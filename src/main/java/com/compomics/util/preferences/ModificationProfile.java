@@ -70,6 +70,8 @@ public class ModificationProfile implements Serializable {
 
     /**
      * Constructor creating a new Modification profile based on the given one.
+     * 
+     * @param modificationProfile the modification profile
      */
     public ModificationProfile(ModificationProfile modificationProfile) {
         fixedModifications = modificationProfile.getFixedModifications();

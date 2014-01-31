@@ -34,7 +34,7 @@ public abstract class IdentificationMatch extends ExperimentObject {
     public abstract MatchType getType();
 
     /**
-     * returns the key of a match.
+     * Returns the key of a match.
      *
      * @return the key of a match
      */

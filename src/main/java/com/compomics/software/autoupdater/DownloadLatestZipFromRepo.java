@@ -1,5 +1,6 @@
 package com.compomics.software.autoupdater;
 
+import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
@@ -7,12 +8,14 @@ import java.io.InterruptedIOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipFile;
+import javax.swing.JOptionPane;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 
@@ -25,23 +28,13 @@ import org.apache.commons.io.FileUtils;
 public class DownloadLatestZipFromRepo {
 
     /**
-     * Main method for testing purposes only.
-     * 
-     * @param args 
+     * True of a file is currently being downloaded.
      */
-    public static void main(String[] args) {
-
-        try {
-            File jarFile = new File("C:\\Users\\hba041\\My_Applications\\peptide-shaker\\target\\PeptideShaker-0.24.2\\PeptideShaker-0.24.2.jar");
-            downloadLatestZipFromRepo(jarFile.toURI().toURL(), true, "peptide-shaker.ico", args, new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString()), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
-    }
+    private static boolean isFileBeingDownloaded = false;
+    /**
+     * The downloaded version of the tool.
+     */
+    private static File downloadedFile;
 
     /**
      * Downloads the latest deploy from the genesis maven repository of the
@@ -49,14 +42,15 @@ public class DownloadLatestZipFromRepo {
      * jar if there was an update.
      *
      * @param jarPath the path to the jarfile
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(URL jarPath) throws IOException, XMLStreamException, URISyntaxException {
-        downloadLatestZipFromRepo(jarPath, true, true);
+    public static void downloadLatestZipFromRepo(URL jarPath, String toolName) throws IOException, XMLStreamException, URISyntaxException {
+        downloadLatestZipFromRepo(jarPath, toolName, true, true, true, null);
     }
 
     /**
@@ -64,17 +58,20 @@ public class DownloadLatestZipFromRepo {
      * artifact and starts it without arguments.
      *
      * @param jarPath the path to the jarfile
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles if the jar who starts the update should be deleted
      * @param startDownloadedVersion if the newly downloaded jar should be
      * started after download
+     * @param addDesktopIcon if true, a desktop icon will be created
+     * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(URL jarPath, boolean deleteOldFiles, boolean startDownloadedVersion) throws IOException, XMLStreamException, URISyntaxException {
-        downloadLatestZipFromRepo(jarPath, deleteOldFiles, new String[0], startDownloadedVersion);
+    public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
+        downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, new String[0], startDownloadedVersion, addDesktopIcon, waitingHandler);
     }
 
     /**
@@ -82,18 +79,23 @@ public class DownloadLatestZipFromRepo {
      * maven repo.
      *
      * @param jarPath the path to the jarfile to update
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles if the original jar file should be deleted
      * @param args the args for the newly downloaded jar when it starts
      * @param startDownloadedVersion if true, the downloaded version will be
      * started when the download completes
+     * @param addDesktopIcon if true, a desktop icon will be created
+     * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(URL jarPath, boolean deleteOldFiles, String[] args, boolean startDownloadedVersion) throws IOException, XMLStreamException, URISyntaxException {
-        downloadLatestZipFromRepo(jarPath, deleteOldFiles, null, args, new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString()), startDownloadedVersion);
+    public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, String[] args,
+            boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
+        downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, null, args, new URL("http", "genesis.ugent.be",
+                new StringBuilder().append("/maven2/").toString()), startDownloadedVersion, addDesktopIcon, waitingHandler);
     }
 
     /**
@@ -101,19 +103,22 @@ public class DownloadLatestZipFromRepo {
      * jarRepository.
      *
      * @param jarPath the path to the jarfile to update, cannot be {@code null}
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles if the original jar folder should be deleted,
      * cannot be {@code null}
+     * @param addDesktopIcon if true, a desktop icon will be created
      * @param args the args for the newly downloaded jar when it starts
      * @param jarRepository the repository to look for the latest deploy of the
      * jar file, cannot be {@code null}
+     * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(URL jarPath, boolean deleteOldFiles, String[] args, URL jarRepository) throws IOException, XMLStreamException, URISyntaxException {
-        downloadLatestZipFromRepo(jarPath, deleteOldFiles, null, args, jarRepository, true);
+    public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, boolean addDesktopIcon, String[] args, URL jarRepository, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
+        downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, null, args, jarRepository, true, addDesktopIcon, waitingHandler);
     }
 
     /**
@@ -122,6 +127,7 @@ public class DownloadLatestZipFromRepo {
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles should the old installation be removed or not
      * cannot be {@code null}
      * @param iconName name of the shortcut image should one be created
@@ -131,17 +137,20 @@ public class DownloadLatestZipFromRepo {
      * {@code null}
      * @param startDownloadedVersion if the newly downloaded version should be
      * started automatically or not
+     * @param addDesktopIcon if true, a desktop icon will be created
+     * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(final URL jarPath, boolean deleteOldFiles, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion) throws IOException, XMLStreamException, URISyntaxException {
+    public static void downloadLatestZipFromRepo(final URL jarPath, String toolName, boolean deleteOldFiles, String iconName, String[] args,
+            URL jarRepository, boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
         if (GraphicsEnvironment.isHeadless()) {
-            downloadLatestZipFromRepo(jarPath, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, new HeadlessFileDAO());
+            downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, addDesktopIcon, new HeadlessFileDAO(), waitingHandler);
         } else {
-            downloadLatestZipFromRepo(jarPath, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, new GUIFileDAO());
+            downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, iconName, args, jarRepository, startDownloadedVersion, addDesktopIcon, new GUIFileDAO(), waitingHandler);
         }
     }
 
@@ -150,6 +159,7 @@ public class DownloadLatestZipFromRepo {
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles should the old installation be removed or not
      * cannot be {@code null}
      * @param iconName name of the shortcut image should one be created
@@ -159,16 +169,21 @@ public class DownloadLatestZipFromRepo {
      * {@code null}
      * @param startDownloadedVersion if the newly downloaded version should be
      * started automatically or not
+     * @param addDesktopIcon if true, a desktop icon will be created
      * @param fileDAO what implementation of FileDAO should be used in the
      * updating
+     * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
      * from the remote maven repository
      * @throws URISyntaxException
      */
-    public static void downloadLatestZipFromRepo(final URL jarPath, boolean deleteOldFiles, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion, FileDAO fileDAO) throws IOException, XMLStreamException, URISyntaxException {
+    public static void downloadLatestZipFromRepo(final URL jarPath, String toolName, boolean deleteOldFiles, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion,
+            boolean addDesktopIcon, FileDAO fileDAO, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
+
         MavenJarFile oldMavenJarFile = new MavenJarFile(jarPath.toURI());
+
         if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
             MavenJarFile downloadedJarFile;
 
@@ -177,41 +192,67 @@ public class DownloadLatestZipFromRepo {
             String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
             String latestArtifactLocation = new StringBuilder(artifactInRepoLocation).append("/").append(latestRemoteRelease).toString();
 
-            if (System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win")) {
-                downloadedJarFile = downloadAndUnzipJarForWindows(oldMavenJarFile, new URL(latestArtifactLocation), fileDAO, true);
-                //try{
-                fileDAO.createDesktopShortcut(downloadedJarFile, iconName, deleteOldFiles);
-                //}catch(IOException ioe){ if (!ignoreShortcutCreationErrors){throw ioe}}
-            } else {
-                downloadedJarFile = downloadAndUnzipJarForUnix(oldMavenJarFile, new URL(latestArtifactLocation), fileDAO);
-                //update symlinks?
+            // download and unzip the files
+            downloadedJarFile = downloadAndUnzipJar(oldMavenJarFile, toolName, new URL(latestArtifactLocation), fileDAO,
+                    true, waitingHandler, System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win"));
+
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                    return;
+                } else {
+                    waitingHandler.setRunFinished();
+                }
             }
+
+            final File jarParent = new File(jarPath.toURI()).getParentFile();
+
+            // ask if the user really wants to delete the old folder 
+            if (deleteOldFiles && fileDAO instanceof GUIFileDAO) {
+                int option = JOptionPane.showConfirmDialog(null,
+                        "Remove the old version of " + toolName + "? This will delete the folder\n"
+                        + "" + jarParent.getAbsolutePath(), "Remove Old " + toolName + " Version?", JOptionPane.YES_NO_OPTION);
+
+                if (option != JOptionPane.YES_OPTION) {
+                    deleteOldFiles = false;
+                }
+            }
+
+            // add desktop icon
+            if (addDesktopIcon) {
+                if (System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win")) {
+                    //try{
+                    fileDAO.createDesktopShortcut(downloadedJarFile, iconName, toolName, deleteOldFiles);
+                    //}catch(IOException ioe){ if (!ignoreShortcutCreationErrors){throw ioe}}
+                } else {
+                    // @TODO: update symlinks?
+                }
+            }
+
             try {
                 // close the access to the old zip file so that it can be deleted
-                oldMavenJarFile.close(); 
+                oldMavenJarFile.close();
 
                 Process launchedJar = null;
                 if (startDownloadedVersion) {
                     launchedJar = launchJar(downloadedJarFile, args);
                 }
-                if (deleteOldFiles) { // && launchedJar != null) {
-                    Runtime.getRuntime().addShutdownHook(new Thread() { // @TODO: not sure why why need to wait until shutdown?
-                        @Override
-                        public void run() {
-                            try {
-                                File jarParent = new File(jarPath.toURI()).getParentFile();
-                                if (jarParent.exists()) {
-                                    //dangerous, find better way to do this
-                                    FileUtils.deleteDirectory(jarParent);
+                if (deleteOldFiles) {
+                    if (deleteOldFiles) {
+                        Runtime.getRuntime().addShutdownHook(new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if (jarParent.exists()) {
+                                        //dangerous, find better way to do this
+                                        FileUtils.deleteDirectory(jarParent);
+                                    }
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                    //todo handle stuff did not get done
                                 }
-                            } catch (URISyntaxException ex) {
-                                ex.printStackTrace();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                                //todo handle stuff did not get done
                             }
-                        }
-                    });
+                        });
+                    }
                     if (launchedJar != null) {
                         launchedJar.waitFor();
                     }
@@ -238,7 +279,9 @@ public class DownloadLatestZipFromRepo {
             processToRun.add("java");
             processToRun.add("-jar");
             processToRun.add(downloadedFile.getAbsoluteFilePath());
-            processToRun.addAll(Arrays.asList(args));
+            if (args != null) {
+                processToRun.addAll(Arrays.asList(args));
+            }
             p = new ProcessBuilder(processToRun);
             p.directory(new File(downloadedFile.getAbsoluteFilePath()).getParentFile());
             jar = p.start();
@@ -249,56 +292,120 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * Aggregation method for downloading and unzipping for windows.
+     * Aggregation method for downloading and unzipping.
      *
      * @param mavenJarFile the maven jar file to download update for
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param jarRepository the url of the version specific location
      * @param fileDAO which fileDAO implementation that should be used
+     * @param isWindows if true, the OS will assumed to be windows
      * @return the downloaded {@code MavenJarFile}
      * @throws MalformedURLException
      * @throws IOException
      * @throws XMLStreamException
      */
-    private static MavenJarFile downloadAndUnzipJarForWindows(MavenJarFile mavenJarFile, URL jarRepository, FileDAO fileDAO, boolean cleanupZipFile) throws MalformedURLException, IOException, XMLStreamException {
-        MavenJarFile newMavenJar;
-        URL archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
-        String folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+    private static MavenJarFile downloadAndUnzipJar(MavenJarFile mavenJarFile, final String toolName, URL jarRepository,
+            FileDAO fileDAO, boolean cleanupZipFile, final WaitingHandler waitingHandler, boolean isWindows) throws MalformedURLException, IOException, XMLStreamException {
+
+        URL archiveURL;
+        String folderName;
+
+        // get the archive url
+        if (isWindows) {
+            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
+            folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+        } else {
+            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", true);
+            if (archiveURL != null) {
+                folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".tar.gz"));
+            } else {
+                archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", true);
+                folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+            }
+        }
+
+        // set up the folder to save the new download in
         File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent()), folderName);
         if (!downloadFolder.exists()) {
             if (!downloadFolder.mkdirs()) {
                 throw new IOException("could not make the directories needed to download the file in");
             }
         }
-        File downloadedFile = fileDAO.writeStreamToDisk(archiveURL.openStream(), archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")), downloadFolder);
-        fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder.getParentFile());
-        newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
+
+        // create an empty dummy file so that progress can be monitored
+        downloadedFile = new File(downloadFolder, archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")));
+
+        isFileBeingDownloaded = true;
+
+        // start a thread to monitor the progress
+        if (waitingHandler != null) {
+            waitingHandler.setWaitingText("Updating " + toolName + ". Please Wait...");
+
+            URLConnection conn = archiveURL.openConnection();
+            final int currentUrlContentLength = conn.getContentLength();
+
+            if (currentUrlContentLength != -1) {
+                waitingHandler.resetPrimaryProgressCounter();
+                waitingHandler.setPrimaryProgressCounterIndeterminate(false);
+                waitingHandler.setMaxPrimaryProgressCounter(currentUrlContentLength);
+
+                new Thread("DownloadMonitorThread") {
+                    @Override
+                    public void run() {
+
+                        long start = System.currentTimeMillis();
+
+                        while (isFileBeingDownloaded) {
+
+                            if (waitingHandler.isRunCanceled()) {
+                                waitingHandler.setRunFinished();
+                                break;
+                            }
+
+                            long now = System.currentTimeMillis();
+
+                            // update the progress dialog every 100 millisecond or so
+                            if ((now - start) > 100 && downloadedFile != null) {
+                                long length = downloadedFile.length();
+
+                                if (currentUrlContentLength != -1) {
+                                    waitingHandler.setSecondaryProgressCounter((int) length);
+                                } else {
+                                    waitingHandler.setWaitingText("Updating " + toolName + ". Please Wait... (" + (length / (1024L * 1024L)) + " MB)");
+                                }
+
+                                start = System.currentTimeMillis();
+                            }
+                        }
+                    }
+                }.start();
+            } else {
+                waitingHandler.setPrimaryProgressCounterIndeterminate(true);
+            }
+        }
+
+        // download and unzip the file
+        if (isWindows) {
+            downloadedFile = fileDAO.writeStreamToDisk(archiveURL.openStream(), archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")), downloadFolder);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+            }
+            fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder.getParentFile());
+        } else {
+            fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadFolder, waitingHandler);
+        }
+
+        // get the new jar file
+        MavenJarFile newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
+        isFileBeingDownloaded = false;
+
+        // delete the downloaded zip file
         if (cleanupZipFile) {
             if (!downloadedFile.delete()) {
                 throw new IOException("could not delete the zip file");
             }
         }
-        return newMavenJar;
-    }
 
-    /**
-     * Aggregation method for downloading and unzipping for linux/mac.
-     *
-     * @param mavenJarFile the maven jar file to download update for
-     * @param jarRepository the url of the version specific location
-     * @param fileDAO which fileDAO implementation that should be used
-     * @return the downloaded {@code MavenJarFile}
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws XMLStreamException
-     */
-    private static MavenJarFile downloadAndUnzipJarForUnix(MavenJarFile oldMavenJarFile, URL jarRepository, FileDAO fileDAO) throws MalformedURLException, IOException, XMLStreamException {
-        URL archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", true);
-        if (archiveURL == null) {
-            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", true);
-        }
-        File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(oldMavenJarFile.getAbsoluteFilePath()), archiveURL.getFile());
-        fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadFolder);
-        MavenJarFile downloadedJarFile = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, oldMavenJarFile.getArtifactId());
-        return downloadedJarFile;
+        return newMavenJar;
     }
 }

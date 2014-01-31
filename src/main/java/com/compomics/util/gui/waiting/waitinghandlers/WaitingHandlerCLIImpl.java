@@ -57,6 +57,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
+    public void setPrimaryProgressCounter(int value) {
+        primaryProgressCounter = value;
+    }
+
+    @Override
     public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
         secondaryMaxProgressCounter = maxProgressValue;
     }
@@ -152,7 +157,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public boolean isReport() {
         return true;
     }
-    
+
     @Override
     public void setSecondaryProgressText(String text) {
         appendReport(text, true, true);
@@ -162,24 +167,24 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public synchronized void resetPrimaryProgressCounter() {
         primaryProgressCounter = 0;
     }
-    
+
     @Override
-    public synchronized int getPrimaryProgressCounter(){
+    public synchronized int getPrimaryProgressCounter() {
         return primaryProgressCounter;
     }
 
     @Override
-    public synchronized int getMaxPrimaryProgressCounter(){
+    public synchronized int getMaxPrimaryProgressCounter() {
         return primaryMaxProgressCounter;
     }
 
     @Override
-    public synchronized int getSecondaryProgressCounter(){
+    public synchronized int getSecondaryProgressCounter() {
         return secondaryProgressCounter;
     }
 
     @Override
-    public synchronized int getMaxSecondaryProgressCounter(){
+    public synchronized int getMaxSecondaryProgressCounter() {
         return secondaryMaxProgressCounter;
     }
 }

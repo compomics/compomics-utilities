@@ -14,12 +14,11 @@ public class HeadlessFileDAO extends FileDAO {
      * {@inheritDoc }
      */
     @Override
-    public boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException {
+    public boolean createDesktopShortcut(MavenJarFile file, String iconName, String toolName, boolean deleteOldShortcut) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); // @TODO: implement me...
     }
 
     /**
-     *
      * {@inheritDoc }
      */
     @Override

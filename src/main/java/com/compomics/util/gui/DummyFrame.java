@@ -1,5 +1,6 @@
 package com.compomics.util.gui;
 
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Arrays;
 import javax.swing.JFrame;
@@ -25,6 +26,20 @@ public class DummyFrame extends JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
         setIconImages(Arrays.asList(Toolkit.getDefaultToolkit().getImage(getClass().getResource(relativeImageIconPath))));
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param title the frame title
+     * @param imageIcon the default image icon for the frame
+     */
+    public DummyFrame(String title, Image imageIcon) {
+        super(title);
+        setUndecorated(true);
+        setVisible(true);
+        setLocationRelativeTo(null);
+        setIconImages(Arrays.asList(imageIcon));
     }
 
     /**

@@ -1,22 +1,31 @@
 package com.compomics.software;
 
+import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
+import com.compomics.software.autoupdater.MavenJarFile;
+import com.compomics.software.autoupdater.WebDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.StreamGobbler;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
+import java.awt.Image;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a
@@ -48,6 +57,10 @@ public class CompomicsWrapper {
      * The user preferences.
      */
     private UtilitiesUserPreferences userPreferences;
+    /**
+     * A simple progress dialog.
+     */
+    private static ProgressDialogX progressDialog;
 
     /**
      * Constructor.
@@ -317,9 +330,9 @@ public class CompomicsWrapper {
                         }
 
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                "Failed to create the Java virtual machine.\n\n"
-                                + "Inspect the log file for details: resources/conf/startup.log.\n\n"
-                                + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com", // @TODO: move help to tool independent website
+                                JOptionEditorPane.getJOptionEditorPane("Failed to create the Java virtual machine.<br><br>"
+                                + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
+                                + "Then go to <a href=\\\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\\\">Java TroubleShooting</a>."),
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
@@ -333,13 +346,12 @@ public class CompomicsWrapper {
                                 "Seems like you are trying to start the tool from within a zip file!",
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
                     } else {
-
                         System.out.println("Unknown error: " + temp);
 
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                "An error occurred when starting the tool.\n\n"
-                                + "Inspect the log file for details: resources/conf/startup.log.\n\n"
-                                + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com", // @TODO: move help to tool independent website
+                                JOptionEditorPane.getJOptionEditorPane("An error occurred when starting the tool.<br><br>"
+                                + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
+                                + "Then go to <a href=\\\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\\\">Java TroubleShooting</a>."), 
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
                     }
 
@@ -468,14 +480,101 @@ public class CompomicsWrapper {
     }
 
     /**
+     * Check if a newer version of the tool is deployed in the Maven repository,
+     * and closes the tool if the user decided to update.
+     *
+     * @param toolName the name of the tool, e.g., PeptideShaker or SearchGUI
+     * @param oldMavenJarFile the old jar file
+     * @param jarRepository the Maven repository
+     * @param iconName the icon name
+     * @param deleteOldFiles if true, the old version of the tool is tried
+     * deleted
+     * @param startDownloadedVersion if true, the new version is started when
+     * downloaded
+     * @param addDesktopIcon if true, a desktop icon is added
+     * @param normalIcon the normal icon for the progress dialog
+     * @param waitingIcon the waiting icon for the progress dialog
+     * @return true if a new version is to be downloaded
+     */
+    public static boolean checkForNewDeployedVersion(final String toolName, final MavenJarFile oldMavenJarFile, final URL jarRepository, final String iconName,
+            final boolean deleteOldFiles, final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon) {
+
+        boolean update = false;
+
+        try {
+            // check if a new version is available
+            if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
+                int option = JOptionPane.showConfirmDialog(null,
+                        "A newer version of " + toolName + " is available.\n"
+                        + "Do you want to update?",
+                        "Update Available",
+                        JOptionPane.YES_NO_CANCEL_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    update = true;
+                } else if (option == JOptionPane.CANCEL_OPTION) {
+                    System.exit(0);
+                }
+            }
+
+            // download the new version
+            if (update) {
+                progressDialog = new ProgressDialogX(new JFrame(),
+                        normalIcon,
+                        waitingIcon,
+                        true);
+                progressDialog.setPrimaryProgressCounterIndeterminate(true);
+                progressDialog.setTitle("Updating " + toolName + ". Please Wait...");
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            progressDialog.setVisible(true);
+                        } catch (IndexOutOfBoundsException e) {
+                            // ignore
+                        }
+                    }
+                }, "ProgressDialog").start();
+
+                new Thread("DisplayThread") {
+                    @Override
+                    public void run() {
+                        try {
+                            downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles, 
+                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog);
+                            if (!progressDialog.isRunFinished()) {
+                                progressDialog.setRunFinished();
+                            }
+                            System.exit(0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        } catch (XMLStreamException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+
+        return update;
+    }
+
+    /**
      * Check if a newer version of the tool is available on GoogleCode, and
-     * closes the tool if the user decided to upgrade. No zip file tag used (see
+     * closes the tool if the user decided to update. No zip file tag used (see
      * the other checkForNewVersion method).
      *
      * @param currentVersion the version number of the tool currently running
      * @param toolName the name of the tool, e.g., "PeptideShaker"
      * @param googleCodeToolName the GoogleCode name of the tool, e.g.,
      * "peptide-shaker"
+     * @deprecated use the Maven repository option instead:
+     * checkForNewDeployedVersion
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
         checkForNewVersion(currentVersion, toolName, googleCodeToolName, true, "", ".zip");
@@ -493,6 +592,8 @@ public class CompomicsWrapper {
      * @param zipFileTag the zip file tag, e.g., SearchGUI-1.10.4_windows.zip
      * has the tag "_windows"
      * @param zipFileType the zip file type, e.g., ".zip" or ".tar.gz"
+     * @deprecated use the Maven repository option instead:
+     * checkForNewDeployedVersion
      */
     public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag, String zipFileType) {
 

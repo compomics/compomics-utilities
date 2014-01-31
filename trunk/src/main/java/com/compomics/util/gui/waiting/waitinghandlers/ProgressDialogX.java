@@ -297,6 +297,15 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
+     * Sets the value of the progress bar.
+     *
+     * @param value the progress value
+     */
+    public void setPrimaryProgressCounter(int value) {
+        setValue(value);
+    }
+
+    /**
      * Increases the progress bar.
      */
     public void increaseSecondaryProgressCounter() {

@@ -23,15 +23,20 @@ public class MavenJarFile extends JarFile {
      * The absolute file path.
      */
     private String absoluteFilePath;
+    /**
+     * The path to the jar file.
+     */
+    private URI jarPath;
 
     /**
      * Create a new MavenJarFile object.
-     * 
+     *
      * @param jarPath the path to the jar file
-     * @throws IOException 
+     * @throws IOException
      */
     public MavenJarFile(URI jarPath) throws IOException {
         super(new File(jarPath));
+        this.jarPath = jarPath;
         this.absoluteFilePath = new File(jarPath).getAbsolutePath();
         Enumeration<JarEntry> entries = this.entries();
         //no cleaner way to do this without asking for the group and artifact id, which defeats the point
@@ -46,9 +51,9 @@ public class MavenJarFile extends JarFile {
 
     /**
      * Create a new MavenJarFile object.
-     * 
+     *
      * @param aJarFile the jar file
-     * @throws IOException 
+     * @throws IOException
      */
     public MavenJarFile(File aJarFile) throws IOException {
         this(aJarFile.toURI());
@@ -56,7 +61,7 @@ public class MavenJarFile extends JarFile {
 
     /**
      * Returns the artifact id.
-     * 
+     *
      * @return the artifact id
      */
     public String getArtifactId() {
@@ -65,7 +70,7 @@ public class MavenJarFile extends JarFile {
 
     /**
      * Returns the group id.
-     * 
+     *
      * @return the group id
      */
     public String getGroupId() {
@@ -74,7 +79,7 @@ public class MavenJarFile extends JarFile {
 
     /**
      * Returns the version number.
-     * 
+     *
      * @return the version number
      */
     public String getVersionNumber() {
@@ -83,10 +88,19 @@ public class MavenJarFile extends JarFile {
 
     /**
      * Returns the absolute file path.
-     * 
+     *
      * @return the absolute file path
      */
     public String getAbsoluteFilePath() {
         return absoluteFilePath;
+    }
+
+    /**
+     * Returns the path to the jar file.
+     *
+     * @return the path to the jar file
+     */
+    public URI getJarPath() {
+        return jarPath;
     }
 }

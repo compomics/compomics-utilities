@@ -192,6 +192,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     /**
+     * Sets the primary progress bar to the given value.
+     *
+     * @param value the progress value
+     */
+    public void setPrimaryProgressCounter(int value) {
+        secondaryJProgressBar.setValue(value);
+    }
+
+    /**
      * Set the maximum value of the progress bar.
      *
      * @param maxProgressValue the max value
@@ -1061,7 +1070,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             public void run() {
 
                 if (layeredPane.getComponentCount() == 2) { // check if the dialog has been canceled
-                
+
                     // resize the report area
                     layeredPane.getComponent(1).setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
 

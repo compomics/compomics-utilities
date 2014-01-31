@@ -1,5 +1,6 @@
 package com.compomics.software.autoupdater;
 
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,12 +33,13 @@ public abstract class FileDAO {
      *
      * @param file the maven jarfile to make a shortcut to
      * @param iconName the name of the icon file in the resources folder
+     * @param toolName the name of the tool, e.g., PeptideShaker
      * @param deleteOldShortcut if previous shortcuts containing the maven jar
      * file artifact id should be removed
      * @return true id the shortcut was created (?)
      * @throws IOException
      */
-    public abstract boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException;
+    public abstract boolean createDesktopShortcut(MavenJarFile file, String iconName, String toolName, boolean deleteOldShortcut) throws IOException;
 
     /**
      * Add desktop shortcut.
@@ -135,10 +137,11 @@ public abstract class FileDAO {
      * @param in a {@code GZIPInputStream} of the file that needs to be
      * ungzipped and untarred
      * @param fileLocationOnDiskToDownloadTo the folder to ungzip and untar in
+     * @param waitingHandler the waiting handler
      * @return true if successful
      * @throws IOException
      */
-    public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo) throws IOException {
+    public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo, WaitingHandler waitingHandler) throws IOException {
 
         InputStreamReader isr = new InputStreamReader(in);
         int count;
@@ -155,6 +158,11 @@ public abstract class FileDAO {
             }
         }
         isr.close();
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+        }
+
         untar(fileLocationOnDiskToDownloadTo);
         return true;
     }

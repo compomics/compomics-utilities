@@ -45,6 +45,12 @@ public interface WaitingHandler {
      * @param increment the increment to increase the value by
      */
     public void increasePrimaryProgressCounter(int increment);
+    /**
+     * Sets the primary progress counter to the given value.
+     *
+     * @param value the progress value
+     */
+    public void setPrimaryProgressCounter(int value);
 
     /**
      * Set the maximum value for the secondary progress counter.

@@ -1,6 +1,5 @@
 package com.compomics.software.autoupdater;
 
-import com.compomics.util.gui.UtilitiesGUIDefaults;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -21,7 +20,7 @@ public class GUIFileDAO extends FileDAO {
      * {@inheritDoc }
      */
     @Override
-    public boolean createDesktopShortcut(MavenJarFile file, String iconName, boolean deleteOldShortcut) throws IOException {
+    public boolean createDesktopShortcut(MavenJarFile file, String iconName, String toolName, boolean deleteOldShortcut) throws IOException {
 
         Properties compomicsArtifactProperties = new Properties();
         File compomicsArtifactPropertiesFile = new File(new StringBuilder().append(System.getProperty("user.home")).append("/.compomics/").append(file.getArtifactId()).append("/updatesettings.properties").toString());
@@ -44,20 +43,14 @@ public class GUIFileDAO extends FileDAO {
 
         if (!compomicsArtifactProperties.contains("create_shortcut")) {
 
-            // set the look and feel
-            try {
-                UtilitiesGUIDefaults.setLookAndFeel();
-            } catch (Exception e) {
-                // ignore error, use default look and feel
-            }
-
-            Object[] options = new Object[]{"Yes", "No", "Ask me next update"};
-            boolean rememberOption = false;
-            int selection = JOptionPane.showOptionDialog(null, "Do you want to create a desktop shortcut?",
-                    "Create Desktop Shortcut?", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, JOptionPane.CANCEL_OPTION);
+            int selection = JOptionPane.showConfirmDialog(null,
+                    "Create a shortcut to " + toolName + " on the desktop?",
+                    "Create Desktop Shortcut?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
             //also check (as in add checkbox) to remember choice
-            if (selection == JOptionPane.CANCEL_OPTION || selection == JOptionPane.CLOSED_OPTION || rememberOption) {
+            if (selection == JOptionPane.CANCEL_OPTION || selection == JOptionPane.CLOSED_OPTION) {
                 compomicsArtifactProperties.setProperty("create_shortcut", String.valueOf(selection));
                 FileOutputStream propOutputStream = null;
                 try {
@@ -70,6 +63,11 @@ public class GUIFileDAO extends FileDAO {
                 }
             }
             try {
+                // delete the add desktop icon trigger file for the new download
+                String filePath = new StringBuilder().append(new File(file.getAbsoluteFilePath()).getParentFile().getAbsolutePath()).append("/resources/conf/firstRun").toString();
+                if (new File(filePath).exists()) {
+                    new File(filePath).delete();
+                }
                 if (selection == JOptionPane.YES_OPTION) {
                     addShortcutAtDeskTop(file, iconName);
                 }

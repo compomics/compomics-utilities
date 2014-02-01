@@ -325,14 +325,14 @@ public class CompomicsWrapper {
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else {
                         if (useStartUpLog) {
-                            bw.write("Memory Limit:" + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
+                            bw.write("Memory Limit: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));
                             bw.close();
                         }
 
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("Failed to create the Java virtual machine.<br><br>"
-                                + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                + "Then go to <a href=\\\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\\\">Java TroubleShooting</a>."),
+                                        + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
+                                        + "Then go to <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java TroubleShooting</a>."),
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
@@ -350,8 +350,8 @@ public class CompomicsWrapper {
 
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("An error occurred when starting the tool.<br><br>"
-                                + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                + "Then go to <a href=\\\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\\\">Java TroubleShooting</a>."), 
+                                        + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
+                                        + "Then go to <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java TroubleShooting</a>."),
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
                     }
 
@@ -494,10 +494,13 @@ public class CompomicsWrapper {
      * @param addDesktopIcon if true, a desktop icon is added
      * @param normalIcon the normal icon for the progress dialog
      * @param waitingIcon the waiting icon for the progress dialog
+     * @param exitJavaOnCancel if true, the JVM will be shut down if the update
+     * is canceled by the user before it has started or when the update is done
      * @return true if a new version is to be downloaded
      */
     public static boolean checkForNewDeployedVersion(final String toolName, final MavenJarFile oldMavenJarFile, final URL jarRepository, final String iconName,
-            final boolean deleteOldFiles, final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon) {
+            final boolean deleteOldFiles, final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon,
+            final boolean exitJavaOnCancel) {
 
         boolean update = false;
 
@@ -512,7 +515,9 @@ public class CompomicsWrapper {
                 if (option == JOptionPane.YES_OPTION) {
                     update = true;
                 } else if (option == JOptionPane.CANCEL_OPTION) {
-                    System.exit(0);
+                    if (exitJavaOnCancel) {
+                        System.exit(0);
+                    }
                 }
             }
 
@@ -539,12 +544,14 @@ public class CompomicsWrapper {
                     @Override
                     public void run() {
                         try {
-                            downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles, 
+                            downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles,
                                     iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog);
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
-                            System.exit(0);
+                            if (exitJavaOnCancel) {
+                                System.exit(0);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (URISyntaxException e) {

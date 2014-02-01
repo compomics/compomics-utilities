@@ -63,8 +63,9 @@ public class WebDAO {
                 if (line.toLowerCase(LOCALE).contains("href=") && line.toLowerCase(LOCALE).contains(suffix)) {
                     toReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(suffix, line.indexOf("href=\"")) + suffix.length());
                     break;
-                } else if (line.toLowerCase(LOCALE).contains(".zip") || line.toLowerCase(LOCALE).contains(".tar.gz") || line.toLowerCase(LOCALE).contains(".bz") && returnAlternateArchives) {
-                    alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf("href=\"") + 6, line.indexOf(">")));
+                } else if (returnAlternateArchives && (line.toLowerCase(LOCALE).contains(".zip") || line.toLowerCase(LOCALE).contains(".tar.gz") || line.toLowerCase(LOCALE).contains(".bz"))) {
+                    alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf("href=\"") + 6, line.indexOf(">"))); // @TODO: looks incorrect? one below correct?
+                    //alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf(">"), line.indexOf("href=\"") + 6));
                 }
             }
         } finally {

@@ -324,6 +324,13 @@ public class DownloadLatestZipFromRepo {
             }
         }
 
+        // special fix for tools with separate versions for windows and unix
+        if (folderName.endsWith("-windows")) {
+            folderName = folderName.substring(0, folderName.indexOf("-windows"));
+        } else if (folderName.endsWith("-mac_and_linux")) {
+            folderName = folderName.substring(0, folderName.indexOf("-mac_and_linux"));
+        }
+
         // set up the folder to save the new download in
         File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent()), folderName);
         if (!downloadFolder.exists()) {

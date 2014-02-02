@@ -237,7 +237,8 @@ public class PTM extends ExperimentObject {
      * @return true if the given PTM is the same as the current ptm
      */
     public boolean isSameAs(PTM anotherPTM) {
-        return type == anotherPTM.getType() && mass == anotherPTM.getMass() && anotherPTM.getPattern().isSameAs(pattern);
+        double massDiff = Math.abs(mass - anotherPTM.getMass());
+        return type == anotherPTM.getType() && (massDiff == 0 || massDiff <= 0.0000000000001) && anotherPTM.getPattern().isSameAs(pattern);
     }
 
     /**

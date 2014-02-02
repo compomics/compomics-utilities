@@ -158,6 +158,7 @@ public class SpectrumFactory {
      * reading the file
      * @throws ClassNotFoundException Exception thrown whenever an error
      * occurred while deserializing the index .cui file.
+     * @deprecated use the version with the waiting handler instead
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         addSpectra(spectrumFile, null);
@@ -197,7 +198,6 @@ public class SpectrumFactory {
                         } else {
                             System.err.println("Reindexing: " + fileName + ". (changes in the file detected)");
                         }
-
                     }
                 } catch (Exception e) {
                     System.err.println("Reindexing: " + fileName + ". (Reason: " + e.getLocalizedMessage() + ")");
@@ -206,6 +206,11 @@ public class SpectrumFactory {
 
             if (mgfIndex == null) {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
+
+                if (waitingHandler.isRunCanceled()) {
+                    return; // return without saving the partial index
+                }
+
                 try {
                     writeIndex(mgfIndex, spectrumFile.getParentFile());
                 } catch (Exception e) {
@@ -244,7 +249,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum. The value will not be saved in cache.
+     * Returns the precursor of the desired spectrum. The value will not be
+     * saved in cache.
      *
      * @param spectrumKey the key of the spectrum
      * @return the corresponding precursor

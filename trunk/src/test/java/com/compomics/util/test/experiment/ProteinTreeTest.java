@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,9 +40,10 @@ public class ProteinTreeTest extends TestCase {
      */
     public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        sequenceFactory.loadFastaFile(sequences);
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
         proteinTree.initiateTree(3, 50, 50, null, true, false);
@@ -82,9 +84,10 @@ public class ProteinTreeTest extends TestCase {
         File ptmFile = new File("src/test/resources/experiment/mods.xml");
         ptmFactory.importModifications(ptmFile, false);
 
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        sequenceFactory.loadFastaFile(sequences);
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
         proteinTree.initiateTree(3, 50, 50, null, true, false);

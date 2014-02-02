@@ -3,6 +3,7 @@ package com.compomics.util.test.experiment;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -19,7 +20,8 @@ public class SpectrumTest extends TestCase {
         File mgfFile = new File("src/test/resources/experiment/test.mgf");
         SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
 
-        spectrumFactory.addSpectra(mgfFile);
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        spectrumFactory.addSpectra(mgfFile, waitingHandlerCLIImpl);
 
         Precursor precursor = spectrumFactory.getPrecursor("test.mgf", "controllerType=0 controllerNumber=1 scan=159");
 

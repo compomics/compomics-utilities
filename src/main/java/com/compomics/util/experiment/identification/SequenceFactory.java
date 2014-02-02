@@ -379,6 +379,7 @@ public class SequenceFactory {
      * parsing of the protein headers
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
+     * @deprecated use the version with the WaitingHandler instead
      */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
         loadFastaFile(fastaFile, null);
@@ -405,6 +406,7 @@ public class SequenceFactory {
         if (!fastaFile.exists()) {
             throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");
         }
+
         defaultProteinTree = null;
         currentFastaFile = fastaFile;
         currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
@@ -500,6 +502,7 @@ public class SequenceFactory {
         String version = null;
         Header.DatabaseType databaseType = null;
         File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+
         if (indexFile.exists()) {
             try {
                 tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);

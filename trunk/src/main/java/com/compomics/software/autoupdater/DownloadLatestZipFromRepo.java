@@ -1,5 +1,6 @@
 package com.compomics.software.autoupdater;
 
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
@@ -185,7 +186,6 @@ public class DownloadLatestZipFromRepo {
         MavenJarFile oldMavenJarFile = new MavenJarFile(jarPath.toURI());
 
         if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
-            MavenJarFile downloadedJarFile;
 
             //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
             String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(oldMavenJarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(oldMavenJarFile.getArtifactId()).toString();
@@ -193,7 +193,7 @@ public class DownloadLatestZipFromRepo {
             String latestArtifactLocation = new StringBuilder(artifactInRepoLocation).append("/").append(latestRemoteRelease).toString();
 
             // download and unzip the files
-            downloadedJarFile = downloadAndUnzipJar(oldMavenJarFile, toolName, new URL(latestArtifactLocation), fileDAO,
+            MavenJarFile downloadedJarFile = downloadAndUnzipJar(oldMavenJarFile, toolName, new URL(latestArtifactLocation), fileDAO,
                     true, waitingHandler, System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win"));
 
             if (waitingHandler != null) {
@@ -227,6 +227,18 @@ public class DownloadLatestZipFromRepo {
                     // @TODO: update symlinks?
                 }
             }
+
+            // set the new version has the default version
+            // @TODO: should be done using enums
+            UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            if (toolName.equalsIgnoreCase("PeptideShaker")) {
+                utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
+            } else if (toolName.equalsIgnoreCase("SearchGUI")) {
+                utilitiesUserPreferences.setSearchGuiPath(downloadedJarFile.getAbsoluteFilePath());
+            } else if (toolName.equalsIgnoreCase("Reporter")) {
+                utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
+            }
+            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
 
             try {
                 // close the access to the old zip file so that it can be deleted

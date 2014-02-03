@@ -776,7 +776,14 @@ public class ReportEditor extends javax.swing.JDialog {
                 case 2:
                     return featuresList.get(row).getFeatureFamily();
                 case 3:
-                    return featuresList.get(row).getTitle(", ");
+                    StringBuilder result = new StringBuilder();
+                    for (String title : featuresList.get(row).getTitles()) {
+                        if (result.length() > 0) {
+                            result.append(", ");
+                        }
+                        result.append(title);
+                    }
+                    return result.toString();
                 case 4:
                     return featuresList.get(row).getDescription();
                 default:

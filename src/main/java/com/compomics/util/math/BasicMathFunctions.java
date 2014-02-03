@@ -91,7 +91,7 @@ public class BasicMathFunctions {
         if (length == 1) {
             return input[0];
         }
-        double indexDouble = percentile * length;
+        double indexDouble = percentile * (length-1);
         int index = (int) (indexDouble);
         double valueAtIndex = input[index];
         double rest = indexDouble - index;
@@ -123,7 +123,7 @@ public class BasicMathFunctions {
         if (length == 1) {
             return input.get(0);
         }
-        double indexDouble = percentile * length;
+        double indexDouble = percentile * (length-1);
         int index = (int) (indexDouble);
         double valueAtIndex = input.get(index);
         double rest = indexDouble - index;

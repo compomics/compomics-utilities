@@ -18,9 +18,11 @@ public interface ExportFeature extends Serializable {
     /**
      * Returns the title of the feature.
      *
+     * @param separator the column separator for titles going over different columns
+     * 
      * @return the title of the feature
      */
-    public String getTitle();
+    public String getTitle(String separator);
 
     /**
      * Returns the description of the feature.

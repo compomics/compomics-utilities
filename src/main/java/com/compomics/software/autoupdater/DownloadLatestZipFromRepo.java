@@ -327,12 +327,13 @@ public class DownloadLatestZipFromRepo {
             archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
             folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
         } else {
-            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", true);
+            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", false);
             if (archiveURL != null) {
                 folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".tar.gz"));
             } else {
-                archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", true);
+                archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
                 folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+                isWindows = true; // zip file, handling is same as for windows
             }
         }
 
@@ -344,7 +345,12 @@ public class DownloadLatestZipFromRepo {
         }
 
         // set up the folder to save the new download in
-        File downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent()), folderName);
+        File downloadFolder; 
+        if (isWindows) {
+            downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent()), folderName);
+        } else {
+            downloadFolder = fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent());
+        }
         if (!downloadFolder.exists()) {
             if (!downloadFolder.mkdirs()) {
                 throw new IOException("could not make the directories needed to download the file in");
@@ -361,7 +367,18 @@ public class DownloadLatestZipFromRepo {
             waitingHandler.setWaitingText("Updating " + toolName + ". Please Wait...");
 
             URLConnection conn = archiveURL.openConnection();
-            final int currentUrlContentLength = conn.getContentLength();
+            int tempLength = conn.getContentLength();
+            final int currentUrlContentLength;
+            
+            if (isWindows) {
+                currentUrlContentLength = tempLength;
+            } else {
+                if (tempLength != -1) {
+                    currentUrlContentLength = conn.getContentLength() * 3; // @TODO: size is not correct for the tar.gz file, as it is unzipped as part of the download
+                } else {
+                    currentUrlContentLength = tempLength;
+                } 
+            }
 
             if (currentUrlContentLength != -1) {
                 waitingHandler.resetPrimaryProgressCounter();
@@ -411,7 +428,7 @@ public class DownloadLatestZipFromRepo {
             }
             fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder.getParentFile());
         } else {
-            fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadFolder, waitingHandler);
+            fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadedFile, waitingHandler);
         }
 
         // get the new jar file

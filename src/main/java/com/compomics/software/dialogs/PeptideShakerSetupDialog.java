@@ -338,6 +338,9 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void peptideShakerDownloadLinkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peptideShakerDownloadLinkLabelMouseClicked
+        
+        // @TODO: should rather simply download the latest version?
+        
         openPeptideShakerWebPage();
     }//GEN-LAST:event_peptideShakerDownloadLinkLabelMouseClicked
 

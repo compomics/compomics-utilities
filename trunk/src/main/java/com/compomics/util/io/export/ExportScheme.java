@@ -212,6 +212,43 @@ public class ExportScheme implements Serializable {
     public ArrayList<ExportFeature> getExportFeatures(String section) {
         return exportFeaturesMap.get(section);
     }
+    
+    /**
+     * Sets the export features of a given section. If a section already exists it will be silently overwritten.
+     * 
+     * @param section the name of the section
+     * @param exportFeatures the export features to include in that section
+     */
+    public void setExportFeatures(String section, ArrayList<ExportFeature> exportFeatures) {
+        exportFeaturesMap.put(section, exportFeatures);
+        sectionList.add(section);
+    }
+    
+    /**
+     * Adds an export feature to the desired section. If the section does not exist it will be created.
+     * 
+     * @param section the name of the section
+     * @param exportFeature the export feature to add
+     */
+    public void addExportFeature(String section, ExportFeature exportFeature) {
+        ArrayList<ExportFeature> sectionFeatures = exportFeaturesMap.get(section);
+        if (sectionFeatures == null) {
+            sectionFeatures = new ArrayList<ExportFeature>();
+            exportFeaturesMap.put(section, sectionFeatures);
+            sectionList.add(section);
+        }
+        sectionFeatures.add(exportFeature);
+    }
+    
+    /**
+     * Removes an entire section from the mapping.
+     * 
+     * @param sectionName the section name
+     */
+    public void removeSection(String sectionName) {
+        exportFeaturesMap.remove(sectionName);
+        sectionList.remove(sectionName);
+    }
 
     /**
      * Returns the main title of the report. Null if none.

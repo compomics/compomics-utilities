@@ -77,7 +77,8 @@ public class NormalDistribution implements Distribution {
                 return 0.0;
             }
         }
-        return Math.pow(Math.E, -Math.pow(x - mean, 2) / (2 * Math.pow(std, 2))) / (std * Math.pow(2 * Math.PI, 0.5));
+        double xNorm = (x - mean) / std;
+        return Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5));
     }
 
     @Override

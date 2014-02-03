@@ -64,8 +64,7 @@ public class WebDAO {
                     toReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(suffix, line.indexOf("href=\"")) + suffix.length());
                     break;
                 } else if (returnAlternateArchives && (line.toLowerCase(LOCALE).contains(".zip") || line.toLowerCase(LOCALE).contains(".tar.gz") || line.toLowerCase(LOCALE).contains(".bz"))) {
-                    alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf("href=\"") + 6, line.indexOf(">"))); // @TODO: looks incorrect? one below correct?
-                    //alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf(">"), line.indexOf("href=\"") + 6));
+                    alternativeReturn = line.substring(line.indexOf("href=\"") + 6, line.indexOf(line.indexOf(">"), line.indexOf("href=\"") + 6));
                 }
             }
         } finally {
@@ -75,6 +74,9 @@ public class WebDAO {
         }
         if (returnAlternateArchives && toReturn == null) {
             toReturn = alternativeReturn;
+        }
+        if (toReturn == null) {
+            return null;
         }
         return new URL(new StringBuilder().append(repoURL.toExternalForm()).append("/").append(toReturn).toString());
     }

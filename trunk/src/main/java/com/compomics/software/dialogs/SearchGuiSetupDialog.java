@@ -341,6 +341,9 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void searchGuiDownloadLinkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchGuiDownloadLinkLabelMouseClicked
+
+        // @TODO: should rather simply download the latest version?
+        
         openSearchGuiWebPage();
     }//GEN-LAST:event_searchGuiDownloadLinkLabelMouseClicked
 

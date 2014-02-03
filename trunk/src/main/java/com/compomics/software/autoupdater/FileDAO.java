@@ -136,7 +136,7 @@ public abstract class FileDAO {
      *
      * @param in a {@code GZIPInputStream} of the file that needs to be
      * ungzipped and untarred
-     * @param fileLocationOnDiskToDownloadTo the folder to ungzip and untar in
+     * @param fileLocationOnDiskToDownloadTo the file to ungzip and untar to
      * @param waitingHandler the waiting handler
      * @return true if successful
      * @throws IOException
@@ -158,6 +158,7 @@ public abstract class FileDAO {
             }
         }
         isr.close();
+        in.close();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
@@ -177,7 +178,7 @@ public abstract class FileDAO {
      */
     private boolean untar(File fileToUntar) throws FileNotFoundException, IOException {
         boolean fileUntarred = false;
-        String untarLocation = fileToUntar.getAbsolutePath();
+        String untarLocation = fileToUntar.getParentFile().getAbsolutePath();
         TarArchiveInputStream tarStream = null;
         try {
             tarStream = new TarArchiveInputStream(new FileInputStream(fileToUntar));
@@ -190,11 +191,18 @@ public abstract class FileDAO {
                     int count;
                     FileWriter out = null;
                     try {
-                        out = new FileWriter(new File(String.format("%s/%s", untarLocation, entry.getName())));
-                        while ((count = bufferedTarReader.read(cbuf, 0, 1024)) != -1) {
-                            out.write(cbuf, 0, count);
+                        File tempFile = new File(String.format("%s/%s", untarLocation, entry.getName()));
+                        if (entry.isDirectory()) {
+                            if (!tempFile.exists()) {
+                                tempFile.mkdir();
+                            }
+                        } else {
+                            out = new FileWriter(tempFile);
+                            while ((count = bufferedTarReader.read(cbuf, 0, 1024)) != -1) {
+                                out.write(cbuf, 0, count);
+                            }
+                            out.flush();
                         }
-                        out.flush();
                     } finally {
                         if (out != null) {
                             out.close();

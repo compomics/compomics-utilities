@@ -26,7 +26,7 @@ public class ModificationProfile implements Serializable {
      *
      * @deprecated use the expected variable modification lists.
      */
-    private HashMap<String, String> modificationNames = new HashMap<String, String>();
+    private HashMap<String, String> modificationNames = new HashMap<String, String>(0);
     /**
      * List of the expected fixed modifications.
      */
@@ -48,7 +48,7 @@ public class ModificationProfile implements Serializable {
      *
      * @deprecated use the variable/fixed versions
      */
-    private ArrayList<String> refinementModifications = null;
+    private ArrayList<String> refinementModifications = new ArrayList<String>(0);
     /**
      * Map of the OMSSA indexes used for user modifications in this search.
      */
@@ -498,6 +498,10 @@ public class ModificationProfile implements Serializable {
             return false;
         }
 
+        if (refinementFixedModifications == null) {
+            repair();
+        }
+        
         // note that the following three tests results in false even if only the order is different
         if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
             return false;

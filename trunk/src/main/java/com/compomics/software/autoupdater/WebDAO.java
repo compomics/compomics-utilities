@@ -83,19 +83,27 @@ public class WebDAO {
 
     /**
      * Returns true if a new version is available.
-     * 
+     *
      * @param jarFile the maven jar file
      * @param jarRepository the repository
      * @return true if a new version is available
      * @throws IOException
-     * @throws XMLStreamException 
+     * @throws XMLStreamException
      */
     public static boolean newVersionReleased(MavenJarFile jarFile, URL jarRepository) throws IOException, XMLStreamException {
+
+        String currentVersionNumber = jarFile.getVersionNumber();
+
+        // check if beta version
+        if (currentVersionNumber.contains("b") || currentVersionNumber.contains("beta")) {
+            return false;
+        }
+
         boolean newVersion = false;
         String versionRepoURLString = new StringBuilder(jarRepository.toExternalForm()).append(
                 jarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(jarFile.getArtifactId()).append("/maven-metadata.xml").toString();
         String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(versionRepoURLString));
-        if (new CompareVersionNumbers().compare(jarFile.getVersionNumber(), latestRemoteRelease) == 1) {
+        if (new CompareVersionNumbers().compare(currentVersionNumber, latestRemoteRelease) == 1) {
             newVersion = true;
         }
         return newVersion;

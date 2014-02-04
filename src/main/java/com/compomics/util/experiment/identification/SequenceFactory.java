@@ -110,6 +110,17 @@ public class SequenceFactory {
     }
 
     /**
+     * Indicates whether the database contained enough protein sequences for
+     * reliability of the target/decoy based statistics
+     *
+     * @return a boolean indicating whether the database contained enough
+     * protein sequences for reliability of the target/decoy based statistics
+     */
+    public boolean hasEnoughSequences() {
+        return getNTargetSequences() > 10000; //@TODO: use a better metric
+    }
+
+    /**
      * Clears the factory getInstance() needs to be called afterwards.
      *
      * @throws IOException

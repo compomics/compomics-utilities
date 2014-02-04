@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.21.23</version>
+    <version>3.21.24</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -423,7 +423,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.4</version>
+            <version>1.7</version>
         </dependency>
 
         <dependency>

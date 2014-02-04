@@ -2,15 +2,14 @@ package com.compomics.software.autoupdater;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -143,28 +142,29 @@ public abstract class FileDAO {
      */
     public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo, WaitingHandler waitingHandler) throws IOException {
 
-        InputStreamReader isr = new InputStreamReader(in);
-        int count;
-        char data[] = new char[1024];
-        BufferedWriter dest = null;
         try {
-            dest = new BufferedWriter(new FileWriter(fileLocationOnDiskToDownloadTo), 1024);
-            while ((count = isr.read(data, 0, 1024)) != -1) {
-                dest.write(data, 0, count);
+            FileOutputStream fos = new FileOutputStream(fileLocationOnDiskToDownloadTo);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = in.read(buffer)) != -1) {
+                fos.write(buffer, 0, len);
             }
-        } finally {
-            if (dest != null) {
-                dest.close();
+            //close resources
+            fos.close();
+            in.close();
+
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
             }
-        }
-        isr.close();
-        in.close();
 
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+            untar(fileLocationOnDiskToDownloadTo);
+        } catch (IOException e) {
+            if (waitingHandler != null) {
+                waitingHandler.setRunCanceled();
+            }
+            e.printStackTrace();
         }
 
-        untar(fileLocationOnDiskToDownloadTo);
         return true;
     }
 
@@ -187,26 +187,23 @@ public abstract class FileDAO {
                 bufferedTarReader = new BufferedReader(new InputStreamReader(tarStream));
                 ArchiveEntry entry;
                 while ((entry = tarStream.getNextEntry()) != null) {
-                    char[] cbuf = new char[1024];
-                    int count;
-                    FileWriter out = null;
-                    try {
-                        File tempFile = new File(String.format("%s/%s", untarLocation, entry.getName()));
-                        if (entry.isDirectory()) {
-                            if (!tempFile.exists()) {
-                                tempFile.mkdir();
-                            }
-                        } else {
-                            out = new FileWriter(tempFile);
-                            while ((count = bufferedTarReader.read(cbuf, 0, 1024)) != -1) {
-                                out.write(cbuf, 0, count);
-                            }
-                            out.flush();
+                    byte[] buffer = new byte[8 * 1024];
+                    File tempFile = new File(String.format("%s/%s", untarLocation, entry.getName()));
+                    if (entry.isDirectory()) {
+                        if (!tempFile.exists()) {
+                            tempFile.mkdir();
                         }
-                    } finally {
-                        if (out != null) {
-                            out.close();
+                    } else {
+                        OutputStream output = new FileOutputStream(tempFile);
+                        try {
+                            int bytesRead;
+                            while ((bytesRead = tarStream.read(buffer)) != -1) {
+                                output.write(buffer, 0, bytesRead);
+                            }
+                        } finally {
+                            output.close();
                         }
+                        tempFile.setExecutable(true); // make sure the binary files can be executed
                     }
                 }
             } finally {

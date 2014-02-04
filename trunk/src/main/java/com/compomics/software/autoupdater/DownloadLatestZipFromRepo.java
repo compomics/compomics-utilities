@@ -432,7 +432,12 @@ public class DownloadLatestZipFromRepo {
         }
 
         // get the new jar file
-        MavenJarFile newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
+        MavenJarFile newMavenJar;
+        if (isWindows) {
+            newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
+        } else {
+            newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(new File(downloadFolder, folderName), mavenJarFile.getArtifactId());
+        }
         isFileBeingDownloaded = false;
 
         // delete the downloaded zip file

@@ -12,12 +12,12 @@ Also note that most OMSSA, X!Tandem and PepNovo+ settings listed below are for e
 
 {{{
 java -cp SearchGUI-X.Y.Z.jar 
-eu.isas.searchgui.cmd.IdentificationParametersCLIParams [parameters]
+eu.isas.searchgui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 {{{
 java -cp PeptideShaker-X.Y.Z.jar 
-eu.isas.peptideshaker.cmd.IdentificationParametersCLIParams [parameters]
+eu.isas.peptideshaker.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 *General parameters:*

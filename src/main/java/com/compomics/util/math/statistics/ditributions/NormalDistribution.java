@@ -86,7 +86,14 @@ public class NormalDistribution implements Distribution {
         if (std == 0) {
             return mean;
         }
-        return mean + Math.pow(-2 * Math.pow(std, 2) * Math.log(std * p * Math.pow(2 * Math.PI, 0.5)), 0.5);
+        if (p > 0.5) {
+            throw new IllegalArgumentException("Probability >= 0.5");
+        }
+        if (p <= 0) {
+            throw new IllegalArgumentException("Probability <= 0");
+        }
+        double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5);
+        return mean + std * x;
     }
 
     @Override
@@ -94,7 +101,14 @@ public class NormalDistribution implements Distribution {
         if (std == 0) {
             return mean;
         }
-        return mean - Math.pow(-2 * Math.pow(std, 2) * Math.log(std * p * Math.pow(2 * Math.PI, 0.5)), 0.5);
+        if (p > 0.5) {
+            throw new IllegalArgumentException("Probability >= 0.5");
+        }
+        if (p <= 0) {
+            throw new IllegalArgumentException("Probability <= 0");
+        }
+        double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5);
+        return mean - std * x;
     }
 
     @Override

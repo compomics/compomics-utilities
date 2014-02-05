@@ -57,7 +57,10 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * and 84.1% percentiles.
      */
     public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistribution(ArrayList<Double> input) {
-        return new NonSymmetricalNormalDistribution(BasicMathFunctions.median(input), BasicMathFunctions.percentile(input, 0.159), BasicMathFunctions.percentile(input, 0.841));
+        double median = BasicMathFunctions.median(input);
+        double percentileDown = BasicMathFunctions.percentile(input, 0.159);
+        double percentileUp = BasicMathFunctions.percentile(input, 0.841);
+        return new NonSymmetricalNormalDistribution(median, median - percentileDown, percentileUp - median);
     }
 
     @Override

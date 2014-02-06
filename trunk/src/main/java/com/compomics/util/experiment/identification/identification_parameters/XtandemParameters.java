@@ -46,7 +46,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      */
     private Boolean proteinQuickAcetyl = true;
     /**
-     * indicates whether the quick pyrolidone option should be triggered.
+     * Indicates whether the quick pyrolidone option should be triggered.
      */
     private Boolean quickPyrolidone = true;
     /**

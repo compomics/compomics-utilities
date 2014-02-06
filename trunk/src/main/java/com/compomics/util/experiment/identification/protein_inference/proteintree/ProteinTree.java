@@ -611,7 +611,6 @@ public class ProteinTree {
                 tree.clear();
                 return;
             }
-
         }
 
         if (loadLengths) {
@@ -697,12 +696,12 @@ public class ProteinTree {
     }
 
     /**
-     * Splits the raw nodes and saves them in the database
+     * Splits the raw nodes and saves them in the database.
      *
      * @param maxNodeSize the maximal size allowed for a node
      * @param maxPeptideSize the maximal peptide length allowed
      * @param waitingHandler waiting handler providing feedback on the process
-     * and allowing cancelling the process
+     * and allowing canceling the process
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *
@@ -737,10 +736,10 @@ public class ProteinTree {
                 }
             }
         }
-        
+
         if (!splittedNodes.isEmpty()) {
-                componentsFactory.saveNodes(splittedNodes);
-                splittedNodes.clear();
+            componentsFactory.saveNodes(splittedNodes);
+            splittedNodes.clear();
         }
     }
 
@@ -750,7 +749,7 @@ public class ProteinTree {
      * @param maxNodeSize the maximal size allowed for a node
      * @param maxPeptideSize the maximal peptide length allowed
      * @param waitingHandler waiting handler providing feedback on the process
-     * and allowing cancelling the process
+     * and allowing canceling the process
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *

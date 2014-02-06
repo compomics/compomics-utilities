@@ -528,7 +528,7 @@ public class ProteinTree {
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         // find the tags in the proteins and create a node per tag found
-        indexProteins(tags, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
+        indexProteinsSingleThread(tags, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
 
         // increase the progress by the number of tags not found 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
@@ -536,11 +536,87 @@ public class ProteinTree {
         }
 
         // split the nodes and save them in the db
-        processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+        processRawNodesSingleThread(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
 
         // clear memory before further processing
         tree.clear();
         System.gc();
+    }
+
+    /**
+     * Iterates all the proteins and indexes the given tags in their sequences
+     * by batches of proteinBatchSize using a SequenceIndexer in a separate
+     * thread. When sequence indexers are finished, a node per tag is created
+     * and stored in the tree map.
+     *
+     * @param tags the tags to index
+     * @param waitingHandler waiting handler providing feedback on the process
+     * and allowing canceling the process
+     * @param initialTagSize the initial tag size
+     * @param enzyme enzyme to use. Can be null
+     * @param loadLengths boolean indicating whether protein lengths should be
+     * loaded in the db
+     * @param displayProgress boolean indicating whether progress shall be
+     * displayed using the waiting handler
+     *
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    private void indexProteinsSingleThread(ArrayList<String> tags,
+            int initialTagSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
+            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
+        ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
+        ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
+        int nAccessions;
+        if (sequenceFactory.isDefaultReversed()) {
+            nAccessions = sequenceFactory.getNTargetSequences();
+        } else {
+            nAccessions = sequenceFactory.getNSequences();
+        }
+
+        ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
+        HashMap<String, Object> proteinLengths = new HashMap<String, Object>(nAccessions);
+
+        while (proteinIterator.hasNext()) {
+            Protein protein = proteinIterator.getNextProtein();
+            String accession = protein.getAccession();
+            if (loadLengths) {
+                proteinLengths.put(protein.getAccession(), protein.getLength());
+            }
+
+            HashMap<String, ArrayList<Integer>> indexesMap = getTagToIndexesMap(protein.getSequence(), tags, enzyme);
+
+            for (String tag : indexesMap.keySet()) {
+                ArrayList<Integer> indexes = indexesMap.get(tag);
+                if (!indexes.isEmpty()) {
+                    Node node = tree.get(tag);
+                    if (node == null) {
+                        node = new Node(initialTagSize);
+                        tree.put(tag, node);
+                    }
+                    node.addAccession(accession, indexes);
+                }
+            }
+
+            if (displayProgress && waitingHandler != null) {
+                waitingHandler.increaseSecondaryProgressCounter();
+            }
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                tree.clear();
+                return;
+            }
+
+        }
+
+        if (loadLengths) {
+            componentsFactory.saveProteinLengths(proteinLengths);
+        }
     }
 
     /**
@@ -617,6 +693,54 @@ public class ProteinTree {
 
         while (!sequenceIndexers.isEmpty()) {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
+        }
+    }
+
+    /**
+     * Splits the raw nodes and saves them in the database
+     *
+     * @param maxNodeSize the maximal size allowed for a node
+     * @param maxPeptideSize the maximal peptide length allowed
+     * @param waitingHandler waiting handler providing feedback on the process
+     * and allowing cancelling the process
+     * @param displayProgress boolean indicating whether progress shall be
+     * displayed using the waiting handler
+     *
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    private void processRawNodesSingleThread(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
+            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+
+        int batchSize = 10000;
+        HashMap<String, Object> splittedNodes = new HashMap<String, Object>(batchSize);
+
+        for (String tag : tree.keySet()) {
+
+            Node node = tree.get(tag);
+
+            node.splitNode(maxNodeSize, maxPeptideSize);
+            splittedNodes.put(tag, node);
+
+            if (splittedNodes.size() == batchSize) {
+                componentsFactory.saveNodes(splittedNodes);
+                splittedNodes.clear();
+            }
+
+            if (waitingHandler != null) {
+                if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                    emptyCache();
+                    return;
+                }
+            }
+        }
+        
+        if (!splittedNodes.isEmpty()) {
+                componentsFactory.saveNodes(splittedNodes);
+                splittedNodes.clear();
         }
     }
 
@@ -1570,6 +1694,47 @@ public class ProteinTree {
     }
 
     /**
+     * Returns all the positions of the given tags on the given sequence in a
+     * map: tag -> list of indexes in the sequence.
+     *
+     * @param sequence the sequence of interest
+     * @param tags the tags of interest
+     * @param enzyme the enzyme restriction
+     * @return all the positions of the given tags
+     */
+    private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
+        HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
+        Integer initialTagSize = componentsFactory.getInitialSize();
+
+        for (String tag : tags) {
+            tagToIndexesMap.put(tag, new ArrayList<Integer>());
+        }
+
+        for (int i = 0; i < sequence.length() - initialTagSize; i++) {
+
+            if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
+
+                char[] tagValue = new char[initialTagSize];
+
+                for (int j = 0; j < initialTagSize; j++) {
+                    char aa = sequence.charAt(i + j);
+                    tagValue[j] = aa;
+                }
+
+                String tag = new String(tagValue);
+                ArrayList<Integer> tempIndexes = tagToIndexesMap.get(tag);
+
+                if (tempIndexes != null) {
+                    tempIndexes.add(i);
+                }
+            }
+        }
+
+        return tagToIndexesMap;
+    }
+
+    /**
      * Runnable used for the indexing of a protein sequence.
      */
     private class SequenceIndexer implements Runnable {
@@ -1678,47 +1843,6 @@ public class ProteinTree {
          */
         public HashMap<String, HashMap<String, ArrayList<Integer>>> getIndexes() {
             return indexes;
-        }
-
-        /**
-         * Returns all the positions of the given tags on the given sequence in
-         * a map: tag -> list of indexes in the sequence.
-         *
-         * @param sequence the sequence of interest
-         * @param tags the tags of interest
-         * @param enzyme the enzyme restriction
-         * @return all the positions of the given tags
-         */
-        private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
-            HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
-            Integer initialTagSize = componentsFactory.getInitialSize();
-
-            for (String tag : tags) {
-                tagToIndexesMap.put(tag, new ArrayList<Integer>());
-            }
-
-            for (int i = 0; i < sequence.length() - initialTagSize; i++) {
-
-                if (enzyme == null || i == 0 || enzyme.isCleavageSite(sequence.charAt(i - 1), sequence.charAt(i))) {
-
-                    char[] tagValue = new char[initialTagSize];
-
-                    for (int j = 0; j < initialTagSize; j++) {
-                        char aa = sequence.charAt(i + j);
-                        tagValue[j] = aa;
-                    }
-
-                    String tag = new String(tagValue);
-                    ArrayList<Integer> tempIndexes = tagToIndexesMap.get(tag);
-
-                    if (tempIndexes != null) {
-                        tempIndexes.add(i);
-                    }
-                }
-            }
-
-            return tagToIndexesMap;
         }
 
         /**

@@ -172,7 +172,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             stpBiasCmb.setSelectedIndex(1);
         }
         if (xtandemParameters.isRefine()) {
-            quickPyroCmb.setSelectedIndex(0);
+            refinementCmb.setSelectedIndex(0);
             maxEValueRefineTxt.setEnabled(true);
             unanticipatedCleavageCmb.setEnabled(true);
             semiEnzymaticCmb.setEnabled(true);
@@ -181,7 +181,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             snapsCmb.setEnabled(true);
             spectrumSynthesisCmb.setEnabled(true);
         } else {
-            quickPyroCmb.setSelectedIndex(1);
+            refinementCmb.setSelectedIndex(1);
             maxEValueRefineTxt.setEnabled(false);
             unanticipatedCleavageCmb.setEnabled(false);
             semiEnzymaticCmb.setEnabled(false);

@@ -207,7 +207,7 @@ public class SpectrumFactory {
             if (mgfIndex == null) {
                 mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
 
-                if (waitingHandler.isRunCanceled()) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return; // return without saving the partial index
                 }
 

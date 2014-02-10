@@ -109,6 +109,9 @@ public class ModificationProfile implements Serializable {
      * @return the refinement variable modifications
      */
     public ArrayList<String> getRefinementVariableModifications() {
+        if (refinementVariableModifications == null) {
+            repair();
+        }
         return refinementVariableModifications;
     }
 
@@ -119,6 +122,9 @@ public class ModificationProfile implements Serializable {
      * @return the refinement fixed modifications
      */
     public ArrayList<String> getRefinementFixedModifications() {
+        if (refinementFixedModifications == null) {
+            repair();
+        }
         return refinementFixedModifications;
     }
 
@@ -169,7 +175,6 @@ public class ModificationProfile implements Serializable {
         if (refinementFixedModifications == null) {
             repair();
         }
-        // In the honour of Kenneth: add variable fixed modifications
         for (String ptmName : fixedModifications) {
             if (!refinementFixedModifications.contains(ptmName) && !result.contains(ptmName)) {
                 result.add(ptmName);
@@ -210,6 +215,9 @@ public class ModificationProfile implements Serializable {
      */
     public void addRefinementVariableModification(PTM modification) {
         String modName = modification.getName();
+        if (refinementVariableModifications == null) {
+            repair();
+        }
         if (!refinementVariableModifications.contains(modName)) {
             refinementVariableModifications.add(modName);
         }
@@ -227,6 +235,9 @@ public class ModificationProfile implements Serializable {
      */
     public void addRefinementFixedModification(PTM modification) {
         String modName = modification.getName();
+        if (refinementFixedModifications == null) {
+            repair();
+        }
         if (!refinementFixedModifications.contains(modName)) {
             refinementFixedModifications.add(modName);
         }
@@ -376,6 +387,9 @@ public class ModificationProfile implements Serializable {
      * @param modificationName the name of the modification
      */
     public void removeRefinementVariableModification(String modificationName) {
+        if (refinementVariableModifications == null) {
+            repair();
+        }
         while (refinementVariableModifications.contains(modificationName)) {
             refinementVariableModifications.remove(modificationName);
         }
@@ -387,6 +401,9 @@ public class ModificationProfile implements Serializable {
      * @param modificationName the name of the modification
      */
     public void removeRefinementFixedModification(String modificationName) {
+        if (refinementFixedModifications == null) {
+            repair();
+        }
         while (refinementFixedModifications.contains(modificationName)) {
             refinementFixedModifications.remove(modificationName);
         }
@@ -440,9 +457,9 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the omssa indexes as a map.
+     * Returns the OMSSA indexes as a map.
      *
-     * @return the omssa indexes
+     * @return the OMSSA indexes
      */
     public HashMap<Integer, String> getOmssaIndexes() {
         return omssaIndexes;
@@ -462,8 +479,8 @@ public class ModificationProfile implements Serializable {
         }
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
-                || refinementVariableModifications.contains(modificationName)
-                || refinementFixedModifications.contains(modificationName);
+                || (refinementVariableModifications != null && refinementVariableModifications.contains(modificationName))
+                || (refinementFixedModifications != null && refinementFixedModifications.contains(modificationName));
     }
 
     /**

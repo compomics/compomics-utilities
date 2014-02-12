@@ -5,6 +5,7 @@ import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -262,6 +263,20 @@ public class ProteinTreeComponentsFactory {
      */
     public void saveProteinLengths(HashMap<String, Object> lengths) throws SQLException, IOException {
         objectsDB.insertObjects(lengthTable, lengths, null, true);
+    }
+
+    /**
+     * Adds a protein length to the database.
+     *
+     * @param lengths the lengths
+     * @param waitingHandler the waiting handler
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading data in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading data in the database
+     */
+    public void saveProteinLengths(HashMap<String, Object> lengths, WaitingHandler waitingHandler) throws SQLException, IOException {
+        objectsDB.insertObjects(lengthTable, lengths, waitingHandler, true);
     }
 
     /**

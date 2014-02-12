@@ -569,9 +569,6 @@ public class ProteinTree {
             int initialTagSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
-        ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
-        ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
         int nAccessions;
         if (sequenceFactory.isDefaultReversed()) {
             nAccessions = sequenceFactory.getNTargetSequences();

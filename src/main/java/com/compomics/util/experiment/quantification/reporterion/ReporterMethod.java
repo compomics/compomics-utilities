@@ -88,7 +88,7 @@ public class ReporterMethod {
      * @return the reagent of interest
      */
     public Reagent getReagent(String reagentName) {
-        return reagents.get(name);
+        return reagents.get(reagentName);
     }
 
     /**

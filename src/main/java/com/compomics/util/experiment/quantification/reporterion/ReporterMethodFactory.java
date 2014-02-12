@@ -107,6 +107,8 @@ public class ReporterMethodFactory extends ExperimentObject {
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<minus1>" + reagent.getMinus1() + "</minus2>");
                     writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<ref>" + reagent.getRef() + "</ref>");
+                    writer.newLine();
                     writer.write(indent + indent + indent + indent + "<plus1>" + reagent.getPlus1() + "</plus1>");
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<plus2>" + reagent.getPlus2() + "</plus2>");
@@ -183,28 +185,28 @@ public class ReporterMethodFactory extends ExperimentObject {
             Reagent reagent = new Reagent();
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("reagentList")) {
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagentList")) {
                     throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
                 }
             }
             type = parser.next();
             String reagentName = parser.getText().trim();
             reagent.setName(reagentName);
-            while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("monoisotopicMass")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
             type = parser.next();
             Double monoisotopicMass = new Double(parser.getText().trim());
-            ReporterIon reporterIon = new ReporterIon(name, monoisotopicMass);
+            ReporterIon reporterIon = new ReporterIon(reagentName, monoisotopicMass);
             reagent.setReporterIon(reporterIon);
             //@TODO: set reporter ion
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
             type = parser.next();
@@ -212,17 +214,26 @@ public class ReporterMethodFactory extends ExperimentObject {
             reagent.setMinus2(correctionFactor);
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus1")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
             type = parser.next();
             correctionFactor = new Double(parser.getText().trim());
             reagent.setMinus1(correctionFactor);
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("ref")) {
+                type = parser.next();
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
+                }
+            }
+            type = parser.next();
+            correctionFactor = new Double(parser.getText().trim());
+            reagent.setRef(correctionFactor);
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus1")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
             type = parser.next();
@@ -230,8 +241,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             reagent.setPlus1(correctionFactor);
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus2")) {
                 type = parser.next();
-                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
             type = parser.next();
@@ -239,6 +250,13 @@ public class ReporterMethodFactory extends ExperimentObject {
             reagent.setPlus2(correctionFactor);
 
             reagents.add(reagent);
+            while (type != XmlPullParser.END_TAG || !parser.getName().equals("reagent")) {
+                type = parser.next();
+            }
+            type = parser.next();
+            while (type != XmlPullParser.START_TAG && type != XmlPullParser.END_TAG) {
+                type = parser.next();
+            }
         }
 
         return new ReporterMethod(name, reagents);

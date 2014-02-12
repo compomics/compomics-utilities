@@ -7,10 +7,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This factory imports reporter methods details from an XMl file.
@@ -72,9 +75,55 @@ public class ReporterMethodFactory extends ExperimentObject {
      * Save to file.
      *
      * @param aFile the file to save to
+     *
+     * @throws java.io.IOException exception thrown whenever a problem occurred
+     * while writing the file
      */
-    public void saveFile(File aFile) {
-        // @TODO: implement save
+    public void saveFile(File aFile) throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(aFile));
+        try {
+            String indent = "\t";
+            writer.write("<xml>");
+            writer.newLine();
+            for (ReporterMethod reporterMethod : methods) {
+                writer.write(indent + "<reorterMethod>");
+                writer.newLine();
+                writer.write(indent + indent + "<name>" + reporterMethod.getName() + "</name>");
+                writer.newLine();
+                writer.write(indent + indent + "<reagentList>");
+                writer.newLine();
+                ArrayList<String> reagentNames = new ArrayList<String>(reporterMethod.getReagentNames());
+                Collections.sort(reagentNames);
+                for (String reagentName : reagentNames) {
+                    Reagent reagent = reporterMethod.getReagent(reagentName);
+                    writer.write(indent + indent + indent + "<reagent>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<name>" + reagent.getName() + "</name>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<monoisotopicMass>" + reagent.getReporterIon().getTheoreticMass() + "</monoisotopicMass>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<minus2>" + reagent.getMinus2() + "</minus2>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<minus1>" + reagent.getMinus1() + "</minus2>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<plus1>" + reagent.getPlus1() + "</plus1>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + indent + "<plus2>" + reagent.getPlus2() + "</plus2>");
+                    writer.newLine();
+                    writer.write(indent + indent + indent + "</reagent>");
+                    writer.newLine();
+                }
+                writer.write(indent + indent + "</reagentList>");
+                writer.newLine();
+                writer.write(indent + "</reorterMethod>");
+                writer.newLine();
+                writer.write("</xml>");
+                writer.newLine();
+            }
+        } finally {
+            writer.close();
+        }
     }
 
     /**
@@ -128,101 +177,70 @@ public class ReporterMethodFactory extends ExperimentObject {
         }
         type = parser.next();
         String name = parser.getText().trim();
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("reporterIonList")) {
-            type = parser.next();
-        }
-        ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
-        while (type != XmlPullParser.END_TAG || !parser.getName().equals("reporterIonList")) {
-            reporterIons.add(parseIon(parser));
-            type = parser.next();
-            while (type != XmlPullParser.START_TAG && type != XmlPullParser.END_TAG) {
+
+        ArrayList<Reagent> reagents = new ArrayList<Reagent>();
+        while (type != XmlPullParser.END_TAG || !parser.getName().equals("reagentList")) {
+            Reagent reagent = new Reagent();
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
                 type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("reagentList")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
             }
-        }
-
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("correctionFactorList")) {
             type = parser.next();
-        }
-        ArrayList<CorrectionFactor> correctionFactors = new ArrayList<CorrectionFactor>();
-        while (type != XmlPullParser.END_TAG || !parser.getName().equals("correctionFactorList")) {
-            correctionFactors.add(parseCorrectionFactor(parser));
-            type = parser.next();
-            while (type != XmlPullParser.START_TAG && type != XmlPullParser.END_TAG) {
+            String reagentName = parser.getText().trim();
+            reagent.setName(reagentName);
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
                 type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
             }
-        }
-        return new ReporterMethod(name, reporterIons, correctionFactors);
-    }
+            type = parser.next();
+            Double monoisotopicMass = new Double(parser.getText().trim());
+            ReporterIon reporterIon = new ReporterIon(name, monoisotopicMass);
+            reagent.setReporterIon(reporterIon);
+            //@TODO: set reporter ion
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
+                type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
+            }
+            type = parser.next();
+            Double correctionFactor = new Double(parser.getText().trim());
+            reagent.setMinus2(correctionFactor);
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus1")) {
+                type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
+            }
+            type = parser.next();
+            correctionFactor = new Double(parser.getText().trim());
+            reagent.setMinus1(correctionFactor);
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus1")) {
+                type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
+            }
+            type = parser.next();
+            correctionFactor = new Double(parser.getText().trim());
+            reagent.setPlus1(correctionFactor);
+            while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus2")) {
+                type = parser.next();
+                if (type != XmlPullParser.END_TAG || !parser.getName().equals("monoisotopicMass")) {
+                    throw new IllegalArgumentException("Unexpected end of reagent list when parsing method " + name + ".");
+                }
+            }
+            type = parser.next();
+            correctionFactor = new Double(parser.getText().trim());
+            reagent.setPlus2(correctionFactor);
 
-    /**
-     * Parses an XML bloc describing a reporter ion.
-     *
-     * @param parser the XML parser
-     * @return the reporter ion described by the pointed XML bloc
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the XML file
-     */
-    private ReporterIon parseIon(XmlPullParser parser) throws XmlPullParserException, IOException {
-        int type = parser.next();
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
-            type = parser.next();
+            reagents.add(reagent);
         }
-        type = parser.next();
-        String name = parser.getText().trim();
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("mass")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Double mass = new Double(parser.getText().trim());
-        while (type != XmlPullParser.END_TAG || !parser.getName().equals("reporterIon")) {
-            type = parser.next();
-        }
-        return new ReporterIon(name, mass);
-    }
 
-    /**
-     * Parses an XML bloc representing a correction factor.
-     *
-     * @param parser the XML parser
-     * @return the correction factor described in the XML bloc pointed by the
-     * parser
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     * @throws XmlPullParserException exception thrown whenever an error
-     * occurred while parsing the XML file
-     */
-    private CorrectionFactor parseCorrectionFactor(XmlPullParser parser) throws XmlPullParserException, IOException {
-        int type = parser.next();
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("ionId")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Integer id = new Integer(parser.getText().trim());
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Double minus2 = new Double(parser.getText().trim());
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus1")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Double minus1 = new Double(parser.getText().trim());
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus1")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Double plus1 = new Double(parser.getText().trim());
-        while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus2")) {
-            type = parser.next();
-        }
-        type = parser.next();
-        Double plus2 = new Double(parser.getText().trim());
-        while (type != XmlPullParser.END_TAG || !parser.getName().equals("correctionFactor")) {
-            type = parser.next();
-        }
-        return new CorrectionFactor(id, minus2, minus1, plus1, plus2);
+        return new ReporterMethod(name, reagents);
     }
 }

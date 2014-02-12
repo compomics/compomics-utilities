@@ -2,10 +2,12 @@ package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import static com.compomics.util.experiment.biology.ions.PrecursorIon.PRECURSOR;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This class models a reporter ion and is its own factory. Note: By convention
@@ -20,9 +22,9 @@ public class ReporterIon extends Ion {
      */
     static final long serialVersionUID = 1109011048958734120L;
     /**
-     * Map of the implemented reporter ions.
+     * Map of the implemented reporter ions. Name -> reporter ion
      */
-    private static HashMap<Integer, String> reporterIonTypes = new HashMap<Integer, String>();
+    private static HashMap<String, ReporterIon> implementedIons = new HashMap<String, ReporterIon>();
     /**
      * Standard reporter ion iTRAQ 113.
      */
@@ -66,27 +68,27 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion TMT0.
      */
-    public final static ReporterIon TMT0 = new ReporterIon("TMT126", 126.127491);
+    public final static ReporterIon TMT126 = new ReporterIon("TMT126", 126.127491);
     /**
      * Standard reporter ion TMT1.
      */
-    public final static ReporterIon TMT1 = new ReporterIon("TMT127", 127.1308594);
+    public final static ReporterIon TMT127 = new ReporterIon("TMT127", 127.1308594);
     /**
      * Standard reporter ion TMT2.
      */
-    public final static ReporterIon TMT2 = new ReporterIon("TMT128", 128.1341553);
+    public final static ReporterIon TMT128 = new ReporterIon("TMT128", 128.1341553);
     /**
      * Standard reporter ion TMT3.
      */
-    public final static ReporterIon TMT3 = new ReporterIon("TMT129", 129.1375046);
+    public final static ReporterIon TMT129 = new ReporterIon("TMT129", 129.1375046);
     /**
      * Standard reporter ion TMT4.
      */
-    public final static ReporterIon TMT4 = new ReporterIon("TMT130", 130.1408768);
+    public final static ReporterIon TMT130 = new ReporterIon("TMT130", 130.1408768);
     /**
      * Standard reporter ion TMT5.
      */
-    public final static ReporterIon TMT5 = new ReporterIon("TMT131", 131.1444851);
+    public final static ReporterIon TMT131 = new ReporterIon("TMT131", 131.1444851);
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
@@ -111,10 +113,6 @@ public class ReporterIon extends Ion {
      * Ion name for user defined ions.
      */
     private String name;
-    /**
-     * The ion subtype.
-     */
-    private int subtype;
 
     /**
      * Constructor for a user-defined reporter ion.
@@ -126,29 +124,7 @@ public class ReporterIon extends Ion {
         type = IonType.REPORTER_ION;
         this.name = name;
         this.theoreticMass = mass;
-        boolean found = false;
-        for (int possibleType : reporterIonTypes.keySet()) {
-            if (reporterIonTypes.get(possibleType).equals(name)) {
-                this.subtype = possibleType;
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            subtype = reporterIonTypes.size();
-            reporterIonTypes.put(subtype, name);
-        }
-    }
-
-    /**
-     * Constructor for a user-defined reporter ion.
-     *
-     * @param subType the reporter ion type
-     */
-    public ReporterIon(int subType) {
-        type = IonType.REPORTER_ION;
-        this.name = reporterIonTypes.get(subType);
-        this.subtype = subType;
+        implementedIons.put(name, this);
     }
 
     /**
@@ -193,8 +169,7 @@ public class ReporterIon extends Ion {
      * @return a boolean indicating whether masses are equal
      */
     public boolean isSameAs(ReporterIon anotherReporterIon) {
-        return subtype == anotherReporterIon.getSubType();
-        //return theoreticMass == anotherReporterIon.getTheoreticMass(); // @TODO: never a good idea to compare float values like this!
+        return theoreticMass == anotherReporterIon.getTheoreticMass();
     }
 
     /**
@@ -209,12 +184,48 @@ public class ReporterIon extends Ion {
 
     @Override
     public int getSubType() {
-        return subtype;
+        ArrayList<String> ionList = new ArrayList<String>(getImplementedIons());
+        Collections.sort(ionList);
+        return ionList.indexOf(name);
     }
 
     @Override
     public String getSubTypeAsString() {
-        return reporterIonTypes.get(subtype);
+        return getName();
+    }
+    
+    /**
+     * Returns the reporter ion indexed by the given index.
+     * 
+     * @param subType the index of interest
+     * 
+     * @return the corresponding reporter ion
+     */
+    public static ReporterIon getReporterIon(int subType) {
+        ArrayList<String> ionList = new ArrayList<String>(getImplementedIons());
+        Collections.sort(ionList);
+        String name = ionList.get(subType);
+        return getReporterIon(name);
+    }
+    
+    /**
+     * Returns the reporter ion corresponding to the given name.
+     * 
+     * @param name the name of the reporter ion
+     * 
+     * @return the corresponding reporter ion
+     */
+    public static ReporterIon getReporterIon(String name) {
+        return implementedIons.get(name);
+    }
+
+    /**
+     * Returns an arraylist of possible subtypes.
+     *
+     * @return an arraylist of possible subtypes
+     */
+    public static Set<String> getImplementedIons() {
+        return implementedIons.keySet();
     }
 
     /**
@@ -223,8 +234,10 @@ public class ReporterIon extends Ion {
      * @return an arraylist of possible subtypes
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
-        ArrayList<Integer> possibleTypes = new ArrayList<Integer>(reporterIonTypes.keySet());
-        Collections.sort(possibleTypes);
+        ArrayList<Integer> possibleTypes = new ArrayList<Integer>(implementedIons.size());
+        for (int i = 0 ; i < implementedIons.size() ; i++) {
+            possibleTypes.add(i);
+        }
         return possibleTypes;
     }
 
@@ -235,8 +248,11 @@ public class ReporterIon extends Ion {
 
     @Override
     public boolean isSameAs(Ion anotherIon) {
-        return anotherIon.getType() == IonType.REPORTER_ION
-                && anotherIon.getSubType() == subtype;
+        if (anotherIon instanceof ReporterIon) {
+            ReporterIon otherIon = (ReporterIon) anotherIon;
+            return isSameAs(otherIon);
+        }
+        return false;
     }
 
     @Override

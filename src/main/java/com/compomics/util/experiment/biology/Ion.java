@@ -285,7 +285,7 @@ public abstract class Ion extends ExperimentObject {
             case PRECURSOR_ION:
                 return new PrecursorIon(neutralLosses);
             case REPORTER_ION:
-                return new ReporterIon(subType);
+                return ReporterIon.getReporterIon(subType);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }
@@ -314,7 +314,7 @@ public abstract class Ion extends ExperimentObject {
             case PRECURSOR_ION:
                 return new PrecursorIon();
             case REPORTER_ION:
-                return new ReporterIon(subType);
+                return ReporterIon.getReporterIon(subType);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }

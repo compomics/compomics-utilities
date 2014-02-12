@@ -1118,14 +1118,14 @@ public class PTMFactory implements Serializable {
 
                 if (ptm.getReporterIons().isEmpty()) {
 
-                    ptm.addReporterIon(ReporterIon.TMT0);
-                    ptm.addReporterIon(ReporterIon.TMT1);
+                    ptm.addReporterIon(ReporterIon.TMT126);
+                    ptm.addReporterIon(ReporterIon.TMT127);
 
-                    if (ptmName.contains("6")) {
-                        ptm.addReporterIon(ReporterIon.TMT2);
-                        ptm.addReporterIon(ReporterIon.TMT3);
-                        ptm.addReporterIon(ReporterIon.TMT4);
-                        ptm.addReporterIon(ReporterIon.TMT5);
+                    if (ptmName.contains("6") || ptmName.contains("10")) {
+                        ptm.addReporterIon(ReporterIon.TMT128);
+                        ptm.addReporterIon(ReporterIon.TMT129);
+                        ptm.addReporterIon(ReporterIon.TMT130);
+                        ptm.addReporterIon(ReporterIon.TMT131);
                         ptm.addReporterIon(ReporterIon.TMT_230);
                     } else {
                         ptm.addReporterIon(ReporterIon.TMT_226);

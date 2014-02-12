@@ -1265,7 +1265,7 @@ public class Peptide extends ExperimentObject {
      */
     public void estimateTheoreticMass() throws IllegalArgumentException {
 
-        mass = Atom.H.mass;
+        mass = Atom.H.getMonoisotopicMass();
 
         for (int aa = 0; aa < sequence.length(); aa++) {
             try {
@@ -1281,7 +1281,7 @@ public class Peptide extends ExperimentObject {
             }
         }
 
-        mass += Atom.H.mass + Atom.O.mass;
+        mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 

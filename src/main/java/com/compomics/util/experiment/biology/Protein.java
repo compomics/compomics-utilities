@@ -198,7 +198,7 @@ public class Protein extends ExperimentObject {
      */
     public double computeMolecularWeight() {
 
-        double mass = Atom.H.mass;
+        double mass = Atom.H.getMonoisotopicMass();
 
         for (int iaa = 0; iaa < sequence.length(); iaa++) {
             char aa = sequence.charAt(iaa);
@@ -216,7 +216,7 @@ public class Protein extends ExperimentObject {
             }
         }
 
-        mass += Atom.H.mass + Atom.O.mass;
+        mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
         return mass;
     }

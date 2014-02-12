@@ -16,23 +16,23 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * H2O loss.
      */
-    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.mass + Atom.O.mass, false);
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass(), false);
     /**
      * NH3 loss.
      */
-    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.mass + 3 * Atom.H.mass, false);
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass(), false);
     /**
      * H3PO4 loss.
      */
-    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.mass + Atom.P.mass + 4 * Atom.O.mass, false);
+    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.getMonoisotopicMass() + Atom.P.getMonoisotopicMass() + 4 * Atom.O.getMonoisotopicMass(), false);
     /**
      * H3PO3 loss.
      */
-    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.mass + Atom.P.mass + 3 * Atom.O.mass, false);
+    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.getMonoisotopicMass() + Atom.P.getMonoisotopicMass() + 3 * Atom.O.getMonoisotopicMass(), false);
     /**
      * CH4OS loss.
      */
-    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.mass + 4 * Atom.H.mass + Atom.O.mass + Atom.S.mass, false);
+    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.getMonoisotopicMass() + 4 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() + Atom.S.getMonoisotopicMass(), false);
     /**
      * The mass lost.
      */

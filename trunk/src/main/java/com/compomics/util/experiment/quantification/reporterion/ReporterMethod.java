@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.ions.ReporterIon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This class contains information relative to a reporter quantification method.
@@ -13,61 +14,81 @@ import java.util.HashMap;
 public class ReporterMethod {
 
     /**
-     * The reporter ions of the method.
+     * Map of the reagents. Reagent name -> reagent
      */
-    private HashMap<Integer, ReporterIon> reporterIons = new HashMap<Integer, ReporterIon>();
-    /**
-     * The correction factors corresponding to the ions.
-     */
-    private ArrayList<CorrectionFactor> correctionFactors;
+    private HashMap<String, Reagent> reagents;
     /**
      * The name of the method.
      */
     private String name;
+    /**
+     * The names of the reporter ions in this method
+     */
+    private HashMap<String, ReporterIon> reporterIonsMap;
 
     /**
      * Constructor for a reporter method.
      *
      * @param name the name of the method
-     * @param reporterIons the reporter ions used
-     * @param correctionFactors the correction factors corresponding to the
-     * reporter ions
+     * @param reagents list of reagents
      */
-    public ReporterMethod(String name, ArrayList<ReporterIon> reporterIons, ArrayList<CorrectionFactor> correctionFactors) {
-        this.correctionFactors = correctionFactors;
+    public ReporterMethod(String name, ArrayList<Reagent> reagents) {
         this.name = name;
-        for (ReporterIon reporterIon : reporterIons) {
-            this.reporterIons.put(reporterIon.getIndex(), reporterIon);
+        this.reagents = new HashMap<String, Reagent>(reagents.size());
+        reporterIonsMap = new HashMap<String, ReporterIon>(reagents.size());
+        for (Reagent reagent : reagents) {
+            String reagentName = reagent.getName();
+            if (this.reagents.containsKey(reagentName)) {
+                throw new IllegalArgumentException("Reagent name " + reagentName + " is duplicated in the reporter method " + name + ".");
+            }
+            this.reagents.put(reagent.getName(), reagent);
+            ReporterIon reporterIon = reagent.getReporterIon();
+            String reporterIonName = reporterIon.getName();
+            if (reporterIonsMap.containsKey(reporterIonName)) {
+                throw new IllegalArgumentException("Reporter ion name " + reporterIonName + " is duplicated in the reporter method " + name + ".");
+            }
+            reporterIonsMap.put(reporterIonName, reporterIon);
         }
-    }
-    
-    /**
-     * Returns a list containing the indexes of the reporter ions.
-     * 
-     * @return a list containing the indexes of the reporter ions
-     */
-    public ArrayList<Integer> getReporterIonIndexes() {
-        return new ArrayList<Integer>(reporterIons.keySet());
-    }
-    
-    /**
-     * Returns the reporter ion indexed by the given index, null if not found.
-     * 
-     * @param reporterIonIndex the index of the reporter ion
-     * 
-     * @return the reporter ion of interest
-     */
-    public ReporterIon getReporterIon(int reporterIonIndex) {
-        return reporterIons.get(reporterIonIndex);
     }
 
     /**
-     * Returns the correction factors corresponding to the reporter ions.
+     * Returns a list containing the names of the reporter ions.
      *
-     * @return the correction factors corresponding to the reporter ions
+     * @return a list containing the names of the reporter ions
      */
-    public ArrayList<CorrectionFactor> getCorrectionFactors() {
-        return correctionFactors;
+    public Set<String> getReporterIonNames() {
+        return reporterIonsMap.keySet();
+    }
+
+    /**
+     * Returns the reporter ion of the given name, null if not found.
+     *
+     * @param reporterIonName the name of the reporter ion
+     *
+     * @return the reporter ion of interest
+     */
+    public ReporterIon getReporterIon(String reporterIonName) {
+        return reporterIonsMap.get(reporterIonName);
+    }
+    
+    /**
+     * Returns the reagents available in this method.
+     * 
+     * @return the reagents available in this method
+     */
+    public Set<String> getReagentNames() {
+        return reagents.keySet();
+    }
+
+    /**
+     * Returns the reagent of the given name, null if not found.
+     * 
+     * @param reagentName the reagent name
+     * 
+     * @return the reagent of interest
+     */
+    public Reagent getReagent(String reagentName) {
+        return reagents.get(name);
     }
 
     /**

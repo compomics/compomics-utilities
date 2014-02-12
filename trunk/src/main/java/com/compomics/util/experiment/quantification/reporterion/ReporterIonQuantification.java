@@ -16,19 +16,19 @@ import java.util.Set;
 public class ReporterIonQuantification extends Quantification {
 
     /**
-     * The sample assignment to the various ions indexed by their index.
+     * The sample assignment to the various reporter ions indexed by their name.
      */
-    private HashMap<Integer, Sample> sampleAssignement = new HashMap<Integer, Sample>();
+    private HashMap<String, Sample> sampleAssignement = new HashMap<String, Sample>();
     /**
      * List of control samples. The index should be the same as for the sample
      * assignment.
      */
-    private ArrayList<Integer> controlSamples;
+    private ArrayList<String> controlSamples;
     /**
-     * List of normalisation factors. The index should be the same as for the
+     * List of normalisation factors. The key should be the same as for the
      * sample assignment.
      */
-    private HashMap<Integer, Double> normalisationFactors = new HashMap<Integer, Double>();
+    private HashMap<String, Double> normalisationFactors = new HashMap<String, Double>();
     /**
      * The reporter method.
      */
@@ -46,33 +46,34 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * Assign a sample to an ion referenced by its static index.
      *
-     * @param reporterIndex the index of the ion
+     * @param reporterName the name of the reporter ion
      * @param sample the sample
      */
-    public void assignSample(int reporterIndex, Sample sample) {
-        sampleAssignement.put(reporterIndex, sample);
+    public void assignSample(String reporterName, Sample sample) {
+        sampleAssignement.put(reporterName, sample);
     }
 
     /**
      * This method returns the sample associated to the given ion.
      *
-     * @param reporterIndex the static index of the reporter ion
+     * @param reporterIonName the static index of the reporter ion
      * @return the corresponding sample
      */
-    public Sample getSample(int reporterIndex) {
-        return sampleAssignement.get(reporterIndex);
+    public Sample getSample(String reporterIonName) {
+        return sampleAssignement.get(reporterIonName);
     }
 
     /**
-     * This method returns the ion associated to the given sample.
+     * This method returns the reporter ion name associated to the given sample. Null if not found.
      *
      * @param aSample the sample
+     * 
      * @return the static index of the associated ion
      */
-    public Integer getReporterIndex(Sample aSample) {
-        for (int index : sampleAssignement.keySet()) {
-            if (sampleAssignement.get(index).isSameAs(aSample)) {
-                return index;
+    public String getReporterIndex(Sample aSample) {
+        for (String ionName : sampleAssignement.keySet()) {
+            if (sampleAssignement.get(ionName).isSameAs(aSample)) {
+                return ionName;
             }
         }
         return null;
@@ -113,7 +114,7 @@ public class ReporterIonQuantification extends Quantification {
      *
      * @return the indexes of the samples labelled as control
      */
-    public ArrayList<Integer> getControlSamples() {
+    public ArrayList<String> getControlSamples() {
         return controlSamples;
     }
 
@@ -122,7 +123,7 @@ public class ReporterIonQuantification extends Quantification {
      *
      * @param controlSamples the indexes of the samples to label as control
      */
-    public void setControlSamples(ArrayList<Integer> controlSamples) {
+    public void setControlSamples(ArrayList<String> controlSamples) {
         this.controlSamples = controlSamples;
     }
 
@@ -145,22 +146,22 @@ public class ReporterIonQuantification extends Quantification {
     /**
      * Adds a normalisation factor.
      *
-     * @param sampleIndex the index of the sample
+     * @param reporterIonName the index of the sample
      * @param normalisationFactor the normalisation factor
      */
-    public void addNormalisationFactor(int sampleIndex, double normalisationFactor) {
-        normalisationFactors.put(sampleIndex, normalisationFactor);
+    public void addNormalisationFactor(String reporterIonName, double normalisationFactor) {
+        normalisationFactors.put(reporterIonName, normalisationFactor);
     }
 
     /**
      * Returns the normalisation factor for the given sample.
      *
-     * @param sampleIndex the index of the sample
+     * @param reporterIonName the index of the sample
      *
      * @return the normalisation factor, 1.0 if not set.
      */
-    public double getNormalisationFactor(int sampleIndex) {
-        Double normalisationFactor = normalisationFactors.get(sampleIndex);
+    public double getNormalisationFactor(String reporterIonName) {
+        Double normalisationFactor = normalisationFactors.get(reporterIonName);
         if (normalisationFactor == null) {
             return 1.0;
         }
@@ -172,7 +173,7 @@ public class ReporterIonQuantification extends Quantification {
      *
      * @return a set containing the indexes of every sample
      */
-    public Set<Integer> getSampleIndexes() {
+    public Set<String> getSampleIndexes() {
         return sampleAssignement.keySet();
     }
 }

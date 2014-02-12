@@ -116,7 +116,7 @@ public class ImmoniumIon extends Ion {
         type = IonType.IMMONIUM_ION;
         this.subType = getSubtype(residue);
         AminoAcid currentAA = AminoAcid.getAminoAcid(residue);
-        theoreticMass = currentAA.monoisotopicMass - Atom.C.mass - Atom.O.mass;
+        theoreticMass = currentAA.monoisotopicMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass();
     }
 
     /**
@@ -130,7 +130,7 @@ public class ImmoniumIon extends Ion {
         this.subType = subType;
         char aa = getResidue(subType);
         AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-        theoreticMass = currentAA.monoisotopicMass - Atom.C.mass - Atom.O.mass;
+        theoreticMass = currentAA.monoisotopicMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass();
     }
 
     /**

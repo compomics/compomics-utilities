@@ -53,7 +53,7 @@ public class IonMatch extends ExperimentObject {
      * @return the matching error
      */
     public double getError() {
-        return peak.mz - ((ion.getTheoreticMass() + charge.value * Atom.H.mass) / charge.value);
+        return peak.mz - ((ion.getTheoreticMass() + charge.value * Atom.H.getMonoisotopicMass()) / charge.value);
     }
 
     /**
@@ -66,7 +66,7 @@ public class IonMatch extends ExperimentObject {
     public double getAbsoluteError(boolean subtractIsotope) {
         double theoreticMass = ion.getTheoreticMass();
         if (subtractIsotope) {
-            theoreticMass -= getIsotopeNumber() * ElementaryElement.neutron.getMass();
+            theoreticMass -= getIsotopeNumber() * Atom.C.getDifferenceToMonoisotopic(1);
         }
         return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
     }
@@ -92,7 +92,7 @@ public class IonMatch extends ExperimentObject {
             double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
             double measuredMz = peak.mz;
             if (subtractIsotope) {
-                measuredMz -= getIsotopeNumber() * ElementaryElement.neutron.getMass() / charge.value;
+                measuredMz -= getIsotopeNumber() * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
             }
             return ((measuredMz - theoreticMz) / theoreticMz) * 1000000;
         } else {
@@ -119,7 +119,7 @@ public class IonMatch extends ExperimentObject {
      */
     public int getIsotopeNumber() {
         double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
-        double result = (experimentalMass - ion.getTheoreticMass()) / ElementaryElement.neutron.getMass();
+        double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
         return (int) Math.round(result);
     }
 

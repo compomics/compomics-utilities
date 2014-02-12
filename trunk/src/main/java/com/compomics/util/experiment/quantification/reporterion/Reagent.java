@@ -3,44 +3,45 @@ package com.compomics.util.experiment.quantification.reporterion;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 
 /**
- * A reporter ion labelling reagent
+ * A reporter ion labeling reagent.
  *
- * @author Marc
+ * @author Marc.
  */
 public class Reagent {
 
     /**
-     * The name of the reagent
+     * The name of the reagent.
      */
     private String name;
     /**
-     * The reporter ion to look for in the spectrum
+     * The reporter ion to look for in the spectrum.
      */
     private ReporterIon reporterIon;
     /**
-     * the isotopic correction factor at -2Da
+     * The isotopic correction factor at -2Da.
      */
     private double minus2;
     /**
-     * the isotopic correction factor at -1Da
+     * .
+     * The isotopic correction factor at -1Da.
      */
     private double minus1;
     /**
-     * The intensity 
+     * The intensity .
      */
     private double ref;
     /**
-     * the isotopic correction factor at +1Da
+     * The isotopic correction factor at +1Da.
      */
     private double plus1;
     /**
-     * the isotopic correction factor at +2Da
+     * The isotopic correction factor at +2Da.
      */
     private double plus2;
 
     /**
      * Returns the name of the reagent.
-     * 
+     *
      * @return the name of the reagent
      */
     public String getName() {
@@ -49,7 +50,7 @@ public class Reagent {
 
     /**
      * Sets the name of the reagent.
-     * 
+     *
      * @param name the name of the reagent
      */
     public void setName(String name) {
@@ -58,7 +59,7 @@ public class Reagent {
 
     /**
      * Returns the reporter ion to look for in the spectrum.
-     * 
+     *
      * @return the reporter ion to look for in the spectrum
      */
     public ReporterIon getReporterIon() {
@@ -67,7 +68,7 @@ public class Reagent {
 
     /**
      * Sets the reporter ion to look for in the spectrum.
-     * 
+     *
      * @param reporterIon the reporter ion to look for in the spectrum
      */
     public void setReporterIon(ReporterIon reporterIon) {
@@ -76,7 +77,7 @@ public class Reagent {
 
     /**
      * Returns the isotopic correction factor at -2 Da.
-     * 
+     *
      * @return the isotopic correction factor at -2 Da
      */
     public double getMinus2() {
@@ -85,7 +86,7 @@ public class Reagent {
 
     /**
      * Sets the isotopic correction factor at -2 Da.
-     * 
+     *
      * @param minus2 the isotopic correction factor at -2 Da
      */
     public void setMinus2(double minus2) {
@@ -94,7 +95,7 @@ public class Reagent {
 
     /**
      * Returns the isotopic correction factor at -1 Da.
-     * 
+     *
      * @return the isotopic correction factor at -1 Da
      */
     public double getMinus1() {
@@ -103,7 +104,7 @@ public class Reagent {
 
     /**
      * Sets the isotopic correction factor at -1 Da.
-     * 
+     *
      * @param minus1 the isotopic correction factor at -1 Da
      */
     public void setMinus1(double minus1) {
@@ -112,7 +113,7 @@ public class Reagent {
 
     /**
      * Returns the value used as reference for the correction factors.
-     * 
+     *
      * @return the value used as reference for the correction factors
      */
     public double getRef() {
@@ -121,7 +122,7 @@ public class Reagent {
 
     /**
      * Sets the value used as reference for the correction factors.
-     * 
+     *
      * @param ref the value used as reference for the correction factors
      */
     public void setRef(double ref) {
@@ -130,7 +131,7 @@ public class Reagent {
 
     /**
      * Returns the isotopic correction factor at +1 Da.
-     * 
+     *
      * @return the isotopic correction factor at +1 Da
      */
     public double getPlus1() {
@@ -139,7 +140,7 @@ public class Reagent {
 
     /**
      * Sets the isotopic correction factor at +1 Da.
-     * 
+     *
      * @param plus1 the isotopic correction factor at +1 Da
      */
     public void setPlus1(double plus1) {
@@ -148,7 +149,7 @@ public class Reagent {
 
     /**
      * Returns the isotopic correction factor at +2 Da.
-     * 
+     *
      * @return the isotopic correction factor at +2 Da
      */
     public double getPlus2() {
@@ -157,11 +158,10 @@ public class Reagent {
 
     /**
      * Sets the isotopic correction factor at +2 Da.
-     * 
+     *
      * @param plus2 the isotopic correction factor at +2 Da
      */
     public void setPlus2(double plus2) {
         this.plus2 = plus2;
     }
-    
 }

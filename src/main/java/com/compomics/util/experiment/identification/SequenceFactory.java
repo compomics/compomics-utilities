@@ -624,7 +624,7 @@ public class SequenceFactory {
                     }
                 }
 
-                if (waitingHandler != null) {
+                if (waitingHandler != null && progressUnit != 0) {
                     waitingHandler.setSecondaryProgressCounter((int) (index / progressUnit));
                     if (waitingHandler.isRunCanceled()) {
                         break;

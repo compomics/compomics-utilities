@@ -171,7 +171,8 @@ public class IdfileReaderFactory {
     }
 
     /**
-     * This method return the search engine corresponding to the given file.
+     * This method return the identification software corresponding to the given
+     * file.
      *
      * @param aFile an identification file
      * @return the index of the search engine

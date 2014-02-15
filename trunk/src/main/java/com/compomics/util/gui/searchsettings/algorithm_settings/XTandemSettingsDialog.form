@@ -444,7 +444,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel8" max="32767" attributes="0"/>
+                          <Component id="refinementModificationsJPanel" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="usePotentialModsLabel" min="-2" pref="265" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
@@ -534,7 +534,7 @@
                           <Component id="spectrumSynthesisLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jPanel8" max="32767" attributes="0"/>
+                      <Component id="refinementModificationsJPanel" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -702,7 +702,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel8">
+            <Container class="javax.swing.JPanel" name="refinementModificationsJPanel">
               <Properties>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
@@ -711,7 +711,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="fixedModificationsLabel" max="32767" attributes="1"/>
+                          <Component id="refinementModificationsLabel" max="32767" attributes="1"/>
                           <EmptySpace min="-2" pref="246" max="-2" attributes="0"/>
                           <Component id="openModificationSettingsJButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -723,7 +723,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="fixedModificationsLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="refinementModificationsLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="openModificationSettingsJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -733,14 +733,14 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="fixedModificationsLabel">
+                <Component class="javax.swing.JLabel" name="refinementModificationsLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/refpmm.htmll&quot;&gt;Refinement Modifications&lt;/a&gt;&lt;/html&gt;"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModificationsLabelMouseReleased"/>
-                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModificationsLabelMouseEntered"/>
-                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModificationsLabelMouseExited"/>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="openModificationSettingsJButton">

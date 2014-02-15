@@ -379,8 +379,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         unanticipatedCleavageLabel = new javax.swing.JLabel();
         usePotentialModsLabel = new javax.swing.JLabel();
         potentialModificationsCmb = new javax.swing.JComboBox();
-        jPanel8 = new javax.swing.JPanel();
-        fixedModificationsLabel = new javax.swing.JLabel();
+        refinementModificationsJPanel = new javax.swing.JPanel();
+        refinementModificationsLabel = new javax.swing.JLabel();
         openModificationSettingsJButton = new javax.swing.JButton();
         modificationsJScrollPane = new javax.swing.JScrollPane();
         modificationsTable = new JTable() {
@@ -832,18 +832,18 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         potentialModificationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        jPanel8.setOpaque(false);
+        refinementModificationsJPanel.setOpaque(false);
 
-        fixedModificationsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refpmm.htmll\">Refinement Modifications</a></html>");
-        fixedModificationsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                fixedModificationsLabelMouseReleased(evt);
-            }
+        refinementModificationsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refpmm.htmll\">Refinement Modifications</a></html>");
+        refinementModificationsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fixedModificationsLabelMouseEntered(evt);
+                refinementModificationsLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                fixedModificationsLabelMouseExited(evt);
+                refinementModificationsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                refinementModificationsLabelMouseReleased(evt);
             }
         });
 
@@ -907,22 +907,22 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         });
         modificationsJScrollPane.setViewportView(modificationsTable);
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(fixedModificationsLabel)
+        javax.swing.GroupLayout refinementModificationsJPanelLayout = new javax.swing.GroupLayout(refinementModificationsJPanel);
+        refinementModificationsJPanel.setLayout(refinementModificationsJPanelLayout);
+        refinementModificationsJPanelLayout.setHorizontalGroup(
+            refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(refinementModificationsJPanelLayout.createSequentialGroup()
+                .addComponent(refinementModificationsLabel)
                 .addGap(246, 246, 246)
                 .addComponent(openModificationSettingsJButton)
                 .addGap(2, 2, 2))
             .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        refinementModificationsJPanelLayout.setVerticalGroup(
+            refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(refinementModificationsJPanelLayout.createSequentialGroup()
+                .addGroup(refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(refinementModificationsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(openModificationSettingsJButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -935,7 +935,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             .addGroup(refinementSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(refinementModificationsJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, refinementSettingsPanelLayout.createSequentialGroup()
                         .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1006,7 +1006,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     .addComponent(spectrumSynthesisCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spectrumSynthesisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(refinementModificationsJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2241,29 +2241,29 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      *
      * @param evt
      */
-    private void fixedModificationsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseEntered
+    private void refinementModificationsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementModificationsLabelMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_fixedModificationsLabelMouseEntered
+    }//GEN-LAST:event_refinementModificationsLabelMouseEntered
 
     /**
      * Change the cursor back to the default cursor.
      *
      * @param evt
      */
-    private void fixedModificationsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseExited
+    private void refinementModificationsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementModificationsLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_fixedModificationsLabelMouseExited
+    }//GEN-LAST:event_refinementModificationsLabelMouseExited
 
     /**
      * Open the link to the X!Tandem help pages.
      *
      * @param evt
      */
-    private void fixedModificationsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fixedModificationsLabelMouseReleased
+    private void refinementModificationsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refinementModificationsLabelMouseReleased
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/refpmm.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_fixedModificationsLabelMouseReleased
+    }//GEN-LAST:event_refinementModificationsLabelMouseReleased
 
     /**
      * Change the cursor to a hand cursor.
@@ -2663,8 +2663,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
     private javax.swing.JTextField dynamicRangeTxt;
     private javax.swing.JLabel eValueLbl;
     private javax.swing.JTextField eValueTxt;
-    private javax.swing.JLabel fixedModificationsLabel;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JTextField maxEValueRefineTxt;
     private javax.swing.JLabel maxEValueRefinmentLbl;
     private javax.swing.JLabel minFragMzLbl;
@@ -2700,6 +2698,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
     private javax.swing.JLabel quickPyroLabel;
     private javax.swing.JComboBox refinementCmb;
     private javax.swing.JLabel refinementLabel;
+    private javax.swing.JPanel refinementModificationsJPanel;
+    private javax.swing.JLabel refinementModificationsLabel;
     private javax.swing.JPanel refinementSettingsPanel;
     private javax.swing.JComboBox semiEnzymaticCmb;
     private javax.swing.JLabel semiEnzymaticLabel;

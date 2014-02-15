@@ -48,10 +48,9 @@ public class SequenceFactory {
      */
     private File currentFastaFile = null;
     /**
-     * Number of proteins to keep in cache, 1 by default. For my good old
-     * uniprot swissprot human, 20,000 sequences take ~300MB of memory.
+     * Number of proteins to keep in cache, 100000 by default.
      */
-    private int nCache = 1;
+    private int nCache = 100000;
     /**
      * List of accessions of the loaded proteins.
      */

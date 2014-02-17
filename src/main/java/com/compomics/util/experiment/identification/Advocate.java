@@ -22,7 +22,7 @@ public enum Advocate {
     /**
      * The de novo algorithm PepNovo.
      */
-    pepnovo(3, "Pepnovo"),
+    pepnovo(3, "PepNovo"),
     /**
      * The search engine Andromeda.
      */

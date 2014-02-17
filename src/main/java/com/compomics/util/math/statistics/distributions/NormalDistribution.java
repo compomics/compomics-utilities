@@ -1,4 +1,4 @@
-package com.compomics.util.math.statistics.ditributions;
+package com.compomics.util.math.statistics.distributions;
 
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;

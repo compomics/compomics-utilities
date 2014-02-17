@@ -4,25 +4,8 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialogParent;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 import javax.swing.*;
-import no.uib.jsparklines.data.XYDataPoint;
-import org.jfree.chart.*;
-import org.jfree.chart.entity.ChartEntity;
-import org.jfree.chart.entity.EntityCollection;
-import org.jfree.chart.labels.StandardXYZToolTipGenerator;
-import org.jfree.chart.renderer.xy.XYBubbleRenderer;
-import org.jfree.chart.annotations.XYTextAnnotation;
-import org.jfree.chart.annotations.XYBoxAnnotation;
-import org.jfree.chart.annotations.XYShapeAnnotation;
-import org.jfree.chart.entity.XYAnnotationEntity;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.xy.DefaultXYZDataset;
-import org.jfree.ui.TextAnchor;
 
 /**
  * A dialog for creating and displaying Venn diagrams. (Work in progress...)
@@ -31,33 +14,6 @@ import org.jfree.ui.TextAnchor;
  */
 public class VennDiagramDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent {
 
-    /**
-     * The supported Venn diagram types.
-     */
-    public enum VennDiagramType {
-
-        ONE_WAY, TWO_WAY, THREE_WAY, FOUR_WAY
-    }
-    /**
-     * The current Venn diagram type.
-     */
-    private VennDiagramType currentVennDiagramType = VennDiagramType.THREE_WAY;
-    /**
-     * Map each dataset tooltip back to the given dataset.
-     */
-    private HashMap<String, String> tooltipToDatasetMap;
-    /**
-     * The current Venn diagram results/data.
-     */
-    private HashMap<String, ArrayList<String>> vennDiagramResults;
-    /**
-     * The current Venn diagram group names.
-     */
-    private HashMap<String, String> groupNames;
-    /**
-     * The chart panel.
-     */
-    private ChartPanel chartPanel;
     /**
      * The dialog parent.
      */
@@ -75,45 +31,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      */
     private Image waitingIcon;
     /**
-     * The font size to use for the values.
+     * The Venn diagram panel.
      */
-    private int fontSizeValues = 17;
-    /**
-     * The font size to use for the legend.
-     */
-    private int fontSizeLegend = 14;
-    /**
-     * If true, the legend is shown.
-     */
-    private boolean showLegend = true;
-    /**
-     * The legend location of Dataset A in a one to three way Venn diagram.
-     */
-    private XYDataPoint legendDatasetAThreeWay = new XYDataPoint(0.86, 0.86);
-    /**
-     * The legend location of Dataset B in a one to three way Venn diagram.
-     */
-    private XYDataPoint legendDatasetBThreeWay = new XYDataPoint(1.15, 0.86);
-    /**
-     * The legend location of Dataset C in a one to three way Venn diagram.
-     */
-    private XYDataPoint legendDatasetCThreeWay = new XYDataPoint(1.0, 1.22);
-    /**
-     * The legend location of Dataset A in a four-way Venn diagram.
-     */
-    private XYDataPoint legendDatasetAFourWay = new XYDataPoint(0.13, 0.53);
-    /**
-     * The legend location of Dataset B in a four-way Venn diagram.
-     */
-    private XYDataPoint legendDatasetBFourWay = new XYDataPoint(0.23, 0.43);
-    /**
-     * The legend location of Dataset C in a four-way Venn diagram.
-     */
-    private XYDataPoint legendDatasetCFourWay = new XYDataPoint(0.33, 0.33);
-    /**
-     * The legend location of Dataset D in a four-way Venn diagram.
-     */
-    private XYDataPoint legendDatasetDFourWay = new XYDataPoint(0.43, 0.23);
+    private VennDiagramPanel vennDiagramPanel;
 
     /**
      * Creates a new XYPlottingDialog.
@@ -142,8 +62,6 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         plotLayeredPaneComponentResized(null);
         setVisible(true);
-
-        updatePlot();
     }
 
     /**
@@ -196,25 +114,12 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
             String[] lines = datasetD.split("\n");
             d.addAll(Arrays.asList(lines));
         }
-
-        groupNames = new HashMap<String, String>();
-
-        groupNames.put("a", datasetATextField.getText());
-        groupNames.put("b", datasetBTextField.getText());
-        groupNames.put("c", datasetCTextField.getText());
-        groupNames.put("d", datasetDTextField.getText());
-
-        vennDiagramResults = vennDiagramMaker(a, b, c, d);
-
-        if (b.isEmpty() && c.isEmpty() && d.isEmpty()) {
-            currentVennDiagramType = VennDiagramType.ONE_WAY;
-        } else if (c.isEmpty() && d.isEmpty()) {
-            currentVennDiagramType = VennDiagramType.TWO_WAY;
-        } else if (d.isEmpty()) {
-            currentVennDiagramType = VennDiagramType.THREE_WAY;
-        } else {
-            currentVennDiagramType = VennDiagramType.FOUR_WAY;
-        }
+        
+        vennDiagramPanel = new VennDiagramPanel(a, b, c, d,
+                datasetATextField.getText(), datasetBTextField.getText(), datasetCTextField.getText(), datasetDTextField.getText(),
+                datasetAColorJPanel.getBackground(), datasetBColorJPanel.getBackground(), datasetCColorJPanel.getBackground(), datasetDColorJPanel.getBackground());
+        xyPlotPanel.removeAll();
+        xyPlotPanel.add(vennDiagramPanel);
     }
 
     /**
@@ -238,7 +143,6 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
         backgroundPanel = new javax.swing.JPanel();
         plotLayeredPane = new javax.swing.JLayeredPane();
         xyPlotPanel = new javax.swing.JPanel();
-        plotPanel = new javax.swing.JPanel();
         plotOptionsJButton = new javax.swing.JButton();
         plotHelpJButton = new javax.swing.JButton();
         contextMenuPlotBackgroundPanel = new javax.swing.JPanel();
@@ -310,7 +214,6 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Statistics");
         setModal(true);
-        setPreferredSize(new java.awt.Dimension(600, 600));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -328,14 +231,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         xyPlotPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Venn Diagram"));
         xyPlotPanel.setOpaque(false);
-        xyPlotPanel.setLayout(new javax.swing.BoxLayout(xyPlotPanel, javax.swing.BoxLayout.PAGE_AXIS));
-
-        plotPanel.setBackground(new java.awt.Color(255, 255, 255));
-        plotPanel.setLayout(new javax.swing.BoxLayout(plotPanel, javax.swing.BoxLayout.LINE_AXIS));
-        xyPlotPanel.add(plotPanel);
-
+        xyPlotPanel.setLayout(new javax.swing.BoxLayout(xyPlotPanel, javax.swing.BoxLayout.Y_AXIS));
+        plotLayeredPane.add(xyPlotPanel);
         xyPlotPanel.setBounds(0, 0, 580, 360);
-        plotLayeredPane.add(xyPlotPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         plotOptionsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contextual_menu_gray.png"))); // NOI18N
         plotOptionsJButton.setToolTipText("Plot Options");
@@ -354,8 +252,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
                 plotOptionsJButtonMouseReleased(evt);
             }
         });
+        plotLayeredPane.add(plotOptionsJButton);
         plotOptionsJButton.setBounds(550, 5, 10, 19);
-        plotLayeredPane.add(plotOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        plotLayeredPane.setLayer(plotOptionsJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         plotHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help_no_frame_grey.png"))); // NOI18N
         plotHelpJButton.setToolTipText("Help");
@@ -376,8 +275,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
                 plotHelpJButtonActionPerformed(evt);
             }
         });
+        plotLayeredPane.add(plotHelpJButton);
         plotHelpJButton.setBounds(570, 0, 10, 19);
-        plotLayeredPane.add(plotHelpJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        plotLayeredPane.setLayer(plotHelpJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         contextMenuPlotBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -392,8 +292,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
             .addGap(0, 19, Short.MAX_VALUE)
         );
 
+        plotLayeredPane.add(contextMenuPlotBackgroundPanel);
         contextMenuPlotBackgroundPanel.setBounds(550, 0, 30, 19);
-        plotLayeredPane.add(contextMenuPlotBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
+        plotLayeredPane.setLayer(contextMenuPlotBackgroundPanel, javax.swing.JLayeredPane.POPUP_LAYER);
 
         dataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Data"));
         dataPanel.setOpaque(false);
@@ -673,7 +574,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      * @param evt
      */
     private void exportPlotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPlotMenuItemActionPerformed
-        new ExportGraphicsDialog(this, this, true, chartPanel);
+        new ExportGraphicsDialog(this, this, true, vennDiagramPanel.getChartPanel());
     }//GEN-LAST:event_exportPlotMenuItemActionPerformed
 
     /**
@@ -743,15 +644,9 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
                 // resize the plot area
                 plotLayeredPane.getComponent(3).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
-
-                if (getCurrentVennDiagramType() != VennDiagramType.FOUR_WAY) {
-                    int min = Math.min(plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
-                    plotPanel.setMaximumSize(new Dimension(min, min));
-                    plotPanel.setPreferredSize(new Dimension(min, min));
-                    updatePlot();
-                } else {
-                    plotPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-                    updatePlot();
+                
+                if (vennDiagramPanel != null) {
+                    vennDiagramPanel.resizePlot(plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
                 }
 
                 plotLayeredPane.revalidate();
@@ -767,7 +662,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      */
     private void datasetATextAreaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_datasetATextAreaKeyReleased
         setUpGUI();
-        updatePlot();
+        vennDiagramPanel.updatePlot();
         plotLayeredPaneComponentResized(null);
     }//GEN-LAST:event_datasetATextAreaKeyReleased
 
@@ -835,7 +730,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         if (newColor != null) {
             datasetAColorJPanel.setBackground(newColor);
-            updatePlot();
+            vennDiagramPanel.updatePlot();
         }
     }//GEN-LAST:event_datasetAColorJPanelMouseClicked
 
@@ -849,7 +744,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         if (newColor != null) {
             datasetBColorJPanel.setBackground(newColor);
-            updatePlot();
+            vennDiagramPanel.updatePlot();
         }
     }//GEN-LAST:event_datasetBColorJPanelMouseClicked
 
@@ -863,7 +758,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         if (newColor != null) {
             datasetCColorJPanel.setBackground(newColor);
-            updatePlot();
+            vennDiagramPanel.updatePlot();
         }
     }//GEN-LAST:event_datasetCColorJPanelMouseClicked
 
@@ -877,7 +772,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
         if (newColor != null) {
             datasetDColorJPanel.setBackground(newColor);
-            updatePlot();
+            vennDiagramPanel.updatePlot();
         }
     }//GEN-LAST:event_datasetDColorJPanelMouseClicked
 
@@ -887,8 +782,8 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      * @param evt
      */
     private void legendCheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legendCheckBoxMenuItemActionPerformed
-        showLegend = legendCheckBoxMenuItem.isSelected();
-        updatePlot();
+        vennDiagramPanel.setShowLegend(legendCheckBoxMenuItem.isSelected());
+        vennDiagramPanel.updatePlot();
     }//GEN-LAST:event_legendCheckBoxMenuItemActionPerformed
 
     /**
@@ -897,12 +792,12 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      * @param evt
      */
     private void valueFontSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueFontSizeMenuItemActionPerformed
-        String value = JOptionPane.showInputDialog(this, "Values Font Size:", fontSizeValues);
+        String value = JOptionPane.showInputDialog(this, "Values Font Size:", vennDiagramPanel.getFontSize());
 
         if (value != null) {
             try {
-                fontSizeValues = Integer.parseInt(value);
-                updatePlot();
+                vennDiagramPanel.setFontSize(Integer.parseInt(value));
+                vennDiagramPanel.updatePlot();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Font size has to be an integer!", "Font Error", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -915,12 +810,12 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      * @param evt
      */
     private void legendFontSizeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_legendFontSizeMenuItemActionPerformed
-        String value = JOptionPane.showInputDialog(this, "Legend Font Size:", fontSizeLegend);
+        String value = JOptionPane.showInputDialog(this, "Legend Font Size:", vennDiagramPanel.getFontSizeLegend());
 
         if (value != null) {
             try {
-                fontSizeLegend = Integer.parseInt(value);
-                updatePlot();
+                vennDiagramPanel.setFontSizeLegend(Integer.parseInt(value));
+                vennDiagramPanel.updatePlot();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Font size has to be an integer!", "Font Error", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -974,441 +869,10 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
     private javax.swing.JButton plotHelpJButton;
     private javax.swing.JLayeredPane plotLayeredPane;
     private javax.swing.JButton plotOptionsJButton;
-    private javax.swing.JPanel plotPanel;
     private javax.swing.JPopupMenu plotPopupMenu;
     private javax.swing.JMenuItem valueFontSizeMenuItem;
     private javax.swing.JPanel xyPlotPanel;
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Update the plot.
-     */
-    public void updatePlot() {
-
-        plotPanel.removeAll();
-        tooltipToDatasetMap = new HashMap<String, String>();
-
-        DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
-
-        JFreeChart chart = ChartFactory.createBubbleChart(null, "X", "Y", xyzDataset, PlotOrientation.VERTICAL, false, true, false);
-        XYPlot plot = chart.getXYPlot();
-
-        if (currentVennDiagramType == VennDiagramType.ONE_WAY) {
-            plot.getRangeAxis().setRange(0.86, 1.24);
-            plot.getDomainAxis().setRange(0.85, 1.25);
-        } else if (currentVennDiagramType == VennDiagramType.TWO_WAY) {
-            plot.getRangeAxis().setRange(0.86, 1.24);
-            plot.getDomainAxis().setRange(0.85, 1.25);
-        } else if (currentVennDiagramType == VennDiagramType.THREE_WAY) {
-            plot.getRangeAxis().setRange(0.86, 1.24);
-            plot.getDomainAxis().setRange(0.85, 1.25);
-        } else {
-            plot.getRangeAxis().setRange(-0.04, 0.6);
-            plot.getDomainAxis().setRange(-0.08, 0.7);
-        }
-
-        plot.getRangeAxis().setVisible(false);
-        plot.getDomainAxis().setVisible(false);
-
-
-        double radius = 0.1;
-        Ellipse2D ellipse = new Ellipse2D.Double(1 - radius, 1 - radius, radius + radius, radius + radius);
-        XYShapeAnnotation xyShapeAnnotation = new XYShapeAnnotation(ellipse, new BasicStroke(2f), new Color(140, 140, 140, 150), datasetAColorJPanel.getBackground()); // @TODO: make it possible set the line color and width?
-        plot.addAnnotation(xyShapeAnnotation);
-
-        if (currentVennDiagramType == VennDiagramType.TWO_WAY || currentVennDiagramType == VennDiagramType.THREE_WAY) {
-            ellipse = new Ellipse2D.Double(1 - radius + 0.1, 1 - radius, radius + radius, radius + radius);
-            xyShapeAnnotation = new XYShapeAnnotation(ellipse, new BasicStroke(2f), new Color(140, 140, 140, 150), datasetBColorJPanel.getBackground());
-            plot.addAnnotation(xyShapeAnnotation);
-        }
-
-        if (currentVennDiagramType == VennDiagramType.THREE_WAY) {
-            ellipse = new Ellipse2D.Double(1 - radius + 0.05, 1 - radius + 0.1, radius + radius, radius + radius);
-            xyShapeAnnotation = new XYShapeAnnotation(ellipse, new BasicStroke(2f), new Color(140, 140, 140, 150), datasetCColorJPanel.getBackground());
-            plot.addAnnotation(xyShapeAnnotation);
-        }
-
-        XYTextAnnotation anotation;
-
-        if (currentVennDiagramType == VennDiagramType.ONE_WAY) {
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("a").size(), 1.0, 1.0);
-            anotation.setToolTipText(groupNames.get("a"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "a");
-
-            // legend
-            if (showLegend) {
-                anotation = new XYTextAnnotation(groupNames.get("a"), legendDatasetAThreeWay.getX(), legendDatasetAThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-            }
-
-        } else if (currentVennDiagramType == VennDiagramType.TWO_WAY) {
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("a").size(), 0.96, 1.0);
-            anotation.setToolTipText(groupNames.get("a"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "a");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("b").size(), 1.14, 1.0);
-            anotation.setToolTipText(groupNames.get("b"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "b");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ab").size(), 1.05, 1.0);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ab");
-
-            // legend
-            if (showLegend) {
-                anotation = new XYTextAnnotation(groupNames.get("a"), legendDatasetAThreeWay.getX(), legendDatasetAThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("b"), legendDatasetBThreeWay.getX(), legendDatasetBThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-            }
-
-        } else if (currentVennDiagramType == VennDiagramType.THREE_WAY) {
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("a").size(), 0.96, 0.97);
-            anotation.setToolTipText(groupNames.get("a"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "a");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("b").size(), 1.14, 0.97);
-            anotation.setToolTipText(groupNames.get("b"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "b");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ab").size(), 1.05, 0.97);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ab");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("c").size(), 1.05, 1.14);
-            anotation.setToolTipText(groupNames.get("c"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "c");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ac").size(), 0.99, 1.065);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + "  &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ac");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("bc").size(), 1.11, 1.065);
-            anotation.setToolTipText("<html>" + groupNames.get("b") + " &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "bc");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("abc").size(), 1.05, 1.036);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + "  &#8745; " + groupNames.get("b") + " &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "abc");
-
-
-            // legend
-            if (showLegend) {
-                anotation = new XYTextAnnotation(groupNames.get("a"), legendDatasetAThreeWay.getX(), legendDatasetAThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("b"), legendDatasetBThreeWay.getX(), legendDatasetBThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("c"), legendDatasetCThreeWay.getX(), legendDatasetCThreeWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-            }
-
-        } else if (currentVennDiagramType == VennDiagramType.FOUR_WAY) {
-
-            XYBoxAnnotation anotation2 = new XYBoxAnnotation(0, 0, 0.2, 0.5, new BasicStroke(2), Color.LIGHT_GRAY, datasetAColorJPanel.getBackground());
-            plot.addAnnotation(anotation2);
-
-            anotation2 = new XYBoxAnnotation(0.1, 0, 0.3, 0.4, new BasicStroke(2), Color.LIGHT_GRAY, datasetBColorJPanel.getBackground());
-            plot.addAnnotation(anotation2);
-
-            anotation2 = new XYBoxAnnotation(0, 0.1, 0.4, 0.3, new BasicStroke(2), Color.LIGHT_GRAY, datasetCColorJPanel.getBackground());
-            plot.addAnnotation(anotation2);
-
-            anotation2 = new XYBoxAnnotation(0, 0, 0.5, 0.2, new BasicStroke(2), Color.LIGHT_GRAY, datasetDColorJPanel.getBackground());
-            plot.addAnnotation(anotation2);
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("a").size(), 0.15, 0.45);
-            anotation.setToolTipText(groupNames.get("a"));
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "a");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ab").size(), 0.15, 0.35);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ab");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("abc").size(), 0.15, 0.25);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + " &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "abc");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("abcd").size(), 0.15, 0.15);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + " &#8745; " + groupNames.get("c") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "abcd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("abd").size(), 0.15, 0.05);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("b") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "abd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ac").size(), 0.05, 0.25);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ac");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("acd").size(), 0.05, 0.15);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("c") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "acd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("ad").size(), 0.05, 0.05);
-            anotation.setToolTipText("<html>" + groupNames.get("a") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "ad");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("b").size(), 0.25, 0.35);
-            anotation.setToolTipText("<html>" + groupNames.get("b") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "b");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("bc").size(), 0.25, 0.25);
-            anotation.setToolTipText("<html>" + groupNames.get("b") + " &#8745; " + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "bc");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("bcd").size(), 0.25, 0.15);
-            anotation.setToolTipText("<html>" + groupNames.get("b") + " &#8745; " + groupNames.get("c") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "bcd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("bd").size(), 0.25, 0.05);
-            anotation.setToolTipText("<html>" + groupNames.get("b") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "bd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("c").size(), 0.35, 0.25);
-            anotation.setToolTipText("<html>" + groupNames.get("c") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "c");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("cd").size(), 0.35, 0.15);
-            anotation.setToolTipText("<html>" + groupNames.get("c") + " &#8745; " + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "cd");
-
-            anotation = new XYTextAnnotation("" + vennDiagramResults.get("d").size(), 0.45, 0.15);
-            anotation.setToolTipText("<html>" + groupNames.get("d") + "</html>");
-            anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeValues));
-            plot.addAnnotation(anotation);
-            tooltipToDatasetMap.put(anotation.getToolTipText(), "d");
-
-
-            // legend
-            if (showLegend) {
-                anotation = new XYTextAnnotation(groupNames.get("a"), legendDatasetAFourWay.getX(), legendDatasetAFourWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("b"), legendDatasetBFourWay.getX(), legendDatasetBFourWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("c"), legendDatasetCFourWay.getX(), legendDatasetCFourWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-                anotation = new XYTextAnnotation(groupNames.get("d"), legendDatasetDFourWay.getX(), legendDatasetDFourWay.getY());
-                anotation.setTextAnchor(TextAnchor.BASELINE_LEFT);
-                anotation.setFont(new Font(anotation.getFont().getFontName(), Font.BOLD, fontSizeLegend));
-                plot.addAnnotation(anotation);
-            }
-        }
-
-        // set up the renderer
-        XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_RANGE_AXIS);
-        renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator());
-        plot.setRenderer(renderer);
-
-        // make all datapoints semitransparent
-        plot.setForegroundAlpha(0.5f);
-
-        // remove space before/after the domain axis
-        plot.getDomainAxis().setUpperMargin(0);
-        plot.getDomainAxis().setLowerMargin(0);
-
-        plot.setRangeGridlinePaint(Color.black);
-
-        // hide unwanted chart details
-        plot.setDomainGridlinesVisible(false);
-        plot.setRangeGridlinesVisible(false);
-        chart.getPlot().setOutlineVisible(false);
-
-        // set background color
-        chart.getPlot().setBackgroundPaint(Color.WHITE);
-        chart.setBackgroundPaint(Color.WHITE);
-        chartPanel = new ChartPanel(chart);
-
-        // disable the pop up menu
-        chartPanel.setPopupMenu(null);
-
-        chartPanel.setBackground(Color.WHITE);
-
-        // add the plot to the chart
-        plotPanel.add(chartPanel);
-
-        plotPanel.revalidate();
-
-        plotPanel.repaint();
-
-        // add chart mouse listener
-        chartPanel.addChartMouseListener(
-                new ChartMouseListener() {
-                    public void chartMouseClicked(ChartMouseEvent cme) {
-                        mouseClickedInChart(cme);
-                    }
-
-                    public void chartMouseMoved(ChartMouseEvent cme) {
-                        mouseMovedInChart(cme);
-                    }
-                });
-
-
-        // add more chart mouse listeners
-        chartPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mouseClicked(e);
-            }
-        });
-    }
-
-    /**
-     * Handles mouse clicks in the chart panel.
-     *
-     * @param event
-     */
-    public void mouseClickedInChart(ChartMouseEvent event) {
-
-        ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
-
-        if (entities.isEmpty()) {
-            return;
-        }
-
-        boolean dataPointFound = false;
-        String dataPointTooltip = "";
-
-        for (ChartEntity tempEntity : entities) {
-            if (tempEntity instanceof XYAnnotationEntity) {
-                if (((XYAnnotationEntity) tempEntity).getToolTipText() != null) {
-                    dataPointFound = true;
-                    dataPointTooltip = ((XYAnnotationEntity) tempEntity).getToolTipText();
-                }
-            }
-        }
-
-        if (dataPointFound) {
-            String dataset = tooltipToDatasetMap.get(dataPointTooltip);
-            JOptionPane.showMessageDialog(this, dataPointTooltip + ":\n" + vennDiagramResults.get(dataset), "Selected Values", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     * Handles mouse movements in the chart panel.
-     *
-     * @param event
-     */
-    public void mouseMovedInChart(ChartMouseEvent event) {
-
-        ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
-
-        boolean dataPointFound = false;
-
-        for (ChartEntity tempEntity : entities) {
-            if (tempEntity instanceof XYAnnotationEntity) {
-                if (((XYAnnotationEntity) tempEntity).getToolTipText() != null) {
-                    dataPointFound = true;
-                }
-            }
-        }
-
-        if (dataPointFound) {
-            chartPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        } else {
-            chartPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        }
-    }
-
-    /**
-     * Returns a list of the entities at the given x, y view location.
-     *
-     * @param viewX the x location
-     * @param viewY the y location
-     * @return a list of the entities
-     */
-    public ArrayList<ChartEntity> getEntitiesForPoint(int viewX, int viewY) {
-
-        ArrayList<ChartEntity> entitiesForPoint = new ArrayList<ChartEntity>();
-        ChartRenderingInfo info = chartPanel.getChartRenderingInfo();
-
-        if (info != null) {
-            Insets insets = chartPanel.getInsets();
-            double x = (viewX - insets.left) / chartPanel.getScaleX();
-            double y = (viewY - insets.top) / chartPanel.getScaleY();
-            EntityCollection allEntities = info.getEntityCollection();
-            int numEntities = allEntities.getEntityCount();
-
-            for (int i = 0; i < numEntities; i++) {
-                ChartEntity entity = allEntities.getEntity(i);
-                if (entity.getArea().contains(x, y)) {
-                    entitiesForPoint.add(entity);
-                }
-            }
-        }
-
-        return entitiesForPoint;
-    }
 
     public void setSelectedExportFolder(String selectedFolder) {
         lastSelectedFolder = selectedFolder;
@@ -1418,293 +882,6 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
         return lastSelectedFolder;
     }
 
-    /**
-     * Create the Venn diagram groupings based on the provided data.
-     *
-     * @param groupA
-     * @param groupB
-     * @param groupC
-     * @param groupD
-     * @return the Venn diagram groupings
-     */
-    public HashMap<String, ArrayList<String>> vennDiagramMaker(ArrayList<String> groupA, ArrayList<String> groupB, ArrayList<String> groupC, ArrayList<String> groupD) {
-
-        HashMap<String, ArrayList<String>> tempVennDiagramResults = new HashMap<String, ArrayList<String>>();
-
-        ArrayList<String> a = new ArrayList<String>();
-        ArrayList<String> b = new ArrayList<String>();
-        ArrayList<String> c = new ArrayList<String>();
-        ArrayList<String> d = new ArrayList<String>();
-
-        ArrayList<String> ab = new ArrayList<String>();
-        ArrayList<String> ac = new ArrayList<String>();
-        ArrayList<String> ad = new ArrayList<String>();
-        ArrayList<String> bc = new ArrayList<String>();
-        ArrayList<String> bd = new ArrayList<String>();
-        ArrayList<String> cd = new ArrayList<String>();
-
-        ArrayList<String> abc = new ArrayList<String>();
-        ArrayList<String> abd = new ArrayList<String>();
-        ArrayList<String> acd = new ArrayList<String>();
-        ArrayList<String> bcd = new ArrayList<String>();
-
-        ArrayList<String> abcd = new ArrayList<String>();
-
-        ArrayList<String> allDataPoints = new ArrayList<String>();
-
-        for (String temp : groupA) {
-
-            if (!allDataPoints.contains(temp)) {
-
-                boolean inGroupB = groupB.contains(temp);
-                boolean inGroupC = groupC.contains(temp);
-                boolean inGroupD = groupD.contains(temp);
-
-                if (!inGroupB && !inGroupC && !inGroupD) {
-                    a.add(temp);
-                } else {
-                    if (inGroupB && !inGroupC && !inGroupD) {
-                        ab.add(temp);
-                    } else if (!inGroupB && inGroupC && !inGroupD) {
-                        ac.add(temp);
-                    } else if (!inGroupB && !inGroupC && inGroupD) {
-                        ad.add(temp);
-                    } else if (inGroupB && inGroupC && !inGroupD) {
-                        abc.add(temp);
-                    } else if (inGroupB && !inGroupC && inGroupD) {
-                        abd.add(temp);
-                    } else if (!inGroupB && inGroupC && inGroupD) {
-                        acd.add(temp);
-                    } else {
-                        abcd.add(temp);
-                    }
-                }
-
-                allDataPoints.add(temp);
-            }
-        }
-
-        for (String temp : groupB) {
-
-            if (!allDataPoints.contains(temp)) {
-
-                boolean inGroupA = groupA.contains(temp);
-                boolean inGroupC = groupC.contains(temp);
-                boolean inGroupD = groupD.contains(temp);
-
-                if (!inGroupA && !inGroupC && !inGroupD) {
-                    b.add(temp);
-                } else {
-                    if (inGroupA && !inGroupC && !inGroupD) {
-                        ab.add(temp);
-                    } else if (!inGroupA && inGroupC && !inGroupD) {
-                        bc.add(temp);
-                    } else if (!inGroupA && !inGroupC && inGroupD) {
-                        bd.add(temp);
-                    } else if (inGroupA && inGroupC && !inGroupD) {
-                        abc.add(temp);
-                    } else if (inGroupA && !inGroupC && inGroupD) {
-                        abd.add(temp);
-                    } else if (!inGroupA && inGroupC && inGroupD) {
-                        bcd.add(temp);
-                    } else {
-                        abcd.add(temp);
-                    }
-                }
-
-                allDataPoints.add(temp);
-            }
-        }
-
-
-        for (String temp : groupC) {
-
-            if (!allDataPoints.contains(temp)) {
-
-                boolean inGroupA = groupA.contains(temp);
-                boolean inGroupB = groupB.contains(temp);
-                boolean inGroupD = groupD.contains(temp);
-
-                if (!inGroupA && !inGroupB && !inGroupD) {
-                    c.add(temp);
-                } else {
-                    if (inGroupA && !inGroupB && !inGroupD) {
-                        ac.add(temp);
-                    } else if (!inGroupA && inGroupB && !inGroupD) {
-                        bc.add(temp);
-                    } else if (!inGroupA && !inGroupB && inGroupD) {
-                        cd.add(temp);
-                    } else if (inGroupA && inGroupB && !inGroupD) {
-                        abc.add(temp);
-                    } else if (inGroupA && !inGroupB && inGroupD) {
-                        acd.add(temp);
-                    } else if (!inGroupA && inGroupB && inGroupD) {
-                        bcd.add(temp);
-                    } else {
-                        abcd.add(temp);
-                    }
-                }
-
-                allDataPoints.add(temp);
-            }
-        }
-
-        for (String temp : groupD) {
-
-            if (!allDataPoints.contains(temp)) {
-
-                boolean inGroupA = groupA.contains(temp);
-                boolean inGroupB = groupB.contains(temp);
-                boolean inGroupC = groupC.contains(temp);
-
-                if (!inGroupA && !inGroupB && !inGroupC) {
-                    d.add(temp);
-                } else {
-                    if (inGroupA && !inGroupB && !inGroupC) {
-                        ad.add(temp);
-                    } else if (!inGroupA && inGroupB && !inGroupC) {
-                        bd.add(temp);
-                    } else if (!inGroupA && !inGroupB && inGroupC) {
-                        cd.add(temp);
-                    } else if (inGroupA && inGroupB && !inGroupC) {
-                        abd.add(temp);
-                    } else if (inGroupA && !inGroupB && inGroupC) {
-                        acd.add(temp);
-                    } else if (!inGroupA && inGroupB && inGroupC) {
-                        bcd.add(temp);
-                    } else {
-                        abcd.add(temp);
-                    }
-                }
-
-                allDataPoints.add(temp);
-            }
-        }
-
-
-        // add the results to the hashmap
-        tempVennDiagramResults.put("a", a);
-        tempVennDiagramResults.put("b", b);
-        tempVennDiagramResults.put("c", c);
-        tempVennDiagramResults.put("d", d);
-
-        tempVennDiagramResults.put("ab", ab);
-        tempVennDiagramResults.put("ac", ac);
-        tempVennDiagramResults.put("ad", ad);
-        tempVennDiagramResults.put("bc", bc);
-        tempVennDiagramResults.put("bd", bd);
-        tempVennDiagramResults.put("cd", cd);
-
-        tempVennDiagramResults.put("abc", abc);
-        tempVennDiagramResults.put("abd", abd);
-        tempVennDiagramResults.put("acd", abd);
-        tempVennDiagramResults.put("bcd", bcd);
-
-        tempVennDiagramResults.put("abcd", abcd);
-
-
-        boolean debug = false;
-
-        if (debug) {
-
-            System.out.print("a: ");
-            for (String temp : a) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("b: ");
-            for (String temp : b) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("c: ");
-            for (String temp : c) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("d: ");
-            for (String temp : d) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-
-            System.out.print("ab: ");
-            for (String temp : ab) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("ac: ");
-            for (String temp : ac) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("ad: ");
-            for (String temp : ad) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("bc: ");
-            for (String temp : bc) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("bd: ");
-            for (String temp : bd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("cd: ");
-            for (String temp : cd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-
-            System.out.print("abc: ");
-            for (String temp : abc) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("abd: ");
-            for (String temp : abd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("bcd: ");
-            for (String temp : bcd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-            System.out.print("acd: ");
-            for (String temp : acd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-
-
-            System.out.print("abcd: ");
-            for (String temp : abcd) {
-                System.out.print(temp + ", ");
-            }
-            System.out.println();
-        }
-
-        return tempVennDiagramResults;
-
-    }
-
     public Image getNormalIcon() {
         return Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/compomics-utilities.png"));
     }
@@ -1712,164 +889,13 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
     public Image getWaitingIcon() {
         return Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/compomics-utilities.png"));
     }
-
+    
     /**
-     * Returns the chart panel.
-     *
-     * @return the chart panel
+     * Returns the Venn diagram panel.
+     * 
+     * @return the Venn diagram panel
      */
-    public ChartPanel getChartPanel() {
-        return chartPanel;
-    }
-
-    /**
-     * Returns a standard map of the group names. Keys: a, b, c and d.
-     *
-     * @return a standard map of the group names
-     */
-    public HashMap<String, String> getGroupNames() {
-        return groupNames;
-    }
-
-    /**
-     * Returns the legend location of Dataset A in a three way Venn diagram.
-     *
-     * @return the legendDatasetAThreeWay
-     */
-    public XYDataPoint getLegendDatasetAThreeWay() {
-        return legendDatasetAThreeWay;
-    }
-
-    /**
-     * Set the legend location of Dataset A in a three way Venn diagram.
-     *
-     * @param legendDatasetAThreeWay the legendDatasetAThreeWay to set
-     */
-    public void setLegendDatasetAThreeWay(XYDataPoint legendDatasetAThreeWay) {
-        this.legendDatasetAThreeWay = legendDatasetAThreeWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset B in a three way Venn diagram.
-     *
-     * @return the legendDatasetBThreeWay
-     */
-    public XYDataPoint getLegendDatasetBThreeWay() {
-        return legendDatasetBThreeWay;
-    }
-
-    /**
-     * Set the legend location of Dataset B in a three way Venn diagram.
-     *
-     * @param legendDatasetBThreeWay the legendDatasetBThreeWay to set
-     */
-    public void setLegendDatasetBThreeWay(XYDataPoint legendDatasetBThreeWay) {
-        this.legendDatasetBThreeWay = legendDatasetBThreeWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset C in a three way Venn diagram.
-     *
-     * @return the legendDatasetCThreeWay
-     */
-    public XYDataPoint getLegendDatasetCThreeWay() {
-        return legendDatasetCThreeWay;
-    }
-
-    /**
-     * Set the legend location of Dataset C in a three way Venn diagram.
-     *
-     * @param legendDatasetCThreeWay the legendDatasetCThreeWay to set
-     */
-    public void setLegendDatasetCThreeWay(XYDataPoint legendDatasetCThreeWay) {
-        this.legendDatasetCThreeWay = legendDatasetCThreeWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset A in a four way Venn diagram.
-     *
-     * @return the legendDatasetAFourWay
-     */
-    public XYDataPoint getLegendDatasetAFourWay() {
-        return legendDatasetAFourWay;
-    }
-
-    /**
-     * Set the legend location of Dataset A in a four way Venn diagram.
-     *
-     * @param legendDatasetAFourWay the legendDatasetAFourWay to set
-     */
-    public void setLegendDatasetAFourWay(XYDataPoint legendDatasetAFourWay) {
-        this.legendDatasetAFourWay = legendDatasetAFourWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset B in a four way Venn diagram.
-     *
-     * @return the legendDatasetBFourWay
-     */
-    public XYDataPoint getLegendDatasetBFourWay() {
-        return legendDatasetBFourWay;
-    }
-
-    /**
-     * Set the legend location of Dataset B in a four way Venn diagram.
-     *
-     * @param legendDatasetBFourWay the legendDatasetBFourWay to set
-     */
-    public void setLegendDatasetBFourWay(XYDataPoint legendDatasetBFourWay) {
-        this.legendDatasetBFourWay = legendDatasetBFourWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset C in a four way Venn diagram.
-     *
-     * @return the legendDatasetCFourWay
-     */
-    public XYDataPoint getLegendDatasetCFourWay() {
-        return legendDatasetCFourWay;
-    }
-
-    /**
-     * Set the legend location of Dataset C in a four way Venn diagram.
-     *
-     * @param legendDatasetCFourWay the legendDatasetCFourWay to set
-     */
-    public void setLegendDatasetCFourWay(XYDataPoint legendDatasetCFourWay) {
-        this.legendDatasetCFourWay = legendDatasetCFourWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the legend location of dataset D in a four way Venn diagram.
-     *
-     * @return the legendDatasetDFourWay
-     */
-    public XYDataPoint getLegendDatasetDFourWay() {
-        return legendDatasetDFourWay;
-    }
-
-    /**
-     * Set the legend location of Dataset D in a four way Venn diagram.
-     *
-     * @param legendDatasetDFourWay the legendDatasetDFourWay to set
-     */
-    public void setLegendDatasetDFourWay(XYDataPoint legendDatasetDFourWay) {
-        this.legendDatasetDFourWay = legendDatasetDFourWay;
-        updatePlot();
-    }
-
-    /**
-     * Returns the current Venn diagram type.
-     *
-     * @return the currentVennDiagramType
-     */
-    public VennDiagramType getCurrentVennDiagramType() {
-        return currentVennDiagramType;
+    public VennDiagramPanel getVennDiagramPanel() {
+        return vennDiagramPanel;
     }
 }

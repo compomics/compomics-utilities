@@ -29,7 +29,7 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
         initComponents();
         this.vennDiagramDialog = vennDiagramDialog;
 
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
             upDatasetDButton.setEnabled(false);
             downDatasetDButton.setEnabled(false);
             leftDatasetDButton.setEnabled(false);
@@ -259,9 +259,9 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
             legendLocationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(legendLocationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(legendLocationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(upDatasetAButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(upDatasetCButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(legendLocationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(upDatasetCButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(upDatasetAButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(legendLocationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(datasetALabel)
@@ -373,12 +373,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void upDatasetAButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upDatasetAButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAThreeWay();
-            vennDiagramDialog.setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAFourWay();
-            vennDiagramDialog.setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         }
     }//GEN-LAST:event_upDatasetAButtonActionPerformed
 
@@ -388,12 +388,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void downDatasetAButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downDatasetAButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAThreeWay();
-            vennDiagramDialog.setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAFourWay();
-            vennDiagramDialog.setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         }
     }//GEN-LAST:event_downDatasetAButtonActionPerformed
 
@@ -403,12 +403,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void leftDatasetAButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftDatasetAButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAThreeWay();
-            vennDiagramDialog.setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAFourWay();
-            vennDiagramDialog.setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_leftDatasetAButtonActionPerformed
 
@@ -418,12 +418,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void rightDatasetAButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightDatasetAButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAThreeWay();
-            vennDiagramDialog.setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetAFourWay();
-            vennDiagramDialog.setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetAFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetAFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_rightDatasetAButtonActionPerformed
 
@@ -433,12 +433,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void upDatasetBButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upDatasetBButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBThreeWay();
-            vennDiagramDialog.setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBFourWay();
-            vennDiagramDialog.setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         }
     }//GEN-LAST:event_upDatasetBButtonActionPerformed
 
@@ -448,12 +448,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void downDatasetBButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downDatasetBButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBThreeWay();
-            vennDiagramDialog.setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBFourWay();
-            vennDiagramDialog.setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         }
     }//GEN-LAST:event_downDatasetBButtonActionPerformed
 
@@ -463,12 +463,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void leftDatasetBButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftDatasetBButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBThreeWay();
-            vennDiagramDialog.setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBFourWay();
-            vennDiagramDialog.setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_leftDatasetBButtonActionPerformed
 
@@ -478,12 +478,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void rightDatasetBButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightDatasetBButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBThreeWay();
-            vennDiagramDialog.setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetBFourWay();
-            vennDiagramDialog.setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetBFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetBFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_rightDatasetBButtonActionPerformed
 
@@ -493,12 +493,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void upDatasetCButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upDatasetCButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCThreeWay();
-            vennDiagramDialog.setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCFourWay();
-            vennDiagramDialog.setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
         }
     }//GEN-LAST:event_upDatasetCButtonActionPerformed
 
@@ -508,12 +508,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void downDatasetCButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downDatasetCButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCThreeWay();
-            vennDiagramDialog.setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCFourWay();
-            vennDiagramDialog.setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
         }
     }//GEN-LAST:event_downDatasetCButtonActionPerformed
 
@@ -523,12 +523,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void leftDatasetCButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftDatasetCButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCThreeWay();
-            vennDiagramDialog.setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCFourWay();
-            vennDiagramDialog.setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_leftDatasetCButtonActionPerformed
 
@@ -538,12 +538,12 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void rightDatasetCButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightDatasetCButtonActionPerformed
-        if (vennDiagramDialog.getCurrentVennDiagramType() != VennDiagramDialog.VennDiagramType.FOUR_WAY) {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCThreeWay();
-            vennDiagramDialog.setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+        if (vennDiagramDialog.getVennDiagramPanel().getCurrentVennDiagramType() != VennDiagramPanel.VennDiagramType.FOUR_WAY) {
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCThreeWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCThreeWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         } else {
-            XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetCFourWay();
-            vennDiagramDialog.setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+            XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetCFourWay();
+            vennDiagramDialog.getVennDiagramPanel().setLegendDatasetCFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
         }
     }//GEN-LAST:event_rightDatasetCButtonActionPerformed
 
@@ -553,8 +553,8 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void upDatasetDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upDatasetDButtonActionPerformed
-        XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetDFourWay();
-        vennDiagramDialog.setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
+        XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetDFourWay();
+        vennDiagramDialog.getVennDiagramPanel().setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() + legendShiftSize));
     }//GEN-LAST:event_upDatasetDButtonActionPerformed
 
     /**
@@ -563,8 +563,8 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void downDatasetDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downDatasetDButtonActionPerformed
-        XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetDFourWay();
-        vennDiagramDialog.setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
+        XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetDFourWay();
+        vennDiagramDialog.getVennDiagramPanel().setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX(), oldLocation.getY() - legendShiftSize));
     }//GEN-LAST:event_downDatasetDButtonActionPerformed
 
     /**
@@ -573,8 +573,8 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void leftDatasetDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftDatasetDButtonActionPerformed
-        XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetDFourWay();
-        vennDiagramDialog.setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
+        XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetDFourWay();
+        vennDiagramDialog.getVennDiagramPanel().setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX() - legendShiftSize, oldLocation.getY()));
     }//GEN-LAST:event_leftDatasetDButtonActionPerformed
 
     /**
@@ -583,8 +583,8 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void rightDatasetDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightDatasetDButtonActionPerformed
-        XYDataPoint oldLocation = vennDiagramDialog.getLegendDatasetDFourWay();
-        vennDiagramDialog.setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
+        XYDataPoint oldLocation = vennDiagramDialog.getVennDiagramPanel().getLegendDatasetDFourWay();
+        vennDiagramDialog.getVennDiagramPanel().setLegendDatasetDFourWay(new XYDataPoint(oldLocation.getX() + legendShiftSize, oldLocation.getY()));
     }//GEN-LAST:event_rightDatasetDButtonActionPerformed
 
     /**

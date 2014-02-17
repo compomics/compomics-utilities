@@ -3,6 +3,7 @@ package com.compomics.util.experiment.quantification.reporterion;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -78,6 +79,33 @@ public class ReporterMethod {
      */
     public Set<String> getReagentNames() {
         return reagents.keySet();
+    }
+    
+    /**
+     * Returns the list of reagents sorted by ascending mass.
+     * 
+     * @return the list of reagents sorted by ascending mass
+     */
+    public ArrayList<String> getReagentsSortedByMass() {
+        HashMap<Double, ArrayList<String>> reagentsMap = new HashMap<Double, ArrayList<String>>();
+        for (String reagentName : reagents.keySet()) {
+            double mass = reagents.get(reagentName).getReporterIon().getTheoreticMass();
+            ArrayList<String> reagentNames = reagentsMap.get(mass);
+            if (reagentNames == null) {
+                reagentNames = new ArrayList<String>();
+                reagentsMap.put(mass, reagentNames);
+            }
+            reagentNames.add(reagentName);
+        }
+        ArrayList<Double> masses = new ArrayList<Double>(reagentsMap.keySet());
+        Collections.sort(masses);
+        ArrayList<String> result = new ArrayList<String>();
+        for (Double mass : masses) {
+            ArrayList<String> reagentNames = reagentsMap.get(mass);
+            Collections.sort(reagentNames);
+            result.addAll(reagentNames);
+        }
+        return result;
     }
 
     /**

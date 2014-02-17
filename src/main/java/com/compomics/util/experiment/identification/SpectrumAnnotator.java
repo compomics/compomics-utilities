@@ -561,14 +561,15 @@ public abstract class SpectrumAnnotator {
      * Convenience method to match a reporter ion in a spectrum. The charge is assumed to be 1.
      * 
      * @param theoreticIon the theoretic ion to look for
+     * @param charge the charge of the ion
      * @param spectrum the spectrum
      * @param massTolerance the mass tolerance to use
      * 
      * @return a list of all the ion matches
      */
-    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, Spectrum spectrum, double massTolerance) {
+    public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
-        double targetMass = theoreticIon.getTheoreticMass();
+        double targetMass = (theoreticIon.getTheoreticMass() + charge * ElementaryIon.proton.getTheoreticMass())/charge;
         for (double mz : spectrum.getOrderedMzValues()) {
             if (Math.abs(mz-targetMass) <= massTolerance) {
                 result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, new Charge(Charge.PLUS, 1)));

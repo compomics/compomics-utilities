@@ -35,7 +35,7 @@ public class PTMFactory implements Serializable {
     /**
      * User PTM file.
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.10.32.cus";
+    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.23.0.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -862,7 +862,7 @@ public class PTMFactory implements Serializable {
      * @throws java.sql.SQLException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType) 
+            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
@@ -1118,17 +1118,55 @@ public class PTMFactory implements Serializable {
 
                 if (ptm.getReporterIons().isEmpty()) {
 
-                    ptm.addReporterIon(ReporterIon.TMT126);
-                    ptm.addReporterIon(ReporterIon.TMT127);
+                    if (ptmName.contains("old")) {
 
-                    if (ptmName.contains("6") || ptmName.contains("10")) {
-                        ptm.addReporterIon(ReporterIon.TMT128);
-                        ptm.addReporterIon(ReporterIon.TMT129);
-                        ptm.addReporterIon(ReporterIon.TMT130);
-                        ptm.addReporterIon(ReporterIon.TMT131);
-                        ptm.addReporterIon(ReporterIon.TMT_230);
+                        ptm.addReporterIon(ReporterIon.TMT126_old);
+                        ptm.addReporterIon(ReporterIon.TMT127_old);
+
+                        if (ptmName.contains("6")) {
+                            ptm.addReporterIon(ReporterIon.TMT128_old);
+                            ptm.addReporterIon(ReporterIon.TMT129_old);
+                            ptm.addReporterIon(ReporterIon.TMT130_old);
+                            ptm.addReporterIon(ReporterIon.TMT131_old);
+                            ptm.addReporterIon(ReporterIon.TMT_230);
+                        } else {
+                            ptm.addReporterIon(ReporterIon.TMT_226);
+                        }
                     } else {
-                        ptm.addReporterIon(ReporterIon.TMT_226);
+
+                        if (ptmName.contains("duplex")) {
+                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT126_etd);
+                            ptm.addReporterIon(ReporterIon.TMT127_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT127_etd);
+                            ptm.addReporterIon(ReporterIon.TMT_226);
+                        } else if (ptmName.contains("6")) {
+                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT126_etd);
+                            ptm.addReporterIon(ReporterIon.TMT127_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT127_etd);
+                            ptm.addReporterIon(ReporterIon.TMT128_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT128_etd);
+                            ptm.addReporterIon(ReporterIon.TMT129_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT129_etd);
+                            ptm.addReporterIon(ReporterIon.TMT130_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT130_etd);
+                            ptm.addReporterIon(ReporterIon.TMT131_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT131_etd);
+                            ptm.addReporterIon(ReporterIon.TMT_230);
+                        } else if (ptmName.contains("10")) {
+                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT127N_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT127C_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT128N_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT128C_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT129N_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT129C_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT130N_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT130C_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT131_hcd);
+                            ptm.addReporterIon(ReporterIon.TMT_230);
+                        }
                     }
 
                     changed = true;

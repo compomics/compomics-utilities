@@ -66,29 +66,109 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 305.2); // @TODO: check the mass!!
     /**
-     * Standard reporter ion TMT0.
+     * Standard reporter ion for an old TMT 126.
      */
-    public final static ReporterIon TMT126 = new ReporterIon("TMT126", 126.127491);
+    public final static ReporterIon TMT126_old = new ReporterIon("TMT126", 126.127491);
     /**
-     * Standard reporter ion TMT1.
+     * Standard reporter ion for an old TMT 127.
      */
-    public final static ReporterIon TMT127 = new ReporterIon("TMT127", 127.1308594);
+    public final static ReporterIon TMT127_old = new ReporterIon("TMT127", 127.1308594);
     /**
-     * Standard reporter ion TMT2.
+     * Standard reporter ion for an old TMT 128.
      */
-    public final static ReporterIon TMT128 = new ReporterIon("TMT128", 128.1341553);
+    public final static ReporterIon TMT128_old = new ReporterIon("TMT128", 128.1341553);
     /**
-     * Standard reporter ion TMT3.
+     * Standard reporter ion for an old TMT 129.
      */
-    public final static ReporterIon TMT129 = new ReporterIon("TMT129", 129.1375046);
+    public final static ReporterIon TMT129_old = new ReporterIon("TMT129", 129.1375046);
     /**
-     * Standard reporter ion TMT4.
+     * Standard reporter ion for an old TMT 130.
      */
-    public final static ReporterIon TMT130 = new ReporterIon("TMT130", 130.1408768);
+    public final static ReporterIon TMT130_old = new ReporterIon("TMT130", 130.1408768);
     /**
-     * Standard reporter ion TMT5.
+     * Standard reporter ion for an old TMT 131.
      */
-    public final static ReporterIon TMT131 = new ReporterIon("TMT131", 131.1444851);
+    public final static ReporterIon TMT131_old = new ReporterIon("TMT131", 131.1444851);
+    /**
+     * Standard reporter ion TMT 126 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT126_hcd = new ReporterIon("TMT126", 126.127725);
+    /**
+     * Standard reporter ion TMT 126 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT126_etd = new ReporterIon("TMT114", 114.127725);
+    /**
+     * Standard reporter ion TMT 127 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT127_hcd = new ReporterIon("TMT127", 127.124760);
+    /**
+     * Standard reporter ion TMT 127 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT127_etd = new ReporterIon("TMT115", 115.124760);
+    /**
+     * Standard reporter ion TMT 127N obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT127N_hcd = new ReporterIon("TMT127N", 127.124760);
+    /**
+     * Standard reporter ion TMT 127C obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT127C_hcd = new ReporterIon("TMT127C", 127.131079);
+    /**
+     * Standard reporter ion TMT 128 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT128_hcd = new ReporterIon("TMT128", 128.134433);
+    /**
+     * Standard reporter ion TMT 128 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT128_etd = new ReporterIon("TMT116", 116.134433);
+    /**
+     * Standard reporter ion TMT 128N obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT128N_hcd = new ReporterIon("TMT128N", 128.128114);
+    /**
+     * Standard reporter ion TMT 128C obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT128C_hcd = new ReporterIon("TMT128C", 128.134433);
+    /**
+     * Standard reporter ion TMT 129 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT129_hcd = new ReporterIon("TMT129", 129.131468);
+    /**
+     * Standard reporter ion TMT 129 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT129_etd = new ReporterIon("TMT117", 117.131468);
+    /**
+     * Standard reporter ion TMT 129N obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT129N_hcd = new ReporterIon("TMT129N", 129.131468);
+    /**
+     * Standard reporter ion TMT 129C obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT129C_hcd = new ReporterIon("TMT129C", 129.131468);
+    /**
+     * Standard reporter ion TMT 130 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT130_hcd = new ReporterIon("TMT130", 130.141141);
+    /**
+     * Standard reporter ion TMT 130 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT130_etd = new ReporterIon("TMT118", 118.141141);
+    /**
+     * Standard reporter ion TMT 130N obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT130N_hcd = new ReporterIon("TMT130N", 130.131141);
+    /**
+     * Standard reporter ion TMT 130C obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT130C_hcd = new ReporterIon("TMT130C", 130.141141);
+    /**
+     * Standard reporter ion TMT 131 obtained by hcd fragmentation.
+     */
+    public final static ReporterIon TMT131_hcd = new ReporterIon("TMT131", 131.138176);
+    /**
+     * Standard reporter ion TMT 131 obtained by etd fragmentation.
+     */
+    public final static ReporterIon TMT131_etd = new ReporterIon("TMT119", 119.138176);
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */

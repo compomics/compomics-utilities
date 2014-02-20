@@ -195,16 +195,29 @@ public class ReporterIon extends Ion {
     private String name;
 
     /**
-     * Constructor for a user-defined reporter ion.
+     * Constructor for a user-defined reporter ion. The reporter ion is saved in a static map by default and can be retrieved using the static methods. See getReporterIon(String name).
      *
      * @param name name of the reporter ion. Should be unique to the ion.
      * @param mass theoretic mass of the reporter ion
      */
     public ReporterIon(String name, double mass) {
+        this(name, mass, true);
+    }
+
+    /**
+     * Constructor for a user-defined reporter ion.
+     *
+     * @param name name of the reporter ion. Should be unique to the ion.
+     * @param mass theoretic mass of the reporter ion
+     * @param save if true the reporter ion will be saved in the static map for later reuse
+     */
+    public ReporterIon(String name, double mass, boolean save) {
         type = IonType.REPORTER_ION;
         this.name = name;
         this.theoreticMass = mass;
-        implementedIons.put(name, this);
+        if (save) {
+            implementedIons.put(name, this);
+        }
     }
 
     /**
@@ -236,9 +249,8 @@ public class ReporterIon extends Ion {
 
     @Override
     public CvTerm getPrideCvTerm() {
-        
+
         // @TODO: implement when the required cv terms are added
-        
         return null;
     }
 
@@ -273,12 +285,12 @@ public class ReporterIon extends Ion {
     public String getSubTypeAsString() {
         return getName();
     }
-    
+
     /**
      * Returns the reporter ion indexed by the given index.
-     * 
+     *
      * @param subType the index of interest
-     * 
+     *
      * @return the corresponding reporter ion
      */
     public static ReporterIon getReporterIon(int subType) {
@@ -287,12 +299,12 @@ public class ReporterIon extends Ion {
         String name = ionList.get(subType);
         return getReporterIon(name);
     }
-    
+
     /**
      * Returns the reporter ion corresponding to the given name.
-     * 
+     *
      * @param name the name of the reporter ion
-     * 
+     *
      * @return the corresponding reporter ion
      */
     public static ReporterIon getReporterIon(String name) {
@@ -315,7 +327,7 @@ public class ReporterIon extends Ion {
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
         ArrayList<Integer> possibleTypes = new ArrayList<Integer>(implementedIons.size());
-        for (int i = 0 ; i < implementedIons.size() ; i++) {
+        for (int i = 0; i < implementedIons.size(); i++) {
             possibleTypes.add(i);
         }
         return possibleTypes;

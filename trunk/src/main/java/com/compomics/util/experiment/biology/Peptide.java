@@ -1400,9 +1400,22 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether a peptide can be derived from a decoy protein.
      *
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     *
      * @return whether a peptide can be derived from a decoy protein
+     * 
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
-    public boolean isDecoy() {
+    public boolean isDecoy(AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+
+        if (parentProteins == null) {
+            getParentProteins(matchingType, massTolerance);
+        }
         for (String accession : parentProteins) {
             if (SequenceFactory.getInstance().isDecoyAccession(accession)) {
                 return true;

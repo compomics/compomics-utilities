@@ -25,7 +25,7 @@ public class ReporterMethodFactory extends ExperimentObject {
     /**
      * The reporter methods.
      */
-    private static ArrayList<ReporterMethod> methods;
+    private ArrayList<ReporterMethod> methods;
     /**
      * The reporter factory.
      */

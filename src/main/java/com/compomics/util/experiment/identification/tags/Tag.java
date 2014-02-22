@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.tags;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -134,10 +135,11 @@ public class Tag extends ExperimentObject {
      * @return the mass of the tag
      */
     public double getMass() {
-        double mass = 0;
+        double mass = Atom.H.getMonoisotopicMass();
         for (TagComponent tagComponent : content) {
             mass += tagComponent.getMass();
         }
+        mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
         return mass;
     }
 

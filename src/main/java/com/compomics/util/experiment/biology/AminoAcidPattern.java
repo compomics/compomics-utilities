@@ -1569,7 +1569,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". null as targeted amino acid map.");
             }
             if (targetModifications != null) {
-                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i);
+                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i+1);
                 if (modificationAtIndex != null) {
                     for (ModificationMatch modificationMatch : modificationAtIndex) {
                         PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());

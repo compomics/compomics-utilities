@@ -78,7 +78,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
-        return (getTheoreticMass(includeCTermGap, includeNTermGap) + ElementaryIon.proton.getTheoreticMass() * (identificationCharge.value - 1)) / identificationCharge.value;
+        return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
     }
 
     @Override

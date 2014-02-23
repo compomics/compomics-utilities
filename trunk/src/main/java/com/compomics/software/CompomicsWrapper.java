@@ -956,9 +956,6 @@ public class CompomicsWrapper {
             String path = URLDecoder.decode(new File(toolPath).getParentFile().getAbsolutePath(), "UTF-8");
             confFolder = new File(path, "resources/conf");
         }
-        if (!confFolder.exists()) {
-            throw new FileNotFoundException(confFolder.getAbsolutePath() + " not found!");
-        }
 
         String javaHome = wrapper.getJavaHome(confFolder, null);
         javaHomeAndOptions.add(javaHome);

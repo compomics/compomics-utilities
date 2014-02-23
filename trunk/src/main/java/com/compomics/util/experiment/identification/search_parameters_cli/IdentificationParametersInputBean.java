@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
@@ -529,6 +530,82 @@ public class IdentificationParametersInputBean {
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), xtandemParameters);
 
+        MsgfParameters msgfParameters = new MsgfParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                msgfParameters.setSearchDecoyDatabase(true);
+            } else {
+                msgfParameters.setSearchDecoyDatabase(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id);
+            Integer instrumentID = new Integer(arg);
+            msgfParameters.setInstrumentID(instrumentID); // @TODO: check for valid index!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setFragmentationType(option); // @TODO: check for valid index!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_PROTOCOL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PROTOCOL.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setProtocol(option); // @TODO: check for valid index!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setMinPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setMaxPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setNumberOfSpectrumMarches(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                msgfParameters.setAdditionalOutput(true);
+            } else {
+                msgfParameters.setAdditionalOutput(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setLowerIsotopeErrorRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setUpperIsotopeErrorRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_EVALUE.id);
+            Double option = new Double(arg);
+            msgfParameters.setMaxEValue(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setNumberTolerableTermini(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setNumberOfPtmsPerPeptide(option);
+        }
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), msgfParameters);
+        
         PepnovoParameters pepnovoParameters = new PepnovoParameters();
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
@@ -585,7 +662,6 @@ public class IdentificationParametersInputBean {
             }
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), pepnovoParameters);
-
     }
 
     /**

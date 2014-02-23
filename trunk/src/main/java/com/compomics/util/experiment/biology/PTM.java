@@ -234,7 +234,7 @@ public class PTM extends ExperimentObject {
      * Compares two PTMs.
      *
      * @param anotherPTM another PTM
-     * @return true if the given PTM is the same as the current ptm
+     * @return true if the given PTM is the same as the current PTM
      */
     public boolean isSameAs(PTM anotherPTM) {
         double massDiff = Math.abs(mass - anotherPTM.getMass());

@@ -1155,28 +1155,28 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     @Override
     public String asSequence() {
-        String result = "";
+        StringBuilder result = new StringBuilder(length());
         for (int i = 0; i < length(); i++) {
             if (getNTargetedAA(i) == 1 && getNExcludedAA(i) == 0) {
-                result += getTargetedAA(i).get(0).singleLetterCode;
+                result.append(getTargetedAA(i).get(0).singleLetterCode);
             } else {
-                result += "[";
+                result.append("[");
                 if (getNTargetedAA(i) == 0) {
-                    result += "X";
+                    result.append("X");
                 } else {
                     for (AminoAcid aa : getTargetedAA(i)) {
-                        result += aa.singleLetterCode;
+                        result.append(aa.singleLetterCode);
                     }
                 }
                 if (getNExcludedAA(i) > 0) {
-                    result += "/";
+                    result.append("/");
                     for (AminoAcid aa : getExcludedAA(i)) {
-                        result += aa.singleLetterCode;
+                        result.append(aa.singleLetterCode);
                     }
                 }
             }
         }
-        return result;
+        return result.toString();
     }
 
     /**

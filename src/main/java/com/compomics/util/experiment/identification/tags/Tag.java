@@ -1024,7 +1024,6 @@ public class Tag extends ExperimentObject {
                         }
                     }
                 }
-                peptideSequence.append(seedSequence);
                 HashMap<Integer, ArrayList<ModificationMatch>> sequenceModifications = tagPattern.getModificationMatches();
                 if (sequenceModifications != null) {
                     for (int i : sequenceModifications.keySet()) {

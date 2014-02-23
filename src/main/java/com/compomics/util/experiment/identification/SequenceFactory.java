@@ -793,9 +793,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the number of sequences in the fasta file.
+     * Returns the number of sequences in the FASTA file.
      *
-     * @return the number of sequences in the fasta file
+     * @return the number of sequences in the FASTA file
      */
     public int getNSequences() {
         return fastaIndex.getNSequences();

@@ -295,6 +295,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         enzymeLabel.setText("Enzyme");
 
+        enzymesCmb.setMaximumRowCount(12);
         enzymesCmb.setModel(new DefaultComboBoxModel(loadEnzymes()));
         enzymesCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -693,11 +694,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         });
         modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseExited(evt);
-            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseExited(evt);
             }
         });
         modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -2184,6 +2185,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         SearchParameters tempSearchParameters = new SearchParameters();
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
+        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()));
 
         String dbPath = databaseSettingsTxt.getText().trim();
         if (!dbPath.equals("")) {

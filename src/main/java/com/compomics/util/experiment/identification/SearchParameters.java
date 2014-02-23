@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
@@ -857,7 +858,7 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Adds identification algorithm specific paramters
+     * Adds identification algorithm specific parameters.
      *
      * @param algorithmID the algorithm id as indexed in the Advocate class
      *
@@ -920,6 +921,10 @@ public class SearchParameters implements Serializable {
             xtandemParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(xtandemParameters.getAlgorithm().getIndex(), xtandemParameters);
 
+            MsgfParameters msgfParameters = new MsgfParameters();
+            msgfParameters.setMaxEValue(result.getMaxEValue());
+            result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
+
             PepnovoParameters pepnovoParameters = new PepnovoParameters();
             pepnovoParameters.setDiscardLowQualitySpectra(result.getDiscardLowQualitySpectra());
             pepnovoParameters.setEstimateCharge(result.isEstimateCharge());
@@ -929,6 +934,14 @@ public class SearchParameters implements Serializable {
             pepnovoParameters.setPepNovoPtmMap(result.getPepNovoPtmMap());
             result.setIdentificationAlgorithmParameter(pepnovoParameters.getAlgorithm().getIndex(), pepnovoParameters);
         }
+
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()) == null) {
+            MsgfParameters msgfParameters = new MsgfParameters();
+            msgfParameters.setMaxEValue(result.getMaxEValue());
+            result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
+        }
+
         return result;
     }
 
@@ -1144,10 +1157,12 @@ public class SearchParameters implements Serializable {
         if (this.getPrecursorAccuracyType() != otherSearchParameters.getPrecursorAccuracyType()) {
             return false;
         }
-        if (this.getPrecursorAccuracy().doubleValue() != otherSearchParameters.getPrecursorAccuracy().doubleValue()) {
+        double diff = Math.abs(this.getPrecursorAccuracy().doubleValue() - otherSearchParameters.getPrecursorAccuracy().doubleValue());
+        if (diff > 0.0000000000001) {
             return false;
         }
-        if (this.getFragmentIonAccuracy().doubleValue() != otherSearchParameters.getFragmentIonAccuracy().doubleValue()) {
+        diff = Math.abs(this.getFragmentIonAccuracy().doubleValue() - otherSearchParameters.getFragmentIonAccuracy().doubleValue());
+        if (diff > 0.0000000000001) {
             return false;
         }
         if (this.getnMissedCleavages().intValue() != otherSearchParameters.getnMissedCleavages().intValue()) {

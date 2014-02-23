@@ -577,23 +577,25 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     @Override
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
         
-        // @TODO: extend with all the new parameters!!!
-        
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
-            if (!getMaxEValue().equals(xtandemParameters.getMaxEValue())) {
+            double diff = Math.abs(maxEValue - xtandemParameters.getMaxEValue());
+            if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getDynamicRange().equals(xtandemParameters.getDynamicRange())) {
+            diff = Math.abs(dynamicRange - xtandemParameters.getDynamicRange());
+            if (diff > 0.0000000000001) {
                 return false;
             }
             if (!getnPeaks().equals(xtandemParameters.getnPeaks())) {
                 return false;
             }
-            if (!getMinPrecursorMass().equals(xtandemParameters.getMinPrecursorMass())) {
+            diff = Math.abs(minPrecursorMass - xtandemParameters.getMinPrecursorMass());
+            if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getMinFragmentMz().equals(xtandemParameters.getMinFragmentMz())) {
+            diff = Math.abs(minFragmentMz - xtandemParameters.getMinFragmentMz());
+            if (diff > 0.0000000000001) {
                 return false;
             }
             if (!getMinPeaksPerSpectrum().equals(xtandemParameters.getMinPeaksPerSpectrum())) {
@@ -623,7 +625,8 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
             if (!isRefineSnaps().equals(xtandemParameters.isRefineSnaps())) {
                 return false;
             }
-            if (!getMaximumExpectationValueRefinement().equals(xtandemParameters.getMaximumExpectationValueRefinement())) {
+            diff = Math.abs(maximumExpectationValueRefinement - xtandemParameters.getMaximumExpectationValueRefinement());
+            if (diff > 0.0000000000001) {
                 return false;
             }
             if (!isPotentialModificationsForFullRefinment().equals(xtandemParameters.isPotentialModificationsForFullRefinment())) {

@@ -24,7 +24,7 @@ public enum IdentificationParametersCLIParams {
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false),
     PREC_TOL_DA("prec_tol", "Precursor ion mass tolerance in Dalton, default is 0.5 Da.", false), // For tools which do not have the ppm option
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Dalton, default is '0.5' Da.", false),
-    ENZYME("enzyme", "Enzyme, default is 'Trypsin'. Available enzymes are listed in the GUI. (Note: case sensitive.)", false),
+    ENZYME("enzyme", "Enzyme, default is 'Trypsin'. Available enzymes are listed in the GUI. (Note: case sensitive.)", false), // @TODO: list supported enzymes per search engine on a web page!
     FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"oxidation of m, phosphorylation of s\"", false),
     VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"oxidation of m, phosphorylation of s\"", false),
     MIN_CHARGE("min_charge", "Minimal charge to search for, default is '2'.", false),
@@ -98,6 +98,22 @@ public enum IdentificationParametersCLIParams {
     XTANDEM_OUTPUT_SEQUENCES("xtandem_output_sequences", "X!Tandem 'output, sequences' option. 1: true, 0: false, default is '0'.", false),
     XTANDEM_OUTPUT_SPECTRA("xtandem_output_spectra", "X!Tandem 'output, spectra' option. 1: true, 0: false, default is '0'.", false),
     XTANDEM_SKYLINE("xtandem_skyline_path", "X!Tandem 'spectrum, skyline path' option.", false),
+    //////////////////////////////////
+    // MS-GF+ specific parameters
+    //////////////////////////////////
+    MSGF_DECOY("msgf_decoy", "MS-GF+ search decoys option, 1: true, 0: false, default is '0'.", false),
+    MSGF_INSTRUMENT("msgf_instrument", "MS-GF+ instrument id option, 0: Low-res LCQ/LTQ (Default), 1: High-res LTQ, 2: TOF, 3: Q-Exactive.", false),
+    MSGF_FRAGMENTATION("msgf_fragmentation", "MS-GF+ fragmentation id option, 0: As written in the spectrum or CID if no info (Default), 1: CID, 2: ETD, 3: HCD.", false),
+    MSGF_PROTOCOL("msgf_protocol", "MS-GF+ protocol id option, 0: NoProtocol (Default), 1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho.", false),
+    MSGF_MIN_PEP_LENGTH("msgf_min_pep_length", "MS-GF+ minumum peptide length, default is '6'.", false),
+    MSGF_MAX_PEP_LENGTH("msgf_max_pep_length", "MS-GF+ maximum peptide length, default is '30'.", false),
+    MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '1'.", false), // @TODO: find an optimal default
+    MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional features, 0: output basic scores only (Default), 1: output additional features.", false),
+    MSGF_ISOTOPE_LOW("msgf_isotope_low", "MS-GF+ lower isotope error range, default is '0'.", false),
+    MSGF_ISOTOPE_HIGH("msgf_isotope_high", "MS-GF+ upper isotope error range, default is '1'.", false),
+    MSGF_EVALUE("msgf_evalue", "MS-GF+ maximal evalue considered, default is '100'.", false),
+    MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false),
+    MSGF_PTMS("msgf_num_ptms", "MS-GF+ max number of PTMs per peptide, default is '2'.", false),
     //////////////////////////////////
     // PepNovo specific parameters
     //////////////////////////////////

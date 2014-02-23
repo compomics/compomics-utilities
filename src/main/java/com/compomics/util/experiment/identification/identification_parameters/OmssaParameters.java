@@ -999,7 +999,8 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
             if (!getNumberOfItotopicPeaks().equals(omssaParameters.getNumberOfItotopicPeaks())) {
                 return false;
             }
-            if (!getNeutronThreshold().equals(omssaParameters.getNeutronThreshold())) {
+            double diff = Math.abs(neutronThreshold - omssaParameters.getNeutronThreshold());
+            if (diff > 0.0000000000001) {
                 return false;
             }
             if (!getLowIntensityCutOff().equals(omssaParameters.getLowIntensityCutOff())) {
@@ -1044,7 +1045,8 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
             if (!getMaxFragmentCharge().equals(omssaParameters.getMaxFragmentCharge())) {
                 return false;
             }
-            if (!getFractionOfPeaksForChargeEstimation().equals(omssaParameters.getFractionOfPeaksForChargeEstimation())) {
+            diff = Math.abs(fractionOfPeaksForChargeEstimation - omssaParameters.getFractionOfPeaksForChargeEstimation());
+            if (diff > 0.0000000000001) {
                 return false;
             }
             if (!isDetermineChargePlusOneAlgorithmically().equals(omssaParameters.isDetermineChargePlusOneAlgorithmically())) {
@@ -1062,16 +1064,20 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
             if (!isUseCorrelationCorrectionScore().equals(omssaParameters.isUseCorrelationCorrectionScore())) {
                 return false;
             }
-            if (!getConsecutiveIonProbability().equals(omssaParameters.getConsecutiveIonProbability())) {
+            diff = Math.abs(consecutiveIonProbability - omssaParameters.getConsecutiveIonProbability());
+            if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getIterativeSequenceEvalue().equals(omssaParameters.getIterativeSequenceEvalue())) {
+            diff = Math.abs(iterativeSequenceEvalue - omssaParameters.getIterativeSequenceEvalue());
+            if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getIterativeSpectrumEvalue().equals(omssaParameters.getIterativeSpectrumEvalue())) {
+            diff = Math.abs(iterativeSpectrumEvalue - omssaParameters.getIterativeSpectrumEvalue());
+            if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getIterativeReplaceEvalue().equals(omssaParameters.getIterativeReplaceEvalue())) {
+            diff = Math.abs(iterativeReplaceEvalue - omssaParameters.getIterativeReplaceEvalue());
+            if (diff > 0.0000000000001) {
                 return false;
             }
 

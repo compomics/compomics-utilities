@@ -34,7 +34,11 @@ public enum Advocate {
     /**
      * The post processing tool PeptideShaker.
      */
-    PeptideShaker(6, "PeptideShaker");
+    PeptideShaker(6, "PeptideShaker"),
+    /**
+     * The search engine MS-GF+.
+     */
+    MSGF(7, "MS-GF+");
     /**
      * The index of the advocate.
      */

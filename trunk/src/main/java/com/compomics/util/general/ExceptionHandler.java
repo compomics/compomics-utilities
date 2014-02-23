@@ -80,6 +80,8 @@ public class ExceptionHandler {
                     }
                 } else {
 
+                    // @TODO: silently ignore some error types? i.e., just send the error to the log file
+
                     String error = "";
 
                     if (e.getLocalizedMessage() != null) {

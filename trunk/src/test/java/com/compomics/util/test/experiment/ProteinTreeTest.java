@@ -117,12 +117,12 @@ public class ProteinTreeTest extends TestCase {
             }
         }
         
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
         Assert.assertTrue(proteinMapping.isEmpty());
 
         cTermGap += 57.02;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         ArrayList<Peptide> peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         ArrayList<Integer> indexes = proteinMapping.get(peptides.get(0)).get("test");
@@ -131,7 +131,7 @@ public class ProteinTreeTest extends TestCase {
 
         nTermGap += 15.99;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         indexes = proteinMapping.get(peptides.get(0)).get("test");
@@ -143,7 +143,7 @@ public class ProteinTreeTest extends TestCase {
         cTermGap = AminoAcid.K.monoisotopicMass;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
 
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true);
+        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         indexes = proteinMapping.get(peptides.get(0)).get("test");

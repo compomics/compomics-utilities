@@ -342,6 +342,8 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param fixedModifications the fixed modifications to account for
      * @param variableModifications the variable modifications to account for
      * @param ascendingScore indicates whether the score is ascending when hits get better
+     * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
+     * reported in the Peptide object
      *
      * @return a new spectrum match containing the peptide assumptions made from
      * the tag assumptions.
@@ -352,7 +354,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws SQLException
      */
     public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, 
-            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore) 
+            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore, boolean reportFixedPtms) 
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
@@ -374,7 +376,7 @@ public class SpectrumMatch extends IdentificationMatch {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = 
-                                proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true);
+                                proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true, reportFixedPtms);
                         for (Peptide peptide : proteinMapping.keySet()) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, 
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?

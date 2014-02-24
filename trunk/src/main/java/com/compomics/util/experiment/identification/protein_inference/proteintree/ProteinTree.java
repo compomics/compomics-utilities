@@ -465,9 +465,12 @@ public class ProteinTree {
 
         long time1 = System.currentTimeMillis();
         long initiationTime = time1 - time0;
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        utilitiesUserPreferences.addProteinTreeImportTime(sequenceFactory.getCurrentFastaFile().length(), initiationTime);
-        UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+
+        if (sequenceFactory.getNSequences() > 1000) {
+            UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            utilitiesUserPreferences.addProteinTreeImportTime(sequenceFactory.getCurrentFastaFile().length(), initiationTime);
+            UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+        }
 
         if (debugSpeed) {
             debugSpeedWriter.write("tree initiation: " + initiationTime + " ms.");
@@ -530,13 +533,8 @@ public class ProteinTree {
         // find the tags in the proteins and create a node per tag found
         indexProteinsSingleThread(tags, initialTagSize, enzyme, loadLengths, waitingHandler, displayProgress);
 
-        // increase the progress by the number of tags not found 
-        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
-            waitingHandler.increaseSecondaryProgressCounter(tags.size() - tree.size());
-        }
-
         // split the nodes and save them in the db
-        processRawNodesSingleThread(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+        processRawNodesSingleThread(tags, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
 
         // clear memory before further processing
         tree.clear();
@@ -695,6 +693,7 @@ public class ProteinTree {
     /**
      * Splits the raw nodes and saves them in the database.
      *
+     * @param tags the tags indexed
      * @param maxNodeSize the maximal size allowed for a node
      * @param maxPeptideSize the maximal peptide length allowed
      * @param waitingHandler waiting handler providing feedback on the process
@@ -708,25 +707,37 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private void processRawNodesSingleThread(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
+    private void processRawNodesSingleThread(ArrayList<String> tags, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int batchSize = 10000;
+        int batchSize = tree.size() / 3;
+        System.out.println("Size: " + batchSize);
+        batchSize = Math.min(10000, batchSize);
+        System.out.println("Size: " + batchSize);
+        batchSize = Math.max(1000, batchSize);
+        System.out.println("Size: " + batchSize);
         HashMap<String, Object> splittedNodes = new HashMap<String, Object>(batchSize);
 
-        for (String tag : tree.keySet()) {
+        for (String tag : tags) {
 
             Node node = tree.get(tag);
 
-            node.splitNode(maxNodeSize, maxPeptideSize);
-            splittedNodes.put(tag, node);
+            if (node != null) {
 
-            if (splittedNodes.size() == batchSize) {
-                componentsFactory.saveNodes(splittedNodes);
-                splittedNodes.clear();
+                node.splitNode(maxNodeSize, maxPeptideSize);
+                splittedNodes.put(tag, node);
+
+                if (splittedNodes.size() == batchSize) {
+                    componentsFactory.saveNodes(splittedNodes);
+                    splittedNodes.clear();
+                }
+
             }
 
             if (waitingHandler != null) {
+                if (displayProgress) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     emptyCache();
                     return;

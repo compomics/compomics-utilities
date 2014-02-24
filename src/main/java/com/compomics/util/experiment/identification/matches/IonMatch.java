@@ -120,7 +120,7 @@ public class IonMatch extends ExperimentObject {
     public int getIsotopeNumber() {
         double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
-        return (int) Math.round(result);
+        return Math.max((int) Math.round(result), 0);
     }
 
     /**

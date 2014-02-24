@@ -1098,6 +1098,8 @@ public class ProteinTree {
      * @param variableModifications the variable modifications to consider
      * @param limitXs if true the share of Xs in the peptide sequences will be
      * limited in order to increase sequencing speed.
+     * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
+     * reported in the Peptide object
      *
      * @return the protein mapping for the given peptide sequence
      *
@@ -1106,7 +1108,7 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean limitXs) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+            AminoAcidPattern.MatchingType matchingType, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean limitXs, boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();
@@ -1138,7 +1140,7 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications);
+                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         if (!matches.isEmpty()) {
                             for (int aa : matches.keySet()) {
                                 for (Peptide peptide : matches.get(aa)) {

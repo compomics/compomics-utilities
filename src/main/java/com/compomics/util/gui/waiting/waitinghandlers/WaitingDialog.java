@@ -232,7 +232,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param maxProgressValue the max value
      */
     public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
-        secondaryJProgressBar.setValue(0);
+        secondaryJProgressBar.setValue(0); //@TODO: can we remove this?
         secondaryJProgressBar.setMaximum(maxProgressValue);
     }
 

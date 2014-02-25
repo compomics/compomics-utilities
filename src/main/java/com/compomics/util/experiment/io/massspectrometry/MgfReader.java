@@ -540,19 +540,9 @@ public class MgfReader {
      */
     public ArrayList<MgfIndex> splitFile(File mgfFile, int nSpectra, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        // @TODO: possible to make this method even faster?? 
-        // replacing RandomAccessFile with BufferedRandomAccessFile helped a lot, but might still be room for more
         String fileName = mgfFile.getName();
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
-
-            ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
-            ArrayList<String> spectrumTitles = new ArrayList<String>();
-            String title = null;
-            String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
-
-            BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
-            long writeIndex = 0, beginIndex = 0;
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -560,18 +550,18 @@ public class MgfReader {
                 waitingHandler.setSecondaryProgressCounter(0);
             }
 
-            int fileCounter = 1, spectrumCounter = 0;
-            long typicalSize = 0;
-            double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
-            int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
-            boolean peakPicked = true;
+            String splittedName = fileName.substring(0, fileName.lastIndexOf("."));
+            ArrayList<File> splittedFiles = new ArrayList<File>();
 
-            HashMap<String, Long> indexes = new HashMap<String, Long>();
+            int fileCounter = 1, spectrumCounter = 0;
             String currentName = splittedName + "_" + fileCounter + ".mgf";
             File testFile = new File(mgfFile.getParent(), currentName);
-            BufferedRandomAccessFile writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
+            splittedFiles.add(testFile);
 
-            long sizeOfReadAccessFile = readBufferedRandomAccessFile.length();
+            BufferedRandomAccessFile writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
+            BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+
+            long sizeOfReadAccessFile = readBufferedRandomAccessFile.length(), lastIndex = 0;
             long progressUnit = sizeOfReadAccessFile / 100;
             String line;
 
@@ -582,35 +572,18 @@ public class MgfReader {
                 if (line.equals("BEGIN IONS")) {
 
                     spectrumCounter++;
-                    writeIndex = writeBufferedRandomAccessFile.getFilePointer();
-                    beginIndex = writeIndex;
-                    peakCount = 0;
 
                     long readIndex = readBufferedRandomAccessFile.getFilePointer();
 
                     if (spectrumCounter > nSpectra) {
-
-                        typicalSize = Math.max(writeIndex, typicalSize);
-
-                        if (sizeOfReadAccessFile - readIndex > typicalSize / 2) { // try to avoid small leftovers
-
+                        if (sizeOfReadAccessFile - readIndex > (readIndex - lastIndex) / 2) { // try to avoid small leftovers
                             writeBufferedRandomAccessFile.close();
-
-                            long lastModified = testFile.lastModified();
-
-                            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified));
-
                             currentName = splittedName + "_" + ++fileCounter + ".mgf";
                             testFile = new File(mgfFile.getParent(), currentName);
-                            writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
-                            writeIndex = 0;
+                            splittedFiles.add(testFile);
+                            lastIndex = readIndex;
                             spectrumCounter = 0;
-                            maxRT = -1;
-                            minRT = Double.MAX_VALUE;
-                            maxCharge = 0;
-                            maxPeakCount = 0;
-                            indexes = new HashMap<String, Long>();
-                            spectrumTitles = new ArrayList<String>();
+                            writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
                         }
                     }
 
@@ -620,110 +593,32 @@ public class MgfReader {
                         }
                         waitingHandler.setSecondaryProgressCounter((int) (readIndex / progressUnit));
                     }
-
-                } else if (line.startsWith("TITLE")) {
-                    title = line.substring(line.indexOf('=') + 1).trim();
-                    try {
-                        title = URLDecoder.decode(title, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
-                        e.printStackTrace();
-                    }
-                    spectrumTitles.add(title);
-                    indexes.put(title, writeIndex);
-                } else if (line.startsWith("CHARGE")) {
-                    ArrayList<Charge> precursorCharges = parseCharges(line);
-                    for (Charge charge : precursorCharges) {
-                        if (charge.value > maxCharge) {
-                            maxCharge = charge.value;
-                        }
-                    }
-                } else if (line.startsWith("PEPMASS")) {
-                    String temp = line.substring(line.indexOf("=") + 1);
-                    String[] values = temp.split("\\s");
-                    double precursorMz = Double.parseDouble(values[0]);
-
-                    if (precursorMz > maxMz) {
-                        maxMz = precursorMz;
-                    }
-
-                    if (values.length > 1) {
-                        double precursorIntensity = Double.parseDouble(values[1]);
-
-                        if (precursorIntensity > maxIntensity) {
-                            maxIntensity = precursorIntensity;
-                        }
-                    }
-
-                } else if (line.startsWith("RTINSECONDS")) {
-                    try {
-                        String rtInput = line.substring(line.indexOf('=') + 1);
-                        String[] rtWindow = rtInput.split("-");
-                        if (rtWindow.length == 1) {
-                            double rt = new Double(rtWindow[0]);
-                            if (rt > maxRT) {
-                                maxRT = rt;
-                            }
-                            if (rt < minRT) {
-                                minRT = rt;
-                            }
-                        } else if (rtWindow.length == 2) {
-                            double rt1 = new Double(rtWindow[0]);
-                            if (rt1 > maxRT) {
-                                maxRT = rt1;
-                            }
-                            if (rt1 < minRT) {
-                                minRT = rt1;
-                            }
-                            double rt2 = new Double(rtWindow[1]);
-                            if (rt2 > maxRT) {
-                                maxRT = rt2;
-                            }
-                            if (rt2 < minRT) {
-                                minRT = rt2;
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Cannot parse retention time.");
-                    }
-                } else if (line.equals("END IONS")) {
-                    if (title == null) {
-                        title = spectrumCounter + "";
-                        indexes.put(title, beginIndex);
-                        spectrumTitles.add(title);
-                    }
-                    title = null;
-                    if (peakCount > maxPeakCount) {
-                        maxPeakCount = peakCount;
-                    }
-                } else if (!line.equals("")) {
-                    try {
-                        String values[] = line.split("\\s+");
-                        Double mz = new Double(values[0]);
-                        Double intensity = new Double(values[1]);
-                        if (peakPicked && intensity == 0) {
-                            peakPicked = false;
-                        }
-                        peakCount++;
-                    } catch (Exception e1) {
-                        // ignore comments and all other lines
-                    }
                 }
 
                 writeBufferedRandomAccessFile.writeBytes(line + System.getProperty("line.separator"));
             }
 
             writeBufferedRandomAccessFile.close();
+            readBufferedRandomAccessFile.close();
 
-            long lastModified = testFile.lastModified();
+            // index the new files
+            ArrayList<MgfIndex> mgfIndexes = new ArrayList<MgfIndex>();
+            for (int i = 0; i < splittedFiles.size(); i++) {
+                File newFile = splittedFiles.get(i);
 
-            mgfIndexes.add(new MgfIndex(spectrumTitles, indexes, currentName, minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified));
+                if (waitingHandler != null) {
+                    waitingHandler.setWaitingText("Indexing New Files " + (i + 1) + "/" + splittedFiles.size() + ". Please Wait...");
+                }
+
+                mgfIndexes.add(getIndexMap(newFile, waitingHandler));
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
+            }
 
             if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);
             }
-
-            readBufferedRandomAccessFile.close();
 
             return mgfIndexes;
 

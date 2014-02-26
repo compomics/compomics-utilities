@@ -43,7 +43,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public AndromedaIdfileReader() {
         // Default constructor for the purpose of instantiation.
     }
-    
+
     /**
      * Constructor for an Andromeda result file reader.
      *
@@ -86,9 +86,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 index.put(title, currentIndex);
                 newTitle = false;
-            if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
-            }
+                if (waitingHandler != null) {
+                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
+                }
             }
         }
     }
@@ -100,17 +100,16 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
-        
+
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
-        
+
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
 
         for (String title : index.keySet()) {
 
             // @TODO: need to implement the spectrum number as well
-
             SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
 
             int cpt = 1;
@@ -135,7 +134,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
-        
+
         String[] temp = line.trim().split("\t");
         String[] temp1 = temp[5].split(";");
 

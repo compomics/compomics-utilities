@@ -75,7 +75,7 @@ public class ProteinTreeComponentsFactory {
     private ProteinTreeComponentsFactory() throws IOException {
         objectsCache.setAutomatedMemoryManagement(false); // Change this to true if large objects are stored
         objectsCache.setCacheSize(1000);
-        objectsCache.setBatchSize(100);
+        objectsCache.setBatchSize(100); // @TODO: why 100 and not higher?
     }
 
     /**
@@ -207,14 +207,15 @@ public class ProteinTreeComponentsFactory {
      * Adds nodes to the database.
      *
      * @param nodes map of the nodes
+     * @param waitingHandler the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
      * loading data in the database
      */
-    public void saveNodes(HashMap<String, Object> nodes) throws SQLException, IOException {
-        objectsDB.insertObjects(nodeTable, nodes, null, true);
+    public void saveNodes(HashMap<String, Object> nodes, WaitingHandler waitingHandler) throws SQLException, IOException {
+        objectsDB.insertObjects(nodeTable, nodes, waitingHandler, true);
     }
 
     /**

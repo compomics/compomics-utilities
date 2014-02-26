@@ -403,7 +403,7 @@ public class ProteinTree {
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            int totalProgress = (int) (nPassages * nAccessions + tags.size());
+            int totalProgress = (int) (nPassages * nAccessions + tags.size() * 2);
             waitingHandler.setMaxSecondaryProgressCounter(totalProgress);
             waitingHandler.setSecondaryProgressCounter(0);
         }
@@ -710,12 +710,10 @@ public class ProteinTree {
     private void processRawNodesSingleThread(ArrayList<String> tags, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int batchSize = tree.size() / 3;
-        System.out.println("Size: " + batchSize);
+        int batchSize = (int) Math.ceil(tree.size() / 3);
         batchSize = Math.min(10000, batchSize);
-        System.out.println("Size: " + batchSize);
         batchSize = Math.max(1000, batchSize);
-        System.out.println("Size: " + batchSize);
+
         HashMap<String, Object> splittedNodes = new HashMap<String, Object>(batchSize);
 
         for (String tag : tags) {
@@ -728,15 +726,17 @@ public class ProteinTree {
                 splittedNodes.put(tag, node);
 
                 if (splittedNodes.size() == batchSize) {
-                    componentsFactory.saveNodes(splittedNodes);
+                    componentsFactory.saveNodes(splittedNodes, waitingHandler);
                     splittedNodes.clear();
                 }
 
             }
-
             if (waitingHandler != null) {
                 if (displayProgress) {
                     waitingHandler.increaseSecondaryProgressCounter();
+                    if (node == null) {
+                        waitingHandler.increaseSecondaryProgressCounter();
+                    }
                 }
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     emptyCache();
@@ -746,7 +746,7 @@ public class ProteinTree {
         }
 
         if (!splittedNodes.isEmpty()) {
-            componentsFactory.saveNodes(splittedNodes);
+            componentsFactory.saveNodes(splittedNodes, waitingHandler);
             splittedNodes.clear();
         }
     }
@@ -778,7 +778,7 @@ public class ProteinTree {
             Node node = tree.get(tag);
 
             while (nodeSplitters.size() == nThreads) {
-                processFinishedNodeSplitters(nodeSplitters);
+                processFinishedNodeSplitters(nodeSplitters, null); // @TODO: add waiting handler
             }
 
             NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
@@ -794,7 +794,7 @@ public class ProteinTree {
         }
 
         while (!nodeSplitters.isEmpty()) {
-            processFinishedNodeSplitters(nodeSplitters);
+            processFinishedNodeSplitters(nodeSplitters, null); // @TODO: add waiting handler
         }
     }
 
@@ -803,10 +803,11 @@ public class ProteinTree {
      * to finish and batch saves the splitted nodes.
      *
      * @param nodeProcessors the node processors of interest
+     * @param waitingHandler the waiting handler
      *
      * @throws InterruptedException
      */
-    private synchronized void processFinishedNodeSplitters(ArrayList<NodeSplitter> nodeSplitters) throws InterruptedException, SQLException, IOException {
+    private synchronized void processFinishedNodeSplitters(ArrayList<NodeSplitter> nodeSplitters, WaitingHandler waitingHandler) throws InterruptedException, SQLException, IOException {
 
         listening = false;
         ArrayList<NodeSplitter> done = new ArrayList<NodeSplitter>();
@@ -835,7 +836,7 @@ public class ProteinTree {
             nodeSplitter.clear();
         }
 
-        componentsFactory.saveNodes(splittedNodes);
+        componentsFactory.saveNodes(splittedNodes, waitingHandler);
         nodeSplitters.removeAll(done);
     }
 
@@ -1117,9 +1118,11 @@ public class ProteinTree {
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean limitXs, boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, AminoAcidPattern.MatchingType matchingType,
+            Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean limitXs,
+            boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();

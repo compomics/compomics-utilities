@@ -26,9 +26,11 @@ public class DirecTagParameters {
      * determine charge state.
      */
     private boolean useChargeStateFromMS = false;
-    /*
-     * If DirecTag determines a spectrum to be multiply charged and this parameter is true, the spectrum will be copied and treated as if it was all possible charge states from +2 to +<NumChargeStates>. 
-     * If this parameter is false, the spectrum will simply be treated as a +2.
+    /**
+     * If DirecTag determines a spectrum to be multiply charged and this
+     * parameter is true, the spectrum will be copied and treated as if it was
+     * all possible charge states from +2 to +<NumChargeStates>. If this
+     * parameter is false, the spectrum will simply be treated as a +2.
      */
     private boolean duplicateSpectra = true;
     /**
@@ -72,20 +74,24 @@ public class DirecTagParameters {
      */
     private int maxTagCount = 50;
     /**
-     * This parameter controls how intensity scores are combined to
-     * form a total score. DirecTag scores tags on the basis of their peak intensities. 
-     * Tags that contain intense peaks are more likely to be correct than those that contain average peaks. 
+     * This parameter controls how intensity scores are combined to form a total
+     * score. DirecTag scores tags on the basis of their peak intensities. Tags
+     * that contain intense peaks are more likely to be correct than those that
+     * contain average peaks.
      */
     private double intensityScoreWeight = 1.0;
     /**
-     * This parameter controls how mzFidelity scores are combined to
-     * form a total score. m/z fidelity for a tag can be characterized through SSE. DirecTag evaluates the consistency of fragment ion m/z values for each tag. 
+     * This parameter controls how mzFidelity scores are combined to form a
+     * total score. m/z fidelity for a tag can be characterized through SSE.
+     * DirecTag evaluates the consistency of fragment ion m/z values for each
+     * tag.
      */
     private double mzFidelityScoreWeight = 1.0;
     /**
-     * This parameter controls how complement scores are combined to
-     * form a total score. Peaks that match to complementary ions within the spectrum are more trustworthy than other peaks. 
-     * DirecTag assesses the number and concordance of complementary ions for each tag.
+     * This parameter controls how complement scores are combined to form a
+     * total score. Peaks that match to complementary ions within the spectrum
+     * are more trustworthy than other peaks. DirecTag assesses the number and
+     * concordance of complementary ions for each tag.
      */
     private double complementScoreWeight = 1.0;
 
@@ -94,192 +100,221 @@ public class DirecTagParameters {
      */
     public DirecTagParameters() {
     }
-    
+
     /**
      * Returns the number of charge states.
+     *
      * @return numChargeStates the number of charge states
      */
     public int getNumChargeStates() {
         return numChargeStates;
     }
-    
-     /**
+
+    /**
      * Sets the number of charge states.
+     *
      * @param numChargeStates the number of charge states
      */
     public void setNumChargeStates(int numChargeStates) {
         this.numChargeStates = numChargeStates;
     }
-    
+
     /**
      * Returns the output tags suffix.
+     *
      * @return the output tags suffix.
      */
     public String getOutputSuffix() {
         return outputSuffix;
     }
-    
+
     /**
      * Sets the output tags suffix.
+     *
      * @param outputSuffix the output tags suffix.
      */
     public void setOutputSuffix(String outputSuffix) {
         this.outputSuffix = outputSuffix;
     }
-    
+
     /**
      * Indicates whether the charge state from the spectrum should be used.
-     * @return boolean indicating whether the charge states from the spectrum should be used
+     *
+     * @return boolean indicating whether the charge states from the spectrum
+     * should be used
      */
     public boolean isUseChargeStateFromMS() {
         return useChargeStateFromMS;
     }
-    
+
     /**
      * Sets whether the charge state from the spectrum should be used.
-     * @param useChargeStateFromMS boolean indicating whether the charge states from the spectrum should be used
+     *
+     * @param useChargeStateFromMS boolean indicating whether the charge states
+     * from the spectrum should be used
      */
     public void setUseChargeStateFromMS(boolean useChargeStateFromMS) {
         this.useChargeStateFromMS = useChargeStateFromMS;
     }
-    
+
     /**
      * Indicates whether to use duplicate spectra option.
+     *
      * @return boolean indicating whether to use duplicate spectra option
      */
     public boolean isDuplicateSpectra() {
         return duplicateSpectra;
     }
-    
+
     /**
      * Sets whether to use duplicate spectra option.
-     * @param duplicateSpectra boolean indicating whether to use duplicate spectra option
+     *
+     * @param duplicateSpectra boolean indicating whether to use duplicate
+     * spectra option
      */
     public void setDuplicateSpectra(boolean duplicateSpectra) {
         this.duplicateSpectra = duplicateSpectra;
     }
-    
+
     /**
      * Returns the deisotoping flag value.
+     *
      * @return deisotoping flag value
      */
     public int getDeisotopingMode() {
         return deisotopingMode;
     }
-    
+
     /**
      * Sets the deisotoping flag value.
+     *
      * @param deisotopingMode deisotoping flag value
      */
     public void setDeisotopingMode(int deisotopingMode) {
         this.deisotopingMode = deisotopingMode;
     }
-    
+
     /**
      * Returns the deisotoping m/z tolerance.
+     *
      * @return deisotoping m/z tolerance
      */
     public double getIsotopeMzTolerance() {
         return isotopeMzTolerance;
     }
-    
+
     /**
      * Sets the deisotoping m/z tolerance.
+     *
      * @param isotopeMzTolerance deisotoping m/z tolerance
      */
     public void setIsotopeMzTolerance(double isotopeMzTolerance) {
         this.isotopeMzTolerance = isotopeMzTolerance;
     }
-    
+
     /**
      * Returns the complement m/z tolerance.
+     *
      * @return the complement m/z tolerance
      */
     public double getComplementMzTolerance() {
         return complementMzTolerance;
     }
-    
+
     /**
      * Sets the complement m/z tolerance
+     *
      * @param complementMzTolerance the complement m/z tolerance
      */
     public void setComplementMzTolerance(double complementMzTolerance) {
         this.complementMzTolerance = complementMzTolerance;
     }
-    
+
     /**
      * Returns the tag legnth.
+     *
      * @return the tag length
      */
     public int getTagLength() {
         return tagLength;
     }
+
     /**
      * Sets the tag length.
+     *
      * @param tagLength the tag length
      */
     public void setTagLength(int tagLength) {
         this.tagLength = tagLength;
     }
-    
+
     /**
      * Returns the maximum number of dynamic mods.
+     *
      * @return the maximum number of dynamic mods
      */
     public int getMaxDynamicMods() {
         return maxDynamicMods;
     }
-    
+
     /**
      * Sets the maximum number of dynamic mods.
+     *
      * @param maxDynamicMods the maximum number of dynamic mods
      */
     public void setMaxDynamicMods(int maxDynamicMods) {
         this.maxDynamicMods = maxDynamicMods;
     }
-    
+
     /**
      * Returns the maximum number of tags per spectrum to be generated.
+     *
      * @return the maximum number of tags per spectrum to be generated
      */
     public int getMaxTagCount() {
         return maxTagCount;
     }
-    
+
     /**
      * Sets the maximum number of tags per spectrum to be generated.
-     * @param maxTagCount the maximum number of tags per spectrum to be generated
+     *
+     * @param maxTagCount the maximum number of tags per spectrum to be
+     * generated
      */
     public void setMaxTagCount(int maxTagCount) {
         this.maxTagCount = maxTagCount;
     }
-    
+
     /**
      * Returns the intensity score weight. Default is 1.0.
+     *
      * @return the intensity score weight
      */
     public double getIntensityScoreWeight() {
         return intensityScoreWeight;
     }
-    
+
     /**
      * Set the intensity score weight. Default is 1.0.
+     *
      * @param intensityScoreWeight the intensity score weight
      */
     public void setIntensityScoreWeight(double intensityScoreWeight) {
         this.intensityScoreWeight = intensityScoreWeight;
     }
-    
+
     /**
      * Returns the mzFidelity score weight. Default is 1.0.
+     *
      * @return the mzFidelity score weight
      */
     public double getMzFidelityScoreWeight() {
         return mzFidelityScoreWeight;
     }
-    
+
     /**
      * Set the mzFidelity score weight. Default is 1.0.
+     *
      * @param mzFidelityScoreWeight the mzFidelity score weight
      */
     public void setMzFidelityScoreWeight(double mzFidelityScoreWeight) {
@@ -288,14 +323,16 @@ public class DirecTagParameters {
 
     /**
      * Returns the complement score weight. Default is 1.0.
+     *
      * @return the complement score weight
      */
     public double getComplementScoreWeight() {
         return complementScoreWeight;
     }
-    
+
     /**
      * Set the complement score weight. Default is 1.0.
+     *
      * @param complementScoreWeight the complement score weight
      */
     public void setComplementScoreWeight(double complementScoreWeight) {

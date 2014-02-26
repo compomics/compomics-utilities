@@ -72,12 +72,21 @@ public class DirecTagParameters {
      */
     private int maxTagCount = 50;
     /**
-     * This group of (three) parameters controls how tag scores are combined to
-     * form a total score. The total score of a tag is what is used to determine
-     * its final ranking in the result list
+     * This parameter controls how intensity scores are combined to
+     * form a total score. DirecTag scores tags on the basis of their peak intensities. 
+     * Tags that contain intense peaks are more likely to be correct than those that contain average peaks. 
      */
     private double intensityScoreWeight = 1.0;
+    /**
+     * This parameter controls how mzFidelity scores are combined to
+     * form a total score. m/z fidelity for a tag can be characterized through SSE. DirecTag evaluates the consistency of fragment ion m/z values for each tag. 
+     */
     private double mzFidelityScoreWeight = 1.0;
+    /**
+     * This parameter controls how complement scores are combined to
+     * form a total score. Peaks that match to complementary ions within the spectrum are more trustworthy than other peaks. 
+     * DirecTag assesses the number and concordance of complementary ions for each tag.
+     */
     private double complementScoreWeight = 1.0;
 
     /**

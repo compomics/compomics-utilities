@@ -77,15 +77,6 @@ public enum Advocate {
     }
 
     /**
-     * Returns the implemented advocates.
-     * 
-     * @return the implemented advocates
-     */
-    public static Advocate[] getPossibilities() {
-        return new Advocate[]{Mascot, OMSSA, XTandem, pepnovo, andromeda};
-    }
-    
-    /**
      * Returns the advocate corresponding to the given index. Null if not found.
      * 
      * @param index the index of the advocate
@@ -93,7 +84,7 @@ public enum Advocate {
      * @return the advocate of interest
      */
     public static Advocate getAdvocate(int index) {
-        for (Advocate advocate : getPossibilities()) {
+        for (Advocate advocate : values()) {
             if (advocate.getIndex() == index) {
                 return advocate;
             }

@@ -189,6 +189,8 @@ public class IdfileReaderFactory {
             }
         } else if (fileName.endsWith(".out")) {
             return Advocate.pepnovo.getIndex();
+        } else if (fileName.endsWith(".tags")) {
+            return Advocate.DirecTag.getIndex();
         } else if (fileName.endsWith(".res")) {
             return Advocate.andromeda.getIndex();
         }

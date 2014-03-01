@@ -16,7 +16,7 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
      */
     static final long serialVersionUID = -8056507693211793829L;
     /**
-     * The maximal hit list length for PepNovo+. max is 20.
+     * The maximal hit list length for PepNovo+. Max is 20.
      */
     private Integer hitListLength = 10;
     /**

@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -59,6 +60,9 @@ public class IdentificationParametersInputBean {
      */
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
         
+        ///////////////////////////////////
+        // General parameters
+        ///////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
             listMods = true;
         }
@@ -157,6 +161,9 @@ public class IdentificationParametersInputBean {
         }
         searchParameters.setModificationProfile(modificationProfile);
 
+        ///////////////////////////////////
+        // OMSSA parameters
+        ///////////////////////////////////
         OmssaParameters omssaParameters = new OmssaParameters();
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
@@ -362,6 +369,9 @@ public class IdentificationParametersInputBean {
         searchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), omssaParameters);
         ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
 
+        ///////////////////////////////////
+        // X!Tandem parameters
+        ///////////////////////////////////
         XtandemParameters xtandemParameters = new XtandemParameters();
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
@@ -530,6 +540,9 @@ public class IdentificationParametersInputBean {
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), xtandemParameters);
 
+        ///////////////////////////////////
+        // MS-GF+ parameters
+        ///////////////////////////////////
         MsgfParameters msgfParameters = new MsgfParameters();
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
@@ -606,6 +619,9 @@ public class IdentificationParametersInputBean {
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), msgfParameters);
         
+        ///////////////////////////////////
+        // PepNovo+ parameters
+        ///////////////////////////////////
         PepnovoParameters pepnovoParameters = new PepnovoParameters();
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
@@ -662,6 +678,124 @@ public class IdentificationParametersInputBean {
             }
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), pepnovoParameters);
+        
+        ///////////////////////////////////
+        // DirecTag parameters
+        ///////////////////////////////////
+        DirecTagParameters direcTagParameters = new DirecTagParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setTicCutoffPercentage(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setMaxPeakCount(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setNumIntensityClasses(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                direcTagParameters.setAdjustPrecursorMass(true);
+            } else {
+                direcTagParameters.setAdjustPrecursorMass(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
+            Double option = new Double(arg);
+            direcTagParameters.setMinPrecursorAdjustment(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
+            Double option = new Double(arg);
+            direcTagParameters.setMaxPrecursorAdjustment(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
+            Double option = new Double(arg);
+            direcTagParameters.setPrecursorAdjustmentStep(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setNumChargeStates(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id);
+            direcTagParameters.setOutputSuffix(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                direcTagParameters.setUseChargeStateFromMS(true);
+            } else {
+                direcTagParameters.setUseChargeStateFromMS(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                direcTagParameters.setDuplicateSpectra(true);
+            } else {
+                direcTagParameters.setDuplicateSpectra(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setDeisotopingMode(option); // @TODO: check for valid values!!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id);
+            Double option = new Double(arg);
+            direcTagParameters.setIsotopeMzTolerance(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id);
+            Double option = new Double(arg);
+            direcTagParameters.setComplementMzTolerance(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setTagLength(option); // @TODO: check for valid values!!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setMaxDynamicMods(option); // @TODO: check for valid values!!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id);
+            Integer option = new Integer(arg);
+            direcTagParameters.setMaxTagCount(option); // @TODO: check for valid values!!!
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id);
+            Double option = new Double(arg);
+            direcTagParameters.setIntensityScoreWeight(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id);
+            Double option = new Double(arg);
+            direcTagParameters.setMzFidelityScoreWeight(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id);
+            Double option = new Double(arg);
+            direcTagParameters.setComplementScoreWeight(option);
+        }
+
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), direcTagParameters);
     }
 
     /**
@@ -1796,6 +1930,10 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        
+        
+        // @TODO: add MS-GF+ and DirecTag parameters!!!
+        
 
         return true;
     }

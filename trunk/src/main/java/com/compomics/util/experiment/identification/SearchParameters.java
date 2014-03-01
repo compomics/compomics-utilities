@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -940,6 +941,12 @@ public class SearchParameters implements Serializable {
             MsgfParameters msgfParameters = new MsgfParameters();
             msgfParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
+        }
+        
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()) == null) {
+            DirecTagParameters direcTagParameters = new DirecTagParameters();
+            result.setIdentificationAlgorithmParameter(direcTagParameters.getAlgorithm().getIndex(), direcTagParameters);
         }
 
         return result;

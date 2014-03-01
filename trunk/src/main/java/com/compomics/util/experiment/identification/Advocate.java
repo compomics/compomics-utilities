@@ -20,9 +20,9 @@ public enum Advocate {
      */
     XTandem(2, "X!Tandem"),
     /**
-     * The de novo algorithm PepNovo.
+     * The de novo algorithm PepNovo+.
      */
-    pepnovo(3, "PepNovo"),
+    pepnovo(3, "PepNovo+"),
     /**
      * The search engine Andromeda.
      */
@@ -38,7 +38,11 @@ public enum Advocate {
     /**
      * The search engine MS-GF+.
      */
-    MSGF(7, "MS-GF+");
+    MSGF(7, "MS-GF+"),
+    /**
+     * The de novo algorithm DirecTag.
+     */
+    DirecTag(8, "DirecTag");
     /**
      * The index of the advocate.
      */

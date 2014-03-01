@@ -96,7 +96,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modificationsSplitPane" pref="689" max="32767" attributes="0"/>
+                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -379,9 +379,9 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userModificationsTableMouseReleased"/>
                         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userModificationsTableMouseClicked"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userModificationsTableMouseExited"/>
-                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userModificationsTableMouseReleased"/>
                         <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="userModificationsTableMouseMoved"/>
                       </Events>
                       <AuxValues>

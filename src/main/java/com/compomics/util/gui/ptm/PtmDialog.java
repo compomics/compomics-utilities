@@ -1,5 +1,6 @@
 package com.compomics.util.gui.ptm;
 
+import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.*;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
@@ -12,7 +13,6 @@ import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
 import java.awt.Color;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
@@ -20,11 +20,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
-import no.uib.olsdialog.OLSDialog;
-import no.uib.olsdialog.OLSInputable;
-import uk.ac.ebi.ols.soap.Query;
-import uk.ac.ebi.ols.soap.QueryService;
-import uk.ac.ebi.ols.soap.QueryServiceLocator;
 
 /**
  * This dialog allows the user to create/edit PTMs.
@@ -32,7 +27,7 @@ import uk.ac.ebi.ols.soap.QueryServiceLocator;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
+public class PtmDialog extends javax.swing.JDialog {
 
     /**
      * The PtmDialog parent.
@@ -58,10 +53,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      * The PTM to PRIDE map.
      */
     private PtmToPrideMap ptmToPrideMap;
-    /**
-     * The modification CV term.
-     */
-    private CvTerm cvTerm = null;
     /**
      * Boolean indicating whether the user can edit the PTM or not.
      */
@@ -198,6 +189,8 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         addReporterIon.setEnabled(editable);
         removerReporterIon.setEnabled(editable);
         residuesTxt.setEnabled(editable);
+        unimodAccessionJTextField.setEditable(editable);
+        unimodNameJTextField.setEditable(editable);
 
         if (currentPtm != null) {
             typeCmb.setSelectedIndex(currentPtm.getType());
@@ -210,13 +203,13 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             this.reporterIons.addAll(currentPtm.getReporterIons());
             updateTables();
 
-            cvTerm = ptmToPrideMap.getCVTerm(currentPtm.getName());
+            CvTerm cvTerm = ptmToPrideMap.getCVTerm(currentPtm.getName());
 
             if (cvTerm == null) {
                 cvTerm = PtmToPrideMap.getDefaultCVTerm(currentPtm.getName());
             }
             if (cvTerm != null) {
-                updateModMappingText();
+                updateModMappingText(cvTerm);
             }
 
             setTitle("Edit Modification");
@@ -446,9 +439,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         removeNeutralLoss = new javax.swing.JButton();
         helpJButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        psiModMappingPanel = new javax.swing.JPanel();
-        psiModMappingJTextField = new javax.swing.JTextField();
-        olsJButton = new javax.swing.JButton();
+        unimodMappingPanel = new javax.swing.JPanel();
+        unimodAccessionJTextField = new javax.swing.JTextField();
+        unimodAccessionLabel = new javax.swing.JLabel();
+        unimodNameLabel = new javax.swing.JLabel();
+        unimodNameJTextField = new javax.swing.JTextField();
+        unimodLinkLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         reporterIonsJScrollPane = new javax.swing.JScrollPane();
         reporterIonsTable = new JTable() {
@@ -537,11 +533,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
 
         nameShortTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nameShortTxt.setToolTipText("The modification name");
-        nameShortTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nameShortTxtKeyReleased(evt);
-            }
-        });
 
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
@@ -686,40 +677,66 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             }
         });
 
-        psiModMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PSI-MOD Mapping"));
-        psiModMappingPanel.setOpaque(false);
+        unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod Mapping"));
+        unimodMappingPanel.setOpaque(false);
 
-        psiModMappingJTextField.setEditable(false);
-        psiModMappingJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        unimodAccessionJTextField.setEditable(false);
+        unimodAccessionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        olsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ols_transparent.GIF"))); // NOI18N
-        olsJButton.setToolTipText("Ontology Lookup Service");
-        olsJButton.setPreferredSize(new java.awt.Dimension(61, 23));
-        olsJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                olsJButtonActionPerformed(evt);
+        unimodAccessionLabel.setText("Accession");
+
+        unimodNameLabel.setText("PSI-MS Name");
+
+        unimodNameJTextField.setEditable(false);
+        unimodNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        unimodLinkLabel.setText("<html><a href>See http://www.unimod.org</a></html>");
+        unimodLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseExited(evt);
             }
         });
 
-        javax.swing.GroupLayout psiModMappingPanelLayout = new javax.swing.GroupLayout(psiModMappingPanel);
-        psiModMappingPanel.setLayout(psiModMappingPanelLayout);
-        psiModMappingPanelLayout.setHorizontalGroup(
-            psiModMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, psiModMappingPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
+        unimodMappingPanel.setLayout(unimodMappingPanelLayout);
+        unimodMappingPanelLayout.setHorizontalGroup(
+            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(psiModMappingJTextField)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(olsJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
+                        .addComponent(unimodAccessionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
+                        .addComponent(unimodNameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        psiModMappingPanelLayout.setVerticalGroup(
-            psiModMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(psiModMappingPanelLayout.createSequentialGroup()
+        unimodMappingPanelLayout.setVerticalGroup(
+            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(psiModMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(psiModMappingJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(olsJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodAccessionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Reporter Ions"));
@@ -794,7 +811,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(psiModMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(unimodMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -808,7 +825,7 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(psiModMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
@@ -827,7 +844,9 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -849,6 +868,26 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
+            
+            // check the unimod details
+            CvTerm cvTerm = null;
+            if (!unimodAccessionJTextField.getText().trim().isEmpty()) { // @TODO: move to the validateInput method
+                
+                // check the Unimod name
+                if (unimodNameJTextField.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please provide the Unimod name for the modification.", "Unimod Name", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                try {
+                    int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
+                    cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+                    cvTerm.setValue(massTxt.getText());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
 
             PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
                     nameTxt.getText().trim().toLowerCase(),
@@ -891,14 +930,12 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
                 ptmFactory.addUserPTM(newPTM); // note: "editable" is here used to decide if it's a user ptm
             }
 
-            if (cvTerm != null) {
-                cvTerm.setValue(massTxt.getText()); // set the modification mass, note that this means that the mass can be different from the one in PSI-MOD...
-            }
-
             // store the short name in the factory
             ptmFactory.setShortName(newPTM.getName(), nameShortTxt.getText().trim().toLowerCase());
 
-            ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
+            if (cvTerm != null) {
+                ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
+            }
             ptmDialogParent.updateModifications();
             saveChanges();
             dispose();
@@ -921,39 +958,6 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
             residuesTxt.setEnabled(false);
         }
     }//GEN-LAST:event_typeCmbActionPerformed
-
-    /**
-     * Opens the OLS Dialog.
-     *
-     * @param evt
-     */
-    private void olsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_olsJButtonActionPerformed
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-
-        String searchTerm = null;
-        String ontology = "MOD";
-
-        if (psiModMappingJTextField.getText().length() > 0) {
-
-            searchTerm = psiModMappingJTextField.getText();
-
-            ontology = searchTerm.substring(searchTerm.lastIndexOf("[") + 1, searchTerm.lastIndexOf("]") - 1);
-
-            searchTerm = psiModMappingJTextField.getText().substring(
-                    0, psiModMappingJTextField.getText().lastIndexOf("[") - 1);
-            searchTerm = searchTerm.replaceAll("-", " ");
-            searchTerm = searchTerm.replaceAll(":", " ");
-            searchTerm = searchTerm.replaceAll("\\(", " ");
-            searchTerm = searchTerm.replaceAll("\\)", " ");
-            searchTerm = searchTerm.replaceAll("&", " ");
-            searchTerm = searchTerm.replaceAll("\\+", " ");
-            searchTerm = searchTerm.replaceAll("\\[", " ");
-            searchTerm = searchTerm.replaceAll("\\]", " ");
-        }
-
-        new OLSDialog(this, this, true, "mod", ontology, searchTerm);
-        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_olsJButtonActionPerformed
 
     /**
      * Changes the cursor to a hand cursor.
@@ -1096,9 +1100,35 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
         validateInput(false);
     }//GEN-LAST:event_massTxtKeyReleased
 
-    private void nameShortTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameShortTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameShortTxtKeyReleased
+    /**
+     * Change the cursor to a hand cursor.
+     * 
+     * @param evt 
+     */
+    private void unimodLinkLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     * 
+     * @param evt 
+     */
+    private void unimodLinkLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabelMouseExited
+
+    /**
+     * Open the Unimod web page.
+     * 
+     * @param evt 
+     */
+    private void unimodLinkLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseReleased
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.unimod.org");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabelMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
@@ -1118,81 +1148,28 @@ public class PtmDialog extends javax.swing.JDialog implements OLSInputable {
     private javax.swing.JScrollPane neutralLossesJScrollPane;
     private javax.swing.JTable neutralLossesTable;
     private javax.swing.JButton okButton;
-    private javax.swing.JButton olsJButton;
     private javax.swing.JLabel patternLabel;
-    private javax.swing.JTextField psiModMappingJTextField;
-    private javax.swing.JPanel psiModMappingPanel;
     private javax.swing.JButton removeNeutralLoss;
     private javax.swing.JButton removerReporterIon;
     private javax.swing.JScrollPane reporterIonsJScrollPane;
     private javax.swing.JTable reporterIonsTable;
     private javax.swing.JTextField residuesTxt;
     private javax.swing.JComboBox typeCmb;
+    private javax.swing.JTextField unimodAccessionJTextField;
+    private javax.swing.JLabel unimodAccessionLabel;
+    private javax.swing.JLabel unimodLinkLabel;
+    private javax.swing.JPanel unimodMappingPanel;
+    private javax.swing.JTextField unimodNameJTextField;
+    private javax.swing.JLabel unimodNameLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void insertOLSResult(String field, String selectedValue,
-            String accession, String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, Map<String, String> metadata) {
-
-        Double monoMass = null;
-
-        // get the mono diff mass
-        try {
-            QueryService locator = new QueryServiceLocator();
-            Query olsConnection = locator.getOntologyQuery();
-            Map<String, String> metaData = olsConnection.getTermMetadata(accession, ontologyShort);
-            String monoMassAsString = metaData.get("DiffMono");
-            if (monoMassAsString != null) {
-                monoMass = new Double(monoMassAsString).doubleValue();
-
-                try {
-                    double userMass = new Double(massTxt.getText()).doubleValue();
-
-                    if (monoMass != userMass) {
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "The modification mass has been updated.",
-                                "Modification Mass", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                } catch (NumberFormatException e) {
-                    // ignore
-                }
-
-                massTxt.setText(monoMassAsString);
-            } else {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "The modification selected has no mass. Using user defined mass.",
-                        "Modification Mass", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Error connecting to the OLS.",
-                    "OLS Connection Error", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
-
-        if (monoMass != null) {
-            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, monoMass.toString());
-        } else {
-            cvTerm = new CvTerm(ontologyShort, accession, selectedValue, null);
-        }
-
-        updateModMappingText();
-    }
-
-    @Override
-    public Window getWindow() {
-        return (Window) this;
-    }
-
     /**
-     * Displays the PSI-MOD mapping information.
+     * Displays the Unimod mapping information.
      */
-    private void updateModMappingText() {
-        psiModMappingJTextField.setText(cvTerm.getName() + " [" + cvTerm.getAccession() + "]");
-        psiModMappingJTextField.setCaretPosition(0);
+    private void updateModMappingText(CvTerm cvTerm) {
+        unimodAccessionJTextField.setText(cvTerm.getAccession().substring("Unimod:".length()));
+        unimodNameJTextField.setText(cvTerm.getName());
+        unimodNameJTextField.setCaretPosition(0);
     }
 
     /**

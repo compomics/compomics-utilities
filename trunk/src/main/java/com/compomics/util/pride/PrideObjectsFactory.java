@@ -177,6 +177,12 @@ public class PrideObjectsFactory {
             File ptmMapFile = new File(prideFolder, PtmToPrideMap.fileName);
 
             try {
+                // check if the file exists, if not create it
+                if (!ptmMapFile.exists()) {
+                    ptmToPrideMap = new PtmToPrideMap();
+                    setPtmToPrideMap(ptmToPrideMap);
+                }
+
                 ptmToPrideMap = (PtmToPrideMap) loadObject(ptmMapFile);
 
                 // corrupt file, reset the mappings

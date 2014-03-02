@@ -193,7 +193,8 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="dynamicRangeLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/sdr.html&quot;&gt;Dynamic Range (Da)&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Dynamic Range (Da)    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dynamicRangeLblMouseReleased"/>
@@ -219,7 +220,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="nPeaksLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/stp.html&quot;&gt;Number of Peaks&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Number of Peaks    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nPeaksLblMouseReleased"/>
@@ -229,7 +231,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="minFragMzLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/smfmz.html&quot;&gt;Minimum Fragment m/z&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Minimum Fragment m/z    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="minFragMzLblMouseReleased"/>
@@ -247,7 +250,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="minPeaksLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/smp.html&quot;&gt;Minimum Peaks&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Minimum Peaks    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="minPeaksLblMouseReleased"/>
@@ -265,7 +269,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="minPrecMassLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/smpmh.html&quot;&gt;Minimum Precursor Mass&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Minimum Precursor Mass    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="minPrecMassLblMouseReleased"/>
@@ -296,7 +301,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="noiseSuppressionLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/suns.html&quot;&gt;Noise Suppression&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Noise Suppression    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noiseSuppressionLabelMouseReleased"/>
@@ -388,7 +394,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="quickAcetylLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/pqa.html&quot;&gt;Quick Acetyl&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Quick Acetyl    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="quickAcetylLabelMouseReleased"/>
@@ -398,7 +405,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="quickPyroLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/pqp.html&quot;&gt;Quick Pyrolidone&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Quick Pyrolidone    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="quickPyroLabelMouseReleased"/>
@@ -408,7 +416,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="stpBiasLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/pstpb.html&quot;&gt;stP bias&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="stP bias    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="stpBiasLabelMouseReleased"/>
@@ -556,7 +565,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="refinementLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/refine.html&quot;&gt;Refinement&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Refinement    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementLabelMouseReleased"/>
@@ -566,7 +576,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="semiEnzymaticLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/rcsemi.html&quot;&gt;Semi-Enzymatic Cleavage&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Semi-Enzymatic Cleavage    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="semiEnzymaticLabelMouseReleased"/>
@@ -594,7 +605,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="maxEValueRefinmentLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/refmvev.html&quot;&gt;Maximum Valid Expectation Value&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Maximum Valid Expectation Value    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxEValueRefinmentLblMouseReleased"/>
@@ -604,7 +616,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="pointMutationLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/rpm.html&quot;&gt;Point Mutations&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Point Mutations    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pointMutationLabelMouseReleased"/>
@@ -624,7 +637,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="snapsLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/rsaps.html&quot;&gt;snAPs&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="snAPs    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="snapsLabelMouseReleased"/>
@@ -654,7 +668,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="spectrumSynthesisLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/rss.html&quot;&gt;Spectrum Synthesis&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Spectrum Synthesis    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spectrumSynthesisLabelMouseReleased"/>
@@ -674,7 +689,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="unanticipatedCleavageLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/ruc.html&quot;&gt;Unanticipated Cleavage&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Unanticipated Cleavage    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unanticipatedCleavageLabelMouseReleased"/>
@@ -684,7 +700,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="usePotentialModsLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/rupmffr.html&quot;&gt;Use Potential Modifications for Full Refinement&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Potential Modifications for Full Refinement    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usePotentialModsLabelMouseReleased"/>
@@ -735,12 +752,13 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="refinementModificationsLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/refpmm.htmll&quot;&gt;Refinement Modifications&lt;/a&gt;&lt;/html&gt;"/>
+                    <Property name="text" type="java.lang.String" value="Refinement Modifications    (?)"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseExited"/>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="refinementModificationsLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="openModificationSettingsJButton">
@@ -931,7 +949,8 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="eValueLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/omvev.html&quot;&gt;E-value Cutoff&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="E-value Cutoff    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="eValueLblMouseReleased"/>
@@ -949,7 +968,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="outputSequencesLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/osequ.html&quot;&gt;Output Sequences&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Output Sequences    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSequencesLabelMouseReleased"/>
@@ -982,7 +1002,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="outputProteinsLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/oprot.html&quot;&gt;Output Proteins&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Output Proteins    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputProteinsLabelMouseReleased"/>
@@ -992,7 +1013,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="outputSpectraLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/ospec.html&quot;&gt;Output Spectra&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Output Spectra    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSpectraLabelMouseReleased"/>
@@ -1017,7 +1039,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="skylinePathValueLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/ssp.html&quot;&gt;Skyline Path&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Skyline Path    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="skylinePathValueLblMouseReleased"/>
@@ -1037,7 +1060,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="outputHistogramsLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.thegpm.org/TANDEM/api/ohist.html&quot;&gt;Output Histograms&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="Output Histograms    (?)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputHistogramsLabelMouseReleased"/>

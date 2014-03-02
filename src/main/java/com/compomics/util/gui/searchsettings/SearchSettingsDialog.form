@@ -133,7 +133,7 @@
                       </Group>
                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="missedCleavagesTxt" alignment="0" max="32767" attributes="2"/>
+                          <Component id="maxMissedCleavagesTxt" alignment="0" max="32767" attributes="2"/>
                           <Component id="fragmentIonAccuracyTxt" alignment="0" max="32767" attributes="2"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="minPrecursorChargeTxt" pref="70" max="32767" attributes="2"/>
@@ -152,7 +152,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="missedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="enzymeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="enzymesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxMissedCleavagesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -202,12 +202,12 @@
                 <Property name="text" type="java.lang.String" value="Max Missed Cleavages"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="missedCleavagesTxt">
+            <Component class="javax.swing.JTextField" name="maxMissedCleavagesTxt">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
               <Events>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="missedCleavagesTxtKeyReleased"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxMissedCleavagesTxtKeyReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="precursorIonLbl">

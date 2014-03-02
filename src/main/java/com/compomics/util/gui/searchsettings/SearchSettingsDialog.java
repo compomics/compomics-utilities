@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.protein.SequenceDbDetailsDialog;
@@ -226,7 +227,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         enzymeLabel = new javax.swing.JLabel();
         enzymesCmb = new javax.swing.JComboBox();
         maxMissedCleavagesLabel = new javax.swing.JLabel();
-        missedCleavagesTxt = new javax.swing.JTextField();
+        maxMissedCleavagesTxt = new javax.swing.JTextField();
         precursorIonLbl = new javax.swing.JLabel();
         precursorIonAccuracyTxt = new javax.swing.JTextField();
         precursorIonUnit = new javax.swing.JComboBox();
@@ -305,10 +306,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         maxMissedCleavagesLabel.setText("Max Missed Cleavages");
 
-        missedCleavagesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        missedCleavagesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        maxMissedCleavagesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxMissedCleavagesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                missedCleavagesTxtKeyReleased(evt);
+                maxMissedCleavagesTxtKeyReleased(evt);
             }
         });
 
@@ -384,7 +385,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     .addComponent(precursorChargeLbl))
                 .addGap(18, 18, 18)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(missedCleavagesTxt)
+                    .addComponent(maxMissedCleavagesTxt)
                     .addComponent(fragmentIonAccuracyTxt)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                         .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
@@ -399,7 +400,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(missedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(enzymeLabel)
                     .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxMissedCleavagesLabel))
@@ -770,7 +771,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 800, 318);
+        modificationsPanel.setBounds(0, 0, 800, 0);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -863,9 +864,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      *
      * @param evt
      */
-    private void missedCleavagesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_missedCleavagesTxtKeyReleased
+    private void maxMissedCleavagesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxMissedCleavagesTxtKeyReleased
         validateParametersInput(false);
-    }//GEN-LAST:event_missedCleavagesTxtKeyReleased
+    }//GEN-LAST:event_maxMissedCleavagesTxtKeyReleased
 
     /**
      * Validates the parameters.
@@ -1511,9 +1512,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel maxMissedCleavagesLabel;
+    private javax.swing.JTextField maxMissedCleavagesTxt;
     private javax.swing.JTextField maxPrecursorChargeTxt;
     private javax.swing.JTextField minPrecursorChargeTxt;
-    private javax.swing.JTextField missedCleavagesTxt;
     private javax.swing.JSplitPane modificationTypesSplitPane;
     private javax.swing.JScrollPane modificationsJScrollPane;
     private javax.swing.JLayeredPane modificationsLayeredPane;
@@ -1741,7 +1742,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         if (searchParameters.getnMissedCleavages() != null) {
-            missedCleavagesTxt.setText(searchParameters.getnMissedCleavages() + "");
+            maxMissedCleavagesTxt.setText(searchParameters.getnMissedCleavages() + "");
         }
 
         if (searchParameters.getPrecursorAccuracy() != null) {
@@ -1930,17 +1931,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     public boolean validateParametersInput(boolean showMessage) {
 
         boolean valid = true;
-        precursorIonLbl.setForeground(Color.BLACK);
-        maxMissedCleavagesLabel.setForeground(Color.BLACK);
-        fragmentIonLbl.setForeground(Color.BLACK);
-        precursorChargeLbl.setForeground(Color.BLACK);
         databaseSettingsLbl.setForeground(Color.BLACK);
         enzymeLabel.setForeground(Color.BLACK);
 
-        precursorIonLbl.setToolTipText(null);
-        maxMissedCleavagesLabel.setToolTipText(null);
-        fragmentIonLbl.setToolTipText(null);
-        precursorChargeLbl.setToolTipText(null);
         databaseSettingsLbl.setToolTipText(null);
         enzymeLabel.setToolTipText(null);
 
@@ -1963,204 +1956,33 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         }
 
-        // Validate missed cleavages (multi-step validation).
-        if (missedCleavagesTxt.getText() == null || missedCleavagesTxt.getText().trim().equals("")) {
-            if (showMessage) {
-                JOptionPane.showMessageDialog(this, "You need to specify a number of allowed missed cleavages.", "Missed Cleavages Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxMissedCleavagesLabel.setForeground(Color.RED);
-            maxMissedCleavagesLabel.setToolTipText("Please select the number of allowed missed cleavages");
-        }
+        // validate missed cleavages, precursor mass tolerances, fragment mass tolerances and precursor charges
+        valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, precursorIonLbl, precursorIonAccuracyTxt, "precursor mass tolerance", "Precursor Mass Tolerance Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, fragmentIonLbl, fragmentIonAccuracyTxt, "fragment mass tolerance", "Fragment Mass Tolerance Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
 
-        // OK, see if it is an integer.
-        int missedCleavages = -1;
-
+        // make sure that the lower charge is smaller than the upper charge
         try {
-            missedCleavages = Integer.parseInt(missedCleavagesTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable integer!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the allowed missed cleavages.",
-                        "Missed Cleavages Error", JOptionPane.WARNING_MESSAGE);
+            double chargeLowerBound = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
+            double chargeUpperBound = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
+
+            if (chargeUpperBound < chargeLowerBound) {
+                if (showMessage && valid) {
+                    JOptionPane.showMessageDialog(this, "The minimum precursor charge must be lower than or equal to the maximum precursor charge.",
+                            "Precursor Charge Error", JOptionPane.WARNING_MESSAGE);
+                }
+                valid = false;
+                precursorChargeLbl.setForeground(Color.RED);
+                precursorChargeLbl.setToolTipText("Minimum precursor charge > Maximum precursor charge!");
             }
-            valid = false;
-            maxMissedCleavagesLabel.setForeground(Color.RED);
-            maxMissedCleavagesLabel.setToolTipText("Please select a positive integer");
+
+        } catch (NumberFormatException e) {
+            // ignore, error already caught above
         }
 
-        // And it should be zero or more.
-        if (missedCleavages < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the allowed missed cleavages.",
-                        "Missed Cleavages Error", JOptionPane.WARNING_MESSAGE);
-                missedCleavagesTxt.requestFocus();
-            }
-            valid = false;
-            maxMissedCleavagesLabel.setForeground(Color.RED);
-            maxMissedCleavagesLabel.setToolTipText("Please select a positive integer");
-        }
-
-        // Validate precursor mass tolerances
-        if (precursorIonAccuracyTxt.getText() == null || precursorIonAccuracyTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a precursor mass tolerance.",
-                        "Precursor Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorIonLbl.setForeground(Color.RED);
-            precursorIonLbl.setToolTipText("Please select a precursor mass tolerance");
-        }
-
-        // OK, see if it is a number.
-        float precursorTolerance = -1;
-
-        try {
-            precursorTolerance = Float.parseFloat(precursorIonAccuracyTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number (zero or more) for the precursor mass tolerance.",
-                        "Precursor Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorIonLbl.setForeground(Color.RED);
-            precursorIonLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (precursorTolerance < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number (zero or more) for the precursor mass tolerance.",
-                        "Precursor Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorIonLbl.setForeground(Color.RED);
-            precursorIonLbl.setToolTipText("Please select a positive number");
-        }
-
-        // Validate fragment mass tolerances
-        if (fragmentIonAccuracyTxt.getText() == null || fragmentIonAccuracyTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a fragment mass tolerance.",
-                        "Fragment Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            fragmentIonLbl.setForeground(Color.RED);
-            fragmentIonLbl.setToolTipText("Please select the fragment mass tolerance");
-        }
-
-        // OK, see if it is a number.
-        float fragmentTolerance = -1;
-
-        try {
-            fragmentTolerance = Float.parseFloat(fragmentIonAccuracyTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number (zero or more) for the fragment mass tolerance.",
-                        "Fragment Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            fragmentIonLbl.setForeground(Color.RED);
-            fragmentIonLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (fragmentTolerance < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number (zero or more) for the fragment mass tolerance.",
-                        "Fragment Mass Tolerance Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            fragmentIonLbl.setForeground(Color.RED);
-            fragmentIonLbl.setToolTipText("Please select a positive number");
-        }
-
-        // Validate precursor charge lower bound
-        if (minPrecursorChargeTxt.getText() == null || minPrecursorChargeTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a lower bound for the precursor charge first.",
-                        "Lower Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select a lower bound for the precursor charge");
-        }
-
-        // OK, see if it is an integer.
-        int chargeLowerBound = -1;
-
-        try {
-            chargeLowerBound = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the lower bound of the precursor charge.",
-                        "Lower Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select positive integers");
-        }
-
-        if (chargeLowerBound <= 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the lower bound of the precursor charge.",
-                        "Lower Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select positive integers");
-        }
-
-        // Validate precursor charge upper bound
-        if (maxPrecursorChargeTxt.getText() == null || maxPrecursorChargeTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify an upper bound for the precursor charge.",
-                        "Upper Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select an upper bound for the precursor charge");
-        }
-
-        // OK, see if it is an integer.
-        int chargeUpperBound = -1;
-
-        try {
-            chargeUpperBound = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the upper bound of the precursor charge.",
-                        "Upper Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select positive integers");
-        }
-
-        if (chargeUpperBound <= 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the upper bound of the precursor charge.",
-                        "Upper Bound Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Please select positive integers");
-        }
-
-        if (chargeUpperBound < chargeLowerBound) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "The minimum precursor charge must be lower than or equal to the maximum precursor charge.",
-                        "Precursor Charge Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            precursorChargeLbl.setForeground(Color.RED);
-            precursorChargeLbl.setToolTipText("Minimum precursor charge > Maximum precursor charge!");
-        }
-
+        // valdiate that an enzyme is selected
         if (enzymesCmb.getSelectedIndex() == 0) {
             if (showMessage && valid) {
                 JOptionPane.showMessageDialog(this, "Please select an enzyme.", "Enzyme Error", JOptionPane.WARNING_MESSAGE);
@@ -2220,10 +2042,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             modificationProfile.addVariableModification(ptmFactory.getPTM(modName));
             modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
         }
-        
+
         tempSearchParameters.setModificationProfile(modificationProfile);
 
-        tempSearchParameters.setnMissedCleavages(new Integer(missedCleavagesTxt.getText().trim()));
+        tempSearchParameters.setnMissedCleavages(new Integer(maxMissedCleavagesTxt.getText().trim()));
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);

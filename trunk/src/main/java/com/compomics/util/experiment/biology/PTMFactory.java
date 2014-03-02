@@ -845,8 +845,9 @@ public class PTMFactory implements Serializable {
      * for protein termini modifications)
      * @param modificationMass the modification mass as found in the search
      * results
-     * @param massTolerance the mass tolerance to use to match the modification
+     * @param ptmMassTolerance the mass tolerance to use to match the modification
      * mass
+     * @param ms2Tolerance the fragment ion mass tolerance
      * @param matchingType the type of sequence matching
      *
      * @return a map of expected PTMs corresponding to the given
@@ -862,15 +863,15 @@ public class PTMFactory implements Serializable {
      * @throws java.sql.SQLException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
-            double modificationMass, double massTolerance, AminoAcidPattern.MatchingType matchingType)
+            double modificationMass, double ptmMassTolerance, double ms2Tolerance, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
         HashMap<Integer, ArrayList<String>> mapping = new HashMap<Integer, ArrayList<String>>();
 
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = getPTM(ptmName);
-            if (Math.abs(ptm.getMass() - modificationMass) <= massTolerance) {
-                for (int site : peptide.getPotentialModificationSites(ptm, matchingType, massTolerance)) {
+            if (Math.abs(ptm.getMass() - modificationMass) <= ptmMassTolerance) {
+                for (int site : peptide.getPotentialModificationSites(ptm, matchingType, ms2Tolerance)) {
                     ArrayList<String> modifications = mapping.get(site);
                     if (modifications == null) {
                         modifications = new ArrayList<String>();
@@ -895,8 +896,8 @@ public class PTMFactory implements Serializable {
      * @param peptide the peptide
      * @param ptmName the name of the searched PTM
      * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param ptmMassTolerance the PTM mass tolerance
+     * @param ms2Tolerance the fragment ion mass tolerance
      *
      * @return the possible expected modification names. Empty if not found.
      *
@@ -911,9 +912,9 @@ public class PTMFactory implements Serializable {
      * @throws java.sql.SQLException
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName, AminoAcidPattern.MatchingType matchingType,
-            Double massTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+            Double ptmMassTolerance, double ms2Tolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         PTM ptm = getPTM(ptmName);
-        return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), massTolerance, matchingType);
+        return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), ptmMassTolerance, ms2Tolerance, matchingType);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
+import com.compomics.util.gui.GuiUtilities;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -280,11 +281,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
         highIsotopeErrorRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         highIsotopeErrorRangeTxt.setText("1");
-        highIsotopeErrorRangeTxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                highIsotopeErrorRangeTxtActionPerformed(evt);
-            }
-        });
         highIsotopeErrorRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 highIsotopeErrorRangeTxtKeyReleased(evt);
@@ -623,15 +619,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void highIsotopeErrorRangeTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_highIsotopeErrorRangeTxtActionPerformed
-        validateInput(false);
-    }//GEN-LAST:event_highIsotopeErrorRangeTxtActionPerformed
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
     private void eValueCutoffTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueCutoffTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_eValueCutoffTxtKeyReleased
@@ -664,144 +651,20 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
         boolean valid = true;
 
-        peptideLengthLabel.setForeground(Color.BLACK);
-        peptideLengthLabel.setToolTipText(null);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, lowIsotopeErrorRangeTxt, "lower isotope range", "Isotope Range Error", false, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, highIsotopeErrorRangeTxt, "upper isotope range", "Isotope Range Error", false, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, eValueCutoffLabel, eValueCutoffTxt, "e-value cuttoff limit", "E-value Cutoff Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberTerminiLabel, numberTerminiTxt, "number of tolerable termini", "Peptide Termini Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
 
-        // validate peptide sizes
-        if (minPepLengthTxt.getText() != null && !minPepLengthTxt.getText().trim().equals("")
-                || maxPepLengthTxt.getText() != null && !maxPepLengthTxt.getText().trim().equals("")) {
-
-            // OK, see if it is an integer.
-            int length = 0;
-            try {
-                length = Integer.parseInt(minPepLengthTxt.getText().trim());
-            } catch (NumberFormatException nfe) {
-                // Unparseable number!
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify positive numbers for the peptide lengths.",
-                            "Peptide Length Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                peptideLengthLabel.setForeground(Color.RED);
-                peptideLengthLabel.setToolTipText("Please select positive integers");
-            }
-
-            // and it should be greater than zero
-            if (length < 0) {
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify positive integers for the peptide lengths.",
-                            "Incorrect peptide lengths found!", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                peptideLengthLabel.setForeground(Color.RED);
-                peptideLengthLabel.setToolTipText("Please select positive integers");
-            }
-
-            // ok, see if it is an integer
-            length = 0;
-            try {
-                length = Integer.parseInt(maxPepLengthTxt.getText().trim());
-            } catch (NumberFormatException nfe) {
-                // Unparseable number!
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify positive numbers for the peptide lengths.",
-                            "Peptide Length Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                peptideLengthLabel.setForeground(Color.RED);
-                peptideLengthLabel.setToolTipText("Please select positive integers for the peptide length");
-            }
-
-            // and it should be greater than zero
-            if (length <= 0) {
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify positive integers for the peptide lengths.",
-                            "Peptide Length Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                peptideLengthLabel.setForeground(Color.RED);
-                peptideLengthLabel.setToolTipText("Please select positive integers");
-            }
-        }
-
-        // check the number of spectrum matches
-        numberMatchesLabel.setForeground(Color.BLACK);
-        numberMatchesLabel.setToolTipText(null);
-        if (numberMatchesTxt.getText() == null || numberMatchesTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify the number of spectrum matches.",
-                        "Number Spectrum Matches Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberMatchesLabel.setForeground(Color.RED);
-            numberMatchesLabel.setToolTipText("Please select the number of spectrum matches");
-        }
-
-        // OK, see if it is an integer
-        double test = -1;
-
+        // isotope range: the low value should be lower than the high value
         try {
-            test = new Integer(numberMatchesTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the number of spectrum matches.",
-                        "Number Spectrum Matches Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberMatchesLabel.setForeground(Color.RED);
-            numberMatchesLabel.setToolTipText("Please select a positive integer");
-        }
+            int lowValue = Integer.parseInt(lowIsotopeErrorRangeTxt.getText().trim());
+            int highValue = Integer.parseInt(highIsotopeErrorRangeTxt.getText().trim());
 
-        // and it should be one or bigger
-        if (test < 1) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the number of spectrum matches.",
-                        "Number Spectrum Matches Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberMatchesLabel.setForeground(Color.RED);
-            numberMatchesLabel.setToolTipText("Please select a positive integer");
-        }
-
-        isotopeErrorRangeLabel.setForeground(Color.BLACK);
-        isotopeErrorRangeLabel.setToolTipText(null);
-
-        // validate the isotop error range
-        if (lowIsotopeErrorRangeTxt.getText() != null && !lowIsotopeErrorRangeTxt.getText().trim().equals("")
-                || highIsotopeErrorRangeTxt.getText() != null && !highIsotopeErrorRangeTxt.getText().trim().equals("")) {
-
-            // OK, see if it is an integer.
-            int lowValue = 0;
-            try {
-                lowValue = Integer.parseInt(lowIsotopeErrorRangeTxt.getText().trim());
-            } catch (NumberFormatException nfe) {
-                // Unparseable number!
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify an integer for the lower isotope range.",
-                            "Isotope Range Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                isotopeErrorRangeLabel.setForeground(Color.RED);
-                isotopeErrorRangeLabel.setToolTipText("Please select integers for the isotop error range");
-            }
-
-            // ok, see if it is an integer
-            int highValue = 0;
-            try {
-                highValue = Integer.parseInt(highIsotopeErrorRangeTxt.getText().trim());
-            } catch (NumberFormatException nfe) {
-                // Unparseable number!
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "You need to specify an integer for the upper isotope range.",
-                            "Isotope Range Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                isotopeErrorRangeLabel.setForeground(Color.RED);
-                isotopeErrorRangeLabel.setToolTipText("Please select integers for the isotop error range");
-            }
-
-            // and the low value should be lower than the high value
             if (lowValue > highValue) {
                 if (showMessage && valid) {
                     JOptionPane.showMessageDialog(this, "The lower range value has to be smaller than the upper range value.",
@@ -811,131 +674,14 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                 isotopeErrorRangeLabel.setForeground(Color.RED);
                 isotopeErrorRangeLabel.setToolTipText("Please select a valid range (upper < higher))");
             }
+        } catch (NumberFormatException e) {
+            // ignore, handled above
         }
-
-        eValueCutoffLabel.setForeground(Color.BLACK);
-        eValueCutoffLabel.setToolTipText(null);
-        // Validate e-value cutoff
-        if (eValueCutoffTxt.getText() == null || eValueCutoffTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify an e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueCutoffLabel.setForeground(Color.RED);
-            eValueCutoffLabel.setToolTipText("Please select an e-value cuttoff limit");
-        }
-
-        // OK, see if it is a number.
-        float eValue = -1;
-
-        try {
-            eValue = Float.parseFloat(eValueCutoffTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueCutoffLabel.setForeground(Color.RED);
-            eValueCutoffLabel.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (eValue < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueCutoffLabel.setForeground(Color.RED);
-            eValueCutoffLabel.setToolTipText("Please select a positive number");
-        }
-
-        numberTerminiLabel.setForeground(Color.BLACK);
-        numberTerminiLabel.setToolTipText(null);
-        // Validate number of tolerable termini
-        if (numberTerminiTxt.getText() == null || numberTerminiTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify the number of tolerable termini.",
-                        "Peptide Termini Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberTerminiLabel.setForeground(Color.RED);
-            numberTerminiLabel.setToolTipText("Please select the number of tolerable termini");
-        }
-
-        // OK, see if it is a number.
-        int termini = -1;
-
-        try {
-            termini = Integer.parseInt(numberTerminiTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the number of tolerable termini.",
-                        "Peptide Termini Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberTerminiLabel.setForeground(Color.RED);
-            numberTerminiLabel.setToolTipText("Please select a positive integer");
-        }
-
-        // And it should be zero or more.
-        if (termini < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the number of tolerable termini..",
-                        "Peptide Termini Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            numberTerminiLabel.setForeground(Color.RED);
-            numberTerminiLabel.setToolTipText("Please select a positive integer");
-        }
-
-        maxPtmsLabel.setForeground(Color.BLACK);
-        maxPtmsLabel.setToolTipText(null);
-        // Validate the max number of ptms per peptide
-        if (maxPtmsTxt.getText() == null || maxPtmsTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify the max number of PTMs per peptide.",
-                        "Peptide PTM Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxPtmsLabel.setForeground(Color.RED);
-            maxPtmsLabel.setToolTipText("Please select the max number of PTMs per peptide");
-        }
-
-        // OK, see if it is a number.
-        int numberPtms = -1;
-
-        try {
-            numberPtms = Integer.parseInt(maxPtmsTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the max number of PTMs per peptide.",
-                        "Peptide PTM Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxPtmsLabel.setForeground(Color.RED);
-            maxPtmsLabel.setToolTipText("Please select an integer");
-        }
-
-        // And it should be zero or more.
-        if (numberPtms < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive integer for the max number of PTMs per peptide.",
-                        "Peptide PTM Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxPtmsLabel.setForeground(Color.RED);
-            maxPtmsLabel.setToolTipText("Please select a positive integer");
-        }
+        
+        okButton.setEnabled(valid);
 
         return valid;
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox additionalOutputCmb;

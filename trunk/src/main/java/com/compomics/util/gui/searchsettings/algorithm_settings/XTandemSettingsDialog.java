@@ -4,6 +4,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
+import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.gui.ptm.PtmDialogParent;
@@ -322,10 +323,10 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         }
         return result;
     }
-    
+
     /**
      * Returns the modification profile corresponding to the input by the user.
-     * 
+     *
      * @return the modification profile corresponding to the input by the user
      */
     public ModificationProfile getModificationProfile() {
@@ -423,7 +424,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         spectrumImportSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spectrum Import"));
         spectrumImportSettingsPanel.setOpaque(false);
 
-        dynamicRangeLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/sdr.html\">Dynamic Range (Da)</a></html>");
+        dynamicRangeLbl.setText("Dynamic Range (Da)    (?)");
+        dynamicRangeLbl.setToolTipText("Open X!Tandem parameter details");
         dynamicRangeLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 dynamicRangeLblMouseReleased(evt);
@@ -450,7 +452,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        nPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/stp.html\">Number of Peaks</a></html>");
+        nPeaksLbl.setText("Number of Peaks    (?)");
+        nPeaksLbl.setToolTipText("Open X!Tandem parameter details");
         nPeaksLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 nPeaksLblMouseReleased(evt);
@@ -463,7 +466,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        minFragMzLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smfmz.html\">Minimum Fragment m/z</a></html>");
+        minFragMzLbl.setText("Minimum Fragment m/z    (?)");
+        minFragMzLbl.setToolTipText("Open X!Tandem parameter details");
         minFragMzLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 minFragMzLblMouseReleased(evt);
@@ -483,7 +487,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        minPeaksLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smp.html\">Minimum Peaks</a></html>");
+        minPeaksLbl.setText("Minimum Peaks    (?)");
+        minPeaksLbl.setToolTipText("Open X!Tandem parameter details");
         minPeaksLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 minPeaksLblMouseReleased(evt);
@@ -503,7 +508,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        minPrecMassLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/smpmh.html\">Minimum Precursor Mass</a></html>");
+        minPrecMassLbl.setText("Minimum Precursor Mass    (?)");
+        minPrecMassLbl.setToolTipText("Open X!Tandem parameter details");
         minPrecMassLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 minPrecMassLblMouseReleased(evt);
@@ -530,7 +536,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        noiseSuppressionLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/suns.html\">Noise Suppression</a></html>");
+        noiseSuppressionLabel.setText("Noise Suppression    (?)");
+        noiseSuppressionLabel.setToolTipText("Open X!Tandem parameter details");
         noiseSuppressionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 noiseSuppressionLabelMouseReleased(evt);
@@ -581,28 +588,28 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             .addGroup(spectrumImportSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dynamicRangeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dynamicRangeLbl)
                     .addComponent(dynamicRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nPeaksLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minFragmentMzTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minFragMzLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(minFragMzLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minPeaksLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(minPeaksLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(noiseSuppressionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(noiseSuppressionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(noiseSuppressionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumImportSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minPrecMassLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(minPrecMassLbl))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -623,7 +630,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        quickAcetylLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqa.html\">Quick Acetyl</a></html>");
+        quickAcetylLabel.setText("Quick Acetyl    (?)");
+        quickAcetylLabel.setToolTipText("Open X!Tandem parameter details");
         quickAcetylLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 quickAcetylLabelMouseReleased(evt);
@@ -636,7 +644,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        quickPyroLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pqp.html\">Quick Pyrolidone</a></html>");
+        quickPyroLabel.setText("Quick Pyrolidone    (?)");
+        quickPyroLabel.setToolTipText("Open X!Tandem parameter details");
         quickPyroLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 quickPyroLabelMouseReleased(evt);
@@ -649,7 +658,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        stpBiasLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/pstpb.html\">stP bias</a></html>");
+        stpBiasLabel.setText("stP bias    (?)");
+        stpBiasLabel.setToolTipText("Open X!Tandem parameter details");
         stpBiasLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 stpBiasLabelMouseReleased(evt);
@@ -686,16 +696,16 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(quickAcetylLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quickAcetylLabel)
                     .addComponent(quickAcetylCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quickPyroCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(quickPyroLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stpBiasCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stpBiasLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -709,7 +719,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        refinementLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refine.html\">Refinement</a></html>");
+        refinementLabel.setText("Refinement    (?)");
+        refinementLabel.setToolTipText("Open X!Tandem parameter details");
         refinementLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 refinementLabelMouseReleased(evt);
@@ -722,7 +733,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        semiEnzymaticLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rcsemi.html\">Semi-Enzymatic Cleavage</a></html>");
+        semiEnzymaticLabel.setText("Semi-Enzymatic Cleavage    (?)");
+        semiEnzymaticLabel.setToolTipText("Open X!Tandem parameter details");
         semiEnzymaticLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 semiEnzymaticLabelMouseReleased(evt);
@@ -744,7 +756,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        maxEValueRefinmentLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refmvev.html\">Maximum Valid Expectation Value</a></html>");
+        maxEValueRefinmentLbl.setText("Maximum Valid Expectation Value    (?)");
+        maxEValueRefinmentLbl.setToolTipText("Open X!Tandem parameter details");
         maxEValueRefinmentLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 maxEValueRefinmentLblMouseReleased(evt);
@@ -757,7 +770,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        pointMutationLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rpm.html\">Point Mutations</a></html>");
+        pointMutationLabel.setText("Point Mutations    (?)");
+        pointMutationLabel.setToolTipText("Open X!Tandem parameter details");
         pointMutationLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 pointMutationLabelMouseReleased(evt);
@@ -772,7 +786,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         pointMutationsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        snapsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rsaps.html\">snAPs</a></html>");
+        snapsLabel.setText("snAPs    (?)");
+        snapsLabel.setToolTipText("Open X!Tandem parameter details");
         snapsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 snapsLabelMouseReleased(evt);
@@ -789,7 +804,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         spectrumSynthesisCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        spectrumSynthesisLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rss.html\">Spectrum Synthesis</a></html>");
+        spectrumSynthesisLabel.setText("Spectrum Synthesis    (?)");
+        spectrumSynthesisLabel.setToolTipText("Open X!Tandem parameter details");
         spectrumSynthesisLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 spectrumSynthesisLabelMouseReleased(evt);
@@ -804,7 +820,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         unanticipatedCleavageCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        unanticipatedCleavageLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ruc.html\">Unanticipated Cleavage</a></html>");
+        unanticipatedCleavageLabel.setText("Unanticipated Cleavage    (?)");
+        unanticipatedCleavageLabel.setToolTipText("Open X!Tandem parameter details");
         unanticipatedCleavageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 unanticipatedCleavageLabelMouseReleased(evt);
@@ -817,7 +834,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        usePotentialModsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/rupmffr.html\">Use Potential Modifications for Full Refinement</a></html>");
+        usePotentialModsLabel.setText("Potential Modifications for Full Refinement    (?)");
+        usePotentialModsLabel.setToolTipText("Open X!Tandem parameter details");
         usePotentialModsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 usePotentialModsLabelMouseReleased(evt);
@@ -834,16 +852,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         refinementModificationsJPanel.setOpaque(false);
 
-        refinementModificationsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/refpmm.htmll\">Refinement Modifications</a></html>");
+        refinementModificationsLabel.setText("Refinement Modifications    (?)");
+        refinementModificationsLabel.setToolTipText("Open X!Tandem parameter details");
         refinementModificationsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                refinementModificationsLabelMouseReleased(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 refinementModificationsLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 refinementModificationsLabelMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                refinementModificationsLabelMouseReleased(evt);
             }
         });
 
@@ -912,7 +931,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         refinementModificationsJPanelLayout.setHorizontalGroup(
             refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(refinementModificationsJPanelLayout.createSequentialGroup()
-                .addComponent(refinementModificationsLabel)
+                .addComponent(refinementModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(246, 246, 246)
                 .addComponent(openModificationSettingsJButton)
                 .addGap(2, 2, 2))
@@ -922,7 +941,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(refinementModificationsJPanelLayout.createSequentialGroup()
                 .addGroup(refinementModificationsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(refinementModificationsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(refinementModificationsLabel)
                     .addComponent(openModificationSettingsJButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -976,35 +995,35 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                 .addContainerGap()
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(refinementCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(refinementLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(refinementLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxEValueRefineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxEValueRefinmentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maxEValueRefinmentLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(unanticipatedCleavageCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unanticipatedCleavageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(unanticipatedCleavageLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(semiEnzymaticCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(semiEnzymaticLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(semiEnzymaticLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(potentialModificationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(usePotentialModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usePotentialModsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pointMutationsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pointMutationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pointMutationLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(snapsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(snapsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(snapsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(refinementSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spectrumSynthesisCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spectrumSynthesisLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spectrumSynthesisLabel))
                 .addGap(18, 18, 18)
                 .addComponent(refinementModificationsJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1013,7 +1032,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         outputSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
         outputSettingsPanel.setOpaque(false);
 
-        eValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/omvev.html\">E-value Cutoff</a></html>");
+        eValueLbl.setText("E-value Cutoff    (?)");
+        eValueLbl.setToolTipText("Open X!Tandem parameter details");
         eValueLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 eValueLblMouseReleased(evt);
@@ -1033,7 +1053,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        outputSequencesLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/osequ.html\">Output Sequences</a></html>");
+        outputSequencesLabel.setText("Output Sequences    (?)");
+        outputSequencesLabel.setToolTipText("Open X!Tandem parameter details");
         outputSequencesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 outputSequencesLabelMouseReleased(evt);
@@ -1055,7 +1076,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        outputProteinsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/oprot.html\">Output Proteins</a></html>");
+        outputProteinsLabel.setText("Output Proteins    (?)");
+        outputProteinsLabel.setToolTipText("Open X!Tandem parameter details");
         outputProteinsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 outputProteinsLabelMouseReleased(evt);
@@ -1068,7 +1090,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             }
         });
 
-        outputSpectraLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ospec.html\">Output Spectra</a></html>");
+        outputSpectraLabel.setText("Output Spectra    (?)");
+        outputSpectraLabel.setToolTipText("Open X!Tandem parameter details");
         outputSpectraLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 outputSpectraLabelMouseReleased(evt);
@@ -1085,7 +1108,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         skylineTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        skylinePathValueLbl.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ssp.html\">Skyline Path</a></html>");
+        skylinePathValueLbl.setText("Skyline Path    (?)");
+        skylinePathValueLbl.setToolTipText("Open X!Tandem parameter details");
         skylinePathValueLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 skylinePathValueLblMouseReleased(evt);
@@ -1100,7 +1124,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         outputHistogramsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        outputHistogramsLabel.setText("<html><a href=\"http://www.thegpm.org/TANDEM/api/ohist.html\">Output Histograms</a></html>");
+        outputHistogramsLabel.setText("Output Histograms    (?)");
+        outputHistogramsLabel.setToolTipText("Open X!Tandem parameter details");
         outputHistogramsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 outputHistogramsLabelMouseReleased(evt);
@@ -1152,27 +1177,27 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
             .addGroup(outputSettingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eValueLbl)
                     .addComponent(eValueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputProteinsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputProteinsLabel)
                     .addComponent(outputProteinsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputSequencesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(outputSequencesLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputSpectraCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(outputSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(outputSpectraLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(outputHistogramsLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(skylinePathValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(skylinePathValueLbl)
                     .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1360,7 +1385,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      */
     private void quickAcetylCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickAcetylCmbActionPerformed
         if (quickAcetylCmb.getSelectedIndex() == 0) {
-            PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
                 if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
@@ -1381,7 +1405,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      */
     private void quickPyroCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPyroCmbActionPerformed
         if (quickPyroCmb.getSelectedIndex() == 0) {
-            PTMFactory ptmFactory = PTMFactory.getInstance();
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
                 if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
@@ -2307,280 +2330,16 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
 
         boolean valid = true;
 
-        eValueLbl.setForeground(Color.BLACK);
-        eValueLbl.setToolTipText(null);
-        // Validate e-value cutoff
-        if (eValueTxt.getText() == null || eValueTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify an e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueLbl.setForeground(Color.RED);
-            eValueLbl.setToolTipText("Please select an e-value cuttoff limit");
-        }
+        valid = GuiUtilities.validateDoubleInput(this, eValueLbl, eValueTxt, "e-value cutoff", "E-value Cutoff Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, dynamicRangeLbl, dynamicRangeTxt, "dynamic range cutoff", "Dynamic Range Cutoff Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, nPeaksLbl, nPeaksTxt, "number of peaks", "Number of Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, minFragMzLbl, minFragmentMzTxt, "minimal fragment m/z", "Minimal Fragment MZ Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimal number of peaks", "Minimal Number of Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, minPrecMassLbl, minPrecMassTxt, "minimal precursor mass", "Minimal Precursor Mass Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, maxEValueRefinmentLbl, maxEValueRefineTxt, "maximal e-value for the refinement", "Maximal Refinement E-Value Error", true, showMessage, valid);
 
-        // OK, see if it is a number.
-        float eValue = -1;
-
-        try {
-            eValue = Float.parseFloat(eValueTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueLbl.setForeground(Color.RED);
-            eValueLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (eValue < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the e-value cutoff.",
-                        "E-value Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            eValueLbl.setForeground(Color.RED);
-            eValueLbl.setToolTipText("Please select a positive number");
-        }
-
-        dynamicRangeLbl.setForeground(Color.BLACK);
-        dynamicRangeLbl.setToolTipText(null);
-        if (dynamicRangeTxt.getText() == null || dynamicRangeTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a dynamic range cutoff.",
-                        "Dynamic Range Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            dynamicRangeLbl.setForeground(Color.RED);
-            dynamicRangeLbl.setToolTipText("Please select a dynamic range cuttoff limit");
-        }
-
-        // OK, see if it is a number.
-        double test = -1;
-
-        try {
-            test = new Double(dynamicRangeTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the dynamic range cutoff.",
-                        "Dynamic Range Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            dynamicRangeLbl.setForeground(Color.RED);
-            dynamicRangeLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (test < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the dynamic range cutoff.",
-                        "Dynamic Range Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            dynamicRangeLbl.setForeground(Color.RED);
-            dynamicRangeLbl.setToolTipText("Please select a positive number");
-        }
-
-        nPeaksLbl.setForeground(Color.BLACK);
-        nPeaksLbl.setToolTipText(null);
-        if (nPeaksTxt.getText() == null || nPeaksTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a number of peaks.",
-                        "Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            nPeaksLbl.setForeground(Color.RED);
-            nPeaksLbl.setToolTipText("Please select a number of peaks limit");
-        }
-
-        // OK, see if it is a number.
-        Integer nPeaks = -1;
-
-        try {
-            nPeaks = new Integer(nPeaksTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the number of peaks.",
-                        "Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            nPeaksLbl.setForeground(Color.RED);
-            nPeaksLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (nPeaks < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the number of peaks.",
-                        "Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            nPeaksLbl.setForeground(Color.RED);
-            nPeaksLbl.setToolTipText("Please select a positive number");
-        }
-
-        minFragMzLbl.setForeground(Color.BLACK);
-        minFragMzLbl.setToolTipText(null);
-        if (minFragmentMzTxt.getText() == null || minFragmentMzTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a minimal fragment m/z.",
-                        "Minimal Fragment m/z Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minFragMzLbl.setForeground(Color.RED);
-            minFragMzLbl.setToolTipText("Please select a minimal fragment m/z limit");
-        }
-
-        // OK, see if it is a number.
-        test = -1;
-
-        try {
-            test = new Double(minFragmentMzTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal fragment m/z.",
-                        "Minimal Fragment m/z Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minFragMzLbl.setForeground(Color.RED);
-            minFragMzLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (test < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal fragment m/z.",
-                        "Minimal Fragment m/z Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minFragMzLbl.setForeground(Color.RED);
-            minFragMzLbl.setToolTipText("Please select a positive number");
-        }
-
-        minPeaksLbl.setForeground(Color.BLACK);
-        minPeaksLbl.setToolTipText(null);
-        if (minPeaksTxt.getText() == null || minPeaksTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a minimal number of peaks.",
-                        "Minimal Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPeaksLbl.setForeground(Color.RED);
-            minPeaksLbl.setToolTipText("Please select a minimal number of peaks");
-        }
-
-        // OK, see if it is a number.
-        nPeaks = -1;
-
-        try {
-            nPeaks = new Integer(minPeaksTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal number of peaks.",
-                        "Minimal Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPeaksLbl.setForeground(Color.RED);
-            minPeaksLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (nPeaks < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal number of peaks.",
-                        "Minimal Number of Peaks Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPeaksLbl.setForeground(Color.RED);
-            minPeaksLbl.setToolTipText("Please select a positive number");
-        }
-
-        minPrecMassLbl.setForeground(Color.BLACK);
-        minPrecMassLbl.setToolTipText(null);
-        if (minPrecMassTxt.getText() == null || minPrecMassTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a minimal precursor mass.",
-                        "Minimal Precursor Mass Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPrecMassLbl.setForeground(Color.RED);
-            minPrecMassLbl.setToolTipText("Please select a minimal precursor mass");
-        }
-
-        // OK, see if it is a number.
-        test = -1;
-
-        try {
-            test = new Double(minPrecMassTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal precursor mass.",
-                        "Minimal Precursor Mass Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPrecMassLbl.setForeground(Color.RED);
-            minPrecMassLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (test < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the minimal precursor mass.",
-                        "Minimal Precursor Mass Cutoff Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            minPrecMassLbl.setForeground(Color.RED);
-            minPrecMassLbl.setToolTipText("Please select a positive number");
-        }
-
-        maxEValueRefinmentLbl.setForeground(Color.BLACK);
-        maxEValueRefinmentLbl.setToolTipText(null);
-        if (maxEValueRefineTxt.getText() == null || maxEValueRefineTxt.getText().trim().equals("")) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a maximal e-value for the refinement.",
-                        "Maximal Refinement E-Value Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxEValueRefinmentLbl.setForeground(Color.RED);
-            maxEValueRefinmentLbl.setToolTipText("Please select a maximal e-value for the refinement");
-        }
-
-        // OK, see if it is a number.
-        test = -1;
-
-        try {
-            test = new Double(maxEValueRefineTxt.getText().trim());
-        } catch (NumberFormatException nfe) {
-            // Unparseable number!
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the maximal e-value for the refinement.",
-                        "Maximal Refinement E-Value Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxEValueRefinmentLbl.setForeground(Color.RED);
-            maxEValueRefinmentLbl.setToolTipText("Please select a positive number");
-        }
-
-        // And it should be zero or more.
-        if (test < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(this, "You need to specify a positive number for the maximal e-value for the refinement.",
-                        "Maximal Refinement E-Value Error", JOptionPane.WARNING_MESSAGE);
-            }
-            valid = false;
-            maxEValueRefinmentLbl.setForeground(Color.RED);
-            maxEValueRefinmentLbl.setToolTipText("Please select a positive number");
-        }
-
+        okButton.setEnabled(valid);
+        
         return valid;
     }
 

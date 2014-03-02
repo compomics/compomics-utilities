@@ -1163,7 +1163,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param newMatch the new match
      * @param ascendingScore indicates whether the score is ascending when hits get better
-     * 
+     *
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while saving the file
      * @throws IOException exception thrown whenever an error occurred while
@@ -1311,8 +1311,7 @@ public abstract class Identification extends ExperimentObject {
             ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide(), peptideKey);
             if (!proteinMatch.getKey().equals(proteinKey)) {
                 throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + " most likely a problem with "
-                        + Advocate.getAdvocate(spectrumMatch.getBestPeptideAssumption().getAdvocate()).getName() + ".");
+                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + ".");
             }
             proteinIdentification.add(proteinKey);
             for (String protein : peptide.getParentProteinsNoRemapping()) {
@@ -1339,8 +1338,9 @@ public abstract class Identification extends ExperimentObject {
      * Add a set of spectrumMatches to the model.
      *
      * @param spectrumMatches The spectrum matches
-     * @param ascendingScore indicates whether the score is ascending when hits get better
-     * 
+     * @param ascendingScore indicates whether the score is ascending when hits
+     * get better
+     *
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while saving the file
      * @throws IOException exception thrown whenever an error occurred while

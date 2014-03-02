@@ -118,7 +118,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public String getKey() {
         return spectrumKey;
     }
-
+    
     /**
      * Return all assumptions for the specified search engine indexed by their
      * e-value.

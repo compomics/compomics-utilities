@@ -26,7 +26,7 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     /**
      * Indicates whether the precursor mass shall be corrected.
      */
-    private Boolean correctPrecursorMass = true;
+    private Boolean correctPrecursorMass = false;
     /**
      * Indicates whether the low quality spectra shall be discarded.
      */

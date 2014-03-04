@@ -56,7 +56,7 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Cronstructor with rt window.
+     * Constructor with rt window.
      *
      * @param rt the retention time
      * @param mz the m/z
@@ -75,7 +75,7 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Cronstructor with rt window and no reference rt.
+     * Constructor with rt window and no reference rt.
      *
      * @param mz the m/z
      * @param intensity

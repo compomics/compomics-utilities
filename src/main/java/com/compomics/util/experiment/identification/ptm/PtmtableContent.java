@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
@@ -242,7 +241,7 @@ public class PtmtableContent {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
+                    iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false, false); // @TODO: is the last false ok here???
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -311,7 +310,7 @@ public class PtmtableContent {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false);
+                    iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false, false); // @TODO: is the last false ok here???
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {

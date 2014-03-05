@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.scoring;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -61,7 +60,8 @@ public class PsmScores {
 
             double p = ((double) i + 1) / 100;
 
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrumMap.get(i), peptide, 0, mzTolerance, false);
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, 
+                    precursorCharge, spectrumMap.get(i), peptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
             int n = matches.size();
             double P = 0;
             for (int k = n; k <= N; k++) {

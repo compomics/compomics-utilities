@@ -147,7 +147,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
-     * spectrumfilename on the panel can be 'null' for default coloring.
+     * spectrum filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
@@ -173,7 +173,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
-     * spectrumfilename on the panel can be 'null' for default coloring.
+     * spectrum filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
@@ -200,7 +200,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      * @param aSpectrumFilenameColor Color with the color for the
-     * spectrumfilename on the panel can be 'null' for default coloring.
+     * spectrum filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      *
      * @param aShowFileName boolean that specifies if the file name should be

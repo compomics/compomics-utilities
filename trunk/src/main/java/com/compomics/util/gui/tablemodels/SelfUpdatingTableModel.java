@@ -80,10 +80,6 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * table and that the table should not update.
      */
     public boolean isScrolling = false;
-    /**
-     * The time for the last scroll event.
-     */
-    private static long lastScrollEvent = System.currentTimeMillis();
 
     /**
      * Loads the data needed for objects at rows of the given view indexes. Use

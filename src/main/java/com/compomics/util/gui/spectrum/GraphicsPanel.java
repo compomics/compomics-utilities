@@ -229,19 +229,19 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected int iDragXLoc = 0;
     /**
-     * Scale unit for the X axis
+     * Scale unit for the X axis.
      */
     protected double iXScaleUnit = 0.0;
     /**
-     * Scale unit for the Y axis
+     * Scale unit for the Y axis.
      */
     protected double iYScaleUnit = 0.0;
     /**
-     * Graphical unit for the X axis
+     * Graphical unit for the X axis.
      */
     protected int iXUnit = 0;
     /**
-     * Graphical unit for the Y axis
+     * Graphical unit for the Y axis.
      */
     protected int iYUnit = 0;
     /**
@@ -872,7 +872,7 @@ public abstract class GraphicsPanel extends JPanel {
             }
 
             // round the range of the x- and y-axis to integer values
-            iXAxisMin = (int) Math.floor(iXAxisMin);
+            iXAxisMin = (int) Math.floor(iXAxisMin); // @TODO: increase the zooming resolution!!!
             iXAxisMax = (int) Math.ceil(iXAxisMax);
             iYAxisMin = (int) Math.floor(iYAxisMin);
             iYAxisMax = (int) Math.ceil(iYAxisMax);
@@ -1654,7 +1654,6 @@ public abstract class GraphicsPanel extends JPanel {
         iXAxisData.add(new double[peaks.size()]);
         iYAxisData.add(new double[peaks.size()]);
 
-
         // Maximum y-axis value.
         double maxYAxisValue = 0.0;
 
@@ -1842,7 +1841,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         // Now the tags along the axes.
-        this.drawXTags(g, (int) Math.floor(aXMin), (int) Math.ceil(aXMax), aXScale, xAxis, currentPadding);
+        this.drawXTags(g, (int) Math.floor(aXMin), (int) Math.ceil(aXMax), aXScale, xAxis, currentPadding); // @TODO: increase the zooming resolution!!!
         int yTemp = yAxis;
 
         if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
@@ -1867,6 +1866,8 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aPadding int with the amount of padding to take into account.
      */
     protected void drawXTags(Graphics g, int aMin, int aMax, int aXScale, int aXAxisWidth, int aPadding) {
+
+        // @TODO: increase the zooming resolution!!!
 
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
@@ -1982,6 +1983,7 @@ public abstract class GraphicsPanel extends JPanel {
             if (delta > 1) {
 
                 long lTagValue = 0;
+
                 // now we can mark the first unit
                 for (int i = 0; i < aMax; i++) {
 
@@ -2180,7 +2182,7 @@ public abstract class GraphicsPanel extends JPanel {
      * the current boundaries. Note always returns a round number, e.g., 1, 5,
      * 10, 25, 50, etc.
      *
-     * @param maxNumberOfTags the maxium number of tags there is room for
+     * @param maxNumberOfTags the maximum number of tags there is room for
      * @param delta the difference between the max and the min value
      * @return the optimal distance between the tags
      */

@@ -29,6 +29,7 @@ import java.util.Vector;
  * The spectrum annotator annotates peaks in a spectrum.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class SpectrumAnnotator {
 
@@ -94,6 +95,12 @@ public abstract class SpectrumAnnotator {
      * C-terminal m/z shift applied to all reverse ions.
      */
     protected double massShiftCTerm = 0;
+    /**
+     * If there are more than one matching peak for a given annotation setting
+     * this value to true results in the most accurate peak being annotated,
+     * while setting this to false annotates the most intense peak.
+     */
+    protected boolean pickMostAccuratePeak = true;
 
     /**
      * Translates the list of ion matches into a vector of annotations which can
@@ -121,6 +128,7 @@ public abstract class SpectrumAnnotator {
 
         Charge charge = new Charge(Charge.PLUS, inspectedCharge);
         IonMatch bestMatch = null;
+        double bestAccuracy = Double.MAX_VALUE;
         double fragmentMz = (theoreticIon.getTheoreticMass() + inspectedCharge * ElementaryIon.proton.getTheoreticMass()) / inspectedCharge;
 
         double deltaMz;
@@ -131,8 +139,9 @@ public abstract class SpectrumAnnotator {
             deltaMz = mzTolerance;
         }
 
-        if (!mz.isEmpty() && fragmentMz >= mz.get(0) - deltaMz
-                && fragmentMz <= mz.get(mz.size() - 1) + deltaMz) {
+        if (!mz.isEmpty()
+                && (fragmentMz >= mz.get(0) - deltaMz)
+                && (fragmentMz <= mz.get(mz.size() - 1) + deltaMz)) {
 
             int indexMin = 0;
             int indexMax = mz.size() - 1;
@@ -142,14 +151,25 @@ public abstract class SpectrumAnnotator {
             if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
                 Peak currentPeak = peakMap.get(mz.get(indexMax));
                 bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+                bestAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
             }
 
             tempMatch = new IonMatch(new Peak(mz.get(indexMin), 0), theoreticIon, charge);
 
             if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
+
                 Peak currentPeak = peakMap.get(mz.get(indexMin));
-                if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                    bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+
+                if (pickMostAccuratePeak) {
+                    double tempAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
+                    if (bestMatch == null || tempAccuracy < bestAccuracy) {
+                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+                        bestAccuracy = tempAccuracy;
+                    }
+                } else {
+                    if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
+                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+                    }
                 }
             }
 
@@ -160,9 +180,19 @@ public abstract class SpectrumAnnotator {
                 tempMatch = new IonMatch(new Peak(currentMz, 0), theoreticIon, charge);
 
                 if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
+
                     Peak currentPeak = peakMap.get(mz.get(index));
-                    if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+
+                    if (pickMostAccuratePeak) {
+                        double tempAccuracy = Math.abs(currentPeak.mz - theoreticIon.getTheoreticMz(inspectedCharge));
+                        if (bestMatch == null || tempAccuracy < bestAccuracy) {
+                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+                            bestAccuracy = tempAccuracy;
+                        }
+                    } else {
+                        if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
+                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
+                        }
                     }
                 }
 
@@ -217,13 +247,18 @@ public abstract class SpectrumAnnotator {
      * @param mzTolerance the new m/z tolerance (in m/z, Th)
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
+     * @param pickMostAccuratePeak if there are more than one matching peak for
+     * a given annotation setting this value to true results in the most
+     * accurate peak being annotated, while setting this to false annotates the
+     * most intense peak
      */
-    protected void setMassTolerance(double mzTolerance, boolean isPpm) {
-        if (mzTolerance != this.mzTolerance) {
+    protected void setMassTolerance(double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
+        if (mzTolerance != this.mzTolerance || pickMostAccuratePeak != this.pickMostAccuratePeak) {
             spectrumAnnotation.clear();
             unmatchedIons.clear();
             this.mzTolerance = mzTolerance;
             this.isPpm = isPpm;
+            this.pickMostAccuratePeak = pickMostAccuratePeak;
         }
     }
 
@@ -341,9 +376,13 @@ public abstract class SpectrumAnnotator {
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
+     * @param pickMostAccuratePeak if there are more than one matching peak for
+     * a given annotation setting this value to true results in the most
+     * accurate peak being annotated, while setting this to false annotates the
+     * most intense peak
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
 
     /**
      * Returns the spectrum currently inspected.
@@ -457,15 +496,17 @@ public abstract class SpectrumAnnotator {
      * spectrumIdentificationAssumption of interest
      * @param matchingType the matching type to map ptms on the peptide sequence
      * @param mzTolerance the ms2 m/z tolerance to use
-     * 
+     *
      * @return the expected possible neutral losses
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, AminoAcidPattern.MatchingType matchingType,
+            double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
             return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), matchingType, mzTolerance);
@@ -479,8 +520,8 @@ public abstract class SpectrumAnnotator {
 
     /**
      * This method matches the potential fragment ions of a given peptide with a
-     * given peak. 
-     * Note: fragment ions need to be initiated by the SpectrumAnnotator extending class.
+     * given peak. Note: fragment ions need to be initiated by the
+     * SpectrumAnnotator extending class.
      *
      * @param iontypes The fragment ions selected
      * @param charges The charges of the fragment to search for
@@ -525,8 +566,9 @@ public abstract class SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * Note: fragment ions need to be initiated by the SpectrumAnnotator extending class.
-     * 
+     * Note: fragment ions need to be initiated by the SpectrumAnnotator
+     * extending class.
+     *
      * @param iontypes The expected ions to look for
      * @param neutralLosses Map of expected neutral losses: neutral loss ->
      * first position in the sequence (first aa is 1). let null if neutral
@@ -556,22 +598,23 @@ public abstract class SpectrumAnnotator {
         }
         return result;
     }
-    
+
     /**
-     * Convenience method to match a reporter ion in a spectrum. The charge is assumed to be 1.
-     * 
+     * Convenience method to match a reporter ion in a spectrum. The charge is
+     * assumed to be 1.
+     *
      * @param theoreticIon the theoretic ion to look for
      * @param charge the charge of the ion
      * @param spectrum the spectrum
      * @param massTolerance the mass tolerance to use
-     * 
+     *
      * @return a list of all the ion matches
      */
     public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
-        double targetMass = (theoreticIon.getTheoreticMass() + charge * ElementaryIon.proton.getTheoreticMass())/charge;
+        double targetMass = (theoreticIon.getTheoreticMass() + charge * ElementaryIon.proton.getTheoreticMass()) / charge;
         for (double mz : spectrum.getOrderedMzValues()) {
-            if (Math.abs(mz-targetMass) <= massTolerance) {
+            if (Math.abs(mz - targetMass) <= massTolerance) {
                 result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, new Charge(Charge.PLUS, 1)));
             }
             if (mz > targetMass + massTolerance) {
@@ -580,5 +623,4 @@ public abstract class SpectrumAnnotator {
         }
         return result;
     }
-
 }

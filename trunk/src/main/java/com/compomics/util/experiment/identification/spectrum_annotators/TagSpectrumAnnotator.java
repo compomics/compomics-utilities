@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -78,9 +77,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param tag the tag of interest
      * @param matchingType the matching type to map ptms on the peptide sequence
      * @param mzTolerance the ms2 m/z tolerance to use
-     * 
+     *
      * @return the expected possible neutral losses
-     * 
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
@@ -196,11 +195,15 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param mzTolerance The m/z tolerance to use
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
+     * @param pickMostAccuratePeak if there are more than one matching peak for
+     * a given annotation setting this value to true results in the most
+     * accurate peak being annotated, while setting this to false annotates the
+     * most intense peak
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Tag tag, double intensityLimit, double mzTolerance, boolean isPpm) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
+            int precursorCharge, MSnSpectrum spectrum, Tag tag, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
@@ -209,7 +212,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         }
 
         setTag(tag, precursorCharge);
-        setMassTolerance(mzTolerance, isPpm);
+        setMassTolerance(mzTolerance, isPpm, pickMostAccuratePeak);
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -254,7 +257,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
-        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, tag, intensityLimit, mzTolerance, isPpm);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
+        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, tag, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
     }
 }

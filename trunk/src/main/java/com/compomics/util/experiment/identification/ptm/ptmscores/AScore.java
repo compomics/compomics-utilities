@@ -7,10 +7,8 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -250,7 +248,8 @@ public class AScore {
             double p = ((double) bestI + 1) / 100;
             Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, 
+                    spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
             int n = 0;
 
             for (IonMatch match : matches) {
@@ -283,7 +282,8 @@ public class AScore {
 
             tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
-            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false);
+            matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, 
+                    spectrumMap.get(bestI), tempPeptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
             n = 0;
 
             for (IonMatch match : matches) {
@@ -430,7 +430,8 @@ public class AScore {
                 Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
                 tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
 
-                ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, spectrumMap.get(i), tempPeptide, 0, mzTolerance, false);
+                ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge, 
+                        spectrumMap.get(i), tempPeptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
                 int n = matches.size();
                 double P = 0;
                 for (int k = n; k <= N; k++) {

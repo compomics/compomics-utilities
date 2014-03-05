@@ -511,7 +511,7 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Set if the automatic y-axis zoom only considers the anotated peaks.
+     * Set if the automatic y-axis zoom only considers the annotated peaks.
      *
      * @param yAxisZoomExcludesBackgroundPeaks
      */

@@ -19,6 +19,7 @@ import java.util.HashMap;
  * This class contains the spectrum annotation preferences.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class AnnotationPreferences implements Serializable {
 
@@ -32,7 +33,7 @@ public class AnnotationPreferences implements Serializable {
      */
     private boolean yAxisZoomExcludesBackgroundPeaks = true;
     /**
-     * If true, the ion table is shown as an intensity versionm, false displays
+     * If true, the ion table is shown as an intensity version, false displays
      * the standard Mascot version.
      */
     private boolean intensityIonTable = true;
@@ -103,6 +104,12 @@ public class AnnotationPreferences implements Serializable {
      * The charge for the fragment ions in the de novo sequencing.
      */
     private int deNovoCharge = 1;
+    /**
+     * If there are more than one matching peak for a given annotation setting this
+     * value to true results in the most accurate peak being annotated, while
+     * setting this to false annotates the most intense peak.
+     */
+    private Boolean highResolutionAnnotation = true;
 
     /**
      * Constructor.
@@ -519,5 +526,28 @@ public class AnnotationPreferences implements Serializable {
      */
     public void setDeNovoCharge(int deNovoCharge) {
         this.deNovoCharge = deNovoCharge;
+    }
+
+    /**
+     * Returns true if the peak annotation should be based on the most accurate 
+     * mz value, false bases the annotation on the most intense peak.
+     * 
+     * @return the highResolutionAnnotation
+     */
+    public boolean isHighResolutionAnnotation() {
+        if (highResolutionAnnotation == null) {
+            highResolutionAnnotation = true;
+        }
+        return highResolutionAnnotation;
+    }
+
+    /**
+     * Set if the peak annotation should be based on the most accurate 
+     * mz value, or on the most intense peak.
+     * 
+     * @param highResolutionAnnotation the highResolutionAnnotation to set
+     */
+    public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
+        this.highResolutionAnnotation = highResolutionAnnotation;
     }
 }

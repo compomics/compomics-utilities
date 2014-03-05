@@ -106,11 +106,15 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param mzTolerance The m/z tolerance to use
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
+     * @param pickMostAccuratePeak if there are more than one matching peak for
+     * a given annotation setting this value to true results in the most
+     * accurate peak being annotated, while setting this to false annotates the
+     * most intense peak
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
+            int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
@@ -119,7 +123,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         }
 
         setPeptide(peptide, precursorCharge);
-        setMassTolerance(mzTolerance, isPpm);
+        setMassTolerance(mzTolerance, isPpm, pickMostAccuratePeak);
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -147,8 +151,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     for (int charge : tempCharges) {
                         if (chargeValidated(peptideIon, charge, precursorCharge)) {
                             String key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
-                            if (!spectrumAnnotation.containsKey(key)
-                                    && !unmatchedIons.contains(key)) {
+                            if (!spectrumAnnotation.containsKey(key) && !unmatchedIons.contains(key)) {
                                 matchInSpectrum(peptideIon, charge);
                             }
                             if (!unmatchedIons.contains(key)) {
@@ -179,14 +182,18 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param mzTolerance The m/z tolerance to use
      * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
      * in Da
+     * @param pickMostAccuratePeak if there are more than one matching peak for
+     * a given annotation setting this value to true results in the most
+     * accurate peak being annotated, while setting this to false annotates the
+     * most intense peak
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
      */
     public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm) {
+            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
 
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
-        ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);
+        ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
 
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
@@ -231,8 +238,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges) {
-        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
+        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
     }
 
     /**
@@ -243,9 +250,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param peptide the peptide of interest
      * @param matchingType the matching type to map ptms on the peptide sequence
      * @param mzTolerance the ms2 m/z tolerance to use
-     * 
+     *
      * @return the expected possible neutral losses
-     * 
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException

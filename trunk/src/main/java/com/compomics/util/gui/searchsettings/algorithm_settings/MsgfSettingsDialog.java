@@ -216,14 +216,14 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Settings"));
         advancedSearchSettingsPanel.setOpaque(false);
 
-        instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Low Resolution LCQ/LTQ", "High Resolution LTQ", "TOF", "Q-Exactive" }));
+        instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Low-res LCQ/LTQ", "Orbitrap/FTICR", "TOF", "Q-Exactive" }));
 
         decoyDatabaseCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         decoyDatabaseCmb.setSelectedIndex(1);
 
         decoyDatabaseLabel.setText("Search Decoy Database");
 
-        instrumentLabel.setText("Instrument Type");
+        instrumentLabel.setText("Instrument Type for MS/MS");
 
         fragmentationMethodLabel.setText("Fragmentation Method");
 
@@ -231,7 +231,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
         protocolLabel.setText("Protocol");
 
-        protocolCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Protocol", "Phosphorylation", "iTRAQ", "iTRAQPhospho" }));
+        protocolCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Protocol", "Phosphorylation", "iTRAQ", "iTRAQPhospho", "TMT" }));
 
         minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minPepLengthTxt.setText("6");
@@ -310,7 +310,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        maxPtmsLabel.setText("Max Number of Peptide PTMs");
+        maxPtmsLabel.setText("Max Variable PTMs per Peptide");
 
         maxPtmsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxPtmsTxt.setText("2");
@@ -424,16 +424,16 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                     .addComponent(isotopeErrorRangeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueCutoffLabel)
-                    .addComponent(eValueCutoffTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberTerminiLabel)
                     .addComponent(numberTerminiTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPtmsLabel)
                     .addComponent(maxPtmsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(eValueCutoffLabel)
+                    .addComponent(eValueCutoffTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -513,7 +513,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

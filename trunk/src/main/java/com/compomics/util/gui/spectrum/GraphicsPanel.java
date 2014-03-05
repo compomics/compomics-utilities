@@ -328,7 +328,7 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected double iYAxisMax = 0.0;
     /**
-     * The procentual non-inclusive, minimal y-axis value (compared to the
+     * The percent non-inclusive, minimal y-axis value (compared to the
      * highest point in the spectrum) a point should have before being eligible
      * for annotation. Default is '0.0'.
      */

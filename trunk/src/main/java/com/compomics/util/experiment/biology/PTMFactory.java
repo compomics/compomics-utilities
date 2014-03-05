@@ -845,8 +845,8 @@ public class PTMFactory implements Serializable {
      * for protein termini modifications)
      * @param modificationMass the modification mass as found in the search
      * results
-     * @param ptmMassTolerance the mass tolerance to use to match the modification
-     * mass
+     * @param ptmMassTolerance the mass tolerance to use to match the
+     * modification mass
      * @param ms2Tolerance the fragment ion mass tolerance
      * @param matchingType the type of sequence matching
      *
@@ -1089,106 +1089,19 @@ public class PTMFactory implements Serializable {
 
         boolean changed = false;
 
+        // add default reporter ions for the user modifications
+        for (String ptmName : userMods) {
+            boolean tempChange = addDefaultReporterIons(ptmName);
+            if (tempChange) {
+                changed = true;
+            }
+        }
+
+        // add default reporter ions for the default modifications
         for (String ptmName : defaultMods) {
-
-            // @TODO: remove the hard coding...
-            if (ptmName.contains("itraq")) {
-                PTM ptm = ptmMap.get(ptmName);
-                if (ptm.getReporterIons().isEmpty()) {
-
-                    ptm.addReporterIon(ReporterIon.iTRAQ114);
-                    ptm.addReporterIon(ReporterIon.iTRAQ115);
-                    ptm.addReporterIon(ReporterIon.iTRAQ116);
-                    ptm.addReporterIon(ReporterIon.iTRAQ117);
-
-                    if (ptmName.contains("8")) {
-                        ptm.addReporterIon(ReporterIon.iTRAQ113);
-                        ptm.addReporterIon(ReporterIon.iTRAQ118);
-                        ptm.addReporterIon(ReporterIon.iTRAQ119);
-                        ptm.addReporterIon(ReporterIon.iTRAQ121);
-                        ptm.addReporterIon(ReporterIon.iTRAQ_305);
-                    } else {
-                        ptm.addReporterIon(ReporterIon.iTRAQ_145);
-                    }
-
-                    changed = true;
-                }
-            } else if (ptmName.contains("tmt")) {
-
-                PTM ptm = ptmMap.get(ptmName);
-
-                if (ptm.getReporterIons().isEmpty()) {
-
-                    if (ptmName.contains("old")) {
-
-                        ptm.addReporterIon(ReporterIon.TMT126_old);
-                        ptm.addReporterIon(ReporterIon.TMT127_old);
-
-                        if (ptmName.contains("6")) {
-                            ptm.addReporterIon(ReporterIon.TMT128_old);
-                            ptm.addReporterIon(ReporterIon.TMT129_old);
-                            ptm.addReporterIon(ReporterIon.TMT130_old);
-                            ptm.addReporterIon(ReporterIon.TMT131_old);
-                            ptm.addReporterIon(ReporterIon.TMT_230);
-                        } else {
-                            ptm.addReporterIon(ReporterIon.TMT_226);
-                        }
-                    } else {
-
-                        if (ptmName.contains("duplex")) {
-                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT126_etd);
-                            ptm.addReporterIon(ReporterIon.TMT127_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT127_etd);
-                            ptm.addReporterIon(ReporterIon.TMT_226);
-                        } else if (ptmName.contains("6")) {
-                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT126_etd);
-                            ptm.addReporterIon(ReporterIon.TMT127_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT127_etd);
-                            ptm.addReporterIon(ReporterIon.TMT128_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT128_etd);
-                            ptm.addReporterIon(ReporterIon.TMT129_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT129_etd);
-                            ptm.addReporterIon(ReporterIon.TMT130_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT130_etd);
-                            ptm.addReporterIon(ReporterIon.TMT131_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT131_etd);
-                            ptm.addReporterIon(ReporterIon.TMT_230);
-                        } else if (ptmName.contains("10")) {
-                            ptm.addReporterIon(ReporterIon.TMT126_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT127N_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT127C_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT128N_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT128C_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT129N_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT129C_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT130N_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT130C_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT131_hcd);
-                            ptm.addReporterIon(ReporterIon.TMT_230);
-                        }
-                    }
-
-                    changed = true;
-                }
-            } else if (ptmName.contains("acetylation of k")) {
-
-                PTM ptm = ptmMap.get(ptmName);
-
-                if (ptm.getReporterIons().isEmpty()) {
-                    ptm.addReporterIon(ReporterIon.ACE_K_126);
-                    ptm.addReporterIon(ReporterIon.ACE_K_143);
-                    changed = true;
-                }
-            } else if (ptmName.contains("phosphorylation of y")) {
-
-                PTM ptm = ptmMap.get(ptmName);
-
-                if (ptm.getReporterIons().isEmpty()) {
-                    ptm.addReporterIon(ReporterIon.PHOSPHO_Y);
-                    changed = true;
-                }
+            boolean tempChange = addDefaultReporterIons(ptmName);
+            if (tempChange) {
+                changed = true;
             }
         }
 
@@ -1199,6 +1112,119 @@ public class PTMFactory implements Serializable {
                 // cancel save
             }
         }
+    }
+
+    /**
+     * Add default reporter ions.
+     * 
+     * @param ptmName the name of the PTM
+     * @return true if reporter ions where added
+     */
+    private boolean addDefaultReporterIons(String ptmName) {
+
+        boolean changed = false;
+
+        // @TODO: remove the hard coding...
+        if (ptmName.contains("itraq")) {
+            PTM ptm = ptmMap.get(ptmName);
+            if (ptm.getReporterIons().isEmpty()) {
+
+                ptm.addReporterIon(ReporterIon.iTRAQ114);
+                ptm.addReporterIon(ReporterIon.iTRAQ115);
+                ptm.addReporterIon(ReporterIon.iTRAQ116);
+                ptm.addReporterIon(ReporterIon.iTRAQ117);
+
+                if (ptmName.contains("8")) {
+                    ptm.addReporterIon(ReporterIon.iTRAQ113);
+                    ptm.addReporterIon(ReporterIon.iTRAQ118);
+                    ptm.addReporterIon(ReporterIon.iTRAQ119);
+                    ptm.addReporterIon(ReporterIon.iTRAQ121);
+                    ptm.addReporterIon(ReporterIon.iTRAQ_305);
+                } else {
+                    ptm.addReporterIon(ReporterIon.iTRAQ_145);
+                }
+
+                changed = true;
+            }
+        } else if (ptmName.contains("tmt")) {
+
+            PTM ptm = ptmMap.get(ptmName);
+
+            if (ptm.getReporterIons().isEmpty()) {
+
+                if (ptmName.contains("old")) {
+
+                    ptm.addReporterIon(ReporterIon.TMT126_old);
+                    ptm.addReporterIon(ReporterIon.TMT127_old);
+
+                    if (ptmName.contains("6")) {
+                        ptm.addReporterIon(ReporterIon.TMT128_old);
+                        ptm.addReporterIon(ReporterIon.TMT129_old);
+                        ptm.addReporterIon(ReporterIon.TMT130_old);
+                        ptm.addReporterIon(ReporterIon.TMT131_old);
+                        ptm.addReporterIon(ReporterIon.TMT_230);
+                    } else {
+                        ptm.addReporterIon(ReporterIon.TMT_226);
+                    }
+                } else {
+
+                    if (ptmName.contains("duplex")) {
+                        ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT126_etd);
+                        ptm.addReporterIon(ReporterIon.TMT127_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT127_etd);
+                        ptm.addReporterIon(ReporterIon.TMT_226);
+                    } else if (ptmName.contains("6")) {
+                        ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT126_etd);
+                        ptm.addReporterIon(ReporterIon.TMT127_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT127_etd);
+                        ptm.addReporterIon(ReporterIon.TMT128_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT128_etd);
+                        ptm.addReporterIon(ReporterIon.TMT129_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT129_etd);
+                        ptm.addReporterIon(ReporterIon.TMT130_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT130_etd);
+                        ptm.addReporterIon(ReporterIon.TMT131_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT131_etd);
+                        ptm.addReporterIon(ReporterIon.TMT_230);
+                    } else if (ptmName.contains("10")) {
+                        ptm.addReporterIon(ReporterIon.TMT126_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT127N_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT127C_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT128N_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT128C_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT129N_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT129C_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT130N_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT130C_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT131_hcd);
+                        ptm.addReporterIon(ReporterIon.TMT_230);
+                    }
+                }
+
+                changed = true;
+            }
+        } else if (ptmName.contains("acetylation of k")) {
+
+            PTM ptm = ptmMap.get(ptmName);
+
+            if (ptm.getReporterIons().isEmpty()) {
+                ptm.addReporterIon(ReporterIon.ACE_K_126);
+                ptm.addReporterIon(ReporterIon.ACE_K_143);
+                changed = true;
+            }
+        } else if (ptmName.contains("phosphorylation of y")) {
+
+            PTM ptm = ptmMap.get(ptmName);
+
+            if (ptm.getReporterIons().isEmpty()) {
+                ptm.addReporterIon(ReporterIon.PHOSPHO_Y);
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 
     /**

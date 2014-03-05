@@ -281,6 +281,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     normalIcon,
                     waitingIcon,
                     true));
+
+            // add scrolling listeners
+            //SelfUpdatingTableModel.addScrollListeners(selectedValuesTable, selectedValuesScrollPane, selectedValuesScrollPane.getVerticalScrollBar()); // @TODO: should work, but has no effect it seems...
         } else {
             selectedValuesTable.setAutoCreateRowSorter(true);
         }

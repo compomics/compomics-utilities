@@ -1,13 +1,18 @@
 package com.compomics.util.gui.tablemodels;
 
+import com.compomics.util.gui.TableMouseWheelListener;
+import com.compomics.util.gui.TableScrollBarListener;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Component;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.Icon;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -70,6 +75,15 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * A progress dialog.
      */
     private ProgressDialogX progressDialog;
+    /**
+     * When true this indicates that the user is currently scrolling in the
+     * table and that the table should not update.
+     */
+    public boolean isScrolling = false;
+    /**
+     * The time for the last scroll event.
+     */
+    private static long lastScrollEvent = System.currentTimeMillis();
 
     /**
      * Loads the data needed for objects at rows of the given view indexes. Use
@@ -495,5 +509,45 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
         public boolean isFinished() {
             return finished;
         }
+    }
+
+    /**
+     * Indicates whether the table is currently being scrolled.
+     *
+     * @return true if the table is currently being scrolled
+     */
+    public boolean isScrolling() {
+        return isScrolling;
+    }
+
+    /**
+     * Set if the user is currently scrolling or not.
+     *
+     * @param isScrolling the isScrolling to set
+     */
+    public void setIsScrolling(boolean isScrolling) {
+        this.isScrolling = isScrolling;
+
+        if (isScrolling && lastLoadingRunnable != null) {
+            lastLoadingRunnable.cancel();
+        }
+    }
+
+    /**
+     * Add scroll bar and mouse wheel listeners.
+     *
+     * @param table the table
+     * @param scrollBar the scroll bar
+     * @param scrollPane the scroll pane
+     */
+    public static void addScrollListeners(JTable table, JScrollPane scrollPane, JScrollBar scrollBar) {
+
+        // add scroll bar listener
+        AdjustmentListener scrollBarListener = new TableScrollBarListener(table);
+        scrollBar.addAdjustmentListener(scrollBarListener);
+
+        // add mouse wheel listener
+        TableMouseWheelListener mouseWheelListener = new TableMouseWheelListener(table);
+        scrollPane.addMouseWheelListener(mouseWheelListener);
     }
 }

@@ -68,7 +68,7 @@ public class Header implements Cloneable, Serializable {
      * only an internally consistent naming scheme included to be able to later
      * separate the databases. For example when linking to the online version of
      * the database. The links themselves are not included as these might change
-     * outside the control of the compomics-utilties library. Note that the type
+     * outside the control of the compomics-utilities library. Note that the type
      * is set to unknown by default, and is set to the correct type during the
      * parsing of the header.
      */
@@ -835,6 +835,7 @@ public class Header implements Cloneable, Serializable {
                         // Unknown.
                         // Everything is rest.
                         result.iRest = aFASTAHeader;
+
                         // Check for the presence of a location.
                         int index = -1;
                         if (((index = result.iRest.lastIndexOf(" (")) > 0) && (result.iRest.lastIndexOf(")") > 0) && (result.iRest.lastIndexOf("-") > index)) {
@@ -890,6 +891,20 @@ public class Header implements Cloneable, Serializable {
 
     public void setAccession(String aAccession) {
         iAccession = aAccession;
+    }
+
+    /**
+     * Returns the accession or if this is null the rest. This is a quick fix 
+     * for unsupported custom headers.
+     * 
+     * @return the accession or if this is null the rest
+     */
+    public String getAccessionOrRest() {
+        if (iAccession == null) {
+            return iRest;
+        } else {
+            return iAccession;
+        }
     }
 
     public DatabaseType getDatabaseType() {

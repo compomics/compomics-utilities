@@ -586,14 +586,11 @@ public class SequenceFactory {
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
             if (line.startsWith(">")) {
                 Header fastaHeader = Header.parseFromFASTA(line);
-                String accession = fastaHeader.getAccession();
+                String accession = fastaHeader.getAccessionOrRest();
 
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-                if (accession == null) {
-                    accession = fastaHeader.getRest();
-                }
 
                 if (indexes.containsKey(accession)) {
                     throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
@@ -1387,11 +1384,11 @@ public class SequenceFactory {
                 if (!line.equals("")) {
                     if (line.startsWith(">")) {
                         Header tempHeader = Header.parseFromFASTA(line);
-                        if (targetOnly && isDecoyAccession(tempHeader.getAccession())) {
+                        if (targetOnly && isDecoyAccession(tempHeader.getAccessionOrRest())) {
                             while ((line = br.readLine()) != null) {
                                 if (line.startsWith(">")) {
                                     tempHeader = Header.parseFromFASTA(line);
-                                    if (!isDecoyAccession(tempHeader.getAccession())) {
+                                    if (!isDecoyAccession(tempHeader.getAccessionOrRest())) {
                                         break;
                                     }
                                 }
@@ -1412,7 +1409,7 @@ public class SequenceFactory {
                 }
             }
             if (!sequence.equals("")) {
-                nextProtein = new Protein(header.getAccession(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccession()));
+                nextProtein = new Protein(header.getAccessionOrRest(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccessionOrRest()));
                 return true;
             } else {
                 close();

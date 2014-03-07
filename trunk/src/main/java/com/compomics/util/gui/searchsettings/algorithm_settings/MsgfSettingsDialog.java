@@ -223,7 +223,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
         decoyDatabaseLabel.setText("Search Decoy Database");
 
-        instrumentLabel.setText("Instrument Type for MS/MS");
+        instrumentLabel.setText("MS/MS Detector");
 
         fragmentationMethodLabel.setText("Fragmentation Method");
 

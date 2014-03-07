@@ -265,7 +265,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="instrumentLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Instrument Type for MS/MS"/>
+                <Property name="text" type="java.lang.String" value="MS/MS Detector"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="fragmentationMethodLabel">

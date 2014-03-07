@@ -278,8 +278,10 @@ public class ProteinTree {
         try {
             componentsFactory.loadTags();
         } catch (Exception e) {
-            e.printStackTrace();
             // ignore, tree will just be slower
+            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
+                e.printStackTrace();
+            }
         }
     }
 

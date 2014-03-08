@@ -1,1 +1,2 @@
 com.compomics.util.experiment.io.identifications.idfilereaders.AndromedaIdfileReader
+com.compomics.util.experiment.io.identifications.idfilereaders.MzIdentMLIdfileReader

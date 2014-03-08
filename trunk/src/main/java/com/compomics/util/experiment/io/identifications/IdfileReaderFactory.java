@@ -193,6 +193,8 @@ public class IdfileReaderFactory {
             return Advocate.DirecTag.getIndex();
         } else if (fileName.endsWith(".res")) {
             return Advocate.andromeda.getIndex();
+        } else if (fileName.endsWith(".mzid")) {
+            return Advocate.MSGF.getIndex();
         }
         return -1;
     }

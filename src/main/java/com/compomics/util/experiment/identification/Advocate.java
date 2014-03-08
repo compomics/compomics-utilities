@@ -30,7 +30,7 @@ public enum Advocate {
     /**
      * The search engine MS-Amanda.
      */
-    msAmanda(5, "MS-Amanda"),
+    msAmanda(5, "MS Amanda"),
     /**
      * The post processing tool PeptideShaker.
      */

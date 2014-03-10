@@ -79,8 +79,6 @@ public class ProteinMatch extends IdentificationMatch {
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
-     *
-     *
      */
     public ProteinMatch(Peptide peptide, String peptideMatchKey) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();

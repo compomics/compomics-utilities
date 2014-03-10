@@ -72,9 +72,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     public static void main(String[] args) {
 
-//        progressDialog = new ProgressDialogX(null,
-//                null, null,
-//                true);
+//        progressDialog = new ProgressDialogX(null, null, null, true);
 //        progressDialog.setPrimaryProgressCounterIndeterminate(true);
 //        progressDialog.setTitle("Loading PSMs. Please Wait...");
 //
@@ -271,6 +269,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public void close() throws IOException {
+        mzIdentMLFile = null;
+        unmarshaller = null;
         //unmarshaller.close(); // @TODO: close method is missing?
     }
 

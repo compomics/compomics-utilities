@@ -23,118 +23,108 @@ import java.util.Set;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
- * An identification file reader for Direct tag results
+ * An identification file reader for Direct tag results.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class DirectTagIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * The name of the tags generator used to create the file
+     * The name of the tags generator used to create the file.
      */
     private String tagsGenerator;
-
     /**
-     * The version of the tags generator
+     * The version of the tags generator.
      */
     private String tagsGeneratorVersion;
-
     /**
-     * The copyright
+     * The copyright.
      */
     private String copyRight;
-
     /**
-     * The license
+     * The license.
      */
     private String license;
-
     /**
-     * The time of sequencing start
+     * The time of sequencing start.
      */
     private String timeStart;
-
     /**
-     * The time of sequencing end
+     * The time of sequencing end.
      */
     private String timeEnd;
-
     /**
-     * The tagging time
+     * The tagging time.
      */
     private Double taggingTimeSeconds;
-
     /**
-     * The number of processing nodes
+     * The number of processing nodes.
      */
     private Integer nProcessingNode;
-
     /**
-     * The file used as input
+     * The file used as input.
      */
     private String inputFile;
-
     /**
-     * The tags parameters in a map
+     * The tags parameters in a map.
      */
     private HashMap<String, String> tagsParameters = new HashMap<String, String>();
-
     /**
-     * Returns the content of the columns for a spectrum line. Name -> index in the column
+     * Returns the content of the columns for a spectrum line. Name -> index in
+     * the column.
      */
     private HashMap<String, Integer> spectrumLineContent = new HashMap<String, Integer>();
     /**
-     * Returns the content of the columns for a tag line. Name -> index in the column
+     * Returns the content of the columns for a tag line. Name -> index in the
+     * column.
      */
     private HashMap<String, Integer> tagLineContent = new HashMap<String, Integer>();
     /**
-     * The indexes at which are the spectra. Spectrum ID -> index
+     * The indexes at which are the spectra. Spectrum ID -> index.
      */
     private HashMap<Integer, Long> spectrumIndexes = new HashMap<Integer, Long>();
     /**
-     * The indexes at which are the tags. Spectrum ID -> indexes
+     * The indexes at which are the tags. Spectrum ID -> indexes.
      */
     private HashMap<Integer, ArrayList<Long>> tagIndexes = new HashMap<Integer, ArrayList<Long>>();
-
     /**
-     * The random access file used
+     * The random access file used.
      */
     private BufferedRandomAccessFile bufferedRandomAccessFile;
-
     /**
-     * The file inspected
+     * The file inspected.
      */
     private File tagFile;
 
     /**
      * Constructors, parses a file.
-     * 
+     *
      * @param tagFile the file to parse
      * @param indexResults if true the results section will be indexed
-     * 
+     *
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     public DirectTagIdfileReader(File tagFile, boolean indexResults) throws FileNotFoundException, IOException {
         this.tagFile = tagFile;
         bufferedRandomAccessFile = new BufferedRandomAccessFile(tagFile, "r", 1024 * 100);
         parseFile(indexResults);
     }
-    
+
     /**
      * Returns the name of the different parameters names found.
-     * 
+     *
      * @return the name of the different parameters names found
      */
     public Set<String> getTagsParametersNames() {
         return tagsParameters.keySet();
     }
-    
+
     /**
      * Returns the tagging parameter corresponding to a given parameter name.
-     * 
+     *
      * @param tagParameterName the name of the parameter of interest
-     * 
+     *
      * @return the parameter of interest
      */
     public String getTagParameter(String tagParameterName) {
@@ -143,11 +133,11 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
 
     /**
      * Parses a result file.
-     * 
+     *
      * @param indexResults if true the results section will be indexed
-     * 
+     *
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      */
     private void parseFile(boolean indexResults) throws FileNotFoundException, IOException {
 
@@ -168,11 +158,11 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Parses the parameters section
-     * 
+     * Parses the parameters section.
+     *
      * @return true if the end of the file was reached
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private boolean parseParameters() throws IOException {
         String line;
@@ -224,11 +214,11 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Parses the tag parameters
-     * 
+     * Parses the tag parameters.
+     *
      * @return true if the end of the file was reached
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private boolean parseTagParameters() throws IOException {
         String line;
@@ -254,11 +244,11 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Parses the tables headers
-     * 
+     * Parses the tables headers.
+     *
      * @return true if the end of the file was reached
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private boolean parseHeaders() throws IOException {
         String line = bufferedRandomAccessFile.readLine();
@@ -303,9 +293,9 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Parses the results section
-     * 
-     * @throws IOException 
+     * Parses the results section.
+     *
+     * @throws IOException
      */
     private void parseResults() throws IOException {
         String line;
@@ -334,13 +324,14 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
 
     /**
      * Returns a component in a spectrum line.
-     * 
+     *
      * @param spectrumId the id of the spectrum of interest
-     * @param componentName the name of the component of interest according to the header
-     * 
+     * @param componentName the name of the component of interest according to
+     * the header
+     *
      * @return the component
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public String getSpectrumComponent(int spectrumId, String componentName) throws IOException {
         long index = spectrumIndexes.get(spectrumId);
@@ -356,9 +347,9 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Returns all the spectrum ids found.
-     * 
-     * @return the spectrum ids found in a set
+     * Returns all the spectrum IDs found.
+     *
+     * @return the spectrum IDs found in a set
      */
     public Set<Integer> getSpectrumIds() {
         return spectrumIndexes.keySet();
@@ -366,7 +357,7 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
 
     /**
      * Returns all the spectrum components names found in the header.
-     * 
+     *
      * @return all the spectrum components names found in the header
      */
     public Set<String> getSpectrumComponentNames() {
@@ -374,13 +365,14 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * Returns the tag components associated to a spectrum in a map: component name -> value.
-     * 
+     * Returns the tag components associated to a spectrum in a map: component
+     * name -> value.
+     *
      * @param spectrumId the id of the spectrum
-     * 
+     *
      * @return the tag components associated to a spectrum in a map
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private ArrayList<HashMap<String, String>> getTags(int spectrumId) throws IOException {
         ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
@@ -446,10 +438,10 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
 
     /**
      * Returns the assumption associated to a tag line.
-     * 
+     *
      * @param line the line
      * @param rank the rank of the assumption
-     * 
+     *
      * @return the assumption associated to a tag line
      */
     private TagAssumption getAssumptionFromLine(String line, int rank) {
@@ -508,5 +500,4 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     public String getSoftwareVersion() {
         return tagsGeneratorVersion;
     }
-
 }

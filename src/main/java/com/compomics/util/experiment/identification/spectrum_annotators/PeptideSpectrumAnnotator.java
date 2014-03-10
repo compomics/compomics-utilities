@@ -313,6 +313,11 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 aaMin = Math.min(firstIndex, aaMin);
                 aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
             }
+            firstIndex = peptide.getSequence().indexOf("R");
+            if (firstIndex != -1) {
+                aaMin = Math.min(firstIndex, aaMin);
+                aaMax = Math.max(peptide.getSequence().lastIndexOf("R"), aaMax);
+            }
             if (aaMin < peptide.getSequence().length()) {
                 neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, peptide.getSequence().length() - aaMax);
             }

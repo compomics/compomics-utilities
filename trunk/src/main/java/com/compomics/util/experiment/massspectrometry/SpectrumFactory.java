@@ -845,6 +845,18 @@ public class SpectrumFactory {
     }
 
     /**
+     * Returns the spectrum index of the given spectrum in the given file. If
+     * the same spectrum title is used more than ones the last index is used.
+     *
+     * @param spectrumTitle the spectrum title
+     * @param mgfFile the name of the mgf file
+     * @return the spectrum index of the given spectrum
+     */
+    public Integer getSpectrumIndex(String spectrumTitle, String mgfFile) {
+        return mgfIndexesMap.get(mgfFile).getSpectrumIndex(spectrumTitle);
+    }
+
+    /**
      * Returns the fixed mgf title.
      *
      * @param spectrumTitle

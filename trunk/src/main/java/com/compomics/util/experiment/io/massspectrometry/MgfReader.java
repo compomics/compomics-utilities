@@ -176,12 +176,13 @@ public class MgfReader {
     public static MgfIndex getIndexMap(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
+        HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
         ArrayList<String> spectrumTitles = new ArrayList<String>();
         HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long beginIndex = 0, currentIndex = 0;
         String title = null;
-        int cpt = 0;
+        int spectrumCounter = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
         int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
         boolean peakPicked = true;
@@ -203,7 +204,7 @@ public class MgfReader {
             if (line.equals("BEGIN IONS")) {
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 beginIndex = currentIndex;
-                cpt++;
+                spectrumCounter++;
                 peakCount = 0;
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {
@@ -233,6 +234,7 @@ public class MgfReader {
                 }
                 spectrumTitles.add(title);
                 indexes.put(title, currentIndex);
+                spectrumIndexes.put(title, spectrumCounter - 1);
             } else if (line.startsWith("CHARGE")) {
                 ArrayList<Charge> precursorCharges = parseCharges(line);
                 for (Charge charge : precursorCharges) {
@@ -294,7 +296,7 @@ public class MgfReader {
                 }
             } else if (line.equals("END IONS")) {
                 if (title == null) {
-                    title = cpt + "";
+                    title = spectrumCounter + "";
                     indexes.put(title, beginIndex);
                     spectrumTitles.add(title);
                 }
@@ -329,7 +331,7 @@ public class MgfReader {
 
         long lastModified = mgfFile.lastModified();
 
-        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified);
+        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified);
     }
 
     /**

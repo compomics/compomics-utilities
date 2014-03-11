@@ -18,6 +18,11 @@ public class MgfIndex extends ExperimentObject {
      */
     private HashMap<String, Long> indexMap;
     /**
+     * A map of all the spectrum titles and which index they have in the file,
+     * i.e., the first spectrum has index 0, the second index 1, etc.
+     */
+    private HashMap<String, Integer> spectrumNumberIndexMap;
+    /**
      * List of spectrum titles.
      */
     private ArrayList<String> spectrumTitles = null;
@@ -68,6 +73,8 @@ public class MgfIndex extends ExperimentObject {
      *
      * @param spectrumTitles an ordered list of all spectrum titles
      * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
+     * -> spectrum index in the file
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
@@ -79,11 +86,12 @@ public class MgfIndex extends ExperimentObject {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, String fileName, double minRT,
             double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
+        this.spectrumNumberIndexMap = spectrumNumberIndexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
@@ -102,6 +110,8 @@ public class MgfIndex extends ExperimentObject {
      * @param duplicatedSpectrumTitles a map of duplicated spectrum titles, and
      * how often each title is duplicated
      * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
+     * -> spectrum index in the file
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
@@ -113,11 +123,12 @@ public class MgfIndex extends ExperimentObject {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, String fileName, double minRT,
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, String fileName, double minRT,
             double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
+        this.spectrumNumberIndexMap = spectrumNumberIndexMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
@@ -137,6 +148,29 @@ public class MgfIndex extends ExperimentObject {
      */
     public Long getIndex(String spectrumTitle) {
         return indexMap.get(spectrumTitle);
+    }
+
+    /**
+     * Returns the spectrum index corresponding to the desired spectrum, i.e.,
+     * returns 0 for the first spectrum in the file, 1 for the second, etc. Null
+     * map is not set, and -1 if not found.
+     *
+     * @param spectrumTitle the desired spectrum
+     * @return the corresponding spectrum index
+     */
+    public Integer getSpectrumIndex(String spectrumTitle) {
+
+        if (spectrumNumberIndexMap == null) {
+            return null;
+        }
+
+        Integer index = spectrumNumberIndexMap.get(spectrumTitle);
+        
+        if (index == null) {
+            return -1;
+        } else {
+            return index;
+        }
     }
 
     /**

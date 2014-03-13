@@ -1175,12 +1175,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     userSelectFile = true;
                 }
 
+                boolean fileSaved = true;
+
                 if (userSelectFile) {
-                    saveAsPressed();
+                    fileSaved = saveAsPressed();
                     tempSearchParameters = getSearchParameters();
                 }
 
-                if (tempSearchParameters.getParametersFile() != null) {
+                if (fileSaved && tempSearchParameters.getParametersFile() != null) {
 
                     try {
                         SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
@@ -1565,19 +1567,25 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
     /**
      * This method is called when the user clicks the 'Save' button.
+     *
+     * @return true of the file was saved
      */
-    public void savePressed() {
+    public boolean savePressed() {
         if (parametersFile == null) {
-            saveAsPressed();
+            return saveAsPressed();
         } else if (validateParametersInput(true)) {
             try {
                 searchParameters = getSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, parametersFile);
                 searchSettingsDialogParent.setSearchParameters(searchParameters);
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, new String[]{"An error occurred while witing: " + parametersFile.getName(), e.getMessage()}, "Error Saving File", JOptionPane.WARNING_MESSAGE);
+                return false;
             }
+        } else {
+            return false;
         }
     }
 
@@ -1861,8 +1869,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
     /**
      * This method is called when the user clicks the 'Save As' button.
+     *
+     * @return true of the file was saved
      */
-    public void saveAsPressed() {
+    public boolean saveAsPressed() {
 
         if (validateParametersInput(true)) {
 
@@ -1913,12 +1923,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                         }
                     }
                 } else {
-                    return;
+                    return complete;
                 }
             }
 
-            savePressed();
+            boolean saved = savePressed();
             searchParameters.setParametersFile(parametersFile);
+            return saved;
+        } else {
+            return false;
         }
     }
 
@@ -2061,7 +2074,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         charge = new Integer(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, charge));
 
-        if (searchParameters.getParametersFile() != null) {
+        if (searchParameters.getParametersFile() != null && searchParameters.getParametersFile().exists()) {
             tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         }
 

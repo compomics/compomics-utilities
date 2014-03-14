@@ -40,8 +40,10 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      */
     private String fileName;
 
+    /**
+     * Default constructor for the purpose of instantiation.
+     */
     public AndromedaIdfileReader() {
-        // Default constructor for the purpose of instantiation.
     }
 
     /**

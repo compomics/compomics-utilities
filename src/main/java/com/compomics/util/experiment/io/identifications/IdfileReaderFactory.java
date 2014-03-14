@@ -2,7 +2,6 @@ package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,8 +47,8 @@ public class IdfileReaderFactory {
             IdfileReader idfileReader = idfrIterator.next();
             logger.info("Found IdfileReader '" + idfileReader.getClass().getCanonicalName() + "' in Java service loader.");
             IdfileReaderFactory.registerIdFileReader(idfileReader.getClass(), idfileReader.getExtension());
+            }
         }
-    }
 
     /**
      * The factory constructor.
@@ -110,15 +109,13 @@ public class IdfileReaderFactory {
      * reader after creation.
      *
      * @param aFile the file to parse
-     * @param waitingHandler a waiting handler to display the results. Can be
-     * null
      * @return an adapted file reader
      * @throws SAXException
      * @throws FileNotFoundException
      * @throws IOException
      * @throws OutOfMemoryError thrown if the parser runs out of memory
      */
-    public IdfileReader getFileReader(File aFile, WaitingHandler waitingHandler) throws SAXException, FileNotFoundException, IOException, OutOfMemoryError {
+    public IdfileReader getFileReader(File aFile) throws SAXException, FileNotFoundException, IOException, OutOfMemoryError {
 
         // @TODO: create parsers using waiting handlers and indexed files.
         // The return value, defaulting to null.

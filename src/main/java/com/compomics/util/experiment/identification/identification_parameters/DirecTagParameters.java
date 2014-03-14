@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.identification_parameters;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * The DirecTag specific parameters.
@@ -174,6 +175,10 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
     private double complementScoreWeight = 1.0;
+    /**
+     * The variable ptms in the order used for
+     */
+    private ArrayList<String> variablePtms = new ArrayList<String>();
 
     /**
      * Constructor.
@@ -543,6 +548,33 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      */
     public void setPrecursorAdjustmentStep(double PrecursorAdjustmentStep) {
         this.precursorAdjustmentStep = PrecursorAdjustmentStep;
+    }
+
+    /**
+     * Sets the variable PTMs searched. The order is the one used by DirecTag
+     * and the name is the utilities one.
+     *
+     * @param variablePtms list of the names of the searched variable PTMs
+     */
+    public void setPtms(ArrayList<String> variablePtms) {
+        this.variablePtms = variablePtms;
+    }
+
+    /**
+     * Returns the name of the PTM indexed by the given index.
+     *
+     * @param index the index of the PTM of interest
+     *
+     * @return the name of the PTM of interest
+     */
+    public String getUtilitiesPtmName(int index) {
+        if (variablePtms == null || variablePtms.isEmpty()) {
+            throw new IllegalArgumentException("Variable PTM index map not set for this DirecTag sequencing.");
+        }
+        if (index < 0 || index >= variablePtms.size()) {
+            throw new IllegalArgumentException("Variable PTM index " + index + " not found in mapping.");
+        }
+        return variablePtms.get(index);
     }
 
     @Override

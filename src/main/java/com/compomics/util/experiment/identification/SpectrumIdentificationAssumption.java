@@ -88,6 +88,16 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public Charge getIdentificationCharge() {
         return identificationCharge;
     }
+    
+    /**
+     * Sets the identification charge.
+     * 
+     * @param charge the identification charge
+     */
+    public void setIdentificationCharge(Charge charge) {
+        this.identificationCharge = identificationCharge;
+    }
+    
     /**
      * Returns the theoretic mass of the given assumption.
      * 

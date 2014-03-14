@@ -942,11 +942,19 @@ public class SearchParameters implements Serializable {
             msgfParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
         }
-        
+
         // compatibility check
         if (result.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()) == null) {
             DirecTagParameters direcTagParameters = new DirecTagParameters();
             result.setIdentificationAlgorithmParameter(direcTagParameters.getAlgorithm().getIndex(), direcTagParameters);
+        }
+
+        // compatibility check
+        if (result.getPepNovoPtmMap() != null) {
+            PepnovoParameters pepnovoParameters = (PepnovoParameters) result.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex());
+            if (pepnovoParameters.getPepNovoPtmMap() == null || pepnovoParameters.getPepNovoPtmMap().isEmpty()) {
+                pepnovoParameters.setPepNovoPtmMap(result.getPepNovoPtmMap());
+            }
         }
 
         return result;

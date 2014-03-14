@@ -57,15 +57,16 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * Default constructor for the purpose of instantiation.
      */
     public PepNovoIdfileReader() {
-        
+
     }
+
     /**
      * Constructor, initiate the parser. Displays the progress using the waiting
-     * handler The close() method shall be used when the file reader is no
+     * handler. The close() method shall be used when the file reader is no
      * longer used.
      *
      * @param identificationFile the identification file to parse
-     * 
+     *
      * @throws FileNotFoundException exception thrown whenever the provided file
      * was not found
      * @throws IOException exception thrown whenever an error occurred while
@@ -77,13 +78,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     /**
      * Constructor, initiate the parser. Displays the progress using the waiting
-     * handler The close() method shall be used when the file reader is no
+     * handler. The close() method shall be used when the file reader is no
      * longer used.
      *
      * @param identificationFile the identification file to parse
      * @param waitingHandler a waiting handler providing progress feedback to
      * the user
-     * 
+     *
      * @throws FileNotFoundException exception thrown whenever the provided file
      * was not found
      * @throws IOException exception thrown whenever an error occurred while
@@ -212,7 +213,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * Returns a Peptide Assumption from a PepNovo result line. The rank score
      * is taken as reference score. All additional parameters are attached as
      * PeptideAssumptionDetails.
-     * Note: fixed PTMs are not annotated, variable PTMs are marked with the pepnovo ptm tag (see PepnovoParameters to retrieve utilities names)
+     *
+     * Note: Fixed PTMs are not annotated, variable PTMs are marked with the
+     * PepNovo PTM tag (see PepnovoParameters to retrieve utilities names).
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
@@ -308,11 +311,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             }
 
             pepNovoPtmTag += modificationMass;
-            
+
             ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, true, currentPtmLocation);
             modificationMatches.add(modMatch);
         }
-        
+
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
             aminoAcidPattern.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
@@ -332,7 +335,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param pepnovoParameters the pep novo parameters
      * @param pepNovoModification the PepNovo modification
-     * 
+     *
      * @return the PTM as a string
      */
     public static String getPTM(PepnovoParameters pepnovoParameters, String pepNovoModification) {

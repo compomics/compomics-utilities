@@ -176,7 +176,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      */
     private double complementScoreWeight = 1.0;
     /**
-     * The variable ptms in the order used for
+     * The variable PTMs in the order used.
      */
     private ArrayList<String> variablePtms = new ArrayList<String>();
 

@@ -321,7 +321,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         aaExcluded.put(index, exclusions);
         length = -1;
     }
-    
+
     /**
      * Removes an amino acid index from the pattern. The first amino acid is 0.
      *
@@ -478,7 +478,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     excludedAa = getExcludedAA(i);
             if (!targetedAa.isEmpty() || !excludedAa.isEmpty()) {
                 if (cpt > 0) {
-                    result.append("(" + cpt + ")");
+                    result.append("(").append(cpt).append(")");
                     cpt = 0;
                 }
                 if (!targetedAa.isEmpty()) {
@@ -1218,10 +1218,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public HashMap<Integer, ArrayList<ModificationMatch>> getModificationMatches() {
         return targetModifications;
     }
-    
+
     /**
-     * Returns a list of the indexes of the amino acids carrying a modification. 1 is the first amino acid.
-     * 
+     * Returns a list of the indexes of the amino acids carrying a modification.
+     * 1 is the first amino acid.
+     *
      * @return a list of the indexes of the amino acids carrying a modification
      */
     public ArrayList<Integer> getModificationIndexes() {
@@ -1230,6 +1231,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
         return new ArrayList<Integer>(targetModifications.keySet());
     }
+
     /**
      * Returns the modifications found at a given localization.
      *
@@ -1247,11 +1249,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
         return new ArrayList<ModificationMatch>();
     }
-    
+
     /**
      * Removes a modification match in the given pattern.
-     * 
-     * @param localisation the localisation of the modification
+     *
+     * @param localisation the localization of the modification
      * @param modificationMatch the modification match to remove
      */
     public void removeModificationMatch(int localisation, ModificationMatch modificationMatch) {
@@ -1262,7 +1264,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 targetModifications.remove(localisation);
             }
         }
-        
+
     }
 
     /**
@@ -1596,7 +1598,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". null as targeted amino acid map.");
             }
             if (targetModifications != null) {
-                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i+1);
+                ArrayList<ModificationMatch> modificationAtIndex = targetModifications.get(i + 1);
                 if (modificationAtIndex != null) {
                     for (ModificationMatch modificationMatch : modificationAtIndex) {
                         PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
@@ -1644,7 +1646,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
         if (targetModifications != null) {
             for (int i : targetModifications.keySet()) {
-                if (i > startIndex && i <= endIndex+1) {
+                if (i > startIndex && i <= endIndex + 1) {
                     int index = i - startIndex;
                     ArrayList<ModificationMatch> modificationMatches = targetModifications.get(i);
                     ArrayList<ModificationMatch> newMatches = new ArrayList<ModificationMatch>(modificationMatches.size());

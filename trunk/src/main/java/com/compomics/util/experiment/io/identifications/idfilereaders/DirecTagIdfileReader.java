@@ -98,7 +98,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     private File tagFile;
     /**
-     * The spectrum factory used to retrieve spectrum titles
+     * The spectrum factory used to retrieve spectrum titles.
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
 

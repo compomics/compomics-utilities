@@ -5,7 +5,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 /**
  * This class models a proteomic sample. 
  * 
- * @authUser: Marc Vaudel
+ * @author Marc Vaudel
  */
 public class Sample extends ExperimentObject {
 

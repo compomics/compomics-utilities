@@ -47,8 +47,8 @@ public class IdfileReaderFactory {
             IdfileReader idfileReader = idfrIterator.next();
             logger.info("Found IdfileReader '" + idfileReader.getClass().getCanonicalName() + "' in Java service loader.");
             IdfileReaderFactory.registerIdFileReader(idfileReader.getClass(), idfileReader.getExtension());
-            }
         }
+    }
 
     /**
      * The factory constructor.

@@ -165,19 +165,20 @@ public class MgfIndex extends ExperimentObject {
         }
 
         Integer index = spectrumNumberIndexMap.get(spectrumTitle);
-        
+
         if (index == null) {
             return -1;
         } else {
             return index;
         }
     }
-    
+
     /**
-     * Returns the spectrum title corresponding to the given spectrum number. 0 is the first spectrum.
-     * 
+     * Returns the spectrum title corresponding to the given spectrum number. 0
+     * is the first spectrum.
+     *
      * @param number the number of the spectrum
-     * 
+     *
      * @return the title of the spectrum of interest
      */
     public String getSpectrumTitle(int number) {

@@ -197,7 +197,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                 @Override
                 public String getDescription() {
-                    return "Supported formats: FASTA (.fasta or .fas)";
+                    return "FASTA (.fasta or .fas)";
                 }
             };
 

@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
+public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be serializable??
 
     /**
      * The theoretic peptide to match.

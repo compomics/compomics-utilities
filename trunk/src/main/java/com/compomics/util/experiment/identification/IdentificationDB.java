@@ -318,7 +318,7 @@ public class IdentificationDB implements Serializable {
      * Returns the desired spectrum match.
      *
      * @param useDB if useDB is false, null will be returned if the object is not in the cache
-     * @param key the psm key
+     * @param key the PSM key
      * @return the spectrum match
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -372,7 +372,7 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Adds a peptide match to the database
+     * Adds a peptide match to the database.
      *
      * @param peptideMatch the peptide match to be added
      * @throws SQLException exception thrown whenever an error occurred while

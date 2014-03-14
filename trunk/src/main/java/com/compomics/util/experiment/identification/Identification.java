@@ -389,7 +389,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads all spectrum matches of the file in the cache of the database
+     * Loads all spectrum matches of the file in the cache of the database.
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler
@@ -467,7 +467,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Adds a spectrum match parameter to the database.
      *
-     * @param key the psm key
+     * @param key the PSM key
      * @param urParameter the match parameter
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database

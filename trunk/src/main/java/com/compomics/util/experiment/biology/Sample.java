@@ -3,24 +3,24 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * This class models a proteomic sample.
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 10:07:52 AM
+ * This class models a proteomic sample. 
+ * 
+ * @authUser: Marc Vaudel
  */
 public class Sample extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 303393644914835325L;
     /**
-     * sample reference
+     * Sample reference.
      */
     private String reference;
 
     /**
-     * Constructor for a sample
+     * Constructor for a sample.
+     *
      * @param reference the reference of the sample
      */
     public Sample(String reference) {
@@ -28,15 +28,17 @@ public class Sample extends ExperimentObject {
     }
 
     /**
-     * setter for the reference of a sample
-     * @param newReference  the new reference
+     * Setter for the reference of a sample.
+     *
+     * @param newReference the new reference
      */
     public void setReference(String newReference) {
         this.reference = newReference;
     }
 
     /**
-     * Getter for the sample reference
+     * Getter for the sample reference.
+     *
      * @return sample reference
      */
     public String getReference() {
@@ -44,8 +46,9 @@ public class Sample extends ExperimentObject {
     }
 
     /**
-     * Comparator for samples. For now based on the reference
-     * @param otherSample   an other sample
+     * Comparator for samples. For now based on the reference.
+     *
+     * @param otherSample an other sample
      * @return a boolean indicating if both samples are the same
      */
     public boolean isSameAs(Sample otherSample) {

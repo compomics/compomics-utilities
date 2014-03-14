@@ -172,6 +172,17 @@ public class MgfIndex extends ExperimentObject {
             return index;
         }
     }
+    
+    /**
+     * Returns the spectrum title corresponding to the given spectrum number. 0 is the first spectrum.
+     * 
+     * @param number the number of the spectrum
+     * 
+     * @return the title of the spectrum of interest
+     */
+    public String getSpectrumTitle(int number) {
+        return spectrumTitles.get(number);
+    }
 
     /**
      * Returns a boolean indicating whether the spectrum title is implemented in

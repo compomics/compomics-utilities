@@ -4,12 +4,11 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.TagAssumption;
+import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
@@ -53,82 +52,27 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * The standard format.
      */
     public static final String tableHeader = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
-    /**
-     * The minimum PepNovo score.
-     */
-    private double minPepNovoScore = Double.MAX_VALUE;
-    /**
-     * The maximum PepNovo score.
-     */
-    private double maxPepNovoScore = Double.MIN_VALUE;
-    /**
-     * The minimum rank score.
-     */
-    private double minRankScore = Double.MAX_VALUE;
-    /**
-     * The maximum rank score.
-     */
-    private double maxRankScore = Double.MIN_VALUE;
-    /**
-     * The minimum N-terminal gap.
-     */
-    private double minNGap = Double.MAX_VALUE;
-    /**
-     * The maximum N-terminal gap.
-     */
-    private double maxNGap = Double.MIN_VALUE;
-    /**
-     * The minimum C-terminal gap.
-     */
-    private double minCGap = Double.MAX_VALUE;
-    /**
-     * The maximum C-terminal gap.
-     */
-    private double maxCGap = Double.MIN_VALUE;
-    /**
-     * The minimum charge.
-     */
-    private int minCharge = Integer.MAX_VALUE;
-    /**
-     * The maximum charge.
-     */
-    private int maxCharge = Integer.MIN_VALUE;
-    /**
-     * The minimum m/z value.
-     */
-    private double minMz = Double.MAX_VALUE;
-    /**
-     * The maximum m/z value.
-     */
-    private double maxMz = Double.MIN_VALUE;
-    /**
-     * The parameters used for sequencing.
-     */
-    private SearchParameters searchParameters;
-    /**
-     * The PTM factory.
-     */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
 
     /**
      * Default constructor for the purpose of instantiation.
      */
     public PepNovoIdfileReader() {
+        
     }
-
     /**
-     * Constructor, initiate the parser. The close() method shall be used when
-     * the file reader is no longer used.
+     * Constructor, initiate the parser. Displays the progress using the waiting
+     * handler The close() method shall be used when the file reader is no
+     * longer used.
      *
      * @param identificationFile the identification file to parse
-     * @param searchParameters the parameters used for sequencing
+     * 
      * @throws FileNotFoundException exception thrown whenever the provided file
      * was not found
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public PepNovoIdfileReader(File identificationFile, SearchParameters searchParameters) throws FileNotFoundException, IOException {
-        this(identificationFile, searchParameters, null);
+    public PepNovoIdfileReader(File identificationFile) throws FileNotFoundException, IOException {
+        this(identificationFile, null);
     }
 
     /**
@@ -137,17 +81,16 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * longer used.
      *
      * @param identificationFile the identification file to parse
-     * @param searchParameters the parameters used for sequencing
      * @param waitingHandler a waiting handler providing progress feedback to
      * the user
+     * 
      * @throws FileNotFoundException exception thrown whenever the provided file
      * was not found
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public PepNovoIdfileReader(File identificationFile, SearchParameters searchParameters, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public PepNovoIdfileReader(File identificationFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        this.searchParameters = searchParameters;
         bufferedRandomAccessFile = new BufferedRandomAccessFile(identificationFile, "r", 1024 * 100);
         fileName = Util.getFileName(identificationFile);
 
@@ -184,13 +127,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                     String spectrumTitle = formatted.substring(0, endIndex).trim();
                     index.put(spectrumTitle, currentIndex);
                 }
-
                 if (waitingHandler != null) {
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
+
             }
         }
     }
@@ -269,6 +212,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * Returns a Peptide Assumption from a PepNovo result line. The rank score
      * is taken as reference score. All additional parameters are attached as
      * PeptideAssumptionDetails.
+     * Note: fixed PTMs are not annotated, variable PTMs are marked with the pepnovo ptm tag (see PepnovoParameters to retrieve utilities names)
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
@@ -279,26 +223,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         String[] lineComponents = line.trim().split("\t");
 
         Double rankScore = new Double(lineComponents[1]);
-        if (rankScore < minRankScore) {
-            minRankScore = rankScore;
-        }
-        if (rankScore > maxRankScore) {
-            maxRankScore = rankScore;
-        }
         Double pepNovoScore = new Double(lineComponents[2]);
-        if (pepNovoScore < minPepNovoScore) {
-            minPepNovoScore = pepNovoScore;
-        }
-        if (pepNovoScore > maxPepNovoScore) {
-            maxPepNovoScore = pepNovoScore;
-        }
         Double nGap = new Double(lineComponents[3]);
-        if (nGap < minNGap) {
-            minNGap = nGap;
-        }
-        if (nGap > maxNGap) {
-            maxNGap = nGap;
-        }
         Double cGap = new Double(lineComponents[4]);
         double cTermCorrection = Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass() + 2 * ElementaryIon.proton.getTheoreticMass();
         if (cGap > 0 && cGap < cTermCorrection) {
@@ -306,20 +232,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         } else if (cGap > 0) {
             cGap -= cTermCorrection;
         }
-        if (cGap < minCGap) {
-            minCGap = cGap;
-        }
-        if (cGap > maxCGap) {
-            maxCGap = cGap;
-        }
         Double mH = new Double(lineComponents[5]);
         Integer charge = new Integer(lineComponents[6]);
-        if (charge < minCharge) {
-            minCharge = charge;
-        }
-        if (charge > maxCharge) {
-            maxCharge = charge;
-        }
         String pepNovoSequence = lineComponents[7];
         String sequence = "";
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
@@ -365,11 +279,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                             }
 
                             pepNovoPtmTag += modificationMass;
-
-                            String ptm = getPTM(pepNovoPtmTag);
-
-                            //String ptm = getPTM(modificationMass, currentAA, nTermPtm, cTermPtm);
-                            ModificationMatch modMatch = new ModificationMatch(ptm, true, currentPtmLocation);
+                            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, true, currentPtmLocation);
                             modMatch.setConfident(true);
                             modificationMatches.add(modMatch);
                             modificationMass = "";
@@ -398,43 +308,17 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             }
 
             pepNovoPtmTag += modificationMass;
-
-            String ptm = getPTM(pepNovoPtmTag);
-            ModificationMatch modMatch = new ModificationMatch(ptm, true, currentPtmLocation);
+            
+            ModificationMatch modMatch = new ModificationMatch(pepNovoPtmTag, true, currentPtmLocation);
             modificationMatches.add(modMatch);
         }
-
-        // find and add the fixed ptms
-        char[] aminoAcidSequence = sequence.toCharArray();
-
-        for (int i = 0; i < aminoAcidSequence.length; i++) {
-
-            String tempAA = String.valueOf(aminoAcidSequence[i]);
-
-            for (String fixedPtm : searchParameters.getModificationProfile().getFixedModifications()) {
-                PTM ptm = ptmFactory.getPTM(fixedPtm);
-                for (AminoAcid residue : ptm.getPattern().getAminoAcidsAtTarget()) {
-                    if (residue.singleLetterCode.equalsIgnoreCase(tempAA)) {
-                        ModificationMatch modMatch = new ModificationMatch(fixedPtm, false, (i + 1));
-                        modMatch.setConfident(true);
-                        modificationMatches.add(modMatch);
-                    }
-                }
-            }
-        }
+        
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
             aminoAcidPattern.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
         }
         Tag tag = new Tag(nGap, aminoAcidPattern, cGap);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), pepNovoScore);
-        double mz = tagAssumption.getTheoreticMz();
-        if (mz < minMz) {
-            minMz = mz;
-        }
-        if (mz > maxMz) {
-            maxMz = mz;
-        }
         PepnovoAssumptionDetails pepnovoAssumptionDetails = new PepnovoAssumptionDetails();
         pepnovoAssumptionDetails.setRankScore(rankScore);
         pepnovoAssumptionDetails.setMH(mH);
@@ -446,12 +330,14 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * Get a PTM.
      *
+     * @param pepnovoParameters the pep novo parameters
      * @param pepNovoModification the PepNovo modification
+     * 
      * @return the PTM as a string
      */
-    public String getPTM(String pepNovoModification) {
+    public static String getPTM(PepnovoParameters pepnovoParameters, String pepNovoModification) {
 
-        Map<String, String> invertedPtmMap = searchParameters.getPepNovoPtmMap();
+        Map<String, String> invertedPtmMap = pepnovoParameters.getPepNovoPtmMap();
 
         if (invertedPtmMap == null) {
             // @TODO: possible to rescue these?
@@ -465,114 +351,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         } else {
             throw new IllegalArgumentException("An error occurred while parsing the modification " + pepNovoModification + ".");
         }
-    }
-
-    /**
-     * Returns the minimum PepNovo score.
-     *
-     * @return Minimum PepNovo score
-     */
-    public double getMinPepNovoScore() {
-        return minPepNovoScore;
-    }
-
-    /**
-     * Returns the maximum PepNovo score.
-     *
-     * @return Maximum PepNovo score
-     */
-    public double getMaxPepNovoScore() {
-        return maxPepNovoScore;
-    }
-
-    /**
-     * Returns the minimum rank score.
-     *
-     * @return Minimum rank score
-     */
-    public double getMinRankScore() {
-        return minRankScore;
-    }
-
-    /**
-     * Returns the maximum rank score.
-     *
-     * @return Maximum rank score
-     */
-    public double getMaxRankScore() {
-        return maxRankScore;
-    }
-
-    /**
-     * Returns the minimum N-terminal gap.
-     *
-     * @return Minimum N-terminal gap.
-     */
-    public double getMinNGap() {
-        return minNGap;
-    }
-
-    /**
-     * Returns the maximum N-terminal gap.
-     *
-     * @return Maximum N-terminal gap
-     */
-    public double getMaxNGap() {
-        return maxNGap;
-    }
-
-    /**
-     * Returns the minimum C-terminal gap.
-     *
-     * @return Minimum C-terminal gap.
-     */
-    public double getMinCGap() {
-        return minCGap;
-    }
-
-    /**
-     * Returns the maximum C-terminal gap.
-     *
-     * @return Maximum C-terminal gap.
-     */
-    public double getMaxCGap() {
-        return maxCGap;
-    }
-
-    /**
-     * Returns the minimum charge.
-     *
-     * @return Minimum charge.
-     */
-    public int getMinCharge() {
-        return minCharge;
-    }
-
-    /**
-     * Returns the maximum charge.
-     *
-     * @return Maximum charge.
-     */
-    public int getMaxCharge() {
-        return maxCharge;
-    }
-
-    /**
-     * Returns the minimum m/z value.
-     *
-     * @return Minimum m/z value.
-     */
-    public double getMinMz() {
-        return minMz;
-    }
-
-    /**
-     * Returns the maximum m/z value.
-     *
-     * @return Maximum m/z value.
-     */
-    public double getMaxMz() {
-        return maxMz;
     }
 
     @Override

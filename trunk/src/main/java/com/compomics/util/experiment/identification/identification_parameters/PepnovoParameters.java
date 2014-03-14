@@ -184,6 +184,20 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     public Map<String, String> getPepNovoPtmMap() {
         return pepNovoPtmMap;
     }
+    
+    /**
+     * Returns the utilities ptm name corresponding to the given pepnovo ptm name. Null if not found.
+     * 
+     * @param pepnovoPtmName the pepnovo ptm name
+     * 
+     * @return the utilities ptm name
+     */
+    public String getUtilitiesPtmName(String pepnovoPtmName) {
+        if (pepNovoPtmMap == null) {
+            return null;
+        }
+        return pepNovoPtmMap.get(pepnovoPtmName);
+    }
 
     /**
      * Set the PepNovo to utilities PTM map.

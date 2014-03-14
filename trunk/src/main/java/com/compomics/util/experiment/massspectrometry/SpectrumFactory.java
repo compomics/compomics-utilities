@@ -853,7 +853,27 @@ public class SpectrumFactory {
      * @return the spectrum index of the given spectrum
      */
     public Integer getSpectrumIndex(String spectrumTitle, String mgfFile) {
-        return mgfIndexesMap.get(mgfFile).getSpectrumIndex(spectrumTitle);
+        MgfIndex mgfIndex = mgfIndexesMap.get(mgfFile);
+        if (mgfIndex == null) {
+            return null;
+        }
+        return mgfIndex.getSpectrumIndex(spectrumTitle);
+    }
+    
+    /**
+     * Returns the spectrum title of the spectrum of the given number in the given file. 0 is the first spectrum. null if not found.
+     * 
+     * @param mgfFile the name of the mgf file of interest
+     * @param spectrumNumber the number of the spectrum in the file
+     * 
+     * @return the title of the spectrum of interest
+     */
+    public String getSpectrumTitle(String mgfFile, int spectrumNumber) {
+        MgfIndex mgfIndex = mgfIndexesMap.get(mgfFile);
+        if (mgfIndex == null) {
+            return null;
+        }
+        return mgfIndex.getSpectrumTitle(spectrumNumber);
     }
 
     /**

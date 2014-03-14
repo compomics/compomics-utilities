@@ -51,7 +51,7 @@ public enum Advocate {
      * The name of the advocate.
      */
     private final String name;
-
+    
     /**
      * Constructor.
      *
@@ -79,7 +79,7 @@ public enum Advocate {
     public String getName() {
         return name;
     }
-
+    
     /**
      * Returns the advocate corresponding to the given index. Null if not found.
      * 

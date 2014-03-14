@@ -3,6 +3,8 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
@@ -1000,6 +1002,85 @@ public class PTMFactory implements Serializable {
     }
 
     /**
+     * Removes the fixed modifications of the given tag and remaps the one
+     * searched for according to the ModificationProfile. Note: for protein
+     * terminal modification the protein must be loaded in the sequence factory.
+     *
+     * @param modificationProfile
+     * @param tag the tag
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids'. Can be null otherwise. (Only useful when
+     * considering modifications targeting a motif comprising interchangeable
+     * amino acids, e.g., glyco)
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws IllegalArgumentException exception thrown whenever an error
+     * occurred while reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
+     * @throws java.sql.SQLException
+     */
+    public void checkFixedModifications(ModificationProfile modificationProfile, Tag tag, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+
+        int offset = 0, componentNumber = 0;
+        for (TagComponent tagComponent : tag.getContent()) {
+            componentNumber++;
+            if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+                for (int aa : aminoAcidPattern.getModificationIndexes()) {
+                    offset++;
+                    ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
+                    for (ModificationMatch modMatch : modificationMatches) {
+                        if (!modMatch.isVariable()) {
+                            toRemove.add(modMatch);
+                        }
+                    }
+                    for (ModificationMatch modMatch : toRemove) {
+                        aminoAcidPattern.removeModificationMatch(aa, modMatch);
+                    }
+                }
+                for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
+                    Double modification = null;
+
+                    for (String fixedModification : modificationProfile.getFixedModifications()) {
+                        PTM ptm = getPTM(fixedModification);
+                        if (ptm.getType() == PTM.MODAA) {
+                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(offset)) {
+                                if (modification == null) {
+                                    modification = ptm.getMass();
+                                    aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                                } else if (modification != ptm.getMass()) {
+                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + modification + ", " + ptm.getMass() + ") at position " + aa + " in pattern " + aminoAcidPattern.asSequence() + " of tag " + tag.asSequence() + ".");
+                                }
+                            }
+                        } else if (ptm.getType() == PTM.MODCP && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {
+                            aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                        } else if (ptm.getType() == PTM.MODNP && componentNumber == 1 && aa == 1) {
+                            aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
+                        } else if (ptm.getType() == PTM.MODCPAA && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {
+                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(offset)) {
+                                aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                            }
+                        } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
+                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(1)) {
+                                aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
+                            }
+                        }
+                    }
+                }
+            } else {
+                offset++;
+            }
+        }
+    }
+
+    /**
      * Set the OMSSA indexes used for this search.
      *
      * @param modificationProfile the modification profile of this search
@@ -1116,7 +1197,7 @@ public class PTMFactory implements Serializable {
 
     /**
      * Add default reporter ions.
-     * 
+     *
      * @param ptmName the name of the PTM
      * @return true if reporter ions where added
      */

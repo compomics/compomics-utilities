@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.TagAssumption;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -27,7 +29,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  *
  * @author Marc Vaudel
  */
-public class DirectTagIdfileReader extends ExperimentObject implements IdfileReader {
+public class DirecTagIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
      * The name of the tags generator used to create the file.
@@ -95,6 +97,29 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
      * The file inspected.
      */
     private File tagFile;
+    /**
+     * The spectrum factory used to retrieve spectrum titles
+     */
+    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
+
+    /**
+     * Default constructor for the purpose of instantiation.
+     */
+    public DirecTagIdfileReader() {
+
+    }
+
+    /**
+     * Constructors, parses a file but does not index the results.
+     *
+     * @param tagFile the file to parse
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public DirecTagIdfileReader(File tagFile) throws FileNotFoundException, IOException {
+        this(tagFile, false);
+    }
 
     /**
      * Constructors, parses a file.
@@ -105,7 +130,7 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public DirectTagIdfileReader(File tagFile, boolean indexResults) throws FileNotFoundException, IOException {
+    public DirecTagIdfileReader(File tagFile, boolean indexResults) throws FileNotFoundException, IOException {
         this.tagFile = tagFile;
         bufferedRandomAccessFile = new BufferedRandomAccessFile(tagFile, "r", 1024 * 100);
         parseFile(indexResults);
@@ -175,10 +200,10 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
                 throw new IOException("Unexpected end of parameters section.");
             } else {
                 line = line.substring(1).trim();
-                if (line.startsWith("TagsGenerator")) {
-                    tagsGenerator = line.substring(line.indexOf(" ")).trim();
-                } else if (line.startsWith("TagsGeneratorVersion")) {
-                    tagsGeneratorVersion = line.substring(line.indexOf(" ")).trim();
+                if (line.startsWith("TagsGeneratorVersion")) {
+                    tagsGeneratorVersion = line.substring(line.indexOf("\t")).trim();
+                } else if (line.startsWith("TagsGenerator")) {
+                    tagsGenerator = line.substring(line.indexOf("\t")).trim();
                 } else if (line.contains("(c)")) {
                     copyRight = line;
                 } else if (line.contains("License")) {
@@ -190,15 +215,15 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
                 } else if (line.startsWith("Tagging finished at")) {
                     timeEnd = line.substring(line.indexOf("Tagging finished at")).trim();
                 } else if (line.startsWith("Total tagging time:")) {
-                    line = line.substring(line.indexOf("Total tagging time:")).trim();
+                    line = line.substring(line.indexOf(":") + 1).trim();
                     line = line.substring(0, line.indexOf(" ")).trim();
                     try {
                         taggingTimeSeconds = new Double(line);
                     } catch (Exception e) {
-                        // ignore
+                        e.printStackTrace();
                     }
                 } else if (line.contains("node")) {
-                    line = line.substring(line.indexOf("Used")).trim();
+                    line = line.substring(line.indexOf(" ")).trim();
                     line = line.substring(0, line.indexOf(" ")).trim();
                     try {
                         nProcessingNode = new Integer(line);
@@ -206,7 +231,7 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
                         // ignore
                     }
                 } else if (line.startsWith("InputFile")) {
-                    inputFile = line.substring(line.indexOf(" ")).trim();
+                    inputFile = line.substring(line.indexOf("\t")).trim();
                 }
             }
         }
@@ -234,8 +259,8 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
                 String[] components = line.split(", ");
                 for (String component : components) {
                     int index = component.indexOf(": ");
-                    String key = component.substring(0, index);
-                    String value = component.substring(index);
+                    String key = component.substring(0, index).trim();
+                    String value = component.substring(index + 1).trim();
                     tagsParameters.put(key, value);
                 }
             }
@@ -253,43 +278,39 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     private boolean parseHeaders() throws IOException {
         String line = bufferedRandomAccessFile.readLine();
         if (line != null) {
-            if (line.startsWith("S") || line.startsWith("T")) {
-                throw new IOException("No Header found.");
-            }
-            if (line.startsWith("H(S)")) {
-                line = line.substring(4).trim();
-                String[] components = line.split("\t");
-                for (int i = 0; i < components.length; i++) {
-                    spectrumLineContent.put(components[i], i);
-                }
-            } else if (line.startsWith("H(T)")) {
-                line = line.substring(4).trim();
-                String[] components = line.split("\t");
-                for (int i = 0; i < components.length; i++) {
-                    tagLineContent.put(components[i], i);
-                }
-            }
+            parseHeaderLine(line);
         }
         line = bufferedRandomAccessFile.readLine();
         if (line != null) {
-            if (line.startsWith("S") || line.startsWith("T")) {
-                throw new IOException("No Header found.");
-            }
-            if (line.startsWith("H(S)")) {
-                line = line.substring(4).trim();
-                String[] components = line.split("\t");
-                for (int i = 0; i < components.length; i++) {
-                    spectrumLineContent.put(components[i], i);
-                }
-            } else if (line.startsWith("H(T)")) {
-                line = line.substring(4).trim();
-                String[] components = line.split("\t");
-                for (int i = 0; i < components.length; i++) {
-                    tagLineContent.put(components[i], i);
-                }
-            }
+            parseHeaderLine(line);
         }
         return line == null;
+    }
+
+    /**
+     * Parses a line corresponding to a header.
+     *
+     * @param linea line corresponding to a header
+     *
+     * @throws IOException
+     */
+    private void parseHeaderLine(String line) throws IOException {
+        if (line.startsWith("S") || line.startsWith("T")) {
+            throw new IOException("No Header found.");
+        }
+        if (line.startsWith("H(S)")) {
+            line = line.substring(4).trim();
+            String[] components = line.split("\t");
+            for (int i = 0; i < components.length; i++) {
+                spectrumLineContent.put(components[i], i);
+            }
+        } else if (line.startsWith("H(T)")) {
+            line = line.substring(4).trim();
+            String[] components = line.split("\t");
+            for (int i = 0; i < components.length; i++) {
+                tagLineContent.put(components[i], i);
+            }
+        }
     }
 
     /**
@@ -404,40 +425,55 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
         }
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
         int sCpt = 0;
-        Integer sIdColumnIndex = spectrumLineContent.get("Index");
+        Integer sIdColumnIndex = spectrumLineContent.get("ID"),
+                chargeColumnIndex = spectrumLineContent.get("Charge");
         BufferedReader reader = new BufferedReader(new FileReader(tagFile));
         try {
             String line;
-            Integer sId = null;
-            int rank = 1;
+            Integer sId = null, lastId = null, lastCharge = null;
+            int rank = 0;
             SpectrumMatch currentMatch = null;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("S")) {
                     sId = ++sCpt;
+                    rank = 0;
                     if (sIdColumnIndex != null) {
                         line = line.substring(1).trim();
                         String[] components = line.split("\t");
-                        sId = new Integer(components[sIdColumnIndex]);
+                        String id = components[sIdColumnIndex];
+                        sId = new Integer(id.substring(id.indexOf("=") + 1));
+                        String chargeString = components[chargeColumnIndex];
+                        lastCharge = new Integer(chargeString);
                     }
-                    if (currentMatch != null) {
-                        result.add(currentMatch);
-                        currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, sId.toString()));
+                    if (!sId.equals(lastId)) {
+                        if (currentMatch != null && currentMatch.hasAssumption()) {
+                            result.add(currentMatch);
+                        }
+                        String spectrumTitle = spectrumFactory.getSpectrumTitle(fileName, sId);
+                        currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, spectrumTitle));
+                        lastId = sId;
                     }
                 } else if (line.startsWith("T")) {
-                    currentMatch.addHit(Advocate.DirecTag.getIndex(), getAssumptionFromLine(line, rank), true);
+                    ++rank;
+                    TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
+                    //@TODO: check with the developers if this is correct
+                    tagAssumption.setIdentificationCharge(new Charge(Charge.PLUS, lastCharge));
+                    currentMatch.addHit(Advocate.DirecTag.getIndex(), tagAssumption, true);
                 }
             }
-            if (currentMatch.hasAssumption()) {
+            if (currentMatch != null && currentMatch.hasAssumption()) {
                 result.add(currentMatch);
             }
         } finally {
             reader.close();
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return result;
     }
 
     /**
-     * Returns the assumption associated to a tag line.
+     * Returns the assumption associated to a tag line. If a modification index
+     * is found, an "X" is put in the tag sequence and a modification match
+     * named after the given index is added.
      *
      * @param line the line
      * @param rank the rank of the assumption
@@ -462,7 +498,28 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
             throw new IllegalArgumentException("Column Tag not found.");
         }
         String tagSequence = components[tagIndex];
-        AminoAcidPattern tagPattern = new AminoAcidPattern(tagSequence);
+        StringBuilder residues = new StringBuilder(tagSequence.length());
+        HashMap<Integer, ModificationMatch> modificationMatches = new HashMap<Integer, ModificationMatch>();
+        for (int i = 0; i < tagSequence.length(); i++) {
+            char charAtI = tagSequence.charAt(i);
+            try {
+                AminoAcid aa = AminoAcid.getAminoAcid(charAtI);
+                residues.append(aa.singleLetterCode);
+            } catch (IllegalArgumentException e) {
+                try {
+                    String modIndexString = charAtI + "";
+                    new Integer(modIndexString);
+                    residues.append("X");
+                    modificationMatches.put(i + 1, new ModificationMatch(modIndexString, true, i + 1));
+                } catch (Exception e1) {
+                    throw new IllegalArgumentException("No amino acid or modification could be mapped to tag component \"" + charAtI + "\" in tag \"" + tagSequence + "\".");
+                }
+            }
+        }
+        AminoAcidPattern tagPattern = new AminoAcidPattern(residues.toString());
+        for (int i : modificationMatches.keySet()) {
+            tagPattern.addModificationMatch(i, modificationMatches.get(i));
+        }
         Tag tag = new Tag(nGap, tagPattern, cGap);
         Integer chargeIndex = tagLineContent.get("TagChargeState");
         if (chargeIndex == null) {
@@ -478,6 +535,78 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
+     * Returns the tags generator used to create the file.
+     *
+     * @return the tags generator used to create the file
+     */
+    public String getTagsGenerator() {
+        return tagsGenerator;
+    }
+
+    /**
+     * Returns the version of the tags generator used to create the file.
+     *
+     * @return the version of the tags generator used to create the file
+     */
+    public String getTagsGeneratorVersion() {
+        return tagsGeneratorVersion;
+    }
+
+    /**
+     * Returns the copyright.
+     *
+     * @return the copyright
+     */
+    public String getCopyRight() {
+        return copyRight;
+    }
+
+    /**
+     * Returns the license information of this file.
+     *
+     * @return the license information of this file
+     */
+    public String getLicense() {
+        return license;
+    }
+
+    /**
+     * Returns the starting time of the tagging as given in the file.
+     *
+     * @return the starting time of the tagging
+     */
+    public String getTimeStart() {
+        return timeStart;
+    }
+
+    /**
+     * Returns the ending time of the tagging as given in the file.
+     *
+     * @return the ending time of the tagging
+     */
+    public String getTimeEnd() {
+        return timeEnd;
+    }
+
+    /**
+     * Returns the tagging time in seconds as listed in the file.
+     *
+     * @return the tagging time in seconds as listed in the file
+     */
+    public Double getTaggingTimeSeconds() {
+        return taggingTimeSeconds;
+    }
+
+    /**
+     * Returns the number of processing nodes used.
+     *
+     * @return the number of processing nodes used
+     */
+    public Integer getnProcessingNode() {
+        return nProcessingNode;
+    }
+
+    /**
      * Returns the spectrum file name as found in the parameters section.
      *
      * @return the spectrum file name
@@ -488,7 +617,7 @@ public class DirectTagIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public String getExtension() {
-        return ".mgf_directag";
+        return ".tags";
     }
 
     @Override

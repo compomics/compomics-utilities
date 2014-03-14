@@ -98,11 +98,6 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="numberMatchesLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="numberMatchesTxt" max="32767" attributes="2"/>
-                          </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="instrumentLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
@@ -117,21 +112,23 @@
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="protocolLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                  <Component id="peptideLengthLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="protocolLabel" min="-2" pref="200" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="minPepLengthTxt" linkSize="10" min="-2" pref="71" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="peptideLengthDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="maxPepLengthTxt" linkSize="10" min="-2" pref="77" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="protocolCmb" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="protocolCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="numberMatchesLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="numberMatchesTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="peptideLengthLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="minPepLengthTxt" linkSize="10" min="-2" pref="71" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="peptideLengthDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="maxPepLengthTxt" linkSize="10" min="-2" pref="77" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="additionalOutputlLabel" min="-2" pref="200" max="-2" attributes="0"/>
@@ -154,8 +151,8 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="numberTerminiLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="numberTerminiTxt" max="32767" attributes="2"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="terminiCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="maxPtmsLabel" min="-2" pref="200" max="-2" attributes="0"/>
@@ -192,6 +189,11 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="numberTerminiLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="terminiCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -199,13 +201,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="numberMatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numberMatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="additionalOutputlLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="additionalOutputCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -216,13 +213,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="numberTerminiLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="numberTerminiTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberMatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberMatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="additionalOutputlLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="additionalOutputCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -407,17 +404,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="numberTerminiLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Number of Tolerable Termini"/>
+                <Property name="text" type="java.lang.String" value="Enzymatic Terminals"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="numberTerminiTxt">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="2"/>
-              </Properties>
-              <Events>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="numberTerminiTxtKeyReleased"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="maxPtmsLabel">
               <Properties>
@@ -432,6 +420,18 @@
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPtmsTxtKeyReleased"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="terminiCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="None Required"/>
+                    <StringItem index="1" value="At Least One"/>
+                    <StringItem index="2" value="Both"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="2"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

@@ -380,7 +380,6 @@ public class ObjectsDB implements Serializable {
                 results = stmt.executeQuery("select * from " + tableName);
 
                 try {
-
                     while (results.next()) {
 
                         if (waitingHandler != null) {
@@ -389,6 +388,7 @@ public class ObjectsDB implements Serializable {
                                 break;
                             }
                         }
+
                         String key = results.getString(1);
 
                         if (!objectsCache.inCache(dbName, tableName, key)) {

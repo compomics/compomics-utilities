@@ -950,6 +950,12 @@ public class SearchParameters implements Serializable {
         }
 
         // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {
+            PepnovoParameters pepnovoParameters = new PepnovoParameters();
+            result.setIdentificationAlgorithmParameter(pepnovoParameters.getAlgorithm().getIndex(), pepnovoParameters);
+        }
+
+        // compatibility check
         if (result.getPepNovoPtmMap() != null) {
             PepnovoParameters pepnovoParameters = (PepnovoParameters) result.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex());
             if (pepnovoParameters.getPepNovoPtmMap() == null || pepnovoParameters.getPepNovoPtmMap().isEmpty()) {

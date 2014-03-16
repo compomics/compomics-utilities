@@ -52,13 +52,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      */
     public static final String tableHeader = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
     /**
-     * the mass to add to the C-terminal gap so that is corresponds to a peptide
-     * fragment
+     * The mass to add to the C-terminal gap so that is corresponds to a peptide
+     * fragment.
      */
     public final double cTermCorrection = Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass() + 2 * ElementaryIon.proton.getTheoreticMass();
     /**
-     * the mass to add to the N-terminal gap so that is corresponds to a peptide
-     * fragment
+     * The mass to add to the N-terminal gap so that is corresponds to a peptide
+     * fragment.
      */
     public final double nTermCorrection = 0;
 

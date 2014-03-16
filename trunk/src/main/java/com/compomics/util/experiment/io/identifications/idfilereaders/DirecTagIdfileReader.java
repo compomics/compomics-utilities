@@ -2,8 +2,6 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -104,11 +102,13 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
-     * the mass to add to the C-terminal gap so that is corresponds to a peptide fragment
+     * The mass to add to the C-terminal gap so that is corresponds to a peptide
+     * fragment.
      */
     public final double cTermCorrection = 0;
     /**
-     * the mass to add to the N-terminal gap so that is corresponds to a peptide fragment
+     * The mass to add to the N-terminal gap so that is corresponds to a peptide
+     * fragment.
      */
     public final double nTermCorrection = 0;
 

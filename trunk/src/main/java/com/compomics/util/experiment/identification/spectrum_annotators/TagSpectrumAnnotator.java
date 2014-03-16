@@ -240,8 +240,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                     for (int charge : tempCharges) {
                         if (chargeValidated(fragmentIon, charge, precursorCharge)) {
                             String key = IonMatch.getPeakAnnotation(fragmentIon, new Charge(Charge.PLUS, charge));
-                            if (!spectrumAnnotation.containsKey(key)
-                                    && !unmatchedIons.contains(key)) {
+                            if (!spectrumAnnotation.containsKey(key) && !unmatchedIons.contains(key)) {
                                 matchInSpectrum(fragmentIon, charge);
                             }
                             if (!unmatchedIons.contains(key)) {

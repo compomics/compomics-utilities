@@ -39,6 +39,10 @@ public class ObjectsDB implements Serializable {
      */
     public static final int VARCHAR_MAX_LENGTH = 32672;
     /**
+     * The maximum key length before using the key correction for long keys.
+     */
+    public static final int MAX_KEY_LENGTH = 1000;
+    /**
      * List of keys too long to create a table.
      *
      * @deprecated use longTableNames instead
@@ -1048,7 +1052,7 @@ public class ObjectsDB implements Serializable {
         if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
             if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
                 correctedKey = LONG_KEY_PREFIX + longKeysMap.get(tableName).indexOf(key);
-            } else if (key.length() >= VARCHAR_MAX_LENGTH) {
+            } else if (key.length() >= MAX_KEY_LENGTH) { // @TODO: find the optimal value
                 if (!longKeysMap.containsKey(tableName)) {
                     longKeysMap.put(tableName, new ArrayList<String>());
                 }
@@ -1058,7 +1062,7 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        if (correctedKey.length() >= VARCHAR_MAX_LENGTH) {
+        if (correctedKey.length() >= MAX_KEY_LENGTH) { // @TODO: find the optimal value
             throw new IllegalArgumentException("Object key " + correctedKey + " is too long to be stored in the database.");
         }
 

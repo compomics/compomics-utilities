@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import no.uib.jsparklines.renderers.util.Util;
 
 /**
  * This class represents a sequence mass tag.
@@ -320,7 +321,7 @@ public class Tag extends ExperimentObject {
             if (includeTerminalGaps) {
                 return firstComponent.asSequence();
             } else {
-                return "...";
+                return Util.roundDouble(firstComponent.getMass(), 2) + "-";
             }
         } else {
             throw new IllegalArgumentException("Terminal tag not implemented for TagComponent " + firstComponent.getClass() + ".");
@@ -355,7 +356,7 @@ public class Tag extends ExperimentObject {
             if (includeTerminalGaps) {
                 return lastComponent.asSequence();
             } else {
-                return "...";
+                return "-" + Util.roundDouble(lastComponent.getMass(), 2);
             }
         } else {
             throw new IllegalArgumentException("Terminal tag not implemented for TagComponent " + lastComponent.getClass() + ".");

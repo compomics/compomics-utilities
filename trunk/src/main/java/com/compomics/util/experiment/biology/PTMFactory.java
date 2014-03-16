@@ -1027,14 +1027,13 @@ public class PTMFactory implements Serializable {
     public void checkFixedModifications(ModificationProfile modificationProfile, Tag tag, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
-        int offset = 0, componentNumber = 0;
+        int indexInTag = 0, componentNumber = 0;
         for (TagComponent tagComponent : tag.getContent()) {
             componentNumber++;
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                 ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
                 for (int aa : aminoAcidPattern.getModificationIndexes()) {
-                    offset++;
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
                         if (!modMatch.isVariable()) {
@@ -1046,12 +1045,13 @@ public class PTMFactory implements Serializable {
                     }
                 }
                 for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
+                    indexInTag++;
                     Double modification = null;
 
                     for (String fixedModification : modificationProfile.getFixedModifications()) {
                         PTM ptm = getPTM(fixedModification);
                         if (ptm.getType() == PTM.MODAA) {
-                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(offset)) {
+                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(indexInTag)) {
                                 if (modification == null) {
                                     modification = ptm.getMass();
                                     aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
@@ -1064,7 +1064,7 @@ public class PTMFactory implements Serializable {
                         } else if (ptm.getType() == PTM.MODNP && componentNumber == 1 && aa == 1) {
                             aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
                         } else if (ptm.getType() == PTM.MODCPAA && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {
-                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(offset)) {
+                            if (tag.getPotentialModificationSites(ptm, matchingType, massTolerance).contains(indexInTag)) {
                                 aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
                             }
                         } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
@@ -1075,7 +1075,7 @@ public class PTMFactory implements Serializable {
                     }
                 }
             } else {
-                offset++;
+                indexInTag++;
             }
         }
     }

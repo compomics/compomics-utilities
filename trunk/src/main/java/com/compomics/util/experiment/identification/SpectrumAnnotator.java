@@ -369,25 +369,20 @@ public abstract class SpectrumAnnotator {
      * given fragment ion
      */
     public boolean chargeValidated(Ion theoreticIon, int charge, int precursorCharge) {
+        if (charge == 1) {
+            return true;
+        }
         switch (theoreticIon.getType()) {
             case IMMONIUM_ION:
-                return charge == 1;
             case REPORTER_ION: // Note, it is possible to implement higher charges for the reporter ion but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
-                return charge == 1;
             case PEPTIDE_FRAGMENT_ION:
                 PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);
-                return charge <= peptideFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
+                return charge <= peptideFragmentIon.getNumber() && charge < precursorCharge;
             case TAG_FRAGMENT_ION:
                 TagFragmentIon tagFragmentIon = ((TagFragmentIon) theoreticIon);
-                return charge <= tagFragmentIon.getNumber() && (charge < precursorCharge || precursorCharge == 1);
+                return charge <= tagFragmentIon.getNumber() && charge < precursorCharge;
             case PRECURSOR_ION:
-//                if ((theoreticIon.getNeutralLossesAsString().lastIndexOf("TMT_C") != -1
-//                        || theoreticIon.getNeutralLossesAsString().lastIndexOf("iTRAQ_C") != -1)
-//                        && theoreticIon.getNeutralLosses().size() == 1) {
-//                    return true; // special case for TMT cluster ions
-//                } else {
                 return charge >= precursorCharge;
-//                }
             default:
                 throw new UnsupportedOperationException("Ion type " + theoreticIon.getTypeAsString() + " not implemented in the spectrum annotator.");
         }

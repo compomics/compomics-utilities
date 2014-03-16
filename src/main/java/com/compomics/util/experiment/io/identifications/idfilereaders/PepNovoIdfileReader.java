@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.TagAssumption;
@@ -52,6 +51,16 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * The standard format.
      */
     public static final String tableHeader = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
+    /**
+     * the mass to add to the C-terminal gap so that is corresponds to a peptide
+     * fragment
+     */
+    public final double cTermCorrection = Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass() + 2 * ElementaryIon.proton.getTheoreticMass();
+    /**
+     * the mass to add to the N-terminal gap so that is corresponds to a peptide
+     * fragment
+     */
+    public final double nTermCorrection = 0;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -212,10 +221,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * Returns a Peptide Assumption from a PepNovo result line. The rank score
      * is taken as reference score. All additional parameters are attached as
-     * PeptideAssumptionDetails.
-     *
-     * Note: Fixed PTMs are not annotated, variable PTMs are marked with the
-     * PepNovo PTM tag (see PepnovoParameters to retrieve utilities names).
+     * PeptideAssumptionDetails. Note: fixed PTMs are not annotated, variable
+     * PTMs are marked with the pepnovo ptm tag (see PepnovoParameters to
+     * retrieve utilities names)
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
@@ -229,7 +237,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         Double pepNovoScore = new Double(lineComponents[2]);
         Double nGap = new Double(lineComponents[3]);
         Double cGap = new Double(lineComponents[4]);
-        double cTermCorrection = Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass() + 2 * ElementaryIon.proton.getTheoreticMass();
         if (cGap > 0 && cGap < cTermCorrection) {
             throw new IllegalArgumentException("Incompatible c-term gap " + cGap);
         } else if (cGap > 0) {

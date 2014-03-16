@@ -267,7 +267,7 @@ public class IonFactory {
                         if (patternMasses.isEmpty()) {
                             for (double mass : aminoAcidMasses) {
                                 int aa = ionNumberOffset + i;
-                                int subaa = i+1;
+                                int subaa = i + 1;
                                 double forwardMass = massOffset + mass;
 
                                 // add the a-ions
@@ -293,7 +293,7 @@ public class IonFactory {
                             for (double patternMass : patternMasses) {
                                 for (double mass : aminoAcidMasses) {
                                     int aa = ionNumberOffset + i;
-                                    int subaa = i+1;
+                                    int subaa = i + 1;
                                     double patternFragmentMass = patternMass + mass;
                                     double forwardMass = massOffset + patternFragmentMass;
 
@@ -332,9 +332,35 @@ public class IonFactory {
                 }
                 ionNumberOffset += aminoAcidPattern.length();
             } else {
+                double gapMass = tagComponent.getMass();
+                int aa = ionNumberOffset;
+                int subaa = 0;
+                for (double massOffset : massOffsets) {
+                    double gap = 0;
+                    if (massOffset != Atom.O.getMonoisotopicMass()) {
+                        gap = massOffset;
+                    }
+                    double forwardMass = massOffset + gapMass;
+
+                    // add the a-ions
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.A_ION, aa, subaa, forwardMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, massOffset));
+                    }
+
+                    // add the b-ions
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.B_ION, aa, subaa, forwardMass - getLossesMass(losses), losses, massOffset));
+                    }
+
+                    // add the c-ion
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.C_ION, aa, subaa, forwardMass + Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses, massOffset));
+                    }
+
+                }
                 ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
                 for (double offsetMass : massOffsets) {
-                    newOffsetMasses.add(offsetMass + tagComponent.getMass());
+                    newOffsetMasses.add(offsetMass + gapMass);
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset++;
@@ -376,7 +402,7 @@ public class IonFactory {
 
                                 // add the x-ions
                                 for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                    result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2*Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                                    result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2 * Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
                                 }
 
                                 // add the y-ions
@@ -407,7 +433,7 @@ public class IonFactory {
 
                                     // add the x-ions
                                     for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                                        result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2*Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                                        result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2 * Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
                                     }
 
                                     // add the y-ions
@@ -440,9 +466,35 @@ public class IonFactory {
                 }
                 ionNumberOffset += aminoAcidPattern.length();
             } else {
+                double gapMass = tagComponent.getMass();
+                int aa = ionNumberOffset;
+                int subaa = 0;
+                for (double massOffset : massOffsets) {
+                    double gap = gapMass;
+                    if (massOffset != Atom.O.getMonoisotopicMass()) {
+                        gap += massOffset;
+                    }
+                    double rewindMass = massOffset + gapMass;
+
+                    // add the x-ions
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2 * Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                    }
+
+                    // add the y-ions
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                    }
+
+                    // add the z-ion
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                    }
+
+                }
                 ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
                 for (double offsetMass : massOffsets) {
-                    newOffsetMasses.add(offsetMass + tagComponent.getMass());
+                    newOffsetMasses.add(offsetMass + gapMass);
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset++;

@@ -41,12 +41,12 @@ public class TagFragmentIon extends Ion {
      */
     private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
     /**
-     * Position of the ion in the tag in amino acids considering gaps as an
-     * amino acid.
+     * Position of the ion in the tag of amino acids considering gaps as an
+     * amino acid. 0 based.
      */
     private int number = -1;
     /**
-     * Position of the ion in the current sequence of amino acids.
+     * Position of the ion in the current sequence of amino acids. 0 based.
      */
     private int subNumber = -1;
     /**
@@ -111,7 +111,7 @@ public class TagFragmentIon extends Ion {
     }
 
     /**
-     * Returns the number of the fragment in the tag.
+     * Returns the number of the fragment in the tag. 0 based.
      *
      * @return the number of the fragment in the tag
      */
@@ -120,7 +120,8 @@ public class TagFragmentIon extends Ion {
     }
 
     /**
-     * Returns the number of the fragment in the current amino acid sequence.
+     * Returns the number of the fragment in the current amino acid sequence. 0
+     * based.
      *
      * @return the number of the fragment in the current amino acid sequence
      */

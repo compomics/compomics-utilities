@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.ElementaryElement;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.*;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -217,22 +216,11 @@ public class IonMatch extends ExperimentObject {
                 // add type
                 result += ion.getSubTypeAsString();
 
-                if (tagFragmentIon.getSubNumber() > 0) {
-                    // add fragment ion number
-                    if (html) {
-                        result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
-                    } else {
-                        result += tagFragmentIon.getSubNumber();
-                    }
+                // add fragment ion number
+                if (html) {
+                    result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
                 } else {
-                    // add gap
-                    if (tagFragmentIon.getMassGap() > 0 && tagFragmentIon.getSubNumber() == 0) {
-                        if (html) {
-                            result += "<sub>(" + tagFragmentIon.getMassGap() + ")</sub>";
-                        } else {
-                            result += "(" + tagFragmentIon.getMassGap() + ")";
-                        }
-                    }
+                    result += tagFragmentIon.getSubNumber();
                 }
 
                 // add charge

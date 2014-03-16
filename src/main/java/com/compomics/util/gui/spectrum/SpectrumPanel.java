@@ -1462,14 +1462,14 @@ public class SpectrumPanel extends GraphicsPanel {
 
                 TagFragmentIon fragmentIon = (TagFragmentIon) ionMatch.ion;
                 if (fragmentIon.getSubType() == forwardIon) {
-                    forwardMap.put(fragmentIon.getNumber(), ionMatch);
+                    forwardMap.put(fragmentIon.getSubNumber(), ionMatch);
                 } else if (fragmentIon.getSubType() == rewindIon) {
-                    rewindMap.put(fragmentIon.getNumber(), ionMatch);
+                    rewindMap.put(fragmentIon.getSubNumber(), ionMatch);
                 }
             }
         }
 
-        int aaIndex = 0;
+        // add forward annotation
         for (TagComponent tagComponent : tag.getContent()) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
@@ -1480,31 +1480,29 @@ public class SpectrumPanel extends GraphicsPanel {
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
 
                     for (int i = 0; i < aminoAcidPattern.length() - 1; i++) {
-                        aaIndex++;
-                        IonMatch ionMatch1 = forwardMap.get(aaIndex);
-                        IonMatch ionMatch2 = forwardMap.get(aaIndex + 1);
+                        IonMatch ionMatch1 = forwardMap.get(i);
+                        IonMatch ionMatch2 = forwardMap.get(i + 1);
                         if (ionMatch1 != null && ionMatch2 != null) {
                             String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i + 2);
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i + 1);
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
-                                    "f" + aaIndex,
-                                    aminoAcidPattern.asSequence(i + 1) + mod,
+                                    "f" + i,
+                                    aminoAcidPattern.asSequence(i) + mod,
                                     ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, forwardIonPercentHeight));
                         }
                     }
                 }
-            } else {
-                aaIndex++;
             }
         }
 
         ArrayList<TagComponent> reversedTag = new ArrayList<TagComponent>(tag.getContent());
         Collections.reverse(reversedTag);
-        aaIndex = 0;
+
+        // add reverse annotation
         for (TagComponent tagComponent : reversedTag) {
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
@@ -1514,26 +1512,24 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
 
-                    for (int i = aminoAcidPattern.length() - 1; i >= 0; i--) {
-                        aaIndex++;
-                        IonMatch ionMatch1 = rewindMap.get(aaIndex);
-                        IonMatch ionMatch2 = rewindMap.get(aaIndex + 1);
-                        if (ionMatch1 != null && ionMatch2 != null && i > 0) {
+                    for (int i = 0; i < aminoAcidPattern.length() - 1; i++) {
+                        IonMatch ionMatch1 = rewindMap.get(i);
+                        IonMatch ionMatch2 = rewindMap.get(i + 1);
+                        if (ionMatch1 != null && ionMatch2 != null) {
+                            int patternIndex = aminoAcidPattern.length() - i - 1;
                             String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(i);
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(patternIndex + 1);
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
                             addReferenceAreaXAxis(new ReferenceArea(
-                                    "r" + aaIndex,
-                                    aminoAcidPattern.asSequence(i - 1) + mod,
+                                    "r" + patternIndex,
+                                    aminoAcidPattern.asSequence(patternIndex) + mod,
                                     ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, rewindIonPercentHeight));
                         }
                     }
                 }
-            } else {
-                aaIndex++;
             }
         }
     }

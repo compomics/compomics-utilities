@@ -1242,4 +1242,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public synchronized int getMaxSecondaryProgressCounter() {
         return secondaryJProgressBar.getMaximum();
     }
+
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+        resizeLayeredPanes(); // update the layout in the layered pane
+    }
 }

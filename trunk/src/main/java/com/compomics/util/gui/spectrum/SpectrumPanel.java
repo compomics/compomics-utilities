@@ -1479,7 +1479,7 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
 
-                    for (int i = 0; i < aminoAcidPattern.length() - 1; i++) {
+                    for (int i = 0; i < aminoAcidPattern.length(); i++) {
                         IonMatch ionMatch1 = forwardMap.get(i);
                         IonMatch ionMatch2 = forwardMap.get(i + 1);
                         if (ionMatch1 != null && ionMatch2 != null) {
@@ -1512,7 +1512,7 @@ public class SpectrumPanel extends GraphicsPanel {
 
                     Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
 
-                    for (int i = 0; i < aminoAcidPattern.length() - 1; i++) {
+                    for (int i = 0; i < aminoAcidPattern.length(); i++) {
                         IonMatch ionMatch1 = rewindMap.get(i);
                         IonMatch ionMatch2 = rewindMap.get(i + 1);
                         if (ionMatch1 != null && ionMatch2 != null) {

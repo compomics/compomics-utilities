@@ -15,7 +15,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
     /**
-     * Serialization id for backward compatibility
+     * Serialization id for backward compatibility.
      */
     static final long serialVersionUID = 496273793273328259L;
     /**

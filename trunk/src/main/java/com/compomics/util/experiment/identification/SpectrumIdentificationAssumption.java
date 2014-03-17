@@ -15,6 +15,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
     /**
+     * Serialization id for backward compatibility
+     */
+    static final long serialVersionUID = 496273793273328259L;
+    /**
      * The rank of the peptide assumption for the concerned spectrum.
      */
     protected int rank;
@@ -88,26 +92,26 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public Charge getIdentificationCharge() {
         return identificationCharge;
     }
-    
+
     /**
      * Sets the identification charge.
-     * 
-     * @param charge the identification charge
+     *
+     * @param identificationCharge the identification charge
      */
-    public void setIdentificationCharge(Charge charge) {
+    public void setIdentificationCharge(Charge identificationCharge) {
         this.identificationCharge = identificationCharge;
     }
-    
+
     /**
      * Returns the theoretic mass of the given assumption.
-     * 
+     *
      * @return the theoretic mass of the given assumption
      */
     public abstract double getTheoreticMass();
-    
+
     /**
      * Returns the theoretic m/z.
-     * 
+     *
      * @return the theoretic m/z
      */
     public double getTheoreticMz() {

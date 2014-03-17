@@ -336,10 +336,6 @@ public class IonFactory {
                 int aa = ionNumberOffset;
                 int subaa = 0;
                 for (double massOffset : massOffsets) {
-                    double gap = 0;
-                    if (massOffset != Atom.O.getMonoisotopicMass()) {
-                        gap = massOffset;
-                    }
                     double forwardMass = massOffset + gapMass;
 
                     // add the a-ions

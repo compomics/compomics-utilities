@@ -213,6 +213,12 @@ public class Protein extends ExperimentObject {
                 } else {
                     throw new IllegalArgumentException("Unknown amino acid: " + aa);
                 }
+            } catch (IllegalArgumentException e) {
+                if (aa == '>') {
+                    throw new IllegalArgumentException("Error parsing the sequence of " + accession + ". Protein sequence: " + sequence + ".");
+                } else {
+                    throw new IllegalArgumentException("Unknown amino acid: " + aa);
+                }
             }
         }
 

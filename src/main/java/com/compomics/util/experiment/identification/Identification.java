@@ -1162,7 +1162,8 @@ public abstract class Identification extends ExperimentObject {
      * Adds a spectrum match to the identification.
      *
      * @param newMatch the new match
-     * @param ascendingScore indicates whether the score is ascending when hits get better
+     * @param ascendingScore indicates whether the score is ascending when hits
+     * get better
      *
      * @throws FileNotFoundException exception thrown whenever an error occurred
      * while saving the file
@@ -1176,10 +1177,13 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+    public void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore)
+            throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         boolean containsSpectrumKey = spectrumIdentificationMap.containsKey(spectrumFile);
+
         if (containsSpectrumKey && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey, true);
             if (oldMatch == null) {
@@ -1353,7 +1357,8 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches, boolean ascendingScore) throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches, boolean ascendingScore)
+            throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
             addSpectrumMatch(spectrumMatch, ascendingScore);
         }

@@ -379,7 +379,6 @@ public class ObjectsDB implements Serializable {
             busy = true;
 
             try {
-
                 Statement stmt = dbConnection.createStatement();
                 results = stmt.executeQuery("select * from " + tableName);
 

@@ -135,7 +135,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     /**
      * Updates the assumption maps based on the old structure where only peptide
-     * assumptions were supported
+     * assumptions were supported.
      */
     private void update() {
         assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(assumptions.size());
@@ -170,8 +170,8 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Add a first hit.
      *
-     * @param otherAdvocateId The index of the new advocate
-     * @param otherAssumption The new identification assumption
+     * @param otherAdvocateId the index of the new advocate
+     * @param otherAssumption the new identification assumption
      * @param ascendingScore indicates whether the score is ascending when hits get better
      */
     public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {

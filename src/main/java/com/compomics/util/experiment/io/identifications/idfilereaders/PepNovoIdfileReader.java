@@ -222,7 +222,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * Returns a Peptide Assumption from a PepNovo result line. The rank score
      * is taken as reference score. All additional parameters are attached as
      * PeptideAssumptionDetails. Note: fixed PTMs are not annotated, variable
-     * PTMs are marked with the pepnovo ptm tag (see PepnovoParameters to
+     * PTMs are marked with the PepNovo PTM tag (see PepnovoParameters to
      * retrieve utilities names)
      *
      * @param line the line to parse
@@ -340,7 +340,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * Get a PTM.
      *
-     * @param pepnovoParameters the pep novo parameters
+     * @param pepnovoParameters the PepNovo parameters
      * @param pepNovoModification the PepNovo modification
      *
      * @return the PTM as a string

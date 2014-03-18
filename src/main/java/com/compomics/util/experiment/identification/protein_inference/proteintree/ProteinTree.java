@@ -582,31 +582,35 @@ public class ProteinTree {
         while (proteinIterator.hasNext()) {
             Protein protein = proteinIterator.getNextProtein();
             String accession = protein.getAccession();
-            if (loadLengths) {
-                proteinLengths.put(protein.getAccession(), protein.getLength());
-            }
 
-            HashMap<String, ArrayList<Integer>> indexesMap = getTagToIndexesMap(protein.getSequence(), tags, enzyme);
+            if (protein.getLength() > 0) { // ignore empty protein sequences
 
-            for (String tag : indexesMap.keySet()) {
-                ArrayList<Integer> indexes = indexesMap.get(tag);
-                if (!indexes.isEmpty()) {
-                    Node node = tree.get(tag);
-                    if (node == null) {
-                        node = new Node(initialTagSize);
-                        tree.put(tag, node);
-                    }
-                    node.addAccession(accession, indexes);
+                if (loadLengths) {
+                    proteinLengths.put(protein.getAccession(), protein.getLength());
                 }
-            }
 
-            if (displayProgress && waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
+                HashMap<String, ArrayList<Integer>> indexesMap = getTagToIndexesMap(protein.getSequence(), tags, enzyme);
 
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                tree.clear();
-                return;
+                for (String tag : indexesMap.keySet()) {
+                    ArrayList<Integer> indexes = indexesMap.get(tag);
+                    if (!indexes.isEmpty()) {
+                        Node node = tree.get(tag);
+                        if (node == null) {
+                            node = new Node(initialTagSize);
+                            tree.put(tag, node);
+                        }
+                        node.addAccession(accession, indexes);
+                    }
+                }
+
+                if (displayProgress && waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    tree.clear();
+                    return;
+                }
             }
         }
 

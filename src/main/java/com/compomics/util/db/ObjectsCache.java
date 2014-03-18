@@ -40,7 +40,7 @@ public class ObjectsCache {
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
     /**
-     * list of the loaded objects with the most used matches in the end.
+     * List of the loaded objects with the most used matches in the end.
      */
     private LinkedBlockingDeque<String> loadedObjectsKeys = new LinkedBlockingDeque<String>();
     /**
@@ -351,7 +351,7 @@ public class ObjectsCache {
                     String dbName = splittedKey[0];
                     String tableName = splittedKey[1];
                     String objectKey = splittedKey[2];
-                    loadedObjectsKeys.remove(entryKey);
+                    loadedObjectsKeys.remove(entryKey); // @TODO: this seems to be very very slow??
                     HashMap<String, HashMap<String, CacheEntry>> dbMap = loadedObjectsMap.get(dbName);
                     if (dbMap != null) {
                         HashMap<String, CacheEntry> tableMap = dbMap.get(tableName);

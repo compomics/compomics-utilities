@@ -265,18 +265,20 @@ public class SequenceFactory {
             currentRandomAccessFile.seek(index);
             String line, sequence = "";
             Header currentHeader = currentHeaderMap.get(accession);
+            boolean headerFound = false;
 
             while ((line = currentRandomAccessFile.readLine()) != null) {
                 line = line.trim();
 
                 if (line.startsWith(">")) {
-                    if (!sequence.equals("")) {
+                    if (!sequence.equals("") || headerFound) {
                         break;
                     }
                     if (currentHeader == null) {
                         currentHeader = Header.parseFromFASTA(line);
                         currentHeaderMap.put(accession, currentHeader);
                     }
+                    headerFound = true;
                 } else {
                     sequence += line;
                 }
@@ -528,7 +530,7 @@ public class SequenceFactory {
         System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
         tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, databaseType, version, waitingHandler);
 
-        if (waitingHandler == null || (waitingHandler != null && !waitingHandler.isRunCanceled())) {
+        if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             try {
                 writeIndex(tempFastaIndex, currentFastaFile.getParentFile());
             } catch (Exception e) {
@@ -584,6 +586,7 @@ public class SequenceFactory {
         }
 
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
+
             if (line.startsWith(">")) {
                 Header fastaHeader = Header.parseFromFASTA(line);
                 String accession = fastaHeader.getAccessionOrRest();
@@ -591,7 +594,6 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-
                 if (indexes.containsKey(accession)) {
                     throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
                 }
@@ -626,6 +628,7 @@ public class SequenceFactory {
                         break;
                     }
                 }
+                index = bufferedRandomAccessFile.getFilePointer();
             } else {
                 index = bufferedRandomAccessFile.getFilePointer();
             }
@@ -1379,36 +1382,35 @@ public class SequenceFactory {
             String sequence = "";
             Header header = nextHeader;
             String line;
+            boolean newHeaderFound = false;
             while ((line = br.readLine()) != null) {
-                line = line.trim();
-                if (!line.equals("")) {
-                    if (line.startsWith(">")) {
-                        Header tempHeader = Header.parseFromFASTA(line);
-                        if (targetOnly && isDecoyAccession(tempHeader.getAccessionOrRest())) {
-                            while ((line = br.readLine()) != null) {
-                                if (line.startsWith(">")) {
-                                    tempHeader = Header.parseFromFASTA(line);
-                                    if (!isDecoyAccession(tempHeader.getAccessionOrRest())) {
-                                        break;
-                                    }
+                if (line.startsWith(">")) {
+                    Header tempHeader = Header.parseFromFASTA(line);
+                    if (targetOnly && isDecoyAccession(tempHeader.getAccessionOrRest())) {
+                        while ((line = br.readLine()) != null) {
+                            if (line.startsWith(">")) {
+                                tempHeader = Header.parseFromFASTA(line);
+                                if (!isDecoyAccession(tempHeader.getAccessionOrRest())) {
+                                    break;
                                 }
                             }
-                            if (line == null) {
-                                break;
-                            }
                         }
-                        if (header == null) {
-                            header = tempHeader;
-                        } else {
-                            nextHeader = tempHeader;
+                        if (line == null) {
                             break;
                         }
-                    } else {
-                        sequence += line;
                     }
+                    if (header == null) {
+                        header = tempHeader;
+                    } else {
+                        nextHeader = tempHeader;
+                        newHeaderFound = true;
+                        break;
+                    }
+                } else {
+                    sequence += line.trim();
                 }
             }
-            if (!sequence.equals("")) {
+            if (newHeaderFound) {
                 nextProtein = new Protein(header.getAccessionOrRest(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccessionOrRest()));
                 return true;
             } else {

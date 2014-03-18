@@ -1341,7 +1341,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * Add a set of spectrumMatches to the model.
      *
-     * @param spectrumMatches The spectrum matches
+     * @param spectrumMatches the spectrum matches
      * @param ascendingScore indicates whether the score is ascending when hits
      * get better
      *

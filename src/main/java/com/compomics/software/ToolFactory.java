@@ -1,7 +1,6 @@
 package com.compomics.software;
 
 import com.compomics.software.dialogs.PeptideShakerSetupDialog;
-import com.compomics.software.dialogs.RelimsSetupDialog;
 import com.compomics.software.dialogs.ReporterSetupDialog;
 import com.compomics.software.dialogs.SearchGuiSetupDialog;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
@@ -120,32 +119,6 @@ public class ToolFactory {
             } else {
                 throw new IllegalArgumentException("Reporter not found in " + utilitiesUserPreferences.getReporterPath());
             }
-        }
-    }
-
-    /**
-     * Starts Relims from the location of utilities preferences.
-     *
-     * @param parent a frame to display the path setting dialog.
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @deprecated use PeptideShaker's own Reshake option instead.
-     */
-    public static void startRelims(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
-
-        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-
-        if (utilitiesUserPreferences.getRelimsPath() == null
-                || (utilitiesUserPreferences.getRelimsPath() != null && !(new File(utilitiesUserPreferences.getRelimsPath()).exists()))) {
-            new RelimsSetupDialog(parent, true);
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        }
-        if (utilitiesUserPreferences.getRelimsPath() != null) {
-            launch(utilitiesUserPreferences.getRelimsPath(), "Relims");
-        } else {
-            throw new IllegalArgumentException("Relims not found in " + utilitiesUserPreferences.getRelimsPath());
         }
     }
 

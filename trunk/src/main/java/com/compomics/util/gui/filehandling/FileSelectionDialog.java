@@ -20,9 +20,9 @@ public class FileSelectionDialog extends javax.swing.JDialog {
      */
     private HashMap<String, File> fileMap = new HashMap<String, File>();
     /**
-     * Boolean indicating whether the user pushed the cancel button.
+     * Boolean indicating whether the user canceled the dialog.
      */
-    private boolean canceled = false;
+    private boolean canceled = true;
 
     /**
      * Creates a new FileSelection dialog.
@@ -136,6 +136,7 @@ public class FileSelectionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        canceled = false;
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -178,9 +179,9 @@ public class FileSelectionDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Indicates whether the user pushed on cancel.
+     * Indicates whether the user canceled the dialog.
      *
-     * @return a boolean indicating whether the user pushed on cancel
+     * @return a boolean indicating whether the canceled the dialog
      */
     public boolean isCanceled() {
         return canceled;

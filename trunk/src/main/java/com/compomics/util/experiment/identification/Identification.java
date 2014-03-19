@@ -1189,8 +1189,15 @@ public abstract class Identification extends ExperimentObject {
             if (oldMatch == null) {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
             }
-            for (int searchEngine : newMatch.getAdvocates()) {
-                oldMatch.addHit(searchEngine, newMatch.getFirstHit(searchEngine), ascendingScore);
+            for (int algorithmId : newMatch.getAdvocates()) {
+                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> hitMap = newMatch.getAllAssumptions(algorithmId);
+                if (hitMap != null) {
+                    for (double score : hitMap.keySet()) {
+                        for (SpectrumIdentificationAssumption assumption : hitMap.get(score)) {
+                            oldMatch.addHit(algorithmId, assumption, ascendingScore);
+                        }
+                    }
+                }
             }
             identificationDB.updateSpectrumMatch(oldMatch);
         } else {

@@ -330,6 +330,7 @@ public class IonFactory {
                         }
                     }
                 }
+                massOffsets = newOffsetMasses;
                 ionNumberOffset += aminoAcidPattern.length();
             } else {
                 double gapMass = tagComponent.getMass();
@@ -460,6 +461,7 @@ public class IonFactory {
                         }
                     }
                 }
+                massOffsets = newOffsetMasses;
                 ionNumberOffset += aminoAcidPattern.length();
             } else {
                 double gapMass = tagComponent.getMass();

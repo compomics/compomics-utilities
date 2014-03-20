@@ -34,7 +34,7 @@ public class ObjectsCache {
     /**
      * Share of the memory to be used.
      */
-    private double memoryShare = 0.99;
+    private double memoryShare = 0.8;
     /**
      * Map of the loaded matches. db -> table -> object key -> object.
      */
@@ -351,7 +351,6 @@ public class ObjectsCache {
                     String dbName = splittedKey[0];
                     String tableName = splittedKey[1];
                     String objectKey = splittedKey[2];
-                    loadedObjectsKeys.remove(entryKey); // @TODO: this seems to be very very slow??
                     HashMap<String, HashMap<String, CacheEntry>> dbMap = loadedObjectsMap.get(dbName);
                     if (dbMap != null) {
                         HashMap<String, CacheEntry> tableMap = dbMap.get(tableName);
@@ -456,7 +455,7 @@ public class ObjectsCache {
     public void updateCache() throws IOException, SQLException, InterruptedException {
         while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize
                 || automatedMemoryManagement && !memoryCheck()) {
-            int toRemove = Math.min(batchSize, loadedObjectsKeys.size() / 2);
+            int toRemove = Math.min(batchSize, loadedObjectsKeys.size() / 2); // @TODO: remove the min option???
             if (toRemove <= 1) {
                 saveObject(loadedObjectsKeys.take());
             } else {

@@ -424,12 +424,15 @@ public class Tag extends ExperimentObject {
                         offset++;
                     }
                 }
+                return possibleSites;
             case PTM.MODC:
             case PTM.MODCP:
                 possibleSites.add(patternLength);
+                return possibleSites;
             case PTM.MODN:
             case PTM.MODNP:
                 possibleSites.add(1);
+                return possibleSites;
             case PTM.MODCAA:
             case PTM.MODCPAA:
                 if (content.isEmpty()) {
@@ -444,6 +447,7 @@ public class Tag extends ExperimentObject {
                 } else {
                     possibleSites.add(patternLength);
                 }
+                return possibleSites;
             case PTM.MODNAA:
             case PTM.MODNPAA:
                 if (content.isEmpty()) {
@@ -458,8 +462,10 @@ public class Tag extends ExperimentObject {
                 } else {
                     possibleSites.add(patternLength);
                 }
+                return possibleSites;
+            default:
+                throw new IllegalArgumentException("PTM type " + ptm.getType() + " not recognized.");
         }
-        return possibleSites;
     }
 
     /**
@@ -740,7 +746,7 @@ public class Tag extends ExperimentObject {
                     }
                 }
             } else {
-                throw new IllegalArgumentException("Tag component " + tagComponent.getClass() + " not implemented for sequence mating.");
+                throw new IllegalArgumentException("Tag component " + tagComponent.getClass() + " not implemented for sequence matching.");
             }
             if (newIndexes.isEmpty()) {
                 return result;

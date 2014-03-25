@@ -96,8 +96,8 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, AminoAcidPattern.MatchingType matchingType)
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true, matchingType);
     }
@@ -135,9 +135,8 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, AminoAcidPattern.MatchingType matchingType)
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, AminoAcidPattern.MatchingType matchingType)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
@@ -200,13 +199,15 @@ public class AScore {
                     secondScoringSites = peptideScoreToPostitionMap.get(scores.get(i));
                 }
                 if (secondScoringSites == null || secondScoringSites.isEmpty()) {
-                    throw new IllegalArgumentException("Only one site found in peptide score to position map when estimating the A-score for spectrum " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
+                    throw new IllegalArgumentException("Only one site found in peptide score to position map when estimating the A-score for spectrum "
+                            + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
                 }
                 HashMap<Integer, Double> lowestScoreMap = null, tempMap;
                 Double lowestScore = null;
                 for (int secondPosition : secondScoringSites) {
                     int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap,
+                            charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                     Double tempMapLowestScore = null;
                     for (int tempPos : tempMap.keySet()) {
                         double tempScore = tempMap.get(tempPos);
@@ -218,7 +219,8 @@ public class AScore {
                         }
                     }
                     if (tempMapLowestScore == null) {
-                        throw new IllegalArgumentException("No secondary position score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
+                        throw new IllegalArgumentException("No secondary position score found for " + spectrum.getSpectrumTitle() + " in file "
+                                + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
                     }
                     if (lowestScore == null || tempMapLowestScore < lowestScore) {
                         lowestScore = tempMapLowestScore;
@@ -228,7 +230,8 @@ public class AScore {
                     }
                 }
                 if (lowestScoreMap == null) {
-                    throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
+                    throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName()
+                            + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
                 }
                 return lowestScoreMap;
             } else {
@@ -238,7 +241,8 @@ public class AScore {
                     for (int secondPosition : bestScoringSites) {
                         if (bestPosition != secondPosition) {
                             int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap,
+                                    charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                             Double tempMapLowestScore = null;
                             for (int tempPos : tempMap.keySet()) {
                                 double tempScore = tempMap.get(tempPos);
@@ -247,7 +251,8 @@ public class AScore {
                                 }
                             }
                             if (tempMapLowestScore == null) {
-                                throw new IllegalArgumentException("No secondary position score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
+                                throw new IllegalArgumentException("No secondary position score found for " + spectrum.getSpectrumTitle() + " in file "
+                                        + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
                             }
                             if (lowestScore == null || tempMapLowestScore < lowestScore) {
                                 lowestScore = tempMapLowestScore;
@@ -262,7 +267,8 @@ public class AScore {
                     }
                 }
                 if (lowestScoreMap == null) {
-                    throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName() + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
+                    throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName()
+                            + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
                 }
                 return lowestScoreMap;
             }
@@ -278,7 +284,7 @@ public class AScore {
     }
 
     /**
-     * Returns the spectrum depth for two PTM sites which maximises the score
+     * Returns the spectrum depth for two PTM sites which maximizes the score
      * difference.
      *
      * @param positionToScoreMap the position to score map
@@ -286,7 +292,7 @@ public class AScore {
      * @param secondPosition the second best position
      *
      * @return the depth at which the score difference between the best position
-     * and the second position is maximised
+     * and the second position is maximized
      */
     private static int getBestDepth(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap, int bestPosition, int secondPosition) {
 
@@ -305,7 +311,7 @@ public class AScore {
 
     /**
      * Returns the A-score for two candidate PTM sites in a map: bestSite ->
-     * score. If the sites score equally both will be returned in the map
+     * score. If the sites score equally both will be returned in the map.
      *
      * @param peptide the peptide of interest
      * @param noModPeptide the peptide without the variable modification of
@@ -327,8 +333,9 @@ public class AScore {
      *
      * @return the candidate A-score in a map
      */
-    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
+    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition,
+            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap, ArrayList<Integer> charges, int precursorCharge,
+            double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
 

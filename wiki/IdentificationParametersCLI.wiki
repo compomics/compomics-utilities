@@ -64,7 +64,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -mods                   Lists the available modifications.
 }}}
 
-*X!Tandem specific parameters:*
+*X!Tandem advanced parameters:*
 
 {{{
 -xtandem_dynamic_range    X!Tandem 'spectrum, dynamic range' option, default is '100'.
@@ -113,7 +113,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -xtandem_skyline_path     X!Tandem 'spectrum, skyline path' option.
 }}}
 
-*MS-GF+ specific parameters:*
+*MS-GF+ advanced parameters:*
 
 {{{
 -msgf_decoy               MS-GF+ search decoys option, 1: true, 0: false, default is '0'.
@@ -151,7 +151,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 
-*OMSSA specific parameters:*
+*OMSSA advanced parameters:*
 
 {{{
 -omssa_memory            OMSSA map sequences in memory option, 1: true, 0: false, default is '1'.
@@ -238,7 +238,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 
-*PepNovo+ specific parameters:*
+*PepNovo+ advanced parameters:*
 
 {{{
 -pepnovo_hitlist_length   PepNovo+ number of de novo solutions [0-2000], default is '10'.
@@ -254,6 +254,58 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
                           PepNovo+ fragmentation model, default is 'CID_IT_TRYP'.
 
 -pepnovo_generate_blast   PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.
+}}}
+
+*DirecTag advanced parameters:*
+
+{{{
+-directag_tic_cutoff      DirecTag TIC cutoff in percent, default is '85'.
+
+-directag_max_peak_count  DirecTag max peak count, default is '400'.
+
+-directag_intensity_classes
+                          DirecTag number of intensity classses, default is '3'.
+
+-directag_adjust_precursor
+                          DirecTag adjust precursor, 1: true, 0: false, default is '0'.
+
+-directag_min_adjustment  DirecTag minimum precursor adjustment, default is '-2.5'.
+
+-directag_max_adjustment  DirecTag maximum precursor adjustment, default is '2.5'.
+
+-directag_adjustment_step DirecTag precursor adjustment step, default is '0.1'.
+
+-directag_charge_states   DirecTag number of charge states considered, default is '3'.
+
+-directag_output_suffix   DirecTag output suffic, default is no suffix.
+
+-directag_ms_charge_state DirecTag use charge state from M spectrum, 1: true, 0: false, default is '0'.
+
+-directag_duplicate_spectra
+                          DirecTag duplicate spectra per charge, 1: true, 0: false, default is '1'.
+
+-directag_deisotoping     DirecTag deisotoping mode, default is '0', 0: no deisotoping, 
+                          1: precursor only, 2: precursor and candidate.
+
+-directag_isotope_tolerance
+                          DirecTag isotope mz tolerance, default is '0.25'.
+
+-directag_complement_tolerance
+                          DirecTag complement mz tolerance, default is '0.5'.
+
+-directag_tag_length      DirecTag tag length, default is '3'.
+
+-directag_max_var_mods    DirecTag maximum variable modifications per sequence, default is '2'.
+
+-directag_max_tag_count   DirecTag maximum tag count, default is '20'.
+
+-directag_intensity_weight
+                          DirecTag intensity score weight, default is '1.0'.
+
+-directag_fidelity_weight DirecTag fidelity score weight, default is '1.0'.
+
+-directag_complement_weight
+                          DirecTag complement_score_weight, default is '1.0'.
 }}}
 
 ----

@@ -103,7 +103,7 @@ public class WebDAO {
         String versionRepoURLString = new StringBuilder(jarRepository.toExternalForm()).append(
                 jarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(jarFile.getArtifactId()).append("/maven-metadata.xml").toString();
         String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(versionRepoURLString));
-        if (new CompareVersionNumbers().compare(currentVersionNumber, latestRemoteRelease) == 1) {
+        if (latestRemoteRelease != null && new CompareVersionNumbers().compare(currentVersionNumber, latestRemoteRelease) == 1) {
             newVersion = true;
         }
         return newVersion;

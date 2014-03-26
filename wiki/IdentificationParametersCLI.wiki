@@ -2,7 +2,7 @@
 
 =IdentificationParameters Command Line Interface=
 
-IdentificationParametersCLI can be used to create an identification parameter file via the command line, for use in tools like [http://searchgui.googlecode.com SearchGUI], [http://denovogui.googlecode.com DeNovoGUI] and [http://peptide-shaker.googlecode.com  PeptideShaker].
+IdentificationParametersCLI can be used to create an identification parameter file via the command line, for use in tools like [http://searchgui.googlecode.com SearchGUI], [http://denovogui.googlecode.com DeNovoGUI] and [http://peptide-shaker.googlecode.com PeptideShaker].
 
 Note that in most cases it is not recommended to use the command line to generate the identification parameter file, but rather to set up the wanted identification parameter file in the GUI, save it, and than use it in the command line processing.
 
@@ -18,6 +18,11 @@ eu.isas.searchgui.cmd.IdentificationParametersCLI [parameters]
 {{{
 java -cp PeptideShaker-X.Y.Z.jar 
 eu.isas.peptideshaker.cmd.IdentificationParametersCLI [parameters]
+}}}
+
+{{{
+java -cp DeNovoGUI-X.Y.Z.jar 
+com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 *General parameters:*

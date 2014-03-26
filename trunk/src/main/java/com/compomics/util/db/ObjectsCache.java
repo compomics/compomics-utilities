@@ -453,9 +453,12 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException
      */
     public void updateCache() throws IOException, SQLException, InterruptedException {
-        while (!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize
-                || automatedMemoryManagement && !memoryCheck()) {
-            int toRemove = Math.min(batchSize, loadedObjectsKeys.size() / 2); // @TODO: remove the min option???
+        
+        // @TODO: remove less than half of the objects
+        
+        while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
+                || (automatedMemoryManagement && !memoryCheck())) {
+            int toRemove = loadedObjectsKeys.size() / 2; // remove half of the objects from the cache
             if (toRemove <= 1) {
                 saveObject(loadedObjectsKeys.take());
             } else {

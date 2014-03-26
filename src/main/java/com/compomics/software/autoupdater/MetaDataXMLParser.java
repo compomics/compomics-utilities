@@ -22,9 +22,9 @@ public class MetaDataXMLParser {
 
     /**
      * Create a new MetaDataXMLParser.
-     * 
+     *
      * @param xmlReader the XML reader
-     * @throws XMLStreamException 
+     * @throws XMLStreamException
      */
     public MetaDataXMLParser(XMLEventReader xmlReader) throws XMLStreamException {
         while (xmlReader.hasNext()) {
@@ -40,7 +40,7 @@ public class MetaDataXMLParser {
 
     /**
      * Returns the highest version number.
-     * 
+     *
      * @return the highest version number
      */
     public String getHighestVersionNumber() {
@@ -60,12 +60,16 @@ public class MetaDataXMLParser {
             XMLEvent = xmlReader.nextEvent();
             if (XMLEvent.isStartElement()) {
                 if (XMLEvent.asStartElement().getName().getLocalPart().equalsIgnoreCase("version")) {
-                    if (highestVersionNumber == null) {
-                        highestVersionNumber = xmlReader.nextEvent().asCharacters().getData();
-                    } else {
-                        String versionNumberToCompareWith = xmlReader.nextEvent().asCharacters().getData();
-                        if (versionNumberComparator.compare(highestVersionNumber, versionNumberToCompareWith) == 1) {
-                            highestVersionNumber = versionNumberToCompareWith;
+
+                    String currentVersionNumber = xmlReader.nextEvent().asCharacters().getData();
+
+                    if (!currentVersionNumber.contains("b") && !currentVersionNumber.contains("beta")) {
+                        if (highestVersionNumber == null) {
+                            highestVersionNumber = currentVersionNumber;
+                        } else {
+                            if (versionNumberComparator.compare(highestVersionNumber, currentVersionNumber) == 1) {
+                                highestVersionNumber = currentVersionNumber;
+                            }
                         }
                     }
                 }

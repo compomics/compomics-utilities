@@ -6,7 +6,7 @@ IdentificationParametersCLI can be used to create an identification parameter fi
 
 Note that in most cases it is not recommended to use the command line to generate the identification parameter file, but rather to set up the wanted identification parameter file in the GUI, save it, and than use it in the command line processing.
 
-Also note that most OMSSA, X!Tandem and PepNovo+ settings listed below are for export usage only. Changes from the default settings should be done with care.
+Also note that most X!Tandem, MS-GF+, OMSSA and PepNovo+ settings listed below are for expert usage only. Changes from the default settings should be done with care.
 
 *General command lines:*
 
@@ -58,6 +58,93 @@ eu.isas.peptideshaker.cmd.IdentificationParametersCLI [parameters]
 
 -mods                   Lists the available modifications.
 }}}
+
+*X!Tandem specific parameters:*
+
+{{{
+-xtandem_dynamic_range    X!Tandem 'spectrum, dynamic range' option, default is '100'.
+
+-xtandem_npeaks           X!Tandem 'spectrum, total peaks' option, default is '50'.
+
+-xtandem_min_frag_mz      X!Tandem 'spectrum, minimum fragment mz' option, default is '200'.
+
+-xtandem_min_peaks        X!Tandem 'spectrum, minimum peaks' option, default is '15'.
+
+-xtandem_noise_suppr      X!Tandem 'spectrum, use noise suppression' option. 1: true, 0: false, default is '0'.
+
+-xtandem_min_prec_mass    X!Tandem 'spectrum, minimum parent m+h' option, default is '500'.
+
+-xtandem_quick_acetyl     X!Tandem 'protein, quick acetyl' option. 1: true, 0: false, default is '1'.
+
+-xtandem_quick_pyro       X!Tandem 'protein, quick pyrolidone' option. 1: true, 0: false, default is '1'.
+
+-xtandem_stp_bias         X!Tandem 'protein, stP bias' option. 1: true, 0: false, default is '0'.
+
+-xtandem_refine           X!Tandem 'refine' option. 1: true, 0: false, default is '1'.
+
+-xtandem_refine_evalue    X!Tandem 'refine, maximum valid expectation value' option, default is '0.01'.
+
+-xtandem_refine_unc       X!Tandem 'refine, unanticipated cleavage' option. 1: true, 0: false, default is '1'.
+
+-xtandem_refine_semi      X!Tandem 'refine, cleavage semi' option. 1: true, 0: false, default is '0'.
+
+-xtandem_refine_pot       X!Tandem 'refine, use potential modifications for full refinement' option. 
+                          1: true, 0: false, default is '0'.
+
+-xtandem_refine_p_mut     X!Tandem 'refine, point mutations' option. 1: true, 0: false, default is '0'.
+
+-xtandem_refine_snaps     X!Tandem 'refine, saps' option. 1: true, 0: false, default is '1'.
+
+-xtandem_refine_spec_synt X!Tandem 'refine, spectrum synthesis' option. 1: true, 0: false, default is '1'.
+
+-xtandem_evalue           X!Tandem 'output, maximum valid expectation value' option, default is '100'.
+
+-xtandem_output_proteins  X!Tandem 'output, proteins' option. 1: true, 0: false, default is '0'.
+
+-xtandem_output_sequences X!Tandem 'output, sequences' option. 1: true, 0: false, default is '0'.
+
+-xtandem_output_spectra   X!Tandem 'output, spectra' option. 1: true, 0: false, default is '0'.
+
+-xtandem_skyline_path     X!Tandem 'spectrum, skyline path' option.
+}}}
+
+*MS-GF+ specific parameters:*
+
+{{{
+-msgf_decoy               MS-GF+ search decoys option, 1: true, 0: false, default is '0'.
+
+-msgf_instrument          MS-GF+ instrument id option, 
+                          0: Low-res LCQ/LTQ (Default), 
+                          1: High-res LTQ, 2: TOF, 3: Q-Exactive.
+
+-msgf_fragmentation       MS-GF+ fragmentation id option, 
+                          0: As written in the spectrum or CID if no info (Default), 
+                          1: CID, 2: ETD, 3: HCD.
+
+-msgf_protocol            MS-GF+ protocol id option, 0: NoProtocol (Default), 
+                          1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho, 4: TMT.
+
+-msgf_min_pep_length      MS-GF+ minumum peptide length, default is '6'.
+
+-msgf_max_pep_length      MS-GF+ maximum peptide length, default is '30'.
+
+-msgf_num_matches         MS-GF+ maximum number of spectrum matches, default is '1'.
+
+-msgf_additional          MS-GF+ additional features, 0: output basic scores only (Default), 
+                          1: output additional features.
+
+-msgf_isotope_low         MS-GF+ lower isotope error range, default is '0'.
+
+-msgf_isotope_high        MS-GF+ upper isotope error range, default is '1'.
+
+-msgf_evalue              MS-GF+ maximal evalue considered, default is '100'.
+
+-msgf_termini             MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 
+                          2: fully-tryptic, default is '2'.
+
+-msgf_num_ptms            MS-GF+ max number of PTMs per peptide, default is '2'.
+}}}
+
 
 *OMSSA specific parameters:*
 
@@ -145,54 +232,6 @@ eu.isas.peptideshaker.cmd.IdentificationParametersCLI [parameters]
 -omssa_format            OMSSA output format. 0: omx, 1: csv, default is 'omx'.
 }}}
 
-*X!Tandem specific parameters:*
-
-{{{
--xtandem_dynamic_range    X!Tandem 'spectrum, dynamic range' option, default is '100'.
-
--xtandem_npeaks           X!Tandem 'spectrum, total peaks' option, default is '50'.
-
--xtandem_min_frag_mz      X!Tandem 'spectrum, minimum fragment mz' option, default is '200'.
-
--xtandem_min_peaks        X!Tandem 'spectrum, minimum peaks' option, default is '15'.
-
--xtandem_noise_suppr      X!Tandem 'spectrum, use noise suppression' option. 1: true, 0: false, default is '0'.
-
--xtandem_min_prec_mass    X!Tandem 'spectrum, minimum parent m+h' option, default is '500'.
-
--xtandem_quick_acetyl     X!Tandem 'protein, quick acetyl' option. 1: true, 0: false, default is '1'.
-
--xtandem_quick_pyro       X!Tandem 'protein, quick pyrolidone' option. 1: true, 0: false, default is '1'.
-
--xtandem_stp_bias         X!Tandem 'protein, stP bias' option. 1: true, 0: false, default is '0'.
-
--xtandem_refine           X!Tandem 'refine' option. 1: true, 0: false, default is '1'.
-
--xtandem_refine_evalue    X!Tandem 'refine, maximum valid expectation value' option, default is '0.01'.
-
--xtandem_refine_unc       X!Tandem 'refine, unanticipated cleavage' option. 1: true, 0: false, default is '1'.
-
--xtandem_refine_semi      X!Tandem 'refine, cleavage semi' option. 1: true, 0: false, default is '0'.
-
--xtandem_refine_pot       X!Tandem 'refine, use potential modifications for full refinement' option. 
-                          1: true, 0: false, default is '0'.
-
--xtandem_refine_p_mut     X!Tandem 'refine, point mutations' option. 1: true, 0: false, default is '0'.
-
--xtandem_refine_snaps     X!Tandem 'refine, saps' option. 1: true, 0: false, default is '1'.
-
--xtandem_refine_spec_synt X!Tandem 'refine, spectrum synthesis' option. 1: true, 0: false, default is '1'.
-
--xtandem_evalue           X!Tandem 'output, maximum valid expectation value' option, default is '100'.
-
--xtandem_output_proteins  X!Tandem 'output, proteins' option. 1: true, 0: false, default is '0'.
-
--xtandem_output_sequences X!Tandem 'output, sequences' option. 1: true, 0: false, default is '0'.
-
--xtandem_output_spectra   X!Tandem 'output, spectra' option. 1: true, 0: false, default is '0'.
-
--xtandem_skyline_path     X!Tandem 'spectrum, skyline path' option.
-}}}
 
 *PepNovo+ specific parameters:*
 

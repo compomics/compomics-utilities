@@ -229,7 +229,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
         protocolLabel.setText("Protocol");
 
-        protocolCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Protocol", "Phosphorylation", "iTRAQ", "iTRAQPhospho", "TMT" }));
+        protocolCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Automatic", "Phosphorylation", "iTRAQ", "iTRAQPhospho", "TMT", "Standard" }));
 
         minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minPepLengthTxt.setText("6");

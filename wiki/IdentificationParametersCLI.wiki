@@ -126,8 +126,8 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
                           0: As written in the spectrum or CID if no info (Default), 
                           1: CID, 2: ETD, 3: HCD.
 
--msgf_protocol            MS-GF+ protocol id option, 0: NoProtocol (Default), 
-                          1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho, 4: TMT.
+-msgf_protocol            MS-GF+ protocol id option, 0: Automatic (Default), 
+                          1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.
 
 -msgf_min_pep_length      MS-GF+ minumum peptide length, default is '6'.
 

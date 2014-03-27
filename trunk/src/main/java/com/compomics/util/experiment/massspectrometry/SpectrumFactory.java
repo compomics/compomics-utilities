@@ -211,11 +211,7 @@ public class SpectrumFactory {
                     return; // return without saving the partial index
                 }
 
-                try {
-                    writeIndex(mgfIndex, spectrumFile.getParentFile());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                writeIndex(mgfIndex, spectrumFile.getParentFile());
             }
 
             if (mgfIndex == null) {
@@ -847,7 +843,7 @@ public class SpectrumFactory {
     /**
      * Returns the spectrum index of the given spectrum in the given file. If
      * the same spectrum title is used more than ones the last index is
-     * returned.  Null if not found.
+     * returned. Null if not found.
      *
      * @param spectrumTitle the spectrum title
      * @param mgfFile the name of the mgf file

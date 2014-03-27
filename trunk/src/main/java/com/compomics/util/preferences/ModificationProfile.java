@@ -175,11 +175,6 @@ public class ModificationProfile implements Serializable {
         if (refinementFixedModifications == null) {
             repair();
         }
-        for (String ptmName : fixedModifications) {
-            if (!refinementFixedModifications.contains(ptmName) && !result.contains(ptmName)) {
-                result.add(ptmName);
-            }
-        }
         for (String ptmName : refinementFixedModifications) {
             if (!fixedModifications.contains(ptmName) && !result.contains(ptmName)) {
                 result.add(ptmName);

@@ -34,8 +34,8 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     private int fragmentationType = 0;
     /**
-     * The MS-GF+ protocol ID: 0: NoProtocol (Default), 1: Phosphorylation, 2:
-     * iTRAQ, 3: iTRAQPhospho.
+     * The MS-GF+ protocol ID: 0: Automatic (Default), 1: Phosphorylation, 2:
+     * iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.
      */
     private int protocol = 0;
     /**

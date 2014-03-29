@@ -204,7 +204,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                 // create the peptide assumption
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, score, Util.getFileName(msAmandaCsvFile));
-                currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, false);
+                currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, true);
 
                 if (waitingHandler != null && progressUnit != 0) {
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));

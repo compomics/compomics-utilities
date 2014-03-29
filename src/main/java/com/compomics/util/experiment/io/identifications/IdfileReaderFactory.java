@@ -192,6 +192,8 @@ public class IdfileReaderFactory {
             return Advocate.andromeda.getIndex();
         } else if (fileName.endsWith(".mzid")) {
             return Advocate.MSGF.getIndex();
+        } else if (fileName.endsWith(".csv")) {
+            return Advocate.msAmanda.getIndex();
         }
         return -1;
     }

@@ -41,7 +41,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      * The MS Amanda csv file.
      */
     private File msAmandaCsvFile;
-
 //    /**
 //     * Progress dialog for displaying the progress.
 //     */
@@ -183,14 +182,19 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                         String residue = ptm.substring(0, 1);
                         int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
                         String ptmName = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1);
+
+                        if (ptmName.equalsIgnoreCase("Oxidation")) {
+                            ptmName = "oxidation of m";
+                        }
+
                         PTM utilitiesPtm = ptmFactory.getPTM(ptmName);
 
-                        if (!ptmName.equalsIgnoreCase("Carbamidomethyl")) { // @TODO: how to separate fixed and variable ptms???
-                            if (utilitiesPtm != null) {
+                        if (!ptmName.equalsIgnoreCase("Carbamidomethyl")) { // @TODO: how to separate fixed and variable ptms..?
+                            if (!utilitiesPtm.isSameAs(PTMFactory.unknownPTM)) {
                                 utilitiesModifications.add(new ModificationMatch(ptmName, true, location));
                             } else {
                                 //utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), true, location));
-                                throw new IllegalArgumentException("Unknown ptm: " + ptmName + "!"); // @TODO: how to map unknown ptms???
+                                throw new IllegalArgumentException("Unknown ptm: " + ptmName + "!"); // @TODO: how to map unknown ptms..?
                             }
                         }
                     }

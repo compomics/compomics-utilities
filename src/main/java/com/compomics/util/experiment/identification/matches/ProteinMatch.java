@@ -70,7 +70,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Constructor for the protein match. Note: proteins must be set for the
-     * peptide
+     * peptide.
      *
      * @param peptide the corresponding peptide match
      * @param peptideMatchKey the key of the peptide match

@@ -181,15 +181,15 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                         String residue = ptm.substring(0, 1);
                         int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
-                        String ptmName = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1);
+                        String ptmName = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
 
-                        if (ptmName.equalsIgnoreCase("Oxidation")) {
+                        if (ptmName.equalsIgnoreCase("oxidation")) {
                             ptmName = "oxidation of m";
                         }
 
                         PTM utilitiesPtm = ptmFactory.getPTM(ptmName);
 
-                        if (!ptmName.equalsIgnoreCase("Carbamidomethyl")) { // @TODO: how to separate fixed and variable ptms..?
+                        if (!ptmName.equalsIgnoreCase("carbamidomethyl") && !ptmName.equalsIgnoreCase("carbamidomethyl c")) { // @TODO: how to separate fixed and variable ptms..?
                             if (!utilitiesPtm.isSameAs(PTMFactory.unknownPTM)) {
                                 utilitiesModifications.add(new ModificationMatch(ptmName, true, location));
                             } else {

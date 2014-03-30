@@ -269,9 +269,11 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 String[] components = line.split(", ");
                 for (String component : components) {
                     int index = component.indexOf(": ");
-                    String key = component.substring(0, index).trim();
-                    String value = component.substring(index + 1).trim();
-                    tagsParameters.put(key, value);
+                    if (index != -1) {
+                        String key = component.substring(0, index).trim();
+                        String value = component.substring(index + 1).trim();
+                        tagsParameters.put(key, value);
+                    }
                 }
             }
         }

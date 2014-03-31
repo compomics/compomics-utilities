@@ -1378,12 +1378,20 @@ public class SequenceFactory {
          * @throws IOException
          */
         public boolean hasNext() throws IOException {
+
             nextProtein = null;
             String sequence = "";
             Header header = nextHeader;
-            String line;
             boolean newHeaderFound = false;
-            while ((line = br.readLine()) != null) {
+
+            String line = br.readLine();
+
+            // reached end of file
+            if (line == null) {
+                return false;
+            }
+
+            while (line != null) {
                 if (line.startsWith(">")) {
                     Header tempHeader = Header.parseFromFASTA(line);
                     if (targetOnly && isDecoyAccession(tempHeader.getAccessionOrRest())) {
@@ -1409,8 +1417,10 @@ public class SequenceFactory {
                 } else {
                     sequence += line.trim();
                 }
+
+                line = br.readLine();
             }
-            if (newHeaderFound) {
+            if (newHeaderFound || line == null) { // line == null means that we read the last protein
                 nextProtein = new Protein(header.getAccessionOrRest(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccessionOrRest()));
                 return true;
             } else {

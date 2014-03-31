@@ -103,7 +103,7 @@ public class ProteinTree {
     /**
      * The version of the protein tree.
      */
-    public static final String version = "1.0.0";
+    public static final String version = "1.0.1";
     /**
      * The matching type of the matches in cache.
      */

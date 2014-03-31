@@ -154,6 +154,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 String modifications = elements[3].trim();
                 //String proteinAccessions = elements[4]; // not currently used
                 double score = Double.valueOf(elements[5]);
+                score = Math.pow(10, -score); // @TODO: fix until decending scores are supported
                 int rank = Integer.valueOf(elements[6]);
                 //String mz = elements[7]; // not currently used
                 int charge = Integer.valueOf(elements[8]);

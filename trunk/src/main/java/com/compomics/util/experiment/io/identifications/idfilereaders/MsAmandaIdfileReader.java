@@ -182,7 +182,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
                             String rest = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
 
-                            String[] details = rest.split("|");
+                            String[] details = rest.split("\\|");
                             String ptmName = details[0]; // not currently used
                             String ptmMass = details[1];
                             String ptmFixedStatus = details[2];

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
@@ -12,7 +11,6 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -86,7 +84,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 //            }
 //        }.start();
 //    }
-
     /**
      * Default constructor for the purpose of instantiation.
      */
@@ -154,7 +151,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 String modifications = elements[3].trim();
                 //String proteinAccessions = elements[4]; // not currently used
                 double score = Double.valueOf(elements[5]);
-                score = Math.pow(10, -score); // @TODO: fix until decending scores are supported
+                score = Math.pow(10, -score); // convert ms amanda score to e-value
                 int rank = Integer.valueOf(elements[6]);
                 //String mz = elements[7]; // not currently used
                 int charge = Integer.valueOf(elements[8]);
@@ -180,23 +177,21 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                     for (String ptm : ptms) {
 
-                        String residue = ptm.substring(0, 1);
-                        int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
-                        String ptmName = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
+                        try {
+                            String residue = ptm.substring(0, 1);
+                            int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
+                            String rest = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
 
-                        if (ptmName.equalsIgnoreCase("oxidation")) {
-                            ptmName = "oxidation of m";
-                        }
+                            String[] details = rest.split("|");
+                            String ptmName = details[0]; // not currently used
+                            String ptmMass = details[1];
+                            String ptmFixedStatus = details[2];
 
-                        PTM utilitiesPtm = ptmFactory.getPTM(ptmName);
-
-                        if (!ptmName.equalsIgnoreCase("carbamidomethyl") && !ptmName.equalsIgnoreCase("carbamidomethyl c")) { // @TODO: how to separate fixed and variable ptms..?
-                            if (!utilitiesPtm.isSameAs(PTMFactory.unknownPTM)) {
-                                utilitiesModifications.add(new ModificationMatch(ptmName, true, location));
-                            } else {
-                                //utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), true, location));
-                                throw new IllegalArgumentException("Unknown ptm: " + ptmName + "!"); // @TODO: how to map unknown ptms..?
+                            if (ptmFixedStatus.equalsIgnoreCase("variable")) {
+                                utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + residue, true, location));
                             }
+                        } catch (Exception e) {
+                            throw new IllegalArgumentException("Error parsing ptm: " + ptm + "!");
                         }
                     }
                 }

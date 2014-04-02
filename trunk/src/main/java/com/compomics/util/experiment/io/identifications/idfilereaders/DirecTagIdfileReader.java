@@ -442,12 +442,12 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         BufferedReader reader = new BufferedReader(new FileReader(tagFile));
         try {
             String line;
-            Integer sId = null, lastId = null, lastCharge = null;
+            Integer lastId = null, lastCharge = null;
             int rank = 0;
             SpectrumMatch currentMatch = null;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("S")) {
-                    sId = ++sCpt;
+                    Integer sId = ++sCpt;
                     rank = 0;
                     if (sIdColumnIndex != null) {
                         line = line.substring(1).trim();

@@ -52,11 +52,12 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private HashMap<Integer, SpectrumIdentificationAssumption> firstHitsMap = new HashMap<Integer, SpectrumIdentificationAssumption>();
     /**
-     * The best peptide assumption. Note: cannot be renamed for backward compatibility
+     * The best peptide assumption. Note: cannot be renamed for backward
+     * compatibility.
      */
     private PeptideAssumption bestAssumption;
     /**
-     * The best tag assumption
+     * The best tag assumption.
      */
     private TagAssumption bestTagAsssumption;
     /**
@@ -140,7 +141,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public String getKey() {
         return spectrumKey;
     }
-    
+
     /**
      * Return all assumptions for the specified search engine indexed by their
      * e-value.
@@ -194,7 +195,8 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param otherAdvocateId the index of the new advocate
      * @param otherAssumption the new identification assumption
-     * @param ascendingScore indicates whether the score is ascending when hits get better
+     * @param ascendingScore indicates whether the score is ascending when hits
+     * get better
      */
     public void addHit(int otherAdvocateId, SpectrumIdentificationAssumption otherAssumption, boolean ascendingScore) {
         if (!firstHitsMap.containsKey(otherAdvocateId)
@@ -363,7 +365,8 @@ public class SpectrumMatch extends IdentificationMatch {
      * in the ascending order; ie the higher the score, the better the match.
      * @param fixedModifications the fixed modifications to account for
      * @param variableModifications the variable modifications to account for
-     * @param ascendingScore indicates whether the score is ascending when hits get better
+     * @param ascendingScore indicates whether the score is ascending when hits
+     * get better
      * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
      * reported in the Peptide object
      *
@@ -375,32 +378,32 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance, 
-            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore, boolean reportFixedPtms) 
+    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance,
+            boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore, boolean reportFixedPtms)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        
+
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
-        
+
         for (int advocateId : assumptionsMap.keySet()) {
-            
+
             int rank = 1;
             ArrayList<Double> scores = new ArrayList<Double>(assumptionsMap.get(advocateId).keySet());
-            
+
             if (scoreInAscendingOrder) {
                 Collections.sort(scores);
             } else {
                 Collections.sort(scores, Collections.reverseOrder());
             }
-            
+
             for (double score : scores) {
                 ArrayList<SpectrumIdentificationAssumption> originalAssumptions = assumptionsMap.get(advocateId).get(score);
                 for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
-                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = 
-                                proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true, reportFixedPtms);
+                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping
+                                = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true, reportFixedPtms);
                         for (Peptide peptide : proteinMapping.keySet()) {
-                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId, 
+                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?
                             peptideAssumption.addUrParam(tagAssumption);
                             spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
@@ -409,7 +412,7 @@ public class SpectrumMatch extends IdentificationMatch {
                 }
             }
         }
-        
+
         return spectrumMatch;
     }
 }

@@ -493,12 +493,10 @@ public class ObjectsDB implements Serializable {
                 busy = true;
 
                 try {
-
                     Statement stmt = dbConnection.createStatement();
                     ResultSet results = stmt.executeQuery("select * from " + tableName);
 
                     try {
-
                         int found = 0;
 
                         while (results.next() && found < toLoad.size()) {
@@ -515,8 +513,8 @@ public class ObjectsDB implements Serializable {
                                 }
 
                                 BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
                                 ObjectInputStream in = new ObjectInputStream(bis);
+
                                 try {
                                     Object object = in.readObject();
                                     objectsCache.addObject(dbName, tableName, key, object, false);
@@ -532,7 +530,6 @@ public class ObjectsDB implements Serializable {
                                 break;
                             }
                         }
-
                     } finally {
                         results.close();
                         stmt.close();

@@ -52,9 +52,13 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private HashMap<Integer, SpectrumIdentificationAssumption> firstHitsMap = new HashMap<Integer, SpectrumIdentificationAssumption>();
     /**
-     * The best peptide assumption.
+     * The best peptide assumption. Note: cannot be renamed for backward compatibility
      */
     private PeptideAssumption bestAssumption;
+    /**
+     * The best tag assumption
+     */
+    private TagAssumption bestTagAsssumption;
     /**
      * All advocates used.
      */
@@ -99,7 +103,7 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Getter for the best peptide assumption.
      *
-     * @return the best assumption for the spectrum
+     * @return the best peptide assumption for the spectrum
      */
     public PeptideAssumption getBestPeptideAssumption() {
         return bestAssumption;
@@ -108,10 +112,28 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Setter for the best peptide assumption.
      *
-     * @param bestAssumption the best assumption for the spectrum
+     * @param bestAssumption the best peptide assumption for the spectrum
      */
     public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
         this.bestAssumption = bestAssumption;
+    }
+
+    /**
+     * Getter for the best tag assumption.
+     *
+     * @return the best tag assumption for the spectrum
+     */
+    public TagAssumption getBestTagAssumption() {
+        return bestTagAsssumption;
+    }
+
+    /**
+     * Setter for the best tag assumption.
+     *
+     * @param bestTagAsssumption the best tag assumption for the spectrum
+     */
+    public void setBestTagAssumption(TagAssumption bestTagAsssumption) {
+        this.bestTagAsssumption = bestTagAsssumption;
     }
 
     @Override

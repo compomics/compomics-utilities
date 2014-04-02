@@ -1256,11 +1256,11 @@ public abstract class Identification extends ExperimentObject {
 
     /**
      * Creates the peptides and protein instances based on the given spectrum
-     * match. Note that the attribute bestAssumption should be set for every
-     * spectrum match at this point and peptides should be mapped to proteins.
-     * This operation will be very slow if the cache is already full. Note: if
-     * proteins are not set for a peptide they will be assigned using the
-     * default protein tree and the given matching parameters.
+     * match. Note that only the best peptide assumption is used, the method has
+     * no effect if it is null. This operation will be very slow if the cache is
+     * already full. Note: if proteins are not set for a peptide they will be
+     * assigned using the default protein tree and the given matching
+     * parameters.
      *
      * @param spectrumMatchKey The key of the spectrum match to add
      * @param matchingType the amino acid matching type to use to create peptide
@@ -1279,68 +1279,70 @@ public abstract class Identification extends ExperimentObject {
         if (spectrumMatch == null) {
             throw new IllegalArgumentException("Spectrum match " + spectrumMatchKey + " not found.");
         }
-        Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
-        if (peptide.getParentProteinsNoRemapping() == null) {
-            peptide.getParentProteins(matchingType, massTolerance);
-        }
-        String peptideKey = peptide.getMatchingKey(matchingType, massTolerance);
-        PeptideMatch peptideMatch;
+        if (spectrumMatch.getBestPeptideAssumption() != null) {
+            Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
+            if (peptide.getParentProteinsNoRemapping() == null) {
+                peptide.getParentProteins(matchingType, massTolerance);
+            }
+            String peptideKey = peptide.getMatchingKey(matchingType, massTolerance);
+            PeptideMatch peptideMatch;
 
-        if (peptideIdentification.contains(peptideKey)) {
-            peptideMatch = getPeptideMatch(peptideKey);
-            if (peptideMatch == null) {
-                throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
-            }
-            peptideMatch.addSpectrumMatch(spectrumMatchKey);
-            identificationDB.updatePeptideMatch(peptideMatch);
-        } else {
-            peptideMatch = new PeptideMatch(peptide, spectrumMatchKey, peptideKey);
-            peptideIdentification.add(peptideKey);
-            try {
-                identificationDB.addPeptideMatch(peptideMatch);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing peptide match " + peptideKey + " in the database.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing peptide match " + peptideKey + " in the database.");
-            }
-        }
-
-        String proteinKey = ProteinMatch.getProteinMatchKey(peptide);
-
-        if (proteinIdentification.contains(proteinKey)) {
-            ProteinMatch proteinMatch = getProteinMatch(proteinKey);
-            if (proteinMatch == null) {
-                throw new IllegalArgumentException("Protein match " + proteinKey + " not found.");
-            }
-            if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
-                proteinMatch.addPeptideMatch(peptideKey);
-                identificationDB.updateProteinMatch(proteinMatch);
-            }
-        } else {
-            ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide(), peptideKey);
-            if (!proteinMatch.getKey().equals(proteinKey)) {
-                throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
-                        + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + ".");
-            }
-            proteinIdentification.add(proteinKey);
-            for (String protein : peptide.getParentProteinsNoRemapping()) {
-                if (!proteinMap.containsKey(protein)) {
-                    proteinMap.put(protein, new ArrayList<String>());
+            if (peptideIdentification.contains(peptideKey)) {
+                peptideMatch = getPeptideMatch(peptideKey);
+                if (peptideMatch == null) {
+                    throw new IllegalArgumentException("Peptide match " + peptideKey + " not found.");
                 }
-                if (!proteinMap.get(protein).contains(proteinKey)) {
-                    proteinMap.get(protein).add(proteinKey);
+                peptideMatch.addSpectrumMatch(spectrumMatchKey);
+                identificationDB.updatePeptideMatch(peptideMatch);
+            } else {
+                peptideMatch = new PeptideMatch(peptide, spectrumMatchKey, peptideKey);
+                peptideIdentification.add(peptideKey);
+                try {
+                    identificationDB.addPeptideMatch(peptideMatch);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IOException("Error while writing peptide match " + peptideKey + " in the database.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new SQLException("Error while writing peptide match " + peptideKey + " in the database.");
                 }
             }
-            try {
-                identificationDB.addProteinMatch(proteinMatch);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing protein match " + proteinKey + " in the database.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing protein match " + proteinKey + " in the database.");
+
+            String proteinKey = ProteinMatch.getProteinMatchKey(peptide);
+
+            if (proteinIdentification.contains(proteinKey)) {
+                ProteinMatch proteinMatch = getProteinMatch(proteinKey);
+                if (proteinMatch == null) {
+                    throw new IllegalArgumentException("Protein match " + proteinKey + " not found.");
+                }
+                if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
+                    proteinMatch.addPeptideMatch(peptideKey);
+                    identificationDB.updateProteinMatch(proteinMatch);
+                }
+            } else {
+                ProteinMatch proteinMatch = new ProteinMatch(peptideMatch.getTheoreticPeptide(), peptideKey);
+                if (!proteinMatch.getKey().equals(proteinKey)) {
+                    throw new IllegalArgumentException("Protein inference issue: the protein key " + proteinKey + " does not match the peptide proteins " + proteinMatch.getKey() + "."
+                            + " Peptide: " + peptideKey + " found in spectrum " + spectrumMatchKey + ".");
+                }
+                proteinIdentification.add(proteinKey);
+                for (String protein : peptide.getParentProteinsNoRemapping()) {
+                    if (!proteinMap.containsKey(protein)) {
+                        proteinMap.put(protein, new ArrayList<String>());
+                    }
+                    if (!proteinMap.get(protein).contains(proteinKey)) {
+                        proteinMap.get(protein).add(proteinKey);
+                    }
+                }
+                try {
+                    identificationDB.addProteinMatch(proteinMatch);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IOException("Error while writing protein match " + proteinKey + " in the database.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new SQLException("Error while writing protein match " + proteinKey + " in the database.");
+                }
             }
         }
     }

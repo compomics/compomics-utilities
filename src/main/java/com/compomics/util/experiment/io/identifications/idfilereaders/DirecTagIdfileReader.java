@@ -430,9 +430,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
-        String fileName = getInputFile().getName();
-        if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressCounter(SpectrumFactory.getInstance().getNSpectra(fileName));
+        String spectrumFileName = getInputFile().getName();
+        if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
+            waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
             waitingHandler.setSecondaryProgressCounter(0);
         }
         HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
@@ -461,8 +461,12 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                         if (currentMatch != null && currentMatch.hasAssumption()) {
                             result.add(currentMatch);
                         }
-                        String spectrumTitle = spectrumFactory.getSpectrumTitle(fileName, sId);
-                        currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, spectrumTitle));
+                        String spectrumTitle = sId + "";
+                        if (spectrumFactory.fileLoaded(spectrumFileName)) {
+                            spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, sId);
+                        }
+                        currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
+                        currentMatch.setSpectrumNumber(sId);
                         lastId = sId;
                     }
                 } else if (line.startsWith("T")) {

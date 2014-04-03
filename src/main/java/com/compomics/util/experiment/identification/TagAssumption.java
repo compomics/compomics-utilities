@@ -90,4 +90,9 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     public int getIndex() {
         return 2;
     }
+    
+    @Override
+    public String toString() {
+        return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";
+    }
 }

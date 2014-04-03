@@ -13,6 +13,7 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -980,6 +981,20 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+
+        // save any changes to the factory
+        try {
+            ptmFactory.saveFactory();
+            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
+            prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
+                    "Saving Error", JOptionPane.WARNING_MESSAGE);
+        } catch (ClassNotFoundException ce) {
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
+                    "Saving Error", JOptionPane.WARNING_MESSAGE);
+        }
+
         ptmDialogParent.updateModifications();
         dispose();
     }//GEN-LAST:event_formWindowClosing

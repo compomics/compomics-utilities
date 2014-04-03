@@ -140,7 +140,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * harder to find because many consecutive ion fragments are rare.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private int tagLength = 3;
+    private int tagLength = 5;
     /**
      * This parameter sets the maximum number of modified residues that may be
      * in any candidate sequence.

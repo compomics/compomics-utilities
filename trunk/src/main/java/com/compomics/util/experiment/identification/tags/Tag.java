@@ -708,6 +708,7 @@ public class Tag extends ExperimentObject {
                                                     }
                                                     validPatterns.add(aminoAcidPattern);
                                                     possiblePatternsMasses.remove(aminoAcidPattern);
+                                                    found = true;
                                                     break;
                                                 }
                                             }
@@ -1131,5 +1132,10 @@ public class Tag extends ExperimentObject {
             }
         }
         return result;
+    }
+    
+    @Override
+    public String toString() {
+        return asSequence();
     }
 }

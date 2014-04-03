@@ -127,6 +127,8 @@ public class AnnotationPreferences implements Serializable {
         clearIonTypes();
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
+        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched2());
+        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched2());
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);

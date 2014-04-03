@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.experiment.refinementparameters;
 
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
- * This class contains pepnovo assumption details which are not contained in the tag assumption class which will be saved as additional parameter.
+ * This class contains pepnovo assumption details which are not contained in the
+ * tag assumption class which will be saved as additional parameter.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PepnovoAssumptionDetails implements UrParameter {
-    
+
     /**
      * The PepNovo rank score.
      */

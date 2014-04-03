@@ -384,14 +384,22 @@ public class PtmDialog extends javax.swing.JDialog {
 
         // check that a modification pattern is given
         if (residuesTxt.getText().length() == 0) {
-            if (showMessage && !error) {
-                JOptionPane.showMessageDialog(this, "Please verify the input for the modification pattern.",
-                        "Missing Pattern", JOptionPane.WARNING_MESSAGE);
+
+            if (typeCmb.getSelectedIndex() == 0
+                    || typeCmb.getSelectedIndex() == 2
+                    || typeCmb.getSelectedIndex() == 4
+                    || typeCmb.getSelectedIndex() == 6
+                    || typeCmb.getSelectedIndex() == 8) {
+
+                if (showMessage && !error) {
+                    JOptionPane.showMessageDialog(this, "Please verify the input for the modification pattern.",
+                            "Missing Pattern", JOptionPane.WARNING_MESSAGE);
+                }
+                error = true;
+                patternLabel.setForeground(Color.RED);
+                patternLabel.setToolTipText("Please provide a modification pattern.");
+                residuesTxt.setToolTipText("Please provide a modification pattern.");
             }
-            error = true;
-            patternLabel.setForeground(Color.RED);
-            patternLabel.setToolTipText("Please provide a modification pattern.");
-            residuesTxt.setToolTipText("Please provide a modification pattern.");
         }
 
         okButton.setEnabled(!error);
@@ -868,17 +876,17 @@ public class PtmDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
-            
+
             // check the unimod details
             CvTerm cvTerm = null;
             if (!unimodAccessionJTextField.getText().trim().isEmpty()) { // @TODO: move to the validateInput method
-                
+
                 // check the Unimod name
                 if (unimodNameJTextField.getText().trim().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Please provide the Unimod name for the modification.", "Unimod Name", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                
+
                 try {
                     int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
                     cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
@@ -955,8 +963,11 @@ public class PtmDialog extends javax.swing.JDialog {
                 || typeCmb.getSelectedIndex() == 8) {
             residuesTxt.setEnabled(true);
         } else {
+            pattern = new AminoAcidPattern();
+            residuesTxt.setText(pattern.toString());
             residuesTxt.setEnabled(false);
         }
+        validateInput(false);
     }//GEN-LAST:event_typeCmbActionPerformed
 
     /**
@@ -1072,7 +1083,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
-        if (evt.getButton() == MouseEvent.BUTTON1) {
+        if (residuesTxt.isEnabled() && evt.getButton() == MouseEvent.BUTTON1) {
             AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);
             if (!dialog.isCanceled()) {
                 pattern = dialog.getPattern();
@@ -1102,8 +1113,8 @@ public class PtmDialog extends javax.swing.JDialog {
 
     /**
      * Change the cursor to a hand cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void unimodLinkLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1111,8 +1122,8 @@ public class PtmDialog extends javax.swing.JDialog {
 
     /**
      * Change the cursor back to the default cursor.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void unimodLinkLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -1120,8 +1131,8 @@ public class PtmDialog extends javax.swing.JDialog {
 
     /**
      * Open the Unimod web page.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void unimodLinkLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabelMouseReleased
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));

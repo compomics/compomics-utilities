@@ -115,6 +115,14 @@ public enum IdentificationParametersCLIParams {
     MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false),
     MSGF_PTMS("msgf_num_ptms", "MS-GF+ max number of PTMs per peptide, default is '2'.", false),
     //////////////////////////////////
+    // MS Amanda specific parameters
+    //////////////////////////////////
+    MS_AMANDA_DECOY("ms_amanda_decoy", "MS Amanda generate decoys option, 0: false, 1: true, default is '0'.", false),
+    MS_AMANDA_MAX_EVALUE("ms_amanda_max_evalue", "MS Amanda maximal evalue considered, default is '100'.", false),
+    MS_AMANDA_INSTRUMENT("ms_amanda_instrument", "MS Amanda instrument id option. Available enzymes are listed in the GUI. (Note: case sensitive.).", false),
+    MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '5'.", false), // @TODO: find an optimal default
+    MS_AMANDA_MONOISOTOPIC("ms_amanda_mono", "MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.", false),
+    //////////////////////////////////
     // PepNovo+ specific parameters
     //////////////////////////////////
     PEPNOVO_HITLIST_LENGTH("pepnovo_hitlist_length", "PepNovo+ number of de novo solutions [0-2000], default is '10'.", false),

@@ -79,6 +79,8 @@ public class ExceptionHandler {
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
+                    
+                    // @TODO: add handling of out of memory errors
 
                     // @TODO: silently ignore some error types? i.e., just send the error to the log file
 

@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -953,6 +954,13 @@ public class SearchParameters implements Serializable {
         if (result.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {
             PepnovoParameters pepnovoParameters = new PepnovoParameters();
             result.setIdentificationAlgorithmParameter(pepnovoParameters.getAlgorithm().getIndex(), pepnovoParameters);
+        }
+
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) == null) {
+            MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
+            msAmandaParameters.setMaxEValue(result.getMaxEValue());
+            result.setIdentificationAlgorithmParameter(msAmandaParameters.getAlgorithm().getIndex(), msAmandaParameters);
         }
 
         // compatibility check

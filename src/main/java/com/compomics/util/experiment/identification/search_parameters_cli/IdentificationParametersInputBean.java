@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -618,6 +619,45 @@ public class IdentificationParametersInputBean {
             msgfParameters.setNumberOfPtmsPerPeptide(option);
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), msgfParameters);
+        
+        ///////////////////////////////////
+        // MS Amanda parameters
+        ///////////////////////////////////
+        MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                msAmandaParameters.setGenerateDecoyDatabase(true);
+            } else {
+                msAmandaParameters.setGenerateDecoyDatabase(false);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_EVALUE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_EVALUE.id);
+            Double option = new Double(arg);
+            msAmandaParameters.setMaxEValue(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
+            msAmandaParameters.setInstrumentID(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxRank(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                msAmandaParameters.setMonoIsotopic(true);
+            } else {
+                msAmandaParameters.setMonoIsotopic(false);
+            }
+        }
+        
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), msAmandaParameters);
         
         ///////////////////////////////////
         // PepNovo+ parameters

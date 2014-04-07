@@ -7,7 +7,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -278,5 +280,76 @@ public class EnzymeFactory {
         }
 
         return tempEnzyme;
+    }
+
+    /**
+     * Creates the MS Amanda enzyme settings file corresponding to the enzymes
+     * loaded in the factory to the given file.
+     *
+     * @param file the file
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the file
+     */
+    public void writeMsAmandaEnzymeFile(File file) throws IOException {
+
+        // @TODO: not yet in use... (and not properly tested)
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        String toWrite = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
+        bw.write(toWrite);
+        bw.newLine();
+
+        bw.write("<enzymes>");
+        bw.newLine();
+
+        for (Enzyme enzyme : getEnzymes()) {
+
+            bw.write("  <enzyme>");
+            bw.newLine();
+
+            bw.write("    <name>" + enzyme.getName() + "</name>");
+            bw.newLine();
+
+            String cleavageSite = "";
+            String inhibitors = "";
+            String position;
+
+            if (!enzyme.getAminoAcidBefore().isEmpty()) {
+                position = "after";
+                for (Character aminoAcid : enzyme.getAminoAcidBefore()) {
+                    cleavageSite += aminoAcid;
+                }
+                for (Character aminoAcid : enzyme.getRestrictionAfter()) {
+                    inhibitors += aminoAcid;
+                }
+            } else {
+                position = "before";
+                for (Character aminoAcid : enzyme.getAminoAcidAfter()) {
+                    cleavageSite += aminoAcid;
+                }
+                for (Character aminoAcid : enzyme.getRestrictionBefore()) {
+                    inhibitors += aminoAcid;
+                }
+            }
+
+            bw.write("    <cleavage_sites>" + cleavageSite + "</cleavage_sites>");
+            bw.newLine();
+
+            if (!inhibitors.isEmpty()) {
+                bw.write("    <inhibitors>" + inhibitors + "</inhibitors>");
+                bw.newLine();
+            }
+
+            bw.write("    <position>" + position + "</position>");
+            bw.newLine();
+            
+            bw.write("  </enzyme>");
+            bw.newLine();
+        }
+
+        bw.write("</enzymes>");
+
+        bw.flush();
+        bw.close();
     }
 }

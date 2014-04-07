@@ -93,9 +93,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         if (msgfParameters.getMaxEValue() != null) {
             eValueCutoffTxt.setText(msgfParameters.getMaxEValue() + "");
         }
-        if (msgfParameters.getMaxEValue() != null) {
-            eValueCutoffTxt.setText(msgfParameters.getMaxEValue() + "");
-        }
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
         }

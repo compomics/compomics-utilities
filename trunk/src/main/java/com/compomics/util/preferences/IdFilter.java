@@ -22,6 +22,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
  * This class achieves a pre-filtering of the identifications for PeptideShaker.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IdFilter implements Serializable {
 
@@ -50,6 +51,14 @@ public class IdFilter implements Serializable {
      */
     private double xtandemMaxEvalue;
     /**
+     * MS-GF+ maximal e-value allowed.
+     */
+    private double msgfMaxEvalue;
+    /**
+     * MS Amanda maximal e-value allowed.
+     */
+    private double msAmandaMaxEvalue;
+    /**
      * The maximal m/z deviation allowed.
      */
     private double maxMassDeviation;
@@ -73,6 +82,8 @@ public class IdFilter implements Serializable {
         mascotMaxEvalue = -1;
         omssaMaxEvalue = -1;
         xtandemMaxEvalue = -1;
+        msgfMaxEvalue = -1;
+        msAmandaMaxEvalue = -1;
         maxMassDeviation = -1;
         isPpm = true;
         unknownPtm = true;
@@ -91,18 +102,25 @@ public class IdFilter implements Serializable {
      * disabled)
      * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less
      * for disabled)
+     * @param msgfMaxEValue The maximal MS-GF+ e-value allowed (0 or less for
+     * disabled)
+     * @param msAmandaEValue The maximal MS Amanda e-value allowed (0 or less
+     * for disabled)
      * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for
      * disabled)
      * @param isPpm Boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
      * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
      */
-    public IdFilter(int minPepLength, int maxPepLength, double mascotMaxEvalue, double omssaMaxEvalue, double xtandemMaxEvalue, double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
+    public IdFilter(int minPepLength, int maxPepLength, double mascotMaxEvalue, double omssaMaxEvalue, double xtandemMaxEvalue,
+            /**double msgfMaxEValue, double msAmandaEValue,**/ double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.mascotMaxEvalue = mascotMaxEvalue;
         this.omssaMaxEvalue = omssaMaxEvalue;
         this.xtandemMaxEvalue = xtandemMaxEvalue;
+        //this.msgfMaxEvalue = msgfMaxEValue;
+        //this.msAmandaMaxEvalue = msAmandaEValue;
         this.maxMassDeviation = maxMzDeviation;
         this.isPpm = isPpm;
         this.unknownPtm = unknownPTM;
@@ -129,9 +147,13 @@ public class IdFilter implements Serializable {
 
         if ((searchEngine == Advocate.Mascot.getIndex() && mascotMaxEvalue > 0 && eValue > mascotMaxEvalue)
                 || (searchEngine == Advocate.OMSSA.getIndex() && omssaMaxEvalue > 0 && eValue > omssaMaxEvalue)
-                || (searchEngine == Advocate.XTandem.getIndex() && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue)) {
+                || (searchEngine == Advocate.XTandem.getIndex() && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue)
+//                || (searchEngine == Advocate.MSGF.getIndex() && msgfMaxEvalue > 0 && eValue > msgfMaxEvalue)
+//                || (searchEngine == Advocate.msAmanda.getIndex() && msAmandaMaxEvalue > 0 && eValue > msAmandaMaxEvalue) // @TODO: not backwards compatible..?
+                ) {
             return false;
         }
+
         return true;
     }
 
@@ -225,13 +247,13 @@ public class IdFilter implements Serializable {
                 String modName = modMatch.getTheoreticPtm();
                 PTM ptm = ptmFactory.getPTM(modName);
                 double mass = ptm.getMass();
-                    if (!modMatches.containsKey(mass)) {
-                        modMatches.put(mass, 1);
-                    } else {
+                if (!modMatches.containsKey(mass)) {
+                    modMatches.put(mass, 1);
+                } else {
                     modMatches.put(mass, modMatches.get(mass) + 1);
-                    }
                 }
             }
+        }
 
         // check if there are more ptms than ptm sites
         for (double mass : modMatches.keySet()) {
@@ -263,14 +285,8 @@ public class IdFilter implements Serializable {
      * @throws MzMLUnmarshallerException
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory) throws IOException, MzMLUnmarshallerException {
-
         Precursor precursor = spectrumFactory.getPrecursor(spectrumKey);
-
-        if (maxMassDeviation > 0 && Math.abs(assumption.getDeltaMass(precursor.getMz(), isPpm)) > maxMassDeviation) {
-            return false;
-        }
-
-        return true;
+        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursor.getMz(), isPpm)) <= maxMassDeviation);
     }
 
     /**
@@ -420,6 +436,42 @@ public class IdFilter implements Serializable {
     }
 
     /**
+     * Returns the maximal MS-GF+ e-value allowed.
+     *
+     * @return the MS-GF+ maximal e-value allowed
+     */
+    public double getMsgfMaxEvalue() {
+        return msgfMaxEvalue;
+    }
+
+    /**
+     * Sets the MS-GF+ maximal e-value allowed.
+     *
+     * @param msgfMaxEvalue the MS-GF+ maximal e-value allowed
+     */
+    public void setMsgfMaxEvalue(double msgfMaxEvalue) {
+        this.msgfMaxEvalue = msgfMaxEvalue;
+    }
+
+    /**
+     * Returns the maximal MS Amanda e-value allowed.
+     *
+     * @return the MS Amanda maximal e-value allowed
+     */
+    public double getMsAmandaMaxEvalue() {
+        return msAmandaMaxEvalue;
+    }
+
+    /**
+     * Sets the MS Amanda maximal e-value allowed.
+     *
+     * @param msAmandaMaxEvalue the MS Amanda maximal e-value allowed
+     */
+    public void setMsAmandaMaxEvalue(double msAmandaMaxEvalue) {
+        this.msAmandaMaxEvalue = msAmandaMaxEvalue;
+    }
+
+    /**
      * Indicates whether this filter is the same as another one.
      *
      * @param anotherFilter another filter
@@ -433,6 +485,8 @@ public class IdFilter implements Serializable {
                 && mascotMaxEvalue == anotherFilter.getMascotMaxEvalue()
                 && omssaMaxEvalue == anotherFilter.getOmssaMaxEvalue()
                 && xtandemMaxEvalue == anotherFilter.getXtandemMaxEvalue()
+//                && msgfMaxEvalue == anotherFilter.getMsgfMaxEvalue()
+//                && msAmandaMaxEvalue == anotherFilter.getMsAmandaMaxEvalue() // @TODO: not backwards compatible..?
                 && maxMassDeviation == anotherFilter.getMaxMzDeviation();
     }
 }

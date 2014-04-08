@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
@@ -33,27 +34,27 @@ public class SpectrumFactory {
     /**
      * Map of already loaded spectra.
      */
-    private HashMap<String, Spectrum> currentSpectrumMap = new HashMap<String, Spectrum>();
+    private HashMap<String, HashMap<String, Spectrum>> currentSpectrumMap = new HashMap<String, HashMap<String, Spectrum>>();
     /**
      * Map of already loaded precursors.
      */
-    private HashMap<String, Precursor> loadedPrecursorsMap = new HashMap<String, Precursor>();
+    private HashMap<String, HashMap<String, Precursor>> loadedPrecursorsMap = new HashMap<String, HashMap<String, Precursor>>();
     /**
-     * Amount of spectra in cache, one by default.
+     * Maximal number of spectra in cache.
      */
-    private static int nSpectraCache = 1;
+    private static int nSpectraCache = 10000;
     /**
-     * Amount of precursors in cache.
+     * Maximal number of precursors in cache.
      */
-    private static int nPrecursorsCache = 10000;
+    private static int nPrecursorsCache = 1000000;
     /**
      * List of the loaded spectra.
      */
-    private ArrayList<String> loadedSpectra = new ArrayList<String>();
+    private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<String>();
     /**
      * List of the loaded precursors.
      */
-    private ArrayList<String> loadedPrecursors = new ArrayList<String>();
+    private LinkedBlockingDeque<String> loadedPrecursors = new LinkedBlockingDeque<String>();
     /**
      * Map of the random access files of the loaded mgf files (filename ->
      * random access file).
@@ -230,22 +231,56 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum.
+     * Returns the precursor of the desired spectrum. The value will be saved in cache
      *
      * @param fileName the name of the spectrum file
      * @param spectrumTitle the title of the spectrum
+     *
      * @return the corresponding precursor
+     *
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
      * @throws MzMLUnmarshallerException exception thrown whenever the file was
      * not parsed correctly
      */
     public Precursor getPrecursor(String fileName, String spectrumTitle) throws IOException, MzMLUnmarshallerException {
-        return getPrecursor(Spectrum.getSpectrumKey(fileName, spectrumTitle));
+        return getPrecursor(fileName, spectrumTitle, true);
     }
 
     /**
-     * Returns the precursor of the desired spectrum. The value will not be
+     * Returns the precursor of the desired spectrum.
+     *
+     * @param fileName the name of the spectrum file
+     * @param spectrumTitle the title of the spectrum
+     * @param save if true the precursor will be saved in cache
+     *
+     * @return the corresponding precursor
+     *
+     * @throws IOException exception thrown whenever the file was not parsed
+     * correctly
+     * @throws MzMLUnmarshallerException exception thrown whenever the file was
+     * not parsed correctly
+     */
+    public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) throws IOException, MzMLUnmarshallerException {
+        HashMap<String, Spectrum> fileSpectrumMap = currentSpectrumMap.get(fileName);
+        if (fileSpectrumMap != null) {
+            Spectrum spectrum = fileSpectrumMap.get(spectrumTitle);
+            if (spectrum != null) {
+                return ((MSnSpectrum) spectrum).getPrecursor();
+            }
+        }
+        HashMap<String, Precursor> filePrecursorMap = loadedPrecursorsMap.get(fileName);
+        if (filePrecursorMap != null) {
+            Precursor currentPrecursor = filePrecursorMap.get(spectrumTitle);
+            if (currentPrecursor != null) {
+                return currentPrecursor;
+            }
+        }
+        return getPrecursor(fileName, spectrumTitle, save, 0);
+    }
+
+    /**
+     * Returns the precursor of the desired spectrum. The value will be
      * saved in cache.
      *
      * @param spectrumKey the key of the spectrum
@@ -258,7 +293,7 @@ public class SpectrumFactory {
      * not parsed correctly
      */
     public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
-        return getPrecursor(spectrumKey, false);
+        return getPrecursor(spectrumKey, true);
     }
 
     /**
@@ -468,14 +503,9 @@ public class SpectrumFactory {
      * not parsed correctly
      */
     public Precursor getPrecursor(String spectrumKey, boolean save) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
-        if (currentSpectrumMap.containsKey(spectrumKey)) {
-            return ((MSnSpectrum) currentSpectrumMap.get(spectrumKey)).getPrecursor();
-        }
-        Precursor currentPrecursor = loadedPrecursorsMap.get(spectrumKey);
-        if (currentPrecursor != null) {
-            return currentPrecursor;
-        }
-        return getPrecursor(spectrumKey, save, 0);
+        String fileName = Spectrum.getSpectrumFile(spectrumKey);
+        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+        return getPrecursor(fileName, spectrumTitle, save);
     }
 
     /**
@@ -532,40 +562,37 @@ public class SpectrumFactory {
      * @throws IllegalArgumentException exception thrown whenever the file was
      * not parsed correctly
      */
-    private synchronized Precursor getPrecursor(String spectrumKey, boolean save, int errorCounter) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, int errorCounter) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
 
         Precursor currentPrecursor = null;
-        String fileName = Spectrum.getSpectrumFile(spectrumKey);
-        String name = fileName;
-        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
 
-        if (name.toLowerCase().endsWith(".mgf")) {
+        if (fileName.toLowerCase().endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...
-            spectrumTitle = fixMgfTitle(spectrumTitle, name);
+            spectrumTitle = fixMgfTitle(spectrumTitle, fileName);
 
-            if (mgfIndexesMap.get(name) == null) {
-                throw new IOException("Mgf file not found: \'" + name + "\'.");
+            if (mgfIndexesMap.get(fileName) == null) {
+                throw new IOException("Mgf file not found: \'" + fileName + "\'.");
             }
-            if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found.");
+            if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + fileName + "\' not found.");
             }
             try {
-                currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
+                currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
             } catch (Exception e) {
                 if (errorCounter <= 100) {
                     try {
                         wait(50);
                     } catch (InterruptedException ie) {
                     }
-                    return getPrecursor(spectrumKey, save, errorCounter + 1);
+                    return getPrecursor(fileName, spectrumTitle, save, errorCounter + 1);
                 } else {
                     e.printStackTrace();
-                    throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumKey);
+                    throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
                 }
             }
-        } else if (name.toLowerCase().endsWith(".mzml")) {
-            uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
+        } else if (fileName.toLowerCase().endsWith(".mzml")) {
+            uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(fileName).getSpectrumById(spectrumTitle);
             int level = 2;
             double mzPrec = 0.0;
             double scanTime = -1.0;
@@ -610,11 +637,23 @@ public class SpectrumFactory {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
         if (save) {
-            loadedPrecursorsMap.put(spectrumKey, currentPrecursor);
+            HashMap<String, Precursor> fileMap = loadedPrecursorsMap.get(fileName);
+            if (fileMap == null) {
+                fileMap = new HashMap<String, Precursor>();
+                loadedPrecursorsMap.put(fileName, fileMap);
+            }
+            fileMap.put(spectrumTitle, currentPrecursor);
+            String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
             loadedPrecursors.add(spectrumKey);
             while (loadedPrecursors.size() > nPrecursorsCache) {
-                loadedPrecursorsMap.remove(loadedPrecursors.get(0));
-                loadedPrecursors.remove(0);
+                String tempKey = loadedPrecursors.pollFirst();
+                String tempFileName = Spectrum.getSpectrumFile(tempKey);
+                fileMap = loadedPrecursorsMap.get(tempFileName);
+                if (fileMap != null) {
+                    String tempTitle = Spectrum.getSpectrumTitle(tempKey);
+                    fileMap.remove(tempTitle);
+                }
+
             }
         }
         return currentPrecursor;
@@ -632,7 +671,14 @@ public class SpectrumFactory {
      * occurred while parsing the mzML file
      */
     public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) throws IOException, MzMLUnmarshallerException {
-        return getSpectrum(Spectrum.getSpectrumKey(spectrumFile, spectrumTitle));
+        HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
+        if (fileMap != null) {
+            Spectrum currentSpectrum = fileMap.get(spectrumTitle);
+            if (currentSpectrum != null) {
+                return currentSpectrum;
+            }
+        }
+        return getSpectrum(spectrumFile, spectrumTitle, 0);
     }
 
     /**
@@ -648,11 +694,9 @@ public class SpectrumFactory {
      * occurred while parsing the file
      */
     public Spectrum getSpectrum(String spectrumKey) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
-        Spectrum currentSpectrum = currentSpectrumMap.get(spectrumKey);
-        if (currentSpectrum != null) {
-            return currentSpectrum;
-        }
-        return getSpectrum(spectrumKey, 0);
+        String fileName = Spectrum.getSpectrumFile(spectrumKey);
+        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+        return getSpectrum(fileName, spectrumTitle);
     }
 
     /**
@@ -667,48 +711,45 @@ public class SpectrumFactory {
      * @throws MzMLUnmarshallerException exception thrown whenever an error
      * occurred while parsing the file
      */
-    private synchronized Spectrum getSpectrum(String spectrumKey, int errorCounter) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, int errorCounter) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
 
         Spectrum currentSpectrum = null;
-        String fileName = Spectrum.getSpectrumFile(spectrumKey);
-        String name = fileName;
-        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
 
-        if (name.toLowerCase().endsWith(".mgf")) {
+        if (spectrumFile.toLowerCase().endsWith(".mgf")) {
 
             // a special fix for mgf files with strange titles...
-            spectrumTitle = fixMgfTitle(spectrumTitle, name);
+            spectrumTitle = fixMgfTitle(spectrumTitle, spectrumFile);
 
-            if (mgfIndexesMap.get(name) == null) {
-                throw new FileNotFoundException("Mgf file not found: \'" + name + "\'!");
+            if (mgfIndexesMap.get(spectrumFile) == null) {
+                throw new FileNotFoundException("Mgf file not found: \'" + spectrumFile + "\'!");
             }
-            if (mgfIndexesMap.get(name).getIndex(spectrumTitle) == null) {
-                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + name + "\' not found!");
+            if (mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle) == null) {
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + spectrumFile + "\' not found!");
             }
             try {
-                currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(name), mgfIndexesMap.get(name).getIndex(spectrumTitle), fileName);
+                currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
             } catch (Exception e) {
                 if (errorCounter <= 100) {
                     try {
                         wait(50);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumKey, errorCounter + 1);
+                    return getSpectrum(spectrumFile, spectrumTitle, errorCounter + 1);
                 } else {
                     e.printStackTrace();
-                    throw new IllegalArgumentException("Error while loading spectrum " + spectrumKey);
+                    throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
                 }
             }
-        } else if (name.toLowerCase().endsWith(".mzml")) {
+        } else if (spectrumFile.toLowerCase().endsWith(".mzml")) {
 
-            if (mzMLUnmarshallers.get(name) == null) {
-                throw new IOException("mzML file not found: \'" + name + "\'!");
+            if (mzMLUnmarshallers.get(spectrumFile) == null) {
+                throw new IOException("mzML file not found: \'" + spectrumFile + "\'!");
             }
-            if (mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle) == null) {
-                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mzML file \'" + name + "\' not found!");
+            if (mzMLUnmarshallers.get(spectrumFile).getSpectrumById(spectrumTitle) == null) {
+                throw new IOException("Spectrum \'" + spectrumTitle + "\' in mzML file \'" + spectrumFile + "\' not found!");
             }
 
-            uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(name).getSpectrumById(spectrumTitle);
+            uk.ac.ebi.jmzml.model.mzml.Spectrum mzMLSpectrum = mzMLUnmarshallers.get(spectrumFile).getSpectrumById(spectrumTitle);
             int level = 2;
             double mzPrec = 0.0;
             double scanTime = -1.0;
@@ -753,7 +794,7 @@ public class SpectrumFactory {
                 peakList.put(mzNumbers[i].doubleValue(), new Peak(mzNumbers[i].doubleValue(), intNumbers[i].doubleValue(), scanTime));
             }
             if (level == 1) {
-                currentSpectrum = new MS1Spectrum(fileName, spectrumTitle, scanTime, peakList);
+                currentSpectrum = new MS1Spectrum(spectrumFile, spectrumTitle, scanTime, peakList);
             } else {
                 //@TODO: update the charge here
                 //Precursor precursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
@@ -763,10 +804,21 @@ public class SpectrumFactory {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
         if (loadedSpectra.size() == nSpectraCache) {
-            currentSpectrumMap.remove(loadedSpectra.get(0));
-            loadedSpectra.remove(0);
+            String tempKey = loadedSpectra.pollFirst();
+            String tempFile = Spectrum.getSpectrumFile(tempKey);
+            HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(tempFile);
+            if (fileMap != null) {
+                String tempTitle = Spectrum.getSpectrumTitle(tempKey);
+                fileMap.remove(tempTitle);
+            }
         }
-        currentSpectrumMap.put(spectrumKey, currentSpectrum);
+        HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
+        if (fileMap == null) {
+            fileMap = new HashMap<String, Spectrum>();
+            currentSpectrumMap.put(spectrumFile, fileMap);
+        }
+        fileMap.put(spectrumTitle, currentSpectrum);
+        String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
         loadedSpectra.add(spectrumKey);
         return currentSpectrum;
     }

@@ -285,6 +285,12 @@ public class PhosphoRS {
                 }
             }
         }
+        
+        for (int site : possibleSites) {
+            if (!scores.keySet().contains(site)) {
+                throw new IllegalArgumentException("Site " + site + " not scored for modification " + ptmMass + " in spectrum " + spectrum.getSpectrumTitle() + " of file " + spectrum.getFileName() + ".");
+            }
+        }
 
         return scores;
     }

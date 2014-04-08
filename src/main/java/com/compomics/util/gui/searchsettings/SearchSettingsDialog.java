@@ -2021,6 +2021,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()));
+        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()));
 
         String dbPath = databaseSettingsTxt.getText().trim();
         if (!dbPath.equals("")) {

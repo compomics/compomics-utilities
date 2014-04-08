@@ -45,4 +45,18 @@ public class ROC {
         double x = distributionPatient.getValueAtCumulativeProbability(specificity);
         return distributionControl.getCumulativeProbabilityAt(x);
     }
+    
+    /**
+     * Returns the specificity at a given sensitivity.
+     * 
+     * @param sensitivity the sensitivity (0.1 is 10%)
+     * 
+     * @return the corresponding specificity (0.1 is 10%)
+     * 
+     * @throws MathException 
+     */
+    public double getSpecificityAt(double sensitivity) throws MathException {
+        double x = distributionControl.getValueAtCumulativeProbability(sensitivity);
+        return distributionPatient.getCumulativeProbabilityAt(x);
+    }
 }

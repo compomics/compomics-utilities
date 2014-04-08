@@ -69,6 +69,9 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
+        
+        proteinTree.close();
+        proteinTree.deleteDb();
     }
 
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
@@ -144,5 +147,8 @@ public class ProteinTreeTest extends TestCase {
         indexes = proteinMapping.get(peptides.get(0)).get("test");
         Assert.assertTrue(indexes.size() == 1);
         Assert.assertTrue(indexes.get(0) == 11);
+        
+        proteinTree.close();
+        proteinTree.deleteDb();
     }
 }

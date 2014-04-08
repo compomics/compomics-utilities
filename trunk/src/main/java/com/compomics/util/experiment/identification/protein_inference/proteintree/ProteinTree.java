@@ -217,6 +217,13 @@ public class ProteinTree {
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
+        // Delete outdated trees
+        try {
+            ProteinTreeComponentsFactory.deletOutdatedTrees();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         tree.clear();
 
         componentsFactory = ProteinTreeComponentsFactory.getInstance();
@@ -463,6 +470,7 @@ public class ProteinTree {
         }
 
         componentsFactory.setVersion(version);
+        componentsFactory.setFastaFilePath(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
         componentsFactory.setImportComplete(true);
 
         long time1 = System.currentTimeMillis();
@@ -1161,7 +1169,6 @@ public class ProteinTree {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
                         HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
-                        if (!matches.isEmpty()) {
                             for (int aa : matches.keySet()) {
                                 for (Peptide peptide : matches.get(aa)) {
                                     HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
@@ -1177,7 +1184,6 @@ public class ProteinTree {
                                     peptideIndexes.add(aa);
                                 }
                             }
-                        }
                     }
                 }
             }

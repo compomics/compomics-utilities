@@ -420,6 +420,20 @@ public class ProteinTreeComponentsFactory {
     /**
      * Returns the version. Null if not set.
      *
+     * @param objectsDB the objects db to look into
+     * @return the version
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws java.lang.InterruptedException
+     */
+    public static String getVersion(ObjectsDB objectsDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return (String) objectsDB.retrieveObject(parametersTable, "version", true);
+    }
+
+    /**
+     * Returns the version. Null if not set.
+     *
      * @return the version
      * @throws SQLException
      * @throws IOException
@@ -427,7 +441,50 @@ public class ProteinTreeComponentsFactory {
      * @throws java.lang.InterruptedException
      */
     public String getVersion() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return (String) objectsDB.retrieveObject(parametersTable, "version", true);
+        return getVersion(objectsDB);
+    }
+
+    /**
+     * Sets the fasta file path
+     *
+     * @param fastaFilePath the fasta file path
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void setFastaFilePath(String fastaFilePath) throws SQLException, IOException, InterruptedException {
+        objectsDB.insertObject(parametersTable, "fastaFile", fastaFilePath, false);
+    }
+
+    /**
+     * Returns the fasta file path.
+     *
+     * @return the fasta file path
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public String getFastaFilePath() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getFastaFilePath(objectsDB);
+    }
+
+    /**
+     * Returns the fasta file path.
+     *
+     * @param objectsDB the objects DB to look into
+     *
+     * @return the fasta file path
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
+    public static String getFastaFilePath(ObjectsDB objectsDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return (String) objectsDB.retrieveObject(parametersTable, "fastaFile", true);
     }
 
     /**
@@ -437,5 +494,48 @@ public class ProteinTreeComponentsFactory {
      */
     public void loadTags() throws SQLException {
         tagsInTree = objectsDB.tableContentAsSet(nodeTable);
+    }
+
+    /**
+     * Deletes the outdated trees.
+     * 
+     * @throws IOException 
+     */
+    public static void deletOutdatedTrees() throws IOException {
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        File folder = utilitiesUserPreferences.getProteinTreeFolder();
+        if (folder.exists()) {
+            for (File dbFolder : folder.listFiles()) {
+                try {
+                    ObjectsCache tempCache = new ObjectsCache();
+                    ObjectsDB objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, tempCache);
+                    boolean upToDate = true;
+                    try {
+                        String version = getVersion(objectsDB);
+                        if (version != null && version.equals(ProteinTree.version)) {
+                            String fastaFilePath = getFastaFilePath(objectsDB);
+                            if (fastaFilePath != null) {
+                                File fastaFile = new File(fastaFilePath);
+                                if (!fastaFile.exists()) {//@TODO: check if the drive is available
+                                    upToDate = false;
+                                }
+                            } else {
+                                upToDate = false;
+                            }
+                        } else {
+                            upToDate = false;
+                        }
+                    } catch (Exception e) {
+                        upToDate = false;
+                    }
+                    objectsDB.close();
+                    if (!upToDate) {
+                        Util.deleteDir(folder);
+                    }
+                } catch (Exception e) {
+                    // Possibly not a tree, skip
+                }
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.compomics.util.preferences.ModificationProfile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import no.uib.jsparklines.renderers.util.Util;
 
@@ -23,6 +24,10 @@ import no.uib.jsparklines.renderers.util.Util;
  */
 public class Tag extends ExperimentObject {
 
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 1625541843008045218L;
     /**
      * The content of the tag.
      */
@@ -489,9 +494,10 @@ public class Tag extends ExperimentObject {
     }
 
     /**
-     * Returns the start and end indexes of the tag in the given sequence. Null
-     * if not found. Note: PTMs must be in the ptm factory. PTMs are considered
-     * at a target amino acid only, longer patterns are not taken into account.
+     * Returns the possible peptides which can be created on this sequence
+     * indexed by their start index. Null if not found. Note: PTMs must be in
+     * the ptm factory. PTMs are considered at a target amino acid only, longer
+     * patterns are not taken into account.
      *
      * @param sequence the sequence where to look for the tag
      * @param tagIndex the index where the tag is located
@@ -504,7 +510,8 @@ public class Tag extends ExperimentObject {
      * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
      * reported in the Peptide object
      *
-     * @return the start and end indexes of the tag
+     * @return the possible peptides which can be created on this sequence
+     * indexed by their start index
      */
     public HashMap<Integer, ArrayList<Peptide>> getPeptideMatches(String sequence, int tagIndex, int componentIndex, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean reportFixedPtms) { // @TODO: implement PTMs
 
@@ -1133,7 +1140,65 @@ public class Tag extends ExperimentObject {
         }
         return result;
     }
-    
+
+    /**
+     * Returns the tag modifications as a string.
+     *
+     * @param tag the tag
+     * @return the peptide modifications as a string
+     */
+    public static String getTagModificationsAsString(Tag tag) {
+
+        HashMap<String, ArrayList<Integer>> modMap = new HashMap<String, ArrayList<Integer>>();
+        int offset = 0;
+        for (TagComponent tagComponent : tag.getContent()) {
+            if (tagComponent instanceof MassGap) {
+                offset++;
+            } else if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
+                for (int i = 1; i <= aminoAcidPattern.length(); i++) {
+                    for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i)) {
+                        if (modificationMatch.isVariable()) {
+                            if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
+                                modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
+                            }
+                            modMap.get(modificationMatch.getTheoreticPtm()).add(i + offset);
+                        }
+                    }
+                }
+                offset += aminoAcidPattern.length();
+            } else {
+                throw new IllegalArgumentException("Modification summary not implemented for TagComponent " + tagComponent.getClass() + ".");
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        boolean first = true, first2;
+        ArrayList<String> mods = new ArrayList<String>(modMap.keySet());
+        Collections.sort(mods);
+        for (String mod : mods) {
+            if (first) {
+                first = false;
+            } else {
+                result.append(", ");
+            }
+            first2 = true;
+            result.append(mod);
+            result.append(" (");
+            for (int aa : modMap.get(mod)) {
+                if (first2) {
+                    first2 = false;
+                } else {
+                    result.append(", ");
+                }
+                result.append(aa);
+            }
+            result.append(")");
+        }
+
+        return result.toString();
+    }
+
     @Override
     public String toString() {
         return asSequence();

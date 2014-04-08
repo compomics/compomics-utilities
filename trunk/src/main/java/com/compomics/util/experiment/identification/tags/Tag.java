@@ -25,7 +25,7 @@ import no.uib.jsparklines.renderers.util.Util;
 public class Tag extends ExperimentObject {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 1625541843008045218L;
     /**

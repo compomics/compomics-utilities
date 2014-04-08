@@ -231,7 +231,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum. The value will be saved in cache
+     * Returns the precursor of the desired spectrum. The value will be saved in
+     * cache.
      *
      * @param fileName the name of the spectrum file
      * @param spectrumTitle the title of the spectrum
@@ -280,8 +281,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum. The value will be
-     * saved in cache.
+     * Returns the precursor of the desired spectrum. The value will be saved in
+     * cache.
      *
      * @param spectrumKey the key of the spectrum
      * @return the corresponding precursor

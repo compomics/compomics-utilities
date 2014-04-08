@@ -445,9 +445,9 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Sets the fasta file path
+     * Sets the FASTA file path.
      *
-     * @param fastaFilePath the fasta file path
+     * @param fastaFilePath the FASTA file path
      *
      * @throws SQLException
      * @throws IOException
@@ -458,9 +458,9 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Returns the fasta file path.
+     * Returns the FASTA file path.
      *
-     * @return the fasta file path
+     * @return the FASTA file path
      *
      * @throws SQLException
      * @throws IOException
@@ -472,11 +472,11 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Returns the fasta file path.
+     * Returns the FASTA file path.
      *
      * @param objectsDB the objects DB to look into
      *
-     * @return the fasta file path
+     * @return the FASTA file path
      *
      * @throws SQLException
      * @throws IOException
@@ -516,7 +516,7 @@ public class ProteinTreeComponentsFactory {
                             String fastaFilePath = getFastaFilePath(objectsDB);
                             if (fastaFilePath != null) {
                                 File fastaFile = new File(fastaFilePath);
-                                if (!fastaFile.exists()) {//@TODO: check if the drive is available
+                                if (!fastaFile.exists()) { //@TODO: check if the drive is available
                                     upToDate = false;
                                 }
                             } else {

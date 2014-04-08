@@ -217,7 +217,7 @@ public class ProteinTree {
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        // Delete outdated trees
+        // delete outdated trees
         try {
             ProteinTreeComponentsFactory.deletOutdatedTrees();
         } catch (Exception e) {

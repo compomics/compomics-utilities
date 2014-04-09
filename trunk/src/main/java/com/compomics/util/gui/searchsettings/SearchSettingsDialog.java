@@ -8,6 +8,11 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
@@ -2018,10 +2023,36 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters();
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()));
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()));
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), new OmssaParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), new XtandemParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), new MsgfParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), new MsAmandaParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), new PepnovoParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), new DirecTagParameters());
+        }
 
         String dbPath = databaseSettingsTxt.getText().trim();
         if (!dbPath.equals("")) {

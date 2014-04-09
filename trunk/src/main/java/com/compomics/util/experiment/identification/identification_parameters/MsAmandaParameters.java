@@ -60,7 +60,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
             if (monoisotopic != msAmandaParameters.isMonoIsotopic()) {
                 return false;
             }
-            if (instrumentID.equals(msAmandaParameters.getInstrumentID())) {
+            if (!instrumentID.equalsIgnoreCase(msAmandaParameters.getInstrumentID())) {
                 return false;
             }
             if (maxRank != msAmandaParameters.getMaxRank()) {

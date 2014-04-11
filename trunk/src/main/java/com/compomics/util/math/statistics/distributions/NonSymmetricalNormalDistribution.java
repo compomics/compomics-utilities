@@ -13,7 +13,7 @@ import org.apache.commons.math.MathException;
 public class NonSymmetricalNormalDistribution implements Distribution {
 
     /**
-     * Serial version number for backward compatibility
+     * Serial version number for backward compatibility.
      */
     static final long serialVersionUID = -5258258835569357886L;
     /**

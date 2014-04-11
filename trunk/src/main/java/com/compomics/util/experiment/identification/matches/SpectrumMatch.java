@@ -230,10 +230,9 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns a list of the top scoring assumptions for the given advocate
+     * Returns a list of the top scoring assumptions for the given advocate.
      * 
      * @param advocateId the index of the advocate of interest
-     * 
      * @return a list of the top scoring assumptions for the given advocate
      */
     public ArrayList<SpectrumIdentificationAssumption> getFirstHits(int advocateId) {

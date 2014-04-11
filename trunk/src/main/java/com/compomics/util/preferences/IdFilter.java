@@ -102,10 +102,10 @@ public class IdFilter implements Serializable {
      * disabled)
      * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less
      * for disabled)
-     * @param msgfMaxEValue The maximal MS-GF+ e-value allowed (0 or less for
-     * disabled)
-     * @param msAmandaEValue The maximal MS Amanda e-value allowed (0 or less
-     * for disabled)
+//     * @param msgfMaxEValue The maximal MS-GF+ e-value allowed (0 or less for
+//     * disabled)
+//     * @param msAmandaEValue The maximal MS Amanda e-value allowed (0 or less
+//     * for disabled)
      * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for
      * disabled)
      * @param isPpm Boolean indicating the unit of the allowed m/z deviation

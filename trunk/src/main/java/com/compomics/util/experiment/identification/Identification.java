@@ -860,11 +860,14 @@ public abstract class Identification extends ExperimentObject {
             return false;
         }
 
-        String fileName = Spectrum.getSpectrumFile(matchKey);
-        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
-        if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
-            return true;
+        if (matchKey.lastIndexOf(Spectrum.SPECTRUM_KEY_SPLITTER) != -1) {
+            String fileName = Spectrum.getSpectrumFile(matchKey);
+            ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(fileName);
+            if (spectrumKeys != null && spectrumKeys.contains(matchKey)) {
+                return true;
+            }
         }
+
         return proteinIdentification.contains(matchKey) || peptideIdentification.contains(matchKey) || spectrumIdentification.contains(matchKey);
     }
 

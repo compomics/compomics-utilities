@@ -230,6 +230,23 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
+     * Returns a list of the top scoring assumptions for the given advocate
+     * 
+     * @param advocateId the index of the advocate of interest
+     * 
+     * @return a list of the top scoring assumptions for the given advocate
+     */
+    public ArrayList<SpectrumIdentificationAssumption> getFirstHits(int advocateId) {
+        HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateHitMap = assumptionsMap.get(advocateId);
+        if (advocateHitMap != null) {
+            ArrayList<Double> eValues = new ArrayList<Double>(advocateHitMap.keySet());
+            double bestScore = Collections.min(eValues);
+            return advocateHitMap.get(bestScore);
+        }
+        return new ArrayList<SpectrumIdentificationAssumption>();
+    }
+
+    /**
      * Sets the best assumption according to the search engine.
      *
      * @param advocateId the search engine index

@@ -1,5 +1,6 @@
 package com.compomics.util.math.statistics;
 
+import java.io.Serializable;
 import org.apache.commons.math.MathException;
 
 /**
@@ -8,7 +9,7 @@ import org.apache.commons.math.MathException;
  *
  * @author Marc Vaudel
  */
-public interface Distribution {
+public interface Distribution extends Serializable {
 
     /**
      * Returns the density function value at a given position.

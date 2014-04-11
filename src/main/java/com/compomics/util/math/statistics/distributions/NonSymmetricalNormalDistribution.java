@@ -13,6 +13,10 @@ import org.apache.commons.math.MathException;
 public class NonSymmetricalNormalDistribution implements Distribution {
 
     /**
+     * Serial version number for backward compatibility
+     */
+    static final long serialVersionUID = -5258258835569357886L;
+    /**
      * The standard deviation on the right of the distribution.
      */
     private double stdUp;
@@ -103,7 +107,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     @Override
     public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
         if (x > mean) {
-        return distributionUp.getCumulativeProbabilityAt(x);
+            return distributionUp.getCumulativeProbabilityAt(x);
         } else {
             return distributionDown.getCumulativeProbabilityAt(x);
         }

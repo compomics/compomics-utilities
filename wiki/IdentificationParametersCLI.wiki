@@ -6,7 +6,7 @@ IdentificationParametersCLI can be used to create an identification parameter fi
 
 Note that in most cases it is not recommended to use the command line to generate the identification parameter file, but rather to set up the wanted identification parameter file in the GUI, save it, and than use it in the command line processing.
 
-Also note that most X!Tandem, MS-GF+, OMSSA and PepNovo+ settings listed below are for expert usage only. Changes from the default settings should be done with care.
+Also note that most X!Tandem, MS-GF+, MS Amanda, OMSSA, PepNovo+ and DirecTag settings listed below are for expert usage only. Changes from the default settings should be done with care.
 
 *General command lines:*
 
@@ -150,6 +150,20 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -msgf_num_ptms            MS-GF+ max number of PTMs per peptide, default is '2'.
 }}}
 
+*MS Amanda advanced parameters:*
+
+{{{
+-ms_amanda_decoy          MS Amanda generate decoys option, 0: false, 1: true, default is '0'.
+
+-ms_amanda_max_evalue     MS Amanda maximal evalue considered, default is '100'.
+
+-ms_amanda_instrument     MS Amanda instrument id option. Available enzymes are listed in the GUI. 
+                          (Note: case sensitive.).
+
+-ms_amanda_max_rank       MS Amanda maximum rank, default is '5'.
+
+-ms_amanda_mono           MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.
+}}}
 
 *OMSSA advanced parameters:*
 

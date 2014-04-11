@@ -321,14 +321,19 @@ public class ObjectsCache {
             String tableName = splittedKey[1];
             String objectKey = splittedKey[2];
             CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
-            if (entry.isModified()) {
-                if (!toSave.containsKey(dbName)) {
-                    toSave.put(dbName, new HashMap<String, HashMap<String, Object>>());
+
+            if (entry == null) {
+                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
+            } else {
+                if (entry.isModified()) {
+                    if (!toSave.containsKey(dbName)) {
+                        toSave.put(dbName, new HashMap<String, HashMap<String, Object>>());
+                    }
+                    if (!toSave.get(dbName).containsKey(tableName)) {
+                        toSave.get(dbName).put(tableName, new HashMap<String, Object>());
+                    }
+                    toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
                 }
-                if (!toSave.get(dbName).containsKey(tableName)) {
-                    toSave.get(dbName).put(tableName, new HashMap<String, Object>());
-                }
-                toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
             }
 
             if (waitingHandler != null) {
@@ -453,12 +458,10 @@ public class ObjectsCache {
      * @throws java.lang.InterruptedException
      */
     public void updateCache() throws IOException, SQLException, InterruptedException {
-        
-        // @TODO: remove less than half of the objects
-        
+
         while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
                 || (automatedMemoryManagement && !memoryCheck())) {
-            int toRemove = loadedObjectsKeys.size() / 2; // remove half of the objects from the cache
+            int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
             if (toRemove <= 1) {
                 saveObject(loadedObjectsKeys.take());
             } else {

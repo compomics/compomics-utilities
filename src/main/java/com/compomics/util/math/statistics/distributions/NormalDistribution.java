@@ -15,7 +15,7 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
 public class NormalDistribution implements Distribution {
 
     /**
-     * Serial version number for backward compatibility
+     * Serial version number for backward compatibility.
      */
     static final long serialVersionUID = -4944773548279233917L;
     /**

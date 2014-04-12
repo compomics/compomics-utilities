@@ -1,27 +1,46 @@
 package com.compomics.util.pdbfinder.das.readers;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 20-mrt-2008
- * Time: 8:30:45
+ * StartEndPosition.
+ *
+ * @author Niklaas Colaert
  */
 public class StartEndPosition {
-    
-    // @TODO: add JavaDoc...
 
+    /**
+     * The start.
+     */
     private int iStart;
+    /**
+     * The end.
+     */
     private int iEnd;
 
+    /**
+     * Constructor.
+     * 
+     * @param aStart
+     * @param aEnd 
+     */
     public StartEndPosition(int aStart, int aEnd) {
         this.iStart = aStart;
         this.iEnd = aEnd;
     }
 
+    /**
+     * Returns the start position.
+     * 
+     * @return the start position
+     */
     public int getStartPosition() {
         return this.iStart;
     }
 
+    /**
+     * Returns the end position.
+     * 
+     * @return the end position
+     */
     public int getEndPosition() {
         return this.iEnd;
     }

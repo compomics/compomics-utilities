@@ -3,26 +3,54 @@ package com.compomics.util.pdbfinder.das.readers;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 25-jan-2008
- * Time: 9:09:14
+ * DasAlignment.
+ * 
+ * @author  Niklaas Colaert
  */
 public class DasAlignment {
     
-    // @TODO: add JavaDoc...
-
+    /**
+     * The alignment.
+     */
     private String iAlignment;
-    //feature elements
+    /**
+     * The resolution.
+     */
     private String resolution = "";
+    /**
+     * The experiment type.
+     */
     private String experiment_type = "";
+    /**
+     * The header.
+     */
     private String header = "";
+    /**
+     * The title.
+     */
     private String title = "";
+    /**
+     * The PDB accession.
+     */
     private String pdbAccession = "";
+    /**
+     * The SP accession.
+     */
     private String spAccession = "";
+    /**
+     * The alignment blocks.
+     */
     private AlignmentBlock[] alignmentBlocks;
+    /**
+     * The PDB group.
+     */
     private String pdbGroup = "";
 
+    /**
+     * Constructor.
+     * 
+     * @param aDasAlignment 
+     */
     public DasAlignment(String aDasAlignment) {
         try {
             this.iAlignment = aDasAlignment;
@@ -66,36 +94,75 @@ public class DasAlignment {
             System.out.println("Error in reading das - pdb alignment");
         }
     }
-    //getters
-
+    
+    /**
+     * Returns the resolution.
+     * 
+     * @return the resolution
+     */
     public String getResolution() {
         return resolution;
     }
 
-    public String getExperiment_type() {
+    /**
+     * Returns the experiment type.
+     * 
+     * @return the experiment type
+     */
+    public String getExperimentType() {
         return experiment_type;
     }
 
+    /**
+     * Returns the header.
+     * 
+     * @return the header
+     */
     public String getHeader() {
         return header;
     }
 
+    /**
+     * Returns the title.
+     * 
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Returns the PDB accession.
+     * 
+     * @return the PDB accession
+     */
     public String getPdbAccession() {
         return pdbAccession;
     }
 
+    /**
+     * Returns the SP accession.
+     * 
+     * @return the SP accession
+     */
     public String getSpAccession() {
         return spAccession;
     }
 
+    /**
+     * Returns the alignment blocks.
+     * 
+     * @return the alignment blocks
+     */
     public AlignmentBlock[] getAlignmentBlocks() {
         return alignmentBlocks;
     }
 
+    /**
+     * Returns the PDB groups.
+     * 
+     * @return the PDB groups
+     */
     public String getPdbGroup() {
         pdbGroup = pdbAccession.substring(pdbAccession.indexOf(".") + 1);
         pdbGroup = pdbGroup.toLowerCase();

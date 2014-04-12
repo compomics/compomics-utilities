@@ -10,96 +10,211 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by IntelliJ IDEA. User: Niklaas Colaert Date: 9-jul-2008 Time:
- * 13:53:46
+ * PdbBlock.
+ *
+ * @author Niklaas Colaert
  */
 public class PdbBlock {
 
-    // @TODO: add JavaDoc...
+    /**
+     * The block.
+     */
     private String iBlock;
-    private int iStart_protein;
-    private int iEnd_protein;
-    private int iStart_block;
-    private int iEnd_block;
+    /**
+     * The protein start.
+     */
+    private int iStartProtein;
+    /**
+     * The protein end.
+     */
+    private int iEndProtein;
+    /**
+     * The block start.
+     */
+    private int iStartBlock;
+    /**
+     * The block end.
+     */
+    private int iEndBlock;
+    /**
+     * The selected positions.
+     */
     private Integer[] iSelectedPositions;
+    /**
+     * True if there is a selection.
+     */
     private boolean iSelection = false;
+    /**
+     * The URL.
+     */
     private String iUrl;
 
+    /**
+     * Constructor.
+     * 
+     * @param aBlock
+     * @param aStart_protein
+     * @param aEnd_protein
+     * @param aStart_block
+     * @param aEnd_block 
+     */
     public PdbBlock(String aBlock, int aStart_protein, int aEnd_protein, int aStart_block, int aEnd_block) {
         this.iBlock = aBlock;
-        this.iStart_protein = aStart_protein;
-        this.iEnd_protein = aEnd_protein;
-        this.iStart_block = aStart_block;
-        this.iEnd_block = aEnd_block;
+        this.iStartProtein = aStart_protein;
+        this.iEndProtein = aEnd_protein;
+        this.iStartBlock = aStart_block;
+        this.iEndBlock = aEnd_block;
     }
 
+    /**
+     * Returns the block.
+     * 
+     * @return block
+     */
     public String getBlock() {
         return iBlock;
     }
 
+    /**
+     * Sets the block.
+     * 
+     * @param aBlock 
+     */
     public void setBlock(String aBlock) {
         this.iBlock = aBlock;
     }
 
-    public int getStart_protein() {
-        return iStart_protein;
+    /**
+     * Returns the protein start.
+     * 
+     * @return the protein start
+     */
+    public int getStartProtein() {
+        return iStartProtein;
     }
 
-    public void setStart_protein(int aStart_protein) {
-        this.iStart_protein = aStart_protein;
+    /**
+     * Set the protein start.
+     * 
+     * @param aStartProtein 
+     */
+    public void setStartProtein(int aStartProtein) {
+        this.iStartProtein = aStartProtein;
     }
 
-    public int getEnd_protein() {
-        return iEnd_protein;
+    /**
+     * Returns the protein end.
+     * 
+     * @return the protein end
+     */
+    public int getEndProtein() {
+        return iEndProtein;
     }
 
-    public void setEnd_protein(int aEnd_protein) {
-        this.iEnd_protein = aEnd_protein;
+    /**
+     * Set the protein end.
+     * 
+     * @param aEndProtein 
+     */
+    public void setEndProtein(int aEndProtein) {
+        this.iEndProtein = aEndProtein;
     }
 
-    public int getStart_block() {
-        return iStart_block;
+    /**
+     * Returns the block start.
+     * 
+     * @return the block start
+     */
+    public int getStartBlock() {
+        return iStartBlock;
     }
 
-    public void setStart_block(int aStart_block) {
-        this.iStart_block = aStart_block;
+    /**
+     * Set the block start.
+     * 
+     * @param aStartBlock 
+     */
+    public void setStartBlock(int aStartBlock) {
+        this.iStartBlock = aStartBlock;
     }
 
-    public int getEnd_block() {
-        return iEnd_block;
+    /**
+     * Returns the block end.
+     * 
+     * @return the block end
+     */
+    public int getEndBlock() {
+        return iEndBlock;
     }
 
-    public void setEnd_block(int aEnd_block) {
-        this.iEnd_block = aEnd_block;
+    /**
+     * Set the block end.
+     * 
+     * @param aEndBlock 
+     */
+    public void setEndBlock(int aEndBlock) {
+        this.iEndBlock = aEndBlock;
     }
 
+    /**
+     * Returns the difference.
+     * 
+     * @return the difference
+     */
     public int getDifference() {
-        int diff = iStart_protein - iStart_block;
+        int diff = iStartProtein - iStartBlock;
         return diff;
     }
 
+    /**
+     * Returns true if there is a selection.
+     * 
+     * @return true if there is a selection.
+     */
     public boolean getSelection() {
         return iSelection;
     }
 
+    /**
+     * Returns the selected positions.
+     * 
+     * @return the selected positions
+     */
     public Integer[] getSelectedPositions() {
         return iSelectedPositions;
     }
 
+    /**
+     * Set the selected positions.
+     * 
+     * @param aSelectedPositions 
+     */
     public void setSelectedPositions(Integer[] aSelectedPositions) {
         this.iSelectedPositions = aSelectedPositions;
         iSelection = true;
     }
 
+    /**
+     * Get the blocked sequence.
+     * 
+     * @param aPdbAccession
+     * @return the blocked sequence
+     */
     public String getBlockSequence(String aPdbAccession) {
         String lUrl = "http://www.rcsb.org/pdb/files/fasta.txt?structureIdList=" + aPdbAccession;
         return readUrl(lUrl, aPdbAccession);
     }
 
+    /**
+     * Read a URL.
+     * 
+     * @param aUrl
+     * @param aPdbAccession
+     * @return the sequence
+     */
     public String readUrl(String aUrl, String aPdbAccession) {
 
         this.iUrl = aUrl;
-
         String lSequence = null;
 
         try {
@@ -131,16 +246,22 @@ public class PdbBlock {
         return lSequence;
     }
 
+    /**
+     * Read a FASTA.
+     * 
+     * @param lFasta
+     * @param aPdbAccession
+     * @return the sequence
+     */
     public String readFasta(String lFasta, String aPdbAccession) {
 
         String[] lLines = lFasta.split("\n");
         boolean lSequenceNeeded = false;
         StringBuilder lSequence = new StringBuilder();
-
-        for (int i = 0; i < lLines.length; i++) {
-            if (lLines[i].startsWith(">")) {
+        for (String lLine : lLines) {
+            if (lLine.startsWith(">")) {
                 //check if we need to read this
-                if (lLines[i].indexOf(aPdbAccession + ":" + iBlock + "|") >= 0) {
+                if (lLine.indexOf(aPdbAccession + ":" + iBlock + "|") >= 0) {
                     //we need this
                     lSequenceNeeded = true;
                 } else {
@@ -148,7 +269,7 @@ public class PdbBlock {
                 }
             } else {
                 if (lSequenceNeeded) {
-                    lSequence.append(lLines[i]);
+                    lSequence.append(lLine);
                 }
             }
         }

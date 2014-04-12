@@ -1,22 +1,47 @@
 package com.compomics.util.pdbfinder.das.readers;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 25-jan-2008
- * Time: 9:18:16
+ * AlignmentBlock.
+ * 
+ * @author Niklaas Colaert
  */
 public class AlignmentBlock {
     
-    // @TODO: add JavaDoc...
-
+    /**
+     * The PDB start.
+     */
     private int iPdbStart;
+    /**
+     * The PDB end.
+     */
     private int iPdbEnd;
+    /**
+     * The SP start.
+     */
     private int iSpStart;
+    /**
+     * The SP end.
+     */
     private int iSpEnd;
+    /**
+     * The PDB accession.
+     */
     private String iPdbAccession;
+    /**
+     * The SP accession.
+     */
     private String iSpAccession;
 
+    /**
+     * Constructor.
+     * 
+     * @param aPdbStart
+     * @param aPdbEnd
+     * @param aSpStart
+     * @param aSpEnd
+     * @param aPdbAccession
+     * @param aSpAccession 
+     */
     public AlignmentBlock(int aPdbStart, int aPdbEnd, int aSpStart, int aSpEnd, String aPdbAccession, String aSpAccession) {
         this.iPdbStart = aPdbStart;
         this.iPdbEnd = aPdbEnd;
@@ -26,31 +51,65 @@ public class AlignmentBlock {
         this.iSpAccession = aSpAccession;
     }
 
-    //getters
+    /**
+     * Returns the PDB start.
+     * 
+     * @return the PDB start
+     */
     public int getPdbStart() {
         return this.iPdbStart;
     }
 
+    /**
+     * Returns the PDB end.
+     * 
+     * @return the PDB end
+     */
     public int getPdbEnd() {
         return this.iPdbEnd;
     }
 
+    /**
+     * Returns the SP start.
+     * 
+     * @return the SP start
+     */
     public int getSpStart() {
         return this.iSpStart;
     }
 
+    /**
+     * Returns the SP end.
+     * 
+     * @return the SP end
+     */
     public int getSpEnd() {
         return this.iSpEnd;
     }
 
+    /**
+     * Returns the PDB accession.
+     * 
+     * @return the PDB accession
+     */
     public String getPdbAccession() {
         return this.iPdbAccession;
     }
 
+    /**
+     * Returns the SP accession.
+     * 
+     * @return the SP accession
+     */
     public String getSpAccession() {
         return this.iSpAccession;
     }
 
+    /**
+     * Returns the difference.
+     * 
+     * @return the difference
+     */
     public int getDifference() {
         int diff = iSpStart - iPdbStart;
         return diff;

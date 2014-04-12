@@ -3,29 +3,34 @@ package com.compomics.util.pdbfinder.das.readers;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 22-jan-2008
- * Time: 14:07:28
+ * DasAnnotationServerResultReader
+ *
+ * @author Niklaas Colaert
  */
 public class DasAnnotationServerResultReader {
 
+    /**
+     * The XML string to parse.
+     */
     private String iXml;
+    /**
+     * The last feature end position.
+     */
     private int lastFeatureEndPosition = 0;
 
     /**
-     * Creates a new reader for an xml string.
-     * 
-     * @param aXml 
+     * Creates a new reader for an XML string.
+     *
+     * @param aXml
      */
     public DasAnnotationServerResultReader(String aXml) {
         this.iXml = aXml;
     }
-    
+
     /**
-     * Get the next feature in the xml string.
-     * 
-     * @return the next feature in the xml string
+     * Get the next feature in the XML string.
+     *
+     * @return the next feature in the XML string
      */
     public DasFeature getNextFeature() {
         String feature = iXml.substring(iXml.indexOf("<FEATURE", lastFeatureEndPosition + 9), iXml.indexOf("</FEATURE>", lastFeatureEndPosition + 9) + 10);
@@ -33,11 +38,11 @@ public class DasAnnotationServerResultReader {
         DasFeature f = new DasFeature(feature);
         return f;
     }
-    
+
     /**
-     * Get all features in the xml string.
-     * 
-     * @return all features in the xml string
+     * Get all features in the XML string.
+     *
+     * @return all features in the XML string
      */
     public DasFeature[] getAllFeatures() {
         Vector feats = new Vector();

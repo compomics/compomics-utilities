@@ -3,18 +3,23 @@ package com.compomics.util.pdbfinder.das.readers;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Niklaas Colaert
- * Date: 25-jan-2008
- * Time: 9:01:48
+ * DasAnnotationServerAlingmentReader.
+ * 
+ * @author  Niklaas Colaert
  */
 public class DasAnnotationServerAlingmentReader {
 
+    /**
+     * The XML string to parse.
+     */
     private String iXml;
+    /**
+     * The last feature end position.
+     */
     private int lastFeatureEndPosition = 0;
 
     /**
-     * Creates a new reader for a xml string.
+     * Creates a new reader for a XML string.
      * 
      * @param aXml 
      */
@@ -23,9 +28,9 @@ public class DasAnnotationServerAlingmentReader {
     }
     
     /**
-     * Get all alingment in the xml string.
+     * Get all alignment in the XML string.
      * 
-     * @return all alingment in the xml string
+     * @return all alignment in the XML string
      */
     public DasAlignment[] getAllAlignments() {
         Vector alings = new Vector();

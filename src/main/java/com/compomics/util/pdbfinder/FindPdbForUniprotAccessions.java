@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Vector;
 
 /**
- * Maps uniprot protein accession numbers to PDB file ids.
+ * Maps UniProt protein accession numbers to PDB file IDs.
  *
  * @author Niklaas Colaert
  */
@@ -28,23 +28,23 @@ public class FindPdbForUniprotAccessions {
      */
     private String iProteinAccession;
     /**
-     * @TODO: JavaDoc missing...
+     * The DAS alignment.
      */
     private DasAlignment[] iAlignments;
     /**
-     * @TODO: JavaDoc missing...
+     * The PDB parameters.
      */
     private Vector<PdbParameter> iPdbs = new Vector<PdbParameter>();
     /**
-     * @TODO: JavaDoc missing...
+     * The DAS reader.
      */
     private DasAnnotationServerAlingmentReader iDasReader = new DasAnnotationServerAlingmentReader("empty");
     /**
-     * @TODO: JavaDoc missing...
+     * The URL.
      */
     private String iUrl;
     /**
-     * @TODO: JavaDoc missing...
+     * True if this is the first try.
      */
     private boolean isFirstTry = true;
     /**
@@ -53,7 +53,7 @@ public class FindPdbForUniprotAccessions {
     private boolean urlRead = false;
 
     /**
-     * @TODO: JavaDoc missing...
+     * Constructor.
      *
      * @param aProteinAccession
      */
@@ -61,14 +61,13 @@ public class FindPdbForUniprotAccessions {
 
         this.iProteinAccession = aProteinAccession;
 
-        //find features
+        // find features
         String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
         readUrl(urlMake);
         iAlignments = iDasReader.getAllAlignments();
 
         try {
-            for (int a = 0; a < iAlignments.length; a++) {
-                DasAlignment align = iAlignments[a];
+            for (DasAlignment align : iAlignments) {
                 String pdb = align.getPdbAccession().substring(0, 4);
                 pdb = pdb.toUpperCase();
                 boolean newPdb = true;
@@ -83,16 +82,14 @@ public class FindPdbForUniprotAccessions {
                 }
 
                 if (newPdb) {
-                    pdbParamToAddBlock = new PdbParameter(pdb, align.getTitle(), align.getExperiment_type(), align.getResolution());
-                    for (int i = 0; i < align.getAlignmentBlocks().length; i++) {
-                        AlignmentBlock alignBlock = align.getAlignmentBlocks()[i];
+                    pdbParamToAddBlock = new PdbParameter(pdb, align.getTitle(), align.getExperimentType(), align.getResolution());
+                    for (AlignmentBlock alignBlock : align.getAlignmentBlocks()) {
                         PdbBlock block = new PdbBlock(alignBlock.getPdbAccession().substring(5), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
                         pdbParamToAddBlock.addBlock(block);
                     }
                     iPdbs.add(pdbParamToAddBlock);
                 } else {
-                    for (int i = 0; i < align.getAlignmentBlocks().length; i++) {
-                        AlignmentBlock alignBlock = align.getAlignmentBlocks()[i];
+                    for (AlignmentBlock alignBlock : align.getAlignmentBlocks()) {
                         PdbBlock block = new PdbBlock(alignBlock.getPdbAccession().substring(5), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
                         pdbParamToAddBlock.addBlock(block);
                     }
@@ -177,17 +174,18 @@ public class FindPdbForUniprotAccessions {
         System.out.println("Found " + lF.getPdbs().size() + " pdf file(s) for " + lAccession);
 
         for (int i = 0; i < lF.getPdbs().size(); i++) {
+
             PdbParameter lParam = lF.getPdbs().get(i);
             System.out.println((i + 1) + ". " + lParam.getPdbaccession() + " : " + lParam.getTitle() + " (" + lParam.getExperiment_type() + ") " + lParam.getResolution());
             System.out.println("\t\tDownload from : " + "http://www.rcsb.org/pdb/files/" + lParam.getPdbaccession() + ".pdb");
             System.out.println(lParam.getBlocks().length + " block(s) found in this pdf file");
             PdbBlock[] lBlocks = lParam.getBlocks();
 
-            for (int j = 0; j < lBlocks.length; j++) {
-                System.out.println("\tBlock : " + lBlocks[j].getBlock());
+            for (PdbBlock lBlock : lBlocks) {
+                System.out.println("\tBlock : " + lBlock.getBlock());
                 System.out.println("\tAlignment between uniprot protein sequence and sequences in this block");
-                System.out.println("\t\tStart block " + lBlocks[j].getStart_block() + " <=> Start protein " + lBlocks[j].getStart_protein());
-                System.out.println("\t\tEnd block " + lBlocks[j].getEnd_block() + " <=> End protein " + lBlocks[j].getEnd_protein());
+                System.out.println("\t\tStart block " + lBlock.getStartBlock() + " <=> Start protein " + lBlock.getStartProtein());
+                System.out.println("\t\tEnd block " + lBlock.getEndBlock() + " <=> End protein " + lBlock.getEndProtein());
             }
 
             System.out.println("\n");

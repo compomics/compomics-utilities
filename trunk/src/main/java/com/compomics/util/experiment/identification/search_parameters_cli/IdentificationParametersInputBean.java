@@ -140,7 +140,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MAX_CHARGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MAX_CHARGE.id);
             Integer option = new Integer(arg);
-            searchParameters.setMinChargeSearched(new Charge(Charge.PLUS, option));
+            searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, option));
         }
 
         ModificationProfile modificationProfile = new ModificationProfile();

@@ -58,8 +58,15 @@ public class LowMemoryDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
+        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator; // @TODO: does this show the actual version used..?
         javaHomeLabel.setText(javaHome);
+
+        String javaVersion = System.getProperty("java.version");
+        versionLabel.setText(javaVersion);
+
+        if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
+            versionLabel.setForeground(Color.red);
+        }
 
         if (CompomicsWrapper.is64BitJava()) {
             bitLabel.setText("64 Bit Java");
@@ -103,9 +110,13 @@ public class LowMemoryDialog extends javax.swing.JDialog {
         editMemoryJLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         javaHelpJLabel = new javax.swing.JLabel();
+        versionPanel = new javax.swing.JPanel();
+        versionLabel = new javax.swing.JLabel();
+        versionRecommendationLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Low Memory");
+        setResizable(false);
 
         backgroundsPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -146,7 +157,7 @@ public class LowMemoryDialog extends javax.swing.JDialog {
             .addGroup(bitPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(bitLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(376, 376, 376)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(bitRecommendationLabel)
                 .addContainerGap())
         );
@@ -172,14 +183,14 @@ public class LowMemoryDialog extends javax.swing.JDialog {
         editMemoryJLabel.setText("<html><u>Edit</u></html>");
         editMemoryJLabel.setToolTipText("Open Java Help");
         editMemoryJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                editMemoryJLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 editMemoryJLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 editMemoryJLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                editMemoryJLabelMouseReleased(evt);
             }
         });
 
@@ -192,7 +203,7 @@ public class LowMemoryDialog extends javax.swing.JDialog {
                 .addComponent(memoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(editMemoryJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(363, 363, 363)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 363, Short.MAX_VALUE)
                 .addComponent(memoryRecommendationLabel)
                 .addContainerGap())
         );
@@ -218,16 +229,45 @@ public class LowMemoryDialog extends javax.swing.JDialog {
         javaHelpJLabel.setText("<html><u><i>Java setup help</i></u></html>");
         javaHelpJLabel.setToolTipText("Open Java Help");
         javaHelpJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                javaHelpJLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 javaHelpJLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 javaHelpJLabelMouseExited(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                javaHelpJLabelMouseReleased(evt);
+            }
         });
+
+        versionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Java Version"));
+        versionPanel.setOpaque(false);
+
+        versionLabel.setText("1.7");
+
+        versionRecommendationLabel.setFont(versionRecommendationLabel.getFont().deriveFont((versionRecommendationLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        versionRecommendationLabel.setText("Recommended: Java 1.7 or newer");
+
+        javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
+        versionPanel.setLayout(versionPanelLayout);
+        versionPanelLayout.setHorizontalGroup(
+            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(versionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(versionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(versionRecommendationLabel)
+                .addContainerGap())
+        );
+        versionPanelLayout.setVerticalGroup(
+            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(versionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versionRecommendationLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout backgroundsPanelLayout = new javax.swing.GroupLayout(backgroundsPanel);
         backgroundsPanel.setLayout(backgroundsPanelLayout);
@@ -243,7 +283,8 @@ public class LowMemoryDialog extends javax.swing.JDialog {
                         .addComponent(javaHelpJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton))
-                    .addComponent(bitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(bitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(versionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundsPanelLayout.setVerticalGroup(
@@ -251,6 +292,8 @@ public class LowMemoryDialog extends javax.swing.JDialog {
             .addGroup(backgroundsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(javaHomePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(versionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bitPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -354,5 +397,8 @@ public class LowMemoryDialog extends javax.swing.JDialog {
     private javax.swing.JPanel memoryPanel;
     private javax.swing.JLabel memoryRecommendationLabel;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel versionLabel;
+    private javax.swing.JPanel versionPanel;
+    private javax.swing.JLabel versionRecommendationLabel;
     // End of variables declaration//GEN-END:variables
 }

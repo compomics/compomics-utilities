@@ -20,7 +20,7 @@ public class SerializationUtils {
      */
     public static void writeObject(Object object, File destinationFile) throws IOException {
 
-        FileOutputStream fos = new FileOutputStream(destinationFile);
+        FileOutputStream fos = new FileOutputStream(destinationFile.getAbsoluteFile());
         try {
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             try {

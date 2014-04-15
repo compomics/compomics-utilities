@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.pride.CvTerm;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -88,7 +89,7 @@ public class EnzymeFactory {
     /**
      * Import enzymes.
      *
-     * @param enzymeFile xml file containing the enzymes
+     * @param enzymeFile XML file containing the enzymes
      * @throws XmlPullParserException when the parser failed
      * @throws IOException when reading the corresponding file failed
      */
@@ -121,7 +122,7 @@ public class EnzymeFactory {
     /**
      * Parse one enzyme.
      *
-     * @param aParser xml parser
+     * @param aParser XML parser
      * @throws XmlPullParserException when the parser failed
      * @throws IOException when reading the corresponding file failed
      */
@@ -293,7 +294,6 @@ public class EnzymeFactory {
     public void writeMsAmandaEnzymeFile(File file) throws IOException {
 
         // @TODO: not yet in use... (and not properly tested)
-
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
         String toWrite = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
         bw.write(toWrite);
@@ -342,7 +342,7 @@ public class EnzymeFactory {
 
             bw.write("    <position>" + position + "</position>");
             bw.newLine();
-            
+
             bw.write("  </enzyme>");
             bw.newLine();
         }
@@ -351,5 +351,57 @@ public class EnzymeFactory {
 
         bw.flush();
         bw.close();
+    }
+
+    /**
+     * Tries to convert the given enzyme to a CvTerm for use in mzIdentML etc.
+     *
+     * @param enzyme the enzyme to convert
+     * @return the enzyme as a CvTerm
+     */
+    public static CvTerm getEnzymeCvTerm(Enzyme enzyme) {
+
+        if (enzyme == null) {
+            return null;
+        }
+
+        CvTerm cvTerm = null;
+
+        String enzymeName = enzyme.getName();
+
+        if (enzymeName.equalsIgnoreCase("Trypsin")
+                || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001251", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("No Enzyme")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001091", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001303", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001304", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Asp-N_ambic")) { // ????
+            cvTerm = new CvTerm("PSI-MS", "MS:1001305", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)") || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001306", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("CNBr")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001307", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001308", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001309", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001310", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001311", enzymeName, null);
+        } else if (enzymeName.equalsIgnoreCase("Whole Protein")
+                || enzymeName.equalsIgnoreCase("Top-Down")) {
+            cvTerm = new CvTerm("PSI-MS", "MS:1001955", enzymeName, null);
+        }
+
+        // @TODO: no cv terms found!!!
+        // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), Lys-N (K), "Thermolysin, no P rule" 
+        
+        // supply a *child* term of MS:1001045
+
+        return cvTerm;
     }
 }

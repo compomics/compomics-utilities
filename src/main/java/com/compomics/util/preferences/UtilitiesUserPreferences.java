@@ -23,7 +23,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Location of the user preferences file.
      */
-    public static final String USER_PREFERENCES_FILE = System.getProperty("user.home") + "/.compomics/userpreferences.cup";
+    private static String USER_PREFERENCES_FILE = System.getProperty("user.home") + "/.compomics/userpreferences.cup";
     /**
      * The width to use for the annotated peaks.
      */
@@ -522,7 +522,7 @@ public class UtilitiesUserPreferences implements Serializable {
     public File getProteinTreeFolder() {
         if (proteinTreeFolder == null) {
             // if not set, set to default
-            proteinTreeFolder = new File(ProteinTreeComponentsFactory.defaultDbFolderPath);
+            proteinTreeFolder = new File(ProteinTreeComponentsFactory.getDefaultDbFolderPath());
         }
         return proteinTreeFolder;
     }
@@ -618,5 +618,34 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setDisplayedTips(ArrayList<String> displayedTips) {
         this.displayedTips = displayedTips;
+    }
+
+    /**
+     * Returns the user preferences file to be used.
+     * 
+     * @return the user preferences file
+     */
+    public static String getUserPreferencesFile() {
+        return USER_PREFERENCES_FILE;
+    }
+
+    /**
+     * Returns the user preferences file to be used.
+     * 
+     * @return the user preferences file
+     */
+    public static String getUserPreferencesFolder() {
+        File tempFile = new File(getUserPreferencesFile());
+        return tempFile.getParent();
+    }
+
+    /**
+     * Sets the user preferences file to be used.
+     * 
+     * @param userPreferencesFolder the user preferences file to be used
+     */
+    public static void setUserPreferencesFolder(String userPreferencesFolder) {
+        File tempFile = new File(userPreferencesFolder, "/utilities_userpreferences.cup");
+        UtilitiesUserPreferences.USER_PREFERENCES_FILE = tempFile.getAbsolutePath();
     }
 }

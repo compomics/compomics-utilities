@@ -35,9 +35,13 @@ public class PTMFactory implements Serializable {
      */
     private static PTMFactory instance = null;
     /**
-     * User PTM file.
+     * The folder containing the PTM factory
      */
-    private static final String SERIALIZATION_FILE = System.getProperty("user.home") + "/.compomics/ptmFactory-3.23.0.cus";
+    private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
+    /**
+     * the name of the PTM factory back-up file
+     */
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.23.0.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -97,7 +101,7 @@ public class PTMFactory implements Serializable {
     public static PTMFactory getInstance() {
         if (instance == null) {
             try {
-                File savedFile = new File(SERIALIZATION_FILE);
+                File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
                 instance = (PTMFactory) SerializationUtils.readObject(savedFile);
             } catch (Exception e) {
                 instance = new PTMFactory();
@@ -134,7 +138,7 @@ public class PTMFactory implements Serializable {
      * saving the ptmFactory
      */
     public void saveFactory() throws IOException {
-        File factoryFile = new File(SERIALIZATION_FILE);
+        File factoryFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
         if (!factoryFile.getParentFile().exists()) {
             factoryFile.getParentFile().mkdir();
         }
@@ -1662,4 +1666,23 @@ public class PTMFactory implements Serializable {
             return null;
         }
     }
+
+    /**
+     * Returns the folder where the factory is saved.
+     * 
+     * @return the folder where the factory is saved
+     */
+    public static String getSerializationFolder() {
+        return SERIALIZATION_FILE_FOLDER;
+    }
+
+    /**
+     * Sets the folder where the factory is saved.
+     * 
+     * @param serializationFolder the folder where the factory is saved
+     */
+    public static void setSerializationFolder(String serializationFolder) {
+        PTMFactory.SERIALIZATION_FILE_FOLDER = serializationFolder;
+    }
+    
 }

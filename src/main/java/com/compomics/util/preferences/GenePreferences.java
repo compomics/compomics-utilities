@@ -37,7 +37,7 @@ public class GenePreferences implements Serializable {
     /**
      * The folder where gene mapping related info is stored.
      */
-    public static final String GENE_MAPPING_FOLDER = System.getProperty("user.home") + "/.compomics/gene_mappings/";
+    private static String GENE_MAPPING_FOLDER = System.getProperty("user.home") + "/.compomics/gene_mappings/";
     /**
      * The suffix to use for files containing gene mappings.
      */
@@ -343,8 +343,17 @@ public class GenePreferences implements Serializable {
      *
      * @return the gene mapping folder
      */
-    public File getGeneMappingFolder() {
+    public static File getGeneMappingFolder() {
         return new File(GENE_MAPPING_FOLDER);
+    }
+
+    /**
+     * Sets the folder where gene mappings are saved.
+     * 
+     * @param geneMappingFolder the folder where gene mappings are saved
+     */
+    public static void setGeneMappingFolder(String geneMappingFolder) {
+        GenePreferences.GENE_MAPPING_FOLDER = geneMappingFolder;
     }
 
     /**

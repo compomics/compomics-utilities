@@ -38,7 +38,7 @@ public class PrideObjectsFactory {
     /**
      * The folder where PRIDE related info is stored.
      */
-    public static final String prideFolder = System.getProperty("user.home") + "/.compomics/pride/";
+    private static String prideFolder = System.getProperty("user.home") + "/.compomics/pride/";
     /**
      * The extension to use when saving objects. By default cus for compomics
      * utilities serialization
@@ -507,4 +507,24 @@ public class PrideObjectsFactory {
     public HashMap<String, Sample> getSamples() {
         return samples;
     }
+
+    /**
+     * Returns the folder where pride annotation information should be saved.
+     * 
+     * @return the folder where pride annotation information should be saved 
+     */
+    public static String getPrideFolder() {
+        return prideFolder;
+    }
+
+    /**
+     * Sets the folder where pride annotation information should be saved.
+     * 
+     * @param prideFolder the folder where pride annotation information should be saved
+     */
+    public static void setPrideFolder(String prideFolder) {
+        PrideObjectsFactory.prideFolder = prideFolder;
+    }
+    
+    
 }

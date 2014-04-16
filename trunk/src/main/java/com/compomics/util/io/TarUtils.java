@@ -33,14 +33,23 @@ public class TarUtils {
      */
     public static void tarFolder(File folder, File destinationFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
         FileOutputStream fos = new FileOutputStream(destinationFile);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        TarArchiveOutputStream tarOutput = (TarArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, bos);
-        tarOutput.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
-        File matchFolder = folder;
-        addFolderContent(tarOutput, matchFolder, waitingHandler);
-        tarOutput.close();
-        bos.close();
-        fos.close();
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            try {
+                TarArchiveOutputStream tarOutput = (TarArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, bos);
+                try {
+                    tarOutput.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+                    File matchFolder = folder;
+                    addFolderContent(tarOutput, matchFolder, waitingHandler);
+                } finally {
+                    tarOutput.close();
+                }
+            } finally {
+                bos.close();
+            }
+        } finally {
+            fos.close();
+        }
     }
 
     /**
@@ -56,28 +65,57 @@ public class TarUtils {
      * reading/writing files
      */
     public static void addFolderContent(ArchiveOutputStream tarOutput, File folder, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+        addFolderContent(tarOutput, folder, null, waitingHandler);
+    }
 
+    /**
+     * Add content to the tar file.
+     *
+     * @param tarOutput the archive output stream
+     * @param folder the folder to add
+     * @param parentFolder the parent folder to remove from the folder path
+     * @param waitingHandler a waiting handler used to cancel the process (can
+     * be null)
+     *
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing files
+     */
+    private static void addFolderContent(ArchiveOutputStream tarOutput, File folder, String parentFolder, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+
+        if (parentFolder == null) {
+            parentFolder = folder.getParentFile().getAbsolutePath();
+        }
         for (File file : folder.listFiles()) {
             if (file.isDirectory()) {
-                addFolderContent(tarOutput, file, waitingHandler);
+                addFolderContent(tarOutput, file, parentFolder, waitingHandler);
             } else {
                 final int BUFFER = 2048;
                 FileInputStream fi = new FileInputStream(file);
-                BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
-                byte data[] = new byte[BUFFER];
-                TarArchiveEntry entry = new TarArchiveEntry(file);
+                try {
+                    BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
+                    try {
+                        byte data[] = new byte[BUFFER];
+                        String filePath = file.getAbsolutePath();
+                        String relativePath = filePath.substring(parentFolder.length() + 1);
+                        TarArchiveEntry entry = new TarArchiveEntry(file, relativePath);
 
-                tarOutput.putArchiveEntry(entry);
-                int count;
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                        break;
+                        tarOutput.putArchiveEntry(entry);
+                        int count;
+                        while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                break;
+                            }
+                            tarOutput.write(data, 0, count);
+                        }
+                        tarOutput.closeArchiveEntry();
+                    } finally {
+                        origin.close();
                     }
-                    tarOutput.write(data, 0, count);
+                } finally {
+                    fi.close();
                 }
-                tarOutput.closeArchiveEntry();
-                origin.close();
-                fi.close();
             }
         }
     }
@@ -94,6 +132,42 @@ public class TarUtils {
      * @throws IOException
      */
     public static void extractFile(File tarFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
+        extractFile(tarFile, null, null, waitingHandler);
+    }
+
+    /**
+     * Extracts files from a tar.
+     *
+     * @param tarFile the tar file
+     * @param destinationFolder the destination folder, if null the file will be
+     * extracted according to the archive name
+     * @param waitingHandler a waiting handler displaying progress and allowing
+     * canceling the process
+     *
+     * @throws FileNotFoundException
+     * @throws ArchiveException
+     * @throws IOException
+     */
+    public static void extractFile(File tarFile, File destinationFolder, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
+        extractFile(tarFile, destinationFolder, null, waitingHandler);
+    }
+
+    /**
+     * Extracts files from a tar.
+     *
+     * @param tarFile the tar file
+     * @param destinationFolder the destination folder, if null the file will be
+     * extracted according to the archive name
+     * @param backwardCompatibilityCorrection prefix to subtract to entry names
+     * for backward compatibility, ignored if null
+     * @param waitingHandler a waiting handler displaying progress and allowing
+     * canceling the process
+     *
+     * @throws FileNotFoundException
+     * @throws ArchiveException
+     * @throws IOException
+     */
+    public static void extractFile(File tarFile, File destinationFolder, String backwardCompatibilityCorrection, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
 
         final int BUFFER = 2048;
         byte data[] = new byte[BUFFER];
@@ -108,10 +182,20 @@ public class TarUtils {
                     ArchiveEntry archiveEntry;
 
                     while ((archiveEntry = tarInput.getNextEntry()) != null) {
-                        File destinationFile = new File(archiveEntry.getName());
-                        File destinationFolder = destinationFile.getParentFile();
+                        File entryFile = new File(archiveEntry.getName());
+                        File entryFolder;
+                        if (destinationFolder == null) {
+                            entryFolder = entryFile.getParentFile();
+                        } else {
+                            String entryName = archiveEntry.getName();
+                            if (backwardCompatibilityCorrection != null && entryName.startsWith(backwardCompatibilityCorrection)) {
+                                entryName = entryName.substring(backwardCompatibilityCorrection.length() + 1);
+                            }
+                            entryFolder = (new File(destinationFolder, entryName)).getParentFile();
+                        }
+                        File destinationFile = new File(entryFolder, entryFile.getName());
 
-                        if (destinationFolder.exists() || destinationFolder.mkdirs()) {
+                        if (entryFolder.exists() || entryFolder.mkdirs()) {
                             FileOutputStream fos = new FileOutputStream(destinationFile);
                             try {
                                 BufferedOutputStream bos = new BufferedOutputStream(fos);

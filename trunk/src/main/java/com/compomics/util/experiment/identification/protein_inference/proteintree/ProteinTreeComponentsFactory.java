@@ -31,7 +31,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * The folder containing the databases.
      */
-    public static final String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
+    private static String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
     /**
      * Boolean indicating whether the factory is in debug mode.
      */
@@ -494,6 +494,24 @@ public class ProteinTreeComponentsFactory {
      */
     public void loadTags() throws SQLException {
         tagsInTree = objectsDB.tableContentAsSet(nodeTable);
+    }
+
+    /**
+     * Returns the default folder to use when storing the trees.
+     * 
+     * @return the default folder to use when storing the trees
+     */
+    public static String getDefaultDbFolderPath() {
+        return defaultDbFolderPath;
+    }
+
+    /**
+     * Sets the default folder to use when storing the trees.
+     * 
+     * @param defaultDbFolderPath the default folder to use when storing the trees
+     */
+    public static void setDefaultDbFolderPath(String defaultDbFolderPath) {
+        ProteinTreeComponentsFactory.defaultDbFolderPath = defaultDbFolderPath;
     }
 
     /**

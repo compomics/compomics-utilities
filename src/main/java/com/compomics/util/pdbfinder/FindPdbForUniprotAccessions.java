@@ -5,6 +5,7 @@ import com.compomics.util.pdbfinder.das.readers.DasAlignment;
 import com.compomics.util.pdbfinder.das.readers.DasAnnotationServerAlingmentReader;
 import com.compomics.util.pdbfinder.pdb.PdbBlock;
 import com.compomics.util.pdbfinder.pdb.PdbParameter;
+import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -51,19 +52,26 @@ public class FindPdbForUniprotAccessions {
      * Set to true of the PDB URL could be read, false otherwise.
      */
     private boolean urlRead = false;
+    /**
+     * The waiting handler.
+     */
+    private WaitingHandler waitingHandler;
 
     /**
      * Constructor.
      *
      * @param aProteinAccession
+     * @param waitingHandler a waiting handler
      */
-    public FindPdbForUniprotAccessions(String aProteinAccession) {
+    public FindPdbForUniprotAccessions(String aProteinAccession, WaitingHandler waitingHandler) {
 
         this.iProteinAccession = aProteinAccession;
+        this.waitingHandler = waitingHandler;
 
         // find features
         String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
-        readUrl(urlMake);
+        readUrl(urlMake, waitingHandler);
+
         iAlignments = iDasReader.getAllAlignments();
 
         try {
@@ -124,18 +132,20 @@ public class FindPdbForUniprotAccessions {
      * Tries to read the PDB URL.
      *
      * @param aUrl the PDB URL to read
+     * @param waitingHandler a waiting handler
      */
-    private void readUrl(String aUrl) {
+    private void readUrl(String aUrl, WaitingHandler aWaitingHandler) {
 
         urlRead = false;
-
         this.iUrl = aUrl;
+        this.waitingHandler = aWaitingHandler;
 
         try {
-            URL myURL = new URL(aUrl);
+            URL myURL = new URL(iUrl);
             StringBuilder input = new StringBuilder();
             HttpURLConnection c = (HttpURLConnection) myURL.openConnection();
-            BufferedInputStream in = new BufferedInputStream(c.getInputStream());
+            BufferedInputStream in = new BufferedInputStream(c.getInputStream()); // @TODO: how to cancel this part..?
+
             Reader r = new InputStreamReader(in);
 
             int i;
@@ -154,7 +164,7 @@ public class FindPdbForUniprotAccessions {
         } catch (ConnectException e) {
             System.out.println("Connect exception for url " + iUrl);
             if (isFirstTry) {
-                this.readUrl(iUrl);
+                readUrl(iUrl, waitingHandler);
             }
             isFirstTry = false;
         } catch (IOException e) {
@@ -169,7 +179,7 @@ public class FindPdbForUniprotAccessions {
      */
     public static void main(String[] args) {
         String lAccession = "O75369";
-        FindPdbForUniprotAccessions lF = new FindPdbForUniprotAccessions(lAccession);
+        FindPdbForUniprotAccessions lF = new FindPdbForUniprotAccessions(lAccession, null);
 
         System.out.println("Found " + lF.getPdbs().size() + " pdf file(s) for " + lAccession);
 

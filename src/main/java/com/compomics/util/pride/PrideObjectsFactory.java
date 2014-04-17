@@ -96,12 +96,10 @@ public class PrideObjectsFactory {
      */
     private void loadObjects() throws FileNotFoundException, IOException, ClassNotFoundException {
         File prideFolderFile = new File(prideFolder);
-        if (!prideFolderFile.exists()) {
+        if (!prideFolderFile.exists() || prideFolderFile.listFiles().length == 0) {
             createDefaultObjects();
         } else {
             File subFolder = new File(prideFolder, "contactGroups");
-
-            // the contact folder has been renamed so we need to create it even though the original folder exists
             if (!subFolder.exists()) {
                 subFolder.mkdir();
             }
@@ -118,6 +116,9 @@ public class PrideObjectsFactory {
             }
 
             subFolder = new File(prideFolder, "protocols");
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
 
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
@@ -131,6 +132,9 @@ public class PrideObjectsFactory {
             }
 
             subFolder = new File(prideFolder, "instruments");
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
 
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
@@ -144,8 +148,6 @@ public class PrideObjectsFactory {
             }
 
             subFolder = new File(prideFolder, "referenceGroups");
-
-            // the references folder has been renamed so we need to create it even though the original folder exists
             if (!subFolder.exists()) {
                 subFolder.mkdir();
             }
@@ -162,6 +164,9 @@ public class PrideObjectsFactory {
             }
 
             subFolder = new File(prideFolder, "samples");
+            if (!subFolder.exists()) {
+                subFolder.mkdir();
+            }
 
             for (File file : subFolder.listFiles()) {
                 if (!file.isDirectory() && file.getName().endsWith(extension)) {
@@ -525,6 +530,4 @@ public class PrideObjectsFactory {
     public static void setPrideFolder(String prideFolder) {
         PrideObjectsFactory.prideFolder = prideFolder;
     }
-    
-    
 }

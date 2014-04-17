@@ -47,7 +47,7 @@ public class UtilitiesPathPreferences {
         /**
          * Folder containing the pride annotation preferences.
          */
-        prideAnnotationKey("pride_annotation", "Folder containing the pride annotation preferences.", "pride", true);
+        prideAnnotationKey("pride_annotation", "Folder containing the PRIDE annotation preferences.", "pride", true);
         /**
          * The key used to refer to this path.
          */
@@ -240,7 +240,7 @@ public class UtilitiesPathPreferences {
                 newFile.mkdirs();
             }
             if (!newFile.exists()) {
-                throw new FileNotFoundException(newFile.getAbsolutePath() + "could not be created.");
+                throw new FileNotFoundException(newFile.getAbsolutePath() + " could not be created.");
             }
             setPathPreference(utilitiesPathKey, newFile.getAbsolutePath());
         }

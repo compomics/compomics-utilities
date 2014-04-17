@@ -12,48 +12,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * This class sets the path preferences for the files to read/write
+ * This class sets the path preferences for the files to read/write.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class UtilitiesPathPreferences {
 
     /**
-     * The separator between a path ID and a path
+     * The separator between a path ID and a path.
      */
     public final static String separator = "=";
 
     /**
-     * Enum of the paths which can be set in utilities
+     * Enum of the paths which can be set in utilities.
      */
     public enum UtilitiesPathKey {
 
         /**
-         * Folder containing the compomics utilities user preferences file
+         * Folder containing the compomics utilities user preferences file.
          */
         utilitiesPreferencesKey("utilities_user_preferences", "Folder containing the compomics utilities user preferences file.", "", true),
         /**
-         * Folder containing the PTM user preferences file
+         * Folder containing the PTM user preferences file.
          */
         ptmFactoryKey("ptm_configuration", "Folder containing the PTM user preferences file.", "", true),
         /**
-         * Folder containing the indexes of the protein sequences databases
+         * Folder containing the indexes of the protein sequences databases.
          */
         fastaIndexesKey("fasta_indexes", "Folder containing the indexes of the protein sequences databases.", "fasta_indexes", true),
         /**
-         * Folder containing the gene mapping files
+         * Folder containing the gene mapping files.
          */
         geneMappingKey("gene_mapping", "Folder containing the gene mapping files.", "gene_mapping", true),
         /**
-         * Folder containing the pride annotation preferences
+         * Folder containing the pride annotation preferences.
          */
         prideAnnotationKey("pride_annotation", "Folder containing the pride annotation preferences.", "pride", true);
         /**
-         * The key used to refer to this path
+         * The key used to refer to this path.
          */
         private String id;
         /**
-         * The description of the path usage
+         * The description of the path usage.
          */
         private String description;
         /**
@@ -62,12 +62,12 @@ public class UtilitiesPathPreferences {
          */
         private String defaultSubDirectory;
         /**
-         * Indicates whether the path should be a folder
+         * Indicates whether the path should be a folder.
          */
         private boolean isDirectory;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param id the id used to refer to this path key
          * @param description the description of the path usage
@@ -139,7 +139,7 @@ public class UtilitiesPathPreferences {
     }
 
     /**
-     * Loads a path to be set from a line
+     * Loads a path to be set from a line.
      *
      * @param line the line where to read the path from
      *
@@ -167,7 +167,7 @@ public class UtilitiesPathPreferences {
     }
 
     /**
-     * Sets the path according to the given key and path
+     * Sets the path according to the given key and path.
      *
      * @param utilitiesPathKey the key of the path
      * @param path the path to be set
@@ -263,6 +263,7 @@ public class UtilitiesPathPreferences {
     }
 
     /**
+     * Writes the configuration file using the provided buffered writer.
      *
      * @param bw the writer to use for writing
      *
@@ -283,7 +284,9 @@ public class UtilitiesPathPreferences {
      * @throws IOException
      */
     public static void writePathToFile(BufferedWriter bw, UtilitiesPathKey pathKey) throws IOException {
+
         bw.write(pathKey.id + UtilitiesPathPreferences.separator);
+
         switch (pathKey) {
             case fastaIndexesKey:
                 bw.write(ProteinTreeComponentsFactory.getDefaultDbFolderPath());
@@ -303,6 +306,7 @@ public class UtilitiesPathPreferences {
             default:
                 throw new UnsupportedOperationException("Path " + pathKey.id + " not implemented.");
         }
+
         bw.newLine();
     }
 }

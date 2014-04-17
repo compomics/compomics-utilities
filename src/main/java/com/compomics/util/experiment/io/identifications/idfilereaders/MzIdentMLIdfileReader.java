@@ -130,6 +130,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     public MzIdentMLIdfileReader(File mzIdentMLFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         this.mzIdentMLFile = mzIdentMLFile;
+        //unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true); // @TODO: figure out when to use in memory processing
         unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
 
         // get the software name and version

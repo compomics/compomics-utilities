@@ -35,11 +35,11 @@ public class PTMFactory implements Serializable {
      */
     private static PTMFactory instance = null;
     /**
-     * The folder containing the PTM factory
+     * The folder containing the PTM factory.
      */
     private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
-     * the name of the PTM factory back-up file
+     * The name of the PTM factory back-up file.
      */
     private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.23.0.cus";
     /**

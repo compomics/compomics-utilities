@@ -53,6 +53,33 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     /**
+     * Returns the standard deviation to the right of the distribution.
+     * 
+     * @return the standard deviation to the right of the distribution
+     */
+    public double getStdUp() {
+        return stdUp;
+    }
+
+    /**
+     * Returns the standard deviation to the left of the distribution.
+     * 
+     * @return the standard deviation to the left of the distribution
+     */
+    public double getStdDown() {
+        return stdDown;
+    }
+
+    /**
+     * Returns the mean of the distribution.
+     * 
+     * @return the mean of the distribution
+     */
+    public double getMean() {
+        return mean;
+    }
+
+    /**
      * Returns the non-symmetrical distribution of the input list of double
      * calibrated on the median, 15.9% and 84.1% percentiles.
      *

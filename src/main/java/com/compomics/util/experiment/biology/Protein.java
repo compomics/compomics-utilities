@@ -154,7 +154,7 @@ public class Protein extends ExperimentObject {
      *
      * @return the number of observable amino acids of the sequence
      */
-    public int getObservableLength(Enzyme enzyme, int pepMaxLength) {
+    public int getObservableLength(Enzyme enzyme, double pepMaxLength) {
         int length = 0, tempLength = 1;
         for (int i = 0; i < sequence.length() - 1; i++) {
             if (enzyme.isCleavageSite(sequence.charAt(i), sequence.charAt(i + 1))) {
@@ -229,7 +229,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the list of indexes where a peptide can be found in the protein
-     * sequence.
+     * sequence. 1 is the first amino acid.
      *
      * @param peptideSequence the sequence of the peptide of interest
      * @param matchingType the type of sequence matching

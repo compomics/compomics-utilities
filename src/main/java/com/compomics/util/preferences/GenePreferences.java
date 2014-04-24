@@ -3,6 +3,7 @@ package com.compomics.util.preferences;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.annotation.gene.GeneFactory;
 import com.compomics.util.experiment.annotation.go.GOFactory;
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingDialog;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 
 /**
  * Contains methods for downloading gene and GO mappings.
@@ -172,7 +174,6 @@ public class GenePreferences implements Serializable {
                 + "</Query>";
 
         // @TODO: have to check if goslim_goa_accession and goslim_goa_description is available
-
         if (!waitingHandler.isRunCanceled()) {
 
             // Send data
@@ -214,7 +215,9 @@ public class GenePreferences implements Serializable {
                                         throw new IllegalArgumentException("Query error: " + rowLine);
                                     } else {
                                         while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                                            waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            if (waitingHandler instanceof WaitingDialog) {
+                                                waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            }
                                             bw.write(rowLine + System.getProperty("line.separator"));
                                             rowLine = br.readLine();
                                         }
@@ -300,19 +303,19 @@ public class GenePreferences implements Serializable {
                             try {
                                 BufferedWriter bw = new BufferedWriter(w);
                                 try {
-
                                     String rowLine = br.readLine();
 
                                     if (rowLine != null && rowLine.startsWith("Query ERROR")) {
                                         throw new IllegalArgumentException("Query error on line: " + rowLine);
                                     } else {
                                         while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                                            waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            if (waitingHandler instanceof WaitingDialog) {
+                                                waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                            }
                                             bw.write(rowLine + System.getProperty("line.separator"));
                                             rowLine = br.readLine();
                                         }
                                     }
-
                                 } finally {
                                     bw.close();
                                 }
@@ -349,7 +352,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Sets the folder where gene mappings are saved.
-     * 
+     *
      * @param geneMappingFolder the folder where gene mappings are saved
      */
     public static void setGeneMappingFolder(String geneMappingFolder) {
@@ -468,7 +471,6 @@ public class GenePreferences implements Serializable {
                 } finally {
                     r.close();
                 }
-
 
                 if (humanEnsemblVersionNew != null) {
 
@@ -899,7 +901,6 @@ public class GenePreferences implements Serializable {
     public boolean loadGeneMappings(String jarFilePath, WaitingHandler waitingHandler) {
 
         //@TODO: we might want to split this method?
-
         boolean success = true;
         try {
             createDefaultGeneMappingFiles(
@@ -968,6 +969,182 @@ public class GenePreferences implements Serializable {
             return new URL("http://metazoa.ensembl.org/biomart/martservice/result");
         } else {
             return new URL("http://www.biomart.org/biomart/martservice/result");
+        }
+    }
+
+    /**
+     * Clears the gene and GO mappings for the currently selected species.
+     *
+     * @param currentEnsemblSpeciesType the species type
+     * @param selectedSpecies the species
+     * @param commandLine if command line of not
+     * @return true if no errors
+     */
+    public boolean clearOldMappings(String currentEnsemblSpeciesType, String selectedSpecies, boolean commandLine) {
+
+        // delete the old mappings file
+        String selectedDb = getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
+
+        GOFactory goFactory = GOFactory.getInstance();
+        GeneFactory geneFactory = GeneFactory.getInstance();
+        
+        goFactory.clearFactory();
+        geneFactory.clearFactory();
+
+        try {
+            goFactory.closeFiles();
+            geneFactory.closeFiles();
+
+            File tempSpeciesGoFile = new File(getGeneMappingFolder(), selectedDb + GenePreferences.GO_MAPPING_FILE_SUFFIX);
+            File tempSpecieGenesFile = new File(getGeneMappingFolder(), selectedDb + GenePreferences.GENE_MAPPING_FILE_SUFFIX);
+
+            boolean goFileDeleted = true;
+            boolean geneFileDeleted = true;
+
+            if (tempSpeciesGoFile.exists()) {
+                goFileDeleted = tempSpeciesGoFile.delete();
+
+                if (!goFileDeleted) {
+                    if (commandLine) {
+                        System.out.println("Failed to delete \'" + tempSpeciesGoFile.getAbsolutePath() + "\'. Please delete the file manually and try again.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to delete \'" + tempSpeciesGoFile.getAbsolutePath() + "\'.\n"
+                                + "Please delete the file manually, reselect the species in the list and click the Download button instead.", "Delete Failed",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+
+            if (tempSpecieGenesFile.exists()) {
+                geneFileDeleted = tempSpecieGenesFile.delete();
+
+                if (!geneFileDeleted) {
+                    if (commandLine) {
+                        System.out.println("Failed to delete \'" + tempSpeciesGoFile.getAbsolutePath() + "\'. Please delete the file manually and try again.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to delete \'" + tempSpecieGenesFile.getAbsolutePath() + "\'.\n"
+                                + "Please delete the file manually, reselect the species in the list and click the Download button instead.", "Delete Failed",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+
+            return (goFileDeleted && geneFileDeleted);
+
+        } catch (IOException ex) {
+            if (commandLine) {
+                System.out.println("An error occured when trying to update the mappings.");
+            } else {
+                JOptionPane.showMessageDialog(null, "An error occured when trying to update the mappings.", "File Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Try to download the gene and GO mappings for the currently selected
+     * species.
+     * 
+     * @param waitingHandler the waiting handler
+     * @param currentEnsemblSpeciesType the species type
+     * @param selectedSpecies the species
+     * @param commandLine command line or GUI?
+     * @return true if no errors
+     */
+    public boolean downloadMappings(WaitingHandler waitingHandler, String currentEnsemblSpeciesType, String selectedSpecies, boolean commandLine) {
+
+        try {
+            // clear old data
+            clearOldResults();
+            
+            GeneFactory geneFactory = GeneFactory.getInstance();
+
+            String selectedDb = getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
+            String ensemblType = "ensembl";
+
+            int speciesTypeIndex = 5;
+
+            if (currentEnsemblSpeciesType.equalsIgnoreCase("fungi")) {
+                speciesTypeIndex = 1;
+                ensemblType = "fungi";
+            } else if (currentEnsemblSpeciesType.equalsIgnoreCase("plants")) {
+                speciesTypeIndex = 2;
+                ensemblType = "plants";
+            } else if (currentEnsemblSpeciesType.equalsIgnoreCase("protists")) {
+                speciesTypeIndex = 3;
+                ensemblType = "protists";
+            } else if (currentEnsemblSpeciesType.equalsIgnoreCase("metazoa")) {
+                speciesTypeIndex = 4;
+                ensemblType = "metazoa";
+            }
+
+            if (!waitingHandler.isRunCanceled()) {
+
+                boolean goMappingsDownloaded = downloadGoMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb, waitingHandler);
+
+                if (!goMappingsDownloaded) {
+                    if (commandLine) {
+                        System.out.println("Gene ontology mappings not available. Downloading gene mappings only.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Gene ontology mappings not available.\n"
+                                + "Downloading gene mappings only.", "Gene Ontology Mappings", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    waitingHandler.setWaitingText("GO Mappings Downloaded.");
+                }
+            }
+            if (!waitingHandler.isRunCanceled()) {
+                downloadGeneMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb,
+                        geneFactory.getCurrentEnsemblVersion(ensemblType).toString(), waitingHandler);
+                
+                if (!waitingHandler.isRunCanceled()) {
+                   waitingHandler.setWaitingText("Gene Mappings Downloaded."); 
+                }
+            }
+
+            boolean canceled = waitingHandler.isRunCanceled();
+            waitingHandler.setRunFinished();
+
+            if (!canceled) {
+                loadSpeciesAndGoDomains();
+                return true;
+            }
+
+        } catch (Exception e) {
+            waitingHandler.setRunFinished();
+
+            if (commandLine) {
+                System.out.println("An error occured when downloading the mappings.");
+            } else {
+                JOptionPane.showMessageDialog(null, "An error occured when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            e.printStackTrace();
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Clear the old results.
+     */
+    private void clearOldResults() {
+
+        GOFactory goFactory = GOFactory.getInstance();
+        GeneFactory geneFactory = GeneFactory.getInstance();
+        
+        goFactory.clearFactory();
+        geneFactory.clearFactory();
+
+        try {
+            goFactory.closeFiles();
+            geneFactory.closeFiles();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.out.println("An error occured when clearing the mappings.");
         }
     }
 }

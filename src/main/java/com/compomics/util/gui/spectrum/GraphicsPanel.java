@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.ArrayList;
 
 /**
- * This class presents a JPanel that will hold and display a mass spectrum in
- * centroid or profile mode, or a chromatogram.
+ * This class presents a JPanel that will hold and display a mass spectrum or a
+ * chromatogram.
  *
  * @author Lennart Martens
  * @author Harald Barsnes
@@ -328,9 +328,9 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected double iYAxisMax = 0.0;
     /**
-     * The percent non-inclusive, minimal y-axis value (compared to the
-     * highest point in the spectrum) a point should have before being eligible
-     * for annotation. Default is '0.0'.
+     * The percent non-inclusive, minimal y-axis value (compared to the highest
+     * point in the spectrum) a point should have before being eligible for
+     * annotation. Default is '0.0'.
      */
     protected double iAnnotationYAxisThreshold = 0.0;
     /**
@@ -580,7 +580,7 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected enum GraphicsPanelType {
 
-        profileSpectrum, centroidSpectrum, chromatogram,
+        profileSpectrum, centroidSpectrum, profileChromatogram, centroidChromatogram,
         isotopicDistributionCentroid, isotopicDistributionProfile
     }
     /**
@@ -844,9 +844,7 @@ public abstract class GraphicsPanel extends JPanel {
      * <code>repaint</code> method to schedule the component for redrawing.
      * <p/>
      * This method actually delegates the work of painting to three protected
-     * methods:
-     * <code>paintComponent</code>,
-     * <code>paintBorder</code>, and
+     * methods: <code>paintComponent</code>, <code>paintBorder</code>, and
      * <code>paintChildren</code>. They're called in the order listed to ensure
      * that children appear on top of component itself. Generally speaking, the
      * component and its children should not paint in the insets area allocated
@@ -884,7 +882,7 @@ public abstract class GraphicsPanel extends JPanel {
             drawYAxisReferenceAreas(g, false);
             drawXAxisReferenceAreas(g, false);
 
-            if (currentGraphicsPanelType.equals(GraphicsPanelType.chromatogram)
+            if (currentGraphicsPanelType.equals(GraphicsPanelType.profileChromatogram)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
                 drawFilledPolygon(g);
@@ -1141,7 +1139,6 @@ public abstract class GraphicsPanel extends JPanel {
                 yTemp[3] = this.getHeight() - start - currentPadding;
 
                 g2d.fillPolygon(xTemp, yTemp, xTemp.length);
-
 
                 // draw the thin line around the polygon
                 g2d.setComposite(originalComposite);
@@ -1495,7 +1492,7 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Sets the color of the area under the curve for chromatograms and profile
+     * Sets the color of the area under the curve for profile chromatograms and
      * spectra for the dataset with the given dataset index. Index starts at 0.
      *
      * @param aColor the color to use
@@ -1578,7 +1575,6 @@ public abstract class GraphicsPanel extends JPanel {
 //                            if (yAxisZoomExcludesBackgroundPeaks) {
 //                                annotatedPeak = isPeakAnnotated(iXAxisDataMirroredSpectrum.get(j)[i]);
 //                            }
-
                             //if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
                             if (!yAxisZoomExcludesBackgroundPeaks || showAllPeaks) {
                                 maxInt = iYAxisDataMirroredSpectrum.get(j)[i];
@@ -1605,13 +1601,11 @@ public abstract class GraphicsPanel extends JPanel {
 
         //@TODO just some helpful printouts for when this is refined further.
         //logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
-
         iYAxisMax = maxInt + (maxInt / 10);
 
 //        if (dataSetCounterMirroredSpectra > 0) {
 //            iYAxisMin = -iYAxisMax;
 //        }
-
         int liSize = iSpecPanelListeners.size();
         RescalingEvent re = new RescalingEvent(this, aMinXAxisValue, aMaxXAxisValue);
         if (aNotifyListeners) {
@@ -1716,7 +1710,6 @@ public abstract class GraphicsPanel extends JPanel {
         // add the new dataset
         iXAxisDataMirroredSpectrum.add(new double[peaks.size()]);
         iYAxisDataMirroredSpectrum.add(new double[peaks.size()]);
-
 
         // Maximum y-axis value.
         double maxYAxisValue = 0.0;
@@ -1868,12 +1861,10 @@ public abstract class GraphicsPanel extends JPanel {
     protected void drawXTags(Graphics g, int aMin, int aMax, int aXScale, int aXAxisWidth, int aPadding) {
 
         // @TODO: increase the zooming resolution!!!
-
         // Font Metrics. We'll be needing these.
         FontMetrics fm = g.getFontMetrics();
 
         //this.setFont(new Font(this.getFont().getName(), this.getFont().getStyle(), 18));
-
         // find the scale unit
         double delta = aMax - aMin;
         iXScaleUnit = delta / aXAxisWidth; // note: do not alter! also used when drawing the peaks
@@ -2033,7 +2024,6 @@ public abstract class GraphicsPanel extends JPanel {
             } else {
 
                 // special case for when zoom size is 1Da. we then need to use float values, e.g., 155.1, 155.2 etc.
-
                 // first find how many tags we have room for: 10, 5, 2 or 1
                 int numberOfTags = 10;
 
@@ -2587,7 +2577,6 @@ public abstract class GraphicsPanel extends JPanel {
     protected void drawMirroredPeaks(Graphics g) {
 
         // @TODO: should be merged with the drawPeaks method
-
         Color originalColor = g.getColor();
 
         // Init an array that holds pixel coordinates for each peak.

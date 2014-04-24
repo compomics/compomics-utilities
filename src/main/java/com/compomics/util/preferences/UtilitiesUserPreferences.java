@@ -57,6 +57,14 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private Color sparklineColorPossible = new Color(100, 150, 255);
     /**
+     * The color used for the doubtful matches in sparkline bar chart plots.
+     */
+    private Color sparklineColorDoubtful = new Color(255, 204, 0);
+    /**
+     * The color used for the false positive in sparkline bar chart plots.
+     */
+    private Color sparklineColorFalsePositive = new Color(255, 51, 51);
+    /**
      * The color of the selected peptide.
      */
     private Color peptideSelected = new Color(0, 0, 255);
@@ -204,6 +212,48 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSparklineColorPossible(Color sparklineColorPossible) {
         this.sparklineColorPossible = sparklineColorPossible;
+    }
+
+    /**
+     * Returns the color for a doubtful sparkline bar chart plots.
+     *
+     * @return the color for a doubtful sparkline bar chart plots
+     */
+    public Color getSparklineColorDoubtful() {
+        if (sparklineColorDoubtful == null) {
+            sparklineColorDoubtful = new Color(255, 204, 0);
+        }
+        return sparklineColorDoubtful;
+    }
+
+    /**
+     * Setter for the doubtful sparkline color.
+     *
+     * @param sparklineColorDoubtful the doubtful sparkline color
+     */
+    public void setSparklineColorDoubtful(Color sparklineColorDoubtful) {
+        this.sparklineColorDoubtful = sparklineColorDoubtful;
+    }
+
+    /**
+     * Returns the color for false positives in sparkline bar chart plots.
+     *
+     * @return the color for a false positives in sparkline bar chart plots
+     */
+    public Color getSparklineColorFalsePositives() {
+        if (sparklineColorFalsePositive == null) {
+            sparklineColorFalsePositive = new Color(255, 51, 51);
+        }
+        return sparklineColorFalsePositive;
+    }
+
+    /**
+     * Setter for the false positives sparkline color.
+     *
+     * @param sparklineColorFalsePositive the false positives sparkline color
+     */
+    public void setSparklineColorFalsePositives(Color sparklineColorFalsePositive) {
+        this.sparklineColorFalsePositive = sparklineColorFalsePositive;
     }
 
     /**
@@ -622,7 +672,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the user preferences file to be used.
-     * 
+     *
      * @return the user preferences file
      */
     public static String getUserPreferencesFile() {
@@ -631,7 +681,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the user preferences file to be used.
-     * 
+     *
      * @return the user preferences file
      */
     public static String getUserPreferencesFolder() {
@@ -641,7 +691,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the user preferences file to be used.
-     * 
+     *
      * @param userPreferencesFolder the user preferences file to be used
      */
     public static void setUserPreferencesFolder(String userPreferencesFolder) {

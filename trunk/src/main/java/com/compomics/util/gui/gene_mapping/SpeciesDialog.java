@@ -8,7 +8,6 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.GenePreferences;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,15 +53,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     public final static String NO_SPECIES_TAG = "-- (no selection) --";
     /**
-     * The icon to display when waiting
+     * The icon to display when waiting.
      */
     private Image waitingImage = null;
     /**
-     * The icon to display when processing is finished
+     * The icon to display when processing is finished.
      */
     private Image normalImage = null;
     /**
-     * The gene preferences
+     * The gene preferences.
      */
     private GenePreferences genePreferences;
 
@@ -497,7 +496,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void updateMappingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateMappingsButtonActionPerformed
         if (geneFactory.getCurrentEnsemblVersion(getEnsemblType()) != null) {
             if (updateMappingsButton.getText().equalsIgnoreCase("Download")) {
-                clearOldMappings();
+                genePreferences.clearOldMappings((String) ensemblCategoryJComboBox.getSelectedItem(), getSelectedSpecies(), false);
                 downloadMappings();
             } else { // update
 
@@ -522,7 +521,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     }
 
                     if (currentEnsemblVersion < latestEnsemblVersion) {
-                        clearOldMappings();
+                        genePreferences.clearOldMappings(currentEnsemblSpeciesType, selectedSpecies, rootPaneCheckingEnabled);
                         downloadMappings();
                     } else {
                         JOptionPane.showMessageDialog(this, "Ensembl mappings are already up to date.", "Ensembl Mappings", JOptionPane.INFORMATION_MESSAGE);
@@ -571,63 +570,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Tries to update the gene and GO mappings for the currently selected
-     * species.
-     *
-     * @param evt
-     */
-    private boolean clearOldMappings() {
-
-        // delete the old mappings file
-        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
-        String selectedSpecies = getSelectedSpecies();
-        String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
-
-        goFactory.clearFactory();
-        geneFactory.clearFactory();
-
-        try {
-            goFactory.closeFiles();
-            geneFactory.closeFiles();
-
-            File tempSpeciesGoFile = new File(genePreferences.getGeneMappingFolder(), selectedDb + GenePreferences.GO_MAPPING_FILE_SUFFIX);
-            File tempSpecieGenesFile = new File(genePreferences.getGeneMappingFolder(), selectedDb + GenePreferences.GENE_MAPPING_FILE_SUFFIX);
-
-            boolean goFileDeleted = true;
-            boolean geneFileDeleted = true;
-
-            if (tempSpeciesGoFile.exists()) {
-                goFileDeleted = tempSpeciesGoFile.delete();
-
-                if (!goFileDeleted) {
-                    JOptionPane.showMessageDialog(this, "Failed to delete \'" + tempSpeciesGoFile.getAbsolutePath() + "\'.\n"
-                            + "Please delete the file manually, reselect the species in the list and click the Download button instead.", "Delete Failed",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-
-            if (tempSpecieGenesFile.exists()) {
-                geneFileDeleted = tempSpecieGenesFile.delete();
-
-                if (!geneFileDeleted) {
-                    JOptionPane.showMessageDialog(this, "Failed to delete \'" + tempSpecieGenesFile.getAbsolutePath() + "\'.\n"
-                            + "Please delete the file manually, reselect the species in the list and click the Download button instead.", "Delete Failed",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-
-            return (goFileDeleted && geneFileDeleted);
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "An error occured when trying to update the mappings.", "File Error", JOptionPane.INFORMATION_MESSAGE);
-        }
-
-        return false;
-    }
-
-    /**
      * Try to download the gene and GO mappings for the currently selected
      * species.
      *
@@ -657,43 +599,20 @@ public class SpeciesDialog extends javax.swing.JDialog {
             }
         }, "ProgressDialog").start();
 
-        new Thread("GoThread") {
+        new Thread("DownloadThread") {
             @Override
             public void run() {
 
                 try {
-                    // clear old data
-                    clearOldResults();
+                    boolean success = genePreferences.downloadMappings(progressDialog, (String) ensemblCategoryJComboBox.getSelectedItem(), getSelectedSpecies(), false);
 
-                    String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
-                    String selectedSpecies = getSelectedSpecies();
-                    String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
-
-                    if (!progressDialog.isRunCanceled()) {
-                        boolean goMappingsDownloaded = genePreferences.downloadGoMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, progressDialog);
-
-                        if (!goMappingsDownloaded) {
-                            JOptionPane.showMessageDialog(finalRef, "Gene ontology mappings not available.\n"
-                                    + "Downloading gene mappings only.", "Gene Ontology Mappings", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                    if (!progressDialog.isRunCanceled()) {
-                        genePreferences.downloadGeneMappings(getEnsemblType(), getEnsemblDbName(), selectedDb, 
-                                geneFactory.getCurrentEnsemblVersion(getEnsemblType()).toString(), progressDialog);
-                    }
-
-                    boolean canceled = progressDialog.isRunCanceled();
-                    progressDialog.setRunFinished();
-
-                    if (!canceled) {
+                    if (success) {
                         int selectedIndex = speciesJComboBox.getSelectedIndex();
-                        genePreferences.loadSpeciesAndGoDomains();
                         updateSpeciesList();
                         JOptionPane.showMessageDialog(finalRef, "Gene mappings downloaded.", "Gene Mappings", JOptionPane.INFORMATION_MESSAGE);
                         speciesJComboBox.setSelectedIndex(selectedIndex);
                         speciesJComboBoxActionPerformed(null);
                     }
-
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
                     e.printStackTrace();
@@ -723,31 +642,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 return "metazoa";
             case 5:
                 return "ensembl";
-        }
-
-        return "unknown"; // shouldn't be possible
-    }
-
-    /**
-     * Returns the name of the Ensembl database for BioMart queries.
-     *
-     * @return the name of the Ensembl database for BioMart queries
-     */
-    private String getEnsemblDbName() {
-
-        int selectedIndex = ensemblCategoryJComboBox.getSelectedIndex();
-
-        switch (selectedIndex) {
-            case 1:
-                return "fungi_mart_" + geneFactory.getCurrentEnsemblVersion("fungi");
-            case 2:
-                return "plants_mart_" + geneFactory.getCurrentEnsemblVersion("plants");
-            case 3:
-                return "protists_mart_" + geneFactory.getCurrentEnsemblVersion("protists");
-            case 4:
-                return "metazoa_mart_" + geneFactory.getCurrentEnsemblVersion("metazoa");
-            case 5:
-                return "default";
         }
 
         return "unknown"; // shouldn't be possible

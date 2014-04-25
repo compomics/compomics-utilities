@@ -121,7 +121,7 @@ public class ProteinTree {
      */
     public static final int proteinBatchSize = 100;
     /**
-     * Cache for the protein Lengths
+     * Cache for the protein lengths.
      */
     private HashMap<String, Integer> proteinLengthsCache = new HashMap<String, Integer>();
 

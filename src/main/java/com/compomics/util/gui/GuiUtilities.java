@@ -2,10 +2,19 @@ package com.compomics.util.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -14,6 +23,15 @@ import javax.swing.table.TableCellRenderer;
  * @author Harald Barsnes
  */
 public class GuiUtilities {
+
+    /**
+     * Escape key stroke.
+     */
+    private static final KeyStroke escapeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+    /**
+     * Dispatch window closing action map key.
+     */
+    private static final String dispatchWindowClosingActionMapKey = "com.compomics.util.gui:WINDOW_CLOSING";
 
     /**
      * Returns the preferred width of a given cell in a table.
@@ -156,5 +174,23 @@ public class GuiUtilities {
         }
 
         return valid;
+    }
+
+    /**
+     * Close a dialog using the escape key.
+     *
+     * @param dialog the dialog to install the escape close on
+     */
+    public static void installEscapeCloseOperation(final JDialog dialog) {
+
+        Action dispatchClosing = new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+                dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
+            }
+        };
+
+        JRootPane root = dialog.getRootPane();
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeStroke, dispatchWindowClosingActionMapKey);
+        root.getActionMap().put(dispatchWindowClosingActionMapKey, dispatchClosing);
     }
 }

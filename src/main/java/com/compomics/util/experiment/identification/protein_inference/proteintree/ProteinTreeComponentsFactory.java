@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
+import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -56,10 +57,6 @@ public class ProteinTreeComponentsFactory {
      * The name of the node table.
      */
     private static final String nodeTable = "nodes";
-    /**
-     * The name of the protein length table.
-     */
-    private static final String lengthTable = "lengths";
     /**
      * The name of the protein length table.
      */
@@ -120,7 +117,6 @@ public class ProteinTreeComponentsFactory {
 
         if (!exists) {
             objectsDB.addTable(nodeTable);
-            objectsDB.addTable(lengthTable);
             objectsDB.addTable(parametersTable);
         }
 
@@ -254,47 +250,6 @@ public class ProteinTreeComponentsFactory {
     }
 
     /**
-     * Adds a protein length to the database.
-     *
-     * @param lengths the lengths
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading data in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * loading data in the database
-     */
-    public void saveProteinLengths(HashMap<String, Object> lengths) throws SQLException, IOException {
-        objectsDB.insertObjects(lengthTable, lengths, null, true);
-    }
-
-    /**
-     * Adds a protein length to the database.
-     *
-     * @param lengths the lengths
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading data in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * loading data in the database
-     */
-    public void saveProteinLengths(HashMap<String, Object> lengths, WaitingHandler waitingHandler) throws SQLException, IOException {
-        objectsDB.insertObjects(lengthTable, lengths, waitingHandler, true);
-    }
-
-    /**
-     * Retrieves the length of a protein.
-     *
-     * @param accession the accession of the protein of interest
-     * @return the length of this protein
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
-     */
-    public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
-        return (Integer) objectsDB.retrieveObject(lengthTable, accession, true);
-    }
-
-    /**
      * Saves the initial tag size in the parameters table of the DB.
      *
      * @param size the initial tag size
@@ -317,18 +272,6 @@ public class ProteinTreeComponentsFactory {
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
-    }
-
-    /**
-     * Loads all protein lengths in cache.
-     *
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void loadProteinLengths() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
-        objectsDB.loadObjects(lengthTable, null);
     }
 
     /**

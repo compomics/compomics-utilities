@@ -11,6 +11,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.Thread.State;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -61,16 +62,42 @@ public class FindPdbForUniprotAccessions {
      * Constructor.
      *
      * @param aProteinAccession
-     * @param waitingHandler a waiting handler
+     * @param aWaitingHandler a waiting handler
      */
-    public FindPdbForUniprotAccessions(String aProteinAccession, WaitingHandler waitingHandler) {
+    public FindPdbForUniprotAccessions(String aProteinAccession, WaitingHandler aWaitingHandler) {
 
         this.iProteinAccession = aProteinAccession;
-        this.waitingHandler = waitingHandler;
+        this.waitingHandler = aWaitingHandler;
 
-        // find features
-        String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
-        readUrl(urlMake, waitingHandler);
+        Thread pdbThread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    // find features
+                    String urlMake = "http://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
+                    readUrl(urlMake);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "PdbDownloader");
+        pdbThread.start();
+        
+        // wait to make sure that the pdb thread has started
+        while (pdbThread.getState() == State.NEW) {
+            // wait
+        }
+
+        // wait until the pdb thread is done, or the user cancels the thread
+        while (!urlRead) {
+            new String("waiting..."); // for some reason we need something here, or the loop will not work...
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                break;
+            }
+        }
+
+        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+            return;
+        }
 
         iAlignments = iDasReader.getAllAlignments();
 
@@ -132,20 +159,17 @@ public class FindPdbForUniprotAccessions {
      * Tries to read the PDB URL.
      *
      * @param aUrl the PDB URL to read
-     * @param waitingHandler a waiting handler
      */
-    private void readUrl(String aUrl, WaitingHandler aWaitingHandler) {
+    private void readUrl(String aUrl) {
 
         urlRead = false;
         this.iUrl = aUrl;
-        this.waitingHandler = aWaitingHandler;
 
         try {
             URL myURL = new URL(iUrl);
             StringBuilder input = new StringBuilder();
-            HttpURLConnection c = (HttpURLConnection) myURL.openConnection();
-            BufferedInputStream in = new BufferedInputStream(c.getInputStream()); // @TODO: how to cancel this part..?
-
+            HttpURLConnection connection = (HttpURLConnection) myURL.openConnection();
+            BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
             Reader r = new InputStreamReader(in);
 
             int i;
@@ -158,13 +182,12 @@ public class FindPdbForUniprotAccessions {
 
             iDasReader = new DasAnnotationServerAlingmentReader(input.toString());
             urlRead = true;
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ConnectException e) {
             System.out.println("Connect exception for url " + iUrl);
             if (isFirstTry) {
-                readUrl(iUrl, waitingHandler);
+                readUrl(iUrl);
             }
             isFirstTry = false;
         } catch (IOException e) {

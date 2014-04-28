@@ -22,17 +22,25 @@ public class BugReport extends javax.swing.JDialog {
      */
     private String selectionFolder;
     /**
-     * The name of the tool to get the bug report for, e.g., "PeptideShaker"
+     * The name of the tool to get the bug report for, e.g., "PeptideShaker".
      */
     private String toolName;
     /**
-     * The google code name of the tool, e.g., "peptide-shaker"
+     * The google code name of the tool, e.g., "peptide-shaker".
      */
     private String googleCodeToolName;
     /**
      * The version number of the tool the log files belongs to.
      */
     private String toolVersion;
+    /**
+     * The name of the Google Group.
+     */
+    private String googleGroup;
+    /**
+     * The human readable name of the the Google Group.
+     */
+    private String googleGroupName;
     /**
      * The log file to display.
      */
@@ -45,18 +53,25 @@ public class BugReport extends javax.swing.JDialog {
      * @param selectionFolder the folder to open in the file selection dialog
      * @param toolName the name of the tool to get the bug report for, e.g.,
      * "PeptideShaker" or "SearchGUI"
-     * @param googleCodeToolName the google code name of the tool, e.g.,
+     * @param googleCodeToolName the Google Code name of the tool, e.g.,
      * "peptide-shaker"
      * @param toolVersion the version number of the tool the log files belongs
      * to
+     * @param googleGroup the name of the Google Group, e.g., peptide-shaker,
+     * setting to null will refer to the PeptideShaker Google Group
+     * @param googleGroupName the human readable name of the the Google Group,
+     * e.g., PeptideShaker, setting to null will refer to the PeptideShaker
+     * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JFrame frame, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, File logFile) {
+    public BugReport(JFrame frame, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(frame, true);
         this.selectionFolder = selectionFolder;
         this.toolName = toolName;
         this.googleCodeToolName = googleCodeToolName;
         this.toolVersion = toolVersion;
+        this.googleGroup = googleGroup;
+        this.googleGroupName = googleGroupName;
         this.logFile = logFile;
         initComponents();
         setUpGui();
@@ -71,18 +86,25 @@ public class BugReport extends javax.swing.JDialog {
      * @param selectionFolder the folder to open in the file selection dialog
      * @param toolName the name of the tool to get the bug report for, e.g.,
      * PeptideShaker or SearchGUI
-     * @param googleCodeToolName the google code name of the tool, e.g.,
+     * @param googleCodeToolName the Google Code name of the tool, e.g.,
      * "peptide-shaker"
      * @param toolVersion the version number of the tool the log files belongs
      * to
+     * @param googleGroup the name of the Google Group, e.g., peptide-shaker,
+     * setting to null will refer to the PeptideShaker Google Group
+     * @param googleGroupName the human readable name of the the Google Group,
+     * e.g., PeptideShaker, setting to null will refer to the PeptideShaker
+     * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JDialog dialog, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, File logFile) {
+    public BugReport(JDialog dialog, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(dialog, true);
         this.selectionFolder = selectionFolder;
         this.toolName = toolName;
         this.googleCodeToolName = googleCodeToolName;
         this.toolVersion = toolVersion;
+        this.googleGroup = googleGroup;
+        this.googleGroupName = googleGroupName;
         this.logFile = logFile;
         initComponents();
         setUpGui();
@@ -98,13 +120,18 @@ public class BugReport extends javax.swing.JDialog {
         setTitle(toolName + " Bug Report");
         ((TitledBorder) logJPanel.getBorder()).setTitle(toolName + " Log");
 
-        // @TODO: note that the below is hardcoded to the peptide shaker maling list as this is the only maling list available at the moment
+        if (googleGroup == null) {
+            googleGroup = "peptide-shaker";
+        }
+        if (googleGroupName == null) {
+            googleGroupName = "PeptideShaker";
+        }
 
         infoJEditorPane.setText("<html><head></head><body>"
                 + "If you encounter any bugs while processing your data, please do one of the following:<br>"
                 + "<ul>"
                 + "<li>Create an issue on the <a href=\"http://code.google.com/p/" + googleCodeToolName + "/issues/list\">" + toolName + " web page</a>.</li>"
-                + "<li>or Send an e-mail to the <a href=\"http://groups.google.com/group/peptide-shaker\">PeptideShaker mailing list</a>.</li>"
+                + "<li>Send an e-mail to the <a href=\"http://groups.google.com/group/" + googleGroup + "\">" + googleGroupName + " Google Group</a>.</li>"
                 + "</ul>"
                 + "Please include any relevant information as well as the log message displayed below."
                 + "</body>"

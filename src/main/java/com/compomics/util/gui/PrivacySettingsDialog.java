@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -12,9 +7,9 @@ import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 /**
- * The privacy settings dialog allows the user to set the privacy settings
+ * The privacy settings dialog allows the user to set the privacy settings.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PrivacySettingsDialog extends javax.swing.JDialog {
 
@@ -23,12 +18,15 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
      */
     private Image normalIcon;
     /**
-     * The user preferences
+     * The user preferences.
      */
     private UtilitiesUserPreferences utilitiesUserPreferences;
 
     /**
-     * Creates new form PrivacySettingsDialog
+     * Creates a new PrivacySettingsDialog.
+     * 
+     * @param parent
+     * @param normalIcon 
      */
     public PrivacySettingsDialog(java.awt.Frame parent, Image normalIcon) {
         super(parent, true);
@@ -39,7 +37,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Loads the user preferences on the GUI
+     * Loads the user preferences on the GUI.
      */
     private void loadPreferencesOnGUI() {
         try {
@@ -54,11 +52,11 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Saves the input in the utilities user preferences
+     * Saves the input in the utilities user preferences.
      */
     private void savePreferences() {
         utilitiesUserPreferences.setAutoUpdate(updatesCheck.isSelected());
-        utilitiesUserPreferences.setNotifyStart(updatesCheck.isSelected());
+        utilitiesUserPreferences.setNotifyStart(toolStartCheck.isSelected());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {
@@ -76,35 +74,20 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        openDialogHelpJButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        updatesCheck = new javax.swing.JCheckBox();
-        toolStartCheck = new javax.swing.JCheckBox();
         openDialogHelpJButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-
-        openDialogHelpJButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        openDialogHelpJButton1.setToolTipText("Help");
-        openDialogHelpJButton1.setBorder(null);
-        openDialogHelpJButton1.setBorderPainted(false);
-        openDialogHelpJButton1.setContentAreaFilled(false);
-        openDialogHelpJButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButton1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButton1MouseExited(evt);
-            }
-        });
-        openDialogHelpJButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openDialogHelpJButton1ActionPerformed(evt);
-            }
-        });
+        settingsPanel = new javax.swing.JPanel();
+        toolStartCheck = new javax.swing.JCheckBox();
+        updatesCheck = new javax.swing.JCheckBox();
+        confidentialLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Privacy Settings");
+        setResizable(false);
+
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -119,10 +102,6 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
                 okButtonActionPerformed(evt);
             }
         });
-
-        updatesCheck.setText("Check for updates");
-
-        toolStartCheck.setText("Notify tool start");
 
         openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
         openDialogHelpJButton.setToolTipText("Help");
@@ -143,41 +122,71 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel1.setText("Your data will always be handled confidentially. More details in the Help below.");
+        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options (all CompOmics tools)"));
+        settingsPanel.setOpaque(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        toolStartCheck.setText("Register tool usage at tool startup");
+        toolStartCheck.setIconTextGap(15);
+        toolStartCheck.setOpaque(false);
+
+        updatesCheck.setText("Check for updates at tool startup");
+        updatesCheck.setIconTextGap(15);
+        updatesCheck.setOpaque(false);
+
+        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
+        settingsPanel.setLayout(settingsPanelLayout);
+        settingsPanelLayout.setHorizontalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(updatesCheck)
-                    .addComponent(toolStartCheck)
-                    .addComponent(jLabel1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(openDialogHelpJButton))
+                    .addComponent(toolStartCheck))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        settingsPanelLayout.setVerticalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(updatesCheck)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(toolStartCheck)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        confidentialLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        confidentialLabel.setText("The information is handled confidentially.");
+
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(openDialogHelpJButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(confidentialLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)))
+                .addContainerGap())
+        );
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cancelButton)
                     .addComponent(okButton)
-                    .addComponent(openDialogHelpJButton))
+                    .addComponent(openDialogHelpJButton)
+                    .addComponent(confidentialLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -185,41 +194,39 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void openDialogHelpJButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1MouseEntered
-        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_openDialogHelpJButton1MouseEntered
-
-    private void openDialogHelpJButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1MouseExited
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_openDialogHelpJButton1MouseExited
-
-    private void openDialogHelpJButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1ActionPerformed
-        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/PrivacySettingsHelp.html"),
-                Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                normalIcon,
-                "Privacy Settings Help", 500, 100);
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_openDialogHelpJButton1ActionPerformed
-
+    /**
+     * Changes the cursor to a hand cursor.
+     * 
+     * @param evt 
+     */
     private void openDialogHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonMouseEntered
 
+    /**
+     * Changes the cursor to the default cursor.
+     * 
+     * @param evt 
+     */
     private void openDialogHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonMouseExited
 
+    /**
+     * Opens the help dialog.
+     * 
+     * @param evt 
+     */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(this, getClass().getResource("/helpFiles/PrivacySettingsHelp.html"),
@@ -229,23 +236,32 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
+    /**
+     * Saves the preferences and closes the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         savePreferences();
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Closes the dialog without saving.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel confidentialLabel;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
-    private javax.swing.JButton openDialogHelpJButton1;
+    private javax.swing.JPanel settingsPanel;
     private javax.swing.JCheckBox toolStartCheck;
     private javax.swing.JCheckBox updatesCheck;
     // End of variables declaration//GEN-END:variables

@@ -123,6 +123,14 @@ public class UtilitiesUserPreferences implements Serializable {
      * The list of already displayed tips.
      */
     private ArrayList<String> displayedTips = null;
+    /**
+     * Indicates whether the tool should check for updates
+     */
+    private Boolean autoUpdate = true;
+    /**
+     * Indicates whether the tool should notify its start
+     */
+    private Boolean notifyStart = true;
 
     /**
      * Constructor.
@@ -698,4 +706,48 @@ public class UtilitiesUserPreferences implements Serializable {
         File tempFile = new File(userPreferencesFolder, "/utilities_userpreferences.cup");
         UtilitiesUserPreferences.USER_PREFERENCES_FILE = tempFile.getAbsolutePath();
     }
+
+    /**
+     * Indicates whether the tools should use the auto update function.
+     * 
+     * @return whether the tools should use the auto update function
+     */
+    public Boolean isAutoUpdate() {
+        if (autoUpdate == null) {
+            autoUpdate = true;
+        }
+        return autoUpdate;
+    }
+
+    /**
+     * Sets whether the tools should use the auto update function.
+     * 
+     * @param autoUpdate whether the tools should use the auto update function
+     */
+    public void setAutoUpdate(Boolean autoUpdate) {
+        this.autoUpdate = autoUpdate;
+    }
+
+    /**
+     * Indicates whether the tools should notify their start.
+     * 
+     * @return whether the tools should notify their start
+     */
+    public Boolean isNotifyStart() {
+        if (notifyStart == null) {
+            notifyStart = true;
+        }
+        return notifyStart;
+    }
+
+    /**
+     * Sets whether the tools should notify their start.
+     * 
+     * @param notifyStart whether the tools should notify their start
+     */
+    public void setNotifyStart(Boolean notifyStart) {
+        this.notifyStart = notifyStart;
+    }
+    
+    
 }

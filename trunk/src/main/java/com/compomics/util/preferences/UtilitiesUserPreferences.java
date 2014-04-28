@@ -124,11 +124,11 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private ArrayList<String> displayedTips = null;
     /**
-     * Indicates whether the tool should check for updates
+     * Indicates whether the tool should check for updates.
      */
     private Boolean autoUpdate = true;
     /**
-     * Indicates whether the tool should notify its start
+     * Indicates whether the tool should notify its start.
      */
     private Boolean notifyStart = true;
 

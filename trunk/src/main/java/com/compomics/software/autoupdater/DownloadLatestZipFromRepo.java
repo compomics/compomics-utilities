@@ -276,6 +276,80 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
+     * Retrieves the latest version of a maven jar file from a maven repository.
+     *
+     * @param downloadFolder the folder to download to
+     * @param groupId the group id
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
+     * @param artifactId the artifact id
+     * @param iconName name of the shortcut image should one be created
+     * @param args the args that will be passed to the newly downloaded program
+     * when started, cannot be {@code null}
+     * @param jarRepository the maven repository to go look in, cannot be
+     * {@code null}
+     * @param startDownloadedVersion if the newly downloaded version should be
+     * started automatically or not
+     * @param addDesktopIcon if true, a desktop icon will be created
+     * @param fileDAO what implementation of FileDAO should be used in the
+     * updating
+     * @param waitingHandler the waiting handler
+     * @throws IOException should there be problems with reading or writing
+     * files during the updating
+     * @throws XMLStreamException if there was a problem reading the meta data
+     * from the remote maven repository
+     * @throws URISyntaxException
+     */
+    public static void downloadLatestZipFromRepo(final File downloadFolder, String toolName, String groupId, String artifactId, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion,
+            boolean addDesktopIcon, FileDAO fileDAO, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
+        
+        //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
+        String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(groupId.replaceAll("\\.", "/")).append("/").append(artifactId).toString();
+        String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
+        String latestArtifactLocation = new StringBuilder(artifactInRepoLocation).append("/").append(latestRemoteRelease).toString();
+
+        // download and unzip the files
+        MavenJarFile downloadedJarFile = downloadAndUnzipJar(downloadFolder, artifactId, toolName, new URL(latestArtifactLocation), fileDAO,
+                true, waitingHandler, System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win"), false);
+
+        if (waitingHandler != null) {
+            if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                return;
+            } else {
+                waitingHandler.setRunFinished();
+            }
+        }
+
+        final File jarParent = downloadFolder;
+
+        // add desktop icon
+        if (addDesktopIcon) {
+            if (System.getProperty("os.name").toLowerCase(new Locale("en")).contains("win")) {
+                //try{
+                fileDAO.createDesktopShortcut(downloadedJarFile, iconName, toolName, false);
+                //}catch(IOException ioe){ if (!ignoreShortcutCreationErrors){throw ioe}}
+            } else {
+                // @TODO: update symlinks?
+            }
+        }
+
+            // set the new version has the default version
+        // @TODO: should be done using enums
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        if (toolName.equalsIgnoreCase("PeptideShaker")) {
+            utilitiesUserPreferences.setPeptideShakerPath(downloadedJarFile.getAbsoluteFilePath());
+        } else if (toolName.equalsIgnoreCase("SearchGUI")) {
+            utilitiesUserPreferences.setSearchGuiPath(downloadedJarFile.getAbsoluteFilePath());
+        } else if (toolName.equalsIgnoreCase("Reporter")) {
+            utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
+        }
+        UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+
+        if (startDownloadedVersion) {
+            launchJar(downloadedJarFile, args);
+        }
+    }
+
+    /**
      * Simple jar launch through a {@code ProcessBuilder}.
      *
      * @param downloadedJarFile the downloaded jar file to start
@@ -345,7 +419,7 @@ public class DownloadLatestZipFromRepo {
         }
 
         // set up the folder to save the new download in
-        File downloadFolder; 
+        File downloadFolder;
         if (isWindows) {
             downloadFolder = new File(fileDAO.getLocationToDownloadOnDisk(new File(mavenJarFile.getAbsoluteFilePath()).getParent()), folderName);
         } else {
@@ -369,7 +443,7 @@ public class DownloadLatestZipFromRepo {
             URLConnection conn = archiveURL.openConnection();
             int tempLength = conn.getContentLength();
             final int currentUrlContentLength;
-            
+
             if (isWindows) {
                 currentUrlContentLength = tempLength;
             } else {
@@ -377,7 +451,7 @@ public class DownloadLatestZipFromRepo {
                     currentUrlContentLength = conn.getContentLength() * 3; // @TODO: size is not correct for the tar.gz file, as it is unzipped as part of the download
                 } else {
                     currentUrlContentLength = tempLength;
-                } 
+                }
             }
 
             if (currentUrlContentLength != -1) {
@@ -437,6 +511,162 @@ public class DownloadLatestZipFromRepo {
             newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, mavenJarFile.getArtifactId());
         } else {
             newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(new File(downloadFolder, folderName), mavenJarFile.getArtifactId());
+        }
+        isFileBeingDownloaded = false;
+
+        // delete the downloaded zip file
+        if (cleanupZipFile) {
+            if (!downloadedFile.delete()) {
+                throw new IOException("could not delete the zip file");
+            }
+        }
+
+        return newMavenJar;
+    }
+    
+    /**
+     * Aggregation method for downloading and unzipping.
+     *
+     * @param mavenJarFile the maven jar file to download update for
+     * @param toolName the name of the tool being updated, e.g., PeptideShaker
+     * @param jarRepository the url of the version specific location
+     * @param fileDAO which fileDAO implementation that should be used
+     * @param isWindows if true, the OS will assumed to be windows
+     * @param update if true, the waiting handler shows update, false shows download
+     * @return the downloaded {@code MavenJarFile}
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws XMLStreamException
+     */
+    private static MavenJarFile downloadAndUnzipJar(final File aDownloadFolder, final String artifactId, final String toolName, URL jarRepository,
+            FileDAO fileDAO, boolean cleanupZipFile, final WaitingHandler waitingHandler, boolean isWindows, final boolean update) throws MalformedURLException, IOException, XMLStreamException {
+
+        URL archiveURL;
+        String folderName;
+
+        // get the archive url
+        if (isWindows) {
+            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
+            folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+        } else {
+            archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".tar.gz", false);
+            if (archiveURL != null) {
+                folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".tar.gz"));
+            } else {
+                archiveURL = WebDAO.getUrlOfZippedVersion(jarRepository, ".zip", false);
+                folderName = archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/"), archiveURL.getFile().lastIndexOf(".zip"));
+                isWindows = true; // zip file, handling is same as for windows
+            }
+        }
+
+        // special fix for tools with separate versions for windows and unix
+        if (folderName.endsWith("-windows")) {
+            folderName = folderName.substring(0, folderName.indexOf("-windows"));
+        } else if (folderName.endsWith("-mac_and_linux")) {
+            folderName = folderName.substring(0, folderName.indexOf("-mac_and_linux"));
+        }
+
+        File downloadFolder;
+        // set up the folder to save the new download in
+        if (isWindows) {
+            downloadFolder = new File(aDownloadFolder, folderName);
+        } else {
+            downloadFolder = aDownloadFolder;
+        }
+        if (!downloadFolder.exists()) {
+            if (!downloadFolder.mkdirs()) {
+                throw new IOException("could not make the directories needed to download the file in");
+            }
+        }
+
+        // create an empty dummy file so that progress can be monitored
+        downloadedFile = new File(downloadFolder, archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")));
+
+        isFileBeingDownloaded = true;
+
+        // start a thread to monitor the progress
+        if (waitingHandler != null) {
+            if (update) {
+                waitingHandler.setWaitingText("Updating " + toolName + ". Please Wait...");
+            } else {
+                waitingHandler.setWaitingText("Downloading " + toolName + ". Please Wait...");
+            }
+
+            URLConnection conn = archiveURL.openConnection();
+            int tempLength = conn.getContentLength();
+            final int currentUrlContentLength;
+
+            if (isWindows) {
+                currentUrlContentLength = tempLength;
+            } else {
+                if (tempLength != -1) {
+                    currentUrlContentLength = conn.getContentLength() * 3; // @TODO: size is not correct for the tar.gz file, as it is unzipped as part of the download
+                } else {
+                    currentUrlContentLength = tempLength;
+                }
+            }
+
+            if (currentUrlContentLength != -1) {
+                waitingHandler.resetPrimaryProgressCounter();
+                waitingHandler.setPrimaryProgressCounterIndeterminate(false);
+                waitingHandler.setMaxPrimaryProgressCounter(currentUrlContentLength);
+
+                new Thread("DownloadMonitorThread") {
+                    @Override
+                    public void run() {
+
+                        long start = System.currentTimeMillis();
+
+                        while (isFileBeingDownloaded) {
+
+                            if (waitingHandler.isRunCanceled()) {
+                                waitingHandler.setRunFinished();
+                                break;
+                            }
+
+                            long now = System.currentTimeMillis();
+
+                            // update the progress dialog every 100 millisecond or so
+                            if ((now - start) > 100 && downloadedFile != null) {
+                                long length = downloadedFile.length();
+
+                                if (currentUrlContentLength != -1) {
+                                    waitingHandler.setSecondaryProgressCounter((int) length);
+                                } else {
+                                    if (update) {
+                                        waitingHandler.setWaitingText("Updating " + toolName + ". Please Wait... (" + (length / (1024L * 1024L)) + " MB)");
+                                    } else {
+                                        waitingHandler.setWaitingText("Downloading " + toolName + ". Please Wait... (" + (length / (1024L * 1024L)) + " MB)");
+                                    }
+                                }
+
+                                start = System.currentTimeMillis();
+                            }
+                        }
+                    }
+                }.start();
+            } else {
+                waitingHandler.setPrimaryProgressCounterIndeterminate(true);
+            }
+        }
+
+        // download and unzip the file
+        if (isWindows) {
+            downloadedFile = fileDAO.writeStreamToDisk(archiveURL.openStream(), archiveURL.getFile().substring(archiveURL.getFile().lastIndexOf("/")), downloadFolder);
+            if (waitingHandler != null) {
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+            }
+            fileDAO.unzipFile(new ZipFile(downloadedFile), downloadFolder.getParentFile());
+        } else {
+            fileDAO.unGzipAndUntarFile(new GZIPInputStream(archiveURL.openStream()), downloadedFile, waitingHandler);
+        }
+
+        // get the new jar file
+        MavenJarFile newMavenJar;
+        if (isWindows) {
+            newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(downloadFolder, artifactId);
+        } else {
+            newMavenJar = fileDAO.getMavenJarFileFromFolderWithArtifactId(new File(downloadFolder, folderName), artifactId);
         }
         isFileBeingDownloaded = false;
 

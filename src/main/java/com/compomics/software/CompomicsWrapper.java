@@ -1,6 +1,7 @@
 package com.compomics.software;
 
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
+import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.software.autoupdater.MavenJarFile;
 import com.compomics.software.autoupdater.WebDAO;
 import com.compomics.util.Util;
@@ -567,6 +568,74 @@ public class CompomicsWrapper {
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
+
+        return update;
+    }
+
+    /**
+     * Check if a newer version of the tool is deployed in the Maven repository,
+     * and closes the tool if the user decided to update.
+     *
+     * @param toolName the name of the tool, e.g., PeptideShaker or SearchGUI
+     * @param groupId the group id
+     * @param artifactId the artifact id
+     * @param downloadFolder the folder to download to
+     * @param jarRepository the Maven repository
+     * @param iconName the icon name
+     * @param startDownloadedVersion if true, the new version is started when
+     * downloaded
+     * @param addDesktopIcon if true, a desktop icon is added
+     * @param normalIcon the normal icon for the progress dialog
+     * @param waitingIcon the waiting icon for the progress dialog
+     * @param exitJavaOnCancel if true, the JVM will be shut down if the update
+     * is canceled by the user before it has started or when the update is done
+     * @return true if a new version is to be downloaded
+     */
+    public static boolean downloadLatestVersion(final String toolName, final String groupId, final String artifactId, final File downloadFolder, final URL jarRepository, final String iconName,
+            final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon,
+            final boolean exitJavaOnCancel) {
+
+        boolean update = false;
+
+        // download the latest version
+        progressDialog = new ProgressDialogX(new JFrame(),
+                normalIcon,
+                waitingIcon,
+                true);
+        progressDialog.setPrimaryProgressCounterIndeterminate(true);
+        progressDialog.setTitle("Downloading " + toolName + ". Please Wait...");
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    progressDialog.setVisible(true);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "ProgressDialog").start();
+
+        new Thread("DisplayThread") {
+            @Override
+            public void run() {
+                try {
+                    downloadLatestZipFromRepo(downloadFolder, toolName, groupId, artifactId, iconName, 
+                            null, jarRepository, startDownloadedVersion, addDesktopIcon, new GUIFileDAO(), progressDialog);
+                    if (!progressDialog.isRunFinished()) {
+                        progressDialog.setRunFinished();
+                    }
+                    if (exitJavaOnCancel) {
+                        System.exit(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (XMLStreamException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
 
         return update;
     }

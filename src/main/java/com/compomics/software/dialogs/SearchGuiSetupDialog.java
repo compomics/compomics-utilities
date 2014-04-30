@@ -1,13 +1,21 @@
 package com.compomics.software.dialogs;
 
+import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
+import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * A dialog used to set up the connection between PeptideShaker and SearchGUI.
@@ -28,6 +36,18 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * Set to true if the dialog was canceled.
      */
     private boolean dialogCanceled = true;
+    /**
+     * The progress dialog.
+     */
+    private ProgressDialogX progressDialog;
+    /**
+     * The parent frame. Can be null.
+     */
+    private JFrame parentFrame = null;
+    /**
+     * The parent dialog. Can be null.
+     */
+    private JDialog parentDialog = null;
 
     /**
      * Creates a new SearchGuiSetupDialog.
@@ -40,23 +60,58 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     public SearchGuiSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
-
         initComponents();
+        parentFrame = parent;
+        setLocationRelativeTo(parent);
+        setUpGUI();
+    }
 
+    /**
+     * Creates a new SearchGuiSetupDialog.
+     *
+     * @param parent
+     * @param modal
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public SearchGuiSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+        super(parent, modal);
+        initComponents();
+        parentDialog = parent;
+        setLocationRelativeTo(parent);
+        setUpGUI();
+    }
+
+    /**
+     * Set up the GUI.
+     */
+    private void setUpGUI() {
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        // display the current searchgui path
-        if (utilitiesUserPreferences != null) {
-            searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
-            lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
-        }
 
-        if (parent.isVisible()) {
-            setLocationRelativeTo(parent);
+        if (utilitiesUserPreferences.getSearchGuiPath() == null) {
+            boolean downloaded = downloadSearchGUI();
+            if (downloaded) {
+                dialogCanceled = false;
+            } else {
+                // display the current searchgui path
+                if (utilitiesUserPreferences != null) {
+                    searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
+                    lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
+                }
+
+                setVisible(true);
+            }
         } else {
-            setLocationRelativeTo(null);
+
+            // display the current searchgui path
+            if (utilitiesUserPreferences != null) {
+                searchGuiInstallationJTextField.setText(utilitiesUserPreferences.getSearchGuiPath());
+                lastSelectedFolder = utilitiesUserPreferences.getSearchGuiPath();
+            }
+
+            setVisible(true);
         }
-        
-        setVisible(true);
     }
 
     /**
@@ -341,9 +396,6 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void searchGuiDownloadLinkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchGuiDownloadLinkLabelMouseClicked
-
-        // @TODO: should rather simply download the latest version?
-        
         openSearchGuiWebPage();
     }//GEN-LAST:event_searchGuiDownloadLinkLabelMouseClicked
 
@@ -376,8 +428,8 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
     /**
      * Close the dialog without saving.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cancelButtonActionPerformed(null);
@@ -409,10 +461,104 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
     /**
      * Returns true of the dialog was canceled by the user.
-     * 
+     *
      * @return the dialogCanceled
      */
     public boolean isDialogCanceled() {
         return dialogCanceled;
+    }
+
+    /**
+     * Download SearchGUI.
+     *
+     * @return true if not canceled
+     */
+    public boolean downloadSearchGUI() {
+
+        int option = JOptionPane.showConfirmDialog(this, "Cannot find SearchGUI. Do you want to download it now?", "Download SearchGUI?", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+
+            String installPath = "user.home";
+
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
+                if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
+                        && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
+                    installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();
+                }
+            }
+
+            final File downloadFolder = Util.getUserSelectedFolder(this, "Select SearchGUI Folder", installPath, "SearchGUI Folder", "Select", false);
+
+            if (downloadFolder != null) {
+
+                if (parentFrame != null) {
+                    progressDialog = new ProgressDialogX(parentFrame,
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui-orange.gif")),
+                            true);
+                } else if (parentDialog != null) {
+                    progressDialog = new ProgressDialogX(parentDialog, (JFrame) parentDialog.getParent(),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui-orange.gif")),
+                            true);
+                } else {
+                    progressDialog = new ProgressDialogX(new JFrame(),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/searchgui-orange.gif")),
+                            true);
+                }
+
+                progressDialog.setPrimaryProgressCounterIndeterminate(true);
+                progressDialog.setTitle("Downloading SearchGUI. Please Wait...");
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            progressDialog.setVisible(true);
+                        } catch (IndexOutOfBoundsException e) {
+                            // ignore
+                        }
+                    }
+                }, "ProgressDialog").start();
+
+                Thread thread = new Thread("DownloadThread") {
+                    @Override
+                    public void run() {
+                        try {
+                            URL jarRepository = new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString());
+                            downloadLatestZipFromRepo(downloadFolder, "SearchGUI", "eu.isas.searchgui", "SearchGUI", "searchgui.ico",
+                                    null, jarRepository, false, true, new GUIFileDAO(), progressDialog);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        } catch (XMLStreamException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                thread.start();
+
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (progressDialog.isRunCanceled()) {
+                    progressDialog.setRunFinished();
+                    return false;
+                } else {
+                    if (!progressDialog.isRunFinished()) {
+                        progressDialog.setRunFinished();
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

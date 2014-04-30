@@ -1,13 +1,21 @@
 package com.compomics.software.dialogs;
 
+import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
+import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * A dialog used to set up the connection to PeptideShaker.
@@ -28,31 +36,82 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * Set to true if the dialog was canceled.
      */
     private boolean dialogCanceled = true;
+    /**
+     * The parent frame. Can be null.
+     */
+    private JFrame parentFrame = null;
+    /**
+     * The parent dialog. Can be null.
+     */
+    private JDialog parentDialog = null;
+    /**
+     * The progress dialog.
+     */
+    private ProgressDialogX progressDialog;
 
     /**
      * Creates a new PeptideShakerSetupDialog.
-     * 
+     *
      * @param parent
      * @param modal
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public PeptideShakerSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
-
         initComponents();
+        parentFrame = parent;
+        setLocationRelativeTo(parent);
+        setUpGUI();
+    }
 
+    /**
+     * Creates a new PeptideShakerSetupDialog.
+     *
+     * @param parent
+     * @param modal
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public PeptideShakerSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+        super(parent, modal);
+        initComponents();
+        parentDialog = parent;
+        setLocationRelativeTo(parent);
+        setUpGUI();
+    }
+
+    /**
+     * Set up the GUI.
+     */
+    private void setUpGUI() {
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
 
-        // display the current peptide shaker path
-        if (utilitiesUserPreferences != null) {
-            peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
-            lastSelectedFolder = utilitiesUserPreferences.getPeptideShakerPath();
-        }
+        if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
+            boolean downloaded = downloadPeptideShaker();
+            if (downloaded) {
+                dialogCanceled = false;
+            } else {
+                // display the current peptideshaker path
+                if (utilitiesUserPreferences != null) {
+                    peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
+                    lastSelectedFolder = utilitiesUserPreferences.getPeptideShakerPath();
+                }
 
-        setLocationRelativeTo(parent);
-        setVisible(true);
+                setVisible(true);
+            }
+        } else {
+
+            // display the current peptideshaker path
+            if (utilitiesUserPreferences != null) {
+                peptideShakernstallationJTextField.setText(utilitiesUserPreferences.getPeptideShakerPath());
+                lastSelectedFolder = utilitiesUserPreferences.getPeptideShakerPath();
+            }
+
+            setVisible(true);
+        }
     }
 
     /**
@@ -288,7 +347,6 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
             } else {
 
                 // @TODO: check if this is the newest PeptideShaker version?
-
                 // file assumed to be ok
                 lastSelectedFolder = selectedFile.getPath();
                 peptideShakernstallationJTextField.setText(lastSelectedFolder);
@@ -338,9 +396,8 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void peptideShakerDownloadLinkLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_peptideShakerDownloadLinkLabelMouseClicked
-        
+
         // @TODO: should rather simply download the latest version?
-        
         openPeptideShakerWebPage();
     }//GEN-LAST:event_peptideShakerDownloadLinkLabelMouseClicked
 
@@ -373,8 +430,8 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
 
     /**
      * Close the dialog without saving.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cancelButtonActionPerformed(null);
@@ -403,13 +460,108 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         BareBonesBrowserLaunch.openURL("http://peptide-shaker.googlecode.com");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
-    
+
     /**
      * Returns true of the dialog was canceled by the user.
-     * 
+     *
      * @return the dialogCanceled
      */
     public boolean isDialogCanceled() {
         return dialogCanceled;
+    }
+
+    /**
+     * Download PeptideShaker.
+     *
+     * @return true if not canceled
+     */
+    public boolean downloadPeptideShaker() {
+
+        int option = JOptionPane.showConfirmDialog(this, "Cannot find PeptideShaker. Do you want to download it now?", "Download PeptideShaker?", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+
+            String installPath = "user.home";
+
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
+                if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
+                        && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
+                    installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();
+                }
+            }
+
+            final File downloadFolder = Util.getUserSelectedFolder(this, "Select PeptideShaker Folder", installPath, "PeptideShaker Folder", "Select", false);
+
+            if (downloadFolder != null) {
+
+                if (parentFrame != null) {
+                    progressDialog = new ProgressDialogX(parentFrame,
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                            true);
+                } else if (parentDialog != null) {
+                    progressDialog = new ProgressDialogX(parentDialog, (JFrame) parentDialog.getParent(),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                            true);
+                } else {
+                    progressDialog = new ProgressDialogX(new JFrame(),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
+                            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker-orange.gif")),
+                            true);
+                }
+
+                progressDialog.setPrimaryProgressCounterIndeterminate(true);
+                progressDialog.setTitle("Downloading PeptideShaker. Please Wait...");
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            progressDialog.setVisible(true);
+                        } catch (IndexOutOfBoundsException e) {
+                            // ignore
+                        }
+                    }
+                }, "ProgressDialog").start();
+
+                Thread thread = new Thread("DownloadThread") {
+                    @Override
+                    public void run() {
+                        try {
+                            URL jarRepository = new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString());
+                            downloadLatestZipFromRepo(downloadFolder, "PeptideShaker", "eu.isas.peptideshaker", "PeptideShaker", "peptide-shaker.ico",
+                                    null, jarRepository, false, true, new GUIFileDAO(), progressDialog);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        } catch (XMLStreamException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                thread.start();
+
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (progressDialog.isRunCanceled()) {
+                    progressDialog.setRunFinished();
+                    return false;
+                } else {
+                    if (!progressDialog.isRunFinished()) {
+                        progressDialog.setRunFinished();
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

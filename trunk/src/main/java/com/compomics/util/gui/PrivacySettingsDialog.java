@@ -125,11 +125,11 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options (all CompOmics tools)"));
         settingsPanel.setOpaque(false);
 
-        toolStartCheck.setText("Register tool usage at tool startup");
+        toolStartCheck.setText("Provide annonymous usage statistics");
         toolStartCheck.setIconTextGap(15);
         toolStartCheck.setOpaque(false);
 
-        updatesCheck.setText("Check for updates at tool startup");
+        updatesCheck.setText("Check for updates when the tool starts");
         updatesCheck.setIconTextGap(15);
         updatesCheck.setOpaque(false);
 
@@ -142,7 +142,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(updatesCheck)
                     .addComponent(toolStartCheck))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,9 +168,9 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(confidentialLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)))

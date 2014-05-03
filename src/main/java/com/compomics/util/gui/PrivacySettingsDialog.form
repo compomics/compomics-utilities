@@ -52,9 +52,9 @@
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="openDialogHelpJButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="confidentialLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="30" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="65" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -135,7 +135,7 @@
                           <Component id="updatesCheck" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="toolStartCheck" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="164" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -154,14 +154,14 @@
           <SubComponents>
             <Component class="javax.swing.JCheckBox" name="toolStartCheck">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Register tool usage at tool startup"/>
+                <Property name="text" type="java.lang.String" value="Provide annonymous usage statistics"/>
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="updatesCheck">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Check for updates at tool startup"/>
+                <Property name="text" type="java.lang.String" value="Check for updates when the tool starts"/>
                 <Property name="iconTextGap" type="int" value="15"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>

@@ -45,7 +45,7 @@ public class ObjectsDB implements Serializable {
     /**
      * List of keys too long to create a table.
      *
-     * @deprecated use longTableNames instead
+     * @deprecated use longTableNames and longKeysMap instead
      */
     private ArrayList<String> longKeys = new ArrayList<String>();
     /**

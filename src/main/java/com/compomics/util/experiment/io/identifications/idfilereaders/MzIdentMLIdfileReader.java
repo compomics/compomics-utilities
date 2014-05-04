@@ -24,6 +24,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.DataCollection;
 import uk.ac.ebi.jmzidml.model.mzidml.Modification;
 import uk.ac.ebi.jmzidml.model.mzidml.ModificationParams;
+import uk.ac.ebi.jmzidml.model.mzidml.Param;
 import uk.ac.ebi.jmzidml.model.mzidml.SearchModification;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectraData;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
@@ -137,11 +138,16 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         AnalysisSoftwareList analysisSoftwareList = unmarshaller.unmarshal(AnalysisSoftwareList.class);
 
         for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
-            String softwareId = software.getId();
-            if (softwareId != null && softwareId.equalsIgnoreCase("ID_software")) {
-                softwareName = software.getName();
-                softwareVersion = software.getVersion();
+            Param softwareNameObject = software.getSoftwareName();
+            if (softwareNameObject.getCvParam() != null) {
+                softwareName = softwareNameObject.getCvParam().getName();
+            } else if (softwareNameObject.getUserParam() != null) {
+                softwareName = softwareNameObject.getUserParam().getName();
+            } else {
+                softwareName = "unknown";
             }
+
+            softwareVersion = software.getVersion();
         }
 
         // get the list of fixed modifications
@@ -198,9 +204,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                 // get the spectrum file name
                 SpectraData spectraData = unmarshaller.unmarshal(SpectraData.class, spectrumIdentResult.getSpectraDataRef());
+                String spectrumFileName = new File(spectraData.getLocation()).getName();
 
                 // set up the yet empty spetrum match
-                SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectraData.getName(), spectrumTitle));
+                SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
 
                 // iterate and add the spectrum matches
                 for (SpectrumIdentificationItem spectrumIdentItem : spectrumIdentResult.getSpectrumIdentificationItem()) {

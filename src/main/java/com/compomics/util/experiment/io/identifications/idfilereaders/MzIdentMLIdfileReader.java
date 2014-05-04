@@ -198,8 +198,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 String spectrumTitle = null;
                 for (CvParam cvParam : spectrumIdentResult.getCvParam()) {
                     if (cvParam.getAccession().equalsIgnoreCase("MS:1000796") || cvParam.getName().equalsIgnoreCase("spectrum title")) {
-                        spectrumTitle = cvParam.getValue(); // @TODO: can this be found in other ways if the cv term is not present..?
+                        spectrumTitle = cvParam.getValue();
                     }
+                }
+
+                // see if we can find the spectrum index
+                String spectrumId = spectrumIdentResult.getSpectrumID();
+                Integer spectrumNumber = null;
+                if (spectrumId != null && spectrumId.startsWith("index=")) {
+                    spectrumNumber = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
                 }
 
                 // get the spectrum file name
@@ -208,6 +215,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                 // set up the yet empty spetrum match
                 SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
+
+                // set spectrum index, used if title is not provided
+                if (spectrumNumber != null) {
+                    currentMatch.setSpectrumNumber(spectrumNumber);
+                }
 
                 // iterate and add the spectrum matches
                 for (SpectrumIdentificationItem spectrumIdentItem : spectrumIdentResult.getSpectrumIdentificationItem()) {

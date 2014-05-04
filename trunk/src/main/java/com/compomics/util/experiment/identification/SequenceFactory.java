@@ -257,6 +257,8 @@ public class SequenceFactory {
      */
     private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException, IllegalArgumentException {
 
+        // @TODO: sometimes times out on galaxy...
+        
         try {
             if (reading) {
                 throw new IllegalStateException("Attempting to read new line before current read operation is completed.");

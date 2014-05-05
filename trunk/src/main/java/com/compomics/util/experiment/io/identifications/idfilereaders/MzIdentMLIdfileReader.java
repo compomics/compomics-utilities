@@ -34,8 +34,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 /**
- * This IdfileReader reads identifications from an mzIdentML result file. (Work
- * in progress...)
+ * This IdfileReader reads identifications from an mzIdentML result file.
  *
  * @author Harald Barsnes
  */

@@ -203,7 +203,7 @@ public class EnzymeFactory {
      * @param prideEnzymeName the PRIDE enzyme name
      * @return the Enzyme object, or null if not mapping is found
      */
-    public Enzyme getUtilitiesEnzyme(String prideEnzymeName) {
+    public static Enzyme getUtilitiesEnzyme(String prideEnzymeName) {
 
         Enzyme tempEnzyme = null;
         prideEnzymeName = prideEnzymeName.trim().toLowerCase();

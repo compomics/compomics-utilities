@@ -832,7 +832,7 @@ public class CompomicsWrapper {
                 b.close();
                 f.close();
 
-                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M");
+                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M"); // @TODO: should also support GB
 
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();

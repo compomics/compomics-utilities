@@ -3,7 +3,7 @@ package com.compomics.util.preferences;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.annotation.gene.GeneFactory;
 import com.compomics.util.experiment.annotation.go.GOFactory;
-import com.compomics.util.gui.waiting.waitinghandlers.WaitingDialog;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -215,7 +215,7 @@ public class GenePreferences implements Serializable {
                                         throw new IllegalArgumentException("Query error: " + rowLine);
                                     } else {
                                         while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                                            if (waitingHandler instanceof WaitingDialog) {
+                                            if (waitingHandler instanceof ProgressDialogX) {
                                                 waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                             }
                                             bw.write(rowLine + System.getProperty("line.separator"));
@@ -309,7 +309,7 @@ public class GenePreferences implements Serializable {
                                         throw new IllegalArgumentException("Query error on line: " + rowLine);
                                     } else {
                                         while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                                            if (waitingHandler instanceof WaitingDialog) {
+                                            if (waitingHandler instanceof ProgressDialogX) {
                                                 waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                             }
                                             bw.write(rowLine + System.getProperty("line.separator"));

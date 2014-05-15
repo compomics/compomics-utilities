@@ -472,8 +472,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 } else if (option == JOptionPane.YES_OPTION) {
                     downloadMappings();
                 } else {
-                    genePreferences.setCurrentSpecies(selectedSpecies);
-                    genePreferences.setCurrentSpeciesType(currentEnsemblSpeciesType);
+                    genePreferences.setCurrentSpecies(null);
+                    genePreferences.setCurrentSpeciesType(null);
                     dispose();
                 }
             } else {
@@ -521,7 +521,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     }
 
                     if (currentEnsemblVersion < latestEnsemblVersion) {
-                        genePreferences.clearOldMappings(currentEnsemblSpeciesType, selectedSpecies, rootPaneCheckingEnabled);
+                        genePreferences.clearOldMappings(currentEnsemblSpeciesType, selectedSpecies, false);
                         downloadMappings();
                     } else {
                         JOptionPane.showMessageDialog(this, "Ensembl mappings are already up to date.", "Ensembl Mappings", JOptionPane.INFORMATION_MESSAGE);
@@ -603,8 +603,10 @@ public class SpeciesDialog extends javax.swing.JDialog {
             @Override
             public void run() {
 
+                boolean success = false;
+
                 try {
-                    boolean success = genePreferences.downloadMappings(progressDialog, (String) ensemblCategoryJComboBox.getSelectedItem(), getSelectedSpecies(), false);
+                    success = genePreferences.downloadMappings(progressDialog, (String) ensemblCategoryJComboBox.getSelectedItem(), getSelectedSpecies(), false);
 
                     if (success) {
                         int selectedIndex = speciesJComboBox.getSelectedIndex();
@@ -617,6 +619,11 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     progressDialog.setRunFinished();
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(finalRef, "An error occured when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // an error occured, clear the possible half downloaded data
+                if (!success) {
+                    genePreferences.clearOldMappings((String) ensemblCategoryJComboBox.getSelectedItem(), getSelectedSpecies(), false);
                 }
             }
         }.start();

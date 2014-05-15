@@ -634,7 +634,7 @@ public class GenePreferences implements Serializable {
                     try {
 
                         String line = br.readLine();
-                        String currentSpeciesType = line.substring(1);
+                        String tempSpeciesType = line.substring(1);
                         ArrayList<String> tempSpeciesList = new ArrayList<String>();
 
                         while ((line = br.readLine()) != null) {
@@ -643,21 +643,21 @@ public class GenePreferences implements Serializable {
 
                                 if (line.startsWith(">")) {
                                     // add the species to the map
-                                    allSpecies.put(currentSpeciesType, tempSpeciesList);
+                                    allSpecies.put(tempSpeciesType, tempSpeciesList);
 
                                     // reset for the next species
-                                    currentSpeciesType = line.substring(1);
+                                    tempSpeciesType = line.substring(1);
                                     tempSpeciesList = new ArrayList<String>();
                                 } else {
 
                                     String[] elements = line.split("\\t");
                                     String tempSpecies = elements[0].trim();
 
-                                    if (!allSpeciesMap.containsKey(currentSpeciesType)) {
-                                        allSpeciesMap.put(currentSpeciesType, new HashMap<String, String>());
+                                    if (!allSpeciesMap.containsKey(tempSpeciesType)) {
+                                        allSpeciesMap.put(tempSpeciesType, new HashMap<String, String>());
                                     }
 
-                                    allSpeciesMap.get(currentSpeciesType).put(tempSpecies, elements[1].trim());
+                                    allSpeciesMap.get(tempSpeciesType).put(tempSpecies, elements[1].trim());
                                     tempSpeciesList.add(tempSpecies);
                                 }
                             }
@@ -665,7 +665,7 @@ public class GenePreferences implements Serializable {
 
                         // add the last species type
                         if (!tempSpeciesList.isEmpty()) {
-                            allSpecies.put(currentSpeciesType, tempSpeciesList);
+                            allSpecies.put(tempSpeciesType, tempSpeciesList);
                         }
 
                     } finally {

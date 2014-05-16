@@ -65,7 +65,9 @@ public class IdentificationDBTest extends TestCase {
         idDB.updateMatch(testSpectrumMatch);
 
         testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
-        Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(proteinKey));
+        Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 2);
+        Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
+        Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
 
         testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
         Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));

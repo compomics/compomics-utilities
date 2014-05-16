@@ -10,16 +10,16 @@ import javax.swing.JFrame;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
- * A dialog for showing low memory issues.
+ * A dialog for showing Java memory settings.
  *
  * @author Harald Barsnes
  */
-public class LowMemoryDialog extends javax.swing.JDialog {
+public class JavaSettingsDialog extends javax.swing.JDialog {
 
     /**
      * The main instance of the GUI.
      */
-    private JavaOptionsDialogParent javaOptionsDialogParent;
+    private JavaMemoryDialogParent javaMemoryDialogParent;
     /**
      * The frame parent.
      */
@@ -34,18 +34,18 @@ public class LowMemoryDialog extends javax.swing.JDialog {
     private JDialog welcomeDialog;
 
     /**
-     * Creates a new LowMemoryDialog.
+     * Creates a new JavaSettingsDialog.
      *
      * @param parent the parent frame
-     * @param javaOptionsDialogParent reference to the JavaOptionsDialogParent
+     * @param javaMemoryDialogParent reference to the JavaMemoryDialogParent
      * @param toolName the name of the tool, e.g., PeptideShaker
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param modal
      */
-    public LowMemoryDialog(JFrame parent, JavaOptionsDialogParent javaOptionsDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
+    public JavaSettingsDialog(JFrame parent, JavaMemoryDialogParent javaMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
         super(parent, modal);
         this.frameParent = parent;
-        this.javaOptionsDialogParent = javaOptionsDialogParent;
+        this.javaMemoryDialogParent = javaMemoryDialogParent;
         this.welcomeDialog = welcomeDialog;
         this.toolName = toolName;
         initComponents();
@@ -115,7 +115,7 @@ public class LowMemoryDialog extends javax.swing.JDialog {
         versionRecommendationLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Low Memory");
+        setTitle("Java Settings");
         setResizable(false);
 
         backgroundsPanel.setBackground(new java.awt.Color(230, 230, 230));
@@ -358,12 +358,12 @@ public class LowMemoryDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
-     * Open the JavaOptionsDialog.
+     * Open the JavaMemoryDialog.
      *
      * @param evt
      */
     private void editMemoryJLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMemoryJLabelMouseReleased
-        new JavaOptionsDialog(frameParent, javaOptionsDialogParent, welcomeDialog, toolName);
+        new JavaMemoryDialog(frameParent, javaMemoryDialogParent, welcomeDialog, toolName);
     }//GEN-LAST:event_editMemoryJLabelMouseReleased
 
     /**

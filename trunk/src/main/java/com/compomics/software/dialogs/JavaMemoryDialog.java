@@ -9,17 +9,17 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * A simple dialog for changing the Java options.
+ * A simple dialog for changing the Java memory setting.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class JavaOptionsDialog extends javax.swing.JDialog {
+public class JavaMemoryDialog extends javax.swing.JDialog {
 
     /**
      * The main instance of the GUI.
      */
-    private JavaOptionsDialogParent javaOptionsDialogParent;
+    private JavaMemoryDialogParent javaMemoryDialogParent;
     /**
      * A reference to the Welcome Dialog.
      */
@@ -30,22 +30,22 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
     private String toolName;
 
     /**
-     * Creates a new JavaOptionsDialog.
+     * Creates a new JavaMemoryDialog.
      *
      * @param parent the parent of the dialog
-     * @param javaOptionsDialogParent reference to the JavaOptionsDialogParent
+     * @param javaMemoryDialogParent reference to the JavaMemoryDialogParent
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param toolName the name of the tool, e.g., PeptideShaker
      */
-    public JavaOptionsDialog(JFrame parent, JavaOptionsDialogParent javaOptionsDialogParent, JDialog welcomeDialog, String toolName) {
+    public JavaMemoryDialog(JFrame parent, JavaMemoryDialogParent javaMemoryDialogParent, JDialog welcomeDialog, String toolName) {
         super(parent, true);
-        this.javaOptionsDialogParent = javaOptionsDialogParent;
+        this.javaMemoryDialogParent = javaMemoryDialogParent;
         this.welcomeDialog = welcomeDialog;
         this.toolName = toolName;
         initComponents();
 
-        if (javaOptionsDialogParent.getUtilitiesUserPreferences() != null) {
-            memoryTxt.setText(javaOptionsDialogParent.getUtilitiesUserPreferences().getMemoryPreference() + "");
+        if (javaMemoryDialogParent.getUtilitiesUserPreferences() != null) {
+            memoryTxt.setText(javaMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference() + "");
         } else {
             memoryTxt.setText("(error)");
         }
@@ -72,16 +72,23 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this,
                         "Please verify the input for the memory limit. It should "
                         + "be a positive integer, e.g., 2048 for max 2GB of memory.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                        "Input Error", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
+            
+            if (value < 800) {
+                JOptionPane.showMessageDialog(this,
+                        "The memory limit has to be bigger than 800 MB.",
+                        "Input Error", JOptionPane.WARNING_MESSAGE);
+                return false;
+            } 
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Please verify the input for the memory limit. It should be an integer.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+                    "Input Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        if (javaOptionsDialogParent.getUtilitiesUserPreferences() == null) {
+        if (javaMemoryDialogParent.getUtilitiesUserPreferences() == null) {
             JOptionPane.showMessageDialog(this, "User preferences where not read correctly. Please solve this first.",
                     "File Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -99,57 +106,19 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        settingsPanel = new javax.swing.JPanel();
-        memoryLimitLabel = new javax.swing.JLabel();
-        memoryTxt = new javax.swing.JTextField();
-        mbLabel = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         javaOptionsHelpJButton = new javax.swing.JButton();
+        memoryLimitLabel = new javax.swing.JLabel();
+        memoryTxt = new javax.swing.JTextField();
+        mbLabel = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Java Options");
+        setTitle("Java Memory Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Memory Settings"));
-        settingsPanel.setOpaque(false);
-
-        memoryLimitLabel.setText("Memory Limit:");
-
-        memoryTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        memoryTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                memoryTxtKeyReleased(evt);
-            }
-        });
-
-        mbLabel.setText("MB");
-
-        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
-        settingsPanel.setLayout(settingsPanelLayout);
-        settingsPanelLayout.setHorizontalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(memoryLimitLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(memoryTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(mbLabel)
-                .addContainerGap())
-        );
-        settingsPanelLayout.setVerticalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(memoryLimitLabel)
-                    .addComponent(memoryTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mbLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -184,6 +153,17 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
             }
         });
 
+        memoryLimitLabel.setText("Memory Limit");
+
+        memoryTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        memoryTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                memoryTxtKeyReleased(evt);
+            }
+        });
+
+        mbLabel.setText("MB");
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -191,14 +171,20 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(javaOptionsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)))
+                        .addComponent(cancelButton))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addComponent(memoryLimitLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(memoryTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mbLabel)))
                 .addContainerGap())
         );
 
@@ -208,14 +194,19 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(memoryLimitLabel)
+                    .addComponent(memoryTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mbLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cancelButton)
                         .addComponent(okButton))
                     .addComponent(javaOptionsHelpJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -251,16 +242,16 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
 
             int newValue = new Integer(memoryTxt.getText().trim());
 
-            if (newValue != javaOptionsDialogParent.getUtilitiesUserPreferences().getMemoryPreference()) {
+            if (newValue != javaMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference()) {
 
                 int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
                         "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
 
                 if (outcome == JOptionPane.OK_OPTION) {
-                    javaOptionsDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
+                    javaMemoryDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
 
                     try {
-                        UtilitiesUserPreferences.saveUserPreferences(javaOptionsDialogParent.getUtilitiesUserPreferences());
+                        UtilitiesUserPreferences.saveUserPreferences(javaMemoryDialogParent.getUtilitiesUserPreferences());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -268,7 +259,7 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
                     if (welcomeDialog != null) {
                         welcomeDialog.setVisible(false);
                     }
-                    javaOptionsDialogParent.restart();
+                    javaMemoryDialogParent.restart();
                 }
             }
 
@@ -323,11 +314,11 @@ public class JavaOptionsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton javaOptionsHelpJButton;
     private javax.swing.JLabel mbLabel;
     private javax.swing.JLabel memoryLimitLabel;
     private javax.swing.JTextField memoryTxt;
     private javax.swing.JButton okButton;
-    private javax.swing.JPanel settingsPanel;
     // End of variables declaration//GEN-END:variables
 }

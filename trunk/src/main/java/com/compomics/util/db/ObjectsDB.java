@@ -199,6 +199,7 @@ public class ObjectsDB implements Serializable {
 
     /**
      * Indicates whether the database contains the given table.
+     * @TODO: not sure to which extend this is derby dependent...
      *
      * @param tableName the name of the table of interest
      *
@@ -209,7 +210,15 @@ public class ObjectsDB implements Serializable {
      * working with the database
      */
     public boolean hasTable(String tableName) throws SQLException {
-        return false;
+    DatabaseMetaData dmd = dbConnection.getMetaData(); 
+    boolean result = false;
+    ResultSet rs = dmd.getTables(null,null, tableName.toUpperCase(),null); 
+    try {
+        result = rs.next();
+    } finally {
+        rs.close();
+    }
+    return result;
     }
 
     /**
@@ -955,8 +964,8 @@ public class ObjectsDB implements Serializable {
      */
     private void loadLongKeys() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (hasTable(LONG_KEY_TABLE)) {
-            longTableNames = (ArrayList<String>) retrieveObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, false);
-            longKeysMap = (HashMap<String, ArrayList<String>>) retrieveObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, false);
+            longTableNames = (ArrayList<String>) retrieveObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, true, false);
+            longKeysMap = (HashMap<String, ArrayList<String>>) retrieveObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, true, false);
         }
     }
 
@@ -973,6 +982,11 @@ public class ObjectsDB implements Serializable {
         }
         insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
         insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+        try {
+        loadLongKeys();
+        } catch (Exception e) {
+            
+        }
     }
 
     /**

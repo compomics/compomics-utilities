@@ -535,8 +535,8 @@ public class ObjectsCache {
             }
             for (String tableName : loadedObjectsMap.get(dbName).keySet()) {
 
-                HashMap<String, Object> objectsToStore = new HashMap<String, Object>();
                 HashMap<String, CacheEntry> data = loadedObjectsMap.get(dbName).get(tableName);
+                HashMap<String, Object> objectsToStore = new HashMap<String, Object>(data.size());
 
                 for (String objectKey : data.keySet()) {
                     CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
@@ -552,7 +552,7 @@ public class ObjectsCache {
                     }
                 }
 
-                objectsDB.insertObjects(tableName, objectsToStore, waitingHandler); // @TODO: can the objectsToStore map become too big? should we set a max size before inserting?
+                objectsDB.insertObjects(tableName, objectsToStore, waitingHandler);
             }
         }
 

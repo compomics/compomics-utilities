@@ -104,9 +104,10 @@ public class AScore {
 
     /**
      * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 0. 1 is the first amino acid. The N-terminus is indexed 0 and the
-     * C-terminus with the peptide length+1. Note that PTMs found on peptides
-     * must be loaded in the PTM factory.
+     * locations score the same they are both given with the score of 0. 1 is
+     * the first amino acid. The N-terminus is indexed 0 and the C-terminus with
+     * the peptide length+1. Note that PTMs found on peptides must be loaded in
+     * the PTM factory.
      *
      * @param peptide The peptide of interest
      * @param ptms The PTMs to score, for instance different phosphorylations.

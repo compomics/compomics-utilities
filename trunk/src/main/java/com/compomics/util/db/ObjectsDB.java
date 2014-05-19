@@ -981,8 +981,20 @@ public class ObjectsDB implements Serializable {
         if (!hasTable(LONG_KEY_TABLE)) {
             addTable(LONG_KEY_TABLE);
         }
-        insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
-        insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+
+        // check if it's in the db already
+        if (inDB(LONG_KEY_TABLE, LONG_TABLE_NAMES, false)) {
+            updateObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
+        } else {
+            insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
+        }
+
+        // check if it's in the db already
+        if (inDB(LONG_KEY_TABLE, LONG_KEY_PREFIX, false)) {
+            updateObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+        } else {
+            insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
+        }
     }
 
     /**

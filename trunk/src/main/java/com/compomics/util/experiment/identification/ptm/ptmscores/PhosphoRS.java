@@ -24,7 +24,7 @@ import java.util.HashSet;
 
 /**
  * This class estimates the PhosphoRS score as described in
- * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warining: still under testing
+ * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: still under testing
  *
  * @author Marc Vaudel
  */

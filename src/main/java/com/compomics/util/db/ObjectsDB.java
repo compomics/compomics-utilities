@@ -983,11 +983,6 @@ public class ObjectsDB implements Serializable {
         }
         insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
         insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
-        try {
-            loadLongKeys();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -998,11 +993,13 @@ public class ObjectsDB implements Serializable {
      */
     public void close() throws SQLException {
 
-        // try to save the long key indexes
-        try {
-            saveLongKeys();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (dbConnection != null) {
+            // try to save the long key indexes
+            try {
+                saveLongKeys();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         objectsCache = null;

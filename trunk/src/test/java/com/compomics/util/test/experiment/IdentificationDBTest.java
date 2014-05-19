@@ -85,6 +85,5 @@ public class IdentificationDBTest extends TestCase {
 
         File dbFolder = new File(path);
         Util.deleteDir(dbFolder);
-
     }
 }

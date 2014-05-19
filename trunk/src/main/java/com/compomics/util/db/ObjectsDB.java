@@ -62,11 +62,11 @@ public class ObjectsDB implements Serializable {
      */
     public static final String LONG_KEY_PREFIX = "long_key_";
     /**
-     * name for the long table names
+     * Name for the long table names.
      */
     public static final String LONG_TABLE_NAMES = "long_tables";
     /**
-     * The table where to save the long keys
+     * The table where to save the long keys.
      */
     public static final String LONG_KEY_TABLE = "long_key_table";
     /**
@@ -199,7 +199,8 @@ public class ObjectsDB implements Serializable {
 
     /**
      * Indicates whether the database contains the given table.
-     * @TODO: not sure to which extend this is derby dependent...
+     *
+     * @TODO: not sure to which extend this is Derby dependent...
      *
      * @param tableName the name of the table of interest
      *
@@ -210,15 +211,15 @@ public class ObjectsDB implements Serializable {
      * working with the database
      */
     public boolean hasTable(String tableName) throws SQLException {
-    DatabaseMetaData dmd = dbConnection.getMetaData(); 
-    boolean result = false;
-    ResultSet rs = dmd.getTables(null,null, tableName.toUpperCase(),null); 
-    try {
-        result = rs.next();
-    } finally {
-        rs.close();
-    }
-    return result;
+        DatabaseMetaData dmd = dbConnection.getMetaData();
+        boolean result = false;
+        ResultSet rs = dmd.getTables(null, null, tableName.toUpperCase(), null);
+        try {
+            result = rs.next();
+        } finally {
+            rs.close();
+        }
+        return result;
     }
 
     /**
@@ -955,12 +956,12 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Loads the long key names from the database in the cache
-     * 
+     * Loads the long key names from the database in the cache.
+     *
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private void loadLongKeys() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (hasTable(LONG_KEY_TABLE)) {
@@ -983,9 +984,9 @@ public class ObjectsDB implements Serializable {
         insertObject(LONG_KEY_TABLE, LONG_TABLE_NAMES, longTableNames, false);
         insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
         try {
-        loadLongKeys();
+            loadLongKeys();
         } catch (Exception e) {
-            
+            e.printStackTrace();
         }
     }
 

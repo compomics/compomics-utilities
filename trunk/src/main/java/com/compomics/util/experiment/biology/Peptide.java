@@ -352,8 +352,10 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the reference key of a peptide. index = SEQUENCE_mod1_mod2 with
      * modifications ordered alphabetically.
-     * 
-     * Note: the key is not unique for indistinguishable sequences, see getMatchingKey(AminoAcidPattern.MatchingType matchingType, Double massTolerance).
+     *
+     * Note: the key is not unique for indistinguishable sequences, see
+     * getMatchingKey(AminoAcidPattern.MatchingType matchingType, Double
+     * massTolerance).
      *
      * @return the index of a peptide
      */
@@ -1407,7 +1409,7 @@ public class Peptide extends ExperimentObject {
      * 'indistiguishibleAminoAcids'. Can be null otherwise
      *
      * @return whether a peptide can be derived from a decoy protein
-     * 
+     *
      * @throws java.io.IOException
      * @throws java.lang.InterruptedException
      * @throws java.sql.SQLException

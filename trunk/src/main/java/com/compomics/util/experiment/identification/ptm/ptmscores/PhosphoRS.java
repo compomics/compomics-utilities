@@ -24,8 +24,7 @@ import java.util.HashSet;
 
 /**
  * This class estimates the PhosphoRS score as described in
- * http://www.ncbi.nlm.nih.gov/pubmed/22073976.
- * Warining: still under testing
+ * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warining: still under testing
  *
  * @author Marc Vaudel
  */
@@ -38,7 +37,8 @@ public class PhosphoRS {
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
-     * locations. 0 is the first amino acid. Note that PTMs found on peptides 
+     * locations. 1 is the first amino acid. The N-terminus is indexed 0 and the
+     * C-terminus with the peptide length+1. Note that PTMs found on peptides
      * must be loaded in the PTM factory.
      *
      * @param peptide The peptide of interest
@@ -52,7 +52,8 @@ public class PhosphoRS {
      * @param mzTolerance The m/z tolerance to use
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
-     * @param matchingType the amino acid matching type to use to map PTMs on peptides
+     * @param matchingType the amino acid matching type to use to map PTMs on
+     * peptides
      *
      * @return a map site -> phosphoRS site probability
      *
@@ -105,7 +106,18 @@ public class PhosphoRS {
         HashMap<ArrayList<Integer>, Double> profileToScoreMap = new HashMap<ArrayList<Integer>, Double>();
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
 
+        int peptideLength = peptide.getSequence().length();
+
         for (PTM ptm : ptms) {
+            if (ptm.isNTerm()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(1)) {
+                    possibleSites.add(0);
+                }
+            } else if (ptm.isCTerm()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(peptideLength)) {
+                    possibleSites.add(peptideLength + 1);
+                }
+            }
             for (int potentialSite : peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
@@ -258,7 +270,7 @@ public class PhosphoRS {
                 }
 
                 double score = getPhosphoRsScore(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
-                double pInv = Math.pow(10, score/10);
+                double pInv = Math.pow(10, score / 10);
                 pInvMap.put(profile, pInv);
                 pInvTotal += pInv;
             }
@@ -273,7 +285,7 @@ public class PhosphoRS {
         } else {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during A-score calculation. Peptide key: " + peptide.getKey());
         }
-        
+
         HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
         for (ArrayList<Integer> profile : profileToScoreMap.keySet()) {
             double score = profileToScoreMap.get(profile);
@@ -285,7 +297,7 @@ public class PhosphoRS {
                 }
             }
         }
-        
+
         for (int site : possibleSites) {
             if (!scores.keySet().contains(site)) {
                 throw new IllegalArgumentException("Site " + site + " not scored for modification " + ptmMass + " in spectrum " + spectrum.getSpectrumTitle() + " of file " + spectrum.getFileName() + ".");
@@ -321,7 +333,7 @@ public class PhosphoRS {
             N += fragmentIons.size();
         }
 
-        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, 
+        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges,
                 precursorCharge, spectrum, peptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
         int n = matches.size();
         double P = 0;
@@ -417,10 +429,20 @@ public class PhosphoRS {
 
         for (ArrayList<Integer> modificationProfile : possibleProfiles) {
 
-            Peptide peptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
+            String sequence = noModPeptide.getSequence();
+            Peptide peptide = new Peptide(sequence, noModPeptide.getModificationMatches());
+            int sequenceLength = sequence.length();
 
             for (int pos : modificationProfile) {
-                peptide.addModificationMatch(new ModificationMatch(referencePtmName, true, pos));
+                int position;
+                if (pos == 0) {
+                    position = 1;
+                } else if (pos == sequenceLength + 1) {
+                    position = sequenceLength;
+                } else {
+                    position = pos;
+                }
+                peptide.addModificationMatch(new ModificationMatch(referencePtmName, true, position));
             }
 
             ArrayList<Double> mzs = new ArrayList<Double>();

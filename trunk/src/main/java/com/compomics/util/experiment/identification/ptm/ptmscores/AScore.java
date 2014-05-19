@@ -104,9 +104,9 @@ public class AScore {
 
     /**
      * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 0. 0 is
-     * the first amino acid. Note that PTMs found on peptides must be loaded in
-     * the PTM factory.
+     * locations score the same they are both given with the score of 0. 1 is the first amino acid. The N-terminus is indexed 0 and the
+     * C-terminus with the peptide length+1. Note that PTMs found on peptides
+     * must be loaded in the PTM factory.
      *
      * @param peptide The peptide of interest
      * @param ptms The PTMs to score, for instance different phosphorylations.
@@ -170,8 +170,19 @@ public class AScore {
             }
         }
 
+        int peptideLength = peptide.getSequence().length();
+
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         for (PTM ptm : ptms) {
+            if (ptm.isNTerm()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(1)) {
+                    possibleSites.add(0);
+                }
+            } else if (ptm.isCTerm()) {
+                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(peptideLength)) {
+                    possibleSites.add(peptideLength + 1);
+                }
+            }
             for (int potentialSite : peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
@@ -540,13 +551,24 @@ public class AScore {
             N += fragmentIons.size();
         }
 
+        String sequence = noModPeptide.getSequence();
+        int sequenceLength = sequence.length();
+
         for (int i = 0; i < spectrumMap.size(); i++) {
 
             double p = ((double) i + 1) / 100;
 
             for (int pos : possibleSites) {
                 Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
-                tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                int position;
+                if (pos == 0) {
+                    position = 1;
+                } else if (pos == sequenceLength + 1) {
+                    position = sequenceLength;
+                } else {
+                    position = pos;
+                }
+                tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, position));
 
                 ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge,
                         spectrumMap.get(i), tempPeptide, 0, mzTolerance, false, false);

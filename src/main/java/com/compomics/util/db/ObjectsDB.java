@@ -1010,7 +1010,9 @@ public class ObjectsDB implements Serializable {
             try {
                 saveLongKeys();
             } catch (Exception e) {
-                e.printStackTrace();
+                if (dbConnection != null) {
+                    e.printStackTrace();
+                }
             }
         }
 

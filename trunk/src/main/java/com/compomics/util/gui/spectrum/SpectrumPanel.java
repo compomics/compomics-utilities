@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
 import javax.swing.*;
@@ -696,15 +697,15 @@ public class SpectrumPanel extends GraphicsPanel {
      * are to be included
      * @return the filtered annotations
      */
-    public static Vector<DefaultSpectrumAnnotation> filterAnnotations(
-            Vector<DefaultSpectrumAnnotation> annotations,
+    public static Vector<SpectrumAnnotation> filterAnnotations(
+            Vector<SpectrumAnnotation> annotations,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
             ArrayList<NeutralLoss> neutralLosses,
             boolean singleChargeSelected,
             boolean doubleChargeSelected,
             boolean moreThanTwoChargesSelected) {
 
-        Vector<DefaultSpectrumAnnotation> filteredAnnotations = new Vector();
+        Vector<SpectrumAnnotation> filteredAnnotations = new Vector();
 
         for (int i = 0; i < annotations.size(); i++) {
 

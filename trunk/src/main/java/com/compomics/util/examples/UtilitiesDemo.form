@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.8" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.8" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Component class="javax.swing.JRadioButton" name="jRadioButton1">
       <Properties>
@@ -17,6 +17,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -180,8 +181,8 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="allPeaksJCheckBox" alignment="0" min="-2" pref="65" max="-2" attributes="1"/>
-                              <Component id="jSeparator9" alignment="0" pref="69" max="32767" attributes="0"/>
-                              <Component id="jSeparator5" alignment="0" pref="69" max="32767" attributes="0"/>
+                              <Component id="jSeparator9" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jSeparator5" alignment="0" max="32767" attributes="0"/>
                               <Component id="jSeparator6" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="jSeparator4" linkSize="4" alignment="0" pref="69" max="32767" attributes="1"/>
                               <Component id="otherIonsJCheckBox" linkSize="1" alignment="2" min="-2" pref="65" max="-2" attributes="1"/>
@@ -201,7 +202,7 @@
                               <Component id="cIonsJCheckBox" linkSize="1" alignment="2" pref="65" max="32767" attributes="1"/>
                               <Component id="profileSpectrumJCheckBox" linkSize="1" alignment="0" min="-2" pref="65" max="-2" attributes="1"/>
                               <Component id="linkedSpectraJCheckBox" linkSize="1" alignment="0" min="-2" pref="65" max="-2" attributes="1"/>
-                              <Component id="exportJButton" alignment="0" pref="69" max="32767" attributes="0"/>
+                              <Component id="exportJButton" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -968,7 +969,7 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="jLabel2" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="peptideSequenceBJTextField" alignment="2" pref="22" max="32767" attributes="1"/>
+                              <Component id="peptideSequenceBJTextField" alignment="2" max="32767" attributes="1"/>
                               <Component id="jLabel7" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel9" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="chargePeptideBJSpinner" linkSize="10" alignment="2" pref="22" max="32767" attributes="1"/>
@@ -1764,7 +1765,7 @@
                               <Component id="browseJButton" linkSize="22" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="sequenceJTabbedPane" pref="111" max="32767" attributes="0"/>
+                          <Component id="sequenceJTabbedPane" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>

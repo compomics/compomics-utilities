@@ -154,20 +154,31 @@ public class GenePreferences implements Serializable {
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
      * @param selectedSpecies
+     * @param swissProtMapping if true, use the uniprot_swissprot_accession
+     * parameter, if false use the uniprot_sptrembl parameter
      * @param waitingHandler
      * @return true of the downloading was OK
      * @throws MalformedURLException
      * @throws IOException
      */
-    public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, boolean swissProtMapping, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+
+        boolean success = true;
+
+        String accessionMapping;
+
+        if (swissProtMapping) {
+            accessionMapping = "\"uniprot_swissprot_accession\"";
+        } else {
+            accessionMapping = "\"uniprot_sptrembl\"";
+        }
 
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
-                + "<Attribute name = \"uniprot_swissprot_accession\" />"
-                //+ "<Attribute name = \"uniprot_sptrembl\" />" // @TODO: not yet supported... how to handle old files?
+                + "<Attribute name = " + accessionMapping + " />"
                 + "<Attribute name = \"goslim_goa_accession\" />"
                 + "<Attribute name = \"goslim_goa_description\" />"
                 + "</Dataset>"
@@ -196,7 +207,7 @@ public class GenePreferences implements Serializable {
                     File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GO_MAPPING_FILE_SUFFIX);
                     boolean fileCreated = tempFile.createNewFile();
 
-                    if (fileCreated) {
+                    if (fileCreated || tempFile.exists()) {
 
                         // Get the response
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -210,11 +221,14 @@ public class GenePreferences implements Serializable {
 
                                     if (rowLine != null && rowLine.startsWith("Query ERROR")) {
                                         if (rowLine.lastIndexOf("Attribute goslim_goa_accession NOT FOUND") != -1) {
-                                            return false;
+                                            success = false;
+                                        } else if (rowLine.lastIndexOf("Attribute uniprot_swissprot_accession NOT FOUND") != -1) {
+                                            success = false;
+                                        } else {
+                                            throw new IllegalArgumentException("Query error: " + rowLine);
                                         }
-                                        throw new IllegalArgumentException("Query error: " + rowLine);
                                     } else {
-                                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
+                                        while (rowLine != null && !waitingHandler.isRunCanceled() && success) {
                                             if (waitingHandler instanceof ProgressDialogX) {
                                                 waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                             }
@@ -222,7 +236,6 @@ public class GenePreferences implements Serializable {
                                             rowLine = br.readLine();
                                         }
                                     }
-
                                 } finally {
                                     bw.close();
                                 }
@@ -242,7 +255,7 @@ public class GenePreferences implements Serializable {
             }
         }
 
-        return true;
+        return success;
     }
 
     /**
@@ -987,7 +1000,7 @@ public class GenePreferences implements Serializable {
 
         GOFactory goFactory = GOFactory.getInstance();
         GeneFactory geneFactory = GeneFactory.getInstance();
-        
+
         goFactory.clearFactory();
         geneFactory.clearFactory();
 
@@ -1046,7 +1059,7 @@ public class GenePreferences implements Serializable {
     /**
      * Try to download the gene and GO mappings for the currently selected
      * species.
-     * 
+     *
      * @param waitingHandler the waiting handler
      * @param currentEnsemblSpeciesType the species type
      * @param selectedSpecies the species
@@ -1058,7 +1071,7 @@ public class GenePreferences implements Serializable {
         try {
             // clear old data
             clearOldResults();
-            
+
             GeneFactory geneFactory = GeneFactory.getInstance();
 
             String selectedDb = getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
@@ -1082,7 +1095,13 @@ public class GenePreferences implements Serializable {
 
             if (!waitingHandler.isRunCanceled()) {
 
-                boolean goMappingsDownloaded = downloadGoMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb, waitingHandler);
+                boolean goMappingsDownloaded = downloadGoMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb, true, waitingHandler);
+
+                // swiss prot mapping not found, try trembl
+                if (!goMappingsDownloaded) {
+                    clearOldResults();
+                    goMappingsDownloaded = downloadGoMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb, false, waitingHandler);
+                }
 
                 if (!goMappingsDownloaded) {
                     if (commandLine) {
@@ -1098,9 +1117,9 @@ public class GenePreferences implements Serializable {
             if (!waitingHandler.isRunCanceled()) {
                 downloadGeneMappings(ensemblType, geneFactory.getEnsemblDbName(speciesTypeIndex), selectedDb,
                         geneFactory.getCurrentEnsemblVersion(ensemblType).toString(), waitingHandler);
-                
+
                 if (!waitingHandler.isRunCanceled()) {
-                   waitingHandler.setWaitingText("Gene Mappings Downloaded."); 
+                    waitingHandler.setWaitingText("Gene Mappings Downloaded.");
                 }
             }
 
@@ -1135,7 +1154,7 @@ public class GenePreferences implements Serializable {
 
         GOFactory goFactory = GOFactory.getInstance();
         GeneFactory geneFactory = GeneFactory.getInstance();
-        
+
         goFactory.clearFactory();
         geneFactory.clearFactory();
 

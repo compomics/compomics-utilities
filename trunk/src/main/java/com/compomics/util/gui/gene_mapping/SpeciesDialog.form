@@ -54,7 +54,9 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="ensemblVersionLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="okButton" min="-2" pref="75" max="-2" attributes="0"/>
+                          <Component id="okButton" linkSize="3" min="-2" pref="75" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cancelButton" linkSize="3" min="-2" pref="75" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -72,6 +74,7 @@
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="unknownSpeciesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="ensemblVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -202,6 +205,14 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ensemblVersionLabelMouseClicked"/>
             <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ensemblVersionLabelMouseEntered"/>
             <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ensemblVersionLabelMouseExited"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="cancelButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cancel"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

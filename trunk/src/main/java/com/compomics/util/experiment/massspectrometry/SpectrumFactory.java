@@ -74,7 +74,7 @@ public class SpectrumFactory {
      */
     private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
     /**
-     * The time out in milliseconds when querying the file
+     * The time out in milliseconds when querying the file.
      */
     public final static long timeOut = 10000;
 
@@ -554,10 +554,9 @@ public class SpectrumFactory {
     /**
      * Returns the precursor of the desired spectrum. It can be that the IO is
      * busy (especially when working on distant servers) thus returning an
-     * error. The method will then retry
-     * after waiting waitingTime milliseconds. The waitingTime is doubled for
-     * the next try. The method throws an exception after timeout (see timeOut
-     * attribute).
+     * error. The method will then retry after waiting waitingTime milliseconds.
+     * The waitingTime is doubled for the next try. The method throws an
+     * exception after timeout (see timeOut attribute).
      *
      * @param spectrumKey the key of the spectrum
      * @param save boolean indicating whether the loaded precursor should be
@@ -578,7 +577,7 @@ public class SpectrumFactory {
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
         }
-        
+
         Precursor currentPrecursor = null;
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
@@ -715,19 +714,18 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the desired spectrum. It can be that the IO is
-     * busy (especially when working on distant servers) thus returning an
-     * error. The method will then retry
-     * after waiting waitingTime milliseconds. The waitingTime is doubled for
-     * the next try. The method throws an exception after timeout (see timeOut
-     * attribute).
+     * Returns the desired spectrum. It can be that the IO is busy (especially
+     * when working on distant servers) thus returning an error. The method will
+     * then retry after waiting waitingTime milliseconds. The waitingTime is
+     * doubled for the next try. The method throws an exception after timeout
+     * (see timeOut attribute).
      *
      * @param spectrumFile the name of the file containing the spectrum
      * @param spectrumTitle the title of the desired spectrum
      * @param waitingTime the waiting time before retry
-     * 
+     *
      * @return the desired spectrum
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -740,7 +738,7 @@ public class SpectrumFactory {
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
         }
-        
+
         Spectrum currentSpectrum = null;
 
         if (spectrumFile.toLowerCase().endsWith(".mgf")) {
@@ -762,7 +760,7 @@ public class SpectrumFactory {
                         wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, 2*waitingTime);
+                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");

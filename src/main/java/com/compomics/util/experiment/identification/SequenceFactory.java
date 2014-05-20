@@ -76,7 +76,7 @@ public class SequenceFactory {
      */
     private boolean reading = false;
     /**
-     * The time out in milliseconds when querying the file
+     * The time out in milliseconds when querying the file.
      */
     public final static long timeOut = 10000;
 
@@ -250,7 +250,9 @@ public class SequenceFactory {
     /**
      * Returns the protein indexed by the given index. It can be that the IO is
      * busy (especially when working on distant servers) thus returning an
-     * error. The method will then retry after waiting waitingTime milliseconds. The waitingTime is doubled for the next try. The method throws an exception after timeout (see timeOut attribute).
+     * error. The method will then retry after waiting waitingTime milliseconds.
+     * The waitingTime is doubled for the next try. The method throws an
+     * exception after timeout (see timeOut attribute).
      *
      * @param index the index where to look at
      * @param waitingTime the waiting time before retry
@@ -260,11 +262,11 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      */
     private synchronized Protein getProtein(String accession, long index, long waitingTime) throws InterruptedException, IOException, IllegalArgumentException {
-        
+
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
         }
-        
+
         try {
             if (reading) {
                 throw new IllegalStateException("Attempting to read new line before current read operation is completed.");
@@ -298,7 +300,7 @@ public class SequenceFactory {
             reading = false;
             if (waitingTime < timeOut) {
                 wait(waitingTime);
-                return getProtein(accession, index, 2*waitingTime);
+                return getProtein(accession, index, 2 * waitingTime);
             } else {
                 throw e;
             }

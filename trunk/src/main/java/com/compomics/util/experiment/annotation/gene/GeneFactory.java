@@ -3,12 +3,9 @@ package com.compomics.util.experiment.annotation.gene;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -313,46 +310,56 @@ public class GeneFactory {
      */
     public Integer getCurrentEnsemblVersion(String ensemblType) {
 
-        if (ensemblVersions == null) {
-            ensemblVersions = new HashMap<String, Integer>();
+        // @TODO: find a less hard coded way of finding the current ensembl versions!!!
+        if (ensemblType.equalsIgnoreCase("fungi")
+                || ensemblType.equalsIgnoreCase("plants")
+                || ensemblType.equalsIgnoreCase("protists")
+                || ensemblType.equalsIgnoreCase("metazoa")) {
+            return 22;
+        } else {
+            return 75;
         }
 
-        if (!ensemblVersions.containsKey(ensemblType)) {
-
-            try {
-                // get the current Ensembl version
-                URL url = new URL("http://www.biomart.org/biomart/martservice?type=registry");
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-                String inputLine;
-                boolean ensemblVersionFound = false;
-                String ensemblVersionAsText = "?";
-
-                while ((inputLine = in.readLine()) != null && !ensemblVersionFound) {
-                    if (inputLine.indexOf("database=\"" + ensemblType + "_mart_") != -1) {
-                        ensemblVersionAsText = inputLine.substring(inputLine.indexOf("database=\"" + ensemblType + "_mart_") + ("database=\"" + ensemblType + "_mart_").length());
-                        ensemblVersionAsText = ensemblVersionAsText.substring(0, ensemblVersionAsText.indexOf("\""));
-                        ensemblVersionFound = true;
-                    }
-                }
-
-                in.close();
-
-                if (ensemblVersionFound) {
-                    try {
-                        Integer ensemblVersion = new Integer(ensemblVersionAsText);
-                        ensemblVersions.put(ensemblType, ensemblVersion);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return ensemblVersions.get(ensemblType);
+        // the code below used to work but is not always updated when new ensembl versions are released
+//        if (ensemblVersions == null) {
+//            ensemblVersions = new HashMap<String, Integer>();
+//        }
+//        if (!ensemblVersions.containsKey(ensemblType)) {
+//
+//            try {
+//                // get the current Ensembl version
+//                URL url = new URL("http://www.biomart.org/biomart/martservice?type=registry");
+//
+//                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+//
+//                String inputLine;
+//                boolean ensemblVersionFound = false;
+//                String ensemblVersionAsText = "?";
+//
+//                while ((inputLine = in.readLine()) != null && !ensemblVersionFound) {
+//                    if (inputLine.indexOf("database=\"" + ensemblType + "_mart_") != -1) {
+//                        ensemblVersionAsText = inputLine.substring(inputLine.indexOf("database=\"" + ensemblType + "_mart_") + ("database=\"" + ensemblType + "_mart_").length());
+//                        ensemblVersionAsText = ensemblVersionAsText.substring(0, ensemblVersionAsText.indexOf("\""));
+//                        ensemblVersionFound = true;
+//                    }
+//                }
+//
+//                in.close();
+//
+//                if (ensemblVersionFound) {
+//                    try {
+//                        Integer ensemblVersion = new Integer(ensemblVersionAsText);
+//                        ensemblVersions.put(ensemblType, ensemblVersion);
+//                    } catch (NumberFormatException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return ensemblVersions.get(ensemblType);
     }
 
     /**

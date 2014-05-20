@@ -15,6 +15,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.io.FileNotFoundException;
@@ -109,8 +110,8 @@ public abstract class SpectrumAnnotator {
      * @param ionMatches list of ion matches
      * @return vector of default spectrum annotations
      */
-    public static Vector<DefaultSpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
-        Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
+    public static Vector<SpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
+        Vector<SpectrumAnnotation> currentAnnotations = new Vector();
         for (IonMatch ionMatch : ionMatches) {
             currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(subtractIsotope),
                     SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()));

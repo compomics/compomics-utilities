@@ -358,7 +358,7 @@ public class GeneFactory {
     /**
      * Returns the name of the Ensembl database for BioMart queries.
      *
-     * @param speciesTypeIndex the species type index: 1:fungi, 2: plants, 3:
+     * @param speciesTypeIndex the species type index: 1: fungi, 2: plants, 3:
      * protist, 4: metazoa or 5: default.
      * @return the name of the Ensembl database for BioMart queries
      */
@@ -366,11 +366,9 @@ public class GeneFactory {
 
         switch (speciesTypeIndex) {
             case 1:
-                //return "fungi_mart_" + getCurrentEnsemblVersion("fungi"); // old ensembl setup
-                return "default";
+                return "fungi_mart_" + getCurrentEnsemblVersion("fungi");
             case 2:
-                //return "plants_mart_" + getCurrentEnsemblVersion("plants"); // old ensembl setup
-                return "default";
+                return "plants_mart_" + getCurrentEnsemblVersion("plants");
             case 3:
                 return "protists_mart_" + getCurrentEnsemblVersion("protists");
             case 4:

@@ -10,6 +10,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.general.IsotopicDistribution;
 import com.compomics.util.gui.UtilitiesGUIDefaults;
 import com.compomics.util.gui.events.RescalingEvent;
+import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
 import com.compomics.util.gui.protein.ProteinSequencePane;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
@@ -113,7 +114,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     /**
      * A hashmap of all spectrum panel annotations.
      */
-    private HashMap<Integer, Vector<DefaultSpectrumAnnotation>> allAnnotations;
+    private HashMap<Integer, Vector<SpectrumAnnotation>> allAnnotations;
     /**
      * The first spectrum panel.
      */
@@ -514,7 +515,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
     private void setUpSpectrumPanelDemo() {
 
         linkedSpectrumPanels = new HashMap<Integer, SpectrumPanel>();
-        allAnnotations = new HashMap<Integer, Vector<DefaultSpectrumAnnotation>>();
+        allAnnotations = new HashMap<Integer, Vector<SpectrumAnnotation>>();
 
         try {
             // create and add two spectra to the view
@@ -527,7 +528,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
             spectrumAPanel = getSpectrumPanel(pklFileA, profileSpectrumJCheckBox.isSelected());
 
             // add the fragment ions annotations for the first spectrum
-            Vector<DefaultSpectrumAnnotation> currentAnnotations = new Vector();
+            Vector<SpectrumAnnotation> currentAnnotations = new Vector();
             currentAnnotations.add(new DefaultSpectrumAnnotation(175.119495, -0.006822999999997137, SpectrumPanel.determineColorOfPeak("y1"), "y1"));
             currentAnnotations.add(new DefaultSpectrumAnnotation(389.251235, 4.6299999996790575E-4, SpectrumPanel.determineColorOfPeak("y3"), "y3"));
             currentAnnotations.add(new DefaultSpectrumAnnotation(460.288345, -0.003290999999990163, SpectrumPanel.determineColorOfPeak("y4"), "y4"));
@@ -2286,7 +2287,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
 
             Integer key = iterator.next();
             SpectrumPanel currentSpectrumPanel = linkedSpectrumPanels.get(key);
-            Vector<DefaultSpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
+            Vector<SpectrumAnnotation> currentAnnotations = allAnnotations.get(key);
 
             // update the ion coverage annotations
             currentSpectrumPanel.setAnnotations(SpectrumPanel.filterAnnotations(

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class presents a JPanel that will hold and display a mass spectrum or a
@@ -795,13 +796,12 @@ public abstract class GraphicsPanel extends JPanel {
      *
      * @param aAnnotations Vector with SpectrumAnnotation instances.
      */
-    public void setAnnotations(Vector aAnnotations) {
+    public void setAnnotations(List<SpectrumAnnotation> aAnnotations) {
         this.iAnnotations = new Vector(50, 25);
         if (aAnnotations != null) {
             // Attempt to remove duplicates.
             HashSet removeDupes = new HashSet(aAnnotations.size());
-            for (Iterator lIterator = aAnnotations.iterator(); lIterator.hasNext();) {
-                SpectrumAnnotation annotation = (SpectrumAnnotation) lIterator.next();
+            for (SpectrumAnnotation annotation : aAnnotations) {
                 String key = annotation.getLabel() + annotation.getMZ();
                 if (removeDupes.contains(key)) {
                     // Duplicate, ignore!

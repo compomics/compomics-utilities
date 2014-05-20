@@ -18,7 +18,7 @@ import java.awt.*;
  * $Date: 2007/10/22 10:09:02 $
  */
 /**
- * This class provideds a default implementation of the SpectrumAnnotation interface.
+ * This class provides a default implementation of the SpectrumAnnotation interface.
  * 
  * @author Lennart Martens
  * @version $Id: DefaultSpectrumAnnotation.java,v 1.1 2007/10/22 10:09:02 lennart Exp $

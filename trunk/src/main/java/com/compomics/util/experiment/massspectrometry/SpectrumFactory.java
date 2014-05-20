@@ -73,6 +73,10 @@ public class SpectrumFactory {
      * engine.
      */
     private HashMap<String, File> idToSpectrumName = new HashMap<String, File>();
+    /**
+     * The time out in milliseconds when querying the file
+     */
+    public final static long timeOut = 10000;
 
     /**
      * Constructor.
@@ -277,7 +281,7 @@ public class SpectrumFactory {
                 return currentPrecursor;
             }
         }
-        return getPrecursor(fileName, spectrumTitle, save, 0);
+        return getPrecursor(fileName, spectrumTitle, save, 1);
     }
 
     /**
@@ -548,14 +552,20 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor of the desired spectrum.
+     * Returns the precursor of the desired spectrum. It can be that the IO is
+     * busy (especially when working on distant servers) thus returning an
+     * error. The method will then retry
+     * after waiting waitingTime milliseconds. The waitingTime is doubled for
+     * the next try. The method throws an exception after timeout (see timeOut
+     * attribute).
      *
      * @param spectrumKey the key of the spectrum
      * @param save boolean indicating whether the loaded precursor should be
      * stored in the factory
-     * @param nErrors the number of errors encountered. If less than 100, the
-     * method will retry after a tempo of 50ms to avoid network related issues.
+     * @param waitingTime the waiting time before retry
+     *
      * @return the corresponding precursor
+     *
      * @throws IOException exception thrown whenever the file was not parsed
      * correctly
      * @throws MzMLUnmarshallerException exception thrown whenever the file was
@@ -563,8 +573,12 @@ public class SpectrumFactory {
      * @throws IllegalArgumentException exception thrown whenever the file was
      * not parsed correctly
      */
-    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, int errorCounter) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    private synchronized Precursor getPrecursor(String fileName, String spectrumTitle, boolean save, long waitingTime) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
 
+        if (waitingTime <= 0) {
+            throw new IllegalArgumentException("Waiting time should be a positive number.");
+        }
+        
         Precursor currentPrecursor = null;
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
@@ -581,12 +595,12 @@ public class SpectrumFactory {
             try {
                 currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
             } catch (Exception e) {
-                if (errorCounter <= 100) {
+                if (waitingTime < timeOut) {
                     try {
-                        wait(50);
+                        wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getPrecursor(fileName, spectrumTitle, save, errorCounter + 1);
+                    return getPrecursor(fileName, spectrumTitle, save, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading precursor of spectrum " + spectrumTitle + " of file " + fileName + ".");
@@ -679,7 +693,7 @@ public class SpectrumFactory {
                 return currentSpectrum;
             }
         }
-        return getSpectrum(spectrumFile, spectrumTitle, 0);
+        return getSpectrum(spectrumFile, spectrumTitle, 1);
     }
 
     /**
@@ -701,10 +715,19 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the desired spectrum.
+     * Returns the desired spectrum. It can be that the IO is
+     * busy (especially when working on distant servers) thus returning an
+     * error. The method will then retry
+     * after waiting waitingTime milliseconds. The waitingTime is doubled for
+     * the next try. The method throws an exception after timeout (see timeOut
+     * attribute).
      *
-     * @param spectrumKey key of the spectrum
+     * @param spectrumFile the name of the file containing the spectrum
+     * @param spectrumTitle the title of the desired spectrum
+     * @param waitingTime the waiting time before retry
+     * 
      * @return the desired spectrum
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -712,8 +735,12 @@ public class SpectrumFactory {
      * @throws MzMLUnmarshallerException exception thrown whenever an error
      * occurred while parsing the file
      */
-    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, int errorCounter) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
 
+        if (waitingTime <= 0) {
+            throw new IllegalArgumentException("Waiting time should be a positive number.");
+        }
+        
         Spectrum currentSpectrum = null;
 
         if (spectrumFile.toLowerCase().endsWith(".mgf")) {
@@ -730,12 +757,12 @@ public class SpectrumFactory {
             try {
                 currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
             } catch (Exception e) {
-                if (errorCounter <= 100) {
+                if (waitingTime < timeOut) {
                     try {
-                        wait(50);
+                        wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, errorCounter + 1);
+                    return getSpectrum(spectrumFile, spectrumTitle, 2*waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");

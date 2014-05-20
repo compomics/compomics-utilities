@@ -75,6 +75,10 @@ public class SequenceFactory {
      * Boolean indicating that the factory is reading the file.
      */
     private boolean reading = false;
+    /**
+     * The time out in milliseconds when querying the file
+     */
+    public final static long timeOut = 10000;
 
     /**
      * Constructor.
@@ -226,7 +230,7 @@ public class SequenceFactory {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
 
-            currentProtein = getProtein(accession, index, 0);
+            currentProtein = getProtein(accession, index, 1);
 
             if (loadedProteins.size() == nCache) {
                 currentProteinMap.remove(loadedProteins.get(0));
@@ -246,18 +250,20 @@ public class SequenceFactory {
     /**
      * Returns the protein indexed by the given index. It can be that the IO is
      * busy (especially when working on distant servers) thus returning an
-     * error. The method will then try 100 times at 0.01 second intervals.
+     * error. The method will then retry after waiting waitingTime milliseconds. The waitingTime is doubled for the next try. The method throws an exception after timeout (see timeOut attribute).
      *
      * @param index the index where to look at
-     * @param nTries the number of tries already made
+     * @param waitingTime the waiting time before retry
      * @return the header indexed by the given index
      * @throws InterruptedException
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    private synchronized Protein getProtein(String accession, long index, int nTries) throws InterruptedException, IOException, IllegalArgumentException {
-
-        // @TODO: sometimes times out on galaxy...
+    private synchronized Protein getProtein(String accession, long index, long waitingTime) throws InterruptedException, IOException, IllegalArgumentException {
+        
+        if (waitingTime <= 0) {
+            throw new IllegalArgumentException("Waiting time should be a positive number.");
+        }
         
         try {
             if (reading) {
@@ -290,9 +296,9 @@ public class SequenceFactory {
 
         } catch (IOException e) {
             reading = false;
-            if (nTries <= 100) {
-                wait(10);
-                return getProtein(accession, index, nTries + 1);
+            if (waitingTime < timeOut) {
+                wait(waitingTime);
+                return getProtein(accession, index, 2*waitingTime);
             } else {
                 throw e;
             }

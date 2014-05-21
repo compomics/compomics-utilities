@@ -26,6 +26,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.Modification;
 import uk.ac.ebi.jmzidml.model.mzidml.ModificationParams;
 import uk.ac.ebi.jmzidml.model.mzidml.Param;
 import uk.ac.ebi.jmzidml.model.mzidml.SearchModification;
+import uk.ac.ebi.jmzidml.model.mzidml.SpecificityRules;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectraData;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
@@ -45,6 +46,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private String softwareName = null;
     /**
+     * The advocate corresponding to this software
+     */
+    private Advocate advocate = null;
+    /**
      * The softwareVersion.
      */
     private String softwareVersion = null;
@@ -53,54 +58,17 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private File mzIdentMLFile;
     /**
+     * The name of the mzIdentML file.
+     */
+    private String mzIdentMLFileName;
+    /**
      * The mzIdentML unmarshaller.
      */
     private MzIdentMLUnmarshaller unmarshaller;
-//    /**
-//     * Progress dialog for displaying the progress.
-//     */
-//    private static ProgressDialogX progressDialog;
     /**
      * The names of the fixed modifications.
      */
-    private ArrayList<String> fixedModifications;
-
-    /**
-     * Main class for testing purposes only.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-
-//        progressDialog = new ProgressDialogX(null, null, null, true);
-//        progressDialog.setPrimaryProgressCounterIndeterminate(true);
-//        progressDialog.setTitle("Loading PSMs. Please Wait...");
-//
-//        new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//                    progressDialog.setVisible(true);
-//                } catch (IndexOutOfBoundsException e) {
-//                    // ignore
-//                }
-//            }
-//        }, "ProgressDialog").start();
-//
-//        new Thread("LoadingThread") {
-//            @Override
-//            public void run() {
-//
-//                try {
-//                    MzIdentMLIdfileReader mzIdentMLIdfileReader = new MzIdentMLIdfileReader(
-//                            new File("C:\\Users\\hba041\\My_Applications\\wiki\\peptide-shaker\\tutorial\\data_09_01_2014\\msgf+\\msgf+.mzid"));
-//                    mzIdentMLIdfileReader.getAllSpectrumMatches(progressDialog);
-//                    progressDialog.setRunFinished();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-    }
+    private ArrayList<SearchModification> fixedModifications;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -130,32 +98,39 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     public MzIdentMLIdfileReader(File mzIdentMLFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
         this.mzIdentMLFile = mzIdentMLFile;
-        //unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true); // @TODO: figure out when to use in memory processing
-        unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
+        mzIdentMLFileName = Util.getFileName(mzIdentMLFile);
+        if (mzIdentMLFile.length() < 1073741824) {
+            unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true);
+        } else {
+            unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
+        }
 
         // get the software name and version
         AnalysisSoftwareList analysisSoftwareList = unmarshaller.unmarshal(AnalysisSoftwareList.class);
 
         for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
             Param softwareNameObject = software.getSoftwareName();
-            if (softwareNameObject.getCvParam() != null) {
+            if (softwareName == null) {
                 softwareName = softwareNameObject.getCvParam().getName();
-            } else if (softwareNameObject.getUserParam() != null) {
-                softwareName = softwareNameObject.getUserParam().getName();
-            } else {
-                softwareName = "unknown";
             }
-
-            softwareVersion = software.getVersion();
+            if (softwareName == null) {
+                softwareName = softwareNameObject.getUserParam().getName();
+            }
+            if (softwareVersion == null) {
+                softwareVersion = software.getVersion();
+            }
+        }
+        if (softwareName == null) {
+            throw new IllegalArgumentException("The name of the software used to generate " + mzIdentMLFileName + " could not be found.");
         }
 
         // get the list of fixed modifications
-        fixedModifications = new ArrayList<String>();
+        fixedModifications = new ArrayList<SearchModification>();
         SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
         ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
         for (SearchModification tempMod : modifications.getSearchModification()) {
             if (tempMod.isFixedMod()) {
-                fixedModifications.add(tempMod.getCvParam().get(0).getAccession()); // @TODO: add better error handling...
+                fixedModifications.add(tempMod);
             }
         }
     }
@@ -174,19 +149,17 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // Get the list of SpectrumIdentification elements
         List<SpectrumIdentificationList> spectrumIdList = analysisData.getSpectrumIdentificationList();
-        int numberOfPsms = 0;
 
+        int spectrumIdentificationResultSize = 0;
         // find the number of psms to parse
         for (SpectrumIdentificationList spectrumIdElements : spectrumIdList) {
-            for (SpectrumIdentificationResult spectrumIdentResult : spectrumIdElements.getSpectrumIdentificationResult()) {
-                numberOfPsms += spectrumIdentResult.getSpectrumIdentificationItem().size(); //@TODO: is there a better/faster way of doing this?
-            }
+            spectrumIdentificationResultSize += spectrumIdElements.getSpectrumIdentificationResult().size();
         }
 
         // set the waiting handler max value
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(numberOfPsms);
+            waitingHandler.setMaxSecondaryProgressCounter(spectrumIdentificationResultSize);
         }
 
         // get the psms
@@ -235,11 +208,69 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     for (Modification modification : mzIdentMLPeptide.getModification()) {
 
                         String accession = modification.getCvParam().get(0).getAccession();
+                        int location = modification.getLocation();
+                        double monoMassDelta = modification.getMonoisotopicMassDelta();
 
-                        if (!fixedModifications.contains(accession)) {
+                        boolean fixed = false;
+                        for (SearchModification searchFixedModification : fixedModifications) {
+                            if (accession.equals(searchFixedModification.getCvParam().get(0).getAccession()) || searchFixedModification.getMassDelta() == monoMassDelta) {
+                                boolean allRules = true;
+                                List<SpecificityRules> specificityRules = searchFixedModification.getSpecificityRules();
+                                if (specificityRules != null && !specificityRules.isEmpty()) {
+                                    for (SpecificityRules specificityRule : specificityRules) {
+                                        for (CvParam cvParam : specificityRule.getCvParam()) {
+                                            if (cvParam.getAccession().equals("MS:1001189") || cvParam.getAccession().equals("MS:1002057")) {
+                                                if (location != 0) {
+                                                    allRules = false;
+                                                    break;
+                                                }
+                                            } else if (cvParam.getAccession().equals("MS:1001190") || cvParam.getAccession().equals("MS:1002058")) {
+                                                if (location != peptideSequence.length() + 1) {
+                                                    allRules = false;
+                                                    break;
+                                                }
+                                            } else if (cvParam.getAccession().equals("MS:1001875")) {
+                                                // can we use this?
+                                            } else if (cvParam.getAccession().equals("MS:1001876")) {
+                                                // not a specificity rule but the scoring of the specificity
+                                            } else {
+                                                throw new IllegalArgumentException("Specificity rule " + cvParam.getAccession() + " not recognized.");
+                                            }
+                                        }
+                                        if (!allRules) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (allRules) {
+                                    List<String> residues = searchFixedModification.getResidues();
+                                    if (residues == null || residues.isEmpty()) {
+                                        fixed = true;
+                                        break;
+                                    } else {
+                                        String aaAtLocation;
+                                        if (location == 0) {
+                                            aaAtLocation = peptideSequence.charAt(0) + "";
+                                        } else if (location == peptideSequence.length() + 1) {
+                                            aaAtLocation = peptideSequence.charAt(location - 2) + "";
+                                        } else {
+                                            aaAtLocation = peptideSequence.charAt(location - 1) + "";
+                                        }
+                                        for (String residue : residues) {
+                                            if (residue.equals(aaAtLocation)) {
+                                                fixed = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (fixed) {
+                                break;
+                            }
+                        }
 
-                            int location = modification.getLocation();
-                            double monoMassDelta = modification.getMonoisotopicMassDelta();
+                        if (!fixed) {
 
                             if (location == 0) {
                                 location = 1; // n-term ptm
@@ -255,25 +286,33 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     Peptide peptide = new Peptide(mzIdentMLPeptide.getPeptideSequence(), utilitiesModifications);
 
                     // get the e-value
-                    double eValue = 100;
+                    Double eValue = null;
                     for (CvParam cvParam : spectrumIdentItem.getCvParam()) {
                         if (cvParam.getAccession().equalsIgnoreCase("MS:1002052")) {
-                            eValue = new Double(cvParam.getValue()); // @TODO: what to do if not found..?
+                            eValue = new Double(cvParam.getValue());
                         }
+                    }
+                    if (eValue == null) {
+                        throw new IllegalArgumentException("No e-value found for spectrum " + spectrumTitle + " in file " + mzIdentMLFileName + ".");
                     }
 
                     // get the charge
                     Charge peptideCharge = new Charge(Charge.PLUS, spectrumIdentItem.getChargeState());
 
+                    // The advocate
+                    Advocate advocate = Advocate.getAdvocate(softwareName);
+                    if (advocate == null) {
+                        advocate = Advocate.addUserAdvocate(softwareName);
+                    }
+
                     // create the peptide assumption
-                    PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.MSGF.getIndex(), peptideCharge, eValue, Util.getFileName(mzIdentMLFile));
-                    currentMatch.addHit(Advocate.MSGF.getIndex(), peptideAssumption, false);
+                    PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), peptideCharge, eValue, mzIdentMLFileName);
+                    currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
 
                     if (waitingHandler != null) {
                         if (waitingHandler.isRunCanceled()) {
                             break;
                         }
-                        waitingHandler.increaseSecondaryProgressCounter();
                     }
                 }
 
@@ -281,6 +320,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     if (waitingHandler.isRunCanceled()) {
                         break;
                     }
+                    waitingHandler.increaseSecondaryProgressCounter();
                 }
 
                 foundPeptides.add(currentMatch);
@@ -306,5 +346,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     @Override
     public String getSoftwareVersion() {
         return softwareVersion;
+    }
+
+    @Override
+    public String getSoftware() {
+        return softwareName;
     }
 }

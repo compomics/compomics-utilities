@@ -80,7 +80,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public Advocate getAlgorithm() {
-        return Advocate.MSGF;
+        return Advocate.msgf;
     }
 
     @Override

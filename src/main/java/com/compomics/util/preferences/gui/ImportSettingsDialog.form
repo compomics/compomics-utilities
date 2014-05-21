@@ -71,7 +71,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="filterPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="helpJButton" alignment="2" max="32767" attributes="1"/>
                       <Component id="okButton" alignment="2" max="32767" attributes="1"/>
@@ -114,21 +114,9 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="nAAmaxTxt" pref="74" max="32767" attributes="2"/>
                           </Group>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="unitCmb" alignment="1" min="-2" pref="69" max="-2" attributes="2"/>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="omssaEValueLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="xtandemEValueLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="mascotEValueLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="omssaEvalueTxt" pref="154" max="32767" attributes="2"/>
-                                      <Component id="mascotEvalueTxt" alignment="0" max="32767" attributes="2"/>
-                                      <Component id="xtandemEvalueTxt" alignment="0" max="32767" attributes="2"/>
-                                  </Group>
-                              </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="205" max="-2" attributes="0"/>
+                              <Component id="unitCmb" min="-2" pref="69" max="-2" attributes="2"/>
                           </Group>
                           <Component id="ptmsCheck" max="32767" attributes="0"/>
                       </Group>
@@ -139,22 +127,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="omssaEValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="omssaEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="xtandemEValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="xtandemEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="mascotEValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="mascotEvalueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nAAmaxTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="nAAminTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -177,21 +150,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="omssaEValueLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="OMSSA Max e-value"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="xtandemEValueLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="X!Tandem Max e-value"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="mascotEValueLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Mascot Max e-value"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JTextField" name="nAAmaxTxt">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
@@ -231,21 +189,6 @@
             <Component class="javax.swing.JLabel" name="precursorAccuracyLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Precursor Accuracy"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="xtandemEvalueTxt">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="omssaEvalueTxt">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="mascotEvalueTxt">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="ptmsCheck">

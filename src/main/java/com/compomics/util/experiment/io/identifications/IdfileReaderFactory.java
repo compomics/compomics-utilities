@@ -36,7 +36,7 @@ public class IdfileReaderFactory {
     private static HashMap<String, Class> idFileReaders = new HashMap<String, Class>();
 
     /**
-     * Static initializer block that checks for registered IdfileReaders through
+     * Static initialiser block that checks for registered IdfileReaders through
      * the Java service loader
      */
     static {
@@ -165,36 +165,5 @@ public class IdfileReaderFactory {
         }
 
         return result;
-    }
-
-    /**
-     * This method return the identification software corresponding to the given
-     * file.
-     *
-     * @param aFile an identification file
-     * @return the index of the search engine
-     */
-    public int getSearchEngine(File aFile) {
-        String fileName = Util.getFileName(aFile);
-        if (fileName.endsWith(".dat")) {
-            return Advocate.Mascot.getIndex();
-        } else if (fileName.endsWith(".omx")) {
-            return Advocate.OMSSA.getIndex();
-        } else if (fileName.endsWith(".t.xml")) {
-            if (!fileName.equals("mods.xml") && !fileName.equals("usermods.xml")) {
-                return Advocate.XTandem.getIndex();
-            }
-        } else if (fileName.endsWith(".out")) {
-            return Advocate.pepnovo.getIndex();
-        } else if (fileName.endsWith(".tags")) {
-            return Advocate.DirecTag.getIndex();
-        } else if (fileName.endsWith(".res")) {
-            return Advocate.andromeda.getIndex();
-        } else if (fileName.endsWith(".mzid")) {
-            return Advocate.MSGF.getIndex();
-        } else if (fileName.endsWith(".csv")) {
-            return Advocate.msAmanda.getIndex();
-        }
-        return -1;
     }
 }

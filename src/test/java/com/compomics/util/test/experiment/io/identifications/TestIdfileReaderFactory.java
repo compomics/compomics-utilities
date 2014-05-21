@@ -48,6 +48,11 @@ public class TestIdfileReaderFactory extends TestCase {
             public String getSoftwareVersion() {
                 return "X.Y.Z";
             }
+
+            @Override
+            public String getSoftware() {
+                return "testIdfileReaderRegistration";
+            }
         };
 
         IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
@@ -107,6 +112,11 @@ public class TestIdfileReaderFactory extends TestCase {
         @Override
         public String getSoftwareVersion() {
             return "X.Y.Z";
+        }
+
+        @Override
+        public String getSoftware() {
+            return "InnerIdfileReader";
         }
     }
 }

@@ -938,28 +938,28 @@ public class SearchParameters implements Serializable {
         }
 
         // compatibility check
-        if (result.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()) == null) {
+        if (result.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()) == null) {
             XtandemParameters xtandemParameters = new XtandemParameters();
             xtandemParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(xtandemParameters.getAlgorithm().getIndex(), xtandemParameters);
         }
 
         // compatibility check
-        if (result.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()) == null) {
+        if (result.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) == null) {
             OmssaParameters omssaParameters = new OmssaParameters();
             omssaParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(omssaParameters.getAlgorithm().getIndex(), omssaParameters);
         }
 
         // compatibility check
-        if (result.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()) == null) {
+        if (result.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()) == null) {
             MsgfParameters msgfParameters = new MsgfParameters();
             msgfParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
         }
 
         // compatibility check
-        if (result.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()) == null) {
+        if (result.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()) == null) {
             DirecTagParameters direcTagParameters = new DirecTagParameters();
             result.setIdentificationAlgorithmParameter(direcTagParameters.getAlgorithm().getIndex(), direcTagParameters);
         }

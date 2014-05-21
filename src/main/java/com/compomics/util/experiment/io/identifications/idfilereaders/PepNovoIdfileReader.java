@@ -365,6 +365,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public String getSoftwareVersion() {
-        throw new UnsupportedOperationException("Not supported yet."); //@TODO
+        return "3.1 (beta)";
+    }
+
+    @Override
+    public String getSoftware() {
+        throw new UnsupportedOperationException("PepNovo+"); //To change body of generated methods, choose Tools | Templates.
     }
 }

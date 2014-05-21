@@ -571,7 +571,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public Advocate getAlgorithm() {
-        return Advocate.XTandem;
+        return Advocate.xtandem;
     }
 
     @Override

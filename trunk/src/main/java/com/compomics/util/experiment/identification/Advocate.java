@@ -3,7 +3,8 @@ package com.compomics.util.experiment.identification;
 import java.util.HashMap;
 
 /**
- * The advocate of a hit can be a search engine, a sequencing algorithm, a rescoring algorithm, etc.
+ * The advocate of a hit can be a search engine, a sequencing algorithm, a
+ * rescoring algorithm, etc.
  *
  * @author Marc Vaudel
  */
@@ -13,6 +14,7 @@ public class Advocate {
      * The different types of advocates
      */
     public enum AdvocateType {
+
         search_engine, sequencing_algorithm, spectral_library, rescoring_algorithm, multiple_algorithm_software, unknown;
     }
     /**
@@ -52,7 +54,7 @@ public class Advocate {
      */
     public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm);
     /**
-     * Map of user defined advocates indexed by index
+     * Map of user defined advocates indexed by index.
      */
     private static HashMap<Integer, Advocate> userAdvocates = new HashMap<Integer, Advocate>();
 
@@ -73,7 +75,8 @@ public class Advocate {
      * Constructor.
      *
      * @param index the index of the advocate
-     * @param name the name of the advocate, should be identical to the one present in the result file
+     * @param name the name of the advocate, should be identical to the one
+     * present in the result file
      * @param type the type of advocate
      */
     private Advocate(int index, String name, AdvocateType type) {
@@ -86,7 +89,8 @@ public class Advocate {
      * Constructor for an advocate of unknown type.
      *
      * @param index the index of the advocate
-     * @param name the name of the advocate, should be identical to the one present in the result file
+     * @param name the name of the advocate, should be identical to the one
+     * present in the result file
      */
     private Advocate(int index, String name) {
         this.index = index;
@@ -111,19 +115,19 @@ public class Advocate {
     public String getName() {
         return name;
     }
-    
+
     /**
      * Returns the type of advocate.
-     * 
+     *
      * @return the type of advocate
      */
     public AdvocateType getType() {
         return type;
     }
-    
+
     /**
      * Returns the implemented advocates in an array.
-     * 
+     *
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
@@ -182,9 +186,9 @@ public class Advocate {
 
     /**
      * Adds a user advocate and returns it.
-     * 
+     *
      * @param advocateName the name of the advocate
-     * 
+     *
      * @return the new advocate
      */
     public static Advocate addUserAdvocate(String advocateName) {
@@ -225,17 +229,17 @@ public class Advocate {
      */
     public String getPmid() {
         if (this == mascot) {
-                return "10612281";
+            return "10612281";
         } else if (this == omssa) {
-                return "15473683";
+            return "15473683";
         } else if (this == xtandem) {
-                return "14976030";
+            return "14976030";
         } else if (this == pepnovo) {
-                return "15858974";
+            return "15858974";
         } else if (this == andromeda) {
-                return "21254760";
+            return "21254760";
         } else if (this == direcTag) {
-                return "18630943";
+            return "18630943";
         } else {
             return null;
         }

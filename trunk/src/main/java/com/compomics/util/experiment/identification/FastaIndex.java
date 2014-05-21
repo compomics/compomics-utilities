@@ -60,7 +60,7 @@ public class FastaIndex extends ExperimentObject {
      */
     private String decoyTag;
     /**
-     * The species included in the database
+     * The species included in the database.
      */
     private ArrayList<String> species;
 
@@ -290,8 +290,9 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the species targeted by this database. Note: this is not necessarily an exhaustive list of the species in the database.
-     * 
+     * Returns the species targeted by this database. Note: this is not
+     * necessarily an exhaustive list of the species in the database.
+     *
      * @return the species targeted by this database
      */
     public ArrayList<String> getSpecies() {
@@ -300,12 +301,10 @@ public class FastaIndex extends ExperimentObject {
 
     /**
      * Sets the species targeted by this database.
-     * 
+     *
      * @param species the species targeted by this database
      */
     public void setSpecies(ArrayList<String> species) {
         this.species = species;
     }
-    
-    
 }

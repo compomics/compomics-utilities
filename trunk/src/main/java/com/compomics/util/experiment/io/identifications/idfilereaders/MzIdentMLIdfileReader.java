@@ -46,7 +46,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private String softwareName = null;
     /**
-     * The advocate corresponding to this software
+     * The advocate corresponding to this software.
      */
     private Advocate advocate = null;
     /**
@@ -110,6 +110,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
             Param softwareNameObject = software.getSoftwareName();
+            
+            // @TODO: not sure if the software wanted is always in first in the list...
+            
             if (softwareName == null) {
                 softwareName = softwareNameObject.getCvParam().getName();
             }
@@ -291,6 +294,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         if (cvParam.getAccession().equalsIgnoreCase("MS:1002052")) {
                             eValue = new Double(cvParam.getValue());
                         }
+                        
+                        // @TODO: add other scores/e-values, as this breaks for anything that is not MS-GF+!!!
                     }
                     if (eValue == null) {
                         throw new IllegalArgumentException("No e-value found for spectrum " + spectrumTitle + " in file " + mzIdentMLFileName + ".");

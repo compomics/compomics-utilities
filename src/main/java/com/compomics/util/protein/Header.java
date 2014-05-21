@@ -90,16 +90,18 @@ public class Header implements Cloneable, Serializable {
         IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), Unknown(null, null);
         
         /**
-         * The full name of the database
+         * The full name of the database.
          */
         String fullName;
         /**
-         * The pubmed id of the database
+         * The PubMed id of the database.
          */
         String pmid;
         /**
+         * Constructor.
          * 
-         * @param fullName 
+         * @param fullName the full name
+         * @param pmid the PubMed ID.
          */
         private DatabaseType(String fullName, String pmid) {
             this.fullName = fullName;
@@ -116,9 +118,9 @@ public class Header implements Cloneable, Serializable {
         }
         
         /**
-         * Returns the pubmed id of the database, null if not set.
+         * Returns the PubMed id of the database, null if not set.
          * 
-         * @return the pubmed id of the database
+         * @return the PubMed id of the database
          */
         public String getPmid() {
             return pmid;

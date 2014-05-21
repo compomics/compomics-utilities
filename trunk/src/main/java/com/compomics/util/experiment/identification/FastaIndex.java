@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header.DatabaseType;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,6 +59,10 @@ public class FastaIndex extends ExperimentObject {
      * The tag used for decoy sequences.
      */
     private String decoyTag;
+    /**
+     * The species included in the database
+     */
+    private ArrayList<String> species;
 
     /**
      * Constructor.
@@ -283,4 +288,24 @@ public class FastaIndex extends ExperimentObject {
                 year = calendar.get(Calendar.YEAR);
         return day + "." + month + "." + year;
     }
+
+    /**
+     * Returns the species targeted by this database. Note: this is not necessarily an exhaustive list of the species in the database.
+     * 
+     * @return the species targeted by this database
+     */
+    public ArrayList<String> getSpecies() {
+        return species;
+    }
+
+    /**
+     * Sets the species targeted by this database.
+     * 
+     * @param species the species targeted by this database
+     */
+    public void setSpecies(ArrayList<String> species) {
+        this.species = species;
+    }
+    
+    
 }

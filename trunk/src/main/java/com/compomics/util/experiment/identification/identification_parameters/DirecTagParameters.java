@@ -579,7 +579,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
 
     @Override
     public Advocate getAlgorithm() {
-        return Advocate.DirecTag;
+        return Advocate.direcTag;
     }
 
     @Override

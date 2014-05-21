@@ -47,7 +47,7 @@ public class IdentificationDBTest extends TestCase {
                 testProteins.add("test protein2");
                 Peptide peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
                 peptide.setParentProteins(testProteins);
-                testSpectrumMatch.addHit(Advocate.Mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.Mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
+                testSpectrumMatch.addHit(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), new Charge(Charge.PLUS, 2), 0.1, "no file"), false);
                 idDB.addSpectrumMatch(testSpectrumMatch);
 
                 peptide = new Peptide(peptideKey, new ArrayList<ModificationMatch>());
@@ -61,17 +61,17 @@ public class IdentificationDBTest extends TestCase {
                 testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
                 Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 2);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
+                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 2);
+                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
+                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
                 ArrayList<String> proteins = new ArrayList<String>();
                 proteins.add(proteinKey);
-                ((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().setParentProteins(proteins);
+                ((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().setParentProteins(proteins);
                 idDB.updateMatch(testSpectrumMatch);
 
                 testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 1);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.Mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(proteinKey));
+                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 1);
+                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(proteinKey));
 
                 testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));

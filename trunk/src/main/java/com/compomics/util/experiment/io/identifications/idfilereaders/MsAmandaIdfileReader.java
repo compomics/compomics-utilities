@@ -21,7 +21,6 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This IdfileReader reads identifications from an MS Amanda csv result file.
- * (Work in progress...)
  *
  * @author Harald Barsnes
  */
@@ -49,7 +48,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     private PTMFactory ptmFactory = PTMFactory.getInstance();
 
 //    /**
-//     * Main class for testing purposes only.
+//     * Main class for testing purposes only. should be moved in a test.
 //     *
 //     * @param args
 //     */
@@ -234,5 +233,10 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     @Override
     public String getSoftwareVersion() {
         return softwareVersion;
+    }
+
+    @Override
+    public String getSoftware() {
+        return softwareName;
     }
 }

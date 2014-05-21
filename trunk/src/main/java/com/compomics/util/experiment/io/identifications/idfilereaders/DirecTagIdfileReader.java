@@ -474,7 +474,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                     //@TODO: check with the developers if this is correct
                     tagAssumption.setIdentificationCharge(new Charge(Charge.PLUS, lastCharge));
-                    currentMatch.addHit(Advocate.DirecTag.getIndex(), tagAssumption, true);
+                    currentMatch.addHit(Advocate.direcTag.getIndex(), tagAssumption, true);
                 }
             }
             if (currentMatch != null && currentMatch.hasAssumption()) {
@@ -552,7 +552,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             throw new IllegalArgumentException("Column Total not found.");
         }
         double eValue = new Double(components[eValueIndex]);
-        return new TagAssumption(Advocate.DirecTag.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), eValue);
+        return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), eValue);
     }
 
     /**
@@ -649,5 +649,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     @Override
     public String getSoftwareVersion() {
         return tagsGeneratorVersion;
+    }
+
+    @Override
+    public String getSoftware() {
+        return tagsGenerator;
     }
 }

@@ -2023,20 +2023,20 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters();
-        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()) != null) {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex()));
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()));
         } else {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), new OmssaParameters());
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), new OmssaParameters());
         }
-        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()) != null) {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex()));
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()));
         } else {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), new XtandemParameters());
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), new XtandemParameters());
         }
-        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()) != null) {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.MSGF.getIndex()));
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()));
         } else {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), new MsgfParameters());
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), new MsgfParameters());
         }
         if (searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) != null) {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()));
@@ -2048,10 +2048,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         } else {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), new PepnovoParameters());
         }
-        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()) != null) {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex()));
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()));
         } else {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), new DirecTagParameters());
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), new DirecTagParameters());
         }
 
         String dbPath = databaseSettingsTxt.getText().trim();
@@ -2114,7 +2114,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         ptmFactory.setSearchedOMSSAIndexes(tempSearchParameters.getModificationProfile());
 
         // Adapt X!Tandem options
-        XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.XTandem.getIndex());
+        XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex());
         if (xtandemParameters != null) {
             xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
             xtandemParameters.setQuickPyrolidone(!pyroConflict);

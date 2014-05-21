@@ -83,9 +83,46 @@ public class Header implements Cloneable, Serializable {
      */
     public enum DatabaseType {
 
-        UniProt, SGD, Arabidopsis_thaliana_TAIR, PSB_Arabidopsis_thaliana, Drosophile, Flybase, NCBI, M_Tuberculosis,
-        H_Invitation, Halobacterium, H_Influenza, C_Trachomatis, D_Melanogaster, Listeria, GAFFA, UPS, Generic_Header,
-        IPI, Generic_Split_Header, Unknown
+        UniProt("UniProtKB", "14681372"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"), 
+        PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"), M_Tuberculosis("TBDatabase (TBDB)", "18835847"),
+        H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), D_Melanogaster("D_Melanogaster", null), 
+        Listeria("Listeria", null), GAFFA("GAFFA", null), UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null),
+        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), Unknown(null, null);
+        
+        /**
+         * The full name of the database
+         */
+        String fullName;
+        /**
+         * The pubmed id of the database
+         */
+        String pmid;
+        /**
+         * 
+         * @param fullName 
+         */
+        private DatabaseType(String fullName, String pmid) {
+            this.fullName = fullName;
+            this.pmid = pmid;
+        }
+        
+        /**
+         * Returns the full name of the database, null if not set.
+         * 
+         * @return the full name of the database
+         */
+        public String getFullName() {
+            return fullName;
+        }
+        
+        /**
+         * Returns the pubmed id of the database, null if not set.
+         * 
+         * @return the pubmed id of the database
+         */
+        public String getPmid() {
+            return pmid;
+        }
     }
     /**
      * The foreign accession String is an accession String in another database

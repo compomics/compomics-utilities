@@ -958,7 +958,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public Advocate getAlgorithm() {
-        return Advocate.OMSSA;
+        return Advocate.omssa;
     }
 
     @Override

@@ -40,22 +40,27 @@ public class IdFilter implements Serializable {
     private int maxPepLength;
     /**
      * Mascot maximal e-value allowed.
+     * @deprecated
      */
     private double mascotMaxEvalue;
     /**
      * OMSSA maximal e-value allowed.
+     * @deprecated
      */
     private double omssaMaxEvalue;
     /**
      * X!Tandem maximal e-value allowed.
+     * @deprecated
      */
     private double xtandemMaxEvalue;
     /**
      * MS-GF+ maximal e-value allowed.
+     * @deprecated
      */
     private double msgfMaxEvalue;
     /**
      * MS Amanda maximal e-value allowed.
+     * @deprecated
      */
     private double msAmandaMaxEvalue;
     /**
@@ -79,11 +84,6 @@ public class IdFilter implements Serializable {
     public IdFilter() {
         minPepLength = 4;
         maxPepLength = 30;
-        mascotMaxEvalue = -1;
-        omssaMaxEvalue = -1;
-        xtandemMaxEvalue = -1;
-        msgfMaxEvalue = -1;
-        msAmandaMaxEvalue = -1;
         maxMassDeviation = -1;
         isPpm = true;
         unknownPtm = true;
@@ -96,31 +96,15 @@ public class IdFilter implements Serializable {
      * disabled)
      * @param maxPepLength The maximal peptide length allowed (0 or less for
      * disabled)
-     * @param mascotMaxEvalue The maximal Mascot e-value allowed (0 or less for
-     * disabled)
-     * @param omssaMaxEvalue The maximal OMSSA e-value allowed (0 or less for
-     * disabled)
-     * @param xtandemMaxEvalue The maximal X!Tandem e-value allowed (0 or less
-     * for disabled)
-//     * @param msgfMaxEValue The maximal MS-GF+ e-value allowed (0 or less for
-//     * disabled)
-//     * @param msAmandaEValue The maximal MS Amanda e-value allowed (0 or less
-//     * for disabled)
      * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for
      * disabled)
      * @param isPpm Boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
      * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
      */
-    public IdFilter(int minPepLength, int maxPepLength, double mascotMaxEvalue, double omssaMaxEvalue, double xtandemMaxEvalue,
-            /**double msgfMaxEValue, double msAmandaEValue,**/ double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
+    public IdFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
-        this.mascotMaxEvalue = mascotMaxEvalue;
-        this.omssaMaxEvalue = omssaMaxEvalue;
-        this.xtandemMaxEvalue = xtandemMaxEvalue;
-        //this.msgfMaxEvalue = msgfMaxEValue;
-        //this.msAmandaMaxEvalue = msAmandaEValue;
         this.maxMassDeviation = maxMzDeviation;
         this.isPpm = isPpm;
         this.unknownPtm = unknownPTM;
@@ -139,18 +123,6 @@ public class IdFilter implements Serializable {
 
         if (maxPepLength > 0 && pepLength > maxPepLength
                 || minPepLength > 0 && pepLength < minPepLength) {
-            return false;
-        }
-
-        int searchEngine = assumption.getAdvocate();
-        double eValue = assumption.getScore();
-
-        if ((searchEngine == Advocate.Mascot.getIndex() && mascotMaxEvalue > 0 && eValue > mascotMaxEvalue)
-                || (searchEngine == Advocate.OMSSA.getIndex() && omssaMaxEvalue > 0 && eValue > omssaMaxEvalue)
-                || (searchEngine == Advocate.XTandem.getIndex() && xtandemMaxEvalue > 0 && eValue > xtandemMaxEvalue)
-//                || (searchEngine == Advocate.MSGF.getIndex() && msgfMaxEvalue > 0 && eValue > msgfMaxEvalue)
-//                || (searchEngine == Advocate.msAmanda.getIndex() && msAmandaMaxEvalue > 0 && eValue > msAmandaMaxEvalue) // @TODO: not backwards compatible..?
-                ) {
             return false;
         }
 
@@ -328,24 +300,6 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Returns the maximal Mascot e-value allowed.
-     *
-     * @return the maximal Mascot e-value allowed
-     */
-    public double getMascotMaxEvalue() {
-        return mascotMaxEvalue;
-    }
-
-    /**
-     * Sets the maximal Mascot e-value allowed.
-     *
-     * @param mascotMaxEvalue the maximal Mascot e-value allowed
-     */
-    public void setMascotMaxEvalue(double mascotMaxEvalue) {
-        this.mascotMaxEvalue = mascotMaxEvalue;
-    }
-
-    /**
      * Returns the maximal m/z deviation allowed.
      *
      * @return the maximal mass deviation allowed
@@ -398,79 +352,7 @@ public class IdFilter implements Serializable {
     public void setMinPepLength(int minPepLength) {
         this.minPepLength = minPepLength;
     }
-
-    /**
-     * Returns the OMSSA maximal e-value allowed.
-     *
-     * @return the OMSSA maximal e-value allowed
-     */
-    public double getOmssaMaxEvalue() {
-        return omssaMaxEvalue;
-    }
-
-    /**
-     * Sets the OMSSA maximal e-value allowed.
-     *
-     * @param omssaMaxEvalue the OMSSA maximal e-value allowed
-     */
-    public void setOmssaMaxEvalue(double omssaMaxEvalue) {
-        this.omssaMaxEvalue = omssaMaxEvalue;
-    }
-
-    /**
-     * Returns the maximal X!Tandem e-value allowed.
-     *
-     * @return the OMSSA maximal e-value allowed
-     */
-    public double getXtandemMaxEvalue() {
-        return xtandemMaxEvalue;
-    }
-
-    /**
-     * Sets the OMSSA maximal e-value allowed.
-     *
-     * @param xtandemMaxEvalue the OMSSA maximal e-value allowed
-     */
-    public void setXtandemMaxEvalue(double xtandemMaxEvalue) {
-        this.xtandemMaxEvalue = xtandemMaxEvalue;
-    }
-
-    /**
-     * Returns the maximal MS-GF+ e-value allowed.
-     *
-     * @return the MS-GF+ maximal e-value allowed
-     */
-    public double getMsgfMaxEvalue() {
-        return msgfMaxEvalue;
-    }
-
-    /**
-     * Sets the MS-GF+ maximal e-value allowed.
-     *
-     * @param msgfMaxEvalue the MS-GF+ maximal e-value allowed
-     */
-    public void setMsgfMaxEvalue(double msgfMaxEvalue) {
-        this.msgfMaxEvalue = msgfMaxEvalue;
-    }
-
-    /**
-     * Returns the maximal MS Amanda e-value allowed.
-     *
-     * @return the MS Amanda maximal e-value allowed
-     */
-    public double getMsAmandaMaxEvalue() {
-        return msAmandaMaxEvalue;
-    }
-
-    /**
-     * Sets the MS Amanda maximal e-value allowed.
-     *
-     * @param msAmandaMaxEvalue the MS Amanda maximal e-value allowed
-     */
-    public void setMsAmandaMaxEvalue(double msAmandaMaxEvalue) {
-        this.msAmandaMaxEvalue = msAmandaMaxEvalue;
-    }
-
+    
     /**
      * Indicates whether this filter is the same as another one.
      *
@@ -482,11 +364,6 @@ public class IdFilter implements Serializable {
                 && unknownPtm == anotherFilter.removeUnknownPTMs()
                 && minPepLength == anotherFilter.getMinPepLength()
                 && maxPepLength == anotherFilter.getMaxPepLength()
-                && mascotMaxEvalue == anotherFilter.getMascotMaxEvalue()
-                && omssaMaxEvalue == anotherFilter.getOmssaMaxEvalue()
-                && xtandemMaxEvalue == anotherFilter.getXtandemMaxEvalue()
-//                && msgfMaxEvalue == anotherFilter.getMsgfMaxEvalue()
-//                && msAmandaMaxEvalue == anotherFilter.getMsAmandaMaxEvalue() // @TODO: not backwards compatible..?
                 && maxMassDeviation == anotherFilter.getMaxMzDeviation();
     }
 }

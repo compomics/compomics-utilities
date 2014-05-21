@@ -367,7 +367,7 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.OMSSA.getIndex(), omssaParameters);
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), omssaParameters);
         ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
 
         ///////////////////////////////////
@@ -539,7 +539,7 @@ public class IdentificationParametersInputBean {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);
             xtandemParameters.setSkylinePath(arg);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.XTandem.getIndex(), xtandemParameters);
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), xtandemParameters);
 
         ///////////////////////////////////
         // MS-GF+ parameters
@@ -618,7 +618,7 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfPtmsPerPeptide(option);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.MSGF.getIndex(), msgfParameters);
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), msgfParameters);
         
         ///////////////////////////////////
         // MS Amanda parameters
@@ -835,7 +835,7 @@ public class IdentificationParametersInputBean {
             direcTagParameters.setComplementScoreWeight(option);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.DirecTag.getIndex(), direcTagParameters);
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
     }
 
     /**

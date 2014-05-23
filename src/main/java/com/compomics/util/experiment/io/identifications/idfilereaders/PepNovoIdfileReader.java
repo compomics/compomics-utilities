@@ -364,12 +364,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public String getSoftwareVersion() {
-        return "3.1 (beta)";
-    }
-
-    @Override
-    public String getSoftware() {
-        return "PepNovo+";
+    public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> versions = new ArrayList<String>();
+        versions.add("3.1 (beta)");
+        result.put("PepNovo+", versions);
+        return result;
     }
 }

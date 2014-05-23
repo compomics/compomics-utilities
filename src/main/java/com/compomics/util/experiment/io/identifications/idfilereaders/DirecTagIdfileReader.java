@@ -647,12 +647,11 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public String getSoftwareVersion() {
-        return tagsGeneratorVersion;
-    }
-
-    @Override
-    public String getSoftware() {
-        return tagsGenerator;
+    public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> versions = new ArrayList<String>();
+        versions.add(tagsGeneratorVersion);
+        result.put(tagsGenerator, versions);
+        return result;
     }
 }

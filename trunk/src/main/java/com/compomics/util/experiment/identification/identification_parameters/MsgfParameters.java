@@ -16,10 +16,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     static final long serialVersionUID = -2656523093031942973L;
     /**
-     * Maximal e-value cut-off.
-     */
-    private Double maxEValue = 100.0;
-    /**
      * Indicates whether MS-GF+ is to create and search a decoy database or not.
      */
     private boolean searchDecoyDatabase = false;
@@ -118,10 +114,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
             if (upperIsotopeErrorRange != msgfParameters.getUpperIsotopeErrorRange()) {
                 return false;
             }
-            double diff = Math.abs(maxEValue - msgfParameters.getMaxEValue());
-            if (diff > 0.0000000000001) {
-                return false;
-            }
             if (numberTolerableTermini != msgfParameters.getNumberTolerableTermini()) {
                 return false;
             }
@@ -181,9 +173,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("UPPER_ISOTOPE_ERROR_RANGE=");
         output.append(upperIsotopeErrorRange);
-        output.append(newLine);
-        output.append("EVALUE_CUTOFF=");
-        output.append(maxEValue);
         output.append(newLine);
         output.append("NUMBER_OF_TOLERABLE_TERMINI=");
         output.append(numberTolerableTermini);
@@ -375,24 +364,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         this.upperIsotopeErrorRange = upperIsotopeErrorRange;
     }
 
-    /**
-     * Returns the maximal e-value searched for.
-     *
-     * @return the maximal e-value searched for
-     */
-    public Double getMaxEValue() {
-        return maxEValue;
-    }
-
-    /**
-     * Sets the maximal e-value searched for.
-     *
-     * @param maxEValue the maximal e-value searched for
-     */
-    public void setMaxEValue(Double maxEValue) {
-        this.maxEValue = maxEValue;
-    }
-    
     /**
      * Returns the number of tolerable termini.
      *

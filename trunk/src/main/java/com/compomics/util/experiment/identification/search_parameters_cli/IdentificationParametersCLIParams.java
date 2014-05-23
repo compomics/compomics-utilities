@@ -111,14 +111,12 @@ public enum IdentificationParametersCLIParams {
     MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional features, 0: output basic scores only (Default), 1: output additional features.", false),
     MSGF_ISOTOPE_LOW("msgf_isotope_low", "MS-GF+ lower isotope error range, default is '0'.", false),
     MSGF_ISOTOPE_HIGH("msgf_isotope_high", "MS-GF+ upper isotope error range, default is '1'.", false),
-    MSGF_EVALUE("msgf_evalue", "MS-GF+ maximal evalue considered, default is '100'.", false),
     MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false),
     MSGF_PTMS("msgf_num_ptms", "MS-GF+ max number of PTMs per peptide, default is '2'.", false),
     //////////////////////////////////
     // MS Amanda specific parameters
     //////////////////////////////////
     MS_AMANDA_DECOY("ms_amanda_decoy", "MS Amanda generate decoys option, 0: false, 1: true, default is '0'.", false),
-    MS_AMANDA_MAX_EVALUE("ms_amanda_max_evalue", "MS Amanda maximal evalue considered, default is '100'.", false),
     MS_AMANDA_INSTRUMENT("ms_amanda_instrument", "MS Amanda instrument id option. Available enzymes are listed in the GUI. (Note: case sensitive.).", false),
     MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '5'.", false), // @TODO: find an optimal default
     MS_AMANDA_MONOISOTOPIC("ms_amanda_mono", "MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.", false),

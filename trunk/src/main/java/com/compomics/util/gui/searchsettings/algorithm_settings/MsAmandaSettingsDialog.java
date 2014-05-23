@@ -62,10 +62,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         instrumentCmb.setSelectedItem(msAmandaParameters.getInstrumentID());
         maxRankTxt.setText(msAmandaParameters.getMaxRank() + "");
 
-        if (msAmandaParameters.getMaxEValue() != null) {
-            eValueCutoffTxt.setText(msAmandaParameters.getMaxEValue() + "");
-        }
-
         if (msAmandaParameters.isMonoIsotopic()) {
             monoIsotopicCmb.setSelectedIndex(0);
         } else {
@@ -99,11 +95,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
             result.setMaxRank(new Integer(input));
         }
 
-        input = eValueCutoffTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMaxEValue(new Double(input));
-        }
-
         result.setMonoIsotopic(monoIsotopicCmb.getSelectedIndex() == 0);
 
         return result;
@@ -126,8 +117,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         instrumentLabel = new javax.swing.JLabel();
         maxRankLabel = new javax.swing.JLabel();
         maxRankTxt = new javax.swing.JTextField();
-        eValueCutoffLabel = new javax.swing.JLabel();
-        eValueCutoffTxt = new javax.swing.JTextField();
         monoIsotopicLabel = new javax.swing.JLabel();
         monoIsotopicCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
@@ -163,16 +152,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        eValueCutoffLabel.setText("E-value Cutoff");
-
-        eValueCutoffTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        eValueCutoffTxt.setText("100");
-        eValueCutoffTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                eValueCutoffTxtKeyReleased(evt);
-            }
-        });
-
         monoIsotopicLabel.setText("Monoisotopic");
 
         monoIsotopicCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
@@ -196,10 +175,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
                         .addComponent(maxRankLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxRankTxt))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(eValueCutoffLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eValueCutoffTxt))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(monoIsotopicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -225,10 +200,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxRankLabel)
                     .addComponent(maxRankTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueCutoffLabel)
-                    .addComponent(eValueCutoffTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -374,15 +345,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_maxRankTxtKeyReleased
 
     /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void eValueCutoffTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueCutoffTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_eValueCutoffTxtKeyReleased
-
-    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -391,7 +353,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
     public boolean validateInput(boolean showMessage) {
         boolean valid = true;
         valid = GuiUtilities.validateIntegerInput(this, maxRankLabel, maxRankTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateDoubleInput(this, eValueCutoffLabel, eValueCutoffTxt, "e-value cuttoff limit", "E-value Cutoff Error", true, showMessage, valid);
         okButton.setEnabled(valid);
         return valid;
     }
@@ -403,8 +364,6 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton closeButton;
     private javax.swing.JComboBox decoyDatabaseCmb;
     private javax.swing.JLabel decoyDatabaseLabel;
-    private javax.swing.JLabel eValueCutoffLabel;
-    private javax.swing.JTextField eValueCutoffTxt;
     private javax.swing.JComboBox instrumentCmb;
     private javax.swing.JLabel instrumentLabel;
     private javax.swing.JLabel maxRankLabel;

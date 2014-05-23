@@ -90,9 +90,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         if (msgfParameters.getUpperIsotopeErrorRange() != null) {
             highIsotopeErrorRangeTxt.setText(msgfParameters.getUpperIsotopeErrorRange() + "");
         }
-        if (msgfParameters.getMaxEValue() != null) {
-            eValueCutoffTxt.setText(msgfParameters.getMaxEValue() + "");
-        }
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
         }
@@ -147,10 +144,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         if (!input.equals("")) {
             result.setUpperIsotopeErrorRange(new Integer(input));
         }
-        input = eValueCutoffTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMaxEValue(new Double(input));
-        }
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
@@ -191,8 +184,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         lowIsotopeErrorRangeTxt = new javax.swing.JTextField();
         highIsotopeErrorRangeTxt = new javax.swing.JTextField();
         isotopeErrorRangeDividerLabel = new javax.swing.JLabel();
-        eValueCutoffLabel = new javax.swing.JLabel();
-        eValueCutoffTxt = new javax.swing.JTextField();
         numberTerminiLabel = new javax.swing.JLabel();
         maxPtmsLabel = new javax.swing.JLabel();
         maxPtmsTxt = new javax.swing.JTextField();
@@ -285,16 +276,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         isotopeErrorRangeDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         isotopeErrorRangeDividerLabel.setText("-");
 
-        eValueCutoffLabel.setText("E-value Cutoff");
-
-        eValueCutoffTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        eValueCutoffTxt.setText("100");
-        eValueCutoffTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                eValueCutoffTxtKeyReleased(evt);
-            }
-        });
-
         numberTerminiLabel.setText("Enzymatic Terminals");
 
         maxPtmsLabel.setText("Max Variable PTMs per Peptide");
@@ -356,10 +337,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(highIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(eValueCutoffLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eValueCutoffTxt))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(numberTerminiLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(terminiCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -419,10 +396,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(additionalOutputlLabel)
                     .addComponent(additionalOutputCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eValueCutoffLabel)
-                    .addComponent(eValueCutoffTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -608,15 +581,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void eValueCutoffTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_eValueCutoffTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_eValueCutoffTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
     private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxPtmsTxtKeyReleased
@@ -636,7 +600,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, lowIsotopeErrorRangeTxt, "lower isotope range", "Isotope Range Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, highIsotopeErrorRangeTxt, "upper isotope range", "Isotope Range Error", false, showMessage, valid);
-        valid = GuiUtilities.validateDoubleInput(this, eValueCutoffLabel, eValueCutoffTxt, "e-value cuttoff limit", "E-value Cutoff Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
 
         // isotope range: the low value should be lower than the high value
@@ -671,8 +634,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton closeButton;
     private javax.swing.JComboBox decoyDatabaseCmb;
     private javax.swing.JLabel decoyDatabaseLabel;
-    private javax.swing.JLabel eValueCutoffLabel;
-    private javax.swing.JTextField eValueCutoffTxt;
     private javax.swing.JComboBox fragmentationMethodCmb;
     private javax.swing.JLabel fragmentationMethodLabel;
     private javax.swing.JTextField highIsotopeErrorRangeTxt;

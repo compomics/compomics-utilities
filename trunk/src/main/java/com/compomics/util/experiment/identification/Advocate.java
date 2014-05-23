@@ -54,6 +54,83 @@ public class Advocate {
      */
     public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm);
     /**
+     * The byonic search engine integrated in the byonic protein metrics interface.
+     */
+    public static final Advocate byonic = new Advocate(9, "Byonic", AdvocateType.search_engine);
+    /**
+     * The Comet search engine, free version of Sequest.
+     */
+    public static final Advocate comet = new Advocate(10, "Comet", AdvocateType.search_engine);
+    /**
+     * The ProteinLynx search engine, waters instruments.
+     */
+    public static final Advocate proteinLynx = new Advocate(11, "ProteinLynx", AdvocateType.search_engine);
+    /**
+     * The MS-Fit search engine, old school peptide mass fingerprinting.
+     */
+    public static final Advocate msFit = new Advocate(12, "MS-Fit", AdvocateType.search_engine);
+    /**
+     * The MyriMatch search engine, old school peptide mass fingerprinting.
+     */
+    public static final Advocate myriMatch = new Advocate(13, "MyriMatch", AdvocateType.search_engine);
+    /**
+     * The PEAKS sequencing algorithm.
+     */
+    public static final Advocate peaks = new Advocate(14, "PEAKS", AdvocateType.sequencing_algorithm);
+    /**
+     * The phenyx search engine.
+     */
+    public static final Advocate phenyx = new Advocate(15, "Phenyx", AdvocateType.search_engine);
+    /**
+     * The profound search engine.
+     */
+    public static final Advocate proFound = new Advocate(16, "ProFound", AdvocateType.search_engine);
+    /**
+     * The search engine results of protein prospector.
+     */
+    public static final Advocate proteinProspector = new Advocate(17, "ProteinProspector", AdvocateType.search_engine);
+    /**
+     * The search engine integrated in protein scape, Bruker instruments.
+     */
+    public static final Advocate proteinScape = new Advocate(18, "ProteinScape", AdvocateType.search_engine);
+    /**
+     * The sequest search engine.
+     */
+    public static final Advocate sequest = new Advocate(19, "SEQUEST", AdvocateType.search_engine);
+    /**
+     * The SeQuence IDentfication (SQID) search engine.
+     */
+    public static final Advocate sqid = new Advocate(19, "SQID", AdvocateType.search_engine);
+    /**
+     * The scaffold multiple search engine data interpretation software.
+     */
+    public static final Advocate scaffold = new Advocate(20, "Scaffold", AdvocateType.multiple_algorithm_software);
+    /**
+     * The sonar search engine, integrated in radars.
+     */
+    public static final Advocate sonar = new Advocate(21, "sonar", AdvocateType.search_engine);
+    /**
+     * The SpectraST spectral library search engine (TPP).
+     */
+    public static final Advocate spectraST = new Advocate(22, "SpectraST", AdvocateType.spectral_library);
+    /**
+     * The Spectrum Mill search engine, Agilent.
+     */
+    public static final Advocate spectrumMill = new Advocate(23, "SpectrumMill", AdvocateType.search_engine);
+    /**
+     * The ZCore search engine, etd search engine.
+     */
+    public static final Advocate zCore = new Advocate(24, "ZCore", AdvocateType.search_engine);
+    /**
+     * The percolator rescoring algorithm.
+     */
+    public static final Advocate percolator = new Advocate(25, "Percolator", AdvocateType.rescoring_algorithm);
+    /**
+     * Advocate type for mzId files where no software is annotated
+     */
+    public static final Advocate genericMzId = new Advocate(100, "MzId", AdvocateType.unknown);
+    
+    /**
      * Map of user defined advocates indexed by index.
      */
     private static HashMap<Integer, Advocate> userAdvocates = new HashMap<Integer, Advocate>();

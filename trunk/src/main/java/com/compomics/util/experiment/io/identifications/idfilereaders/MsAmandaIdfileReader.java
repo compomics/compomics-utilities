@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -278,12 +279,11 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public String getSoftwareVersion() {
-        return softwareVersion;
-    }
-
-    @Override
-    public String getSoftware() {
-        return softwareName;
+    public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> versions = new ArrayList<String>();
+        versions.add(softwareVersion);
+        result.put(softwareName, versions);
+        return result;
     }
 }

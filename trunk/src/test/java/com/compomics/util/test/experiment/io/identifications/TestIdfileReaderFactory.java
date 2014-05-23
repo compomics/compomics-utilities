@@ -9,14 +9,13 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Created with IntelliJ IDEA.
- * User: martlenn
- * Date: 8/09/12
- * Time: 23:42
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: martlenn Date: 8/09/12 Time: 23:42 To
+ * change this template use File | Settings | File Templates.
  */
 public class TestIdfileReaderFactory extends TestCase {
 
@@ -31,7 +30,7 @@ public class TestIdfileReaderFactory extends TestCase {
     public void testIdfileReaderRegistration() {
 
         // First register a new, incorrect class (missing required constructor taking single java.io.File argument).
-        IdfileReader tifr = new IdfileReader(){
+        IdfileReader tifr = new IdfileReader() {
             public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
@@ -45,20 +44,19 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public String getSoftwareVersion() {
-                return "X.Y.Z";
-            }
-
-            @Override
-            public String getSoftware() {
-                return "testIdfileReaderRegistration";
+            public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+                HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+                ArrayList<String> versions = new ArrayList<String>();
+                versions.add("X.Y.Z");
+                result.put("testIdfileReaderRegistration", versions);
+                return result;
             }
         };
 
         IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
         try {
             Assert.assertNull("Should have been unable to register TestIdfileReader in IdfileReaderFactory as it lacks a constructor with a single parameter of type java.io.File!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist")));
-        } catch(Exception e) {
+        } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
 
@@ -69,10 +67,9 @@ public class TestIdfileReaderFactory extends TestCase {
         // See if it works!
         try {
             Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test" + ifr.getExtension())));
-        } catch(Exception e) {
+        } catch (Exception e) {
             fail("Exception thrown when attempting to obtain registered IdfileReader: " + e.getMessage());
         }
-
 
         // Now re-register an existing class.
         result = IdfileReaderFactory.registerIdFileReader(ifr.getClass(), ifr.getExtension());
@@ -82,7 +79,7 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReaderFactory.registerIdFileReader(this.getClass(), ".schtuff");
         try {
             Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff")));
-        } catch(Exception e) {
+        } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
     }
@@ -110,13 +107,12 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public String getSoftwareVersion() {
-            return "X.Y.Z";
-        }
-
-        @Override
-        public String getSoftware() {
-            return "InnerIdfileReader";
+        public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+            HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+            ArrayList<String> versions = new ArrayList<String>();
+            versions.add("X.Y.Z");
+            result.put("testIdfileReaderRegistration", versions);
+            return result;
         }
     }
 }

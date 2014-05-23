@@ -163,12 +163,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public String getSoftwareVersion() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getSoftware() {
-        return "MS Amanda";
+    public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> versions = new ArrayList<String>();
+        versions.add("1.4.0.0");
+        result.put("Andromeda", versions);
+        return result;
     }
 }

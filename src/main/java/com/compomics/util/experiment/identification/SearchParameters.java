@@ -924,7 +924,6 @@ public class SearchParameters implements Serializable {
             result.setIdentificationAlgorithmParameter(xtandemParameters.getAlgorithm().getIndex(), xtandemParameters);
 
             MsgfParameters msgfParameters = new MsgfParameters();
-            msgfParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
 
             PepnovoParameters pepnovoParameters = new PepnovoParameters();
@@ -954,7 +953,6 @@ public class SearchParameters implements Serializable {
         // compatibility check
         if (result.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()) == null) {
             MsgfParameters msgfParameters = new MsgfParameters();
-            msgfParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msgfParameters.getAlgorithm().getIndex(), msgfParameters);
         }
 
@@ -973,7 +971,6 @@ public class SearchParameters implements Serializable {
         // compatibility check
         if (result.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) == null) {
             MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
-            msAmandaParameters.setMaxEValue(result.getMaxEValue());
             result.setIdentificationAlgorithmParameter(msAmandaParameters.getAlgorithm().getIndex(), msAmandaParameters);
         }
 

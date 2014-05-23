@@ -121,7 +121,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
 
         HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
-
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(msAmandaCsvFile, "r", 1024 * 100);
 
         if (waitingHandler != null) {
@@ -132,7 +131,46 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         // read the header line
-        bufferedRandomAccessFile.readLine();
+        String headerString = bufferedRandomAccessFile.readLine();
+        String[] headers = headerString.split("\t");
+        int scanNumberIndex = -1, titleIndex = -1, sequenceIndex = -1, modificationsIndex = -1, proteinAccessionsIndex = -1,
+                amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, filenameIndex = -1;
+
+        // get the column index of the headers
+        for (int i = 0; i < headers.length; i++) {
+            String header = headers[i];
+
+            if (header.equalsIgnoreCase("Scan Number")) {
+                scanNumberIndex = i;
+            } else if (header.equalsIgnoreCase("Title")) {
+                titleIndex = i;
+            } else if (header.equalsIgnoreCase("Sequence")) {
+                sequenceIndex = i;
+            } else if (header.equalsIgnoreCase("Modifications")) {
+                modificationsIndex = i;
+            } else if (header.equalsIgnoreCase("Protein Accessions")) {
+                proteinAccessionsIndex = i;
+            } else if (header.equalsIgnoreCase("Amanda Score")) {
+                amandaScoreIndex = i;
+            } else if (header.equalsIgnoreCase("Rank")) {
+                rankIndex = i;
+            } else if (header.equalsIgnoreCase("m/z")) {
+                mzIndex = i;
+            } else if (header.equalsIgnoreCase("Charge")) {
+                chargeIndex = i;
+            } else if (header.equalsIgnoreCase("RT")) {
+                rtIndex = i;
+            } else if (header.equalsIgnoreCase("Filename")) {
+                filenameIndex = i;
+            }
+        }
+        
+        // check if all the required header are found
+        if (scanNumberIndex == -1 || titleIndex == -1 || sequenceIndex == -1 || modificationsIndex == -1
+                 || proteinAccessionsIndex == -1 || amandaScoreIndex == -1 || rankIndex == -1
+                 || mzIndex == -1 || chargeIndex == -1 || filenameIndex == -1) {
+            throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check the file!");
+        }
 
         String line;
         String currentSpectrumTitle = null;
@@ -143,18 +181,27 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
             String[] elements = line.split("\t");
 
-            if (elements.length == 10) {
-                //String scanNumber = elements[0]; // not currently used
-                String spectrumTitle = elements[1];
-                String peptideSequence = elements[2].toUpperCase();
-                String modifications = elements[3].trim();
-                //String proteinAccessions = elements[4]; // not currently used
-                double score = Double.valueOf(elements[5]);
+            if (!line.trim().isEmpty()) { // @TODO: make this more robust?
+                //String scanNumber = elements[scanNumberIndex]; // not currently used
+                String spectrumTitle = elements[titleIndex];
+                String peptideSequence = elements[sequenceIndex].toUpperCase();
+                String modifications = elements[modificationsIndex].trim();
+                //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used
+                String scoreAsText = elements[amandaScoreIndex];
+                double score;
+                try {
+                    score = Double.valueOf(scoreAsText);
+                } catch (NumberFormatException e) {
+                    scoreAsText = scoreAsText.replaceAll("\\.", "");
+                    scoreAsText = scoreAsText.replaceAll(",", "\\.");
+                    score = Double.valueOf(scoreAsText);
+                }
                 score = Math.pow(10, -score); // convert ms amanda score to e-value
-                int rank = Integer.valueOf(elements[6]);
-                //String mz = elements[7]; // not currently used
-                int charge = Integer.valueOf(elements[8]);
-                String fileName = elements[9];
+                int rank = Integer.valueOf(elements[rankIndex]);
+                //String mz = elements[mzIndex]; // not currently used
+                int charge = Integer.valueOf(elements[chargeIndex]);
+                //double rt = Double.valueOf(elements[rtIndex]); // not currently used, and not mandatory, as old csv files didn't have this one...
+                String fileName = elements[filenameIndex];
 
                 // set up the yet empty spectrum match, or add to the current match
                 if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

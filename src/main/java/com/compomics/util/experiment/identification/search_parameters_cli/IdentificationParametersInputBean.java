@@ -603,11 +603,6 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setUpperIsotopeErrorRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_EVALUE.id);
-            Double option = new Double(arg);
-            msgfParameters.setMaxEValue(option);
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
@@ -632,11 +627,6 @@ public class IdentificationParametersInputBean {
             } else {
                 msAmandaParameters.setGenerateDecoyDatabase(false);
             }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_EVALUE.id);
-            Double option = new Double(arg);
-            msAmandaParameters.setMaxEValue(option);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
@@ -1972,7 +1962,7 @@ public class IdentificationParametersInputBean {
         }
         
         
-        // @TODO: add MS-GF+ and DirecTag parameters!!!
+        // @TODO: add MS-GF+, MS Amanda and DirecTag parameters!!!
         
 
         return true;

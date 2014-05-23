@@ -142,8 +142,6 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 
 -msgf_isotope_high        MS-GF+ upper isotope error range, default is '1'.
 
--msgf_evalue              MS-GF+ maximal evalue considered, default is '100'.
-
 -msgf_termini             MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 
                           2: fully-tryptic, default is '2'.
 
@@ -154,8 +152,6 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 
 {{{
 -ms_amanda_decoy          MS Amanda generate decoys option, 0: false, 1: true, default is '0'.
-
--ms_amanda_max_evalue     MS Amanda maximal evalue considered, default is '100'.
 
 -ms_amanda_instrument     MS Amanda instrument id option. Available enzymes are listed in the GUI. 
                           (Note: case sensitive.).

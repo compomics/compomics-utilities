@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Advocate {
 
     /**
-     * The different types of advocates
+     * The different types of advocates.
      */
     public enum AdvocateType {
 
@@ -30,7 +30,7 @@ public class Advocate {
      */
     public static final Advocate xtandem = new Advocate(2, "X!Tandem", AdvocateType.search_engine);
     /**
-     * The pepnovo+ de novo sequencing algorithm.
+     * The PepNovo+ de novo sequencing algorithm.
      */
     public static final Advocate pepnovo = new Advocate(3, "PepNovo+", AdvocateType.sequencing_algorithm);
     /**
@@ -54,7 +54,8 @@ public class Advocate {
      */
     public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm);
     /**
-     * The byonic search engine integrated in the byonic protein metrics interface.
+     * The byonic search engine integrated in the byonic protein metrics
+     * interface.
      */
     public static final Advocate byonic = new Advocate(9, "Byonic", AdvocateType.search_engine);
     /**
@@ -129,7 +130,7 @@ public class Advocate {
      * Advocate type for mzId files where no software is annotated
      */
     public static final Advocate genericMzId = new Advocate(100, "MzId", AdvocateType.unknown);
-    
+
     /**
      * Map of user defined advocates indexed by index.
      */

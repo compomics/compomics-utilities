@@ -43,11 +43,11 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * List of software used to create this file according to the file
+     * List of software used to create this file according to the file.
      */
     private HashMap<String, ArrayList<String>> tempSoftwareVersions = new HashMap<String, ArrayList<String>>();
     /**
-     * The list of software according to the scores found
+     * The list of software according to the scores found.
      */
     private HashMap<String, ArrayList<String>> softwareVersions = new HashMap<String, ArrayList<String>>();
     /**

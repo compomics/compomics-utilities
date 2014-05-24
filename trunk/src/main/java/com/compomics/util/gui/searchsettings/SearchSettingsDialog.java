@@ -103,6 +103,19 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * Reference for the separation of modifications.
      */
     public static final String MODIFICATION_SEPARATOR = "//";
+    /**
+     * Counts the number of times the users has pressed a key on the keyboard in
+     * the search field.
+     */
+    private int keyPressedCounter = 0;
+    /**
+     * The current PTM search string.
+     */
+    private String currentPtmSearchString = "";
+    /**
+     * The time to wait between keys typed before updating the search.
+     */
+    private int waitingTime = 500;
 
     /**
      * Creates a new SearchSettingsDialog.
@@ -712,6 +725,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 modificationsTableMouseMoved(evt);
             }
         });
+        modificationsTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                modificationsTableKeyReleased(evt);
+            }
+        });
         modificationsJScrollPane.setViewportView(modificationsTable);
 
         openModificationSettingsJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
@@ -776,7 +794,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 800, 0);
+        modificationsPanel.setBounds(0, 0, 800, 318);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1496,6 +1514,66 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private void openDialogHelpJButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDialogHelpJButton1MouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButton1MouseExited
+
+    /**
+     * Jump to the row with the PTM starting with the typed letters.
+     *
+     * @param evt
+     */
+    private void modificationsTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_modificationsTableKeyReleased
+
+        char currentChar = evt.getKeyChar();
+
+        if (Character.isLetterOrDigit(currentChar) || Character.isWhitespace(currentChar)) {
+
+            keyPressedCounter++;
+            currentPtmSearchString += currentChar;
+
+            new Thread("FindThread") {
+                @Override
+                public synchronized void run() {
+
+                    try {
+                        wait(waitingTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        // see if the gui is to be updated or not
+                        if (keyPressedCounter == 1) {
+                            
+                            // search in the ptm table
+                            for (int i = 0; i < modificationsTable.getRowCount(); i++) {
+                                
+                                String currentPtmName = ((String) modificationsTable.getValueAt(i, modificationsTable.getColumn("Name").getModelIndex())).toLowerCase();
+                                
+                                if (currentPtmName.startsWith(currentPtmSearchString.toLowerCase())) {
+                                    modificationsTable.scrollRectToVisible(modificationsTable.getCellRect(i, i, false));
+                                    modificationsTable.repaint();
+                                    modificationsTable.setRowSelectionInterval(i, i);
+                                    modificationsTable.repaint();
+                                    break;
+                                }
+                            }
+
+                            // gui updated, reset the counter
+                            keyPressedCounter = 0;
+                            currentPtmSearchString = "";
+                        } else {
+                            // gui not updated, decrease the counter
+                            keyPressedCounter--;
+                        }
+                    } catch (Exception e) {
+                        keyPressedCounter = 0;
+                        currentPtmSearchString = "";
+                        modificationsTable.repaint();
+                    }
+                }
+            }.start();
+        }
+    }//GEN-LAST:event_modificationsTableKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFixedModification;
     private javax.swing.JButton addVariableModification;
@@ -2247,6 +2325,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         if (modificationsTable.getRowCount() > 0) {
             modificationsTable.setRowSelectionInterval(0, 0);
+            modificationsTable.scrollRectToVisible(modificationsTable.getCellRect(0, 0, false));
+            modificationsTable.requestFocus();
         }
 
         // enable/disable the add/remove ptm buttons

@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * The advocate of a hit can be a search engine, a sequencing algorithm, a
@@ -127,9 +128,9 @@ public class Advocate {
      */
     public static final Advocate percolator = new Advocate(25, "Percolator", AdvocateType.rescoring_algorithm);
     /**
-     * Advocate type for mzId files where no software is annotated
+     * Advocate type for mzId files where no software is annotated.
      */
-    public static final Advocate genericMzId = new Advocate(100, "MzId", AdvocateType.unknown);
+    public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
 
     /**
      * Map of user defined advocates indexed by index.
@@ -250,15 +251,27 @@ public class Advocate {
      * @return the advocate with the given name
      */
     public static Advocate getAdvocate(String advocateName) {
-        Advocate userAdvocate = userAdvocates.get(advocateName);
-        if (userAdvocate != null) {
-            return userAdvocate;
-        }
+
+        // check the default advocates
         for (Advocate advocate : values()) {
             if (advocate.getName().equals(advocateName)) {
                 return advocate;
             }
         }
+
+        // check the user advocates
+        Iterator<Integer> iterator = userAdvocates.keySet().iterator();
+        while (iterator.hasNext()) {
+            Integer key = iterator.next();
+
+            Advocate advocate = userAdvocates.get(key);
+
+            if (advocate.getName().equals(advocateName)) {
+                return advocate;
+            }
+        }
+
+        // unknown advocate
         return null;
     }
 
@@ -301,9 +314,9 @@ public class Advocate {
     }
 
     /**
-     * Returns the pubmed id of the reference of the advocate of interest.
+     * Returns the PubMed id of the reference of the advocate of interest.
      *
-     * @return the pubmed id of the reference of the advocate of interest
+     * @return the PubMed id of the reference of the advocate of interest
      */
     public String getPmid() {
         if (this == mascot) {

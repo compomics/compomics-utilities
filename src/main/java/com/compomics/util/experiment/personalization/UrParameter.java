@@ -10,9 +10,7 @@ import java.io.Serializable;
  * If your implementation of an ExperimentObject was a protein this would be a PTM...
  * Acknowledging the great creativity of the code comments would be greatly appreciated!
  * 
- * User: Marc
- * Date: Sep 1, 2010
- * Time: 11:35:43 AM
+ * @author Marc Vaudel
  */
 public interface UrParameter extends Serializable {
 

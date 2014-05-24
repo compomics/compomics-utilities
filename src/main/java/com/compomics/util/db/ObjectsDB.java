@@ -679,6 +679,7 @@ public class ObjectsDB implements Serializable {
         long start = System.currentTimeMillis();
 
         Statement stmt = dbConnection.createStatement();
+
         try {
             ResultSet results = stmt.executeQuery("select MATCH_BLOB from " + tableName + " where NAME='" + correctedKey + "'");
             try {
@@ -750,6 +751,7 @@ public class ObjectsDB implements Serializable {
         } finally {
             stmt.close();
         }
+
         return null;
     }
 

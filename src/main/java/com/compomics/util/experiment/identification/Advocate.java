@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -21,19 +22,19 @@ public class Advocate {
     /**
      * The Mascot search engine.
      */
-    public static final Advocate mascot = new Advocate(0, "Mascot", AdvocateType.search_engine);
+    public static final Advocate mascot = new Advocate(0, "Mascot", AdvocateType.search_engine, new java.awt.Color(255, 153, 255));
     /**
      * The OMSSA search engine.
      */
-    public static final Advocate omssa = new Advocate(1, "OMSSA", AdvocateType.search_engine);
+    public static final Advocate omssa = new Advocate(1, "OMSSA", AdvocateType.search_engine, new java.awt.Color(153, 153, 255));
     /**
      * The X!Tandem search engine.
      */
-    public static final Advocate xtandem = new Advocate(2, "X!Tandem", AdvocateType.search_engine);
+    public static final Advocate xtandem = new Advocate(2, "X!Tandem", AdvocateType.search_engine, new java.awt.Color(153, 255, 255));
     /**
      * The PepNovo+ de novo sequencing algorithm.
      */
-    public static final Advocate pepnovo = new Advocate(3, "PepNovo+", AdvocateType.sequencing_algorithm);
+    public static final Advocate pepnovo = new Advocate(3, "PepNovo+", AdvocateType.sequencing_algorithm, new java.awt.Color(224, 130, 20));
     /**
      * The Andromeda search engine.
      */
@@ -41,19 +42,19 @@ public class Advocate {
     /**
      * The MS Amanda search engine.
      */
-    public static final Advocate msAmanda = new Advocate(5, "MS Amanda", AdvocateType.search_engine);
+    public static final Advocate msAmanda = new Advocate(5, "MS Amanda", AdvocateType.search_engine, new java.awt.Color(216, 191, 216));
     /**
      * The PeptideShaker multiple algorithm software.
      */
-    public static final Advocate peptideShaker = new Advocate(6, "PeptideShaker", AdvocateType.multiple_algorithm_software);
+    public static final Advocate peptideShaker = new Advocate(6, "PeptideShaker", AdvocateType.multiple_algorithm_software, new Color(110, 196, 97));
     /**
      * The MS-GF+ search engine.
      */
-    public static final Advocate msgf = new Advocate(7, "MS-GF+", AdvocateType.search_engine);
+    public static final Advocate msgf = new Advocate(7, "MS-GF+", AdvocateType.search_engine, new java.awt.Color(205, 92, 92));
     /**
      * The DirecTag sequencing algorithm.
      */
-    public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm);
+    public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm, new java.awt.Color(189, 183, 107));
     /**
      * The byonic search engine integrated in the byonic protein metrics
      * interface.
@@ -131,12 +132,10 @@ public class Advocate {
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
-
     /**
      * Map of user defined advocates indexed by index.
      */
     private static HashMap<Integer, Advocate> userAdvocates = new HashMap<Integer, Advocate>();
-
     /**
      * The index of the advocate.
      */
@@ -149,9 +148,37 @@ public class Advocate {
      * The type of advocate
      */
     private final AdvocateType type;
+    /**
+     * The color of the advocate. Defaults to light gray.
+     */
+    private Color color = Color.lightGray;
+    /**
+     * The search engine color map.
+     */
+    private static HashMap<Integer, java.awt.Color> advocateColorMap;
+    /**
+     * The search engine tool tip map.
+     */
+    private static HashMap<Integer, String> advocateToolTipMap;
 
     /**
      * Constructor.
+     *
+     * @param index the index of the advocate
+     * @param name the name of the advocate, should be identical to the one
+     * present in the result file
+     * @param type the type of advocate
+     * @param color the color of the advocate
+     */
+    private Advocate(int index, String name, AdvocateType type, Color color) {
+        this.index = index;
+        this.name = name;
+        this.type = type;
+        this.color = color;
+    }
+
+    /**
+     * Constructor. Advocate color will be light gray.
      *
      * @param index the index of the advocate
      * @param name the name of the advocate, should be identical to the one
@@ -165,7 +192,8 @@ public class Advocate {
     }
 
     /**
-     * Constructor for an advocate of unknown type.
+     * Constructor for an advocate of unknown type. Advocate color will be light
+     * gray.
      *
      * @param index the index of the advocate
      * @param name the name of the advocate, should be identical to the one
@@ -202,6 +230,15 @@ public class Advocate {
      */
     public AdvocateType getType() {
         return type;
+    }
+
+    /**
+     * Returns the color of the advocate.
+     *
+     * @return the color of the advocate
+     */
+    public Color getColor() {
+        return color;
     }
 
     /**
@@ -334,5 +371,43 @@ public class Advocate {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns the advocate color map. Key is the advocate index and the element
+     * the advocate color.
+     *
+     * @return the advocate color map
+     */
+    public static HashMap<Integer, java.awt.Color> getAdvocateColorMap() {
+
+        if (advocateColorMap == null) {
+            advocateColorMap = new HashMap<Integer, Color>();
+
+            for (Advocate tempAdvoate : values()) {
+                advocateColorMap.put(tempAdvoate.getIndex(), tempAdvoate.getColor());
+            }
+        }
+
+        return advocateColorMap;
+    }
+
+    /**
+     * Returns the advocate tool tip map. Key is the advocate index and the
+     * element the advocate name.
+     *
+     * @return the advocate tool tip map
+     */
+    public static HashMap<Integer, String> getAdvocateToolTipMap() {
+
+        if (advocateToolTipMap == null) {
+            advocateToolTipMap = new HashMap<Integer, String>();
+
+            for (Advocate tempAdvoate : values()) {
+                advocateToolTipMap.put(tempAdvoate.getIndex(), tempAdvoate.getName());
+            }
+        }
+
+        return advocateToolTipMap;
     }
 }

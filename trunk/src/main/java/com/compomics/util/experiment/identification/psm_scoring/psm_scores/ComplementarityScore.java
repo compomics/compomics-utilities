@@ -14,12 +14,15 @@ import java.util.HashMap;
 
 /**
  * The intensity sub-score as adapted from the DirecTag paper
- * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+ * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ComplementarityScore {
 
+    /**
+     * Log2.
+     */
     private static final Double log2 = FastMath.log(2.0);
 
     /**

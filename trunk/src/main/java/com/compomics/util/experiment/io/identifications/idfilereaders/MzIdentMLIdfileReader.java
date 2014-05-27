@@ -1124,6 +1124,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         return result;
     }
 
+    /**
+     * Returns the advocate.
+     * 
+     * @return the advocate
+     */
     private Advocate getAdvocate() {
         for (String softwareName : tempSoftwareVersions.keySet()) {
             Advocate advocate = Advocate.getAdvocate(softwareName);

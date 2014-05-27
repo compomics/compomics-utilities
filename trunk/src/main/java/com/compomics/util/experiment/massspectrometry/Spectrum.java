@@ -37,7 +37,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     protected HashMap<Double, Peak> peakList;
     /**
-     * intensity indexed Peak map.
+     * Intensity indexed Peak map.
      */
     protected HashMap<Double, ArrayList<Peak>> intensityPeakMap = null;
     /**
@@ -568,10 +568,11 @@ public abstract class Spectrum extends ExperimentObject {
         }
         return result;
     }
-    
+
     /**
-     * Returns the peak list in a map where peaks are indexed by their intensity.
-     * 
+     * Returns the peak list in a map where peaks are indexed by their
+     * intensity.
+     *
      * @return the peak list in a map where peaks are indexed by their intensity
      */
     public HashMap<Double, ArrayList<Peak>> getIntensityMap() {
@@ -589,13 +590,13 @@ public abstract class Spectrum extends ExperimentObject {
         }
         return intensityPeakMap;
     }
-    
+
     /**
      * Returns the number of peaks in the spectrum.
-     * 
+     *
      * @return the number of peaks in the spectrum
      */
-    public int getNPeaks () {
+    public int getNPeaks() {
         if (peakList == null) {
             return 0;
         }

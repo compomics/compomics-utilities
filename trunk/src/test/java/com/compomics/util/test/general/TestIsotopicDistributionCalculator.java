@@ -29,12 +29,9 @@ public class TestIsotopicDistributionCalculator extends TestCase {
      */
     public void testCalculator() {
         try {
-
             IsotopicDistribution lCalc = new IsotopicDistribution(60, 13, 86, 13, 2);
-
             Assert.assertEquals(0.39350045799282984, lCalc.getPercMax()[2]);
-            Assert.assertEquals(0.1662899391500604, lCalc.getPercTot()[2]);
-
+            Assert.assertEquals(0.16628993915006032, lCalc.getPercTot()[2]);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             fail(e.getMessage());

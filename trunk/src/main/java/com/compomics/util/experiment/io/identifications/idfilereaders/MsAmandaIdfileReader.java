@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -39,51 +38,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      * The MS Amanda csv file.
      */
     private File msAmandaCsvFile;
-//    /**
-//     * Progress dialog for displaying the progress.
-//     */
-//    private static ProgressDialogX progressDialog;
-    /**
-     * The compomics PTM factory.
-     */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
 
-//    /**
-//     * Main class for testing purposes only. should be moved in a test.
-//     *
-//     * @param args
-//     */
-//    public static void main(String[] args) {
-//
-//        progressDialog = new ProgressDialogX(null, null, null, true);
-//        progressDialog.setPrimaryProgressCounterIndeterminate(true);
-//        progressDialog.setTitle("Loading PSMs. Please Wait...");
-//
-//        new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//                    progressDialog.setVisible(true);
-//                } catch (IndexOutOfBoundsException e) {
-//                    // ignore
-//                }
-//            }
-//        }, "ProgressDialog").start();
-//
-//        new Thread("LoadingThread") {
-//            @Override
-//            public void run() {
-//
-//                try {
-//                    MsAmandaIdfileReader msAmandaIdfileReader = new MsAmandaIdfileReader(
-//                            new File("C:\\Users\\hba041\\Desktop\\MS Search Engines\\MSAmanda1.4\\qExactive01819_output.csv"));
-//                    msAmandaIdfileReader.getAllSpectrumMatches(progressDialog);
-//                    progressDialog.setRunFinished();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-//    }
     /**
      * Default constructor for the purpose of instantiation.
      */

@@ -742,8 +742,9 @@ public class MgfReader {
      *
      * @param chargeLine the charge line
      * @return the possible charges found
+     * @throws IllegalArgumentException 
      */
-    private static ArrayList<Charge> parseCharges(String chargeLine) {
+    private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
 
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
@@ -761,14 +762,19 @@ public class MgfReader {
             Integer value;
             charge = charge.trim();
 
-            if (charge.endsWith("+")) {
-                value = new Integer(charge.substring(0, charge.length() - 1));
-                result.add(new Charge(Charge.PLUS, value));
-            } else if (charge.endsWith("-")) {
-                value = new Integer(charge.substring(0, charge.length() - 1));
-                result.add(new Charge(Charge.MINUS, value));
-            } else if (!charge.equalsIgnoreCase("Mr")) {
-                result.add(new Charge(Charge.PLUS, new Integer(charge)));
+            try {
+                if (charge.endsWith("+")) {
+                    value = new Integer(charge.substring(0, charge.length() - 1));
+                    result.add(new Charge(Charge.PLUS, value));
+                } else if (charge.endsWith("-")) {
+                    value = new Integer(charge.substring(0, charge.length() - 1));
+                    result.add(new Charge(Charge.MINUS, value));
+                } else if (!charge.equalsIgnoreCase("Mr")) {
+                    result.add(new Charge(Charge.PLUS, new Integer(charge)));
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException(charge + " could not be processed as a valid precursor charge!");
             }
         }
 

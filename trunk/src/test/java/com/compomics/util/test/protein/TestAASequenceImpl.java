@@ -72,7 +72,7 @@ public class TestAASequenceImpl extends TestCase {
         AASequenceImpl seq = new AASequenceImpl(seqString);
         Assert.assertEquals(71, seq.getMolecularFormula().getElementCount(MolecularElement.H));
         Assert.assertEquals(47, seq.getMolecularFormula().getElementCount(MolecularElement.C));
-        Assert.assertEquals(0.10799336006817781, seq.getIsotopicDistribution().getPercTot()[2]);
+        Assert.assertEquals(0.10799336006817777, seq.getIsotopicDistribution().getPercTot()[2]);
     }
 
     /**

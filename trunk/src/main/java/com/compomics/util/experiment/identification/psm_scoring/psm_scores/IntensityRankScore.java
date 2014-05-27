@@ -12,15 +12,18 @@ import java.util.HashMap;
 
 /**
  * The intensity rank sub-score as adapted from the DirecTag paper
- * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+ * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class IntensityRankScore {
 
     /**
-     * Scores the match between the given peptide and spectrum using the intensity rank of the matched peaks. 
-     * The score goes from the most intense peaks to the lowest and returns the intensity rank at which more than 1% of the total number of peaks is not annotated. The rank is then normalized by the peptide length.
+     * Scores the match between the given peptide and spectrum using the
+     * intensity rank of the matched peaks. The score goes from the most intense
+     * peaks to the lowest and returns the intensity rank at which more than 1%
+     * of the total number of peaks is not annotated. The rank is then
+     * normalized by the peptide length.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -38,8 +41,11 @@ public class IntensityRankScore {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using the intensity rank of the matched peaks. 
-     * The score goes from the most intense peaks to the lowest and returns the intensity rank at which more than 1% of the total number of peaks is not annotated. The rank is then normalized by the peptide length.
+     * Scores the match between the given peptide and spectrum using the
+     * intensity rank of the matched peaks. The score goes from the most intense
+     * peaks to the lowest and returns the intensity rank at which more than 1%
+     * of the total number of peaks is not annotated. The rank is then
+     * normalized by the peptide length.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -68,6 +74,7 @@ public class IntensityRankScore {
 
         double rank = 0;
         int missed = 0;
+
         for (double intensity : intensities) {
             for (Peak peak : intensityMap.get(intensity)) {
                 if (peptideSpectrumAnnotator.matchPeak(peptide, iontypes, charges, precursorCharge, neutralLosses, peak).isEmpty()) {
@@ -79,7 +86,7 @@ public class IntensityRankScore {
                 rank++;
             }
         }
+
         return rank / peptide.getSequence().length();
     }
-
 }

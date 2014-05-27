@@ -124,6 +124,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 }
             }
         }
+        
+        softwareVersions = tempSoftwareVersions;
 
         // get the list of fixed modifications
         fixedModifications = new ArrayList<SearchModification>();
@@ -162,6 +164,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(spectrumIdentificationResultSize);
         }
+        
+        // Reset the software versions to keep only the advocates which were used for scoring
+        softwareVersions.clear();
 
         // get the psms
         for (SpectrumIdentificationList spectrumIdElements : spectrumIdList) {

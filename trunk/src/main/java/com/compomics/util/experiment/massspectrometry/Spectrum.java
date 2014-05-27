@@ -33,9 +33,13 @@ public abstract class Spectrum extends ExperimentObject {
      */
     protected int level;
     /**
-     * Peak list.
+     * mz indexed Peak list.
      */
     protected HashMap<Double, Peak> peakList;
+    /**
+     * intensity indexed Peak map.
+     */
+    protected HashMap<Double, ArrayList<Peak>> intensityPeakMap = null;
     /**
      * Scan number or range.
      */
@@ -439,7 +443,7 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns an array containing the intensity of all peak above the provided
+     * Returns an array containing the intensity of all peaks above the provided
      * threshold.
      *
      * @param threshold the lower threshold
@@ -467,7 +471,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public double getIntensityLimit(double intensityLimit) {
 
-        ArrayList<Double> intensities = new ArrayList<Double>();
+        ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
         for (Peak peak : peakList.values()) {
             intensities.add(peak.intensity);
@@ -491,7 +495,7 @@ public abstract class Spectrum extends ExperimentObject {
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
 
-        HashMap<Double, Peak> result = new HashMap<Double, Peak>();
+        HashMap<Double, Peak> result = new HashMap<Double, Peak>(peakList.size());
         ArrayList<Double> keys = new ArrayList<Double>(mzCorrections.keySet());
         Collections.sort(keys);
 
@@ -563,5 +567,38 @@ public abstract class Spectrum extends ExperimentObject {
             }
         }
         return result;
+    }
+    
+    /**
+     * Returns the peak list in a map where peaks are indexed by their intensity.
+     * 
+     * @return the peak list in a map where peaks are indexed by their intensity
+     */
+    public HashMap<Double, ArrayList<Peak>> getIntensityMap() {
+        if (intensityPeakMap == null) {
+            intensityPeakMap = new HashMap<Double, ArrayList<Peak>>(peakList.size());
+            for (Peak peak : peakList.values()) {
+                double intensity = peak.intensity;
+                ArrayList<Peak> peaksAtIntensity = intensityPeakMap.get(intensity);
+                if (peaksAtIntensity == null) {
+                    peaksAtIntensity = new ArrayList<Peak>();
+                    intensityPeakMap.put(intensity, peaksAtIntensity);
+                }
+                peaksAtIntensity.add(peak);
+            }
+        }
+        return intensityPeakMap;
+    }
+    
+    /**
+     * Returns the number of peaks in the spectrum.
+     * 
+     * @return the number of peaks in the spectrum
+     */
+    public int getNPeaks () {
+        if (peakList == null) {
+            return 0;
+        }
+        return peakList.size();
     }
 }

@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -121,8 +120,8 @@ public class IdFilter implements Serializable {
 
         int pepLength = assumption.getPeptide().getSequence().length();
 
-        if (maxPepLength > 0 && pepLength > maxPepLength
-                || minPepLength > 0 && pepLength < minPepLength) {
+        if ((maxPepLength > 0 && pepLength > maxPepLength)
+                || (minPepLength > 0 && pepLength < minPepLength)) {
             return false;
         }
 

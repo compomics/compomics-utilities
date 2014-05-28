@@ -326,7 +326,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             }
                         } else {
 
-                            // MS-Amanda
+                            // MS Amanda
                             eValue = scoreMap.get("MS:1002319");
                             if (eValue != null) {
                                 eValue = Math.pow(10, eValue);

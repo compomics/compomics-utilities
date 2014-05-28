@@ -10,6 +10,7 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.refinementparameters.MsAmandaScore;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -120,11 +121,11 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 filenameIndex = i;
             }
         }
-        
+
         // check if all the required header are found
         if (scanNumberIndex == -1 || titleIndex == -1 || sequenceIndex == -1 || modificationsIndex == -1
-                 || proteinAccessionsIndex == -1 || amandaScoreIndex == -1 || rankIndex == -1
-                 || mzIndex == -1 || chargeIndex == -1 || filenameIndex == -1) {
+                || proteinAccessionsIndex == -1 || amandaScoreIndex == -1 || rankIndex == -1
+                || mzIndex == -1 || chargeIndex == -1 || filenameIndex == -1) {
             throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check the file!");
         }
 
@@ -144,15 +145,15 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 String modifications = elements[modificationsIndex].trim();
                 //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used
                 String scoreAsText = elements[amandaScoreIndex];
-                double score;
+                double msAmandaScore;
                 try {
-                    score = Double.valueOf(scoreAsText);
+                    msAmandaScore = Double.valueOf(scoreAsText);
                 } catch (NumberFormatException e) {
                     scoreAsText = scoreAsText.replaceAll("\\.", "");
                     scoreAsText = scoreAsText.replaceAll(",", "\\.");
-                    score = Double.valueOf(scoreAsText);
+                    msAmandaScore = Double.valueOf(scoreAsText);
                 }
-                score = Math.pow(10, -score); // convert ms amanda score to e-value
+                double msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
                 int rank = Integer.valueOf(elements[rankIndex]);
                 //String mz = elements[mzIndex]; // not currently used
                 int charge = Integer.valueOf(elements[chargeIndex]);
@@ -205,7 +206,11 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 Charge peptideCharge = new Charge(Charge.PLUS, charge);
 
                 // create the peptide assumption
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, score, Util.getFileName(msAmandaCsvFile));
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaEValue, Util.getFileName(msAmandaCsvFile));
+
+                MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore);
+                peptideAssumption.addUrParam(scoreParam);
+
                 currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, true);
 
                 if (waitingHandler != null && progressUnit != 0) {

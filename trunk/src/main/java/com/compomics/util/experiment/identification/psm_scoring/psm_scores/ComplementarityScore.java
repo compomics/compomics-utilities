@@ -37,14 +37,14 @@ public class ComplementarityScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      *
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, null);
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance) {
+        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, mzTolerance, null);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ComplementarityScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      * @param peptideSpectrumAnnotator an external annotator (if null an
      * internal will be used)
@@ -67,7 +67,7 @@ public class ComplementarityScore {
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         if (peptideSpectrumAnnotator == null) {
             peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
@@ -75,7 +75,7 @@ public class ComplementarityScore {
 
         int sequenceLength = peptide.getSequence().length();
 
-        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge,
+        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, identificationCharge,
                 spectrum, peptide, 0, mzTolerance, false, true);
 
         HashMap<Integer, Double> residueToMatchesMap = new HashMap<Integer, Double>(sequenceLength);
@@ -97,13 +97,17 @@ public class ComplementarityScore {
         ArrayList<Double> scorePerResidue = new ArrayList<Double>(residueToMatchesMap.size());
         for (int number = 1; number <= sequenceLength; number++) {
             Double nIons = residueToMatchesMap.get(number);
-            if (nIons == null) {
-                scorePerResidue.add(0.0);
-            } else {
+            if (nIons != null) {
                 scorePerResidue.add(FastMath.log(nIons) / log2);
             }
         }
+        
+        double mean = 0;
+        
+        if (!scorePerResidue.isEmpty()) {
+            mean = BasicMathFunctions.mean(scorePerResidue);
+        }
 
-        return BasicMathFunctions.mean(scorePerResidue);
+        return Math.pow(2, mean);
     }
 }

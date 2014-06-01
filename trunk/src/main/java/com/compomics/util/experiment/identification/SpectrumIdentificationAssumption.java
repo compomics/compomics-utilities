@@ -74,6 +74,15 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public double getScore() {
         return score;
     }
+    
+    /**
+     * Sets the score.
+     * 
+     * @param score the score
+     */
+    public void setScore(double score) {
+        this.score = score;
+    }
 
     /**
      * Returns the identification file.

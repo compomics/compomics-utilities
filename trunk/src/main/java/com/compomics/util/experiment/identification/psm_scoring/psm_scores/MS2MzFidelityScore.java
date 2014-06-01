@@ -28,14 +28,14 @@ public class MS2MzFidelityScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      *
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, null);
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance) {
+        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, mzTolerance, null);
     }
 
     /**
@@ -48,7 +48,7 @@ public class MS2MzFidelityScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      * @param peptideSpectrumAnnotator an external annotator (if null an
      * internal will be used)
@@ -56,18 +56,21 @@ public class MS2MzFidelityScore {
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         if (peptideSpectrumAnnotator == null) {
             peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
         }
 
-        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge,
+        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, identificationCharge,
                 spectrum, peptide, 0, mzTolerance, false, true);
         ArrayList<Double> mzDeviations = new ArrayList<Double>(matches.size());
         for (IonMatch ionMatch : matches) {
             double mzError = ionMatch.getAbsoluteError();
             mzDeviations.add(mzError);
+        }
+        if (mzDeviations.size() < 2) {
+            return mzTolerance;
         }
         double deviationUp = BasicMathFunctions.percentile(mzDeviations, 0.75);
         double deviationDown = BasicMathFunctions.percentile(mzDeviations, 0.25);

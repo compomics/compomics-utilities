@@ -123,11 +123,11 @@ public class AnnotationPreferences implements Serializable {
      * @param searchParameters the search parameters where to take the
      * information from
      */
-    public void setPreferencesFromSearchParamaers(SearchParameters searchParameters) { // @TODO: fix typo in method name (while keeping backwards compatability...)
+    public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
         clearIonTypes();
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched1());
         addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, searchParameters.getIonSearched2());
-        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched2());
+        addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched1());
         addIonType(Ion.IonType.TAG_FRAGMENT_ION, searchParameters.getIonSearched2());
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);

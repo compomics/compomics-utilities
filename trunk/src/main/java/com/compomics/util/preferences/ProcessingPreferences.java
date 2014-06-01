@@ -1,6 +1,10 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class groups the user preferences for the initial PeptideShaker
@@ -37,11 +41,17 @@ public class ProcessingPreferences implements Serializable {
      * average molecular weight analysis in the Fractions tab.
      */
     private Double proteinConfidenceMwPlots = 95.0;
+    /**
+     * The scores used to score the spectrum matches for every advocate in a
+     * map: advocate index -> list of score indexes
+     */
+    private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
 
     /**
      * Constructor with default settings.
      */
     public ProcessingPreferences() {
+        initializeAlgorithmScores();
     }
 
     /**
@@ -139,5 +149,116 @@ public class ProcessingPreferences implements Serializable {
      */
     public void setProteinConfidenceMwPlots(Double proteinConfidenceMwPlots) {
         this.proteinConfidenceMwPlots = proteinConfidenceMwPlots;
+    }
+    
+    /**
+     * Sets the default score selection for the implemented advocates. Note: this silently erases any previous selection.
+     */
+    public void initializeAlgorithmScores() {
+        spectrumMatchingScores = new HashMap<Integer, ArrayList<Integer>>(Advocate.values().length);
+        for (Advocate advocate : Advocate.values()) {
+            ArrayList<Integer> scores = new ArrayList<Integer>();
+            scores.add(PsmScores.native_score.index);
+            if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm || advocate.getType() == Advocate.AdvocateType.spectral_library || advocate.getType() == Advocate.AdvocateType.unknown) {
+                scores.add(PsmScores.precursor_accuracy.index);
+                scores.add(PsmScores.ms2_mz_fidelity.index);
+                scores.add(PsmScores.intensity.index);
+                scores.add(PsmScores.complementarity.index);
+            }
+            spectrumMatchingScores.put(advocate.getIndex(), scores);
+        }
+    }
+
+    /**
+     * Sets the scores to use for a given advocate.
+     *
+     * @param advocateIndex the index of the advocate
+     * @param scores the scores
+     */
+    public void setScoresForAlgorithm(int advocateIndex, ArrayList<Integer> scores) {
+        if (spectrumMatchingScores == null) {
+            spectrumMatchingScores = new HashMap<Integer, ArrayList<Integer>>();
+        }
+        spectrumMatchingScores.put(advocateIndex, scores);
+    }
+
+    /**
+     * Returns the scores used for a given advocate.
+     *
+     * @param advocateIndex the index of the advocate
+     *
+     * @return the scores used for a given advocate
+     */
+    public ArrayList<Integer> getScores(int advocateIndex) {
+        if (spectrumMatchingScores == null) {
+            return null;
+        }
+        return spectrumMatchingScores.get(advocateIndex);
+    }
+
+    /**
+     * Indicates whether a score computation is needed for the given advocate.
+     *
+     * @param advocate the index of the advocate of interest
+     *
+     * @return a boolean indicating whether a score computation is needed
+     */
+    public boolean isScoringNeeded(int advocate) {
+        if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
+            ArrayList<Integer> scores = spectrumMatchingScores.get(advocate);
+            if (scores != null && !scores.isEmpty()) {
+                for (int scoreIndex : scores) {
+                    if (scoreIndex != PsmScores.native_score.index) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicates whether a score computation is needed for the given advocates.
+     *
+     * @param advocates the advocates of interest
+     *
+     * @return a boolean indicating whether a score computation is needed
+     */
+    public boolean isScoringNeeded(ArrayList<Integer> advocates) {
+        if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
+            for (Integer advocate : advocates) {
+                if (isScoringNeeded(advocate)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Indicates whether target decoy databases are needed for PSM scoring.
+     *
+     * @param advocates the advocates of interest
+     *
+     * @return a boolean indicating whether a score computation is needed
+     */
+    public boolean isTargetDecoyNeededForPsmScoring(ArrayList<Integer> advocates) {
+        if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
+            for (Integer advocate : advocates) {
+                ArrayList<Integer> scores = spectrumMatchingScores.get(advocate);
+                if (scores != null && !scores.isEmpty()) {
+                    int nScores = 0;
+                    for (int scoreIndex : scores) {
+                        if (scoreIndex != PsmScores.native_score.index) {
+                            if (nScores == 1) {
+                                return true;
+                            }
+                            nScores++;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

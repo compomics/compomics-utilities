@@ -33,7 +33,7 @@ public interface IdfileReader {
      * filename) of the file that this IdfileReader can read.
      */
     public String getExtension();
-
+    
     /**
      * Closes the file reader.
      *

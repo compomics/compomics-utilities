@@ -30,14 +30,14 @@ public class IntensityRankScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      *
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, null);
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance) {
+        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, mzTolerance, null);
     }
 
     /**
@@ -52,7 +52,7 @@ public class IntensityRankScore {
      * @param iontypes the fragment ions to annotate
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
-     * @param precursorCharge the precursor charge
+     * @param identificationCharge the precursor charge
      * @param mzTolerance the ms2 m/z tolerance
      * @param peptideSpectrumAnnotator an external annotator (if null an
      * internal will be used)
@@ -60,13 +60,13 @@ public class IntensityRankScore {
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         if (peptideSpectrumAnnotator == null) {
             peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
         }
 
-        double nMissedTolerance = ((double) spectrum.getNPeaks()) / 100;
+        double nMissedTolerance = 10 * ((double) spectrum.getNPeaks()) / 100;
 
         HashMap<Double, ArrayList<Peak>> intensityMap = spectrum.getIntensityMap();
         ArrayList<Double> intensities = new ArrayList<Double>(intensityMap.keySet());
@@ -77,16 +77,16 @@ public class IntensityRankScore {
 
         for (double intensity : intensities) {
             for (Peak peak : intensityMap.get(intensity)) {
-                if (peptideSpectrumAnnotator.matchPeak(peptide, iontypes, charges, precursorCharge, neutralLosses, peak).isEmpty()) {
+                if (peptideSpectrumAnnotator.matchPeak(peptide, iontypes, charges, identificationCharge, neutralLosses, peak).isEmpty()) {
                     missed++;
                     if (missed > nMissedTolerance) {
-                        return rank / peptide.getSequence().length();
+                        return ((double) rank) / spectrum.getNPeaks();
                     }
                 }
                 rank++;
             }
         }
 
-        return rank / peptide.getSequence().length();
+        return ((double) rank) / spectrum.getNPeaks();
     }
 }

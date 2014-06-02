@@ -295,15 +295,12 @@ public class MgfReader {
                     throw new IllegalArgumentException("Cannot parse retention time: " + rtInput);
                 }
             } else if (line.equals("END IONS")) {
-                if (title == null) {
-                    title = spectrumCounter + "";
-                    indexes.put(title, beginIndex);
-                    spectrumTitles.add(title);
+                if (title != null) {
+                    if (peakCount > maxPeakCount) {
+                        maxPeakCount = peakCount;
+                    }
                 }
                 title = null;
-                if (peakCount > maxPeakCount) {
-                    maxPeakCount = peakCount;
-                }
             } else if (!line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
@@ -329,9 +326,8 @@ public class MgfReader {
             minRT = 0;
         }
 
-        long lastModified = mgfFile.lastModified();
-
-        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT, maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, lastModified);
+        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT, 
+                maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, mgfFile.lastModified(), spectrumCounter);
     }
 
     /**
@@ -742,7 +738,7 @@ public class MgfReader {
      *
      * @param chargeLine the charge line
      * @return the possible charges found
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException
      */
     private static ArrayList<Charge> parseCharges(String chargeLine) throws IllegalArgumentException {
 

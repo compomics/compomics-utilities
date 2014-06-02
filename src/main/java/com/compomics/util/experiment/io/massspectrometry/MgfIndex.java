@@ -67,6 +67,11 @@ public class MgfIndex extends ExperimentObject {
      * indicated that the check for peak picking was not performed.
      */
     private Boolean peakPicked = null;
+    /**
+     * Returns the number of spectra in the file as counted by the begin ions 
+     * tags. Null if not set.
+     */
+    private Integer spectrumCount = null;
 
     /**
      * Constructor.
@@ -122,9 +127,11 @@ public class MgfIndex extends ExperimentObject {
      * @param peakPicked indicates if the spectra seem to be peak picked or not
      * @param lastModified a long indicating the last time the indexed file was
      * modified
+     * @param spectrumCount the number of spectra in the file counted by the 
+     * number of begin ion tags
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, String fileName, double minRT,
-            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
+            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified, int spectrumCount) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
@@ -138,6 +145,7 @@ public class MgfIndex extends ExperimentObject {
         this.maxPeakCount = maxPeakCount;
         this.lastModified = lastModified;
         this.peakPicked = peakPicked;
+        this.spectrumCount = spectrumCount;
     }
 
     /**
@@ -342,7 +350,11 @@ public class MgfIndex extends ExperimentObject {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
-        return spectrumTitles.size();
+        if (spectrumCount != null) {
+            return spectrumCount;
+        } else {
+            return spectrumTitles.size(); // backwards compatibility
+        }
     }
 
     /**

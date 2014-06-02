@@ -21,26 +21,26 @@ import java.util.HashMap;
 public enum PsmScores {
 
     /**
-     * The native score of the search engine
+     * The native score of the search engine.
      */
     native_score(-1, "native", false),
     /**
-     * The precursor accuracy
+     * The precursor accuracy.
      */
     precursor_accuracy(0, "precursor accuracy", false),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
     intensity(1, "intensity", true),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
     ms2_mz_fidelity(2, "fragment ion mz fildelity", false),
     /**
      * The complementarity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
     complementarity(3, "complementarity", true);
 
@@ -53,25 +53,27 @@ public enum PsmScores {
      */
     public final int index;
     /**
-     * Indicates whether the score increases with the quality of the match
+     * Indicates whether the score increases with the quality of the match.
      */
     public final boolean increasing;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param index the index of the score
      * @param name the name of the score
-     * @param increasing whether the score increases with the quality of the match
+     * @param increasing whether the score increases with the quality of the
+     * match
      */
     private PsmScores(int index, String name, boolean increasing) {
         this.index = index;
         this.name = name;
         this.increasing = increasing;
     }
+
     /**
      * Returns the PSM score of the given index. Null if not found.
-     * 
+     *
      * @param scoreIndex the index of the desired score
      * @return the score of given index
      */
@@ -85,14 +87,15 @@ public enum PsmScores {
     }
 
     /**
-     * A peptide spectrum annotator used when computing scores
+     * A peptide spectrum annotator used when computing scores.
      */
     private static PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
 
     /**
      * Scores the match between the given peptide and spectrum using an m/z
      * fidelity score. The mass interquartile distance of the fragment ion mass
-     * error is used as m/z fidelity score. The score is forced to decrease the quality of the match by taking the opposite value when relevant.
+     * error is used as m/z fidelity score. The score is forced to decrease the
+     * quality of the match by taking the opposite value when relevant.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -170,5 +173,4 @@ public enum PsmScores {
                 throw new UnsupportedOperationException("Score not implemented.");
         }
     }
-
 }

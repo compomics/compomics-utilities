@@ -43,7 +43,7 @@ public class ProcessingPreferences implements Serializable {
     private Double proteinConfidenceMwPlots = 95.0;
     /**
      * The scores used to score the spectrum matches for every advocate in a
-     * map: advocate index -> list of score indexes
+     * map: advocate index -> list of score indexes.
      */
     private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
 
@@ -150,16 +150,19 @@ public class ProcessingPreferences implements Serializable {
     public void setProteinConfidenceMwPlots(Double proteinConfidenceMwPlots) {
         this.proteinConfidenceMwPlots = proteinConfidenceMwPlots;
     }
-    
+
     /**
-     * Sets the default score selection for the implemented advocates. Note: this silently erases any previous selection.
+     * Sets the default score selection for the implemented advocates. Note:
+     * this silently erases any previous selection.
      */
     public void initializeAlgorithmScores() {
         spectrumMatchingScores = new HashMap<Integer, ArrayList<Integer>>(Advocate.values().length);
         for (Advocate advocate : Advocate.values()) {
             ArrayList<Integer> scores = new ArrayList<Integer>();
             scores.add(PsmScores.native_score.index);
-            if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm || advocate.getType() == Advocate.AdvocateType.spectral_library || advocate.getType() == Advocate.AdvocateType.unknown) {
+            if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm 
+                    || advocate.getType() == Advocate.AdvocateType.spectral_library 
+                    || advocate.getType() == Advocate.AdvocateType.unknown) {
                 scores.add(PsmScores.precursor_accuracy.index);
                 scores.add(PsmScores.ms2_mz_fidelity.index);
                 scores.add(PsmScores.intensity.index);

@@ -170,4 +170,4 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         result.put("Andromeda", versions);
         return result;
     }
-    }
+}

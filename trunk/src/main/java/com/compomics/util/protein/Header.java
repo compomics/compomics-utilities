@@ -244,6 +244,7 @@ public class Header implements Cloneable, Serializable {
                         result.databaseType = DatabaseType.UniProt;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
+
                         // Check for the presence of a location.
                         int index = -1;
                         if ((index = result.iAccession.indexOf(" (")) > 0) {
@@ -255,6 +256,8 @@ public class Header implements Cloneable, Serializable {
                             result.iStart = Integer.parseInt(temp.substring(open, minus));
                             result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                         }
+
+                        // get the description
                         result.iDescription = lSt.nextToken();
 
                         // try to get the gene name and taxonomy from the description
@@ -573,13 +576,13 @@ public class Header implements Cloneable, Serializable {
                     int end = aFASTAHeader.indexOf(") ");
                     result.iAccession = aFASTAHeader.substring(start + 2, end);
                     result.databaseType = DatabaseType.UniProt;
-                    result.iID = "sw";
+                    result.iID = "sw"; // @TODO: remove hardcoding?
                     result.iDescription = aFASTAHeader.substring(0, start) + " " + aFASTAHeader.substring(end + 2);
 
                     // try to get the gene name and taxonomy
                     //parseUniProtDescription(result);  // @TOOD: not sure if the header has the right format...
 
-                } else if (aFASTAHeader.matches("^sp\\|[^|\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
+                } else if (aFASTAHeader.matches("^sp\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
@@ -592,9 +595,14 @@ public class Header implements Cloneable, Serializable {
                         result.iStart = Integer.parseInt(result.iAccession.substring(openBracket, result.iAccession.indexOf(" ", openBracket)).trim());
                         result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
                         result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    } else if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
                     }
                     result.databaseType = DatabaseType.UniProt;
-                    result.iID = "sw";
+                    result.iID = "sp";
                     result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
 
                     // try to get the gene name and taxonomy
@@ -604,7 +612,7 @@ public class Header implements Cloneable, Serializable {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
                     // Is formatted something like this:
-                    //  >sp|accession|ID descr rest (including taxonomy, if available)
+                    //  >tr|accession|ID descr rest (including taxonomy, if available)
                     String tempHeader = aFASTAHeader.substring(3);
                     result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
                     // See if there is location information.
@@ -640,7 +648,7 @@ public class Header implements Cloneable, Serializable {
                         result.iEnd = Integer.parseInt(aFASTAHeader.substring(aFASTAHeader.indexOf(" ", openBracket), aFASTAHeader.indexOf(")")).trim());
                     }
                     result.databaseType = DatabaseType.UniProt;
-                    result.iID = "sw";
+                    result.iID = "sw"; // @TODO: remove hardcoding?
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
 
                     // try to get the gene name and taxonomy
@@ -1087,7 +1095,7 @@ public class Header implements Cloneable, Serializable {
         } else {
             // Some more appending to be done here.
             if (!this.iID.equals("")) {
-                if (this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("tr") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
+                if (this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("sp") || this.iID.equalsIgnoreCase("tr") || this.iID.equalsIgnoreCase("IPI") || this.iID.toLowerCase().startsWith("l. monocytogenes")) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|" + this.iDescription);
                 } else if (this.iID.equalsIgnoreCase("gi")) {
@@ -1179,7 +1187,7 @@ public class Header implements Cloneable, Serializable {
         // Score the header...
         if (this.iID == null || this.iID.equals("") || this.iID.startsWith(" M. tub.") || this.iID.startsWith("nrAt") || this.iID.startsWith("L. monocytogenes")) {
             score = 0;
-        } else if (this.iID.equalsIgnoreCase("sw")) {
+        } else if (this.iID.equalsIgnoreCase("sw") || this.iID.equalsIgnoreCase("sp")) {
             score = 4;
         } else if (this.iID.equalsIgnoreCase("tr")) {
             score = 2;

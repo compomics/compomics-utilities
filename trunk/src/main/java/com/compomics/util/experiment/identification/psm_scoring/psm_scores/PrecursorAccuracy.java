@@ -8,14 +8,15 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 
 /**
- * The precursor accuracy as a score
+ * The precursor accuracy as a score.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PrecursorAccuracy {
 
     /**
-     * Scores the match between the given peptide and spectrum using the precursor m/z accuracy.
+     * Scores the match between the given peptide and spectrum using the
+     * precursor m/z accuracy.
      *
      * @param peptide the peptide of interest
      * @param identificationCharge the charge of the identification
@@ -28,5 +29,4 @@ public class PrecursorAccuracy {
         IonMatch ionMatch = new IonMatch(new Peak(precursor.getMz(), 0), new PrecursorIon(peptide.getMass()), new Charge(Charge.PLUS, identificationCharge));
         return Math.abs(ionMatch.getError(ppm, true));
     }
-            
 }

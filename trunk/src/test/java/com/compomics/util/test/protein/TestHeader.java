@@ -308,7 +308,7 @@ public class TestHeader extends TestCase {
 
         // Now test a SP > Sep 2008 protein header.
         h = Header.parseFromFASTA(spSep2008);
-        Assert.assertEquals("sw", h.getID());
+        Assert.assertEquals("sp", h.getID());
         Assert.assertEquals(-1, h.getStartLocation());
         Assert.assertEquals(-1, h.getEndLocation());
         Assert.assertEquals("A7GKH8", h.getAccession());
@@ -491,7 +491,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals("NP0002A", Header.parseFromFASTA(generic).getCoreHeader());
         Assert.assertEquals("nrAt0.2_1 \t(TR:Q8HT11_ARATH)", Header.parseFromFASTA(nrAt).getCoreHeader());
         Assert.assertEquals("L. monocytogenes EGD-e|LMO02333", Header.parseFromFASTA(listeria).getCoreHeader());
-        Assert.assertEquals("sw|A7GKH8", Header.parseFromFASTA(spSep2008).getCoreHeader());
+        Assert.assertEquals("sp|A7GKH8", Header.parseFromFASTA(spSep2008).getCoreHeader());
         Assert.assertEquals("tr|Q8KFF3", Header.parseFromFASTA(trSep2008).getCoreHeader());
         Assert.assertEquals("FBpp0071678", Header.parseFromFASTA(flybase).getCoreHeader());
     }
@@ -1214,9 +1214,9 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(49, h17.getEndLocation());
 
         h18.setLocation(42, 49);
-        Assert.assertEquals("sw|A7GKH8 (42-49)", h18.getCoreHeader());
-        Assert.assertEquals(">sw|A7GKH8 (42-49)|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1", h18.getAbbreviatedFASTAHeader());
-        Assert.assertEquals(">sw|A7GKH8 (42-49)|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1", h18.toString());
+        Assert.assertEquals("sp|A7GKH8 (42-49)", h18.getCoreHeader());
+        Assert.assertEquals(">sp|A7GKH8 (42-49)|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1", h18.getAbbreviatedFASTAHeader());
+        Assert.assertEquals(">sp|A7GKH8 (42-49)|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1", h18.toString());
         Assert.assertEquals(42, h18.getStartLocation());
         Assert.assertEquals(49, h18.getEndLocation());
 

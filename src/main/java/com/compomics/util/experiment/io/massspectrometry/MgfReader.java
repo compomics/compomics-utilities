@@ -326,7 +326,7 @@ public class MgfReader {
             minRT = 0;
         }
 
-        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT, 
+        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT,
                 maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, mgfFile.lastModified(), spectrumCounter);
     }
 
@@ -346,7 +346,6 @@ public class MgfReader {
     public static void removeDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
         ArrayList<String> spectrumTitles = new ArrayList<String>();
-
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
 
         if (waitingHandler != null) {
@@ -356,15 +355,15 @@ public class MgfReader {
         }
 
         BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+
         try {
-
             long progressUnit = br.length() / 100;
-
             FileWriter fw = new FileWriter(tempSpectrumFile);
+
             try {
                 BufferedWriter bw = new BufferedWriter(fw);
-                try {
 
+                try {
                     String line;
                     String currentSpectrum = "";
                     boolean includeSpectrum = true;
@@ -441,6 +440,121 @@ public class MgfReader {
     }
 
     /**
+     * Adds missing spectrum titles.
+     *
+     * @param mgfFile the MGF file to fix
+     * @param waitingHandler a waitingHandler showing the progress, can be null
+     *
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     * @throws UnsupportedEncodingException if the decoding of a spectrum title
+     * fails
+     */
+    public static void addMissingSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+
+        ArrayList<String> spectrumTitles = new ArrayList<String>();
+
+        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+
+        try {
+            long progressUnit = br.length() / 100;
+
+            FileWriter fw = new FileWriter(tempSpectrumFile);
+            try {
+                BufferedWriter bw = new BufferedWriter(fw);
+                try {
+
+                    String line;
+                    String currentSpectrum = "";
+                    String title = null;
+                    int spectrumCounter = 0;
+
+                    while ((line = br.readLine()) != null) {
+
+                        if (line.equals("BEGIN IONS")) {
+                            spectrumCounter++;
+
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) {
+                                    break;
+                                }
+                                waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
+                            }
+
+                        } else if (line.startsWith("TITLE")) {
+                            currentSpectrum += line + System.getProperty("line.separator");
+
+                            title = line.substring(line.indexOf('=') + 1).trim();
+
+                            try {
+                                title = URLDecoder.decode(title, "utf-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                                throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
+                            }
+
+                            spectrumTitles.add(title);
+                        } else if (line.equals("END IONS")) {
+
+                            bw.write("BEGIN IONS" + System.getProperty("line.separator"));
+
+                            if (title == null) {
+                                title = "Spectrum " + spectrumCounter;
+                                while (spectrumTitles.contains(title)) {
+                                    title = "Spectrum " + ++spectrumCounter;
+                                }
+                                spectrumTitles.add(title);
+                                bw.write("TITLE=" + title + System.getProperty("line.separator"));
+                            }
+
+                            bw.write(currentSpectrum);
+                            bw.write("END IONS" + System.getProperty("line.separator"));
+                            currentSpectrum = "";
+                            title = null;
+                        } else {
+                            currentSpectrum += line + System.getProperty("line.separator");
+                        }
+                    }
+                } finally {
+                    bw.close();
+                }
+            } finally {
+                fw.close();
+            }
+        } finally {
+            br.close();
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+        }
+
+        // replace the old file
+        String orignalFilePath = mgfFile.getAbsolutePath();
+        boolean fileDeleted = mgfFile.delete();
+
+        if (!fileDeleted) {
+            throw new IOException("Failed to delete the original spectrum file.");
+        }
+
+        boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
+
+        if (!fileRenamed) {
+            throw new IOException("Failed to replace the original spectrum file.");
+        }
+    }
+
+    /**
      * Renames duplicate spectrum titles. Adds (2), (3) etc, behind the
      * duplicate spectrum titles.
      *
@@ -456,12 +570,10 @@ public class MgfReader {
     public static void renameDuplicateSpectrumTitles(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
 
         ArrayList<String> spectrumTitles = new ArrayList<String>();
-
         File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
 
         FileWriter fw = new FileWriter(tempSpectrumFile);
         BufferedWriter bw = new BufferedWriter(fw);
-
         FileReader fr = new FileReader(mgfFile);
         BufferedReader br = new BufferedReader(fr);
 

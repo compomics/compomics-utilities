@@ -11,6 +11,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -177,7 +178,7 @@ public class MgfReader {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
-        ArrayList<String> spectrumTitles = new ArrayList<String>();
+        LinkedHashSet<String> spectrumTitles = new LinkedHashSet<String>();
         HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
         long beginIndex = 0, currentIndex = 0;
@@ -326,7 +327,13 @@ public class MgfReader {
             minRT = 0;
         }
 
-        return new MgfIndex(spectrumTitles, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT,
+        // convert the spectrum tiltes to an arraylist
+        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<String>(); // @TODO: is there a faster way of doing this?
+        for (String temp : spectrumTitles) {
+            spectrumTitlesAsArrayList.add(temp);
+        }
+
+        return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT,
                 maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, mgfFile.lastModified(), spectrumCounter);
     }
 

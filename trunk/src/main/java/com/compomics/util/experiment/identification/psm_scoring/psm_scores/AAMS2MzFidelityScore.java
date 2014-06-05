@@ -22,7 +22,8 @@ public class AAMS2MzFidelityScore {
 
     /**
      * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. Returns the average over the peptide sequence of the minimal mass error of the ions annotating an amino acid.
+     * fidelity score. Returns the average over the peptide sequence of the
+     * minimal mass error of the ions annotating an amino acid.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -41,7 +42,8 @@ public class AAMS2MzFidelityScore {
 
     /**
      * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. Returns the average over the peptide sequence of the minimal mass error of the ions annotating an amino acid.
+     * fidelity score. Returns the average over the peptide sequence of the
+     * minimal mass error of the ions annotating an amino acid.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -68,8 +70,10 @@ public class AAMS2MzFidelityScore {
             aaDeviations.put(i, mzTolerance);
         }
 
-        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, identificationCharge,
+        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(
+                iontypes, neutralLosses, charges, identificationCharge,
                 spectrum, peptide, 0, mzTolerance, false, true);
+        
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             if (ion instanceof PeptideFragmentIon) {
@@ -82,11 +86,12 @@ public class AAMS2MzFidelityScore {
                 }
             }
         }
+        
         ArrayList<Double> mzDeviations = new ArrayList<Double>(aaDeviations.values());
         if (mzDeviations.isEmpty()) {
             return mzTolerance;
         }
+
         return BasicMathFunctions.mean(mzDeviations);
     }
-
 }

@@ -172,6 +172,7 @@ public class TarUtils {
         final int BUFFER = 2048;
         byte data[] = new byte[BUFFER];
         FileInputStream fi = new FileInputStream(tarFile);
+
         try {
             BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
             try {
@@ -182,12 +183,21 @@ public class TarUtils {
                     ArchiveEntry archiveEntry;
 
                     while ((archiveEntry = tarInput.getNextEntry()) != null) {
-                        File entryFile = new File(archiveEntry.getName());
+
+                        String entryName = archiveEntry.getName();
+
+                        // dirty fix to be able to open windows cps files on linux/mac and the other way around
+                        if (System.getProperty("os.name").lastIndexOf("Windows") == -1) {
+                            entryName = entryName.replaceAll("\\\\", "/");
+                        } else {
+                            entryName = entryName.replaceAll("/", "\\\\");
+                        }
+
+                        File entryFile = new File(entryName);
                         File entryFolder;
                         if (destinationFolder == null) {
                             entryFolder = entryFile.getParentFile();
                         } else {
-                            String entryName = archiveEntry.getName();
                             if (backwardCompatibilityCorrection != null && entryName.startsWith(backwardCompatibilityCorrection)) {
                                 entryName = entryName.substring(backwardCompatibilityCorrection.length() + 1);
                             }
@@ -225,7 +235,6 @@ public class TarUtils {
                             break;
                         }
                     }
-
                 } finally {
                     tarInput.close();
                 }

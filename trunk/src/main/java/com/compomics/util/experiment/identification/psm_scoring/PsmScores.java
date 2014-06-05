@@ -37,17 +37,17 @@ public enum PsmScores {
     ms2_mz_fidelity(1, "fragment ion mz fildelity", false),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
      */
     aa_ms2_mz_fidelity(2, "AA fragment ion mz fildelity", false),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
     intensity(3, "intensity", true),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
      */
     aa_intensity(4, "AA intensity", false),
     /**

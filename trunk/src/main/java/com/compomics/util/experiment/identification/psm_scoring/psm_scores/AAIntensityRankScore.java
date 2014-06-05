@@ -21,15 +21,17 @@ import java.util.HashMap;
  * @author Marc Vaudel
  */
 public class AAIntensityRankScore {
-    
+
     /**
-     * The number of bins for the spectrum intensities
+     * The number of bins for the spectrum intensities.
      */
     public static final int nBins = 10;
 
     /**
      * Scores the match between the given peptide and spectrum using the
-     * intensity rank of the matched peaks. For every amino-acid, the rank of the most intense peak is taken and the average value over the sequence is returned
+     * intensity rank of the matched peaks. For every amino-acid, the rank of
+     * the most intense peak is taken and the average value over the sequence is
+     * returned.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -48,7 +50,9 @@ public class AAIntensityRankScore {
 
     /**
      * Scores the match between the given peptide and spectrum using the
-     * intensity rank of the matched peaks. For every amino-acid, the rank of the most intense peak is taken and the average value over the sequence is returned
+     * intensity rank of the matched peaks. For every amino-acid, the rank of
+     * the most intense peak is taken and the average value over the sequence is
+     * returned.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -97,31 +101,30 @@ public class AAIntensityRankScore {
         ArrayList<Double> thresholds = new ArrayList<Double>(100);
         int count = 0;
         for (double intensity : intensities) {
-         if (++count == percentile) {
-             thresholds.add(intensity);
-             count = 0;
-         }
+            if (++count == percentile) {
+                thresholds.add(intensity);
+                count = 0;
+            }
         }
-        
+
         HashMap<Integer, Double> aaPercentile = new HashMap<Integer, Double>(sequenceLength);
         for (int aa : aaIntensities.keySet()) {
             double intensity = aaIntensities.get(aa);
             double rank = nBins;
             if (intensity > 0) {
-            rank = 0;
-            for (double threshold : thresholds) {
-                if (intensity >= threshold) {
-                    break;
-                } else {
-                    rank++;
+                rank = 0;
+                for (double threshold : thresholds) {
+                    if (intensity >= threshold) {
+                        break;
+                    } else {
+                        rank++;
+                    }
                 }
-            }
             }
             aaPercentile.put(aa, rank);
         }
-        
+
         ArrayList<Double> ranks = new ArrayList<Double>(aaPercentile.values());
         return BasicMathFunctions.mean(ranks);
     }
-
 }

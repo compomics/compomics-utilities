@@ -181,8 +181,22 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                     for (String ptm : ptms) {
 
                         try {
-                            String residue = ptm.substring(0, 1);
-                            int location = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
+                            // we expect something like this:
+                            // N-Term(acetylation of protein n-term|42.010565|variable) or
+                            // C4(carbamidomethyl c|57.021464|fixed)
+
+                            String location = ptm.substring(0, ptm.indexOf("("));
+                            int modSite;
+
+                            if (location.equalsIgnoreCase("N-Term")) {
+                                modSite = 1;
+                            } else if (location.equalsIgnoreCase("C-Term")) {
+                                modSite = peptideSequence.length() + 1;
+                            } else {
+                                // amino acid type and index expected, e.g., C4 or M3
+                                modSite = Integer.parseInt(ptm.substring(1, ptm.indexOf("(")));
+                            }
+
                             String rest = ptm.substring(ptm.indexOf("(") + 1, ptm.length() - 1).toLowerCase();
 
                             String[] details = rest.split("\\|");
@@ -191,7 +205,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             String ptmFixedStatus = details[2];
 
                             if (ptmFixedStatus.equalsIgnoreCase("variable")) {
-                                utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + residue, true, location));
+                                utilitiesModifications.add(new ModificationMatch(ptmMass + "@" + peptideSequence.charAt(modSite - 1), true, modSite));
                             }
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Error parsing ptm: " + ptm + "!");

@@ -14,7 +14,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     static final long serialVersionUID = 7129515983284796207L;
     /**
-     * The theoretic modiffication name. The modification can be accessed via
+     * The theoretic modification name. The modification can be accessed via
      * the PTM factory.
      */
     private String theoreticPtm;

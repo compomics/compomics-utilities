@@ -4,6 +4,8 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAIntensityRankScore;
+import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAMS2MzFidelityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.ComplementarityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.IntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.MS2MzFidelityScore;
@@ -29,20 +31,30 @@ public enum PsmScores {
      */
     precursor_accuracy(0, "precursor accuracy", false),
     /**
-     * The intensity sub-score as adapted from the DirecTag paper
-     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
-     */
-    intensity(1, "intensity", true),
-    /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    ms2_mz_fidelity(2, "fragment ion mz fildelity", false),
+    ms2_mz_fidelity(1, "fragment ion mz fildelity", false),
+    /**
+     * The m/z fidelity score as adapted from the DirecTag paper
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid
+     */
+    aa_ms2_mz_fidelity(2, "AA fragment ion mz fildelity", false),
+    /**
+     * The intensity sub-score as adapted from the DirecTag paper
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943)
+     */
+    intensity(3, "intensity", true),
+    /**
+     * The intensity sub-score as adapted from the DirecTag paper
+     * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid
+     */
+    aa_intensity(4, "AA intensity", false),
     /**
      * The complementarity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    complementarity(3, "complementarity", true);
+    complementarity(5, "complementarity", true);
 
     /**
      * The name of the score.
@@ -163,10 +175,14 @@ public enum PsmScores {
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
                 return PrecursorAccuracy.getScore(peptide, identificationCharge, spectrum.getPrecursor(), searchParameters.isPrecursorAccuracyTypePpm());
-            case intensity:
-                return IntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
             case ms2_mz_fidelity:
                 return MS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+            case aa_ms2_mz_fidelity:
+                return AAMS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+            case intensity:
+                return IntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+            case aa_intensity:
+                return AAIntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
             case complementarity:
                 return ComplementarityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
             default:

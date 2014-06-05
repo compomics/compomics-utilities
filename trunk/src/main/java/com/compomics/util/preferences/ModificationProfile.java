@@ -311,7 +311,7 @@ public class ModificationProfile implements Serializable {
             refinementFixedModifications = new ArrayList<String>();
         }
         if (refinementModifications != null && !refinementModifications.isEmpty()) {
-            for (String ptm : refinementFixedModifications) {
+            for (String ptm : refinementModifications) {
                 if (!refinementVariableModifications.contains(ptm)) {
                     refinementVariableModifications.add(ptm);
                 }

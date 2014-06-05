@@ -171,8 +171,16 @@ public class Util {
      * @return the file name with suffix
      */
     public static String appendSuffix(String fileName, String suffix) {
-        String tempName = fileName.substring(0, fileName.lastIndexOf("."));
-        String extension = fileName.substring(fileName.lastIndexOf("."));
+        String tempName;
+        String extension;
+        int extensionIndex = fileName.lastIndexOf(".");
+        if (extensionIndex > -1) {
+            tempName = fileName.substring(0, fileName.lastIndexOf("."));
+            extension = fileName.substring(fileName.lastIndexOf("."));
+        } else {
+            tempName = fileName;
+            extension = "";
+        }
         return tempName + suffix + extension;
     }
 

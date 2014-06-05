@@ -8,29 +8,21 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.math.BasicMathFunctions;
-import org.apache.commons.math.util.FastMath;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The intensity sub-score as adapted from the DirecTag paper
+ * The m/z fidelity sub-score as adapted from the DirecTag paper where the
+ * minimal value per amino-scid is retained
  * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
  *
  * @author Marc Vaudel
  */
-public class ComplementarityScore {
+public class AAMS2MzFidelityScore {
 
     /**
-     * Log2.
-     */
-    private static final Double log2 = FastMath.log(2.0);
-
-    /**
-     * Scores the match between the given peptide and spectrum using the
-     * complementarity of the matched peaks. For every residue, a list of
-     * matched peaks is established and if any is found, the score per residue
-     * is the log of the number of matched ions. The peptide score is the
-     * average of the residue scores.
+     * Scores the match between the given peptide and spectrum using an m/z
+     * fidelity score. Returns the average over the peptide sequence of the minimal mass error of the ions annotating an amino acid.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -48,11 +40,8 @@ public class ComplementarityScore {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using the
-     * complementarity of the matched peaks. For every residue, a list of
-     * matched peaks is established and if any is found, the score per residue
-     * is the log of the number of matched ions. The peptide score is the
-     * average of the residue scores.
+     * Scores the match between the given peptide and spectrum using an m/z
+     * fidelity score. Returns the average over the peptide sequence of the minimal mass error of the ions annotating an amino acid.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -74,37 +63,30 @@ public class ComplementarityScore {
         }
 
         int sequenceLength = peptide.getSequence().length();
+        HashMap<Integer, Double> aaDeviations = new HashMap(sequenceLength);
+        for (int i = 1; i <= sequenceLength; i++) {
+            aaDeviations.put(i, mzTolerance);
+        }
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, identificationCharge,
                 spectrum, peptide, 0, mzTolerance, false, true);
-
-        HashMap<Integer, Double> residueToMatchesMap = new HashMap<Integer, Double>(sequenceLength);
-        for (int i = 1; i <= sequenceLength; i++) {
-            residueToMatchesMap.put(i, 0.0);
-        }
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             if (ion instanceof PeptideFragmentIon) {
                 PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
                 int number = peptideFragmentIon.getNumber();
-                residueToMatchesMap.put(number, residueToMatchesMap.get(number) + 1);
+                double error = aaDeviations.get(number),
+                        tempError = Math.abs(ionMatch.getAbsoluteError());
+                if (tempError < error) {
+                    aaDeviations.put(number, tempError);
+                }
             }
         }
-
-        ArrayList<Double> scorePerResidue = new ArrayList<Double>(residueToMatchesMap.size());
-        for (int number = 1; number <= sequenceLength; number++) {
-            Double nIons = residueToMatchesMap.get(number);
-            if (nIons != null) {
-                scorePerResidue.add(FastMath.log(nIons) / log2);
-            }
+        ArrayList<Double> mzDeviations = new ArrayList<Double>(aaDeviations.values());
+        if (mzDeviations.isEmpty()) {
+            return mzTolerance;
         }
-        
-        double mean = 0;
-        
-        if (!scorePerResidue.isEmpty()) {
-            mean = BasicMathFunctions.mean(scorePerResidue);
-        }
-
-        return Math.pow(2, mean);
+        return BasicMathFunctions.mean(mzDeviations);
     }
+
 }

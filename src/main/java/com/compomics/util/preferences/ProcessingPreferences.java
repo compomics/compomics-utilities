@@ -160,12 +160,12 @@ public class ProcessingPreferences implements Serializable {
         for (Advocate advocate : Advocate.values()) {
             ArrayList<Integer> scores = new ArrayList<Integer>();
             scores.add(PsmScores.native_score.index);
-            if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm 
-                    || advocate.getType() == Advocate.AdvocateType.spectral_library 
-                    || advocate.getType() == Advocate.AdvocateType.unknown) {
+            if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm || advocate.getType() == Advocate.AdvocateType.spectral_library || advocate.getType() == Advocate.AdvocateType.unknown) {
                 scores.add(PsmScores.precursor_accuracy.index);
-                scores.add(PsmScores.ms2_mz_fidelity.index);
-                scores.add(PsmScores.intensity.index);
+//                           scores.add(PsmScores.ms2_mz_fidelity.index);
+            scores.add(PsmScores.aa_ms2_mz_fidelity.index);
+//                           scores.add(PsmScores.intensity.index);
+                scores.add(PsmScores.aa_intensity.index);
                 scores.add(PsmScores.complementarity.index);
             }
             spectrumMatchingScores.put(advocate.getIndex(), scores);
@@ -249,16 +249,8 @@ public class ProcessingPreferences implements Serializable {
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             for (Integer advocate : advocates) {
                 ArrayList<Integer> scores = spectrumMatchingScores.get(advocate);
-                if (scores != null && !scores.isEmpty()) {
-                    int nScores = 0;
-                    for (int scoreIndex : scores) {
-                        if (scoreIndex != PsmScores.native_score.index) {
-                            if (nScores == 1) {
-                                return true;
-                            }
-                            nScores++;
-                        }
-                    }
+                if (scores != null && scores.size() > 1) {
+                    return true;
                 }
             }
         }

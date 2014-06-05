@@ -22,8 +22,7 @@ public class IntensityRankScore {
      * Scores the match between the given peptide and spectrum using the
      * intensity rank of the matched peaks. The score goes from the most intense
      * peaks to the lowest and returns the intensity rank at which more than 1%
-     * of the total number of peaks is not annotated. The rank is then
-     * normalized by the peptide length.
+     * of the total number of peaks is not annotated.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -44,8 +43,7 @@ public class IntensityRankScore {
      * Scores the match between the given peptide and spectrum using the
      * intensity rank of the matched peaks. The score goes from the most intense
      * peaks to the lowest and returns the intensity rank at which more than 1%
-     * of the total number of peaks is not annotated. The rank is then
-     * normalized by the peptide length.
+     * of the total number of peaks is not annotated.
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -77,7 +75,7 @@ public class IntensityRankScore {
 
         for (double intensity : intensities) {
             for (Peak peak : intensityMap.get(intensity)) {
-                if (peptideSpectrumAnnotator.matchPeak(peptide, iontypes, charges, identificationCharge, neutralLosses, peak).isEmpty()) {
+                if (peptideSpectrumAnnotator.matchPeak(peptide, iontypes, charges, identificationCharge, neutralLosses, peak).isEmpty()) { //Warning: this is very slow
                     missed++;
                     if (missed > nMissedTolerance) {
                         return ((double) rank) / spectrum.getNPeaks();

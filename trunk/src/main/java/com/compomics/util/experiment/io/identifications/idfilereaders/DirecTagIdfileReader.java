@@ -175,7 +175,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @throws IOException
      */
     private void parseFile(boolean indexResults) throws FileNotFoundException, IOException {
-
         try {
             boolean endOfFile = parseParameters();
             if (!endOfFile) {

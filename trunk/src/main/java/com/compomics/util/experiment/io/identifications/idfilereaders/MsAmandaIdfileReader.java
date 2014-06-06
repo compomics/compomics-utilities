@@ -34,7 +34,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * The softwareVersion.
      */
-    private String softwareVersion = null; // not available for MS Amanda
+    private String softwareVersion = null;
     /**
      * The MS Amanda csv file.
      */
@@ -67,6 +67,26 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      */
     public MsAmandaIdfileReader(File msAmandaCsvFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
         this.msAmandaCsvFile = msAmandaCsvFile;
+
+        // get the ms amanda version number
+        extractVersionNumber();
+    }
+
+    /**
+     * Extracts the MS Amanda version number.
+     */
+    private void extractVersionNumber() throws IOException {
+
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(msAmandaCsvFile, "r", 1024 * 100);
+
+        // read the version number, if available, requires ms amanda version 1.0.0.3196 or newer
+        String versionNumberString = bufferedRandomAccessFile.readLine();
+
+        if (versionNumberString.toLowerCase().startsWith("#version: ")) {
+            softwareVersion = versionNumberString.substring("#version: ".length()).trim();
+        }
+
+        bufferedRandomAccessFile.close();
     }
 
     @Override
@@ -87,8 +107,18 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
-        // read the header line
-        String headerString = bufferedRandomAccessFile.readLine();
+        // check if the version number is included, ms amanda version 1.0.0.3196 or newer
+        String versionNumberString = bufferedRandomAccessFile.readLine();
+        String headerString;
+
+        // skip the version number
+        if (versionNumberString.toLowerCase().startsWith("#version: ")) {
+            headerString = bufferedRandomAccessFile.readLine();
+        } else {
+            headerString = versionNumberString;
+        }
+
+        // parse the header line
         String[] headers = headerString.split("\t");
         int scanNumberIndex = -1, titleIndex = -1, sequenceIndex = -1, modificationsIndex = -1, proteinAccessionsIndex = -1,
                 amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, filenameIndex = -1;

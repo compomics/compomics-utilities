@@ -632,7 +632,8 @@ public class SpectrumFactory {
                     SelectedIonList sIonList = precursorList.getPrecursor().get(0).getSelectedIonList();
                     if (sIonList != null) {
                         for (CVParam cvParam : sIonList.getSelectedIon().get(0).getCvParam()) {
-                            if (cvParam.getAccession().equals("MS:1000744")) {
+                            if (cvParam.getAccession().equals("MS:1000744")
+                                    || cvParam.getAccession().equals("MS:1000040")) {
                                 mzPrec = new Double(cvParam.getValue());
                             } else if (cvParam.getAccession().equals("MS:1000041")) {
                                 chargePrec = new Integer(cvParam.getValue());
@@ -644,8 +645,10 @@ public class SpectrumFactory {
             if (level == 1) {
                 throw new IllegalArgumentException("MS1 spectrum");
             } else {
-                //@TODO: update the charge here
-//                    currentPrecursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
+                //@TODO: is this correct..?
+                ArrayList<Charge> charges = new ArrayList<Charge>();
+                charges.add(new Charge(Charge.PLUS, chargePrec));
+                currentPrecursor = new Precursor(scanTime, mzPrec, charges);
             }
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");
@@ -667,9 +670,9 @@ public class SpectrumFactory {
                     String tempTitle = Spectrum.getSpectrumTitle(tempKey);
                     fileMap.remove(tempTitle);
                 }
-
             }
         }
+
         return currentPrecursor;
     }
 
@@ -801,7 +804,8 @@ public class SpectrumFactory {
                     SelectedIonList sIonList = precursorList.getPrecursor().get(0).getSelectedIonList();
                     if (sIonList != null) {
                         for (CVParam cvParam : sIonList.getSelectedIon().get(0).getCvParam()) {
-                            if (cvParam.getAccession().equals("MS:1000744")) {
+                            if (cvParam.getAccession().equals("MS:1000744")
+                                    || cvParam.getAccession().equals("MS:1000040")) {
                                 mzPrec = new Double(cvParam.getValue());
                             } else if (cvParam.getAccession().equals("MS:1000041")) {
                                 chargePrec = new Integer(cvParam.getValue());
@@ -822,9 +826,11 @@ public class SpectrumFactory {
             if (level == 1) {
                 currentSpectrum = new MS1Spectrum(spectrumFile, spectrumTitle, scanTime, peakList);
             } else {
-                //@TODO: update the charge here
-                //Precursor precursor = new Precursor(scanTime, mzPrec, new Charge(Charge.PLUS, chargePrec));
-                //currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, fileName, scanTime);
+                //@TODO: is this the correct way to set the precursor..?
+                ArrayList<Charge> charges = new ArrayList<Charge>();
+                charges.add(new Charge(Charge.PLUS, chargePrec));
+                Precursor precursor = new Precursor(scanTime, mzPrec, charges);
+                currentSpectrum = new MSnSpectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
             }
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");

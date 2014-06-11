@@ -368,6 +368,10 @@ public class Advocate {
             return "21254760";
         } else if (this == direcTag) {
             return "18630943";
+        } else if (this == msAmanda) {
+            return "24909410";
+        } else if (this == msgf) {
+            return "20829449"; // @TODO: update to the real ms-gf+ citation when available
         } else {
             return null;
         }

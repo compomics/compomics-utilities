@@ -260,9 +260,9 @@ public class MassErrorBubblePlot extends JPanel {
         String yAxisLabel;
 
         if (useRelativeError) {
-            yAxisLabel = "Mass Error (ppm)";
+            yAxisLabel = "m/z error (ppm)";
         } else {
-            yAxisLabel = "Mass Error (Da)";
+            yAxisLabel = "m/z error (Da)";
         }
 
         JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", yAxisLabel, xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);

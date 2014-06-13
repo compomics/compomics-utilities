@@ -175,19 +175,14 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 String modifications = elements[modificationsIndex].trim();
                 //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used
                 String scoreAsText = elements[amandaScoreIndex];
-                double msAmandaScore;
-                try {
-                    msAmandaScore = Double.valueOf(scoreAsText);
-                } catch (NumberFormatException e) {
-                    scoreAsText = scoreAsText.replaceAll("\\.", "");
-                    scoreAsText = scoreAsText.replaceAll(",", "\\.");
-                    msAmandaScore = Double.valueOf(scoreAsText);
-                }
+                double msAmandaScore = Util.readDoubleAsString(scoreAsText);
                 double msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
                 int rank = Integer.valueOf(elements[rankIndex]);
-                //String mz = elements[mzIndex]; // not currently used
+                //String mzAsText = elements[mzIndex]; // not currently used
+                //double mz = Util.readDoubleAsString(mzAsText);
                 int charge = Integer.valueOf(elements[chargeIndex]);
-                //double rt = Double.valueOf(elements[rtIndex]); // not currently used, and not mandatory, as old csv files didn't have this one...
+                //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
+                //double rt = Util.readDoubleAsString(rtAsText);
                 String fileName = elements[filenameIndex];
 
                 // set up the yet empty spectrum match, or add to the current match
@@ -231,7 +226,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                             String[] details = rest.split("\\|");
                             String ptmName = details[0]; // not currently used
-                            String ptmMass = details[1];
+                            String ptmMassAsString = details[1];
+                            double ptmMass = Util.readDoubleAsString(ptmMassAsString);
                             String ptmFixedStatus = details[2];
 
                             if (ptmFixedStatus.equalsIgnoreCase("variable")) {

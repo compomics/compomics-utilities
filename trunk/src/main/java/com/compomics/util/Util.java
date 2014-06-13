@@ -562,4 +562,31 @@ public class Util {
         }
         return result;
     }
+
+    /**
+     * Method for reading a double value as a string which uses either "," or
+     * "." as the decimal symbol.
+     *
+     * @param doubleAsString the double value as a string
+     * @return the double value
+     * @throws NumberFormatException thrown if the double cannot be read as a
+     * double
+     */
+    public static double readDoubleAsString(String doubleAsString) throws NumberFormatException {
+
+        double temp;
+        try {
+            temp = Double.valueOf(doubleAsString);
+        } catch (NumberFormatException e) {
+            doubleAsString = doubleAsString.replaceAll("\\.", "");
+            doubleAsString = doubleAsString.replaceAll(",", "\\.");
+            try {
+                temp = Double.valueOf(doubleAsString);
+            } catch (NumberFormatException ex) {
+                throw new NumberFormatException(doubleAsString + " cannot be read as a floating value!");
+            }
+        }
+
+        return temp;
+    }
 }

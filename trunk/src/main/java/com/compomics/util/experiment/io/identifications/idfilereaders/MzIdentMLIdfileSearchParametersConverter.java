@@ -3,19 +3,14 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
-import uk.ac.ebi.jmzidml.model.mzidml.DataCollection;
 import uk.ac.ebi.jmzidml.model.mzidml.Enzyme;
-import uk.ac.ebi.jmzidml.model.mzidml.ModificationParams;
 import uk.ac.ebi.jmzidml.model.mzidml.ParamList;
-import uk.ac.ebi.jmzidml.model.mzidml.SearchDatabase;
-import uk.ac.ebi.jmzidml.model.mzidml.SearchModification;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationProtocol;
 import uk.ac.ebi.jmzidml.model.mzidml.Tolerance;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
@@ -28,44 +23,21 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
 
     /**
-     * The enzyme factory.
-     */
-    private static EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
-
-    /**
-     * Main class for testing purposes only.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        try {
-            File lEnzymeFile = new File("C:\\Users\\hba041\\My_Applications\\peptide-shaker\\resources\\conf\\peptideshaker_enzymes.xml");
-            enzymeFactory.importEnzymes(lEnzymeFile);
-            MzIdentMLIdfileSearchParametersConverter.getSearchParameters(
-                    new File("C:\\Users\\hba041\\Desktop\\yasset\\total-spectra-mascot.mzid"),
-                    //new File("C:\\Users\\hba041\\Desktop\\yasset\\total-spectra-myrimatch.mzid"),
-                    //new File("C:\\Users\\hba041\\Desktop\\test\\mzIdentML\\PeptideShaker_example_export.mzid"), 
-                    new File("C:\\Users\\hba041\\Desktop\\test\\mzIdentML\\test.parameters"), null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Constructor.
      *
      * @param mzIdentMLFile
-     * @param searchParametersFile the file to save the search parameters to
+     * @param searchParameters the search parameters object to save to
+     * @param species the current species
      * @param waitingHandler
      * @return the extracted search parameters
      * @throws FileNotFoundException
      * @throws IOException
      * @throws java.lang.ClassNotFoundException
      */
-    public static SearchParameters getSearchParameters(File mzIdentMLFile, File searchParametersFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static String getSearchParameters(File mzIdentMLFile, SearchParameters searchParameters, String species, WaitingHandler waitingHandler)
+            throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        SearchParameters searchParameters = new SearchParameters();
-        searchParameters.setParametersFile(searchParametersFile);
+        String parametersReport = "<br><b><u>Extracted Search Parameters</u></b><br>";
 
         // unmarshal the mzid file
         MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
@@ -78,59 +50,46 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             return null;
         }
 
-        // get the modifications
-        ModificationProfile modificationProfile = new ModificationProfile();
+        // get the spectrum identification protocol
         SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
-        ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
 
-        for (SearchModification tempMod : modifications.getSearchModification()) {
-            if (!tempMod.getCvParam().isEmpty()) {
+        // get the fragment ion tolerance and type
+        Double fragmentMinTolerance = null;
+        Double fragmentMaxTolerance = null;
+        Boolean fragmentToleranceTypeIsPpm = false;
+        Tolerance tempFragmentTolerance = spectrumIdentificationProtocol.getFragmentTolerance();
 
-                CvParam cvParam = tempMod.getCvParam().get(0); // example: <cvParam cvRef="UNIMOD" accession="UNIMOD:4" name="Carbamidomethyl" value="57.021464"/>
-
-                // @TODO: convert to utilities ptms!                
-//                if (tempMod.isFixedMod()) {
-//                    modificationProfile.addFixedModification(null);
-//                } else {
-//                    modificationProfile.addVariableModification(null);
-//                }
+        for (CvParam cvParam : tempFragmentTolerance.getCvParam()) {
+            if (cvParam.getAccession().equalsIgnoreCase("MS:1001412")) {
+                fragmentMaxTolerance = Double.valueOf(cvParam.getValue());
+                fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
+            } else if (cvParam.getAccession().equalsIgnoreCase("MS:1001413")) {
+                fragmentMinTolerance = Double.valueOf(cvParam.getValue());
+                fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
             }
         }
-        searchParameters.setModificationProfile(modificationProfile);
 
-        // get the database
-        DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
-        List<SearchDatabase> databases = dataCollection.getInputs().getSearchDatabase();
-        String databaseLocation = null;
+        parametersReport += "<br><b>Fragment Ion Mass Tolerance:</b> ";
+        if (fragmentMinTolerance != null && fragmentMaxTolerance != null) {
 
-        if (!databases.isEmpty()) {
-            databaseLocation = databases.get(0).getLocation();
-            searchParameters.setFastaFile(new File(databaseLocation));
-        }
+            Double fragmentTolerance;
 
-        // get the enzym
-        String enzyme = null;
-        Integer maxMissedCleavages = null;
-        List<Enzyme> enzymes = spectrumIdentificationProtocol.getEnzymes().getEnzyme();
-        if (!enzymes.isEmpty()) {
-            ParamList paramList = enzymes.get(0).getEnzymeName();
-
-            if (!paramList.getParamGroup().isEmpty()) {
-                enzyme = paramList.getParamGroup().get(0).getName();
+            if (Math.abs(fragmentMinTolerance) - Math.abs(fragmentMaxTolerance) < 0.0000001) {
+                fragmentTolerance = Math.abs(fragmentMinTolerance);
+            } else {
+                fragmentTolerance = Math.max(Math.abs(fragmentMinTolerance), Math.abs(fragmentMaxTolerance));
             }
 
-            if (enzymes.get(0).getMissedCleavages() != null) {
-                maxMissedCleavages = enzymes.get(0).getMissedCleavages();
+            searchParameters.setPrecursorAccuracy(fragmentTolerance);
+            if (fragmentToleranceTypeIsPpm) {
+                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
+                parametersReport += fragmentTolerance + " ppm";
+            } else {
+                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+                parametersReport += fragmentTolerance + " Da";
             }
-        }
-        if (enzyme != null) {
-            com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzyme); // @TODO: replace by use of cv terms
-            if (utilitiesEnzyme != null) {
-                searchParameters.setEnzyme(utilitiesEnzyme);
-            }
-        }
-        if (maxMissedCleavages != null) {
-            searchParameters.setnMissedCleavages(maxMissedCleavages);
+        } else {
+            parametersReport += searchParameters.getFragmentIonAccuracy() + " Da (default)"; // @TODO: what about accuracy in ppm
         }
 
         // get the precursor tolerance and type
@@ -149,6 +108,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             }
         }
 
+        parametersReport += "<br><b>Precursor Ion Mass Tolerance:</b> ";
         if (precursorMinTolerance != null && precursorMaxTolerance != null) {
 
             Double precursorTolerance;
@@ -162,44 +122,98 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             searchParameters.setPrecursorAccuracy(precursorTolerance);
             if (precursorToleranceTypeIsPpm) {
                 searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
+                parametersReport += precursorTolerance + " ppm";
             } else {
                 searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
+                parametersReport += precursorTolerance + " Da";
+            }
+        } else {
+            parametersReport += searchParameters.getPrecursorAccuracy() + " ppm (default)"; // @TODO: what about accuracy in Dalton
+        }
+
+        // get the enzym
+        String enzyme = null;
+        Integer maxMissedCleavages = null;
+        List<Enzyme> enzymes = spectrumIdentificationProtocol.getEnzymes().getEnzyme();
+        if (!enzymes.isEmpty()) {
+            ParamList paramList = enzymes.get(0).getEnzymeName();
+
+            if (!paramList.getParamGroup().isEmpty()) {
+                enzyme = paramList.getParamGroup().get(0).getName();
+            }
+
+            if (enzymes.get(0).getMissedCleavages() != null) {
+                maxMissedCleavages = enzymes.get(0).getMissedCleavages();
             }
         }
 
-        // get the precursor tolerance and type
-        Double fragmentMinTolerance = null;
-        Double fragmentMaxTolerance = null;
-        Boolean fragmentToleranceTypeIsPpm = false;
-        Tolerance tempFragmentTolerance = spectrumIdentificationProtocol.getFragmentTolerance();
+        parametersReport += "<br><br><b>Enzyme:</b> ";
 
-        for (CvParam cvParam : tempFragmentTolerance.getCvParam()) {
-            if (cvParam.getAccession().equalsIgnoreCase("MS:1001412")) {
-                fragmentMaxTolerance = Double.valueOf(cvParam.getValue());
-                fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
-            } else if (cvParam.getAccession().equalsIgnoreCase("MS:1001413")) {
-                fragmentMinTolerance = Double.valueOf(cvParam.getValue());
-                fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
-            }
-        }
-        if (fragmentMinTolerance != null && fragmentMaxTolerance != null) {
-
-            Double fragmentTolerance;
-
-            if (Math.abs(precursorMinTolerance) - Math.abs(fragmentMaxTolerance) < 0.0000001) {
-                fragmentTolerance = Math.abs(precursorMinTolerance);
+        if (enzyme != null) {
+            com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzyme); // @TODO: replace by use of cv terms
+            if (utilitiesEnzyme != null) {
+                searchParameters.setEnzyme(utilitiesEnzyme);
+                parametersReport += utilitiesEnzyme;
             } else {
-                fragmentTolerance = Math.max(Math.abs(precursorMinTolerance), Math.abs(fragmentMaxTolerance));
+                searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("Trypsin"));
+                parametersReport += "Trypsin (assumed)<br>";
             }
-
-            searchParameters.setPrecursorAccuracy(fragmentTolerance);
-            if (fragmentToleranceTypeIsPpm) {
-                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
-            } else {
-                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
-            }
+        } else {
+            searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("Trypsin"));
+            parametersReport += "Trypsin (assumed)<br>";
         }
 
+        parametersReport += "<b>Maximum Missed Cleavages:</b> ";
+        if (maxMissedCleavages != null) {
+            searchParameters.setnMissedCleavages(maxMissedCleavages);
+            parametersReport += maxMissedCleavages;
+        } else {
+            parametersReport += searchParameters.getnMissedCleavages() + " (default)";
+        }
+
+        // set the min/max precursor charge
+        parametersReport += "<br><br><b>Min Precusor Charge:</b> ";
+        parametersReport += searchParameters.getMinChargeSearched().value + " (default)";
+
+        parametersReport += "<br><b>Max Precusor Charge:</b> ";
+        parametersReport += searchParameters.getMaxChargeSearched().value + " (default)";
+
+        // taxonomy and species
+        parametersReport += "<br><br><b>Species:</b> ";
+        if (species == null || species.length() == 0) {
+            parametersReport += "unknown";
+        } else {
+            parametersReport += species;
+        }
+
+        // get the modifications
+//        ModificationProfile modificationProfile = new ModificationProfile();
+//        
+//        ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
+//
+//        for (SearchModification tempMod : modifications.getSearchModification()) {
+//            if (!tempMod.getCvParam().isEmpty()) {
+//
+//                CvParam cvParam = tempMod.getCvParam().get(0); // example: <cvParam cvRef="UNIMOD" accession="UNIMOD:4" name="Carbamidomethyl" value="57.021464"/>
+//
+//                // @TODO: convert to utilities ptms!                
+////                if (tempMod.isFixedMod()) {
+////                    modificationProfile.addFixedModification(null);
+////                } else {
+////                    modificationProfile.addVariableModification(null);
+////                }
+//            }
+//        }
+//        searchParameters.setModificationProfile(modificationProfile);
+        // get the database
+//        DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
+//        List<SearchDatabase> databases = dataCollection.getInputs().getSearchDatabase();
+//        String databaseLocation = null;
+//
+//        if (!databases.isEmpty()) {
+//            databaseLocation = databases.get(0).getLocation();
+//            searchParameters.setFastaFile(new File(databaseLocation));
+//        }
         // close file
         mzIdentMLFile = null;
         unmarshaller = null;
@@ -209,11 +223,6 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             return null;
         }
 
-        // save the parameters to file
-        if (searchParametersFile != null) {
-            SearchParameters.saveIdentificationParameters(searchParameters, searchParametersFile);
-        }
-
-        return searchParameters;
+        return parametersReport;
     }
 }

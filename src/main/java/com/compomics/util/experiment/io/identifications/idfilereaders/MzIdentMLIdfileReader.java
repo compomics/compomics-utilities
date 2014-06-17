@@ -96,7 +96,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         this.mzIdentMLFile = mzIdentMLFile;
         mzIdentMLFileName = Util.getFileName(mzIdentMLFile);
-        if (mzIdentMLFile.length() < 1073741824) {
+        if (mzIdentMLFile.length() < 10485760) {
             unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true);
         } else {
             unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
@@ -124,7 +124,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 }
             }
         }
-        
+
         softwareVersions = tempSoftwareVersions;
 
         // get the list of fixed modifications
@@ -164,7 +164,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(spectrumIdentificationResultSize);
         }
-        
+
         // Reset the software versions to keep only the advocates which were used for scoring
         softwareVersions.clear();
 
@@ -312,10 +312,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         }
                     } else {
 
-                        // ms-gf+
-                        eValue = scoreMap.get("MS:1002052");
+                        // PeptideShaker
+                        eValue = scoreMap.get("MS:1002466");
                         if (eValue != null) {
-                            advocate = Advocate.msgf;
+                            eValue = Math.pow(10, -eValue);
+                            advocate = Advocate.peptideShaker;
                             String name = advocate.getName();
                             if (!softwareVersions.containsKey(name)) {
                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -325,12 +326,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                 softwareVersions.put(name, versions);
                             }
                         } else {
-
-                            // MS Amanda
-                            eValue = scoreMap.get("MS:1002319");
+                            eValue = scoreMap.get("MS:1002467");
                             if (eValue != null) {
-                                eValue = Math.pow(10, eValue);
-                                advocate = Advocate.msAmanda;
+                                eValue = Math.pow(10, -eValue);
+                                advocate = Advocate.peptideShaker;
                                 String name = advocate.getName();
                                 if (!softwareVersions.containsKey(name)) {
                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -340,10 +339,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                     softwareVersions.put(name, versions);
                                 }
                             } else {
-                                // Andromeda
-                                eValue = scoreMap.get("MS:1002338");
+
+                                // X!Tandem
+                                eValue = scoreMap.get("MS:1001330");
                                 if (eValue != null) {
-                                    advocate = Advocate.andromeda;
+                                    advocate = Advocate.xtandem;
                                     String name = advocate.getName();
                                     if (!softwareVersions.containsKey(name)) {
                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -353,12 +353,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                         softwareVersions.put(name, versions);
                                     }
                                 } else {
-
-                                    // Byonic
-                                    eValue = scoreMap.get("MS:1002262");
+                                    eValue = scoreMap.get("MS:1001331");
                                     if (eValue != null) {
                                         eValue = Math.pow(10, -eValue);
-                                        advocate = Advocate.byonic;
+                                        advocate = Advocate.xtandem;
                                         String name = advocate.getName();
                                         if (!softwareVersions.containsKey(name)) {
                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -368,10 +366,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                             softwareVersions.put(name, versions);
                                         }
                                     } else {
-                                        eValue = scoreMap.get("MS:1002311");
+
+                                        // OMSSA
+                                        eValue = scoreMap.get("MS:1001328");
                                         if (eValue != null) {
-                                            eValue = Math.pow(10, -eValue);
-                                            advocate = Advocate.byonic;
+                                            advocate = Advocate.omssa;
                                             String name = advocate.getName();
                                             if (!softwareVersions.containsKey(name)) {
                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -381,9 +380,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                 softwareVersions.put(name, versions);
                                             }
                                         } else {
-                                            eValue = scoreMap.get("MS:1002265");
+
+                                            // ms-gf+
+                                            eValue = scoreMap.get("MS:1002052");
                                             if (eValue != null) {
-                                                advocate = Advocate.byonic;
+                                                advocate = Advocate.msgf;
                                                 String name = advocate.getName();
                                                 if (!softwareVersions.containsKey(name)) {
                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -393,10 +394,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                     softwareVersions.put(name, versions);
                                                 }
                                             } else {
-                                                eValue = scoreMap.get("MS:1002309");
+
+                                                // MS Amanda
+                                                eValue = scoreMap.get("MS:1002319");
                                                 if (eValue != null) {
-                                                    eValue = Math.pow(10, -eValue);
-                                                    advocate = Advocate.byonic;
+                                                    eValue = Math.pow(10, eValue);
+                                                    advocate = Advocate.msAmanda;
                                                     String name = advocate.getName();
                                                     if (!softwareVersions.containsKey(name)) {
                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -406,10 +409,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                         softwareVersions.put(name, versions);
                                                     }
                                                 } else {
-                                                    eValue = scoreMap.get("MS:1002266");
+                                                    // Andromeda
+                                                    eValue = scoreMap.get("MS:1002338");
                                                     if (eValue != null) {
-                                                        eValue = Math.pow(10, eValue);
-                                                        advocate = Advocate.byonic;
+                                                        advocate = Advocate.andromeda;
                                                         String name = advocate.getName();
                                                         if (!softwareVersions.containsKey(name)) {
                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -420,11 +423,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                         }
                                                     } else {
 
-                                                        // Comet
-                                                        //TODO: no e-value?
-                                                        eValue = scoreMap.get("MS:1002255");
+                                                        // Byonic
+                                                        eValue = scoreMap.get("MS:1002262");
                                                         if (eValue != null) {
-                                                            advocate = Advocate.comet;
+                                                            eValue = Math.pow(10, -eValue);
+                                                            advocate = Advocate.byonic;
                                                             String name = advocate.getName();
                                                             if (!softwareVersions.containsKey(name)) {
                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -434,10 +437,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                 softwareVersions.put(name, versions);
                                                             }
                                                         } else {
-                                                            eValue = scoreMap.get("MS:1002252");
+                                                            eValue = scoreMap.get("MS:1002311");
                                                             if (eValue != null) {
                                                                 eValue = Math.pow(10, -eValue);
-                                                                advocate = Advocate.comet;
+                                                                advocate = Advocate.byonic;
                                                                 String name = advocate.getName();
                                                                 if (!softwareVersions.containsKey(name)) {
                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -447,9 +450,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                     softwareVersions.put(name, versions);
                                                                 }
                                                             } else {
-                                                                eValue = scoreMap.get("MS:1002053");
+                                                                eValue = scoreMap.get("MS:1002265");
                                                                 if (eValue != null) {
-                                                                    advocate = Advocate.msgf;
+                                                                    advocate = Advocate.byonic;
                                                                     String name = advocate.getName();
                                                                     if (!softwareVersions.containsKey(name)) {
                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -459,9 +462,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                         softwareVersions.put(name, versions);
                                                                     }
                                                                 } else {
-                                                                    eValue = scoreMap.get("MS:1002056");
+                                                                    eValue = scoreMap.get("MS:1002309");
                                                                     if (eValue != null) {
-                                                                        advocate = Advocate.msgf;
+                                                                        eValue = Math.pow(10, -eValue);
+                                                                        advocate = Advocate.byonic;
                                                                         String name = advocate.getName();
                                                                         if (!softwareVersions.containsKey(name)) {
                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -471,9 +475,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             softwareVersions.put(name, versions);
                                                                         }
                                                                     } else {
-                                                                        eValue = scoreMap.get("MS:1002055");
+                                                                        eValue = scoreMap.get("MS:1002266");
                                                                         if (eValue != null) {
-                                                                            advocate = Advocate.msgf;
+                                                                            eValue = Math.pow(10, eValue);
+                                                                            advocate = Advocate.byonic;
                                                                             String name = advocate.getName();
                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -483,9 +488,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                 softwareVersions.put(name, versions);
                                                                             }
                                                                         } else {
-                                                                            eValue = scoreMap.get("MS:1002054");
+
+                                                                            // Comet
+                                                                            //TODO: no e-value?
+                                                                            eValue = scoreMap.get("MS:1002255");
                                                                             if (eValue != null) {
-                                                                                advocate = Advocate.msgf;
+                                                                                advocate = Advocate.comet;
                                                                                 String name = advocate.getName();
                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -495,9 +503,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                     softwareVersions.put(name, versions);
                                                                                 }
                                                                             } else {
-                                                                                eValue = scoreMap.get("MS:1002049");
+                                                                                eValue = scoreMap.get("MS:1002252");
                                                                                 if (eValue != null) {
-                                                                                    advocate = Advocate.msgf;
+                                                                                    eValue = Math.pow(10, -eValue);
+                                                                                    advocate = Advocate.comet;
                                                                                     String name = advocate.getName();
                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -507,11 +516,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                         softwareVersions.put(name, versions);
                                                                                     }
                                                                                 } else {
-
-                                                                                    // MS Fit
-                                                                                    eValue = scoreMap.get("MS:1001501");
+                                                                                    eValue = scoreMap.get("MS:1002053");
                                                                                     if (eValue != null) {
-                                                                                        advocate = Advocate.msFit;
+                                                                                        advocate = Advocate.msgf;
                                                                                         String name = advocate.getName();
                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -521,11 +528,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                             softwareVersions.put(name, versions);
                                                                                         }
                                                                                     } else {
-
-                                                                                        // Mascot
-                                                                                        eValue = scoreMap.get("MS:1001172");
+                                                                                        eValue = scoreMap.get("MS:1002056");
                                                                                         if (eValue != null) {
-                                                                                            advocate = Advocate.mascot;
+                                                                                            advocate = Advocate.msgf;
                                                                                             String name = advocate.getName();
                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -535,10 +540,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                 softwareVersions.put(name, versions);
                                                                                             }
                                                                                         } else {
-                                                                                            eValue = scoreMap.get("MS:1001171");
+                                                                                            eValue = scoreMap.get("MS:1002055");
                                                                                             if (eValue != null) {
-                                                                                                eValue = Math.pow(10, -eValue);
-                                                                                                advocate = Advocate.mascot;
+                                                                                                advocate = Advocate.msgf;
                                                                                                 String name = advocate.getName();
                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -548,12 +552,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                     softwareVersions.put(name, versions);
                                                                                                 }
                                                                                             } else {
-
-                                                                                                // MyriMatch
-                                                                                                eValue = scoreMap.get("MS:1001589");
+                                                                                                eValue = scoreMap.get("MS:1002054");
                                                                                                 if (eValue != null) {
-                                                                                                    eValue = Math.pow(Math.E, -eValue);
-                                                                                                    advocate = Advocate.myriMatch;
+                                                                                                    advocate = Advocate.msgf;
                                                                                                     String name = advocate.getName();
                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -563,10 +564,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                         softwareVersions.put(name, versions);
                                                                                                     }
                                                                                                 } else {
-                                                                                                    eValue = scoreMap.get("MS:1001590");
+                                                                                                    eValue = scoreMap.get("MS:1002049");
                                                                                                     if (eValue != null) {
-                                                                                                        eValue = Math.pow(Math.E, -eValue);
-                                                                                                        advocate = Advocate.myriMatch;
+                                                                                                        advocate = Advocate.msgf;
                                                                                                         String name = advocate.getName();
                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -576,9 +576,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                             softwareVersions.put(name, versions);
                                                                                                         }
                                                                                                     } else {
-                                                                                                        eValue = scoreMap.get("MS:1001329");
+
+                                                                                                        // MS Fit
+                                                                                                        eValue = scoreMap.get("MS:1001501");
                                                                                                         if (eValue != null) {
-                                                                                                            advocate = Advocate.omssa;
+                                                                                                            advocate = Advocate.msFit;
                                                                                                             String name = advocate.getName();
                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -589,10 +591,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                             }
                                                                                                         } else {
 
-                                                                                                            // PEAKS
-                                                                                                            eValue = scoreMap.get("MS:1002448");
+                                                                                                            // Mascot
+                                                                                                            eValue = scoreMap.get("MS:1001172");
                                                                                                             if (eValue != null) {
-                                                                                                                advocate = Advocate.peaks;
+                                                                                                                advocate = Advocate.mascot;
                                                                                                                 String name = advocate.getName();
                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -602,10 +604,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                 }
                                                                                                             } else {
-                                                                                                                eValue = scoreMap.get("MS:1001950");
+                                                                                                                eValue = scoreMap.get("MS:1001171");
                                                                                                                 if (eValue != null) {
                                                                                                                     eValue = Math.pow(10, -eValue);
-                                                                                                                    advocate = Advocate.peaks;
+                                                                                                                    advocate = Advocate.mascot;
                                                                                                                     String name = advocate.getName();
                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -616,10 +618,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                     }
                                                                                                                 } else {
 
-                                                                                                                    // Phenyx
-                                                                                                                    eValue = scoreMap.get("MS:1001396");
+                                                                                                                    // MyriMatch
+                                                                                                                    eValue = scoreMap.get("MS:1001589");
                                                                                                                     if (eValue != null) {
-                                                                                                                        advocate = Advocate.phenyx;
+                                                                                                                        eValue = Math.pow(Math.E, -eValue);
+                                                                                                                        advocate = Advocate.myriMatch;
                                                                                                                         String name = advocate.getName();
                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -629,10 +632,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                         }
                                                                                                                     } else {
-                                                                                                                        eValue = scoreMap.get("MS:1001395");
+                                                                                                                        eValue = scoreMap.get("MS:1001590");
                                                                                                                         if (eValue != null) {
-                                                                                                                            eValue = Math.pow(2, -eValue);
-                                                                                                                            advocate = Advocate.phenyx;
+                                                                                                                            eValue = Math.pow(Math.E, -eValue);
+                                                                                                                            advocate = Advocate.myriMatch;
                                                                                                                             String name = advocate.getName();
                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -642,12 +645,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                             }
                                                                                                                         } else {
-
-                                                                                                                            // Profound
-                                                                                                                            eValue = scoreMap.get("MS:1001499");
+                                                                                                                            eValue = scoreMap.get("MS:1001329");
                                                                                                                             if (eValue != null) {
-                                                                                                                                eValue = Math.pow(10, -eValue);
-                                                                                                                                advocate = Advocate.proFound;
+                                                                                                                                advocate = Advocate.omssa;
                                                                                                                                 String name = advocate.getName();
                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -657,10 +657,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                 }
                                                                                                                             } else {
-                                                                                                                                eValue = scoreMap.get("MS:1001498");
+
+                                                                                                                                // PEAKS
+                                                                                                                                eValue = scoreMap.get("MS:1002448");
                                                                                                                                 if (eValue != null) {
-                                                                                                                                    eValue = Math.pow(2, -eValue);
-                                                                                                                                    advocate = Advocate.proFound;
+                                                                                                                                    advocate = Advocate.peaks;
                                                                                                                                     String name = advocate.getName();
                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -670,12 +671,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                         softwareVersions.put(name, versions);
                                                                                                                                     }
                                                                                                                                 } else {
-
-                                                                                                                                    // ProteinLynx
-                                                                                                                                    eValue = scoreMap.get("MS:1001570");
+                                                                                                                                    eValue = scoreMap.get("MS:1001950");
                                                                                                                                     if (eValue != null) {
-                                                                                                                                        eValue = Math.pow(10, eValue);
-                                                                                                                                        advocate = Advocate.proteinLynx;
+                                                                                                                                        eValue = Math.pow(10, -eValue);
+                                                                                                                                        advocate = Advocate.peaks;
                                                                                                                                         String name = advocate.getName();
                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -685,10 +684,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                                         }
                                                                                                                                     } else {
-                                                                                                                                        eValue = scoreMap.get("MS:1001569");
+
+                                                                                                                                        // Phenyx
+                                                                                                                                        eValue = scoreMap.get("MS:1001396");
                                                                                                                                         if (eValue != null) {
-                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                            advocate = Advocate.proteinLynx;
+                                                                                                                                            advocate = Advocate.phenyx;
                                                                                                                                             String name = advocate.getName();
                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -698,11 +698,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                                             }
                                                                                                                                         } else {
-
-                                                                                                                                            // ProteinProspector
-                                                                                                                                            eValue = scoreMap.get("MS:1002045");
+                                                                                                                                            eValue = scoreMap.get("MS:1001395");
                                                                                                                                             if (eValue != null) {
-                                                                                                                                                advocate = Advocate.proteinProspector;
+                                                                                                                                                eValue = Math.pow(2, -eValue);
+                                                                                                                                                advocate = Advocate.phenyx;
                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -712,10 +711,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                                 }
                                                                                                                                             } else {
-                                                                                                                                                eValue = scoreMap.get("MS:1002044");
+
+                                                                                                                                                // Profound
+                                                                                                                                                eValue = scoreMap.get("MS:1001499");
                                                                                                                                                 if (eValue != null) {
                                                                                                                                                     eValue = Math.pow(10, -eValue);
-                                                                                                                                                    advocate = Advocate.proteinProspector;
+                                                                                                                                                    advocate = Advocate.proFound;
                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -725,11 +726,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                         softwareVersions.put(name, versions);
                                                                                                                                                     }
                                                                                                                                                 } else {
-
-                                                                                                                                                    // ProteinScape
-                                                                                                                                                    eValue = scoreMap.get("MS:1001503");
+                                                                                                                                                    eValue = scoreMap.get("MS:1001498");
                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                        advocate = Advocate.proteinScape;
+                                                                                                                                                        eValue = Math.pow(2, -eValue);
+                                                                                                                                                        advocate = Advocate.proFound;
                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -739,10 +739,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                                                         }
                                                                                                                                                     } else {
-                                                                                                                                                        eValue = scoreMap.get("MS:1001504");
+
+                                                                                                                                                        // ProteinLynx
+                                                                                                                                                        eValue = scoreMap.get("MS:1001570");
                                                                                                                                                         if (eValue != null) {
-                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                            advocate = Advocate.proteinScape;
+                                                                                                                                                            eValue = Math.pow(10, eValue);
+                                                                                                                                                            advocate = Advocate.proteinLynx;
                                                                                                                                                             String name = advocate.getName();
                                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -752,10 +754,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                                                             }
                                                                                                                                                         } else {
-                                                                                                                                                            // Sequest
-                                                                                                                                                            eValue = scoreMap.get("MS:1001154");
+                                                                                                                                                            eValue = scoreMap.get("MS:1001569");
                                                                                                                                                             if (eValue != null) {
-                                                                                                                                                                advocate = Advocate.sequest;
+                                                                                                                                                                eValue = Math.pow(10, -eValue);
+                                                                                                                                                                advocate = Advocate.proteinLynx;
                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -765,10 +767,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                                                 }
                                                                                                                                                             } else {
-                                                                                                                                                                eValue = scoreMap.get("MS:1001155");
+
+                                                                                                                                                                // ProteinProspector
+                                                                                                                                                                eValue = scoreMap.get("MS:1002045");
                                                                                                                                                                 if (eValue != null) {
-                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                    advocate = Advocate.sequest;
+                                                                                                                                                                    advocate = Advocate.proteinProspector;
                                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -778,9 +781,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                         softwareVersions.put(name, versions);
                                                                                                                                                                     }
                                                                                                                                                                 } else {
-                                                                                                                                                                    eValue = scoreMap.get("MS:1001215");
+                                                                                                                                                                    eValue = scoreMap.get("MS:1002044");
                                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                                        advocate = Advocate.sequest;
+                                                                                                                                                                        eValue = Math.pow(10, -eValue);
+                                                                                                                                                                        advocate = Advocate.proteinProspector;
                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -790,10 +794,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                                                                         }
                                                                                                                                                                     } else {
-                                                                                                                                                                        eValue = scoreMap.get("MS:1002248");
+
+                                                                                                                                                                        // ProteinScape
+                                                                                                                                                                        eValue = scoreMap.get("MS:1001503");
                                                                                                                                                                         if (eValue != null) {
-                                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                                            advocate = Advocate.sequest;
+                                                                                                                                                                            advocate = Advocate.proteinScape;
                                                                                                                                                                             String name = advocate.getName();
                                                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -803,12 +808,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                                                                             }
                                                                                                                                                                         } else {
-
-                                                                                                                                                                            // SQID
-                                                                                                                                                                            eValue = scoreMap.get("MS:1001887");
+                                                                                                                                                                            eValue = scoreMap.get("MS:1001504");
                                                                                                                                                                             if (eValue != null) {
                                                                                                                                                                                 eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                advocate = Advocate.sqid;
+                                                                                                                                                                                advocate = Advocate.proteinScape;
                                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -818,12 +821,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                                                                 }
                                                                                                                                                                             } else {
-
-                                                                                                                                                                                // Sonar
-                                                                                                                                                                                eValue = scoreMap.get("MS:1001502");
+                                                                                                                                                                                // Sequest
+                                                                                                                                                                                eValue = scoreMap.get("MS:1001154");
                                                                                                                                                                                 if (eValue != null) {
-                                                                                                                                                                                    eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                    advocate = Advocate.sonar;
+                                                                                                                                                                                    advocate = Advocate.sequest;
                                                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -833,12 +834,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                         softwareVersions.put(name, versions);
                                                                                                                                                                                     }
                                                                                                                                                                                 } else {
-
-                                                                                                                                                                                    // SpectraST
-                                                                                                                                                                                    eValue = scoreMap.get("MS:1001417");
+                                                                                                                                                                                    eValue = scoreMap.get("MS:1001155");
                                                                                                                                                                                     if (eValue != null) {
                                                                                                                                                                                         eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                        advocate = Advocate.spectraST;
+                                                                                                                                                                                        advocate = Advocate.sequest;
                                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -848,12 +847,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                                                                                         }
                                                                                                                                                                                     } else {
-
-                                                                                                                                                                                        // SpectrumMill
-                                                                                                                                                                                        eValue = scoreMap.get("MS:1001572");
+                                                                                                                                                                                        eValue = scoreMap.get("MS:1001215");
                                                                                                                                                                                         if (eValue != null) {
-                                                                                                                                                                                            eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                            advocate = Advocate.spectrumMill;
+                                                                                                                                                                                            advocate = Advocate.sequest;
                                                                                                                                                                                             String name = advocate.getName();
                                                                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -863,11 +859,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                                                                                             }
                                                                                                                                                                                         } else {
-
-                                                                                                                                                                                            // X!Tandem
-                                                                                                                                                                                            eValue = scoreMap.get("MS:1001330");
+                                                                                                                                                                                            eValue = scoreMap.get("MS:1002248");
                                                                                                                                                                                             if (eValue != null) {
-                                                                                                                                                                                                advocate = Advocate.xtandem;
+                                                                                                                                                                                                eValue = Math.pow(10, -eValue);
+                                                                                                                                                                                                advocate = Advocate.sequest;
                                                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -877,10 +872,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                                                                                 }
                                                                                                                                                                                             } else {
-                                                                                                                                                                                                eValue = scoreMap.get("MS:1001331");
+
+                                                                                                                                                                                                // SQID
+                                                                                                                                                                                                eValue = scoreMap.get("MS:1001887");
                                                                                                                                                                                                 if (eValue != null) {
                                                                                                                                                                                                     eValue = Math.pow(10, -eValue);
-                                                                                                                                                                                                    advocate = Advocate.xtandem;
+                                                                                                                                                                                                    advocate = Advocate.sqid;
                                                                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -891,10 +888,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                     }
                                                                                                                                                                                                 } else {
 
-                                                                                                                                                                                                    // OMSSA
-                                                                                                                                                                                                    eValue = scoreMap.get("MS:1001328");
+                                                                                                                                                                                                    // Sonar
+                                                                                                                                                                                                    eValue = scoreMap.get("MS:1001502");
                                                                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                                                                        advocate = Advocate.omssa;
+                                                                                                                                                                                                        eValue = Math.pow(10, -eValue);
+                                                                                                                                                                                                        advocate = Advocate.sonar;
                                                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -905,10 +903,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                         }
                                                                                                                                                                                                     } else {
 
-                                                                                                                                                                                                        // ZCore
-                                                                                                                                                                                                        eValue = scoreMap.get("MS:1001952");
+                                                                                                                                                                                                        // SpectraST
+                                                                                                                                                                                                        eValue = scoreMap.get("MS:1001417");
                                                                                                                                                                                                         if (eValue != null) {
-                                                                                                                                                                                                            advocate = Advocate.zCore;
+                                                                                                                                                                                                            eValue = Math.pow(10, -eValue);
+                                                                                                                                                                                                            advocate = Advocate.spectraST;
                                                                                                                                                                                                             String name = advocate.getName();
                                                                                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -919,10 +918,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                             }
                                                                                                                                                                                                         } else {
 
-                                                                                                                                                                                                            // Percolator
-                                                                                                                                                                                                            eValue = scoreMap.get("MS:1001491");
+                                                                                                                                                                                                            // SpectrumMill
+                                                                                                                                                                                                            eValue = scoreMap.get("MS:1001572");
                                                                                                                                                                                                             if (eValue != null) {
-                                                                                                                                                                                                                advocate = Advocate.percolator;
+                                                                                                                                                                                                                eValue = Math.pow(10, -eValue);
+                                                                                                                                                                                                                advocate = Advocate.spectrumMill;
                                                                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -932,9 +932,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                     softwareVersions.put(name, versions);
                                                                                                                                                                                                                 }
                                                                                                                                                                                                             } else {
-                                                                                                                                                                                                                eValue = scoreMap.get("MS:1001493");
+
+                                                                                                                                                                                                                // ZCore
+                                                                                                                                                                                                                eValue = scoreMap.get("MS:1001952");
                                                                                                                                                                                                                 if (eValue != null) {
-                                                                                                                                                                                                                    advocate = Advocate.percolator;
+                                                                                                                                                                                                                    advocate = Advocate.zCore;
                                                                                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -944,9 +946,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                         softwareVersions.put(name, versions);
                                                                                                                                                                                                                     }
                                                                                                                                                                                                                 } else {
-                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1001492");
+
+                                                                                                                                                                                                                    // Percolator
+                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1001491");
                                                                                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                                                                                        eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                                         advocate = Advocate.percolator;
                                                                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
@@ -957,11 +960,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                             softwareVersions.put(name, versions);
                                                                                                                                                                                                                         }
                                                                                                                                                                                                                     } else {
-
-                                                                                                                                                                                                                        // Generic e-value
-                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1002353");
+                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1001493");
                                                                                                                                                                                                                         if (eValue != null) {
-                                                                                                                                                                                                                            advocate = getAdvocate();
+                                                                                                                                                                                                                            advocate = Advocate.percolator;
                                                                                                                                                                                                                             String name = advocate.getName();
                                                                                                                                                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -971,11 +972,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                                                                                                                             }
                                                                                                                                                                                                                         } else {
-
-                                                                                                                                                                                                                            // Generic q-value
-                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1002354");
+                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1001492");
                                                                                                                                                                                                                             if (eValue != null) {
-                                                                                                                                                                                                                                advocate = getAdvocate();
+                                                                                                                                                                                                                                eValue = Math.pow(10, -eValue);
+                                                                                                                                                                                                                                advocate = Advocate.percolator;
                                                                                                                                                                                                                                 String name = advocate.getName();
                                                                                                                                                                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                                                                                                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -986,10 +986,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                             } else {
 
-                                                                                                                                                                                                                                // Generic probability/confidence
-                                                                                                                                                                                                                                eValue = scoreMap.get("MS:1002357");
+                                                                                                                                                                                                                                // Generic e-value
+                                                                                                                                                                                                                                eValue = scoreMap.get("MS:1002353");
                                                                                                                                                                                                                                 if (eValue != null) {
-                                                                                                                                                                                                                                    eValue = 1 - eValue;
                                                                                                                                                                                                                                     advocate = getAdvocate();
                                                                                                                                                                                                                                     String name = advocate.getName();
                                                                                                                                                                                                                                     if (!softwareVersions.containsKey(name)) {
@@ -1001,10 +1000,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                 } else {
 
-                                                                                                                                                                                                                                    // Generic probability/confidence
-                                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002352");
+                                                                                                                                                                                                                                    // Generic q-value
+                                                                                                                                                                                                                                    eValue = scoreMap.get("MS:1002354");
                                                                                                                                                                                                                                     if (eValue != null) {
-                                                                                                                                                                                                                                        eValue = 1 - eValue;
                                                                                                                                                                                                                                         advocate = getAdvocate();
                                                                                                                                                                                                                                         String name = advocate.getName();
                                                                                                                                                                                                                                         if (!softwareVersions.containsKey(name)) {
@@ -1013,6 +1011,38 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                                 versions = new ArrayList<String>();
                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                             softwareVersions.put(name, versions);
+                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                    } else {
+
+                                                                                                                                                                                                                                        // Generic probability/confidence
+                                                                                                                                                                                                                                        eValue = scoreMap.get("MS:1002357");
+                                                                                                                                                                                                                                        if (eValue != null) {
+                                                                                                                                                                                                                                            eValue = 1 - eValue;
+                                                                                                                                                                                                                                            advocate = getAdvocate();
+                                                                                                                                                                                                                                            String name = advocate.getName();
+                                                                                                                                                                                                                                            if (!softwareVersions.containsKey(name)) {
+                                                                                                                                                                                                                                                ArrayList<String> versions = tempSoftwareVersions.get(name);
+                                                                                                                                                                                                                                                if (versions == null) {
+                                                                                                                                                                                                                                                    versions = new ArrayList<String>();
+                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                softwareVersions.put(name, versions);
+                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                        } else {
+
+                                                                                                                                                                                                                                            // Generic probability/confidence
+                                                                                                                                                                                                                                            eValue = scoreMap.get("MS:1002352");
+                                                                                                                                                                                                                                            if (eValue != null) {
+                                                                                                                                                                                                                                                eValue = 1 - eValue;
+                                                                                                                                                                                                                                                advocate = getAdvocate();
+                                                                                                                                                                                                                                                String name = advocate.getName();
+                                                                                                                                                                                                                                                if (!softwareVersions.containsKey(name)) {
+                                                                                                                                                                                                                                                    ArrayList<String> versions = tempSoftwareVersions.get(name);
+                                                                                                                                                                                                                                                    if (versions == null) {
+                                                                                                                                                                                                                                                        versions = new ArrayList<String>();
+                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                    softwareVersions.put(name, versions);
+                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                            }
                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                 }
@@ -1126,7 +1156,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
     /**
      * Returns the advocate.
-     * 
+     *
      * @return the advocate
      */
     private Advocate getAdvocate() {

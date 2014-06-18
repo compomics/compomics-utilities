@@ -286,6 +286,9 @@ public class SequenceFactory {
                     }
                     if (currentHeader == null) {
                         currentHeader = Header.parseFromFASTA(line);
+                        if (currentHeader == null) {
+                            throw new IllegalArgumentException("Could not parse fasta header \"" + line + "\".");
+                        }
                         currentHeaderMap.put(accession, currentHeader);
                     }
                     headerFound = true;

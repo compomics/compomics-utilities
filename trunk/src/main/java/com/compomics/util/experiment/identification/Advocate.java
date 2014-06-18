@@ -277,7 +277,7 @@ public class Advocate {
         result[++i] = zCore;
         result[++i] = percolator;
         result[++i] = genericMzId;
-        
+
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
         }
@@ -434,32 +434,30 @@ public class Advocate {
 
         return advocateToolTipMap;
     }
-    
+
     /**
-     * Returns the advocate based on the identification file name. Null if not found.
-     * Note: this method implements a limited number of algorithms and does not support generic files. Use the IdfileReader when possible.
-     * Implemented formats:
-     * omx -> OMSSA
-     * dat -> Mascot
-     * xml -> X!Tandem
-     * csv -> MS-Amanda
-     * 
+     * Returns the advocate based on the identification file name. Null if not
+     * found. Note: this method implements a limited number of algorithms and
+     * does not support generic files. Use the IdfileReader when possible.
+     * Implemented formats: omx -> OMSSA dat -> Mascot xml -> X!Tandem csv ->
+     * MS-Amanda
+     *
      * @param idFileName the name of the identification file
-     * 
+     *
      * @return the advocate likely to have been used to create the given file
      */
     public static Advocate getAdvocateFromFile(String idFileName) {
         if (idFileName.toLowerCase().endsWith("dat")) {
-                    return Advocate.mascot;
-                } else if (idFileName.toLowerCase().endsWith("omx")) {
-                    return Advocate.omssa;
-                } else if (idFileName.toLowerCase().endsWith("xml")) {
-                    return Advocate.xtandem;
-                } else if (idFileName.toLowerCase().endsWith("mzid")) {
-                    return Advocate.msgf;
-                } else if (idFileName.toLowerCase().endsWith("csv")) {
-                    return Advocate.msAmanda;
-                }
+            return Advocate.mascot;
+        } else if (idFileName.toLowerCase().endsWith("omx")) {
+            return Advocate.omssa;
+        } else if (idFileName.toLowerCase().endsWith("xml")) {
+            return Advocate.xtandem;
+        } else if (idFileName.toLowerCase().endsWith("mzid")) {
+            return Advocate.msgf;
+        } else if (idFileName.toLowerCase().endsWith("csv")) {
+            return Advocate.msAmanda;
+        }
         return null;
     }
 }

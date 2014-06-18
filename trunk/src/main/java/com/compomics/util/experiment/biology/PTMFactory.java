@@ -1510,13 +1510,18 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("iTRAQ4plex-116 reporter+balance reagent acylated residue")
                 || pridePtmName.equalsIgnoreCase("iTRAQ4plex-117 reporter+balance reagent N6-acylated lysine")) {
 
-            modProfile.addFixedModification(getPTM("itraq114 on k"));
-            prideParametersReport += "<br>" + "itraq114 on k" + " (assumed fixed)";
-            modProfile.addFixedModification(getPTM("itraq114 on nterm"));
-            prideParametersReport += "<br>" + "itraq114 on nterm" + " (assumed fixed)";
-
-            modProfile.addVariableModification(getPTM("itraq114 on y"));
-            prideParametersReport += "<br>" + "itraq114 on y" + " (assumed variable)";
+            if (!modProfile.contains("itraq114 on k")) {
+                modProfile.addFixedModification(getPTM("itraq114 on k"));
+                prideParametersReport += "<br>" + "itraq114 on k" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("itraq114 on nterm")) {
+                modProfile.addFixedModification(getPTM("itraq114 on nterm"));
+                prideParametersReport += "<br>" + "itraq114 on nterm" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("itraq114 on y")) {
+                modProfile.addVariableModification(getPTM("itraq114 on y"));
+                prideParametersReport += "<br>" + "itraq114 on y" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("iTRAQ8plex")
                 || pridePtmName.equalsIgnoreCase("iTRAQ8plex reporter+balance reagent acylated residue")
@@ -1528,29 +1533,41 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("iTRAQ8plex-116 reporter+balance reagent acylated residue")
                 || pridePtmName.equalsIgnoreCase("iTRAQ8plex:13C(6)15N(2)")) {
 
-            modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on k"));
-            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on k" + " (assumed fixed)";
-            modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on nterm"));
-            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on nterm" + " (assumed fixed)";
-
-            modProfile.addVariableModification(getPTM("itraq8plex:13c(6)15n(2) on y"));
-            prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on y" + " (assumed variable)";
+            if (!modProfile.contains("itraq8plex:13c(6)15n(2) on k")) {
+                modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on k"));
+                prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on k" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("itraq8plex:13c(6)15n(2) on nterm")) {
+                modProfile.addFixedModification(getPTM("itraq8plex:13c(6)15n(2) on nterm"));
+                prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on nterm" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("itraq8plex:13c(6)15n(2) on y")) {
+                modProfile.addVariableModification(getPTM("itraq8plex:13c(6)15n(2) on y"));
+                prideParametersReport += "<br>" + "itraq8plex:13c(6)15n(2) on y" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("TMT2plex") || pridePtmName.equalsIgnoreCase("TMTduplex")) {
 
-            modProfile.addFixedModification(getPTM("tmt duplex on k"));
-            prideParametersReport += "<br>" + "tmt duplex on k" + " (assumed fixed)";
-            modProfile.addFixedModification(getPTM("tmt duplex on n-term peptide"));
-            prideParametersReport += "<br>" + "tmt duplex on n-term peptide" + " (assumed fixed)";
-
+            if (!modProfile.contains("tmt duplex on k")) {
+                modProfile.addFixedModification(getPTM("tmt duplex on k"));
+                prideParametersReport += "<br>" + "tmt duplex on k" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("tmt duplex on n-term peptide")) {
+                modProfile.addFixedModification(getPTM("tmt duplex on n-term peptide"));
+                prideParametersReport += "<br>" + "tmt duplex on n-term peptide" + " (assumed fixed)";
+            }
         } else if (pridePtmName.equalsIgnoreCase("TMT6plex")
                 || pridePtmName.equalsIgnoreCase("TMT6plex-126 reporter+balance reagent acylated residue")
                 || pridePtmName.equalsIgnoreCase("TMT6plex-131 reporter+balance reagent N6-acylated lysine")) { // @TODO: add the new or old TMT tags..?
 
-            modProfile.addFixedModification(getPTM("tmt 6-plex on k"));
-            prideParametersReport += "<br>" + "tmt 6-plex on k" + " (assumed fixed)";
-            modProfile.addFixedModification(getPTM("tmt 6-plex on n-term peptide"));
-            prideParametersReport += "<br>" + "tmt 6-plex on n-term peptide" + " (assumed fixed)";
+            if (!modProfile.contains("tmt 6-plex on k")) {
+                modProfile.addFixedModification(getPTM("tmt 6-plex on k"));
+                prideParametersReport += "<br>" + "tmt 6-plex on k" + " (assumed fixed)";
+            }
+            if (!modProfile.contains("tmt 6-plex on n-term peptide")) {
+                modProfile.addFixedModification(getPTM("tmt 6-plex on n-term peptide"));
+                prideParametersReport += "<br>" + "tmt 6-plex on n-term peptide" + " (assumed fixed)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("Phosphorylation")
                 || pridePtmName.equalsIgnoreCase("L-aspartic 4-phosphoric anhydride")
@@ -1558,116 +1575,168 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("Phospho")
                 || pridePtmName.equalsIgnoreCase("phosphorylated residue")) {
 
-            modProfile.addVariableModification(getPTM("phosphorylation of s"));
-            prideParametersReport += "<br>" + "phosphorylation of s" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("phosphorylation of t"));
-            prideParametersReport += "<br>" + "phosphorylation of t" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("phosphorylation of y"));
-            prideParametersReport += "<br>" + "phosphorylation of y" + " (assumed variable)";
+            if (!modProfile.contains("phosphorylation of s")) {
+                modProfile.addVariableModification(getPTM("phosphorylation of s"));
+                prideParametersReport += "<br>" + "phosphorylation of s" + " (assumed variable)";
+            }
+            if (!modProfile.contains("phosphorylation of t")) {
+                modProfile.addVariableModification(getPTM("phosphorylation of t"));
+                prideParametersReport += "<br>" + "phosphorylation of t" + " (assumed variable)";
+            }
+            if (!modProfile.contains("phosphorylation of y")) {
+                modProfile.addVariableModification(getPTM("phosphorylation of y"));
+                prideParametersReport += "<br>" + "phosphorylation of y" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("Palmitoylation")) {
 
-            modProfile.addVariableModification(getPTM("palmitoylation of c"));
-            prideParametersReport += "<br>" + "palmitoylation of c" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("palmitoylation of k"));
-            prideParametersReport += "<br>" + "palmitoylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("palmitoylation of s"));
-            prideParametersReport += "<br>" + "palmitoylation of s" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("palmitoylation of t"));
-            prideParametersReport += "<br>" + "palmitoylation of t" + " (assumed variable)";
+            if (!modProfile.contains("palmitoylation of c")) {
+                modProfile.addVariableModification(getPTM("palmitoylation of c"));
+                prideParametersReport += "<br>" + "palmitoylation of c" + " (assumed variable)";
+            }
+            if (!modProfile.contains("palmitoylation of k")) {
+                modProfile.addVariableModification(getPTM("palmitoylation of k"));
+                prideParametersReport += "<br>" + "palmitoylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("palmitoylation of s")) {
+                modProfile.addVariableModification(getPTM("palmitoylation of s"));
+                prideParametersReport += "<br>" + "palmitoylation of s" + " (assumed variable)";
+            }
+            if (!modProfile.contains("palmitoylation of t")) {
+                modProfile.addVariableModification(getPTM("palmitoylation of t"));
+                prideParametersReport += "<br>" + "palmitoylation of t" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("Formylation")) {
 
-            modProfile.addVariableModification(getPTM("formylation of k"));
-            prideParametersReport += "<br>" + "formylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("formylation of peptide n-term"));
-            prideParametersReport += "<br>" + "formylation of peptide n-term" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("formylation of protein c-term"));
-            prideParametersReport += "<br>" + "formylation of protein c-term" + " (assumed variable)";
+            if (!modProfile.contains("formylation of k")) {
+                modProfile.addVariableModification(getPTM("formylation of k"));
+                prideParametersReport += "<br>" + "formylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("formylation of peptide n-term")) {
+                modProfile.addVariableModification(getPTM("formylation of peptide n-term"));
+                prideParametersReport += "<br>" + "formylation of peptide n-term" + " (assumed variable)";
+            }
+            if (!modProfile.contains("formylation of protein c-term")) {
+                modProfile.addVariableModification(getPTM("formylation of protein c-term"));
+                prideParametersReport += "<br>" + "formylation of protein c-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("Carbamylation")) {
 
-            modProfile.addVariableModification(getPTM("carbamylation of k"));
-            prideParametersReport += "<br>" + "carbamylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("carbamylation of n-term peptide"));
-            prideParametersReport += "<br>" + "carbamylation of n-term peptide" + " (assumed variable)";
+            if (!modProfile.contains("carbamylation of k")) {
+                modProfile.addVariableModification(getPTM("carbamylation of k"));
+                prideParametersReport += "<br>" + "carbamylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("carbamylation of n-term peptide")) {
+                modProfile.addVariableModification(getPTM("carbamylation of n-term peptide"));
+                prideParametersReport += "<br>" + "carbamylation of n-term peptide" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(12)C labeled N6-propanoyl-L-lysine")) {
 
-            modProfile.addVariableModification(getPTM("propionyl light k"));
-            prideParametersReport += "<br>" + "propionyl light k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("propionyl light on peptide n-term"));
-            prideParametersReport += "<br>" + "propionyl light on peptide n-term" + " (assumed variable)";
+            if (!modProfile.contains("propionyl light k")) {
+                modProfile.addVariableModification(getPTM("propionyl light k"));
+                prideParametersReport += "<br>" + "propionyl light k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("propionyl light on peptide n-term")) {
+                modProfile.addVariableModification(getPTM("propionyl light on peptide n-term"));
+                prideParametersReport += "<br>" + "propionyl light on peptide n-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(13)C labeled N6-propanoyl-L-lysine")) {
 
-            modProfile.addVariableModification(getPTM("propionyl heavy k"));
-            prideParametersReport += "<br>" + "propionyl heavy k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("propionyl heavy peptide n-term"));
-            prideParametersReport += "<br>" + "propionyl heavy peptide n-term" + " (assumed variable)";
+            if (!modProfile.contains("propionyl heavy k")) {
+                modProfile.addVariableModification(getPTM("propionyl heavy k"));
+                prideParametersReport += "<br>" + "propionyl heavy k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("propionyl heavy peptide n-term")) {
+                modProfile.addVariableModification(getPTM("propionyl heavy peptide n-term"));
+                prideParametersReport += "<br>" + "propionyl heavy peptide n-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("3x(2)H residue methyl ester")) {
 
-            modProfile.addVariableModification(getPTM("tri-deuteromethylation of d"));
-            prideParametersReport += "<br>" + "tri-deuteromethylation of d" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("tri-deuteromethylation of e"));
-            prideParametersReport += "<br>" + "tri-deuteromethylation of e" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("tri-deuteromethylation of peptide c-term"));
-            prideParametersReport += "<br>" + "tri-deuteromethylation of peptide c-term" + " (assumed variable)";
+            if (!modProfile.contains("tri-deuteromethylation of d")) {
+                modProfile.addVariableModification(getPTM("tri-deuteromethylation of d"));
+                prideParametersReport += "<br>" + "tri-deuteromethylation of d" + " (assumed variable)";
+            }
+            if (!modProfile.contains("tri-deuteromethylation of e")) {
+                modProfile.addVariableModification(getPTM("tri-deuteromethylation of e"));
+                prideParametersReport += "<br>" + "tri-deuteromethylation of e" + " (assumed variable)";
+            }
+            if (!modProfile.contains("tri-deuteromethylation of peptide c-term")) {
+                modProfile.addVariableModification(getPTM("tri-deuteromethylation of peptide c-term"));
+                prideParametersReport += "<br>" + "tri-deuteromethylation of peptide c-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("6x(13)C labeled residue")) {
 
-            modProfile.addVariableModification(getPTM("heavy arginine-13C6"));
-            prideParametersReport += "<br>" + "heavy arginine-13C6" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("heavy lysine-13C6"));
-            prideParametersReport += "<br>" + "heavy lysine-13C6" + " (assumed variable)";
+            if (!modProfile.contains("heavy arginine-13C6")) {
+                modProfile.addVariableModification(getPTM("heavy arginine-13C6"));
+                prideParametersReport += "<br>" + "heavy arginine-13C6" + " (assumed variable)";
+            }
+            if (!modProfile.contains("heavy lysine-13C6")) {
+                modProfile.addVariableModification(getPTM("heavy lysine-13C6"));
+                prideParametersReport += "<br>" + "heavy lysine-13C6" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("Acetyl")
                 || pridePtmName.equalsIgnoreCase("N-acetylated residue")
                 || pridePtmName.equalsIgnoreCase("N-acylated residue")
                 || pridePtmName.equalsIgnoreCase("acetylated residue")) {
 
-            modProfile.addVariableModification(getPTM("acetylation of k"));
-            prideParametersReport += "<br>" + "acetylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("acetylation of protein n-term"));
-            prideParametersReport += "<br>" + "acetylation of protein n-term" + " (assumed variable)";
+            if (!modProfile.contains("acetylation of k")) {
+                modProfile.addVariableModification(getPTM("acetylation of k"));
+                prideParametersReport += "<br>" + "acetylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("acetylation of protein n-term")) {
+                modProfile.addVariableModification(getPTM("acetylation of protein n-term"));
+                prideParametersReport += "<br>" + "acetylation of protein n-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("carbamoylated residue")) {
 
-            modProfile.addVariableModification(getPTM("carbamylation of k"));
-            prideParametersReport += "<br>" + "carbamylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("carbamylation of n-term peptide"));
-            prideParametersReport += "<br>" + "carbamylation of n-term peptide" + " (assumed variable)";
+            if (!modProfile.contains("carbamylation of k")) {
+                modProfile.addVariableModification(getPTM("carbamylation of k"));
+                prideParametersReport += "<br>" + "carbamylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("carbamylation of n-term peptide")) {
+                modProfile.addVariableModification(getPTM("carbamylation of n-term peptide"));
+                prideParametersReport += "<br>" + "carbamylation of n-term peptide" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("dimethylated residue")) {
 
-            modProfile.addVariableModification(getPTM("di-methylation of k"));
-            prideParametersReport += "<br>" + "di-methylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("di-methylation of r"));
-            prideParametersReport += "<br>" + "di-methylation of r" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("di-methylation of peptide n-term"));
-            prideParametersReport += "<br>" + "di-methylation of peptide n-term" + " (assumed variable)";
-
-        } else if (pridePtmName.equalsIgnoreCase("dimethylated residue")) {
-
-            modProfile.addVariableModification(getPTM("di-methylation of k"));
-            prideParametersReport += "<br>" + "di-methylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("di-methylation of r"));
-            prideParametersReport += "<br>" + "di-methylation of r" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("di-methylation of peptide n-term"));
-            prideParametersReport += "<br>" + "di-methylation of peptide n-term" + " (assumed variable)";
+            if (!modProfile.contains("di-methylation of k")) {
+                modProfile.addVariableModification(getPTM("di-methylation of k"));
+                prideParametersReport += "<br>" + "di-methylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("di-methylation of r")) {
+                modProfile.addVariableModification(getPTM("di-methylation of r"));
+                prideParametersReport += "<br>" + "di-methylation of r" + " (assumed variable)";
+            }
+            if (!modProfile.contains("di-methylation of peptide n-term")) {
+                modProfile.addVariableModification(getPTM("di-methylation of peptide n-term"));
+                prideParametersReport += "<br>" + "di-methylation of peptide n-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("trimethylated residue")) {
 
-            modProfile.addVariableModification(getPTM("tri-methylation of k"));
-            prideParametersReport += "<br>" + "tri-methylation of k" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("tri-methylation of r"));
-            prideParametersReport += "<br>" + "tri-methylation of r" + " (assumed variable)";
-            modProfile.addVariableModification(getPTM("tri-methylation of protein n-term"));
-            prideParametersReport += "<br>" + "tri-methylation of protein n-term" + " (assumed variable)";
+            if (!modProfile.contains("tri-methylation of k")) {
+                modProfile.addVariableModification(getPTM("tri-methylation of k"));
+                prideParametersReport += "<br>" + "tri-methylation of k" + " (assumed variable)";
+            }
+            if (!modProfile.contains("tri-methylation of r")) {
+                modProfile.addVariableModification(getPTM("tri-methylation of r"));
+                prideParametersReport += "<br>" + "tri-methylation of r" + " (assumed variable)";
+            }
+            if (!modProfile.contains("tri-methylation of protein n-term")) {
+                modProfile.addVariableModification(getPTM("tri-methylation of protein n-term"));
+                prideParametersReport += "<br>" + "tri-methylation of protein n-term" + " (assumed variable)";
+            }
 
         } else if (pridePtmName.equalsIgnoreCase("No PTMs are included in the dataset")) {
-
             // ignore
         } else {
 
@@ -1771,13 +1840,13 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
             return "heavy lysine - 2h4";
         } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")) {
-            return "pyro-glu from n-term Q";
+            return "pyro-glu from n-term q";
         } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")) {
-            return "pyro-glu from n-term E";
+            return "pyro-glu from n-term e";
         } else if (pridePtmName.equalsIgnoreCase("3-hydroxy-L-proline")) {
             return "hydroxylation of p";
         } else if (pridePtmName.equalsIgnoreCase("3x(2)H labeled L-aspartic acid 4-methyl ester")) {
-            return "tri-deuteromethylation of D";
+            return "tri-deuteromethylation of d";
         } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled alpha-dimethylamino N-terminal residue")) {
             return "chd2-di-methylation of peptide n-term";
         } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled dimethylated L-lysine")) {
@@ -1791,7 +1860,7 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("6x(13)C,2x(15)N labeled L-lysine")) {
             return "heavy lysine-13C6";
         } else if (pridePtmName.equalsIgnoreCase("L-aspartic acid 4-methyl ester")) {
-            return "methyl ester of D";
+            return "methyl ester of d";
         } else if (pridePtmName.equalsIgnoreCase("L-cysteic acid (L-cysteine sulfonic acid)")) {
             return "oxidation of C to cysteic acid";
         } else if (pridePtmName.equalsIgnoreCase("L-cysteine glutathione disulfide")) {
@@ -1803,15 +1872,15 @@ public class PTMFactory implements Serializable {
             return "2-amino-3-oxo-butanoic acid t";
         } else if (pridePtmName.equalsIgnoreCase("L-glutamic acid 5-methyl ester (Glu)")
                 || pridePtmName.equalsIgnoreCase("methylated glutamic acid")) {
-            return "methylation of E";
+            return "methylation of e";
         } else if (pridePtmName.equalsIgnoreCase("L-homoarginine")) {
-            return "guanidination of K";
+            return "guanidination of k";
         } else if (pridePtmName.equalsIgnoreCase("L-methionine (R)-sulfoxide")
                 || pridePtmName.equalsIgnoreCase("L-methionine (S)-sulfoxide")
                 || pridePtmName.equalsIgnoreCase("L-methionine sulfoxide")) {
-            return "oxidation of M";
+            return "oxidation of m";
         } else if (pridePtmName.equalsIgnoreCase("L-methionine sulfone")) {
-            return "sulphone of M";
+            return "sulphone of m";
         } else if (pridePtmName.equalsIgnoreCase("N-acetyl-L-asparagine")
                 || pridePtmName.equalsIgnoreCase("N-acetyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("N-acetyl-L-glutamic acid")
@@ -1823,7 +1892,7 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("N6-acetyl-L-lysine")) {
             return "acetylation of k";
         } else if (pridePtmName.equalsIgnoreCase("N-ethylmaleimide derivatized cysteine")) {
-            return "NEM C";
+            return "nem c";
         } else if (pridePtmName.equalsIgnoreCase("N-formyl-L-methionine")) {
             return "n-formyl met addition";
         } else if (pridePtmName.equalsIgnoreCase("N-formylated residue")) {
@@ -1833,9 +1902,9 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("N2-acetyl-L-tryptophan")) {
             return "acetylation of protein n-term";
         } else if (pridePtmName.equalsIgnoreCase("N6,N6-dimethyl-L-lysine")) {
-            return "di-methylation of K";
+            return "di-methylation of k";
         } else if (pridePtmName.equalsIgnoreCase("N6-formyl-L-lysine")) {
-            return "formylation of K";
+            return "formylation of k";
         } else if (pridePtmName.equalsIgnoreCase("N6-methyl-L-lysine")
                 || pridePtmName.equalsIgnoreCase("methylated lysine")
                 || pridePtmName.equalsIgnoreCase("monomethylated L-lysine")) {
@@ -1847,13 +1916,13 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("O-(N-acetylamino)glucosyl-L-threonine")) {
             return "threonine hexnac";
         } else if (pridePtmName.equalsIgnoreCase("O-phospho-L-serine")) {
-            return "phosphorylation of S";
+            return "phosphorylation of s";
         } else if (pridePtmName.equalsIgnoreCase("O-phospho-L-threonine")) {
-            return "phosphorylation of T";
+            return "phosphorylation of t";
         } else if (pridePtmName.equalsIgnoreCase("O4&apos;-phospho-L-tyrosine")) {
-            return "phosphorylation of Y";
+            return "phosphorylation of y";
         } else if (pridePtmName.equalsIgnoreCase("S-carboxamidoethyl-L-cysteine")) {
-            return "propionamide C";
+            return "propionamide c";
         } else if (pridePtmName.equalsIgnoreCase("S-methyl-L-cysteine")) {
             return "methyl c";
         } else if (pridePtmName.equalsIgnoreCase("alpha-amino acetylated residue")) {
@@ -1879,7 +1948,7 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("iodoacetamide N6-derivatized lysine")) {
             return "carboxyamidomethylation of k";
         } else if (pridePtmName.equalsIgnoreCase("monomethylated L-aspartic acid")) {
-            return "methylation of D";
+            return "methylation of d";
         } else if (pridePtmName.equalsIgnoreCase("thioacylation of primary amines - site N-term")) {
             return "gammathiopropionylation of peptide n-term";
         } else if (pridePtmName.equalsIgnoreCase("ubiquitination signature dipeptidyl lysine")) {

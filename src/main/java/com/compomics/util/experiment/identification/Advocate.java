@@ -103,31 +103,31 @@ public class Advocate {
     /**
      * The SeQuence IDentfication (SQID) search engine.
      */
-    public static final Advocate sqid = new Advocate(19, "SQID", AdvocateType.search_engine);
+    public static final Advocate sqid = new Advocate(20, "SQID", AdvocateType.search_engine);
     /**
      * The scaffold multiple search engine data interpretation software.
      */
-    public static final Advocate scaffold = new Advocate(20, "Scaffold", AdvocateType.multiple_algorithm_software);
+    public static final Advocate scaffold = new Advocate(21, "Scaffold", AdvocateType.multiple_algorithm_software);
     /**
      * The sonar search engine, integrated in radars.
      */
-    public static final Advocate sonar = new Advocate(21, "sonar", AdvocateType.search_engine);
+    public static final Advocate sonar = new Advocate(22, "sonar", AdvocateType.search_engine);
     /**
      * The SpectraST spectral library search engine (TPP).
      */
-    public static final Advocate spectraST = new Advocate(22, "SpectraST", AdvocateType.spectral_library);
+    public static final Advocate spectraST = new Advocate(23, "SpectraST", AdvocateType.spectral_library);
     /**
      * The Spectrum Mill search engine, Agilent.
      */
-    public static final Advocate spectrumMill = new Advocate(23, "SpectrumMill", AdvocateType.search_engine);
+    public static final Advocate spectrumMill = new Advocate(24, "SpectrumMill", AdvocateType.search_engine);
     /**
      * The ZCore search engine, etd search engine.
      */
-    public static final Advocate zCore = new Advocate(24, "ZCore", AdvocateType.search_engine);
+    public static final Advocate zCore = new Advocate(25, "ZCore", AdvocateType.search_engine);
     /**
      * The percolator rescoring algorithm.
      */
-    public static final Advocate percolator = new Advocate(25, "Percolator", AdvocateType.rescoring_algorithm);
+    public static final Advocate percolator = new Advocate(26, "Percolator", AdvocateType.rescoring_algorithm);
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -247,7 +247,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[9 + userAdvocates.size()];
+        Advocate[] result = new Advocate[28 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -258,6 +258,26 @@ public class Advocate {
         result[++i] = peptideShaker;
         result[++i] = msgf;
         result[++i] = direcTag;
+        result[++i] = byonic;
+        result[++i] = comet;
+        result[++i] = proteinLynx;
+        result[++i] = msFit;
+        result[++i] = myriMatch;
+        result[++i] = peaks;
+        result[++i] = phenyx;
+        result[++i] = proFound;
+        result[++i] = proteinProspector;
+        result[++i] = proteinScape;
+        result[++i] = sequest;
+        result[++i] = sqid;
+        result[++i] = scaffold;
+        result[++i] = sonar;
+        result[++i] = spectraST;
+        result[++i] = spectrumMill;
+        result[++i] = zCore;
+        result[++i] = percolator;
+        result[++i] = genericMzId;
+        
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
         }
@@ -413,5 +433,33 @@ public class Advocate {
         }
 
         return advocateToolTipMap;
+    }
+    
+    /**
+     * Returns the advocate based on the identification file name. Null if not found.
+     * Note: this method implements a limited number of algorithms and does not support generic files. Use the IdfileReader when possible.
+     * Implemented formats:
+     * omx -> OMSSA
+     * dat -> Mascot
+     * xml -> X!Tandem
+     * csv -> MS-Amanda
+     * 
+     * @param idFileName the name of the identification file
+     * 
+     * @return the advocate likely to have been used to create the given file
+     */
+    public static Advocate getAdvocateFromFile(String idFileName) {
+        if (idFileName.toLowerCase().endsWith("dat")) {
+                    return Advocate.mascot;
+                } else if (idFileName.toLowerCase().endsWith("omx")) {
+                    return Advocate.omssa;
+                } else if (idFileName.toLowerCase().endsWith("xml")) {
+                    return Advocate.xtandem;
+                } else if (idFileName.toLowerCase().endsWith("mzid")) {
+                    return Advocate.msgf;
+                } else if (idFileName.toLowerCase().endsWith("csv")) {
+                    return Advocate.msAmanda;
+                }
+        return null;
     }
 }

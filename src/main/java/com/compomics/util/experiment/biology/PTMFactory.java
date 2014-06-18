@@ -225,21 +225,9 @@ public class PTMFactory implements Serializable {
      * @return The desired PTM
      */
     public PTM getPTM(String name) {
-        if (ptmMap.containsKey(name)) {
-            return ptmMap.get(name);
-        }
-        if (name.indexOf("@") > 1) {
-            try {
-                double mass = 0.0;
-                try {
-                    mass = new Double(name.substring(0, name.indexOf("@")));
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Trying to parse modification " + name + " like an X!Tandem modification!");
-                }
-                return new PTM(-1, name, mass, new AminoAcidPattern());
-            } catch (Exception e) {
-                return unknownPTM;
-            }
+        PTM ptm = ptmMap.get(name);
+        if (ptm != null) {
+            return ptm;
         }
         return unknownPTM;
     }

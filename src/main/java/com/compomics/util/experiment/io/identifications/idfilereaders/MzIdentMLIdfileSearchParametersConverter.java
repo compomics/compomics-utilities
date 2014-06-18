@@ -153,7 +153,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             com.compomics.util.experiment.biology.Enzyme utilitiesEnzyme = EnzymeFactory.getUtilitiesEnzyme(enzyme); // @TODO: replace by use of cv terms
             if (utilitiesEnzyme != null) {
                 searchParameters.setEnzyme(utilitiesEnzyme);
-                parametersReport += utilitiesEnzyme;
+                parametersReport += utilitiesEnzyme.getName() + "<br>";
             } else {
                 searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("Trypsin"));
                 parametersReport += "Trypsin (assumed)<br>";

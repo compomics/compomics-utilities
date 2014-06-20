@@ -89,7 +89,12 @@ public class MgfReader {
                     String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
-                        rt = new Double(rtWindow[0]);
+                        String tempRt = rtWindow[0];
+                        // possible fix for values like RTINSECONDS=PT121.250000S
+                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
+                            tempRt = tempRt.substring(2, tempRt.length() - 1);
+                        }
+                        rt = new Double(tempRt);
                     } else if (rtWindow.length == 2) {
                         rt1 = new Double(rtWindow[0]);
                         rt2 = new Double(rtWindow[1]);
@@ -269,7 +274,12 @@ public class MgfReader {
                     String[] rtWindow = rtInput.split("-");
 
                     if (rtWindow.length == 1) {
-                        double rt = new Double(rtWindow[0]);
+                        String tempRt = rtWindow[0];
+                        // possible fix for values like RTINSECONDS=PT121.250000S
+                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
+                            tempRt = tempRt.substring(2, tempRt.length() - 1);
+                        }
+                        double rt = new Double(tempRt);
                         if (rt > maxRT) {
                             maxRT = rt;
                         }
@@ -797,7 +807,12 @@ public class MgfReader {
                     String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
-                        rt = new Double(rtWindow[0]);
+                        String tempRt = rtWindow[0];
+                        // possible fix for values like RTINSECONDS=PT121.250000S
+                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
+                            tempRt = tempRt.substring(2, tempRt.length() - 1);
+                        }
+                        rt = new Double(tempRt);
                     } else if (rtWindow.length == 2) {
                         rt1 = new Double(rtWindow[0]);
                         rt2 = new Double(rtWindow[1]);
@@ -961,7 +976,12 @@ public class MgfReader {
                     String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
-                        rt = new Double(rtWindow[0]);
+                        String tempRt = rtWindow[0];
+                        // possible fix for values like RTINSECONDS=PT121.250000S
+                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
+                            tempRt = tempRt.substring(2, tempRt.length() - 1);
+                        }
+                        rt = new Double(tempRt);
                     } else if (rtWindow.length == 2) {
                         rt1 = new Double(rtWindow[0]);
                         rt2 = new Double(rtWindow[1]);

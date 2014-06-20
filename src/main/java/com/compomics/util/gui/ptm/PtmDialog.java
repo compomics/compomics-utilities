@@ -188,7 +188,7 @@ public class PtmDialog extends javax.swing.JDialog {
         removeNeutralLoss.setEnabled(editable);
         addReporterIon.setEnabled(editable);
         removerReporterIon.setEnabled(editable);
-        residuesTxt.setEnabled(editable);
+        patternTxt.setEnabled(editable);
         unimodAccessionJTextField.setEditable(editable);
         unimodNameJTextField.setEditable(editable);
 
@@ -197,7 +197,7 @@ public class PtmDialog extends javax.swing.JDialog {
             nameTxt.setText(currentPtm.getName());
             nameShortTxt.setText(ptmFactory.getShortName(currentPtm.getName()));
             massTxt.setText(currentPtm.getMass() + "");
-            residuesTxt.setText(pattern.toString());
+            patternTxt.setText(pattern.toString());
 
             this.neutralLosses.addAll(currentPtm.getNeutralLosses());
             this.reporterIons.addAll(currentPtm.getReporterIons());
@@ -232,20 +232,26 @@ public class PtmDialog extends javax.swing.JDialog {
         nameLabel.setForeground(Color.BLACK);
         massLabel.setForeground(Color.BLACK);
         patternLabel.setForeground(Color.BLACK);
+        unimodAccessionLabel.setForeground(Color.BLACK);
+        unimodNameLabel.setForeground(Color.BLACK);
 
         nameLabel.setToolTipText(null);
         nameTxt.setToolTipText(null);
         massLabel.setToolTipText(null);
         massTxt.setToolTipText(null);
         patternLabel.setToolTipText(null);
-        residuesTxt.setToolTipText(null);
+        patternTxt.setToolTipText(null);
+        unimodAccessionLabel.setToolTipText(null);
+        unimodAccessionJTextField.setToolTipText(null);
+        unimodNameLabel.setToolTipText(null);
+        unimodNameJTextField.setToolTipText(null);
 
         // check the modification mass
         if (massTxt.getText().trim().length() == 0) {
             error = true;
             massLabel.setForeground(Color.RED);
-            massLabel.setToolTipText("Please provide a modification mass.");
-            massTxt.setToolTipText("Please provide a modification mass.");
+            massLabel.setToolTipText("Please provide a modification mass");
+            massTxt.setToolTipText("Please provide a modification mass");
         } else {
             try {
                 new Double(massTxt.getText().trim());
@@ -256,8 +262,8 @@ public class PtmDialog extends javax.swing.JDialog {
                 }
                 error = true;
                 massLabel.setForeground(Color.RED);
-                massLabel.setToolTipText("Please verify the input for the modification mass.");
-                massTxt.setToolTipText("Please verify the input for the modification mass.");
+                massLabel.setToolTipText("Please verify the input for the modification mass");
+                massTxt.setToolTipText("Please verify the input for the modification mass");
             }
         }
 
@@ -267,8 +273,8 @@ public class PtmDialog extends javax.swing.JDialog {
         if (name.length() == 0) {
             error = true;
             nameLabel.setForeground(Color.RED);
-            nameLabel.setToolTipText("Please provide a modification name.");
-            nameTxt.setToolTipText("Please provide a modification name.");
+            nameLabel.setToolTipText("Please provide a modification name");
+            nameTxt.setToolTipText("Please provide a modification name");
         }
 
         // check if name contains the modification separator
@@ -285,14 +291,14 @@ public class PtmDialog extends javax.swing.JDialog {
                 } else {
                     error = true;
                     nameLabel.setForeground(Color.RED);
-                    nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
-                    nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
+                    nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names");
+                    nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names");
                 }
             } else {
                 error = true;
                 nameLabel.setForeground(Color.RED);
-                nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
-                nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names.");
+                nameLabel.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names");
+                nameTxt.setToolTipText("\'" + Peptide.MODIFICATION_SEPARATOR + "\' should be avoided in modification names");
             }
         }
 
@@ -383,7 +389,7 @@ public class PtmDialog extends javax.swing.JDialog {
         }
 
         // check that a modification pattern is given
-        if (residuesTxt.getText().length() == 0) {
+        if (patternTxt.getText().length() == 0) {
 
             if (typeCmb.getSelectedIndex() == 0
                     || typeCmb.getSelectedIndex() == 2
@@ -397,9 +403,32 @@ public class PtmDialog extends javax.swing.JDialog {
                 }
                 error = true;
                 patternLabel.setForeground(Color.RED);
-                patternLabel.setToolTipText("Please provide a modification pattern.");
-                residuesTxt.setToolTipText("Please provide a modification pattern.");
+                patternLabel.setToolTipText("Please provide a modification pattern");
+                patternTxt.setToolTipText("Please provide a modification pattern");
             }
+        }
+
+        // check that the unimod cv term mapping is provided
+        if (unimodNameJTextField.getText().trim().isEmpty()) {
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "Please provide the Unimod name for the modification.", "Unimod Name", JOptionPane.WARNING_MESSAGE);
+            }
+            error = true;
+            unimodNameLabel.setForeground(Color.RED);
+            unimodNameLabel.setToolTipText("Please provide the Unimod name for the modification");
+            unimodNameJTextField.setToolTipText("Please provide the Unimod name for the modification");
+        }
+
+        try {
+            new Integer(unimodAccessionJTextField.getText().trim());
+        } catch (NumberFormatException e) {
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
+            }
+            error = true;
+            unimodAccessionLabel.setForeground(Color.RED);
+            unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
+            unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
         }
 
         okButton.setEnabled(!error);
@@ -426,7 +455,7 @@ public class PtmDialog extends javax.swing.JDialog {
         massLabel = new javax.swing.JLabel();
         massTxt = new javax.swing.JTextField();
         patternLabel = new javax.swing.JLabel();
-        residuesTxt = new javax.swing.JTextField();
+        patternTxt = new javax.swing.JTextField();
         nameShortLabel = new javax.swing.JLabel();
         nameShortTxt = new javax.swing.JTextField();
         neutralLossesAndReporterIonsPanel = new javax.swing.JPanel();
@@ -453,6 +482,7 @@ public class PtmDialog extends javax.swing.JDialog {
         unimodNameLabel = new javax.swing.JLabel();
         unimodNameJTextField = new javax.swing.JTextField();
         unimodLinkLabel = new javax.swing.JLabel();
+        cvExampleLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         reporterIonsJScrollPane = new javax.swing.JScrollPane();
         reporterIonsTable = new JTable() {
@@ -527,12 +557,12 @@ public class PtmDialog extends javax.swing.JDialog {
         patternLabel.setText("Pattern");
         patternLabel.setToolTipText("Residues modified");
 
-        residuesTxt.setEditable(false);
-        residuesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        residuesTxt.setToolTipText("Residues modified");
-        residuesTxt.addMouseListener(new java.awt.event.MouseAdapter() {
+        patternTxt.setEditable(false);
+        patternTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        patternTxt.setToolTipText("Residues modified");
+        patternTxt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                residuesTxtMouseReleased(evt);
+                patternTxtMouseReleased(evt);
             }
         });
 
@@ -551,26 +581,23 @@ public class PtmDialog extends javax.swing.JDialog {
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(detailsPanelLayout.createSequentialGroup()
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(detailsPanelLayout.createSequentialGroup()
-                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nameTxt)
-                                    .addComponent(typeCmb, 0, 345, Short.MAX_VALUE)))
-                            .addGroup(detailsPanelLayout.createSequentialGroup()
-                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(massLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(residuesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                                    .addComponent(massTxt))))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(typeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nameTxt)))
                     .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addComponent(nameShortLabel)
-                        .addGap(18, 18, 18)
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(massLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(massTxt)
+                            .addComponent(patternTxt)))
+                    .addGroup(detailsPanelLayout.createSequentialGroup()
+                        .addComponent(nameShortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(nameShortTxt)))
                 .addContainerGap())
         );
@@ -582,23 +609,23 @@ public class PtmDialog extends javax.swing.JDialog {
             .addGroup(detailsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(typeCmb)
+                    .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameTxt)
+                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameShortTxt)
+                    .addComponent(nameShortTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameShortLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(massTxt)
+                    .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(massLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(residuesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(patternTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(patternLabel))
                 .addContainerGap())
         );
@@ -615,7 +642,7 @@ public class PtmDialog extends javax.swing.JDialog {
         });
         neutralLossesJScrollPane.setViewportView(neutralLossesTable);
 
-        addNeutralLoss.setText("+");
+        addNeutralLoss.setText("Add");
         addNeutralLoss.setToolTipText("Add a neutral loss");
         addNeutralLoss.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -623,7 +650,7 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
-        removeNeutralLoss.setText("-");
+        removeNeutralLoss.setText("Remove");
         removeNeutralLoss.setToolTipText("Remove the selected neutral loss");
         removeNeutralLoss.setEnabled(false);
         removeNeutralLoss.addActionListener(new java.awt.event.ActionListener() {
@@ -638,11 +665,11 @@ public class PtmDialog extends javax.swing.JDialog {
             neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addNeutralLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(removeNeutralLoss, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addNeutralLoss, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeNeutralLoss, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         neutralLossesAndReporterIonsPanelLayout.setVerticalGroup(
@@ -650,12 +677,12 @@ public class PtmDialog extends javax.swing.JDialog {
             .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                     .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addNeutralLoss)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeNeutralLoss)
-                        .addGap(0, 33, Short.MAX_VALUE)))
+                        .addComponent(removeNeutralLoss)))
                 .addContainerGap())
         );
 
@@ -690,6 +717,11 @@ public class PtmDialog extends javax.swing.JDialog {
 
         unimodAccessionJTextField.setEditable(false);
         unimodAccessionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        unimodAccessionJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                unimodAccessionJTextFieldKeyReleased(evt);
+            }
+        });
 
         unimodAccessionLabel.setText("Accession");
 
@@ -697,8 +729,13 @@ public class PtmDialog extends javax.swing.JDialog {
 
         unimodNameJTextField.setEditable(false);
         unimodNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        unimodNameJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                unimodNameJTextFieldKeyReleased(evt);
+            }
+        });
 
-        unimodLinkLabel.setText("<html><a href>See http://www.unimod.org</a></html>");
+        unimodLinkLabel.setText("<html><a href>See: http://www.unimod.org</a></html>");
         unimodLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 unimodLinkLabelMouseReleased(evt);
@@ -711,6 +748,9 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
+        cvExampleLabel.setFont(cvExampleLabel.getFont().deriveFont((cvExampleLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        cvExampleLabel.setText("Ex.: accession:1, name: Acetyl");
+
         javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
         unimodMappingPanel.setLayout(unimodMappingPanelLayout);
         unimodMappingPanelLayout.setHorizontalGroup(
@@ -718,17 +758,16 @@ public class PtmDialog extends javax.swing.JDialog {
             .addGroup(unimodMappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
-                        .addComponent(unimodAccessionLabel)
+                    .addComponent(unimodNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodAccessionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
-                        .addComponent(unimodNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodMappingPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(unimodAccessionJTextField)
+                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         unimodMappingPanelLayout.setVerticalGroup(
@@ -743,7 +782,9 @@ public class PtmDialog extends javax.swing.JDialog {
                     .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(unimodNameLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -759,7 +800,7 @@ public class PtmDialog extends javax.swing.JDialog {
         });
         reporterIonsJScrollPane.setViewportView(reporterIonsTable);
 
-        removerReporterIon.setText("-");
+        removerReporterIon.setText("Remove");
         removerReporterIon.setToolTipText("Remove the selected reporter ion");
         removerReporterIon.setEnabled(false);
         removerReporterIon.addActionListener(new java.awt.event.ActionListener() {
@@ -768,7 +809,7 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
-        addReporterIon.setText("+");
+        addReporterIon.setText("Add");
         addReporterIon.setToolTipText("Add a reporter ion");
         addReporterIon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -782,11 +823,11 @@ public class PtmDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(removerReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addReporterIon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removerReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -794,12 +835,12 @@ public class PtmDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(addReporterIon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removerReporterIon)
-                        .addGap(0, 33, Short.MAX_VALUE))
-                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(removerReporterIon)))
                 .addContainerGap())
         );
 
@@ -809,7 +850,7 @@ public class PtmDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -848,7 +889,7 @@ public class PtmDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -877,25 +918,10 @@ public class PtmDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput(true)) {
 
-            // check the unimod details
-            CvTerm cvTerm = null;
-            if (!unimodAccessionJTextField.getText().trim().isEmpty()) { // @TODO: move to the validateInput method
-
-                // check the Unimod name
-                if (unimodNameJTextField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please provide the Unimod name for the modification.", "Unimod Name", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                try {
-                    int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
-                    cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-                    cvTerm.setValue(massTxt.getText());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-            }
+            // create the unimod cv term
+            int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
+            CvTerm cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+            cvTerm.setValue(massTxt.getText());
 
             PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
                     nameTxt.getText().trim().toLowerCase(),
@@ -941,9 +967,7 @@ public class PtmDialog extends javax.swing.JDialog {
             // store the short name in the factory
             ptmFactory.setShortName(newPTM.getName(), nameShortTxt.getText().trim().toLowerCase());
 
-            if (cvTerm != null) {
-                ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
-            }
+            ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             ptmDialogParent.updateModifications();
             saveChanges();
             dispose();
@@ -961,11 +985,11 @@ public class PtmDialog extends javax.swing.JDialog {
                 || typeCmb.getSelectedIndex() == 4
                 || typeCmb.getSelectedIndex() == 6
                 || typeCmb.getSelectedIndex() == 8) {
-            residuesTxt.setEnabled(true);
+            patternTxt.setEnabled(true);
         } else {
             pattern = new AminoAcidPattern();
-            residuesTxt.setText(pattern.toString());
-            residuesTxt.setEnabled(false);
+            patternTxt.setText(pattern.toString());
+            patternTxt.setEnabled(false);
         }
         validateInput(false);
     }//GEN-LAST:event_typeCmbActionPerformed
@@ -1082,16 +1106,16 @@ public class PtmDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void residuesTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_residuesTxtMouseReleased
-        if (residuesTxt.isEnabled() && evt.getButton() == MouseEvent.BUTTON1) {
+    private void patternTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternTxtMouseReleased
+        if (patternTxt.isEnabled() && evt.getButton() == MouseEvent.BUTTON1) {
             AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);
             if (!dialog.isCanceled()) {
                 pattern = dialog.getPattern();
-                residuesTxt.setText(pattern.toString());
+                patternTxt.setText(pattern.toString());
                 validateInput(false);
             }
         }
-    }//GEN-LAST:event_residuesTxtMouseReleased
+    }//GEN-LAST:event_patternTxtMouseReleased
 
     /**
      * Validate the input.
@@ -1140,11 +1164,30 @@ public class PtmDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_unimodLinkLabelMouseReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void unimodAccessionJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_unimodAccessionJTextFieldKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_unimodAccessionJTextFieldKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void unimodNameJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_unimodNameJTextFieldKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_unimodNameJTextFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel cvExampleLabel;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel jLabel1;
@@ -1160,11 +1203,11 @@ public class PtmDialog extends javax.swing.JDialog {
     private javax.swing.JTable neutralLossesTable;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel patternLabel;
+    private javax.swing.JTextField patternTxt;
     private javax.swing.JButton removeNeutralLoss;
     private javax.swing.JButton removerReporterIon;
     private javax.swing.JScrollPane reporterIonsJScrollPane;
     private javax.swing.JTable reporterIonsTable;
-    private javax.swing.JTextField residuesTxt;
     private javax.swing.JComboBox typeCmb;
     private javax.swing.JTextField unimodAccessionJTextField;
     private javax.swing.JLabel unimodAccessionLabel;

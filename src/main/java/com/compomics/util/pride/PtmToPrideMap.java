@@ -117,7 +117,12 @@ public class PtmToPrideMap implements Serializable {
                 || ptmName.equalsIgnoreCase("phosphorylation with neutral loss on T")
                 || ptmName.equalsIgnoreCase("phosphorylation of S with ETD loss")
                 || ptmName.equalsIgnoreCase("phosphorylation of T with ETD loss")
-                || ptmName.equalsIgnoreCase("phosphorylation of H")) {
+                || ptmName.equalsIgnoreCase("phosphorylation of H")
+                || ptmName.equalsIgnoreCase("phosphorylation of C")
+                || ptmName.equalsIgnoreCase("phosphorylation of D")
+                || ptmName.equalsIgnoreCase("phosphorylation of K")
+                || ptmName.equalsIgnoreCase("phosphorylation of Q")
+                || ptmName.equalsIgnoreCase("phosphorylation of R")) {
             return new CvTerm("UNIMOD", "UNIMOD:21", "Phospho", "79.966331");
         } else if (ptmName.equalsIgnoreCase("M cleavage from protein n-term")) {
             return new CvTerm("UNIMOD", "UNIMOD:765", "Met-loss", "-131.040485");
@@ -152,6 +157,11 @@ public class PtmToPrideMap implements Serializable {
                 || ptmName.equalsIgnoreCase("di-methylation of R")
                 || ptmName.equalsIgnoreCase("di-methylation of peptide n-term")) {
             return new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", "28.031300");
+        } else if (ptmName.equalsIgnoreCase("dimethyl 2d k")
+                || ptmName.equalsIgnoreCase("dimethyl 2d n-terminus")) {
+            return new CvTerm("UNIMOD", "UNIMOD:199", "Dimethyl:2H(4)", "32.056407");
+        } else if (ptmName.equalsIgnoreCase("gtp desthiobiotinc12")) {
+            return new CvTerm("UNIMOD", "UNIMOD:1031", "Biotin:Thermo-88310", "196.121178");
         } else if (ptmName.equalsIgnoreCase("oxidation of F to dihydroxyphenylalanine")
                 || ptmName.equalsIgnoreCase("oxidation of W to formylkynurenin")
                 || ptmName.equalsIgnoreCase("sulphone of M")

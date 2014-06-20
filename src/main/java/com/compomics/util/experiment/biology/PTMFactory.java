@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.23.0.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.28.24.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -87,9 +87,7 @@ public class PTMFactory implements Serializable {
      * Constructor for the factory.
      */
     private PTMFactory() {
-        ptmMap.put(unknownPTM.getName(), unknownPTM);
         defaultMods = new ArrayList<String>();
-        defaultMods.add("unknown");
         defaultModsSorted = false;
     }
 
@@ -239,7 +237,7 @@ public class PTMFactory implements Serializable {
      * @return a boolean indicating whether the PTM is loaded in the factory
      */
     public boolean containsPTM(String name) {
-        return ptmMap.containsKey(name);
+        return ptmMap.containsKey(name) || name.equals(unknownPTM.getName());
     }
 
     /**
@@ -247,9 +245,11 @@ public class PTMFactory implements Serializable {
      *
      * @deprecated This method can generate inconsistent results in case a
      * measurement matches to various PTMs.
+     *
      * @param mass the measured mass induced by the modification
      * @param location the modification location
      * @param sequence the peptide sequence
+     *
      * @return the candidate modification, null if none is found
      */
     public PTM getPTM(double mass, String location, String sequence) {
@@ -514,7 +514,7 @@ public class PTMFactory implements Serializable {
             type = parser.next();
         }
 
-        if (!name.startsWith("user modification ")) {
+        if (!name.startsWith("user modification ") && !name.equals(unknownPTM.getName())) {
             if (!name.endsWith(SEARCH_SUFFIX)) {
                 ptmMap.put(name, currentPTM);
             } else {
@@ -582,22 +582,32 @@ public class PTMFactory implements Serializable {
     public void writeOmssaModificationsFiles(File aFolder, File utilitiesModFile, File utilitiesUserModFile) throws IOException {
         int c;
         BufferedReader br = new BufferedReader(new FileReader(utilitiesModFile));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "mods.xml")));
-        while ((c = br.read()) != -1) {
-            bw.write(c);
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "mods.xml")));
+            try {
+                while ((c = br.read()) != -1) {
+                    bw.write(c);
+                }
+            } finally {
+                bw.close();
+            }
+        } finally {
+            br.close();
         }
-        bw.flush();
-        bw.close();
-        br.close();
 
         br = new BufferedReader(new FileReader(utilitiesUserModFile));
-        bw = new BufferedWriter(new FileWriter(new File(aFolder, "usermods.xml")));
-        while ((c = br.read()) != -1) {
-            bw.write(c);
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(aFolder, "usermods.xml")));
+            try {
+                while ((c = br.read()) != -1) {
+                    bw.write(c);
+                }
+            } finally {
+                bw.close();
+            }
+        } finally {
+            br.close();
         }
-        bw.flush();
-        bw.close();
-        br.close();
     }
 
     /**
@@ -610,44 +620,48 @@ public class PTMFactory implements Serializable {
      */
     public void writeOmssaUserModificationFile(File file) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        String toWrite = "<?xml version=\"1.0\"?>\n<MSModSpecSet\n"
-                + "xmlns=\"http://www.ncbi.nlm.nih.gov\"\n"
-                + "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "xs:schemaLocation=\"http://www.ncbi.nlm.nih.gov OMSSA.xsd\"\n>\n\n";
-        bw.write(toWrite);
-
-        for (int cpt = 1; cpt <= userMods.size(); cpt++) {
-            String ptmName = userMods.get(cpt - 1);
-            toWrite = getOmssaUserModBloc(ptmName, cpt);
+        try {
+            String toWrite = "<?xml version=\"1.0\"?>\n<MSModSpecSet\n"
+                    + "xmlns=\"http://www.ncbi.nlm.nih.gov\"\n"
+                    + "xmlns:xs=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                    + "xs:schemaLocation=\"http://www.ncbi.nlm.nih.gov OMSSA.xsd\"\n>\n\n";
             bw.write(toWrite);
-        }
 
-        for (int cpt = userMods.size() + 1; cpt <= 30; cpt++) {
-            int omssaIndex = cpt + 118;
-            if (omssaIndex > 128) {
-                omssaIndex += 13;
+            int cpt = 0;
+            for (String ptmName : userMods) {
+                if (!ptmName.equals(unknownPTM.getName())) {
+                    toWrite = getOmssaUserModBloc(ptmName, cpt++);
+                    bw.write(toWrite);
+                }
             }
-            toWrite = "\t<MSModSpec>\n"
-                    + "\t\t<MSModSpec_mod>\n"
-                    + "\t\t\t<MSMod value=\"usermod" + cpt + "\">" + omssaIndex + "</MSMod>\n"
-                    + "\t\t</MSModSpec_mod>\n"
-                    + "\t\t<MSModSpec_type>\n"
-                    + "\t\t\t<MSModType value=\"modaa\">0</MSModType>\n"
-                    + "\t\t</MSModSpec_type>\n"
-                    + "\t\t<MSModSpec_name>User modification " + cpt + "</MSModSpec_name>\n"
-                    + "\t\t<MSModSpec_monomass>0</MSModSpec_monomass>\n"
-                    + "\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
-                    + "\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n"
-                    + "\t\t<MSModSpec_residues>\n"
-                    + "\t\t\t<MSModSpec_residues_E>X</MSModSpec_residues_E>\n"
-                    + "\t\t</MSModSpec_residues>\n"
-                    + "\t</MSModSpec>\n";
+
+            while (++cpt <= 30) {
+                int omssaIndex = cpt + 118;
+                if (omssaIndex > 128) {
+                    omssaIndex += 13;
+                }
+                toWrite = "\t<MSModSpec>\n"
+                        + "\t\t<MSModSpec_mod>\n"
+                        + "\t\t\t<MSMod value=\"usermod" + cpt + "\">" + omssaIndex + "</MSMod>\n"
+                        + "\t\t</MSModSpec_mod>\n"
+                        + "\t\t<MSModSpec_type>\n"
+                        + "\t\t\t<MSModType value=\"modaa\">0</MSModType>\n"
+                        + "\t\t</MSModSpec_type>\n"
+                        + "\t\t<MSModSpec_name>User modification " + cpt + "</MSModSpec_name>\n"
+                        + "\t\t<MSModSpec_monomass>0</MSModSpec_monomass>\n"
+                        + "\t\t<MSModSpec_averagemass>0</MSModSpec_averagemass>\n"
+                        + "\t\t<MSModSpec_n15mass>0</MSModSpec_n15mass>\n"
+                        + "\t\t<MSModSpec_residues>\n"
+                        + "\t\t\t<MSModSpec_residues_E>X</MSModSpec_residues_E>\n"
+                        + "\t\t</MSModSpec_residues>\n"
+                        + "\t</MSModSpec>\n";
+                bw.write(toWrite);
+            }
+            toWrite = "</MSModSpecSet>";
             bw.write(toWrite);
+        } finally {
+            bw.close();
         }
-        toWrite = "</MSModSpecSet>";
-        bw.write(toWrite);
-        bw.flush();
-        bw.close();
     }
 
     /**

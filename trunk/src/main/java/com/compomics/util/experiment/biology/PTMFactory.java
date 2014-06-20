@@ -627,7 +627,7 @@ public class PTMFactory implements Serializable {
                     + "xs:schemaLocation=\"http://www.ncbi.nlm.nih.gov OMSSA.xsd\"\n>\n\n";
             bw.write(toWrite);
 
-            int cpt = 0;
+            int cpt = 1;
             for (String ptmName : userMods) {
                 if (!ptmName.equals(unknownPTM.getName())) {
                     toWrite = getOmssaUserModBloc(ptmName, cpt++);
@@ -635,7 +635,7 @@ public class PTMFactory implements Serializable {
                 }
             }
 
-            while (++cpt <= 30) {
+            while (cpt <= 30) {
                 int omssaIndex = cpt + 118;
                 if (omssaIndex > 128) {
                     omssaIndex += 13;
@@ -656,6 +656,8 @@ public class PTMFactory implements Serializable {
                         + "\t\t</MSModSpec_residues>\n"
                         + "\t</MSModSpec>\n";
                 bw.write(toWrite);
+
+                cpt++;
             }
             toWrite = "</MSModSpecSet>";
             bw.write(toWrite);

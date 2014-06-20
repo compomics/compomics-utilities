@@ -212,6 +212,12 @@ public class PtmDialog extends javax.swing.JDialog {
                 updateModMappingText(cvTerm);
             }
 
+            // special case for the three default ptms without cv terms
+            if (cvTerm == null) {
+                unimodAccessionJTextField.setEditable(true);
+                unimodNameJTextField.setEditable(true);
+            }
+
             setTitle("Edit Modification");
         }
 
@@ -243,8 +249,6 @@ public class PtmDialog extends javax.swing.JDialog {
         patternTxt.setToolTipText(null);
         unimodAccessionLabel.setToolTipText(null);
         unimodAccessionJTextField.setToolTipText(null);
-        unimodNameLabel.setToolTipText(null);
-        unimodNameJTextField.setToolTipText(null);
 
         // check the modification mass
         if (massTxt.getText().trim().length() == 0) {
@@ -408,27 +412,19 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         }
 
-        // check that the unimod cv term mapping is provided
-        if (unimodNameJTextField.getText().trim().isEmpty()) {
-            if (showMessage && !error) {
-                JOptionPane.showMessageDialog(this, "Please provide the Unimod name for the modification.", "Unimod Name", JOptionPane.WARNING_MESSAGE);
+        // check that the unimod cv term accesion is an integer
+        if (!unimodAccessionJTextField.getText().trim().isEmpty()) {
+            try {
+                new Integer(unimodAccessionJTextField.getText().trim());
+            } catch (NumberFormatException e) {
+                if (showMessage && !error) {
+                    JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
+                }
+                error = true;
+                unimodAccessionLabel.setForeground(Color.RED);
+                unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
+                unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
             }
-            error = true;
-            unimodNameLabel.setForeground(Color.RED);
-            unimodNameLabel.setToolTipText("Please provide the Unimod name for the modification");
-            unimodNameJTextField.setToolTipText("Please provide the Unimod name for the modification");
-        }
-
-        try {
-            new Integer(unimodAccessionJTextField.getText().trim());
-        } catch (NumberFormatException e) {
-            if (showMessage && !error) {
-                JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
-            }
-            error = true;
-            unimodAccessionLabel.setForeground(Color.RED);
-            unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
-            unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
         }
 
         okButton.setEnabled(!error);
@@ -916,12 +912,42 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+
         if (validateInput(true)) {
 
+            // check if the unimod cv term mapping is provided
+            boolean cvTermOk = true;
+            if (!unimodNameJTextField.getText().trim().isEmpty()) {
+                try {
+                    new Integer(unimodAccessionJTextField.getText().trim());
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
+                    cvTermOk = false;
+                    unimodAccessionLabel.setForeground(Color.RED);
+                    unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
+                    unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
+                }
+            } else {
+                cvTermOk = false;
+
+                int option = JOptionPane.showConfirmDialog(this,
+                        "Note that adding CV term mapping is strongly recommended. This\n"
+                        + "is for example mandatory when exporting the data to mzIdentML.\n\n"
+                        + "Continue without adding a CV term?", "Modification CV Terms",
+                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (option != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
             // create the unimod cv term
-            int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
-            CvTerm cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-            cvTerm.setValue(massTxt.getText());
+            CvTerm cvTerm = null;
+            if (cvTermOk) {
+                int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
+                cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+                cvTerm.setValue(massTxt.getText());
+            }
 
             PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
                     nameTxt.getText().trim().toLowerCase(),
@@ -945,22 +971,22 @@ public class PtmDialog extends javax.swing.JDialog {
 
             newPTM.setReporterIons(tempReporterIons);
 
-            for (String ptm : ptmFactory.getPTMs()) {
-                if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
-                    PTM otherPTM = ptmFactory.getPTM(ptm);
-                    if (newPTM.isSameAs(otherPTM)) {
-                        int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + ptm
-                                + "\' presents characteristics similar to your input.\n"
-                                + "Are you sure you want to create this new modification?",
-                                "Modification Already Exists", JOptionPane.YES_NO_OPTION);
-                        if (outcome == JOptionPane.NO_OPTION) {
-                            return;
+            if (editable) {
+                for (String ptm : ptmFactory.getPTMs()) {
+                    if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
+                        PTM otherPTM = ptmFactory.getPTM(ptm);
+                        if (newPTM.isSameAs(otherPTM)) {
+                            int outcome = JOptionPane.showConfirmDialog(this, "The modification \'" + ptm
+                                    + "\' presents characteristics similar to your input.\n"
+                                    + "Are you sure you want to create this new modification?",
+                                    "Modification Already Exists", JOptionPane.YES_NO_OPTION);
+                            if (outcome == JOptionPane.NO_OPTION) {
+                                return;
+                            }
                         }
                     }
                 }
-            }
 
-            if (editable) {
                 ptmFactory.addUserPTM(newPTM); // note: "editable" is here used to decide if it's a user ptm
             }
 

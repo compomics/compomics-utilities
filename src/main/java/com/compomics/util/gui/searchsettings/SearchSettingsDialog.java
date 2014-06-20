@@ -24,6 +24,7 @@ import com.compomics.util.gui.ptm.PtmDialogParent;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -201,7 +202,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         modificationTableToolTips.add(null);
         modificationTableToolTips.add("Modification Name");
         modificationTableToolTips.add("Modification Mass");
-        modificationTableToolTips.add("Default Modification");
+        modificationTableToolTips.add("<html>Included in the list of the<br>Most Used Modifications</html>");
 
         setAllModificationTableProperties();
 
@@ -220,10 +221,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         if (modificationsListCombo.getSelectedIndex() == 1) {
             try {
-                ImageIcon pinnedIcon = new ImageIcon(this.getClass().getResource("/icons/unpinned.png"));
-                ImageIcon UnpinnedIcon = new ImageIcon(this.getClass().getResource("/icons/pinned.png"));
+                ImageIcon pinnedIcon = new ImageIcon(this.getClass().getResource("/icons/pinned.png"));
+                //ImageIcon unpinnedIcon = new ImageIcon(this.getClass().getResource("/icons/unpinned.png"));
                 modificationsTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
-                        UnpinnedIcon, pinnedIcon, "Unpin PTM", "Pin PTM"));
+                        pinnedIcon, null, "<html>Included in the list of the<br>Most Used Modifications</html>", null));
             } catch (Exception e) {
                 modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
             }
@@ -1399,6 +1400,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     }
                 }
 
+                Point viewPosition = modificationsJScrollPane.getViewport().getViewPosition();
+
                 updateModificationList();
 
                 if (row < modificationsTable.getRowCount()) {
@@ -1406,6 +1409,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
                     modificationsTable.setRowSelectionInterval(row - 1, row - 1);
                 }
+
+                modificationsJScrollPane.getViewport().setViewPosition(viewPosition);
+                modificationsJScrollPane.repaint();
             }
 
             enableAddRemoveButtons();

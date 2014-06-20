@@ -262,7 +262,7 @@ public abstract class SpectrumAnnotator {
                     }
                 }
             }
-            Collections.sort(mz);
+            Collections.sort(mz); // @TODO: possible null pointer..?
             spectrumAnnotation.clear();
             unmatchedIons.clear();
         }

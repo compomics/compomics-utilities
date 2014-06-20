@@ -25,7 +25,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="backgroundPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -49,8 +49,8 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="detailsPanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
@@ -64,7 +64,7 @@
                       <Component id="unimodMappingPanel" alignment="0" max="32767" attributes="0"/>
                       <Component id="jPanel1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -114,42 +114,37 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="nameLabel" linkSize="2" pref="65" max="32767" attributes="0"/>
-                                          <Component id="jLabel1" linkSize="2" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="nameTxt" max="32767" attributes="2"/>
-                                          <Component id="typeCmb" pref="345" max="32767" attributes="2"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="patternLabel" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
-                                          <Component id="massLabel" linkSize="2" min="-2" pref="65" max="-2" attributes="1"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="residuesTxt" pref="345" max="32767" attributes="2"/>
-                                          <Component id="massTxt" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="nameLabel" linkSize="2" pref="90" max="32767" attributes="0"/>
+                                  <Component id="jLabel1" linkSize="2" pref="90" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="typeCmb" max="32767" attributes="2"/>
+                                  <Component id="nameTxt" max="32767" attributes="2"/>
+                              </Group>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="nameShortLabel" linkSize="2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="patternLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="1"/>
+                                  <Component id="massLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="1"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="massTxt" max="32767" attributes="0"/>
+                                  <Component id="patternTxt" max="32767" attributes="2"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="nameShortLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="nameShortTxt" max="32767" attributes="2"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -158,27 +153,27 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="typeCmb" alignment="3" max="32767" attributes="1"/>
+                          <Component id="typeCmb" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="nameTxt" alignment="3" max="32767" attributes="1"/>
+                          <Component id="nameTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="nameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="nameShortTxt" alignment="3" max="32767" attributes="1"/>
+                          <Component id="nameShortTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="nameShortLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="massTxt" alignment="3" max="32767" attributes="1"/>
+                          <Component id="massTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="massLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="residuesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="patternTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="patternLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -254,14 +249,14 @@
                 <Property name="toolTipText" type="java.lang.String" value="Residues modified"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="residuesTxt">
+            <Component class="javax.swing.JTextField" name="patternTxt">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Residues modified"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="residuesTxtMouseReleased"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="patternTxtMouseReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="nameShortLabel">
@@ -293,12 +288,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="neutralLossesJScrollPane" pref="0" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="addNeutralLoss" alignment="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="removeNeutralLoss" pref="40" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="addNeutralLoss" max="32767" attributes="0"/>
+                          <Component id="removeNeutralLoss" pref="90" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="neutralLossesJScrollPane" min="-2" pref="383" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -308,12 +303,12 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="neutralLossesJScrollPane" pref="0" max="32767" attributes="0"/>
+                          <Component id="neutralLossesJScrollPane" pref="85" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="addNeutralLoss" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="removeNeutralLoss" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="33" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -355,7 +350,7 @@
             </Container>
             <Component class="javax.swing.JButton" name="addNeutralLoss">
               <Properties>
-                <Property name="text" type="java.lang.String" value="+"/>
+                <Property name="text" type="java.lang.String" value="Add"/>
                 <Property name="toolTipText" type="java.lang.String" value="Add a neutral loss"/>
               </Properties>
               <Events>
@@ -364,7 +359,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="removeNeutralLoss">
               <Properties>
-                <Property name="text" type="java.lang.String" value="-"/>
+                <Property name="text" type="java.lang.String" value="Remove"/>
                 <Property name="toolTipText" type="java.lang.String" value="Remove the selected neutral loss"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -414,24 +409,22 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="unimodAccessionLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="unimodNameLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="unimodAccessionLabel" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="cvExampleLabel" min="-2" pref="187" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="unimodAccessionJTextField" min="-2" pref="345" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="unimodNameLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="unimodNameJTextField" min="-2" pref="345" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="unimodLinkLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="unimodAccessionJTextField" alignment="1" max="32767" attributes="0"/>
+                          <Component id="unimodNameJTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -449,7 +442,10 @@
                           <Component id="unimodNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="unimodLinkLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="unimodLinkLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cvExampleLabel" alignment="3" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -461,6 +457,9 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="unimodAccessionJTextFieldKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="unimodAccessionLabel">
               <Properties>
@@ -477,16 +476,29 @@
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="unimodNameJTextFieldKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="unimodLinkLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;See http://www.unimod.org&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;See: http://www.unimod.org&lt;/a&gt;&lt;/html&gt;"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseReleased"/>
                 <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseEntered"/>
                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseExited"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="cvExampleLabel">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font component="cvExampleLabel" italic="true" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Ex.: accession:1, name: Acetyl"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -505,12 +517,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="reporterIonsJScrollPane" pref="0" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="addReporterIon" pref="0" max="32767" attributes="0"/>
-                          <Component id="removerReporterIon" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="addReporterIon" max="32767" attributes="0"/>
+                          <Component id="removerReporterIon" min="-2" pref="90" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="reporterIonsJScrollPane" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -520,13 +532,13 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="reporterIonsJScrollPane" pref="85" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="addReporterIon" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="removerReporterIon" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="33" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="reporterIonsJScrollPane" alignment="1" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -567,7 +579,7 @@
             </Container>
             <Component class="javax.swing.JButton" name="removerReporterIon">
               <Properties>
-                <Property name="text" type="java.lang.String" value="-"/>
+                <Property name="text" type="java.lang.String" value="Remove"/>
                 <Property name="toolTipText" type="java.lang.String" value="Remove the selected reporter ion"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -577,7 +589,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="addReporterIon">
               <Properties>
-                <Property name="text" type="java.lang.String" value="+"/>
+                <Property name="text" type="java.lang.String" value="Add"/>
                 <Property name="toolTipText" type="java.lang.String" value="Add a reporter ion"/>
               </Properties>
               <Events>

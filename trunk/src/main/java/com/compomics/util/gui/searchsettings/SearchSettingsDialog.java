@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
+import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesColorTableCellRenderer;
 import org.jfree.chart.plot.PlotOrientation;
@@ -218,7 +219,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         modificationsTable.getColumn("Mass").setMinWidth(100);
 
         if (modificationsListCombo.getSelectedIndex() == 1) {
-            modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+            try {
+                ImageIcon pinnedIcon = new ImageIcon(this.getClass().getResource("/icons/unpinned.png"));
+                ImageIcon UnpinnedIcon = new ImageIcon(this.getClass().getResource("/icons/pinned.png"));
+                modificationsTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
+                        UnpinnedIcon, pinnedIcon, "Unpin PTM", "Pin PTM"));
+            } catch (Exception e) {
+                modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+            }
             modificationsTable.getColumn("  ").setMaxWidth(30);
             modificationsTable.getColumn("  ").setMinWidth(30);
         }
@@ -1542,12 +1550,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     try {
                         // see if the gui is to be updated or not
                         if (keyPressedCounter == 1) {
-                            
+
                             // search in the ptm table
                             for (int i = 0; i < modificationsTable.getRowCount(); i++) {
-                                
+
                                 String currentPtmName = ((String) modificationsTable.getValueAt(i, modificationsTable.getColumn("Name").getModelIndex())).toLowerCase();
-                                
+
                                 if (currentPtmName.startsWith(currentPtmSearchString.toLowerCase())) {
                                     modificationsTable.scrollRectToVisible(modificationsTable.getCellRect(i, i, false));
                                     modificationsTable.repaint();

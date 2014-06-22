@@ -337,21 +337,23 @@ public class ProteinTree {
             String report = "Expected import time: ";
 
             if (nSeconds < 120) {
-                report += nSeconds + " seconds. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
+                report += nSeconds + " seconds.";
             } else {
                 int nMinutes = nSeconds / 60;
                 if (nMinutes < 120) {
-                    report += nMinutes + " minutes. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
+                    report += nMinutes + " minutes.";
                 } else {
                     int nHours = nMinutes / 60;
-                    report += nHours + " hours. (See <a href=\"https://code.google.com/p/compomics-utilities/wiki/ProteinInference\">Protein Inference</a>.)";
+                    report += nHours + " hours.";
                 }
             }
 
             if (waitingHandler != null && waitingHandler.isReport()) {
                 waitingHandler.appendReport(report, true, true);
+                waitingHandler.appendReport("    See http://code.google.com/p/compomics-utilities/wiki/ProteinInference.", true, true);
             } else {
                 System.out.println(report);
+                System.out.println("    See http://code.google.com/p/compomics-utilities/wiki/ProteinInference.");
             }
         }
 

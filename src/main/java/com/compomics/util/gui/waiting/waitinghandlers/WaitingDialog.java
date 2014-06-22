@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.DefaultCaret;
 
 /**
  * A dialog displaying progress details.
@@ -133,6 +134,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             ArrayList<String> tips, String processName, String toolName, String toolVersion, boolean modal) {
         super(waitingHandlerParent, modal);
         initComponents();
+
+        ((DefaultCaret) this.reportTextArea.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         this.waitingHandlerParent = waitingHandlerParent;
         this.waitingIcon = waitingIcon;
@@ -334,8 +337,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tipOfTheDayEditorPane = new javax.swing.JEditorPane();
         closeJButton = new javax.swing.JButton();
         nextJButton = new javax.swing.JButton();
-        reportPaneScrollPane = new javax.swing.JScrollPane();
-        reportEditorPane = new javax.swing.JEditorPane();
+        reportScrollPane = new javax.swing.JScrollPane();
+        reportTextArea = new javax.swing.JTextArea();
         secondaryProgressBarSplitPane = new javax.swing.JSplitPane();
         secondaryJProgressBar = new javax.swing.JProgressBar();
         tempJProgressBar = new javax.swing.JProgressBar();
@@ -346,7 +349,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Importing Data - Please Wait...");
-        setMinimumSize(new java.awt.Dimension(500, 500));
+        setMinimumSize(new java.awt.Dimension(700, 500));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -390,8 +393,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         });
         tipOfTheDayScrollPane.setViewportView(tipOfTheDayEditorPane);
 
+        tipOfTheDayLayeredPane.add(tipOfTheDayScrollPane);
         tipOfTheDayScrollPane.setBounds(0, 2, 210, 260);
-        tipOfTheDayLayeredPane.add(tipOfTheDayScrollPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         closeJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/close_grey.png"))); // NOI18N
         closeJButton.setToolTipText("Close");
@@ -413,8 +416,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 closeJButtonActionPerformed(evt);
             }
         });
+        tipOfTheDayLayeredPane.add(closeJButton);
         closeJButton.setBounds(170, 0, 40, 33);
-        tipOfTheDayLayeredPane.add(closeJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        tipOfTheDayLayeredPane.setLayer(closeJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         nextJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/next_grey.png"))); // NOI18N
         nextJButton.setToolTipText("Next Tip");
@@ -436,8 +440,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 nextJButtonActionPerformed(evt);
             }
         });
+        tipOfTheDayLayeredPane.add(nextJButton);
         nextJButton.setBounds(170, 230, 40, 33);
-        tipOfTheDayLayeredPane.add(nextJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        tipOfTheDayLayeredPane.setLayer(nextJButton, javax.swing.JLayeredPane.POPUP_LAYER);
 
         javax.swing.GroupLayout tipOfTheDayJPanelLayout = new javax.swing.GroupLayout(tipOfTheDayJPanel);
         tipOfTheDayJPanel.setLayout(tipOfTheDayJPanelLayout);
@@ -450,21 +455,19 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             .addComponent(tipOfTheDayLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
 
+        layeredPane.add(tipOfTheDayJPanel);
         tipOfTheDayJPanel.setBounds(610, 200, 210, 270);
-        layeredPane.add(tipOfTheDayJPanel, javax.swing.JLayeredPane.POPUP_LAYER);
+        layeredPane.setLayer(tipOfTheDayJPanel, javax.swing.JLayeredPane.POPUP_LAYER);
 
-        reportEditorPane.setEditable(false);
-        reportEditorPane.setContentType("text/html"); // NOI18N
-        reportEditorPane.setText("<html>\r\n</html>\r\n");
-        reportEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-                reportEditorPaneHyperlinkUpdate(evt);
-            }
-        });
-        reportPaneScrollPane.setViewportView(reportEditorPane);
+        reportTextArea.setEditable(false);
+        reportTextArea.setColumns(20);
+        reportTextArea.setLineWrap(true);
+        reportTextArea.setRows(5);
+        reportTextArea.setWrapStyleWord(true);
+        reportScrollPane.setViewportView(reportTextArea);
 
-        reportPaneScrollPane.setBounds(0, 10, 840, 480);
-        layeredPane.add(reportPaneScrollPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(reportScrollPane);
+        reportScrollPane.setBounds(0, 0, 840, 490);
 
         secondaryProgressBarSplitPane.setBorder(null);
         secondaryProgressBarSplitPane.setDividerLocation(0);
@@ -514,14 +517,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         saveReportLabel.setText("<html><a href=\\\"dummy_link\"><i>Save Report</i></a></html>");
         saveReportLabel.setToolTipText("Save the report to a text file");
         saveReportLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                saveReportLabelMouseReleased(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 saveReportLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 saveReportLabelMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                saveReportLabelMouseReleased(evt);
             }
         });
 
@@ -800,29 +803,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         //peptideShakerGUI.saveUserPreferences();
     }//GEN-LAST:event_closeDialogWhenImportCompletesCheckBoxActionPerformed
 
-    /**
-     * Makes the links active.
-     *
-     * @param evt
-     */
-    private void reportEditorPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_reportEditorPaneHyperlinkUpdate
-        if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.ENTERED.toString())) {
-            setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        } else if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.EXITED.toString())) {
-            setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        } else if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.ACTIVATED.toString())) {
-            if (evt.getDescription().startsWith("#")) {
-                reportEditorPane.scrollToReference(evt.getDescription());
-            } else {
-                this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-                BareBonesBrowserLaunch.openURL(evt.getDescription());
-                this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-            }
-        }
-    }//GEN-LAST:event_reportEditorPaneHyperlinkUpdate
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JCheckBox closeDialogWhenImportCompletesCheckBox;
@@ -832,8 +812,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private javax.swing.JButton okButton;
     private javax.swing.JPanel processProgressPanel;
     private javax.swing.JProgressBar progressBar;
-    private javax.swing.JEditorPane reportEditorPane;
-    private javax.swing.JScrollPane reportPaneScrollPane;
+    private javax.swing.JScrollPane reportScrollPane;
+    private javax.swing.JTextArea reportTextArea;
     private javax.swing.JLabel saveReportLabel;
     private javax.swing.JProgressBar secondaryJProgressBar;
     private javax.swing.JSplitPane secondaryProgressBarSplitPane;
@@ -913,50 +893,34 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     @Override
     public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
 
-        String reportWithoutHtml = getReportWithoutHtml();
-
         if (includeDate) {
             Date date = new Date();
             if (addNewLine) {
-                reportEditorPane.setText("<html>" + reportWithoutHtml + date + tabHtml + report + "<br></html>");
+                reportTextArea.append(date + tabNonHtml + report + System.getProperty("line.separator"));
             } else {
-                reportEditorPane.setText("<html>" + reportWithoutHtml + date + tabHtml + report + "</html>");
+                reportTextArea.append(date + tabNonHtml + report);
             }
         } else {
             if (addNewLine) {
-                reportEditorPane.setText("<html>" + reportWithoutHtml + report + "<br></html>");
+                reportTextArea.append(report + System.getProperty("line.separator"));
             } else {
-                reportEditorPane.setText("<html>" + reportWithoutHtml + report + "</html>");
+                reportTextArea.append(report);
             }
         }
-
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
     }
 
     /**
-     * Append two tabs to the report. No new line.
+     * Append tabs to the report. No new line.
      */
     public synchronized void appendReportNewLineNoDate() {
-        reportEditorPane.setText("<html>" + getReportWithoutHtml() + tabHtml + "</html>");
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
+        reportTextArea.append(tabNonHtml);
     }
 
     /**
      * Append a new line to the report.
      */
     public synchronized void appendReportEndLine() {
-        reportEditorPane.setText("<html>" + getReportWithoutHtml() + "<br>" + "</html>");
-        reportEditorPane.setCaretPosition(reportEditorPane.getDocument().getLength() - 1);
-    }
-
-    /**
-     * Returns the actual report without any HTML tags.
-     *
-     * @return the actual report without any HTML tags
-     */
-    private String getReportWithoutHtml() {
-        String fullReport = reportEditorPane.getText();
-        return fullReport.substring(fullReport.indexOf("<body>") + "<body>".length(), fullReport.lastIndexOf("</body>"));
+        reportTextArea.append(System.getProperty("line.separator"));
     }
 
     /**
@@ -1152,19 +1116,18 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             // Disregard. It's not so bad if we cannot report this.
         }
 
-        // Write the file header.
-        output.append("# ------------------------------------------------------------------<br>"
-                + "# " + toolName + " " + toolVersion + " Report File<br>"
-                + "#<br>"
-                + "# Originally saved by: " + System.getProperty("user.name") + host + "<br>"
-                + "#                  on: " + sdf.format(new Date()) + "<br>");
-
+        // Write the file header.        
+        output.append("# ------------------------------------------------------------------" + System.getProperty("line.separator")
+                + "# " + toolName + " " + toolVersion + " Report File" + System.getProperty("line.separator")
+                + "#" + System.getProperty("line.separator")
+                + "# Originally saved by: " + System.getProperty("user.name") + host + System.getProperty("line.separator")
+                + "#                  on: " + sdf.format(new Date()) + System.getProperty("line.separator"));
         if (aFile != null) {
-            output.append("#                  as: " + aFile.getName() + "<br>");
+            output.append("#                  as: " + aFile.getName() + System.getProperty("line.separator"));
         }
 
-        output.append("# ------------------------------------------------------------------<br><br><br>");
-        output.append(getReportWithoutHtml());
+        output.append("# ------------------------------------------------------------------" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+        output.append(reportTextArea.getText());
 
         return output.toString();
     }

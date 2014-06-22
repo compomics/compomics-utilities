@@ -931,9 +931,9 @@ public class PtmDialog extends javax.swing.JDialog {
                 cvTermOk = false;
 
                 int option = JOptionPane.showConfirmDialog(this,
-                        "Note that adding CV term mapping is strongly recommended. This\n"
+                        "Adding a controlled vocabulary mapping is strongly recommended. This\n"
                         + "is for example mandatory when exporting the data to mzIdentML.\n\n"
-                        + "Continue without adding a CV term?", "Modification CV Terms",
+                        + "Continue without such a mapping?", "Modification Controlled Vocabulary",
                         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (option != JOptionPane.YES_OPTION) {

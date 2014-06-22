@@ -1148,8 +1148,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         HashMap<String, Double> result = new HashMap<String, Double>();
         for (CvParam cvParam : spectrumIdentItem.getCvParam()) {
             String accession = cvParam.getAccession();
-            Double eValue = new Double(cvParam.getValue());
-            result.put(accession, eValue);
+            if (cvParam.getValue() != null) {
+                Double eValue = new Double(cvParam.getValue());
+                result.put(accession, eValue);
+            }
         }
         return result;
     }

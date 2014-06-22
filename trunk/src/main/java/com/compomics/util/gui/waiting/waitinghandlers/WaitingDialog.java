@@ -645,13 +645,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(File myFile) {
-                return myFile.getName().toLowerCase().endsWith("html")
+                return myFile.getName().toLowerCase().endsWith("txt")
                         || myFile.isDirectory();
             }
 
             @Override
             public String getDescription() {
-                return "Supported formats: html (.html)";
+                return "Supported formats: txt (.txt)";
             }
         };
 
@@ -939,15 +939,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private void saveReport(File aFile) {
 
-        String report = "<html>" + getReport(aFile) + "</html>";
+        String report = getReport(aFile);
 
         BufferedWriter bw = null;
 
         try {
             String filePath = aFile.getAbsolutePath();
 
-            if (!filePath.endsWith(".html")) {
-                filePath += ".html";
+            if (!filePath.endsWith(".txt")) {
+                filePath += ".txt";
             }
 
             bw = new BufferedWriter(new FileWriter(filePath));

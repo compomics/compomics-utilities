@@ -25,7 +25,7 @@ public class ObjectsDB implements Serializable {
      */
     private String dbName;
     /**
-     * The path to the database
+     * The path to the database.
      */
     private String path;
     /**
@@ -129,7 +129,7 @@ public class ObjectsDB implements Serializable {
     private boolean useSQLite = false;
     /**
      * The identifier used to register the derby connection in the DerbyUtil
-     * class
+     * class.
      */
     public static final String derbyConnectionID = "objectsDB";
 
@@ -1029,7 +1029,7 @@ public class ObjectsDB implements Serializable {
         objectsCache = null;
 
         boolean connectionActive = path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
-        
+
         if (dbConnection != null && connectionActive) {
             dbConnection.close();
             DerbyUtil.removeActiveConnection(derbyConnectionID, path);
@@ -1079,9 +1079,9 @@ public class ObjectsDB implements Serializable {
 
             close();
 
-                        DerbyUtil.closeConnection();
+            DerbyUtil.closeConnection();
             boolean deleted = Util.deleteDir(dbFolder);
-                        //TODO: Restore connections?
+            //TODO: Restore connections?
 
             if (!deleted) {
                 System.out.println("Failed to delete db folder: " + dbFolder.getPath());

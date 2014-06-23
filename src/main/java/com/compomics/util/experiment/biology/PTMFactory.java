@@ -1787,6 +1787,8 @@ public class PTMFactory implements Serializable {
      */
     private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
 
+        // @TODO: check for more unmapped ptms! everything used in getDefaultCVTerm in PtmToPrideMap should be mapped back as well!!
+        
         if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")
                 || pridePtmName.equalsIgnoreCase("S-carboxamidomethyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("iodoacetamide - site C")
@@ -1855,9 +1857,11 @@ public class PTMFactory implements Serializable {
             return "o18 on peptide n-term";
         } else if (pridePtmName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
             return "heavy lysine - 2h4";
-        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")) {
+        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")
+                || pridePtmName.equalsIgnoreCase("Ammonia-loss")) { 
             return "pyro-glu from n-term q";
-        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")) {
+        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")
+                || pridePtmName.equalsIgnoreCase("Glu->pyro-Glu")) {
             return "pyro-glu from n-term e";
         } else if (pridePtmName.equalsIgnoreCase("3-hydroxy-L-proline")) {
             return "hydroxylation of p";

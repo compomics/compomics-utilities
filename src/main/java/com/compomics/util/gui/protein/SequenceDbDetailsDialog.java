@@ -10,6 +10,7 @@ import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -299,9 +300,14 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 }
 
                 if (!progressDialog.isRunCanceled() && !sequenceFactory.concatenatedTargetDecoy()) {
+
+                    SequenceDbDetailsDialog.this.setIconImage(normalImange);
+
                     int value = JOptionPane.showConfirmDialog(SequenceDbDetailsDialog.this,
                             "The selected FASTA file does not seem to contain decoy sequences.\n"
                             + "Add decoys?", "Add Decoy Sequences?", JOptionPane.YES_NO_OPTION);
+
+                    SequenceDbDetailsDialog.this.setIconImage(waitingImage);
 
                     if (value == JOptionPane.NO_OPTION) {
                         decoyFlagTxt.setEditable(false);

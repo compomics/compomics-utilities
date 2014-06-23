@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
 import com.compomics.util.experiment.biology.Protein;
@@ -491,7 +492,9 @@ public class ProteinTreeComponentsFactory {
                     }
                     objectsDB.close();
                     if (!upToDate) {
+                        DerbyUtil.closeConnection();
                         Util.deleteDir(folder);
+                        //TODO: Restore connections?
                     }
                 } catch (Exception e) {
                     // Possibly not a tree, skip

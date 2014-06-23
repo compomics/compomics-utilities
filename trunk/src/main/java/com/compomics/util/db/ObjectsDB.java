@@ -25,8 +25,11 @@ public class ObjectsDB implements Serializable {
      */
     private String dbName;
     /**
-     * The connection, shall not be accessed outside this class. Don't be lazy,
-     * implement the dedicated methods here.
+     * The path to the database
+     */
+    private String path;
+    /**
+     * The connection, shall not be accessed outside this class.
      */
     private Connection dbConnection;
     /**
@@ -124,6 +127,11 @@ public class ObjectsDB implements Serializable {
      * If true, SQLite is used as the database, if false Derby is used.
      */
     private boolean useSQLite = false;
+    /**
+     * The identifier used to register the derby connection in the DerbyUtil
+     * class
+     */
+    public static final String derbyConnectionID = "objectsDB";
 
     /**
      * Constructor.
@@ -1020,23 +1028,11 @@ public class ObjectsDB implements Serializable {
 
         objectsCache = null;
 
-        if (dbConnection != null) {
-            dbConnection.close(); // possible sql exception that should be handled better: Cannot close a connection while a transaction is still active...
-        }
-
-        if (useSQLite) {
-            // @TODO: do we need to do anything here??
-        } else {
-            try {
-                // we also need to shut down derby completely to release the file lock in the database folder
-                DriverManager.getConnection("jdbc:derby:;shutdown=true;deregister=false");
-            } catch (SQLException e) {
-                if (e.getMessage().indexOf("Derby system shutdown") == -1) {
-                    e.printStackTrace();
-                } else {
-                    // ignore, normal derby shut down always results in an exception thrown
-                }
-            }
+        boolean connectionActive = path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
+        
+        if (dbConnection != null && connectionActive) {
+            dbConnection.close();
+            DerbyUtil.removeActiveConnection(derbyConnectionID, path);
         }
 
         if (debugSpeed && debugSpeedWriter != null) {
@@ -1076,14 +1072,16 @@ public class ObjectsDB implements Serializable {
             parentFolder.mkdirs();
         }
         File dbFolder = new File(aDbFolder, dbName);
-        String path = dbFolder.getAbsolutePath();
+        path = dbFolder.getAbsolutePath();
 
         // close the old connection and delete the db folder
         if (dbFolder.exists() && deleteOldDatabase) {
 
             close();
 
+                        DerbyUtil.closeConnection();
             boolean deleted = Util.deleteDir(dbFolder);
+                        //TODO: Restore connections?
 
             if (!deleted) {
                 System.out.println("Failed to delete db folder: " + dbFolder.getPath());
@@ -1096,15 +1094,18 @@ public class ObjectsDB implements Serializable {
                 dbConnection = DriverManager.getConnection("jdbc:sqlite:" + path); // @TODO: another instance of SQLite may have already booted the database. We need to check this first?
             } catch (SQLException e) {
                 // try using Derby instead
-                String url = "jdbc:derby:" + path + ";create=true";
-                dbConnection = DriverManager.getConnection(url); // @TODO: another instance of Derby may have already booted the database. We need to check this first?
                 useSQLite = false;
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-        } else {
+        }
+        if (!useSQLite) {
+            if (DerbyUtil.isActiveConnection(path)) {
+                throw new IllegalArgumentException("Impossible to establish a Derby connection in " + path + ", connection to the folder already active.");
+            }
             String url = "jdbc:derby:" + path + ";create=true";
-            dbConnection = DriverManager.getConnection(url); // @TODO: another instance of Derby may have already booted the database. We need to check this first?
+            dbConnection = DriverManager.getConnection(url);
+            DerbyUtil.addActiveConnection(derbyConnectionID, path);
         }
 
         this.objectsCache = objectsCache;

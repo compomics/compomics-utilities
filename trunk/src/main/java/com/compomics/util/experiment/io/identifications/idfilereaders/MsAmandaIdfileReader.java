@@ -176,7 +176,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used
                 String scoreAsText = elements[amandaScoreIndex];
                 double msAmandaScore = Util.readDoubleAsString(scoreAsText);
-                double msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
+                double msAmandaEValue = Math.pow(2, -msAmandaScore); // convert ms amanda score to p
                 int rank = Integer.valueOf(elements[rankIndex]);
                 //String mzAsText = elements[mzIndex]; // not currently used
                 //double mz = Util.readDoubleAsString(mzAsText);

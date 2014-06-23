@@ -267,10 +267,6 @@ public class SequenceFactory {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
         }
 
-        if(accession.equalsIgnoreCase("B8AZT1")) {
-            int bb = 2345;
-        }
-        
         try {
             if (reading) {
                 throw new IllegalStateException("Attempting to read new line before current read operation is completed.");
@@ -301,10 +297,6 @@ public class SequenceFactory {
                 }
             }
             reading = false;
-            
-            if (currentHeader == null || accession == null) {
-                int a = 234;
-            }
             
             return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
 

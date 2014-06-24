@@ -227,7 +227,7 @@ public class ProteinTree {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         tree.clear();
 
         componentsFactory = ProteinTreeComponentsFactory.getInstance();
@@ -589,7 +589,7 @@ public class ProteinTree {
 
             if (protein.getLength() > 0) { // ignore empty protein sequences
 
-                HashMap<String, ArrayList<Integer>> indexesMap = getTagToIndexesMap(protein.getSequence(), tags, enzyme);
+                HashMap<String, ArrayList<Integer>> indexesMap = getTagToIndexesMap(protein.getSequence(), tags, enzyme, waitingHandler);
 
                 for (String tag : indexesMap.keySet()) {
                     ArrayList<Integer> indexes = indexesMap.get(tag);
@@ -600,6 +600,10 @@ public class ProteinTree {
                             tree.put(tag, node);
                         }
                         node.addAccession(accession, indexes);
+                    }
+
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        break;
                     }
                 }
 
@@ -1149,21 +1153,21 @@ public class ProteinTree {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
                         HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
-                            for (int aa : matches.keySet()) {
-                                for (Peptide peptide : matches.get(aa)) {
-                                    HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
-                                    if (proteinToIndexMap == null) {
-                                        proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
-                                        results.put(peptide, proteinToIndexMap);
-                                    }
-                                    ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
-                                    if (peptideIndexes == null) {
-                                        peptideIndexes = new ArrayList<Integer>();
-                                        proteinToIndexMap.put(accession, peptideIndexes);
-                                    }
-                                    peptideIndexes.add(aa);
+                        for (int aa : matches.keySet()) {
+                            for (Peptide peptide : matches.get(aa)) {
+                                HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
+                                if (proteinToIndexMap == null) {
+                                    proteinToIndexMap = new HashMap<String, ArrayList<Integer>>();
+                                    results.put(peptide, proteinToIndexMap);
                                 }
+                                ArrayList<Integer> peptideIndexes = proteinToIndexMap.get(accession);
+                                if (peptideIndexes == null) {
+                                    peptideIndexes = new ArrayList<Integer>();
+                                    proteinToIndexMap.put(accession, peptideIndexes);
+                                }
+                                peptideIndexes.add(aa);
                             }
+                        }
                     }
                 }
             }
@@ -1705,9 +1709,11 @@ public class ProteinTree {
      * @param sequence the sequence of interest
      * @param tags the tags of interest
      * @param enzyme the enzyme restriction
+     * @param waitingHandler waiting handler
      * @return all the positions of the given tags
      */
-    private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme,
+            WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         HashMap<String, ArrayList<Integer>> tagToIndexesMap = new HashMap<String, ArrayList<Integer>>(tags.size());
         Integer initialTagSize = componentsFactory.getInitialSize();
@@ -1734,6 +1740,10 @@ public class ProteinTree {
                     tempIndexes.add(i);
                 }
             }
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                break;
+            }
         }
 
         return tagToIndexesMap;
@@ -1751,13 +1761,13 @@ public class ProteinTree {
      */
     public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         Integer length = proteinLengthsCache.get(accession);
-            if (length == null) {
-                Protein protein = sequenceFactory.getProtein(accession);
-                if (protein != null) {
+        if (length == null) {
+            Protein protein = sequenceFactory.getProtein(accession);
+            if (protein != null) {
                 length = protein.getLength();
-                } else {
-                    throw new IllegalArgumentException("Length of protein " + accession + " not found.");
-                }
+            } else {
+                throw new IllegalArgumentException("Length of protein " + accession + " not found.");
+            }
             proteinLengthsCache.put(accession, length);
         }
         return length;
@@ -1826,7 +1836,7 @@ public class ProteinTree {
                         return;
                     }
 
-                    indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme));
+                    indexes.put(protein.getAccession(), getTagToIndexesMap(protein.getSequence(), tags, enzyme, waitingHandler));
 
                     if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                         waitingHandler.increaseSecondaryProgressCounter();

@@ -10,7 +10,6 @@ import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -1198,7 +1198,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                     if (value == JOptionPane.NO_OPTION) {
                         userSelectFile = true;
-                    } else if (value == JOptionPane.CANCEL_OPTION) {
+                    } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
                         return;
                     }
 

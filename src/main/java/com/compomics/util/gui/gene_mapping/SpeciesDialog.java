@@ -481,7 +481,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                         "The gene and GO annotations are not downloaded for the selected species.\n"
                         + "Download now?", "Gene Annotation Missing", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                if (option == JOptionPane.CANCEL_OPTION) {
+                if (option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION) {
                     // cancel the closing of the dialog
                 } else if (option == JOptionPane.YES_OPTION) {
                     downloadMappings();

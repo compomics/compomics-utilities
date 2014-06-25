@@ -182,16 +182,20 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         }
 
         if (probabilisticScoreCmb.getSelectedIndex() == 1) {
-            int outcome = JOptionPane.showConfirmDialog(this, "Disabling the probabilistic score will impair PTM localization and thus distinction between peptides. See help for more details. Continue with this setting?",
+            int outcome = JOptionPane.showConfirmDialog(this,
+                    "Disabling the probabilistic score will impair PTM localization and thus distinction\n"
+                    + "between peptides. See help for more details. Continue with this setting?",
                     "Warning", JOptionPane.WARNING_MESSAGE);
-            if (outcome == JOptionPane.CANCEL_OPTION) {
+            if (outcome == JOptionPane.CANCEL_OPTION || outcome == JOptionPane.CLOSED_OPTION) {
                 return false;
             }
         }
         if (probabilisticScoreCmb.getSelectedIndex() == 0 && neutralLossesCmb.getSelectedIndex() == 0) {
-            int outcome = JOptionPane.showConfirmDialog(this, "In our experience probabilistic scores perform poorely when accounting for neutral losses. See help for more details. Continue with this setting?",
+            int outcome = JOptionPane.showConfirmDialog(this,
+                    "In our experience probabilistic scores perform poorely when accounting for\n"
+                    + "neutral losses. See help for more details. Continue with this setting?",
                     "Warning", JOptionPane.WARNING_MESSAGE);
-            if (outcome == JOptionPane.CANCEL_OPTION) {
+            if (outcome == JOptionPane.CANCEL_OPTION || outcome == JOptionPane.CLOSED_OPTION) {
                 return false;
             }
         }

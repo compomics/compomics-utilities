@@ -75,7 +75,7 @@ public class Advocate {
     /**
      * The MyriMatch search engine, old school peptide mass fingerprinting.
      */
-    public static final Advocate myriMatch = new Advocate(13, "MyriMatch", AdvocateType.search_engine);
+    public static final Advocate myriMatch = new Advocate(13, "MyriMatch", AdvocateType.search_engine, new Color(241, 226, 204));
     /**
      * The PEAKS sequencing algorithm.
      */

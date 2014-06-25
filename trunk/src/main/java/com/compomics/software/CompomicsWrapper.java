@@ -515,7 +515,7 @@ public class CompomicsWrapper {
                         JOptionPane.YES_NO_CANCEL_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     update = true;
-                } else if (option == JOptionPane.CANCEL_OPTION) {
+                } else if (option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION) {
                     if (exitJavaOnCancel) {
                         System.exit(0);
                     }
@@ -722,7 +722,7 @@ public class CompomicsWrapper {
                         if (closeToolWhenUpgrading) {
                             System.exit(0);
                         }
-                    } else if (option == JOptionPane.CANCEL_OPTION) {
+                    } else if (option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION) {
                         if (closeToolWhenUpgrading) {
                             System.exit(0);
                         }

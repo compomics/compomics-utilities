@@ -41,7 +41,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
      * false positives are generated.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */
-    private int maxPeakCount = 400;
+    private int maxPeakCount = 100;
     /**
      * Before scoring any candidates, experimental spectra have their peaks
      * stratified into the number of intensity classes specified by this

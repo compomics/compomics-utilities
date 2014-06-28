@@ -392,6 +392,8 @@ public class Advocate {
             return "24909410";
         } else if (this == msgf) {
             return "20829449"; // @TODO: update to the real ms-gf+ citation when available
+        } else if (this == myriMatch) {
+            return "17269722 ";
         } else {
             return null;
         }

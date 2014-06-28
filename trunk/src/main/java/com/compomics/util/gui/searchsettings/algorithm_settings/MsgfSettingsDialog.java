@@ -74,8 +74,8 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         if (msgfParameters.getMaxPeptideLength() != null) {
             maxPepLengthTxt.setText(msgfParameters.getMaxPeptideLength() + "");
         }
-        if (msgfParameters.getNumberOfSpectrumMarches() != null) {
-            numberMatchesTxt.setText(msgfParameters.getNumberOfSpectrumMarches() + "");
+        if (msgfParameters.getNumberOfSpectrumMatches() != null) {
+            numberMatchesTxt.setText(msgfParameters.getNumberOfSpectrumMatches() + "");
         }
 
         if (msgfParameters.isAdditionalOutput()) {

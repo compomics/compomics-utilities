@@ -102,7 +102,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
             if (maxPeptideLength != msgfParameters.getMaxPeptideLength()) {
                 return false;
             }
-            if (numberOfSpectrumMarches != msgfParameters.getNumberOfSpectrumMarches()) {
+            if (numberOfSpectrumMarches != msgfParameters.getNumberOfSpectrumMatches()) {
                 return false;
             }
             if (additionalOutput != msgfParameters.isAdditionalOutput()) {
@@ -296,8 +296,18 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      * Returns the maximum number of spectrum matches.
      *
      * @return the numberOfSpectrumMarches
+     * @deprecated use getNumberOfSpectrumMatches (without the typo) instead
      */
     public Integer getNumberOfSpectrumMarches() {
+        return numberOfSpectrumMarches;
+    }
+
+    /**
+     * Returns the maximum number of spectrum matches.
+     *
+     * @return the numberOfSpectrumMarches
+     */
+    public Integer getNumberOfSpectrumMatches() {
         return numberOfSpectrumMarches;
     }
 
@@ -381,7 +391,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     public void setNumberTolerableTermini(Integer numberTolerableTermini) {
         this.numberTolerableTermini = numberTolerableTermini;
     }
-    
+
     /**
      * Returns the maximum number of PTMs per peptide.
      *

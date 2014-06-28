@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
@@ -972,6 +973,12 @@ public class SearchParameters implements Serializable {
         if (result.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) == null) {
             MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
             result.setIdentificationAlgorithmParameter(msAmandaParameters.getAlgorithm().getIndex(), msAmandaParameters);
+        }
+
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()) == null) {
+            MyriMatchParameters myriMatchParameters = new MyriMatchParameters();
+            result.setIdentificationAlgorithmParameter(myriMatchParameters.getAlgorithm().getIndex(), myriMatchParameters);
         }
 
         // compatibility check

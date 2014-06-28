@@ -131,9 +131,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         fixedModifications = new ArrayList<SearchModification>();
         SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
         ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
-        for (SearchModification tempMod : modifications.getSearchModification()) {
-            if (tempMod.isFixedMod()) {
-                fixedModifications.add(tempMod);
+        if (modifications != null) {
+            for (SearchModification tempMod : modifications.getSearchModification()) {
+                if (tempMod.isFixedMod()) {
+                    fixedModifications.add(tempMod);
+                }
             }
         }
     }

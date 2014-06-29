@@ -176,7 +176,8 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Convenience method indicating whether a match is decoy based on the match
-     * key. 
+     * key. A match is considered decoy if at least one of its accessions is decoy.
+     * 
      * Note: the sequence database should be loaded in the sequence factory
      *
      * @param key the match key

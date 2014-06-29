@@ -187,7 +187,7 @@ public class SpectrumFactory {
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
 
-            File indexFile = new File(spectrumFile.getParent(), fileName + ".cui");
+            File indexFile = new File(spectrumFile.getParent(), getIndexName(fileName));
             MgfIndex mgfIndex = null;
 
             if (indexFile.exists()) {
@@ -232,6 +232,17 @@ public class SpectrumFactory {
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
+    }
+    
+    /**
+     * Returns the name of an index file based on the given spectrum file name.
+     * 
+     * @param spectrumFileName the name of the spectrum file
+     *
+     * @return the corresponding name of the index file
+     */
+    public static String getIndexName(String spectrumFileName) {
+        return spectrumFileName + ".cui";
     }
 
     /**
@@ -864,7 +875,7 @@ public class SpectrumFactory {
      * while writing the file
      */
     public void writeIndex(MgfIndex mgfIndex, File directory) throws IOException {
-        File indexFile = new File(directory, mgfIndex.getFileName() + ".cui");
+        File indexFile = new File(directory, getIndexName(mgfIndex.getFileName()));
         SerializationUtils.writeObject(mgfIndex, indexFile);
     }
 

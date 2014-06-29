@@ -678,8 +678,19 @@ public class SequenceFactory {
      */
     private void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
-        File destinationFile = new File(directory, fastaIndex.getFileName() + ".cui");
+        File destinationFile = new File(directory, getIndexName(fastaIndex.getFileName()));
         SerializationUtils.writeObject(fastaIndex, destinationFile);
+    }
+    
+    /**
+     * Returns the name of the fasta index corresponding to the given fasta file name.
+     * 
+     * @param fastaName the name of the fasta file
+     * 
+     * @return the name of the index
+     */
+    public static String getIndexName(String fastaName) {
+        return fastaName + ".cui";
     }
 
     /**

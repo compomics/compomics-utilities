@@ -54,7 +54,15 @@ public class ExportScheme implements Serializable {
     /**
      * Indicates whether the title of every section shall be included.
      */
-    private boolean includeSectionTitles = true;
+    private boolean includeSectionTitles = false;
+    /**
+     * Indicates whether only validated matches should be included
+     */
+    private Boolean validatedOnly = true;
+    /**
+     * Indicates whether decoy matches should be included
+     */
+    private Boolean includeDecoy = false;
 
     /**
      * Constructor.
@@ -74,9 +82,11 @@ public class ExportScheme implements Serializable {
      * @param sectionFamily the section family. If null the sections will be
      * automatically separated based on the feature type. Note, be sure that all
      * features are implemented for this section.
+     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param includeDecoys Indicates whether decoy matches should be included
      */
     private ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, String mainTitle) {
+            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys, String mainTitle) {
         this.sectionList = sectionList;
         exportFeaturesMap.putAll(exportFeatures);
         this.separator = separator;
@@ -87,6 +97,8 @@ public class ExportScheme implements Serializable {
         this.mainTitle = mainTitle;
         this.name = name;
         this.editable = editable;
+        this.validatedOnly = validatedOnly;
+        this.includeDecoy = includeDecoys;
     }
 
     /**
@@ -103,10 +115,12 @@ public class ExportScheme implements Serializable {
      * @param includeSectionTitles indicates whether section titles shall be
      * used
      * @param mainTitle the title of the report
+     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, String mainTitle) {
-        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, mainTitle);
+            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys, String mainTitle) {
+        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, mainTitle);
     }
 
     /**
@@ -123,10 +137,12 @@ public class ExportScheme implements Serializable {
      * @param separationLines the number of lines to use for section separation
      * @param includeSectionTitles indicates whether section titles shall be
      * used
+     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles) {
-        this(name, editable, sectionList, exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, null);
+            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys) {
+        this(name, editable, sectionList, exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, null);
     }
 
     /**
@@ -143,10 +159,12 @@ public class ExportScheme implements Serializable {
      * @param separationLines the number of lines to use for section separation
      * @param includeSectionTitles indicates whether section titles shall be
      * used
+     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles) {
-        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, null);
+            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys) {
+        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, null);
     }
 
     /**
@@ -294,4 +312,42 @@ public class ExportScheme implements Serializable {
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
+
+    /**
+     * Indicates whether only validated results should be exported.
+     * 
+     * @return whether only validated results should be exported
+     */
+    public Boolean isValidatedOnly() {
+        return validatedOnly;
+    }
+
+    /**
+     * Sets whether only validated results should be exported.
+     * 
+     * @param validatedOnly whether only validated results should be exported
+     */
+    public void setValidatedOnly(Boolean validatedOnly) {
+        this.validatedOnly = validatedOnly;
+    }
+
+    /**
+     * Indicates whether decoy hits should be included.
+     * 
+     * @return whether decoy hits should be included
+     */
+    public Boolean isIncludeDecoy() {
+        return includeDecoy;
+    }
+
+    /**
+     * Sets whether decoy hits should be included.
+     * 
+     * @param includeDecoy whether decoy hits should be included
+     */
+    public void setIncludeDecoy(Boolean includeDecoy) {
+        this.includeDecoy = includeDecoy;
+    }
+    
+    
 }

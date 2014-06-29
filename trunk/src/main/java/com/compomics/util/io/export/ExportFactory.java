@@ -44,8 +44,9 @@ public interface ExportFactory extends Serializable {
      * Returns the export features implemented for the given section.
      *
      * @param sectionName the name of the section of interest
+     * @param includeSubFeatures indicates whether sub-features should be included
      *
      * @return a list of export features
      */
-    public ArrayList<ExportFeature> getExportFeatures(String sectionName);
+    public ArrayList<ExportFeature> getExportFeatures(String sectionName, boolean includeSubFeatures);
 }

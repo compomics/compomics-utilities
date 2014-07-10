@@ -1,4 +1,4 @@
-package com.compomics.util.io;
+package com.compomics.util.io.compression;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
@@ -18,7 +18,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 public class TarUtils {
 
     /**
-     * Tar a given folder in a file.
+     * Tar a given folder to a file.
      *
      * @param folder the original folder to tar
      * @param destinationFile the destination file
@@ -204,8 +204,10 @@ public class TarUtils {
                             entryFolder = (new File(destinationFolder, entryName)).getParentFile();
                         }
                         File destinationFile = new File(entryFolder, entryFile.getName());
-
-                        if (entryFolder.exists() || entryFolder.mkdirs()) {
+                        
+                        if (archiveEntry.isDirectory()) {
+                            destinationFile.mkdirs();
+                        } else if (entryFolder.exists() || entryFolder.mkdirs()) {
                             FileOutputStream fos = new FileOutputStream(destinationFile);
                             try {
                                 BufferedOutputStream bos = new BufferedOutputStream(fos);

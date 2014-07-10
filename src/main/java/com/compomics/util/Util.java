@@ -191,7 +191,12 @@ public class Util {
      * @return the file name without extension
      */
     public static String removeExtension(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf("."));
+        int poinIndex = fileName.lastIndexOf(".");
+        if (poinIndex > -1) {
+            return fileName.substring(0, poinIndex);
+        } else {
+            return fileName;
+        }
     }
 
     /**

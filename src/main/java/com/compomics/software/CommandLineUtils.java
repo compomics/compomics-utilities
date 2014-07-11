@@ -136,7 +136,7 @@ public class CommandLineUtils {
         ArrayList<String> results = new ArrayList<String>();
 
         // empty input, return the empty list
-        if (cliInput.trim().length() == 0) {
+        if (cliInput == null || cliInput.trim().length() == 0) {
             return results;
         }
 

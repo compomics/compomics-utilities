@@ -22,7 +22,7 @@ public class TempFilesManager {
      * 
      * @param tempFolder the temp folder to register
      */
-    public static void addTempFolder(File tempFolder) {
+    public static void registerTempFolder(File tempFolder) {
         tempFolders.add(tempFolder);
     }
     

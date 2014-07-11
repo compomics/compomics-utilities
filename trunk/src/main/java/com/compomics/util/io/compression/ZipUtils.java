@@ -86,11 +86,12 @@ public class ZipUtils {
      */
     public static void addToZip(File file, String subDirectory, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
         if (file.isDirectory()) {
+            String directory = subDirectory;
             if (!subDirectory.equals("")) {
-                subDirectory += "/";
+                directory += "/";
             }
-            subDirectory += file.getName();
-            addFolderToZip(subDirectory, out);
+            directory += file.getName();
+            addFolderToZip(directory, out);
             for (File subFile : file.listFiles()) {
                 addToZip(subFile, subDirectory, out, waitingHandler);
             }
@@ -137,7 +138,12 @@ public class ZipUtils {
         try {
             BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
             try {
-                ZipEntry entry = new ZipEntry(subDirectory + "/" + file.getName());
+                String entryName = subDirectory;
+                if (!subDirectory.equals("")) {
+                    entryName += "/";
+                }
+                entryName += file.getName();
+                ZipEntry entry = new ZipEntry(entryName);
                 out.putNextEntry(entry);
                 while ((count = origin.read(data, 0, BUFFER)) != -1) {
 

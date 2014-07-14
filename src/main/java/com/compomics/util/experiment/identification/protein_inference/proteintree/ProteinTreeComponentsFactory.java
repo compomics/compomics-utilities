@@ -457,6 +457,15 @@ public class ProteinTreeComponentsFactory {
     public static void setDefaultDbFolderPath(String defaultDbFolderPath) {
         ProteinTreeComponentsFactory.defaultDbFolderPath = defaultDbFolderPath;
     }
+    
+    /**
+     * Returns the cache used to store the nodes.
+     * 
+     * @return the cache used to store the nodes
+     */
+    public ObjectsCache getCache() {
+        return objectsCache;
+    }
 
     /**
      * Deletes the outdated trees.

@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
+import java.util.ArrayList;
 
 /**
  * This class represent a tag assumption made by an identification algorithm
@@ -79,6 +80,10 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
+    }
+    
+    public ArrayList<TagAssumption> getPossibleChargeAssumptions() {
+        return new ArrayList<TagAssumption>();
     }
 
     @Override

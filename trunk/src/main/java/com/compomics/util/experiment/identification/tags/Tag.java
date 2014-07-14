@@ -474,19 +474,45 @@ public class Tag extends ExperimentObject {
     }
 
     /**
-     * Indicates whether this tag is the same as another tag.
+     * Indicates whether this tag is the same as another tag. Note: this method accounts for modification localization.
      *
      * @param anotherTag another tag
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * 
      * @return a boolean indicating whether the tag is the same as another
      */
-    public boolean isSameAs(Tag anotherTag) {
+    public boolean isSameAs(Tag anotherTag, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         if (content.size() != anotherTag.getContent().size()) {
             return false;
         }
         for (int i = 0; i < content.size(); i++) {
             TagComponent component1 = content.get(i);
             TagComponent component2 = anotherTag.getContent().get(i);
-            if (component1.isSameAs(component2)) {
+            if (!component1.isSameAs(component2, matchingType, massTolerance)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Indicates whether this tag is the same as another tag without accounting for modification localization.
+     *
+     * @param anotherTag another tag
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * 
+     * @return a boolean indicating whether the tag is the same as another
+     */
+    public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        if (content.size() != anotherTag.getContent().size()) {
+            return false;
+        }
+        for (int i = 0; i < content.size(); i++) {
+            TagComponent component1 = content.get(i);
+            TagComponent component2 = anotherTag.getContent().get(i);
+            if (!component1.isSameSequenceAndModificationStatusAs(component2, matchingType, massTolerance)) {
                 return false;
             }
         }

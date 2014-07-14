@@ -81,6 +81,10 @@ public class ProteinTree {
      */
     private int cacheSize = 5000;
     /**
+     * Indicates whether the cache should be used
+     */
+    private boolean useCache = false;
+    /**
      * Cache of the last queried peptides.
      */
     private HashMap<String, HashMap<String, HashMap<String, ArrayList<Integer>>>> lastQueriedPeptidesCache;
@@ -991,12 +995,17 @@ public class ProteinTree {
             massToleranceInCache = massTolerance;
         }
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = lastQueriedPeptidesCache.get(peptideSequence);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = null;
+        if (useCache) {
+        result = lastQueriedPeptidesCache.get(peptideSequence);
+        }
 
         if (result == null) {
+            if (useCache) {
             result = lastSlowQueriedPeptidesCache.get(peptideSequence);
+            }
             if (result == null) {
-                if (sequenceFactory.isDefaultReversed()) {
+                if (sequenceFactory.isDefaultReversed() && useCache) {
                     String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
                     result = lastQueriedPeptidesCache.get(reversedSequence);
                     if (result == null) {
@@ -1067,7 +1076,7 @@ public class ProteinTree {
                     }
                 }
 
-                if (!reversed) {
+                if (!reversed && useCache) {
                     long timeEnd = System.currentTimeMillis();
                     long queryTime = timeEnd - timeStart;
 

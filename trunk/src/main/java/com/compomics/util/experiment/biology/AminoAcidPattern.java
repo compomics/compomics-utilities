@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
+import static com.compomics.util.experiment.biology.Peptide.getModificationFamily;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -817,7 +818,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acid sequence
      */
     public boolean matches(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
+        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
     }
 
     /**
@@ -831,7 +832,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidPattern, matchingType, massTolerance) >= 0;
+        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, matchingType, massTolerance) >= 0;
     }
 
     /**
@@ -947,15 +948,96 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether another AminoAcidPattern targets the same pattern.
+     * Indicates whether another AminoAcidPattern targets the same pattern. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
      *
      * @param anotherPattern the other AminoAcidPattern
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameAs(AminoAcidPattern anotherPattern) {
-        if (!anotherPattern.getAsStringPattern().pattern().equalsIgnoreCase(getAsStringPattern().pattern())) {
+    public boolean isSameAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        
+        if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
             return false;
+        }
+        
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        for (int i = 1; i <= length(); i++) {
+            ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
+            ArrayList<ModificationMatch> mods2 = anotherPattern.getModificationsAt(i);
+            if (mods1.size() != mods2.size()) {
+                return false;
+            }
+            for (int j = 0; j < mods1.size(); j++) {
+                ModificationMatch modificationMatch1 = mods1.get(j);
+                ModificationMatch modificationMatch2 = mods2.get(j);
+                PTM ptm1 = ptmFactory.getPTM(modificationMatch1.getTheoreticPtm());
+                PTM ptm2 = ptmFactory.getPTM(modificationMatch2.getTheoreticPtm());
+                if (ptm1 != ptm2) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Indicates whether another AminoAcidPattern targets the same pattern
+     * without accounting for PTM localization. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     *
+     * @param anotherPattern the other AminoAcidPattern
+     * @param matchingType the amino acid matching type
+     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     *
+     * @return true if the other AminoAcidPattern targets the same pattern
+     */
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        
+        if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
+            return false;
+        }
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
+        for (int i = 1; i <= length(); i++) {
+            ArrayList<ModificationMatch> modifications = getModificationsAt(i);
+            for (ModificationMatch modMatch : modifications) {
+                PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
+                double mass = ptm.getMass();
+                Integer occurrence = masses1.get(mass);
+                if (occurrence == null) {
+                    masses1.put(mass, 1);
+                } else {
+                    masses1.put(mass, occurrence + 1);
+                }
+            }
+        }
+
+        HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
+        for (int i = 1; i <= length(); i++) {
+            ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
+            for (ModificationMatch modMatch : modifications) {
+                PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
+                double mass = ptm.getMass();
+                Integer occurrence = masses2.get(mass);
+                if (occurrence == null) {
+                    masses2.put(mass, 1);
+                } else {
+                    masses2.put(mass, occurrence + 1);
+                }
+            }
+        }
+
+        if (masses1.size() != masses2.size()) {
+            return false;
+        }
+        for (Double mass : masses1.keySet()) {
+            Integer occurrence1 = masses1.get(mass);
+            Integer occurrence2 = masses2.get(mass);
+            if (occurrence2 == null || occurrence2 != occurrence1) {
+                return false;
+            }
         }
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
@@ -1675,12 +1757,22 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent) {
+    public boolean isSameAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
         if (!(anotherCompontent instanceof AminoAcidPattern)) {
             return false;
         } else {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
-            return isSameAs(aminoAcidPattern);
+            return isSameAs(aminoAcidPattern, matchingType, massTolerance);
+        }
+    }
+
+    @Override
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+        if (!(anotherCompontent instanceof AminoAcidPattern)) {
+            return false;
+        } else {
+            AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
+            return isSameSequenceAndModificationStatusAs(aminoAcidPattern, matchingType, massTolerance);
         }
     }
 }

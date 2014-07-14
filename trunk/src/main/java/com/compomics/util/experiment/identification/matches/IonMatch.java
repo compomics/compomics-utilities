@@ -111,7 +111,7 @@ public class IonMatch extends ExperimentObject {
     /**
      * Returns the distance in number of neutrons between the experimental mass
      * and theoretic mass, image of the isotope number: 1 typically indicates
-     * C13 isotope.
+     * C13 isotope. Up to 4 isotopes are allowed.
      *
      * @return the distance in number of neutrons between the experimental mass
      * and theoretic mass
@@ -119,7 +119,7 @@ public class IonMatch extends ExperimentObject {
     public int getIsotopeNumber() {
         double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
-        return Math.max((int) Math.round(result), 0);
+        return Math.min(Math.max((int) Math.round(result), 0), 4);
     }
 
     /**

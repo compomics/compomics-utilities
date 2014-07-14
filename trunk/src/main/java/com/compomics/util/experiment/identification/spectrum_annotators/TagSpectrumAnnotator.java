@@ -49,7 +49,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param precursorCharge the new precursor charge
      */
     public void setTag(Tag newTag, int precursorCharge) {
-        if (this.tag == null || !this.tag.isSameAs(newTag) || this.precursorCharge != precursorCharge) {
+        if (this.tag == null || !this.tag.isSameAs(newTag,AminoAcidPattern.MatchingType.string, null) || this.precursorCharge != precursorCharge) {
             this.tag = newTag;
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(newTag);

@@ -1,10 +1,14 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represent a tag assumption made by an identification algorithm
@@ -81,9 +85,52 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge.value * ElementaryIon.proton.getTheoreticMass()) / identificationCharge.value;
     }
+
+    /**
+     * Computes the possible tag assumptions which can be obtained from this one by accounting for other charges and isotopes.
+     * 
+     * @param forwardIon indicates whether the tag is based on forward ions (a, b, or c)
+     * @param minCharge the minimal precursor charge to consider
+     * @param maxCharge the maximal precursor charge to consider
+     * @param maxIsotope the maximal isotope number to consider
+     * 
+     * @return the possible tag assumptions which can be obtained from this one by accounting for other charges and isotopes
+     */
+    public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
+        ArrayList<TagAssumption> results = new ArrayList<TagAssumption>();
+        double refMz = getTheoreticMz(true, true);
+        double refMass = getTheoreticMass();
+        int refCharge = identificationCharge.value;
+        for (int charge = minCharge; charge <= maxCharge; charge++) {
+            for (int isotope = 0; isotope <= maxIsotope; isotope++) {
+                if (charge != refCharge || isotope > 0) {
+                    double newMass = refMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
+                    double deltaMass = newMass - refMass + isotope * Atom.C.getDifferenceToMonoisotopic(1);
+                    int index = 0;
+                    if (forwardIon) {
+                        index = tag.getContent().size() - 1;
+                    }
+                    TagComponent terminalComponent = tag.getContent().get(index);
+                    if ((terminalComponent instanceof MassGap) && terminalComponent.getMass() > -deltaMass) {
+                        Tag newTag = new Tag(tag);
+                        MassGap terminalGap = (MassGap) newTag.getContent().get(index);
+                        terminalGap.setMass(terminalComponent.getMass() + deltaMass);
+                        TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, new Charge(Charge.PLUS, charge), score);
+                        results.add(tagAssumption);
+                    }
+                }
+            }
+        }
+        return results;
+    }
     
-    public ArrayList<TagAssumption> getPossibleChargeAssumptions() {
-        return new ArrayList<TagAssumption>();
+    /**
+     * Retunrs a new TagAssumption instance where the tag is a reversed version of this tag.
+     * 
+     * @return a new TagAssumption instance where the tag is a reversed version of this tag
+     */
+    public TagAssumption reverse() {
+        return new TagAssumption(advocate, rank, tag.reverse(), identificationCharge, score);
     }
 
     @Override
@@ -95,7 +142,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     public int getIndex() {
         return 2;
     }
-    
+
     @Override
     public String toString() {
         return tag.asSequence() + ", " + identificationCharge.getChargeAsFormattedString() + " (" + score + ")";

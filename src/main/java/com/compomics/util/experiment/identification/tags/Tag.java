@@ -39,6 +39,25 @@ public class Tag extends ExperimentObject {
     public Tag() {
 
     }
+    
+    /**
+     * Creates a new tag instance based on the given one.
+     * 
+     * @param tag the reference tag
+     */
+    public Tag(Tag tag) {
+        for (TagComponent tagComponent : tag.getContent()) {
+            if (tagComponent instanceof MassGap) {
+                MassGap massGap = (MassGap) tagComponent;
+                addMassGap(massGap.getMass());
+            } else if (tagComponent instanceof AminoAcidPattern) {
+                AminoAcidPattern aminoAcidPattern = new AminoAcidPattern((AminoAcidPattern) tagComponent);
+                addAminoAcidSequence(aminoAcidPattern);
+            } else {
+                throw new UnsupportedOperationException("Tag constructor not implemeted for tag component " + tagComponent.getClass() + ".");
+            }
+        }
+    }
 
     /**
      * Constructor for a tag consisting of a sequence tag between two mass tags.
@@ -1223,6 +1242,26 @@ public class Tag extends ExperimentObject {
         }
 
         return result.toString();
+    }
+    
+    /**
+     * Returns a new tag instance which is a reversed version of the current tag.
+     * 
+     * @return a new tag instance which is a reversed version of the current tag
+     */
+    public Tag reverse() {
+        Tag newTag = new Tag();
+        for (int i = content.size() - 1 ; i >= 0 ; i--) {
+            TagComponent tagComponent = content.get(i);
+            if (tagComponent instanceof MassGap) {
+                newTag.addMassGap(tagComponent.getMass());
+            } else if (tagComponent instanceof AminoAcidPattern) {
+                newTag.addAminoAcidSequence(((AminoAcidPattern) tagComponent).reverse());
+            } else {
+                throw new UnsupportedOperationException("Reverse method not implemented for tag component " + tagComponent.getClass() + ".");
+            }
+        }
+        return newTag;
     }
 
     @Override

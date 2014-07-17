@@ -24,6 +24,15 @@ public class MassGap extends ExperimentObject implements TagComponent {
     public MassGap(double value) {
         this.value = value;
     }
+    
+    /**
+     * Sets the mass of the gap.
+     * 
+     * @param value the mass of the gap
+     */
+    public void setMass(double value) {
+        this.value = value;
+    }
 
     @Override
     public String asSequence() {

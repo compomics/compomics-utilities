@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
-import static com.compomics.util.experiment.biology.Peptide.getModificationFamily;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -615,6 +614,33 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
+     * Indicates whether the pattern contains a subsequence of amino acids.
+     *
+     * @param aminoAcidSequence the amino acid sequence to look for
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return the first index where the amino acid pattern is found
+     */
+    public boolean contains(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
+        AminoAcidPattern pattern = new AminoAcidPattern(aminoAcidSequence);
+        return pattern.firstIndex(this, matchingType, massTolerance) >= 0;
+    }
+
+    /**
+     * Indicates whether the pattern contains a subsequence of amino acids.
+     *
+     * @param aminoAcidPattern the amino acid sequence to look for
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return the first index where the amino acid pattern is found
+     */
+    public boolean contains(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
+        return aminoAcidPattern.firstIndex(this, matchingType, massTolerance) >= 0;
+    }
+
+    /**
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
@@ -948,20 +974,23 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether another AminoAcidPattern targets the same pattern. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     * Indicates whether another AminoAcidPattern targets the same pattern.
+     * Modifications are considered equal when of same mass. Modifications
+     * should be loaded in the PTM factory.
      *
      * @param anotherPattern the other AminoAcidPattern
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        
+
         if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
             return false;
         }
-        
+
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (int i = 1; i <= length(); i++) {
             ArrayList<ModificationMatch> mods1 = getModificationsAt(i);
@@ -984,16 +1013,19 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Indicates whether another AminoAcidPattern targets the same pattern
-     * without accounting for PTM localization. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     * without accounting for PTM localization. Modifications are considered
+     * equal when of same mass. Modifications should be loaded in the PTM
+     * factory.
      *
      * @param anotherPattern the other AminoAcidPattern
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
     public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        
+
         if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
             return false;
         }
@@ -1754,6 +1786,48 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public AminoAcidPattern getSubPattern(int startIndex, boolean updateTarget) {
         return getSubPattern(startIndex, length(), updateTarget);
+    }
+
+    /**
+     * Returns an amino acid pattern which is a reversed version of the current
+     * pattern.
+     *
+     * @return an amino acid pattern which is a reversed version of the current
+     * pattern
+     */
+    public AminoAcidPattern reverse() {
+        AminoAcidPattern newPattern = new AminoAcidPattern();
+        if (aaTargeted != null) {
+            for (int i : aaTargeted.keySet()) {
+                int reversed = length() - i - 1;
+                newPattern.setTargeted(reversed, (ArrayList<AminoAcid>) aaTargeted.get(i).clone());
+            }
+        }
+        if (aaExcluded != null) {
+            for (int i : aaExcluded.keySet()) {
+                int reversed = length() - i - 1;
+                newPattern.setExcluded(reversed, (ArrayList<AminoAcid>) aaExcluded.get(i).clone());
+            }
+        }
+        if (targetModifications != null) {
+            for (int i : targetModifications.keySet()) {
+                int reversed = length() - i + 1;
+                for (ModificationMatch modificationMatch : targetModifications.get(i)) {
+                    ModificationMatch newMatch = new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), reversed);
+                    if (modificationMatch.isConfident()) {
+                        newMatch.setConfident(true);
+                    }
+                    if (modificationMatch.isInferred()) {
+                        newMatch.setInferred(true);
+                    }
+                    newPattern.addModificationMatch(reversed, newMatch);
+                }
+            }
+        }
+        if (target > -1) {
+            newPattern.setTarget(length() - target - 1);
+        }
+        return newPattern;
     }
 
     @Override

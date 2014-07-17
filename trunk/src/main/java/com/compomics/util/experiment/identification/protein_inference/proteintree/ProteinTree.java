@@ -1145,7 +1145,7 @@ public class ProteinTree {
             }
         }
         if (componentIndex == -1) {
-            throw new IllegalArgumentException("No tag longer than " + initialTagSize + "was found for tag " + tag + ".");
+            throw new IllegalArgumentException("No amino acid sequence longer than " + initialTagSize + " was found for tag " + tag + ".");
         }
         HashMap<String, HashMap<String, ArrayList<Integer>>> seeds = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
         for (String peptideSequence : longestAminoAcidPattern.getAllPossibleSequences()) {

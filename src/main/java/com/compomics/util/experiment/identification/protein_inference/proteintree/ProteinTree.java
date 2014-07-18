@@ -997,12 +997,12 @@ public class ProteinTree {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = null;
         if (useCache) {
-        result = lastQueriedPeptidesCache.get(peptideSequence);
+            result = lastQueriedPeptidesCache.get(peptideSequence);
         }
 
         if (result == null) {
             if (useCache) {
-            result = lastSlowQueriedPeptidesCache.get(peptideSequence);
+                result = lastSlowQueriedPeptidesCache.get(peptideSequence);
             }
             if (result == null) {
                 if (sequenceFactory.isDefaultReversed() && useCache) {
@@ -1026,7 +1026,11 @@ public class ProteinTree {
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
                 AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
-                ArrayList<String> initialTags = getInitialTags(peptidePattern, matchingType, massTolerance);
+                double limitX = -1;
+                if (limitXs) {
+                    limitX = ProteinMatch.maxX * peptideSequence.length() / initialTagSize;
+                }
+                ArrayList<String> initialTags = getInitialTags(peptidePattern, matchingType, massTolerance, limitX);
 
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
@@ -1161,6 +1165,9 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
+                        if (accession.equals("P23381")) {
+                            int i = 1;
+                        }
                         HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {
@@ -1199,10 +1206,10 @@ public class ProteinTree {
     private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-        ArrayList<String> tags = getInitialTags(aminoAcidPattern, matchingType, massTolerance);
+        ArrayList<String> tags = getInitialTags(aminoAcidPattern, matchingType, massTolerance, -1);
         String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
         aminoAcidPattern = new AminoAcidPattern(reversedSequence);
-        tags.addAll(getInitialTags(aminoAcidPattern, matchingType, massTolerance));
+        tags.addAll(getInitialTags(aminoAcidPattern, matchingType, massTolerance, -1));
         ArrayList<String> toLoad = new ArrayList<String>();
 
         for (String tag : tags) {
@@ -1221,7 +1228,8 @@ public class ProteinTree {
      * @param peptideSequence the peptide sequence
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise.
+     * 'indistiguishibleAminoAcids', can be null
+     * @param limitXs the proportion of Xs allowed in the sequence, ignored if <0
      *
      * @returna list of possible initial tags.
      *
@@ -1229,7 +1237,7 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance, double limitXs) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         int initialTagSize = componentsFactory.getInitialSize();
         ArrayList<String> result = new ArrayList<String>();
         for (int i = 0; i < initialTagSize; i++) {
@@ -1302,6 +1310,16 @@ public class ProteinTree {
                     result = newResults;
                 }
             }
+        }
+        if (limitXs >= 0) {
+            ArrayList<String> filtered = new ArrayList<String>();
+            for (String sequence : result) {
+                double xShare = ((double) Util.getOccurrence(sequence, 'X')) / sequence.length();
+                if (xShare <= limitXs) {
+                    filtered.add(sequence);
+                }
+            }
+            result = filtered;
         }
         return result;
     }

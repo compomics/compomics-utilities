@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class represent a tag assumption made by an identification algorithm
@@ -18,6 +17,10 @@ import java.util.HashMap;
  */
 public class TagAssumption extends SpectrumIdentificationAssumption implements UrParameter {
 
+    /**
+     * Serial number for backward compatibility
+     */
+    static final long serialVersionUID = 8514376202742537298L;
     /**
      * List of mass gaps.
      */
@@ -87,14 +90,17 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     }
 
     /**
-     * Computes the possible tag assumptions which can be obtained from this one by accounting for other charges and isotopes.
-     * 
-     * @param forwardIon indicates whether the tag is based on forward ions (a, b, or c)
+     * Computes the possible tag assumptions which can be obtained from this one
+     * by accounting for other charges and isotopes.
+     *
+     * @param forwardIon indicates whether the tag is based on forward ions (a,
+     * b, or c)
      * @param minCharge the minimal precursor charge to consider
      * @param maxCharge the maximal precursor charge to consider
      * @param maxIsotope the maximal isotope number to consider
-     * 
-     * @return the possible tag assumptions which can be obtained from this one by accounting for other charges and isotopes
+     *
+     * @return the possible tag assumptions which can be obtained from this one
+     * by accounting for other charges and isotopes
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
         ArrayList<TagAssumption> results = new ArrayList<TagAssumption>();
@@ -123,11 +129,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
         }
         return results;
     }
-    
+
     /**
-     * Retunrs a new TagAssumption instance where the tag is a reversed version of this tag.
-     * 
-     * @return a new TagAssumption instance where the tag is a reversed version of this tag
+     * Retunrs a new TagAssumption instance where the tag is a reversed version
+     * of this tag.
+     *
+     * @return a new TagAssumption instance where the tag is a reversed version
+     * of this tag
      */
     public TagAssumption reverse() {
         return new TagAssumption(advocate, rank, tag.reverse(), identificationCharge, score);

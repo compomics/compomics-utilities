@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.tags;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.ElementaryElement;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -39,10 +40,10 @@ public class Tag extends ExperimentObject {
     public Tag() {
 
     }
-    
+
     /**
      * Creates a new tag instance based on the given one.
-     * 
+     *
      * @param tag the reference tag
      */
     public Tag(Tag tag) {
@@ -493,12 +494,14 @@ public class Tag extends ExperimentObject {
     }
 
     /**
-     * Indicates whether this tag is the same as another tag. Note: this method accounts for modification localization.
+     * Indicates whether this tag is the same as another tag. Note: this method
+     * accounts for modification localization.
      *
      * @param anotherTag another tag
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
-     * 
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
+     *
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameAs(Tag anotherTag, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
@@ -516,12 +519,14 @@ public class Tag extends ExperimentObject {
     }
 
     /**
-     * Indicates whether this tag is the same as another tag without accounting for modification localization.
+     * Indicates whether this tag is the same as another tag without accounting
+     * for modification localization.
      *
      * @param anotherTag another tag
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
-     * 
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
+     *
      * @return a boolean indicating whether the tag is the same as another
      */
     public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
@@ -1243,18 +1248,36 @@ public class Tag extends ExperimentObject {
 
         return result.toString();
     }
-    
+
     /**
-     * Returns a new tag instance which is a reversed version of the current tag.
-     * 
+     * Returns a new tag instance which is a reversed version of the current
+     * tag.
+     *
+     * @param yIon indicates whether the tag is based on y ions
+     *
      * @return a new tag instance which is a reversed version of the current tag
      */
-    public Tag reverse() {
+    public Tag reverse(boolean yIon) {
+        double water = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
         Tag newTag = new Tag();
-        for (int i = content.size() - 1 ; i >= 0 ; i--) {
+        for (int i = content.size() - 1; i >= 0; i--) {
             TagComponent tagComponent = content.get(i);
             if (tagComponent instanceof MassGap) {
-                newTag.addMassGap(tagComponent.getMass());
+                double mass = tagComponent.getMass();
+                if (i == content.size() - 1) {
+                    if (yIon) {
+                        mass += water;
+                    } else {
+                        mass -= water;
+                    }
+                } else if (i == 0) {
+                    if (yIon) {
+                        mass -= water;
+                    } else {
+                        mass += water;
+                    }
+                }
+                newTag.addMassGap(mass);
             } else if (tagComponent instanceof AminoAcidPattern) {
                 newTag.addAminoAcidSequence(((AminoAcidPattern) tagComponent).reverse());
             } else {
@@ -1262,6 +1285,29 @@ public class Tag extends ExperimentObject {
             }
         }
         return newTag;
+    }
+
+    /**
+     * Indicates whether the tag can be reversed (ie if termini are mass gaps with mass >= water).
+     * 
+     * @return whether the tag can be reversed
+     */
+    public boolean canReverse() {
+        double water = 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
+        TagComponent terminalComponent = content.get(0);
+        if (terminalComponent instanceof MassGap) {
+            MassGap terminalGap = (MassGap) terminalComponent;
+            if (terminalGap.getMass() >= water) {
+                terminalComponent = content.get(content.size() - 1);
+                if (terminalComponent instanceof MassGap) {
+                    terminalGap = (MassGap) terminalComponent;
+                    if (terminalGap.getMass() >= water) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

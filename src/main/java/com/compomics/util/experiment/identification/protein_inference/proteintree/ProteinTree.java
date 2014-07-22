@@ -81,7 +81,7 @@ public class ProteinTree {
      */
     private int cacheSize = 5000;
     /**
-     * Indicates whether the cache should be used
+     * Indicates whether the cache should be used.
      */
     private boolean useCache = false;
     /**
@@ -1165,10 +1165,8 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        if (accession.equals("P23381")) {
-                            int i = 1;
-                        }
-                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
+                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, 
+                                componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {
                                 HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);

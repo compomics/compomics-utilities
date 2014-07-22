@@ -196,6 +196,7 @@ public class ReportEditor extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Report");
+        setMinimumSize(new java.awt.Dimension(720, 650));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -239,7 +240,8 @@ public class ReportEditor extends javax.swing.JDialog {
         separationLinesSpinner.setToolTipText("Number of empty lines between each section");
         separationLinesSpinner.setEnabled(false);
 
-        numberOfSeparationLinesLabel.setText("(number of empty lines between sections)");
+        numberOfSeparationLinesLabel.setFont(numberOfSeparationLinesLabel.getFont().deriveFont((numberOfSeparationLinesLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        numberOfSeparationLinesLabel.setText("#lines between sections");
         numberOfSeparationLinesLabel.setToolTipText("Number of empty lines between each section");
 
         lineNumberCheckBox.setSelected(true);
@@ -287,9 +289,11 @@ public class ReportEditor extends javax.swing.JDialog {
 
         validatedCheck.setSelected(true);
         validatedCheck.setText("Validated Only");
+        validatedCheck.setIconTextGap(15);
         validatedCheck.setOpaque(false);
 
         decoysCheck.setText("Include Decoys");
+        decoysCheck.setIconTextGap(15);
         decoysCheck.setOpaque(false);
 
         javax.swing.GroupLayout reporterSettingsPanelLayout = new javax.swing.GroupLayout(reporterSettingsPanel);
@@ -309,10 +313,10 @@ public class ReportEditor extends javax.swing.JDialog {
                                         .addComponent(sectionTitleCheckBox)
                                         .addComponent(lineNumberCheckBox))
                                     .addComponent(headerCheckBox)))
-                            .addComponent(structureLabel))
-                        .addGap(46, 46, 46)
+                            .addComponent(structureLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(columnDelimiterLabel)
+                            .addComponent(columnDelimiterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,22 +324,23 @@ public class ReportEditor extends javax.swing.JDialog {
                                     .addComponent(semicolonRadioButton)
                                     .addComponent(tabRadioButton)
                                     .addComponent(commaRadioButton))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(validatedCheck)
                                     .addComponent(decoysCheck)))
-                            .addComponent(matchesLbl))
-                        .addGap(57, 57, 57)
+                            .addComponent(matchesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rowDelimiterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(separationLinesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(numberOfSeparationLinesLabel))
-                            .addComponent(rowDelimiterLabel)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(numberOfSeparationLinesLabel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE))
                     .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
                         .addComponent(reportTitleLabel)
                         .addGap(18, 18, 18)
@@ -361,29 +366,34 @@ public class ReportEditor extends javax.swing.JDialog {
                         .addGap(0, 0, 0)
                         .addComponent(commaRadioButton))
                     .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(structureLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maintTitleCheckBox)
-                        .addGap(0, 0, 0)
-                        .addComponent(sectionTitleCheckBox)
-                        .addGap(0, 0, 0)
-                        .addComponent(lineNumberCheckBox)
+                        .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
+                                .addComponent(structureLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(maintTitleCheckBox)
+                                .addGap(0, 0, 0)
+                                .addComponent(sectionTitleCheckBox)
+                                .addGap(0, 0, 0)
+                                .addComponent(lineNumberCheckBox))
+                            .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
+                                .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
+                                        .addGap(20, 20, 20)
+                                        .addComponent(validatedCheck))
+                                    .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
+                                        .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(rowDelimiterLabel)
+                                            .addComponent(matchesLbl))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(separationLinesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(numberOfSeparationLinesLabel))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(decoysCheck)))
                         .addGap(0, 0, 0)
                         .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(headerCheckBox)
-                            .addComponent(spaceRadioButton)))
-                    .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(rowDelimiterLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(separationLinesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(numberOfSeparationLinesLabel)))
-                    .addGroup(reporterSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(matchesLbl)
-                        .addGap(6, 6, 6)
-                        .addComponent(validatedCheck)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(decoysCheck)))
+                            .addComponent(spaceRadioButton))))
                 .addGap(18, 18, 18)
                 .addGroup(reporterSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reportTitleLabel)
@@ -448,7 +458,8 @@ public class ReportEditor extends javax.swing.JDialog {
         featuresTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         featuresScrollPane.setViewportView(featuresTable);
 
-        advancedFeaturesCheck.setText("Show advanced Features");
+        advancedFeaturesCheck.setText("Show Advanced Features");
+        advancedFeaturesCheck.setIconTextGap(10);
         advancedFeaturesCheck.setOpaque(false);
         advancedFeaturesCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -456,7 +467,8 @@ public class ReportEditor extends javax.swing.JDialog {
             }
         });
 
-        subFeaturesCheck.setText("Show sub-features");
+        subFeaturesCheck.setText("Show Sub Features");
+        subFeaturesCheck.setIconTextGap(10);
         subFeaturesCheck.setOpaque(false);
         subFeaturesCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -472,9 +484,10 @@ public class ReportEditor extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(sectionContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(sectionContentPanelLayout.createSequentialGroup()
-                        .addComponent(subFeaturesCheck)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(advancedFeaturesCheck))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(advancedFeaturesCheck)
+                        .addGap(18, 18, 18)
+                        .addComponent(subFeaturesCheck))
                     .addComponent(featuresScrollPane))
                 .addContainerGap())
         );
@@ -482,7 +495,7 @@ public class ReportEditor extends javax.swing.JDialog {
             sectionContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(sectionContentPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(featuresScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addComponent(featuresScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sectionContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(advancedFeaturesCheck)
@@ -493,18 +506,18 @@ public class ReportEditor extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reporterSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(reporterTypePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sectionContentPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sectionsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(reporterSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sectionContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sectionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(reporterTypePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -514,11 +527,11 @@ public class ReportEditor extends javax.swing.JDialog {
                 .addComponent(reporterTypePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reporterSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(sectionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sectionContentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sectionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sectionContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -529,9 +542,7 @@ public class ReportEditor extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

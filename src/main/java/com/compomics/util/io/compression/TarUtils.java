@@ -204,7 +204,7 @@ public class TarUtils {
                             entryFolder = (new File(destinationFolder, entryName)).getParentFile();
                         }
                         File destinationFile = new File(entryFolder, entryFile.getName());
-                        
+
                         if (archiveEntry.isDirectory()) {
                             destinationFile.mkdirs();
                         } else if (entryFolder.exists() || entryFolder.mkdirs()) {
@@ -231,7 +231,9 @@ public class TarUtils {
                                 waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
-                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() + " does not exist and could not be created. Verify that you have the right to write in this directory.");
+                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() 
+                                    + " does not exist and could not be created. "
+                                    + "Verify that you have the right to write in this directory.");
                         }
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             break;

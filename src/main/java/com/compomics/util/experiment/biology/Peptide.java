@@ -926,7 +926,9 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Indicates whether another peptide has the same variable modifications as
-     * this peptide. The localization of the PTM is not accounted for. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     * this peptide. The localization of the PTM is not accounted for.
+     * Modifications are considered equal when of same mass. Modifications
+     * should be loaded in the PTM factory.
      *
      * @param anotherPeptide the other peptide
      * @return a boolean indicating whether the other peptide has the same
@@ -942,12 +944,12 @@ public class Peptide extends ExperimentObject {
         HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
         for (String modName : modifications1) {
             PTM ptm = ptmFactory.getPTM(modName);
-            double mass = ptm.getMass();
-            Integer occurrence = masses1.get(mass);
+            double tempMass = ptm.getMass();
+            Integer occurrence = masses1.get(tempMass);
             if (occurrence == null) {
-                masses1.put(mass, 1);
+                masses1.put(tempMass, 1);
             } else {
-                masses1.put(mass, occurrence + 1);
+                masses1.put(tempMass, occurrence + 1);
             }
         }
 
@@ -955,33 +957,35 @@ public class Peptide extends ExperimentObject {
         HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
         for (String modName : modifications2) {
             PTM ptm = ptmFactory.getPTM(modName);
-            double mass = ptm.getMass();
-            Integer occurrence = masses2.get(mass);
+            double tempMass = ptm.getMass();
+            Integer occurrence = masses2.get(tempMass);
             if (occurrence == null) {
-                masses2.put(mass, 1);
+                masses2.put(tempMass, 1);
             } else {
-                masses2.put(mass, occurrence + 1);
+                masses2.put(tempMass, occurrence + 1);
             }
         }
-        
+
         if (masses1.size() != masses2.size()) {
             return false;
         }
-        for (Double mass : masses1.keySet()) {
-            Integer occurrence1 = masses1.get(mass);
-            Integer occurrence2 = masses2.get(mass);
+        for (Double tempMass : masses1.keySet()) {
+            Integer occurrence1 = masses1.get(tempMass);
+            Integer occurrence2 = masses2.get(tempMass);
             if (occurrence2 == null || occurrence2 != occurrence1) {
                 return false;
             }
         }
-        
+
         return true;
     }
 
     /**
      * Indicates whether another peptide has the same modifications at the same
      * localization as this peptide. This method comes as a complement of
-     * isSameAs, here the localization of all PTMs is taken into account. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     * isSameAs, here the localization of all PTMs is taken into account.
+     * Modifications are considered equal when of same mass. Modifications
+     * should be loaded in the PTM factory.
      *
      * @param anotherPeptide another peptide
      * @param ptms the PTMs
@@ -998,11 +1002,11 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch modificationMatch : modifications) {
             String modName = modificationMatch.getTheoreticPtm();
             if (ptms.contains(modName)) {
-                double mass = ptmFactory.getPTM(modName).getMass();
-                ArrayList<Integer> sites = ptmToPositionsMap1.get(mass);
+                double tempMass = ptmFactory.getPTM(modName).getMass();
+                ArrayList<Integer> sites = ptmToPositionsMap1.get(tempMass);
                 if (sites == null) {
                     sites = new ArrayList<Integer>();
-                    ptmToPositionsMap1.put(mass, sites);
+                    ptmToPositionsMap1.put(tempMass, sites);
                 }
                 int position = modificationMatch.getModificationSite();
                 sites.add(position);
@@ -1011,19 +1015,19 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch modificationMatch : anotherPeptide.getModificationMatches()) {
             String modName = modificationMatch.getTheoreticPtm();
             if (ptms.contains(modName)) {
-                double mass = ptmFactory.getPTM(modName).getMass();
-                ArrayList<Integer> sites = ptmToPositionsMap2.get(mass);
+                double tempMass = ptmFactory.getPTM(modName).getMass();
+                ArrayList<Integer> sites = ptmToPositionsMap2.get(tempMass);
                 if (sites == null) {
                     sites = new ArrayList<Integer>();
-                    ptmToPositionsMap2.put(mass, sites);
+                    ptmToPositionsMap2.put(tempMass, sites);
                 }
                 int position = modificationMatch.getModificationSite();
                 sites.add(position);
             }
         }
-        for (Double mass : ptmToPositionsMap1.keySet()) {
-            ArrayList<Integer> sites1 = ptmToPositionsMap1.get(mass);
-            ArrayList<Integer> sites2 = ptmToPositionsMap2.get(mass);
+        for (Double tempMass : ptmToPositionsMap1.keySet()) {
+            ArrayList<Integer> sites1 = ptmToPositionsMap1.get(tempMass);
+            ArrayList<Integer> sites2 = ptmToPositionsMap2.get(tempMass);
             if (sites2 == null || sites1.size() != sites2.size()) {
                 return false;
             }
@@ -1041,7 +1045,9 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether another peptide has the same modifications at the same
      * localization as this peptide. This method comes as a complement of
-     * isSameAs, here the localization of all PTMs is taken into account. Modifications are considered equal when of same mass. Modifications should be loaded in the PTM factory.
+     * isSameAs, here the localization of all PTMs is taken into account.
+     * Modifications are considered equal when of same mass. Modifications
+     * should be loaded in the PTM factory.
      *
      * @param anotherPeptide another peptide
      * @return true if the other peptide has the same positions at the same

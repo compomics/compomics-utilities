@@ -26,11 +26,12 @@ public interface TagComponent {
 
     /**
      * Indicates whether another component is the same as the component of
-     * interest
+     * interest.
      *
      * @param anotherCompontent another component
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
      *
      * @return a boolean indicating whether the other component is the same as
      * the one of interest
@@ -39,11 +40,12 @@ public interface TagComponent {
 
     /**
      * Indicates whether another component is the same as the component of
-     * interest
+     * interest.
      *
      * @param anotherCompontent another component
      * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as indistinguishable
+     * @param massTolerance the mass tolerance to use to consider amino acids as
+     * indistinguishable
      *
      * @return a boolean indicating whether the other component is the same as
      * the one of interest

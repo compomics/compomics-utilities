@@ -56,11 +56,11 @@ public class ExportScheme implements Serializable {
      */
     private boolean includeSectionTitles = false;
     /**
-     * Indicates whether only validated matches should be included
+     * Indicates whether only validated matches should be included.
      */
     private Boolean validatedOnly = true;
     /**
-     * Indicates whether decoy matches should be included
+     * Indicates whether decoy matches should be included.
      */
     private Boolean includeDecoy = false;
 
@@ -82,7 +82,8 @@ public class ExportScheme implements Serializable {
      * @param sectionFamily the section family. If null the sections will be
      * automatically separated based on the feature type. Note, be sure that all
      * features are implemented for this section.
-     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param validatedOnly Indicates whether only validated matches should be
+     * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
     private ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
@@ -115,7 +116,8 @@ public class ExportScheme implements Serializable {
      * @param includeSectionTitles indicates whether section titles shall be
      * used
      * @param mainTitle the title of the report
-     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param validatedOnly Indicates whether only validated matches should be
+     * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
@@ -137,7 +139,8 @@ public class ExportScheme implements Serializable {
      * @param separationLines the number of lines to use for section separation
      * @param includeSectionTitles indicates whether section titles shall be
      * used
-     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param validatedOnly Indicates whether only validated matches should be
+     * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
@@ -159,7 +162,8 @@ public class ExportScheme implements Serializable {
      * @param separationLines the number of lines to use for section separation
      * @param includeSectionTitles indicates whether section titles shall be
      * used
-     * @param validatedOnly Indicates whether only validated matches should be included
+     * @param validatedOnly Indicates whether only validated matches should be
+     * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
     public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
@@ -230,10 +234,11 @@ public class ExportScheme implements Serializable {
     public ArrayList<ExportFeature> getExportFeatures(String section) {
         return exportFeaturesMap.get(section);
     }
-    
+
     /**
-     * Sets the export features of a given section. If a section already exists it will be silently overwritten.
-     * 
+     * Sets the export features of a given section. If a section already exists
+     * it will be silently overwritten.
+     *
      * @param section the name of the section
      * @param exportFeatures the export features to include in that section
      */
@@ -241,10 +246,11 @@ public class ExportScheme implements Serializable {
         exportFeaturesMap.put(section, exportFeatures);
         sectionList.add(section);
     }
-    
+
     /**
-     * Adds an export feature to the desired section. If the section does not exist it will be created.
-     * 
+     * Adds an export feature to the desired section. If the section does not
+     * exist it will be created.
+     *
      * @param section the name of the section
      * @param exportFeature the export feature to add
      */
@@ -257,10 +263,10 @@ public class ExportScheme implements Serializable {
         }
         sectionFeatures.add(exportFeature);
     }
-    
+
     /**
      * Removes an entire section from the mapping.
-     * 
+     *
      * @param sectionName the section name
      */
     public void removeSection(String sectionName) {
@@ -315,7 +321,7 @@ public class ExportScheme implements Serializable {
 
     /**
      * Indicates whether only validated results should be exported.
-     * 
+     *
      * @return whether only validated results should be exported
      */
     public Boolean isValidatedOnly() {
@@ -324,7 +330,7 @@ public class ExportScheme implements Serializable {
 
     /**
      * Sets whether only validated results should be exported.
-     * 
+     *
      * @param validatedOnly whether only validated results should be exported
      */
     public void setValidatedOnly(Boolean validatedOnly) {
@@ -333,7 +339,7 @@ public class ExportScheme implements Serializable {
 
     /**
      * Indicates whether decoy hits should be included.
-     * 
+     *
      * @return whether decoy hits should be included
      */
     public Boolean isIncludeDecoy() {
@@ -342,12 +348,11 @@ public class ExportScheme implements Serializable {
 
     /**
      * Sets whether decoy hits should be included.
-     * 
+     *
      * @param includeDecoy whether decoy hits should be included
      */
     public void setIncludeDecoy(Boolean includeDecoy) {
         this.includeDecoy = includeDecoy;
     }
-    
-    
+
 }

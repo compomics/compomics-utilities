@@ -17,7 +17,7 @@ public interface ExportFeature extends Serializable {
 
     /**
      * Returns the column titles of the feature.
-     * 
+     *
      * @return the column titles of the feature
      */
     public String[] getTitles();
@@ -39,15 +39,16 @@ public interface ExportFeature extends Serializable {
     /**
      * Returns a list of all implemented export features.
      *
-     * @param includeSubFeatures boolean indicating whether sub features should be included
-     * 
+     * @param includeSubFeatures boolean indicating whether sub features should
+     * be included
+     *
      * @return a list of all implemented export features
      */
     public ArrayList<ExportFeature> getExportFeatures(boolean includeSubFeatures);
-    
+
     /**
-     * indicates whether a feature is for advanced user only.
-     * 
+     * Indicates whether a feature is for advanced user only.
+     *
      * @return a boolean indicating whether a feature is for advanced user only
      */
     public boolean isAdvanced();

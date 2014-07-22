@@ -1927,20 +1927,20 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                             // get the color to use if using gradient color coding
                             if (tempObject instanceof Integer) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minColorValue, maxColorValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minColorValue, maxColorValue, colorGradient, false));
                             } else if (tempObject instanceof Double) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minColorValue, maxColorValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minColorValue, maxColorValue, colorGradient, false));
                             } else if (tempObject instanceof XYDataPoint) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minColorValue, maxColorValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minColorValue, maxColorValue, colorGradient, false));
                             } else if (tempObject instanceof StartIndexes) {
                                 if (((StartIndexes) tempObject).getIndexes().size() > 0) {
                                     datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(
-                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minColorValue, maxColorValue, colorGradient));
+                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minColorValue, maxColorValue, colorGradient, false));
                                 } else {
-                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient));
+                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
                                 }
                             } else {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient));
+                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
                             }
 
                             xyzDataset.addSeries(dataset, tempDataXYZ);

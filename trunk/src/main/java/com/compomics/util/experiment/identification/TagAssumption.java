@@ -134,11 +134,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * Retunrs a new TagAssumption instance where the tag is a reversed version
      * of this tag.
      *
+     * @param yIon indicates whether the tag is based on y ions
+     * 
      * @return a new TagAssumption instance where the tag is a reversed version
      * of this tag
      */
-    public TagAssumption reverse() {
-        return new TagAssumption(advocate, rank, tag.reverse(), identificationCharge, score);
+    public TagAssumption reverse(boolean yIon) {
+        return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, score);
     }
 
     @Override

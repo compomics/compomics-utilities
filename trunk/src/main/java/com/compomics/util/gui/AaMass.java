@@ -7,14 +7,15 @@ import java.awt.event.KeyEvent;
  * Displays the mass of a series of amino acids. This class was written for
  * testing purposes only.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AaMass extends javax.swing.JDialog {
 
-    private String letter;
-
     /**
-     * Creates new form AaMass
+     * Creates a form AaMass.
+     *
+     * @param parent
+     * @param modal
      */
     public AaMass(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -38,7 +39,7 @@ public class AaMass extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        sequenceLbl.setText("Sequence:");
+        sequenceLbl.setText("Sequence");
 
         sequenceTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -46,7 +47,7 @@ public class AaMass extends javax.swing.JDialog {
             }
         });
 
-        massLbl.setText("Mass:");
+        massLbl.setText("Mass");
 
         massTxt.setEditable(false);
 
@@ -63,11 +64,10 @@ public class AaMass extends javax.swing.JDialog {
                     .addComponent(massLbl))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(massTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(daLbl))
+                    .addComponent(massTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addComponent(sequenceTxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(daLbl)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -95,7 +95,7 @@ public class AaMass extends javax.swing.JDialog {
     }//GEN-LAST:event_sequenceTxtKeyReleased
 
     /**
-     * Reads the input sequence and displays the mass
+     * Reads the input sequence and displays the mass.
      */
     private void processInput() {
 

@@ -238,7 +238,9 @@ public class PTM extends ExperimentObject {
      */
     public boolean isSameAs(PTM anotherPTM) {
         double massDiff = Math.abs(mass - anotherPTM.getMass());
-        return type == anotherPTM.getType() && (massDiff == 0 || massDiff <= 0.0000000000001) && anotherPTM.getPattern().isSameAs(pattern,AminoAcidPattern.MatchingType.string, null);
+        return type == anotherPTM.getType() 
+                && (massDiff == 0 || massDiff <= 0.0000000000001) 
+                && anotherPTM.getPattern().isSameAs(pattern, AminoAcidPattern.MatchingType.string, null);
     }
 
     /**
@@ -333,7 +335,7 @@ public class PTM extends ExperimentObject {
 
     /**
      * Returns true if the PTM is an n-term PTM.
-     * 
+     *
      * @return true if the PTM is an n-term PTM
      */
     public boolean isNTerm() {
@@ -342,10 +344,10 @@ public class PTM extends ExperimentObject {
                 || type == PTM.MODNP
                 || type == PTM.MODNPAA;
     }
-    
+
     /**
      * Returns true if the PTM is a c-term PTM.
-     * 
+     *
      * @return true if the PTM is a c-term PTM
      */
     public boolean isCTerm() {

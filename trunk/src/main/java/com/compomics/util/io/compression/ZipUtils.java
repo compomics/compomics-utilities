@@ -13,14 +13,14 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Convenience class for the handling of zip files
+ * Convenience class for the handling of zip files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ZipUtils {
 
     /**
-     * The buffer size
+     * The buffer size.
      */
     private static final int BUFFER = 2048;
 
@@ -29,7 +29,7 @@ public class ZipUtils {
      *
      * @param originFile the file to zip, can be a folder
      * @param destinationFile the destination file
-     * @param waitingHandler a waiting handler allowing cancelling the process
+     * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      *
      * @throws IOException
@@ -60,7 +60,7 @@ public class ZipUtils {
      *
      * @param file the file to add to the zip
      * @param out the zip stream
-     * @param waitingHandler a waiting handler allowing cancelling the process
+     * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      *
      * @throws FileNotFoundException
@@ -72,13 +72,13 @@ public class ZipUtils {
 
     /**
      * Adds a new file to the zip stream. If the file is a folder it will be
-     * added as well
+     * added as well.
      *
      * @param subDirectory the subdirectory relative to the zip file location
      * (e.g. "data", note that there is no tailing "/")
      * @param file the file to add to the zip
      * @param out the zip stream
-     * @param waitingHandler a waiting handler allowing cancelling the process
+     * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      *
      * @throws FileNotFoundException
@@ -105,7 +105,7 @@ public class ZipUtils {
      *
      * @param file the file to add to the zip
      * @param out the zip stream
-     * @param waitingHandler a waiting handler allowing cancelling the process
+     * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      *
      * @throws FileNotFoundException
@@ -122,7 +122,7 @@ public class ZipUtils {
      * (e.g. "data", note that there is no tailing "/")
      * @param file the file to add to the zip
      * @param out the zip stream
-     * @param waitingHandler a waiting handler allowing cancelling the process
+     * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
      *
      * @throws FileNotFoundException
@@ -180,7 +180,7 @@ public class ZipUtils {
      * @param zipFile the file to unzip
      * @param destinationFolder the destination folder
      * @param waitingHandler a waiting handler displaying progress and allowing
-     * cancelling the process (can be null)
+     * canceling the process (can be null)
      *
      * @throws IOException
      */
@@ -238,14 +238,14 @@ public class ZipUtils {
                                 waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
-                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() + " does not exist and could not be created. Verify that you have the right to write in this directory.");
+                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() 
+                                    + " does not exist and could not be created. "
+                                    + "Verify that you have the right to write in this directory.");
                         }
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             break;
                         }
-
                     }
-
                 } finally {
                     zis.close();
                 }

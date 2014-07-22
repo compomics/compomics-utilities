@@ -182,7 +182,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 //double mz = Util.readDoubleAsString(mzAsText);
                 int charge = Integer.valueOf(elements[chargeIndex]);
                 //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
-                //double rt = Util.readDoubleAsString(rtAsText);
+                //double rt = Util.readDoubleAsString(rtAsText); // @TODO: should escape retention times such as PT2700.460000S
                 String fileName = elements[filenameIndex];
 
                 // set up the yet empty spectrum match, or add to the current match

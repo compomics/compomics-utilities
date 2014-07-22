@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class TagAssumption extends SpectrumIdentificationAssumption implements UrParameter {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 8514376202742537298L;
     /**
@@ -135,7 +135,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
      * of this tag.
      *
      * @param yIon indicates whether the tag is based on y ions
-     * 
+     *
      * @return a new TagAssumption instance where the tag is a reversed version
      * of this tag
      */

@@ -31,13 +31,11 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="massTxt" pref="296" max="32767" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="daLbl" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="massTxt" pref="300" max="32767" attributes="0"/>
                   <Component id="sequenceTxt" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="daLbl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -64,7 +62,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="sequenceLbl">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sequence:"/>
+        <Property name="text" type="java.lang.String" value="Sequence"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="sequenceTxt">
@@ -74,7 +72,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="massLbl">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Mass:"/>
+        <Property name="text" type="java.lang.String" value="Mass"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="massTxt">

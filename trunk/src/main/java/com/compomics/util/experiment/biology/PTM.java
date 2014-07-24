@@ -238,8 +238,8 @@ public class PTM extends ExperimentObject {
      */
     public boolean isSameAs(PTM anotherPTM) {
         double massDiff = Math.abs(mass - anotherPTM.getMass());
-        return type == anotherPTM.getType() 
-                && (massDiff == 0 || massDiff <= 0.0000000000001) 
+        return type == anotherPTM.getType()
+                && (massDiff == 0 || massDiff <= 0.0000000000001)
                 && anotherPTM.getPattern().isSameAs(pattern, AminoAcidPattern.MatchingType.string, null);
     }
 

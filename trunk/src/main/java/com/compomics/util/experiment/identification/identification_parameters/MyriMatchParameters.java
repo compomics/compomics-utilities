@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
+import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 
@@ -10,8 +11,6 @@ import com.compomics.util.experiment.identification.IdentificationAlgorithmParam
  */
 public class MyriMatchParameters implements IdentificationAlgorithmParameter {
 
-    // @TODO: implement more parameters!!!
-    
     /**
      * Version number for deserialization.
      */
@@ -23,11 +22,72 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal peptide length.
      */
-    private Integer maxPeptideLength = 30; // note that MS-GF+ default is 40
+    private Integer maxPeptideLength = 30; // note that for MS-GF+ default is 40
     /**
      * The maximum number of spectrum matches.
      */
     private Integer numberOfSpectrumMarches = 1; // @TODO: find optimal default value!
+    /**
+     * The TicCutoffPercentage.
+     */
+    private Double ticCutoffPercentage = 0.98;
+    /**
+     * The maximum number of variable modifications.
+     */
+    private Integer maxDynamicMods = 2;
+    /**
+     * By default, when generating peptides from the protein database, a peptide
+     * must start and end at a valid cleavage site. Setting this parameter to 0
+     * or 1 will reduce that requirement, so that neither terminus or only one
+     * terminus of the peptide must match one of the cleavage rules specified in
+     * the CleavageRules parameter. This parameter is useful to turn a tryptic
+     * digest into a semi-tryptic digest.
+     */
+    private Integer minTerminiCleavages = 2;
+    /**
+     * The minimum precursor mass considered.
+     */
+    private Double minPrecursorMass = 0.0;
+    /**
+     * The maximum precursor mass considered.
+     */
+    private Double maxPrecursorMass = 10000.0;
+    /**
+     * If true, the UseSmartPlusThreeModel us to be used.
+     */
+    private Boolean useSmartPlusThreeModel = true;
+    /**
+     * If true, a Sequest-like cross correlation (xcorr) score will be
+     * calculated for the top ranking hits in each spectrum’s result set.
+     */
+    private Boolean computeXCorr = true;
+    /**
+     * The number of intensity classes.
+     */
+    private Integer numIntensityClasses = 3;
+    /**
+     * The multiplier controlling the size of each intensity class relative to
+     * the class above it.
+     */
+    private Integer classSizeMultiplier = 2;
+    /**
+     * The number of batches per node to strive for when using the MPI-based
+     * parallelization features.
+     */
+    private Integer numberOfBatches = 50;
+    /**
+     * The lower isotope correction range.
+     */
+    private Integer lowerIsotopeCorrection = -1;
+    /**
+     * The upper isotope correction range.
+     */
+    private Integer upperIsotopeCorrection = 2;
+    /**
+     * The fragmentation rules. CID (b, y), ETD (c, z*) or manual (user-defined
+     * (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z)
+     */
+    private String fragmentationRule = "CID";
 
     /**
      * Constructor.
@@ -87,6 +147,45 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         output.append("NUMBER_SPECTRUM_MATCHES=");
         output.append(numberOfSpectrumMarches);
         output.append(newLine);
+        output.append("TIC_CUTOFF_PERCENTAGE=");
+        output.append(ticCutoffPercentage);
+        output.append(newLine);
+        output.append("MAX_DYNMIC_MODS=");
+        output.append(maxDynamicMods);
+        output.append(newLine);
+        output.append("MIN_TERMINI_CLEAVAGES=");
+        output.append(minTerminiCleavages);
+        output.append(newLine);
+        output.append("MIN_PRECURSOR_MASS=");
+        output.append(minPrecursorMass);
+        output.append(newLine);
+        output.append("MAX_PRECURSOR_MASS=");
+        output.append(maxPrecursorMass);
+        output.append(newLine);
+        output.append("USE_SMART_PLUS_THREE_MODEL=");
+        output.append(useSmartPlusThreeModel);
+        output.append(newLine);
+        output.append("COMPUTE_XCORR=");
+        output.append(computeXCorr);
+        output.append(newLine);
+        output.append("NUM_INTENSITY_CLASSES=");
+        output.append(numIntensityClasses);
+        output.append(newLine);
+        output.append("CLASS_SIZE_MULTIPLIER=");
+        output.append(classSizeMultiplier);
+        output.append(newLine);
+        output.append("NUM_BATCHES=");
+        output.append(numberOfBatches);
+        output.append(newLine);
+        output.append("LOWER_ISOTOPE_CORRECTION=");
+        output.append(lowerIsotopeCorrection);
+        output.append(newLine);
+        output.append("UPPER_ISOTOPE_CORRECTION=");
+        output.append(upperIsotopeCorrection);
+        output.append(newLine);
+        output.append("FRAGMENTATION_RULE=");
+        output.append(fragmentationRule);
+        output.append(newLine);
 
         return output.toString();
     }
@@ -141,7 +240,300 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      *
      * @param numberOfSpectrumMarches the numberOfSpectrumMarches to set
      */
-    public void setNumberOfSpectrumMarches(Integer numberOfSpectrumMarches) {
+    public void setNumberOfSpectrumMatches(Integer numberOfSpectrumMarches) {
         this.numberOfSpectrumMarches = numberOfSpectrumMarches;
+    }
+
+    /**
+     * Returns the TicCutoffPercentage.
+     *
+     * @return the ticCutoffPercentage
+     */
+    public Double getTicCutoffPercentage() {
+        return ticCutoffPercentage;
+    }
+
+    /**
+     * Set the TicCutoffPercentage.
+     *
+     * @param ticCutoffPercentage the ticCutoffPercentage to set
+     */
+    public void setTicCutoffPercentage(Double ticCutoffPercentage) {
+        this.ticCutoffPercentage = ticCutoffPercentage;
+    }
+
+    /**
+     * Returns the maximum number of variable modifications.
+     *
+     * @return the maxDynamicMods
+     */
+    public Integer getMaxDynamicMods() {
+        return maxDynamicMods;
+    }
+
+    /**
+     * Set the maximum number of variable modifications.
+     *
+     * @param maxDynamicMods the maxDynamicMods to set
+     */
+    public void setMaxDynamicMods(Integer maxDynamicMods) {
+        this.maxDynamicMods = maxDynamicMods;
+    }
+
+    /**
+     * Returns the minimum number of termini cleavages.
+     *
+     * @return the maxDynamicMods
+     */
+    public Integer getMinTerminiCleavages() {
+        return minTerminiCleavages;
+    }
+
+    /**
+     * Set the minimum number of termini cleavages.
+     *
+     * @param minTerminiCleavages the minTerminiCleavages to set
+     */
+    public void setMinTerminiCleavages(Integer minTerminiCleavages) {
+        this.minTerminiCleavages = minTerminiCleavages;
+    }
+
+    /**
+     * Returns the minimum precursor mass.
+     *
+     * @return the minimum precursor mass
+     */
+    public Double getMinPrecursorMass() {
+        return minPrecursorMass;
+    }
+
+    /**
+     * Sets the minimum precursor mass.
+     *
+     * @param minPrecursorMass the minPrecursorMass to set
+     */
+    public void setMinPrecursorMass(Double minPrecursorMass) {
+        this.minPrecursorMass = minPrecursorMass;
+    }
+
+    /**
+     * Returns the maxPrecursorMass precursor mass.
+     *
+     * @return the maximum precursor mass
+     */
+    public Double getMaxPrecursorMass() {
+        return maxPrecursorMass;
+    }
+
+    /**
+     * Sets the maximum precursor mass.
+     *
+     * @param maxPrecursorMass the maximum to set
+     */
+    public void setMaxPrecursorMass(Double maxPrecursorMass) {
+        this.maxPrecursorMass = maxPrecursorMass;
+    }
+
+    /**
+     * Returns true if the UseSmartPlusThreeModel is to be used.
+     *
+     * @return true if the UseSmartPlusThreeModel is to be used
+     */
+    public boolean getUseSmartPlusThreeModel() {
+        return useSmartPlusThreeModel;
+    }
+
+    /**
+     * Sets if the UseSmartPlusThreeModel is to be used.
+     *
+     * @param useSmartPlusThreeModel
+     */
+    public void setUseSmartPlusThreeModel(boolean useSmartPlusThreeModel) {
+        this.useSmartPlusThreeModel = useSmartPlusThreeModel;
+    }
+
+    /**
+     * Returns true if a Sequest-like cross correlation score will be calculated
+     * for the top ranking hits in each spectrum’s result set.
+     *
+     * @return true if the Sequest-like cross correlation score is to be
+     * calculated
+     */
+    public boolean getComputeXCorr() {
+        return computeXCorr;
+    }
+
+    /**
+     * Sets if a Sequest-like cross correlation score will be calculated for the
+     * top ranking hits in each spectrum’s result set.
+     *
+     * @param computeXCorr
+     */
+    public void setComputeXCorr(boolean computeXCorr) {
+        this.computeXCorr = computeXCorr;
+    }
+
+    /**
+     * Returns the number of intensity classes.
+     *
+     * @return the number of intensity classes
+     */
+    public Integer getNumIntensityClasses() {
+        return numIntensityClasses;
+    }
+
+    /**
+     * Set the number of intensity classes.
+     *
+     * @param numIntensityClasses
+     */
+    public void setNumIntensityClasses(Integer numIntensityClasses) {
+        this.numIntensityClasses = numIntensityClasses;
+    }
+
+    /**
+     * Returns the intensity class size multiplier.
+     *
+     * @return the intensity class size multiplier
+     */
+    public Integer getClassSizeMultiplier() {
+        return classSizeMultiplier;
+    }
+
+    /**
+     * Set the intensity class size multiplier.
+     *
+     * @param classSizeMultiplier
+     */
+    public void setClassSizeMultiplier(Integer classSizeMultiplier) {
+        this.classSizeMultiplier = classSizeMultiplier;
+    }
+
+    /**
+     * Set the number of batches per node to strive for when using the MPI-based
+     * parallelization features.
+     *
+     * @return the number of batches per node
+     */
+    public Integer getNumberOfBatches() {
+        return numberOfBatches;
+    }
+
+    /**
+     * Set the number of batches per node to strive for when using the MPI-based
+     * parallelization features.
+     *
+     * @param numberOfBatches
+     */
+    public void setNumberOfBatches(Integer numberOfBatches) {
+        this.numberOfBatches = numberOfBatches;
+    }
+
+    /**
+     * Returns the lower isotope correction range.
+     *
+     * @return the lower isotope correction range
+     */
+    public Integer getLowerIsotopeCorrectionRange() {
+        return lowerIsotopeCorrection;
+    }
+
+    /**
+     * Set the lower isotope correction range.
+     *
+     * @param lowerIsotopeCorrection
+     */
+    public void setLowerIsotopeCorrectionRange(Integer lowerIsotopeCorrection) {
+        this.lowerIsotopeCorrection = lowerIsotopeCorrection;
+    }
+
+    /**
+     * Returns the upper isotope correction range.
+     *
+     * @return the upper isotope correction range
+     */
+    public Integer getUpperIsotopeCorrectionRange() {
+        return upperIsotopeCorrection;
+    }
+
+    /**
+     * Set the upper isotope correction range.
+     *
+     * @param upperIsotopeCorrection
+     */
+    public void setUpperIsotopeCorrectionRange(Integer upperIsotopeCorrection) {
+        this.upperIsotopeCorrection = upperIsotopeCorrection;
+    }
+
+    /**
+     * Returns the fragmentation rule.
+     *
+     * @return the fragmentation rule
+     */
+    public String getFragmentationRule() {
+        return fragmentationRule;
+    }
+
+    /**
+     * Set the fragmentation rule.
+     *
+     * @param fragmentationRule
+     */
+    public void setFragmentationRule(String fragmentationRule) {
+        this.fragmentationRule = fragmentationRule;
+    }
+
+    /**
+     * Tries to map the utilities enzyme to the enzymes supported by MyriMatch.
+     *
+     * @param enzyme the utilities enzyme
+     * @return the MyriMatch enzyme as a string, or null of no mapping is found
+     */
+    public static String enzymeMapping(Enzyme enzyme) {
+
+        String myriMatchEnzymeAsString = null;
+
+        String enzymeName = enzyme.getName();
+        if (enzymeName.equalsIgnoreCase("No Enzyme")) {
+            myriMatchEnzymeAsString = "unspecific cleavage";
+        } else if (enzymeName.equalsIgnoreCase("Trypsin")
+                || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
+            myriMatchEnzymeAsString = "Trypsin/P";
+        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")
+                || enzymeName.equalsIgnoreCase("Chymotrypsin, no P rule (FYWL)") // not strictly correct, but better than no support...
+                || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
+            myriMatchEnzymeAsString = "Chymotrypsin";
+        } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
+            myriMatchEnzymeAsString = "Lys-C";
+        } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
+                || enzymeName.equalsIgnoreCase("Glu-C") // again, bit really the same enzyme...
+                || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
+            myriMatchEnzymeAsString = "glutamyl endopeptidase";
+        } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
+            myriMatchEnzymeAsString = "Arg-C";
+        } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
+            myriMatchEnzymeAsString = "Asp-N";
+        } else if (enzymeName.equalsIgnoreCase("Top-Down")
+                || enzymeName.equalsIgnoreCase("Whole Protein")) {
+            myriMatchEnzymeAsString = "no cleavage";
+        } else if (enzymeName.equalsIgnoreCase("CNBr")) {
+            myriMatchEnzymeAsString = "CNBr";
+        } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
+            myriMatchEnzymeAsString = "Formic_acid";
+        } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
+            myriMatchEnzymeAsString = "Lys-C/P";
+        } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
+            myriMatchEnzymeAsString = "Pepsin A";
+        } else if (enzymeName.equalsIgnoreCase("Trypsin + Chymotrypsin (FYWLKR)")) {
+            myriMatchEnzymeAsString = "TrypChymo";
+        } else if (enzymeName.equalsIgnoreCase("Trypsin, no P rule")) {
+            myriMatchEnzymeAsString = "Trypsin";
+        } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
+            myriMatchEnzymeAsString = "Asp-N";
+        }
+
+        // enzymes not supported: Trypsin + CNBr, Asp-N + Glu-C, Lys-N (K), Thermolysin, no P rule
+
+        return myriMatchEnzymeAsString;
     }
 }

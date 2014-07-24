@@ -74,6 +74,15 @@ public abstract class AminoAcid implements Serializable {
         "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
 
     /**
+     * Cache of the indistinguishable amino acids
+     */
+    private ArrayList<Character> indistinguishableAACache = null;
+    /**
+     * The mass tolerance used for the indistinguishable amino acids in cache
+     */
+    private Double indistinguishableAACacheMass = null;
+
+    /**
      * Convenience method returning an array of all implemented amino acids
      * represented by their singe letter code.
      *
@@ -234,13 +243,16 @@ public abstract class AminoAcid implements Serializable {
         if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
-        ArrayList<Character> results = new ArrayList<Character>();
-        for (char aa : getAminoAcids()) {
-            if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
-                results.add(aa);
+        if (indistinguishableAACache == null || indistinguishableAACacheMass != massTolerance) {
+            indistinguishableAACache = new ArrayList<Character>();
+            for (char aa : getAminoAcids()) {
+                if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
+                    indistinguishableAACache.add(aa);
+                }
             }
+            indistinguishableAACacheMass = massTolerance;
         }
-        return results;
+        return indistinguishableAACache;
     }
 
     /**

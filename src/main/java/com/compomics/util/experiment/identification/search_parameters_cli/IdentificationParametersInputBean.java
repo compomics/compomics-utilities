@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
@@ -60,7 +61,7 @@ public class IdentificationParametersInputBean {
      * @throws ClassNotFoundException
      */
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         ///////////////////////////////////
         // General parameters
         ///////////////////////////////////
@@ -70,11 +71,11 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OUTPUT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OUTPUT.id);
             if (!arg.endsWith(".parameters")) {
-                arg+= ".parameters";
+                arg += ".parameters";
             }
             destinationFile = new File(arg);
         }
-        
+
         searchParameters = new SearchParameters();
 
         if (aLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
@@ -169,29 +170,17 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                omssaParameters.setRemovePrecursor(true);
-            } else {
-                omssaParameters.setRemovePrecursor(false);
-            }
+            omssaParameters.setRemovePrecursor(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                omssaParameters.setScalePrecursor(true);
-            } else {
-                omssaParameters.setScalePrecursor(false);
-            }
+            omssaParameters.setScalePrecursor(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                omssaParameters.setEstimateCharge(true);
-            } else {
-                omssaParameters.setEstimateCharge(false);
-            }
+            omssaParameters.setEstimateCharge(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id);
@@ -221,11 +210,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                omssaParameters.setMemoryMappedSequenceLibraries(true);
-            } else {
-                omssaParameters.setMemoryMappedSequenceLibraries(false);
-            }
+            omssaParameters.setMemoryMappedSequenceLibraries(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
@@ -290,7 +275,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
             Integer option = new Integer(arg);
-                omssaParameters.setCleaveNterMethionine(option == 1);
+            omssaParameters.setCleaveNterMethionine(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
@@ -310,12 +295,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
             Integer option = new Integer(arg);
-                omssaParameters.setDetermineChargePlusOneAlgorithmically(option == 1);
+            omssaParameters.setDetermineChargePlusOneAlgorithmically(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
             Integer option = new Integer(arg);
-                omssaParameters.setSearchPositiveIons(option == 1);
+            omssaParameters.setSearchPositiveIons(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
@@ -325,12 +310,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
             Integer option = new Integer(arg);
-                omssaParameters.setSearchForwardFragmentFirst(option == 1);
+            omssaParameters.setSearchForwardFragmentFirst(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
             Integer option = new Integer(arg);
-                omssaParameters.setSearchRewindFragments(option == 1);
+            omssaParameters.setSearchRewindFragments(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
@@ -340,7 +325,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
             Integer option = new Integer(arg);
-                omssaParameters.setUseCorrelationCorrectionScore(option == 1);
+            omssaParameters.setUseCorrelationCorrectionScore(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id);
@@ -397,11 +382,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setUseNoiseSuppression(true);
-            } else {
-                xtandemParameters.setUseNoiseSuppression(false);
-            }
+            xtandemParameters.setUseNoiseSuppression(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id);
@@ -411,38 +392,22 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setProteinQuickAcetyl(true);
-            } else {
-                xtandemParameters.setProteinQuickAcetyl(false);
-            }
+            xtandemParameters.setProteinQuickAcetyl(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setQuickPyrolidone(true);
-            } else {
-                xtandemParameters.setQuickPyrolidone(false);
-            }
+            xtandemParameters.setQuickPyrolidone(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setStpBias(true);
-            } else {
-                xtandemParameters.setStpBias(false);
-            }
+            xtandemParameters.setStpBias(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefine(true);
-            } else {
-                xtandemParameters.setRefine(false);
-            }
+            xtandemParameters.setRefine(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id);
@@ -452,56 +417,32 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefineUnanticipatedCleavages(true);
-            } else {
-                xtandemParameters.setRefineUnanticipatedCleavages(false);
-            }
+            xtandemParameters.setRefineUnanticipatedCleavages(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefineSemi(true);
-            } else {
-                xtandemParameters.setRefineSemi(false);
-            }
+            xtandemParameters.setRefineSemi(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setPotentialModificationsForFullRefinment(true);
-            } else {
-                xtandemParameters.setPotentialModificationsForFullRefinment(false);
-            }
+            xtandemParameters.setPotentialModificationsForFullRefinment(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefinePointMutations(true);
-            } else {
-                xtandemParameters.setRefinePointMutations(false);
-            }
+            xtandemParameters.setRefinePointMutations(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefineSnaps(true);
-            } else {
-                xtandemParameters.setRefineSnaps(false);
-            }
+            xtandemParameters.setRefineSnaps(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setRefineSpectrumSynthesis(true);
-            } else {
-                xtandemParameters.setRefineSpectrumSynthesis(false);
-            }
+            xtandemParameters.setRefineSpectrumSynthesis(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_EVALUE.id);
@@ -511,29 +452,17 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setOutputProteins(true);
-            } else {
-                xtandemParameters.setOutputProteins(false);
-            }
+            xtandemParameters.setOutputProteins(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setOutputSequences(true);
-            } else {
-                xtandemParameters.setOutputSequences(false);
-            }
+            xtandemParameters.setOutputSequences(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                xtandemParameters.setOutputSpectra(true);
-            } else {
-                xtandemParameters.setOutputSpectra(false);
-            }
+            xtandemParameters.setOutputSpectra(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);
@@ -548,11 +477,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                msgfParameters.setSearchDecoyDatabase(true);
-            } else {
-                msgfParameters.setSearchDecoyDatabase(false);
-            }
+            msgfParameters.setSearchDecoyDatabase(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id);
@@ -587,11 +512,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                msgfParameters.setAdditionalOutput(true);
-            } else {
-                msgfParameters.setAdditionalOutput(false);
-            }
+            msgfParameters.setAdditionalOutput(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
@@ -614,7 +535,94 @@ public class IdentificationParametersInputBean {
             msgfParameters.setNumberOfPtmsPerPeptide(option);
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), msgfParameters);
-        
+
+        ///////////////////////////////////
+        // MyriMatch parameters
+        ///////////////////////////////////
+        MyriMatchParameters myriMatchParameters = new MyriMatchParameters();
+
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setMinPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setMaxPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id);
+            Double option = new Double(arg);
+            myriMatchParameters.setMinPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id);
+            Double option = new Double(arg);
+            myriMatchParameters.setMaxPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setLowerIsotopeCorrectionRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setUpperIsotopeCorrectionRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setNumberOfSpectrumMatches(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setMaxDynamicMods(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id);
+            myriMatchParameters.setFragmentationRule(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setMinTerminiCleavages(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setUseSmartPlusThreeModel(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setComputeXCorr(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id);
+            Double option = new Double(arg);
+            myriMatchParameters.setTicCutoffPercentage(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setNumIntensityClasses(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setClassSizeMultiplier(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setNumberOfBatches(option);
+        }
+
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
+
         ///////////////////////////////////
         // MS Amanda parameters
         ///////////////////////////////////
@@ -622,11 +630,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                msAmandaParameters.setGenerateDecoyDatabase(true);
-            } else {
-                msAmandaParameters.setGenerateDecoyDatabase(false);
-            }
+            msAmandaParameters.setGenerateDecoyDatabase(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
@@ -640,15 +644,11 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                msAmandaParameters.setMonoIsotopic(true);
-            } else {
-                msAmandaParameters.setMonoIsotopic(false);
-            }
+            msAmandaParameters.setMonoIsotopic(option == 1);
         }
-        
+
         searchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), msAmandaParameters);
-        
+
         ///////////////////////////////////
         // PepNovo+ parameters
         ///////////////////////////////////
@@ -661,38 +661,22 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                pepnovoParameters.setEstimateCharge(true);
-            } else {
-                pepnovoParameters.setEstimateCharge(false);
-            }
+            pepnovoParameters.setEstimateCharge(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                pepnovoParameters.setCorrectPrecursorMass(true);
-            } else {
-                pepnovoParameters.setCorrectPrecursorMass(false);
-            }
+            pepnovoParameters.setCorrectPrecursorMass(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                pepnovoParameters.setDiscardLowQualitySpectra(true);
-            } else {
-                pepnovoParameters.setDiscardLowQualitySpectra(false);
-            }
+            pepnovoParameters.setDiscardLowQualitySpectra(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                pepnovoParameters.setDiscardLowQualitySpectra(true);
-            } else {
-                pepnovoParameters.setDiscardLowQualitySpectra(false);
-            }
+            pepnovoParameters.setDiscardLowQualitySpectra(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id);
@@ -701,14 +685,10 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                pepnovoParameters.setGenerateQuery(true);
-            } else {
-                pepnovoParameters.setGenerateQuery(false);
-            }
+            pepnovoParameters.setGenerateQuery(option == 1);
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), pepnovoParameters);
-        
+
         ///////////////////////////////////
         // DirecTag parameters
         ///////////////////////////////////
@@ -731,11 +711,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                direcTagParameters.setAdjustPrecursorMass(true);
-            } else {
-                direcTagParameters.setAdjustPrecursorMass(false);
-            }
+            direcTagParameters.setAdjustPrecursorMass(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
@@ -764,20 +740,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                direcTagParameters.setUseChargeStateFromMS(true);
-            } else {
-                direcTagParameters.setUseChargeStateFromMS(false);
-            }
+            direcTagParameters.setUseChargeStateFromMS(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                direcTagParameters.setDuplicateSpectra(true);
-            } else {
-                direcTagParameters.setDuplicateSpectra(false);
-            }
+            direcTagParameters.setDuplicateSpectra(option == 1);
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
@@ -839,7 +807,7 @@ public class IdentificationParametersInputBean {
 
     /**
      * Returns the file where to save the identification parameters.
-     * 
+     *
      * @return the file where to save the identification parameters
      */
     public File getDestinationFile() {
@@ -848,7 +816,7 @@ public class IdentificationParametersInputBean {
 
     /**
      * Indicates whether the modifications should be printed on the screen.
-     * 
+     *
      * @return true if the modifications should be printed on the screen
      */
     public Boolean isListMods() {
@@ -876,8 +844,8 @@ public class IdentificationParametersInputBean {
                 }
             } catch (Exception e) {
                 if (!error) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the fixed modifications:"
-                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the fixed modifications:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                 }
                 e.printStackTrace();
                 error = true;
@@ -895,8 +863,8 @@ public class IdentificationParametersInputBean {
                 }
             } catch (Exception e) {
                 if (!error) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the variable modifications:"
-                        + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
+                    System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the variable modifications:"
+                            + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                 }
                 e.printStackTrace();
                 error = true;
@@ -913,7 +881,7 @@ public class IdentificationParametersInputBean {
      * @throws IOException
      */
     public static boolean isValidStartup(CommandLine aLine) throws IOException {
-        
+
         if (aLine.getOptions().length == 0) {
             return false;
         }
@@ -1960,11 +1928,8 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
-        
-        // @TODO: add MS-GF+, MS Amanda and DirecTag parameters!!!
-        
 
+        // @TODO: add MS-GF+, MS Amanda and DirecTag parameters!!!
         return true;
     }
 }

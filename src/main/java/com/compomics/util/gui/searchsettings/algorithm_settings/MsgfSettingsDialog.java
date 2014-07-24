@@ -178,7 +178,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         peptideLengthLabel = new javax.swing.JLabel();
         numberMatchesLabel = new javax.swing.JLabel();
         numberMatchesTxt = new javax.swing.JTextField();
-        additionalOutputlLabel = new javax.swing.JLabel();
+        additionalOutputLabel = new javax.swing.JLabel();
         additionalOutputCmb = new javax.swing.JComboBox();
         isotopeErrorRangeLabel = new javax.swing.JLabel();
         lowIsotopeErrorRangeTxt = new javax.swing.JTextField();
@@ -250,7 +250,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        additionalOutputlLabel.setText("Additional Output");
+        additionalOutputLabel.setText("Additional Output");
 
         additionalOutputCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         additionalOutputCmb.setSelectedIndex(1);
@@ -325,7 +325,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(additionalOutputlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(additionalOutputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(additionalOutputCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
@@ -394,7 +394,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                     .addComponent(numberMatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(additionalOutputlLabel)
+                    .addComponent(additionalOutputLabel)
                     .addComponent(additionalOutputCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -614,7 +614,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
                 }
                 valid = false;
                 isotopeErrorRangeLabel.setForeground(Color.RED);
-                isotopeErrorRangeLabel.setToolTipText("Please select a valid range (upper < higher))");
+                isotopeErrorRangeLabel.setToolTipText("Please select a valid range (upper <= higher)");
             }
         } catch (NumberFormatException e) {
             // ignore, handled above
@@ -627,7 +627,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox additionalOutputCmb;
-    private javax.swing.JLabel additionalOutputlLabel;
+    private javax.swing.JLabel additionalOutputLabel;
     private javax.swing.JPanel advancedSearchSettingsPanel;
     private javax.swing.JLabel advancedSettingsWarningLabel;
     private javax.swing.JPanel backgroundPanel;

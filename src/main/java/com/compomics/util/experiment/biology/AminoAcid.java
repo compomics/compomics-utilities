@@ -74,11 +74,11 @@ public abstract class AminoAcid implements Serializable {
         "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
 
     /**
-     * Cache of the indistinguishable amino acids
+     * Cache of the indistinguishable amino acids.
      */
     private ArrayList<Character> indistinguishableAACache = null;
     /**
-     * The mass tolerance used for the indistinguishable amino acids in cache
+     * The mass tolerance used for the indistinguishable amino acids in cache.
      */
     private Double indistinguishableAACacheMass = null;
 

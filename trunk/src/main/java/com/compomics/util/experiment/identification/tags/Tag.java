@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
@@ -577,18 +579,18 @@ public class Tag extends ExperimentObject {
         int sequenceLastIndex = sequence.length() - 1;
 
         // Check tag components to the N-term
-        HashMap<Integer, AminoAcidPattern> nTermPossiblePatterns = new HashMap<Integer, AminoAcidPattern>();
-        HashMap<Integer, Integer> nTermPossibleIndexes = new HashMap<Integer, Integer>();
-        int tempIndex = nTermPossiblePatterns.size();
-        nTermPossiblePatterns.put(tempIndex, new AminoAcidPattern());
-        nTermPossibleIndexes.put(tempIndex, tagIndex);
+        ArrayList<AminoAcidPattern> nTermPossiblePatterns = new ArrayList<AminoAcidPattern>();
+        ArrayList<Integer> nTermPossibleIndexes = new ArrayList<Integer>();
+        nTermPossiblePatterns.add(new AminoAcidPattern());
+        nTermPossibleIndexes.add(tagIndex);
         for (int i = componentIndex - 1; i >= 0; i--) {
             TagComponent tagComponent = content.get(i);
-            HashMap<Integer, Integer> newIndexes = new HashMap<Integer, Integer>();
-            HashMap<Integer, AminoAcidPattern> newPatterns = new HashMap<Integer, AminoAcidPattern>();
+            ArrayList<AminoAcidPattern> newPatterns = new ArrayList<AminoAcidPattern>();
+            ArrayList<Integer> newIndexes = new ArrayList<Integer>();
+            Iterator<Integer> nTermPossibleIndexesIterator = nTermPossibleIndexes.iterator();
             if (tagComponent instanceof AminoAcidPattern) {
-                for (int index : nTermPossibleIndexes.keySet()) {
-                    int aaIndex = nTermPossibleIndexes.get(index);
+                for (AminoAcidPattern nTermPattern : nTermPossiblePatterns) {
+                    int aaIndex = nTermPossibleIndexesIterator.next();
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                     int startIndex = aaIndex - aminoAcidPattern.length();
                     if (startIndex >= 0) {
@@ -631,21 +633,20 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                             if (goodTerminalPTms) {
-                                AminoAcidPattern nTermPattern = nTermPossiblePatterns.get(index);
                                 newPattern.append(nTermPattern);
-                                tempIndex = newIndexes.size();
-                                newIndexes.put(tempIndex, startIndex);
-                                newPatterns.put(tempIndex, newPattern);
+                                newIndexes.add(startIndex);
+                                newPatterns.add(newPattern);
                             }
                         }
                     }
                 }
             } else if (tagComponent instanceof MassGap) {
                 double massGap = tagComponent.getMass();
-                for (int index : nTermPossibleIndexes.keySet()) {
-                    int aaIndex = nTermPossibleIndexes.get(index);
-                    HashMap<Integer, Double> possiblePatternsMasses = new HashMap<Integer, Double>();
-                    HashMap<Integer, AminoAcidPattern> possiblePatterns = new HashMap<Integer, AminoAcidPattern>();
+                for (AminoAcidPattern nTermPattern : nTermPossiblePatterns) {
+                    int aaIndex = nTermPossibleIndexesIterator.next();
+                    int currentIndex = aaIndex;
+                    ArrayList<Double> possiblePatternsMasses = new ArrayList<Double>();
+                    ArrayList<AminoAcidPattern> possiblePatterns = new ArrayList<AminoAcidPattern>();
                     ArrayList<AminoAcidPattern> validPatterns = new ArrayList<AminoAcidPattern>();
                     while (--aaIndex >= 0) {
                         char aa = sequence.charAt(aaIndex);
@@ -668,9 +669,8 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                             double noModMass = aminoAcid.monoisotopicMass + fixedMass;
-                            tempIndex = possiblePatterns.size();
-                            possiblePatterns.put(tempIndex, newPattern);
-                            possiblePatternsMasses.put(tempIndex, noModMass);
+                            possiblePatterns.add(newPattern);
+                            possiblePatternsMasses.add(noModMass);
                             for (String modificationName : variableModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -678,17 +678,16 @@ public class Tag extends ExperimentObject {
                                     newPattern = new AminoAcidPattern(aminoAcid.singleLetterCode);
                                     newPattern.addModificationMatch(1, new ModificationMatch(modificationName, true, 1));
                                     double newMass = noModMass + ptm.getMass();
-                                    tempIndex = possiblePatterns.size();
-                                    possiblePatterns.put(tempIndex, newPattern);
-                                    possiblePatternsMasses.put(tempIndex, newMass);
+                                    possiblePatterns.add(newPattern);
+                                    possiblePatternsMasses.add(newMass);
                                 }
                             }
                         } else {
-                            HashMap<Integer, Double> newPossiblePatternsMasses = new HashMap<Integer, Double>();
-                            HashMap<Integer, AminoAcidPattern> newPossiblePatterns = new HashMap<Integer, AminoAcidPattern>();
-                            for (int index1 : possiblePatternsMasses.keySet()) {
-                                AminoAcidPattern aminoAcidPattern = possiblePatterns.get(index1);
-                                double mass = possiblePatternsMasses.get(index1);
+                            ArrayList<Double> newPossiblePatternsMasses = new ArrayList<Double>();
+                            ArrayList<AminoAcidPattern> newPossiblePatterns = new ArrayList<AminoAcidPattern>();
+                            Iterator<AminoAcidPattern> newPossiblePatternsMassesIterator = possiblePatterns.iterator();
+                            for (double mass : possiblePatternsMasses) {
+                                AminoAcidPattern aminoAcidPattern = newPossiblePatternsMassesIterator.next();
                                 AminoAcidPattern newPattern = new AminoAcidPattern(aminoAcid.singleLetterCode);
                                 double noModMass = aminoAcid.monoisotopicMass + fixedMass + mass;
                                 newPattern.append(aminoAcidPattern);
@@ -697,9 +696,8 @@ public class Tag extends ExperimentObject {
                                         newPattern.addModificationMatch(1, modificationMatch);
                                     }
                                 }
-                                tempIndex = newPossiblePatternsMasses.size();
-                                newPossiblePatterns.put(tempIndex, newPattern);
-                                newPossiblePatternsMasses.put(tempIndex, noModMass);
+                                newPossiblePatterns.add(newPattern);
+                                newPossiblePatternsMasses.add(noModMass);
                                 for (String modificationName : variableModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                     AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -708,12 +706,13 @@ public class Tag extends ExperimentObject {
                                         newPattern.append(aminoAcidPattern);
                                         newPattern.addModificationMatch(1, new ModificationMatch(modificationName, true, 1));
                                         double newMass = noModMass + ptm.getMass();
-                                        tempIndex = newPossiblePatternsMasses.size();
-                                        newPossiblePatterns.put(tempIndex, newPattern);
-                                        newPossiblePatternsMasses.put(tempIndex, newMass);
+                                        newPossiblePatterns.add(newPattern);
+                                        newPossiblePatternsMasses.add(newMass);
                                     }
                                 }
                             }
+                            possiblePatterns.clear();
+                            possiblePatternsMasses.clear();
                             possiblePatterns = newPossiblePatterns;
                             possiblePatternsMasses = newPossiblePatternsMasses;
                         }
@@ -737,9 +736,11 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                         }
-                        HashSet<Integer> indexes = new HashSet<Integer>(possiblePatterns.keySet());
-                        for (int index1 : indexes) {
-                            AminoAcidPattern aminoAcidPattern = possiblePatterns.get(index1);
+                        Iterator<AminoAcidPattern> possiblePatternsIterator = possiblePatterns.iterator();
+                        Iterator<Double> possiblePatternsMassesIterator = possiblePatternsMasses.iterator();
+                        while (possiblePatternsIterator.hasNext()) {
+                            AminoAcidPattern aminoAcidPattern = possiblePatternsIterator.next();
+                            double mass = possiblePatternsMassesIterator.next();
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -760,10 +761,9 @@ public class Tag extends ExperimentObject {
                                     }
                                 }
                             }
-                            double mass = possiblePatternsMasses.get(index1);
                             if (mass + fixedNTermModifications + minMod > massGap + massTolerance) {
-                                possiblePatternsMasses.remove(index1);
-                                possiblePatterns.remove(index1);
+                                possiblePatternsIterator.remove();
+                                possiblePatternsMassesIterator.remove();
                             } else {
                                 if (Math.abs(mass + fixedNTermModifications - massGap) <= massTolerance) {
                                     if (reportFixedPtms) {
@@ -772,8 +772,8 @@ public class Tag extends ExperimentObject {
                                         }
                                     }
                                     validPatterns.add(aminoAcidPattern);
-                                    possiblePatternsMasses.remove(index1);
-                                    possiblePatterns.remove(index1);
+                                    possiblePatternsIterator.remove();
+                                    possiblePatternsMassesIterator.remove();
                                 } else {
                                     boolean found = false;
                                     if (aaIndex == 0) {
@@ -789,8 +789,8 @@ public class Tag extends ExperimentObject {
                                                         }
                                                     }
                                                     validPatterns.add(aminoAcidPattern);
-                                                    possiblePatternsMasses.remove(index1);
-                                                    possiblePatterns.remove(index1);
+                                                    possiblePatternsIterator.remove();
+                                                    possiblePatternsMassesIterator.remove();
                                                     found = true;
                                                     break;
                                                 }
@@ -810,8 +810,8 @@ public class Tag extends ExperimentObject {
                                                         }
                                                     }
                                                     validPatterns.add(aminoAcidPattern);
-                                                    possiblePatternsMasses.remove(index1);
-                                                    possiblePatterns.remove(index1);
+                                                    possiblePatternsIterator.remove();
+                                                    possiblePatternsMassesIterator.remove();
                                                     break;
                                                 }
                                             }
@@ -820,17 +820,15 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                         }
-                        if (possiblePatternsMasses.isEmpty()) {
+                        if (possiblePatterns.isEmpty()) {
                             break;
                         }
                     }
                     for (AminoAcidPattern aminoAcidPattern : validPatterns) {
-                        AminoAcidPattern nTermPattern = nTermPossiblePatterns.get(index);
                         aminoAcidPattern.append(nTermPattern);
-                        int newIndex = nTermPossibleIndexes.get(index) - aminoAcidPattern.length();
-                        tempIndex = newIndexes.size();
-                        newIndexes.put(tempIndex, newIndex);
-                        newPatterns.put(tempIndex, aminoAcidPattern);
+                        int newIndex = currentIndex - aminoAcidPattern.length();
+                        newIndexes.add(newIndex);
+                        newPatterns.add(aminoAcidPattern);
                     }
                 }
             } else {
@@ -839,6 +837,8 @@ public class Tag extends ExperimentObject {
             if (newIndexes.isEmpty()) {
                 return result;
             } else {
+                nTermPossibleIndexes.clear();
+                nTermPossiblePatterns.clear();
                 nTermPossibleIndexes = newIndexes;
                 nTermPossiblePatterns = newPatterns;
             }
@@ -924,18 +924,18 @@ public class Tag extends ExperimentObject {
             }
         }
         // Check tag components to the C-term
-        HashMap<Integer, AminoAcidPattern> cTermPossiblePatterns = new HashMap<Integer, AminoAcidPattern>();
-        HashMap<Integer, Integer> cTermPossibleIndexes = new HashMap<Integer, Integer>();
-        tempIndex = cTermPossibleIndexes.size();
-        cTermPossiblePatterns.put(tempIndex, new AminoAcidPattern());
-        cTermPossibleIndexes.put(tempIndex, endTagIndex);
-        for (int i = componentIndex + 1; i < content.size(); i++) {
+        ArrayList<AminoAcidPattern> cTermPossiblePatterns = new ArrayList<AminoAcidPattern>();
+        ArrayList<Integer> cTermPossibleIndexes = new ArrayList<Integer>();
+        cTermPossiblePatterns.add(new AminoAcidPattern());
+        cTermPossibleIndexes.add(tagIndex);
+        for (int i = componentIndex - 1; i >= 0; i--) {
             TagComponent tagComponent = content.get(i);
-            HashMap<Integer, Integer> newIndexes = new HashMap<Integer, Integer>();
-            HashMap<Integer, AminoAcidPattern> newPatterns = new HashMap<Integer, AminoAcidPattern>();
+            ArrayList<AminoAcidPattern> newPatterns = new ArrayList<AminoAcidPattern>();
+            ArrayList<Integer> newIndexes = new ArrayList<Integer>();
+            Iterator<Integer> cTermPossibleIndexesIterator = cTermPossibleIndexes.iterator();
             if (tagComponent instanceof AminoAcidPattern) {
-                for (int index : cTermPossibleIndexes.keySet()) {
-                    int aaIndex = cTermPossibleIndexes.get(index);
+                for (AminoAcidPattern cTermPattern : cTermPossiblePatterns) {
+                    int aaIndex = cTermPossibleIndexesIterator.next();
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                     int endIndex = aaIndex + aminoAcidPattern.length();
                     if (endIndex <= sequenceLastIndex) {
@@ -978,21 +978,20 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                             if (goodTerminalPTms) {
-                                AminoAcidPattern cTermPattern = cTermPossiblePatterns.get(index);
                                 cTermPattern.append(newPattern);
-                                tempIndex = newIndexes.size();
-                                newIndexes.put(tempIndex, endIndex);
-                                newPatterns.put(tempIndex, cTermPattern);
+                                newIndexes.add(endIndex);
+                                newPatterns.add(cTermPattern);
                             }
                         }
                     }
                 }
             } else if (tagComponent instanceof MassGap) {
                 double massGap = tagComponent.getMass();
-                for (int index : cTermPossibleIndexes.keySet()) {
-                    int aaIndex = cTermPossibleIndexes.get(index);
-                    HashMap<Integer, Double> possiblePatternsMasses = new HashMap<Integer, Double>();
-                    HashMap<Integer, AminoAcidPattern> possiblePatterns = new HashMap<Integer, AminoAcidPattern>();
+                for (AminoAcidPattern cTermPattern : cTermPossiblePatterns) {
+                    int aaIndex = cTermPossibleIndexesIterator.next();
+                    int currentIndex = aaIndex;
+                    ArrayList<Double> possiblePatternsMasses = new ArrayList<Double>();
+                    ArrayList<AminoAcidPattern> possiblePatterns = new ArrayList<AminoAcidPattern>();
                     ArrayList<AminoAcidPattern> validPatterns = new ArrayList<AminoAcidPattern>();
                     while (++aaIndex <= sequenceLastIndex) {
                         char aa = sequence.charAt(aaIndex);
@@ -1017,9 +1016,8 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                             double noModMass = aminoAcid.monoisotopicMass + fixedMass;
-                            tempIndex = possiblePatterns.size();
-                            possiblePatterns.put(tempIndex, newPattern);
-                            possiblePatternsMasses.put(tempIndex, noModMass);
+                            possiblePatterns.add(newPattern);
+                            possiblePatternsMasses.add(noModMass);
                             for (String modificationName : variableModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -1027,17 +1025,16 @@ public class Tag extends ExperimentObject {
                                     newPattern = new AminoAcidPattern(aminoAcid.singleLetterCode);
                                     newPattern.addModificationMatch(modIndex, new ModificationMatch(modificationName, true, modIndex));
                                     double newMass = noModMass + ptm.getMass();
-                                    tempIndex = possiblePatterns.size();
-                                    possiblePatterns.put(tempIndex, newPattern);
-                                    possiblePatternsMasses.put(tempIndex, newMass);
+                                    possiblePatterns.add(newPattern);
+                                    possiblePatternsMasses.add(newMass);
                                 }
                             }
                         } else {
-                            HashMap<Integer, Double> newPossiblePatternsMasses = new HashMap<Integer, Double>();
-                            HashMap<Integer, AminoAcidPattern> newPossiblePatterns = new HashMap<Integer, AminoAcidPattern>();
-                            for (int index1 : possiblePatternsMasses.keySet()) {
-                                AminoAcidPattern aminoAcidPattern = possiblePatterns.get(index1);
-                                double mass = possiblePatternsMasses.get(index1);
+                            ArrayList<Double> newPossiblePatternsMasses = new ArrayList<Double>();
+                            ArrayList<AminoAcidPattern> newPossiblePatterns = new ArrayList<AminoAcidPattern>();
+                            Iterator<AminoAcidPattern> newPossiblePatternsMassesIterator = possiblePatterns.iterator();
+                            for (double mass : possiblePatternsMasses) {
+                                AminoAcidPattern aminoAcidPattern = newPossiblePatternsMassesIterator.next();
                                 AminoAcidPattern newPattern = new AminoAcidPattern(aminoAcidPattern);
                                 double noModMass = aminoAcid.monoisotopicMass + fixedMass + mass;
                                 newPattern.append(new AminoAcidPattern(aminoAcid.singleLetterCode));
@@ -1048,9 +1045,8 @@ public class Tag extends ExperimentObject {
                                         newPattern.addModificationMatch(modIndex, modificationMatch);
                                     }
                                 }
-                                tempIndex = newPossiblePatternsMasses.size();
-                                newPossiblePatterns.put(tempIndex, newPattern);
-                                newPossiblePatternsMasses.put(tempIndex, noModMass);
+                                newPossiblePatterns.add(newPattern);
+                                newPossiblePatternsMasses.add(noModMass);
                                 for (String modificationName : variableModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                     AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -1059,12 +1055,13 @@ public class Tag extends ExperimentObject {
                                         newPattern.append(new AminoAcidPattern(aminoAcid.singleLetterCode));
                                         newPattern.addModificationMatch(modIndex, new ModificationMatch(modificationName, true, modIndex));
                                         double newMass = noModMass + ptm.getMass();
-                                        tempIndex = newPossiblePatternsMasses.size();
-                                        newPossiblePatterns.put(tempIndex, newPattern);
-                                        newPossiblePatternsMasses.put(tempIndex, newMass);
+                                        newPossiblePatterns.add(newPattern);
+                                        newPossiblePatternsMasses.add(newMass);
                                     }
                                 }
                             }
+                            possiblePatterns.clear();
+                            possiblePatternsMasses.clear();
                             possiblePatterns = newPossiblePatterns;
                             possiblePatternsMasses = newPossiblePatternsMasses;
                         }
@@ -1088,9 +1085,11 @@ public class Tag extends ExperimentObject {
                                 }
                             }
                         }
-                        HashSet<Integer> indexes = new HashSet<Integer>(possiblePatterns.keySet());
-                        for (int index1 : indexes) {
-                            AminoAcidPattern aminoAcidPattern = possiblePatterns.get(index1);
+                        Iterator<AminoAcidPattern> possiblePatternsIterator = possiblePatterns.iterator();
+                        Iterator<Double> possiblePatternsMassesIterator = possiblePatternsMasses.iterator();
+                        while (possiblePatternsIterator.hasNext()) {
+                            AminoAcidPattern aminoAcidPattern = possiblePatternsIterator.next();
+                            double mass = possiblePatternsMassesIterator.next();
                             int lastAminoAcidIndex = aminoAcidPattern.length() - 1;
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -1112,10 +1111,9 @@ public class Tag extends ExperimentObject {
                                     }
                                 }
                             }
-                            double mass = possiblePatternsMasses.get(index1);
                             if (mass + fixedCTermModifications + minMod > massGap + massTolerance) {
-                                possiblePatternsMasses.remove(index1);
-                                possiblePatterns.remove(index1);
+                                possiblePatternsIterator.remove();
+                                possiblePatternsMassesIterator.remove();
                             } else {
                                 int modIndex = aminoAcidPattern.length();
                                 if (Math.abs(mass + fixedCTermModifications - massGap) <= massTolerance) {
@@ -1126,8 +1124,8 @@ public class Tag extends ExperimentObject {
                                             aminoAcidPattern.addModificationMatch(modIndex, modificationMatch);
                                         }
                                     }
-                                    possiblePatternsMasses.remove(index1);
-                                    possiblePatterns.remove(index1);
+                                    possiblePatternsIterator.remove();
+                                    possiblePatternsMassesIterator.remove();
                                 } else {
                                     boolean found = false;
                                     if (aaIndex == lastAminoAcidIndex) {
@@ -1144,8 +1142,8 @@ public class Tag extends ExperimentObject {
                                                             aminoAcidPattern.addModificationMatch(modIndex, modificationMatch);
                                                         }
                                                     }
-                                                    possiblePatternsMasses.remove(index1);
-                                                    possiblePatterns.remove(index1);
+                                                    possiblePatternsIterator.remove();
+                                                    possiblePatternsMassesIterator.remove();
                                                     found = true;
                                                     break;
                                                 }
@@ -1166,8 +1164,8 @@ public class Tag extends ExperimentObject {
                                                         }
                                                     }
                                                     validPatterns.add(aminoAcidPattern);
-                                                    possiblePatternsMasses.remove(index1);
-                                                    possiblePatterns.remove(index1);
+                                                    possiblePatternsIterator.remove();
+                                                    possiblePatternsMassesIterator.remove();
                                                     break;
                                                 }
                                             }
@@ -1181,13 +1179,11 @@ public class Tag extends ExperimentObject {
                         }
                     }
                     for (AminoAcidPattern aminoAcidPattern : validPatterns) {
-                        AminoAcidPattern cTermPattern = cTermPossiblePatterns.get(index);
                         AminoAcidPattern newPattern = new AminoAcidPattern(cTermPattern);
                         newPattern.append(aminoAcidPattern);
-                        int newIndex = cTermPossibleIndexes.get(index) + aminoAcidPattern.length();
-                        tempIndex = newIndexes.size();
-                        newIndexes.put(tempIndex, newIndex);
-                        newPatterns.put(tempIndex, aminoAcidPattern);
+                        int newIndex = currentIndex + aminoAcidPattern.length();
+                        newIndexes.add(newIndex);
+                        newPatterns.add(aminoAcidPattern);
                     }
                 }
             } else {
@@ -1196,22 +1192,24 @@ public class Tag extends ExperimentObject {
             if (newIndexes.isEmpty()) {
                 return result;
             } else {
+                cTermPossibleIndexes.clear();
+                cTermPossiblePatterns.clear();
                 cTermPossibleIndexes = newIndexes;
                 cTermPossiblePatterns = newPatterns;
             }
         }
         // create all possible peptide sequences by adding all possible N and C term to the seed sequence
         String seedSequence = sequence.substring(tagIndex, tagIndex + tagPattern.length());
-        for (int nIndex : nTermPossibleIndexes.keySet()) {
-            int nTermIndex = nTermPossibleIndexes.get(nIndex);
-            AminoAcidPattern nTermPattern = nTermPossiblePatterns.get(nIndex);
+        Iterator<Integer> nTermPossibleIndexesIterator = nTermPossibleIndexes.iterator();
+        for (AminoAcidPattern nTermPattern : nTermPossiblePatterns) {
+            int nTermIndex = nTermPossibleIndexesIterator.next();
 
             StringBuilder nTermSequence = new StringBuilder(nTermPattern.length() + seedSequence.length());
             for (int i = 0; i < nTermPattern.length(); i++) {
                 nTermSequence.append(nTermPattern.getTargetedAA(i).get(0).singleLetterCode);
             }
             nTermSequence.append(seedSequence);
-            for (AminoAcidPattern cTermPattern : cTermPossiblePatterns.values()) {
+            for (AminoAcidPattern cTermPattern : cTermPossiblePatterns) {
                 StringBuilder peptideSequence = new StringBuilder(nTermPattern.length() + seedSequence.length() + cTermPattern.length());
                 peptideSequence.append(nTermSequence);
                 ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();

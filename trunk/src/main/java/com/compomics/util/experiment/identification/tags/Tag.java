@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.tags;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.ElementaryElement;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -16,9 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
@@ -927,8 +924,8 @@ public class Tag extends ExperimentObject {
         ArrayList<AminoAcidPattern> cTermPossiblePatterns = new ArrayList<AminoAcidPattern>();
         ArrayList<Integer> cTermPossibleIndexes = new ArrayList<Integer>();
         cTermPossiblePatterns.add(new AminoAcidPattern());
-        cTermPossibleIndexes.add(tagIndex);
-        for (int i = componentIndex - 1; i >= 0; i--) {
+        cTermPossibleIndexes.add(endTagIndex);
+        for (int i = componentIndex + 1; i < content.size(); i++) {
             TagComponent tagComponent = content.get(i);
             ArrayList<AminoAcidPattern> newPatterns = new ArrayList<AminoAcidPattern>();
             ArrayList<Integer> newIndexes = new ArrayList<Integer>();

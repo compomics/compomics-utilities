@@ -244,12 +244,13 @@ public abstract class AminoAcid implements Serializable {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
         if (indistinguishableAACache == null || indistinguishableAACacheMass != massTolerance) {
-            indistinguishableAACache = new ArrayList<Character>();
+            ArrayList<Character> result = new ArrayList<Character>();
             for (char aa : getAminoAcids()) {
                 if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
-                    indistinguishableAACache.add(aa);
+                    result.add(aa);
                 }
             }
+            indistinguishableAACache = result;
             indistinguishableAACacheMass = massTolerance;
         }
         return indistinguishableAACache;

@@ -27,7 +27,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximum rank.
      */
-    private Integer maxRank = 5; // @TODO: find optimal default value!
+    private Integer maxRank = 10;
     /**
      * Defines whether monoisotopic mass values shall be used (in contrast to
      * average mass values).

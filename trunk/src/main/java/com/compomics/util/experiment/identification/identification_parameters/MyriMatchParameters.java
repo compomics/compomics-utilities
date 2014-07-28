@@ -26,7 +26,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximum number of spectrum matches.
      */
-    private Integer numberOfSpectrumMarches = 1; // @TODO: find optimal default value!
+    private Integer numberOfSpectrumMarches = 10;
     /**
      * The TicCutoffPercentage.
      */

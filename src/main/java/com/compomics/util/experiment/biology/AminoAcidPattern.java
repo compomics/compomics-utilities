@@ -702,21 +702,24 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         for (int i = startIndex; i <= lastIndex; i++) {
             boolean match = true;
             for (int j = 0; j < patternLength; j++) {
-                boolean aaMatched = false;
-                for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i + j)) {
-                    char aa = aminoAcid.singleLetterCode.charAt(0);
-                    boolean reject = isExcluded(aa, j, matchingType, massTolerance);
-                    if (!reject) {
-                        boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
-                        if (targeted) {
-                            aaMatched = true;
-                            break;
+                ArrayList<AminoAcid> aminoAcids = aminoAcidPattern.getTargetedAA(i + j);
+                if (!aminoAcids.isEmpty()) {
+                    boolean aaMatched = false;
+                    for (AminoAcid aminoAcid : aminoAcids) {
+                        char aa = aminoAcid.singleLetterCode.charAt(0);
+                        boolean reject = isExcluded(aa, j, matchingType, massTolerance);
+                        if (!reject) {
+                            boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
+                            if (targeted) {
+                                aaMatched = true;
+                                break;
+                            }
                         }
                     }
-                }
-                if (!aaMatched) {
-                    match = false;
-                    break;
+                    if (!aaMatched) {
+                        match = false;
+                        break;
+                    }
                 }
             }
             if (match) {
@@ -1103,10 +1106,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 length = Collections.max(aaTargeted.keySet()) + 1;
             } else {
                 length = Math.max(Collections.max(aaTargeted.keySet()), Collections.max(aaExcluded.keySet())) + 1;
-            }
-        }
+                        }
+                    }
         return length;
-    }
+                }
 
     /**
      * Computes a pattern which can be searched by standard search engines,
@@ -1267,8 +1270,14 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         return getAsStringPattern().pattern();
     }
 
-    @Override
-    public String asSequence() {
+    /**
+     * Returns the sequence represented by this amino acid pattern in a new
+     * string builder.
+     *
+     * @return the sequence represented by this amino acid pattern in a new
+     * string builder
+     */
+    public StringBuilder asStringBuilder() {
         StringBuilder result = new StringBuilder(length());
         for (int i = 0; i < length(); i++) {
             if (getNTargetedAA(i) == 1 && getNExcludedAA(i) == 0) {
@@ -1290,7 +1299,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
-        return result.toString();
+        return result;
+    }
+
+    @Override
+    public String asSequence() {
+        return asStringBuilder().toString();
     }
 
     /**
@@ -1325,7 +1339,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Getter for the modifications carried by this sequence.
+     * Getter for the modifications carried by this sequence in a map: aa number
+     * -> modification matches. 1 is the first amino acid.
      *
      * @return the modifications matches as found by the search engine
      */

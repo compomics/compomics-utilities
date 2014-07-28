@@ -824,7 +824,8 @@ public class PTMFactory implements Serializable {
         for (String modification : modificationProfile.getBackedUpPtms()) {
             if (containsPTM(modification)) {
                 PTM oldPTM = getPTM(modification);
-                if (!oldPTM.isSameAs(modificationProfile.getPtm(modification))) {
+                PTM newPTM = modificationProfile.getPtm(modification);
+                if (!oldPTM.isSameAs(newPTM)) {
                     toCheck.add(modification);
                     if (overwrite) {
                         ptmMap.put(modification, modificationProfile.getPtm(modification));

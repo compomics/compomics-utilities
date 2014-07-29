@@ -8,7 +8,7 @@ Note that in most cases it is not recommended to use the command line to generat
 
 Also note that most X!Tandem, MS-GF+, MS Amanda, OMSSA, PepNovo+ and DirecTag settings listed below are for expert usage only. Changes from the default settings should be done with care.
 
-*General command lines:*
+*General command lines*
 
 {{{
 java -cp SearchGUI-X.Y.Z.jar 
@@ -25,7 +25,7 @@ java -cp DeNovoGUI-X.Y.Z.jar
 com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
-*General parameters:*
+*General parameters*
 
 {{{
 -db	                The sequence database in FASTA format.
@@ -61,7 +61,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -mods                   Lists the available modifications.
 }}}
 
-*X!Tandem advanced parameters:*
+*X!Tandem advanced parameters*
 
 {{{
 -xtandem_dynamic_range    X!Tandem 'spectrum, dynamic range' option, default is '100'.
@@ -110,7 +110,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -xtandem_skyline_path     X!Tandem 'spectrum, skyline path' option.
 }}}
 
-*MS-GF+ advanced parameters:*
+*MS-GF+ advanced parameters*
 
 {{{
 -msgf_decoy               MS-GF+ search decoys option, 1: true, 0: false, default is '0'.
@@ -145,7 +145,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -msgf_num_ptms            MS-GF+ max number of PTMs per peptide, default is '2'.
 }}}
 
-*MS Amanda advanced parameters:*
+*MS Amanda advanced parameters*
 
 {{{
 -ms_amanda_decoy          MS Amanda generate decoys option, 0: false, 1: true, default is '0'.
@@ -158,7 +158,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -ms_amanda_mono           MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.
 }}}
 
-*OMSSA advanced parameters:*
+*OMSSA advanced parameters*
 
 {{{
 -omssa_memory            OMSSA map sequences in memory option, 1: true, 0: false, default is '1'.
@@ -244,8 +244,51 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -omssa_format            OMSSA output format. 0: omx, 1: csv, default is 'omx'.
 }}}
 
+*MyriMatch advanced parameters*
 
-*PepNovo+ advanced parameters:*
+{{{
+-myrimatch_min_pep_length MyriMatch minumum peptide length, default is '6'.
+
+-myrimatch_max_pep_length MyriMatch maximum peptide length, default is '30'.
+
+-myrimatch_min_prec_mass  MyriMatch minumum precursor mass, default is '0.0'.
+
+-myrimatch_max_prec_mass  MyriMatch maximum precursor mass, default is '10000.0'.
+
+-myrimatch_isotope_low    MyriMatch lower isotope error range, default is '-1'.
+
+-myrimatch_isotope_high   MyriMatch upper isotope error range, default is '2'.
+
+-myrimatch_num_matches    MyriMatch maximum number of spectrum matches, default is '10'.
+
+-myrimatch_num_ptms       MyriMatch max number of PTMs per peptide, default is '2'.
+
+-myrimatch_fragmentation  MyriMatch fragmentation method, 
+                          cid (b, y), etd (c, z*) 
+                          or manual (a comma-separated list of [abcxyz] 
+                          or z* (z+1), e.g. manual:b,y,z).
+
+-myrimatch_termini        MyriMatch number of enzymatic termini, 
+                          e.g. 0: non-tryptic, 1: semi-tryptic, 
+                          2: fully-tryptic, default is '2'.
+
+-myrimatch_plus_three     MyriMatch smart plus three option, 
+                          1: true, 0: false, default is '1'.
+
+-myrimatch_xcorr          MyriMatch xcorr option, 1: true, 0: false, default is '1'.
+
+-myrimatch_tic_cutoff     MyriMatch TIC cutoff percentage, default is '0.98'.
+
+-myrimatch_intensity_classes
+                          MyriMatch number of intensity classes, default is '3'.
+
+-myrimatch_class_multiplier
+                          MyriMatch class multiplier option, default is '2'.
+
+-myrimatch_num_batches    MyriMatch number of batches option, default is '50'.
+}}}
+
+*PepNovo+ advanced parameters*
 
 {{{
 -pepnovo_hitlist_length   PepNovo+ number of de novo solutions [0-2000], default is '10'.
@@ -263,7 +306,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -pepnovo_generate_blast   PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.
 }}}
 
-*DirecTag advanced parameters:*
+*DirecTag advanced parameters*
 
 {{{
 -directag_tic_cutoff      DirecTag TIC cutoff in percent, default is '85'.

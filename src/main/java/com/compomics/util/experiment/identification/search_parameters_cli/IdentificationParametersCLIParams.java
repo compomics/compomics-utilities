@@ -107,7 +107,7 @@ public enum IdentificationParametersCLIParams {
     MSGF_PROTOCOL("msgf_protocol", "MS-GF+ protocol id option, 0: Automatic (Default), 1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.", false),
     MSGF_MIN_PEP_LENGTH("msgf_min_pep_length", "MS-GF+ minumum peptide length, default is '6'.", false),
     MSGF_MAX_PEP_LENGTH("msgf_max_pep_length", "MS-GF+ maximum peptide length, default is '30'.", false),
-    MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '1'.", false), // @TODO: find an optimal default
+    MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false), // @TODO: find an optimal default
     MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional features, 0: output basic scores only (Default), 1: output additional features.", false),
     MSGF_ISOTOPE_LOW("msgf_isotope_low", "MS-GF+ lower isotope error range, default is '0'.", false),
     MSGF_ISOTOPE_HIGH("msgf_isotope_high", "MS-GF+ upper isotope error range, default is '1'.", false),
@@ -118,7 +118,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     MS_AMANDA_DECOY("ms_amanda_decoy", "MS Amanda generate decoys option, 0: false, 1: true, default is '0'.", false),
     MS_AMANDA_INSTRUMENT("ms_amanda_instrument", "MS Amanda instrument id option. Available enzymes are listed in the GUI. (Note: case sensitive.).", false),
-    MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '5'.", false), // @TODO: find an optimal default
+    MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '10'.", false),
     MS_AMANDA_MONOISOTOPIC("ms_amanda_mono", "MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.", false),
     //////////////////////////////////
     // MyriMatch specific parameters
@@ -129,7 +129,7 @@ public enum IdentificationParametersCLIParams {
     MYRIMATCH_MAX_PREC_MASS("myrimatch_max_prec_mass", "MyriMatch maximum precursor mass, default is '10000.0'.", false),
     MYRIMATCH_ISOTOPE_LOW("myrimatch_isotope_low", "MyriMatch lower isotope error range, default is '-1'.", false),
     MYRIMATCH_ISOTOPE_HIGH("myrimatch_isotope_high", "MyriMatch upper isotope error range, default is '2'.", false),
-    MYRIMATCH_NUM_MATCHES("myrimatch_num_matches", "MyriMatch maximum number of spectrum matches, default is '1'.", false), // @TODO: find an optimal default
+    MYRIMATCH_NUM_MATCHES("myrimatch_num_matches", "MyriMatch maximum number of spectrum matches, default is '10'.", false),
     MYRIMATCH_PTMS("myrimatch_num_ptms", "MyriMatch max number of PTMs per peptide, default is '2'.", false),
     MYRIMATCH_FRAGMENTATION("myrimatch_fragmentation", "MyriMatch fragmentation method, cid (b, y), etd (c, z*) or manual (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z).", false),
     MYRIMATCH_TERMINI("myrimatch_termini", "MyriMatch number of enzymatic termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false),

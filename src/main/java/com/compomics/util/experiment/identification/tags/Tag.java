@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import no.uib.jsparklines.renderers.util.Util;
-import org.tukaani.xz.UnsupportedOptionsException;
 
 /**
  * This class represents a sequence mass tag.

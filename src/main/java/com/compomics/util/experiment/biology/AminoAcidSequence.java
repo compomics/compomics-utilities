@@ -7,26 +7,25 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This class represents a series of amino acids with associated modifications
+ * This class represents a series of amino acids with associated modifications.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class AminoAcidSequence extends ExperimentObject implements TagComponent {
 
     /**
-     * The sequence as string
+     * The sequence as string.
      */
     private String sequence;
     /**
-     * The sequence as string builder
+     * The sequence as string builder.
      */
     private StringBuilder sequenceStringBuilder = null;
     /**
-     * The sequence as amino acid pattern
+     * The sequence as amino acid pattern.
      */
     private AminoAcidPattern aminoAcidPattern = null;
     /**
@@ -241,8 +240,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
         for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
+            ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
+            for (ModificationMatch modMatch : tempModifications) {
                 PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
                 double mass = ptm.getMass();
                 Integer occurrence = masses1.get(mass);
@@ -256,8 +255,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
         for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = anotherPattern.getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
+            ArrayList<ModificationMatch> tempModifications = anotherPattern.getModificationsAt(i);
+            for (ModificationMatch modMatch : tempModifications) {
                 PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
                 double mass = ptm.getMass();
                 Integer occurrence = masses2.get(mass);
@@ -398,7 +397,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 modifications.remove(localisation);
             }
         }
-
     }
 
     /**
@@ -481,7 +479,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * this method will work only if the PTM found in the peptide are in the
      * PTMFactory. /!\ This method uses the modifications as set in the
      * modification matches of this peptide and displays all of them. Note: this
-     * does not include html start end tags or terminal annotation.
+     * does not include HTML start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -691,8 +689,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         PTMFactory ptmFactory = PTMFactory.getInstance();
         HashMap<Double, Integer> masses1 = new HashMap<Double, Integer>();
         for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
+            ArrayList<ModificationMatch> tempModifications = getModificationsAt(i);
+            for (ModificationMatch modMatch : tempModifications) {
                 PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
                 double mass = ptm.getMass();
                 Integer occurrence = masses1.get(mass);
@@ -706,8 +704,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
         HashMap<Double, Integer> masses2 = new HashMap<Double, Integer>();
         for (int i = 1; i <= length(); i++) {
-            ArrayList<ModificationMatch> modifications = anotherSequence.getModificationsAt(i);
-            for (ModificationMatch modMatch : modifications) {
+            ArrayList<ModificationMatch> tempModifications = anotherSequence.getModificationsAt(i);
+            for (ModificationMatch modMatch : tempModifications) {
                 PTM ptm = ptmFactory.getPTM(modMatch.getTheoreticPtm());
                 double mass = ptm.getMass();
                 Integer occurrence = masses2.get(mass);

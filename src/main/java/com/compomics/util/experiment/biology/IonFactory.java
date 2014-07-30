@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * This factory generates the expected ions from a peptide.

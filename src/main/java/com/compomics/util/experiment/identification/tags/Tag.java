@@ -368,7 +368,7 @@ public class Tag extends ExperimentObject {
             } else if (tagComponent instanceof AminoAcidSequence) {
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 modifiedSequence += aminoAcidSequence.getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, useShortName, excludeAllFixedPtms);
-            } else if (tagComponent instanceof AminoAcidSequence) {
+            } else if (tagComponent instanceof MassGap) {
                 if (includeTerminalGaps || i > 0 && i < tag.getContent().size() - 1) {
                     modifiedSequence += tagComponent.asSequence();
                 }

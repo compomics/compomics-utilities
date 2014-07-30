@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidPattern.MatchingType;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -1025,17 +1027,17 @@ public class ProteinTree {
 
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
-                AminoAcidPattern peptidePattern = new AminoAcidPattern(peptideSequence);
+                AminoAcidSequence peptideAminoAcidSequence = new AminoAcidSequence(peptideSequence);
                 double limitX = -1;
                 if (limitXs) {
                     limitX = ProteinMatch.maxX * peptideSequence.length() / initialTagSize;
                 }
-                ArrayList<String> initialTags = getInitialTags(peptidePattern, matchingType, massTolerance, limitX);
+                HashSet<String> initialTags = getInitialTags(peptideAminoAcidSequence, matchingType, massTolerance, limitX);
 
                 for (String tag : initialTags) {
                     Node node = getNode(tag);
                     if (node != null) {
-                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptidePattern, tag, matchingType, massTolerance, limitXs);
+                        HashMap<String, HashMap<String, ArrayList<Integer>>> tagResults = node.getProteinMapping(peptideAminoAcidSequence, tag, matchingType, massTolerance, limitXs);
                         for (String tagSequence : tagResults.keySet()) {
                             HashMap<String, ArrayList<Integer>> mapping = result.get(tagSequence);
                             HashMap<String, ArrayList<Integer>> tagMapping = tagResults.get(tagSequence);
@@ -1136,15 +1138,24 @@ public class ProteinTree {
             boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int initialTagSize = componentsFactory.getInitialSize();
-        AminoAcidPattern longestAminoAcidPattern = new AminoAcidPattern();
+        AminoAcidPattern longestAminoAcidPattern = null;
+        AminoAcidSequence longestAminoAcidSequence = null;
         int componentIndex = -1;
         for (int i = 0; i < tag.getContent().size(); i++) {
             TagComponent tagComponent = tag.getContent().get(i);
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                if (aminoAcidPattern.length() >= initialTagSize && aminoAcidPattern.length() > longestAminoAcidPattern.length()) {
+                if (aminoAcidPattern.length() >= initialTagSize && (longestAminoAcidPattern == null || aminoAcidPattern.length() > longestAminoAcidPattern.length()) && (longestAminoAcidSequence == null || aminoAcidPattern.length() > longestAminoAcidSequence.length())) {
                     componentIndex = i;
                     longestAminoAcidPattern = aminoAcidPattern;
+                    longestAminoAcidSequence = null;
+                }
+            } else if (tagComponent instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+                if (aminoAcidSequence.length() >= initialTagSize && (longestAminoAcidPattern == null || aminoAcidSequence.length() > longestAminoAcidPattern.length()) && (longestAminoAcidSequence == null || aminoAcidSequence.length() > longestAminoAcidSequence.length())) {
+                    componentIndex = i;
+                    longestAminoAcidSequence = aminoAcidSequence;
+                    longestAminoAcidPattern = null;
                 }
             }
         }
@@ -1152,11 +1163,15 @@ public class ProteinTree {
             throw new IllegalArgumentException("No amino acid sequence longer than " + initialTagSize + " was found for tag " + tag + ".");
         }
         HashMap<String, HashMap<String, ArrayList<Integer>>> seeds = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-        for (String peptideSequence : longestAminoAcidPattern.getAllPossibleSequences()) {
-            double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / peptideSequence.length();
-            if (!limitXs || xShare <= ProteinMatch.maxX) {
-                seeds.putAll(getProteinMapping(peptideSequence, matchingType, massTolerance, limitXs));
+        if (longestAminoAcidPattern != null) {
+            for (String peptideSequence : longestAminoAcidPattern.getAllPossibleSequences()) {
+                double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / peptideSequence.length();
+                if (!limitXs || xShare <= ProteinMatch.maxX) {
+                    seeds.putAll(getProteinMapping(peptideSequence, matchingType, massTolerance, limitXs));
+                }
             }
+        } else {
+            seeds.putAll(getProteinMapping(longestAminoAcidSequence.getSequence(), matchingType, massTolerance, limitXs));
         }
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> results = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         for (String tagSeed : seeds.keySet()) {
@@ -1165,7 +1180,7 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex, 
+                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex,
                                 componentIndex, matchingType, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {
@@ -1203,10 +1218,10 @@ public class ProteinTree {
      */
     private void batchLoadNodes(String peptideSequence, MatchingType matchingType, Double massTolerance) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-        ArrayList<String> tags = getInitialTags(aminoAcidPattern, matchingType, massTolerance, -1);
+        AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
+        HashSet<String> tags = getInitialTags(aminoAcidPattern, matchingType, massTolerance, -1);
         String reversedSequence = SequenceFactory.reverseSequence(peptideSequence);
-        aminoAcidPattern = new AminoAcidPattern(reversedSequence);
+        aminoAcidPattern = new AminoAcidSequence(reversedSequence);
         tags.addAll(getInitialTags(aminoAcidPattern, matchingType, massTolerance, -1));
         ArrayList<String> toLoad = new ArrayList<String>();
 
@@ -1227,7 +1242,8 @@ public class ProteinTree {
      * @param matchingType the matching type
      * @param massTolerance the mass tolerance for matching type
      * 'indistiguishibleAminoAcids', can be null
-     * @param limitXs the proportion of Xs allowed in the sequence, ignored if <0
+     * @param limitXs the proportion of Xs allowed in the sequence, ignored if
+     * <0
      *
      * @returna list of possible initial tags.
      *
@@ -1235,9 +1251,9 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private ArrayList<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance, double limitXs) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    private HashSet<String> getInitialTags(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance, double limitXs) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         int initialTagSize = componentsFactory.getInitialSize();
-        ArrayList<String> result = new ArrayList<String>();
+        HashSet<String> result = new HashSet<String>();
         for (int i = 0; i < initialTagSize; i++) {
             for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
                 if (result.isEmpty()) {
@@ -1272,7 +1288,7 @@ public class ProteinTree {
                         }
                     }
                 } else {
-                    ArrayList<String> newResults = new ArrayList<String>();
+                    HashSet<String> newResults = new HashSet<String>();
                     for (String sequence : result) {
                         if (matchingType == MatchingType.string) {
                             newResults.add(sequence + aminoAcid.singleLetterCode);
@@ -1310,7 +1326,97 @@ public class ProteinTree {
             }
         }
         if (limitXs >= 0) {
-            ArrayList<String> filtered = new ArrayList<String>();
+            HashSet<String> filtered = new HashSet<String>();
+            for (String sequence : result) {
+                double xShare = ((double) Util.getOccurrence(sequence, 'X')) / sequence.length();
+                if (xShare <= limitXs) {
+                    filtered.add(sequence);
+                }
+            }
+            result = filtered;
+        }
+        return result;
+    }
+
+    /**
+     * Returns a list of possible initial tags.
+     *
+     * @param aminoAcidSequence the peptide sequence
+     * @param matchingType the matching type
+     * @param massTolerance the mass tolerance for matching type
+     * 'indistiguishibleAminoAcids', can be null
+     * @param limitXs the proportion of Xs allowed in the sequence, ignored if
+     * <0
+     *
+     * @returna list of possible initial tags.
+     *
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private HashSet<String> getInitialTags(AminoAcidSequence aminoAcidSequence, MatchingType matchingType, Double massTolerance, double limitXs) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        int initialTagSize = componentsFactory.getInitialSize();
+        HashSet<String> result = new HashSet<String>();
+        for (int i = 0; i < initialTagSize; i++) {
+            AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
+            if (result.isEmpty()) {
+                if (matchingType == MatchingType.string) {
+                    result.add(aminoAcid.singleLetterCode);
+                } else {
+                    for (char newAa : aminoAcid.getSubAminoAcids()) {
+                        String newTag = String.valueOf(newAa);
+                        if (!result.contains(newTag)) {
+                            result.add(newTag);
+                        }
+                    }
+                    for (char newAa : aminoAcid.getCombinations()) {
+                        String newTag = String.valueOf(newAa);
+                        if (!result.contains(newTag)) {
+                            result.add(newTag);
+                        }
+                    }
+                    if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                        for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                            String newTag = String.valueOf(newAa);
+                            if (!result.contains(newTag)) {
+                                result.add(newTag);
+                            }
+                        }
+                    }
+                }
+            } else {
+                HashSet<String> newResults = new HashSet<String>();
+                for (String sequence : result) {
+                    if (matchingType == MatchingType.string) {
+                        newResults.add(sequence + aminoAcid.singleLetterCode);
+                    } else {
+                        for (char newAa : aminoAcid.getSubAminoAcids()) {
+                            String newTag = sequence + newAa;
+                            if (!newResults.contains(newTag)) {
+                                newResults.add(newTag);
+                            }
+                        }
+                        for (char newAa : aminoAcid.getCombinations()) {
+                            String newTag = sequence + newAa;
+                            if (!newResults.contains(newTag)) {
+                                newResults.add(newTag);
+                            }
+                        }
+                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
+                            for (char newAa : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                                String newTag = sequence + newAa;
+                                if (!newResults.contains(newTag)) {
+                                    newResults.add(newTag);
+                                }
+                            }
+                        }
+                    }
+                }
+                result = newResults;
+            }
+        }
+        if (limitXs >= 0) {
+            HashSet<String> filtered = new HashSet<String>();
             for (String sequence : result) {
                 double xShare = ((double) Util.getOccurrence(sequence, 'X')) / sequence.length();
                 if (xShare <= limitXs) {

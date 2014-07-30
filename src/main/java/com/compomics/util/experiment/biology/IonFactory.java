@@ -8,9 +8,11 @@ import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * This factory generates the expected ions from a peptide.
@@ -332,7 +334,44 @@ public class IonFactory {
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset += aminoAcidPattern.length();
-            } else {
+            } else if (tagComponent instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+                double sequenceMass = 0;
+                for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                    AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
+                    double mass = aminoAcid.monoisotopicMass;
+                    sequenceMass += mass;
+                    for (double massOffset : massOffsets) {
+                        int aa = ionNumberOffset + i;
+                        int subaa = i + 1;
+                        double forwardMass = massOffset + mass;
+
+                        // add the a-ions
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.A_ION, aa, subaa, forwardMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, massOffset));
+                        }
+
+                        // add the b-ions
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.B_ION, aa, subaa, forwardMass - getLossesMass(losses), losses, massOffset));
+                        }
+
+                        // add the c-ion
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.C_ION, aa, subaa, forwardMass + Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses, massOffset));
+                        }
+                    }
+                }
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    double newMass = offsetMass + sequenceMass;
+                    if (!newOffsetMasses.contains(newMass)) {
+                        newOffsetMasses.add(newMass);
+                    }
+                }
+                massOffsets = newOffsetMasses;
+                ionNumberOffset += aminoAcidSequence.length();
+            } else if (tagComponent instanceof MassGap) {
                 double gapMass = tagComponent.getMass();
                 int aa = ionNumberOffset;
                 int subaa = 0;
@@ -361,6 +400,8 @@ public class IonFactory {
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset++;
+            } else {
+                throw new UnsupportedOperationException("Fragment ion not implemented for tag component " + tagComponent.getClass() + ".");
             }
         }
 
@@ -463,7 +504,48 @@ public class IonFactory {
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset += aminoAcidPattern.length();
-            } else {
+            } else if (tagComponent instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+                double sequenceMass = 0;
+                for (int i = aminoAcidSequence.length() - 1; i >= 0; i--) {
+                    AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
+                    double mass = aminoAcid.monoisotopicMass;
+                    sequenceMass += mass;
+                    for (double massOffset : massOffsets) {
+                        int aa = ionNumberOffset + aminoAcidSequence.length() - i;
+                        int subaa = aminoAcidSequence.length() - i;
+                        double rewindMass = massOffset + mass;
+                        double gap = 0;
+                        if (massOffset != Atom.O.getMonoisotopicMass()) {
+                            gap = massOffset;
+                        }
+
+                        // add the x-ions
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.X_ION, aa, subaa, rewindMass + Atom.C.getMonoisotopicMass() + 2 * Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                        }
+
+                        // add the y-ions
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.Y_ION, aa, subaa, rewindMass + 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                        }
+
+                        // add the z-ion
+                        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                            result.add(new TagFragmentIon(TagFragmentIon.Z_ION, aa, subaa, rewindMass - Atom.N.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses, gap));
+                        }
+                    }
+                }
+                ArrayList<Double> newOffsetMasses = new ArrayList<Double>();
+                for (double offsetMass : massOffsets) {
+                    double newMass = offsetMass + sequenceMass;
+                    if (!newOffsetMasses.contains(newMass)) {
+                        newOffsetMasses.add(newMass);
+                    }
+                }
+                massOffsets = newOffsetMasses;
+                ionNumberOffset += aminoAcidSequence.length();
+            } else if (tagComponent instanceof MassGap) {
                 double gapMass = tagComponent.getMass();
                 int aa = ionNumberOffset;
                 int subaa = 0;
@@ -496,6 +578,8 @@ public class IonFactory {
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset++;
+            } else {
+                throw new UnsupportedOperationException("Fragment ion not implemented for tag component " + tagComponent.getClass() + ".");
             }
         }
 

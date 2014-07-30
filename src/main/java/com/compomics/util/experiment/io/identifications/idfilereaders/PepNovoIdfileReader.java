@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
@@ -323,11 +324,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             modificationMatches.add(modMatch);
         }
 
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(sequence);
+        AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(sequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
-            aminoAcidPattern.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
+            aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
         }
-        Tag tag = new Tag(nGap, aminoAcidPattern, cGap);
+        Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
         TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), pepNovoScore);
         PepnovoAssumptionDetails pepnovoAssumptionDetails = new PepnovoAssumptionDetails();
         pepnovoAssumptionDetails.setRankScore(rankScore);

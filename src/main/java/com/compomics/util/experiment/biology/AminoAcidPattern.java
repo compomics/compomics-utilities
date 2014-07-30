@@ -91,6 +91,27 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
+     * Creates an amino acid pattern based on the given amino acid sequence.
+     * Warning, the modification mapping is the same, modifying it here modifies
+     * the original sequence.
+     *
+     * @param aminoAcidSequence the original amino acid sequence
+     */
+    public AminoAcidPattern(AminoAcidSequence aminoAcidSequence) {
+        String sequence = aminoAcidSequence.getSequence();
+        aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(sequence.length());
+        for (int i = 0; i < sequence.length(); i++) {
+            char letter = sequence.charAt(i);
+            AminoAcid aa = AminoAcid.getAminoAcid(letter);
+            ArrayList<AminoAcid> list = new ArrayList<AminoAcid>(1);
+            list.add(aa);
+            aaTargeted.put(i, list);
+        }
+        length = sequence.length();
+        targetModifications = aminoAcidSequence.getModificationMatches();
+    }
+
+    /**
      * Creates a pattern from another pattern.
      *
      * @param aminoAcidPattern the other pattern
@@ -603,6 +624,20 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * Returns the first index where the amino acid pattern is found. -1 if not
      * found. 0 is the first amino acid.
      *
+     * @param aminoAcidSequence the amino acid sequence to look into
+     * @param matchingType the type of sequence matching
+     * @param massTolerance the mass tolerance for matching type
+     *
+     * @return the first index where the amino acid pattern is found
+     */
+    public int firstIndex(AminoAcidSequence aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
+        return firstIndex(aminoAcidSequence.getSequence(), matchingType, massTolerance, 0);
+    }
+
+    /**
+     * Returns the first index where the amino acid pattern is found. -1 if not
+     * found. 0 is the first amino acid.
+     *
      * @param aminoAcidPattern the amino acid sequence to look into
      * @param matchingType the type of sequence matching
      * @param massTolerance the mass tolerance for matching type
@@ -683,8 +718,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Returns the first index where the amino acid pattern is found. -1 if not
-     * found. 0 is the first amino acid.
+     * Returns the first index where the amino acid pattern is found in the
+     * given pattern. -1 if not found. 0 is the first amino acid.
      *
      * @param aminoAcidPattern the amino acid sequence to look into
      * @param matchingType the type of sequence matching
@@ -990,7 +1025,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
 
-        if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
+        if (!matches(anotherPattern, matchingType, massTolerance)) {
             return false;
         }
 
@@ -1001,12 +1036,17 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             if (mods1.size() != mods2.size()) {
                 return false;
             }
-            for (int j = 0; j < mods1.size(); j++) {
-                ModificationMatch modificationMatch1 = mods1.get(j);
-                ModificationMatch modificationMatch2 = mods2.get(j);
+            for (ModificationMatch modificationMatch1 : mods1) {
                 PTM ptm1 = ptmFactory.getPTM(modificationMatch1.getTheoreticPtm());
-                PTM ptm2 = ptmFactory.getPTM(modificationMatch2.getTheoreticPtm());
-                if (ptm1 != ptm2) {
+                boolean found = false;
+                for (ModificationMatch modificationMatch2 : mods2) {
+                    PTM ptm2 = ptmFactory.getPTM(modificationMatch2.getTheoreticPtm());
+                    if (ptm1.getMass() == ptm2.getMass()) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
                     return false;
                 }
             }
@@ -1029,7 +1069,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
 
-        if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
+        if (!matches(anotherPattern, matchingType, massTolerance)) {
             return false;
         }
 
@@ -1106,10 +1146,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 length = Collections.max(aaTargeted.keySet()) + 1;
             } else {
                 length = Math.max(Collections.max(aaTargeted.keySet()), Collections.max(aaExcluded.keySet())) + 1;
-                        }
-                    }
+            }
+        }
         return length;
-                }
+    }
 
     /**
      * Computes a pattern which can be searched by standard search engines,

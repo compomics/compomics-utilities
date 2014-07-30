@@ -4,6 +4,7 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
@@ -13,6 +14,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import org.apache.log4j.Logger;
 import com.compomics.util.interfaces.SpectrumFile;
@@ -1497,6 +1499,35 @@ public class SpectrumPanel extends GraphicsPanel {
                         }
                     }
                 }
+            } else if (tagComponent instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+
+                // add forward ion de novo tags (a, b or c)
+                if (showForwardTags) {
+
+                    Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, forwardIon), false);
+
+                    for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                        IonMatch ionMatch1 = forwardMap.get(i);
+                        IonMatch ionMatch2 = forwardMap.get(i + 1);
+                        if (ionMatch1 != null && ionMatch2 != null) {
+                            String mod = "";
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(i + 1);
+                            if (!modificationMatches.isEmpty()) {
+                                mod = "*";
+                            }
+                            addReferenceAreaXAxis(new ReferenceArea(
+                                    "f" + i,
+                                    aminoAcidSequence.charAt(i) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, forwardIonPercentHeight));
+                        }
+                    }
+                }
+            } else if (tagComponent instanceof MassGap) {
+                // nothing to annotate here
+            } else {
+                throw new UnsupportedOperationException("Spectrum annotation not implemented for tag component " + tagComponent.getClass() + ".");
             }
         }
 
@@ -1531,6 +1562,36 @@ public class SpectrumPanel extends GraphicsPanel {
                         }
                     }
                 }
+            } else if (tagComponent instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+
+                // add reverse ion de novo tags (x, y or z)
+                if (showReverseTags) {
+
+                    Color annotationColor = SpectrumPanel.determineFragmentIonColor(Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, rewindIon), false);
+
+                    for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                        IonMatch ionMatch1 = rewindMap.get(i);
+                        IonMatch ionMatch2 = rewindMap.get(i + 1);
+                        if (ionMatch1 != null && ionMatch2 != null) {
+                            int sequenceIndex = aminoAcidSequence.length() - i - 1;
+                            String mod = "";
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(sequenceIndex + 1);
+                            if (!modificationMatches.isEmpty()) {
+                                mod = "*";
+                            }
+                            addReferenceAreaXAxis(new ReferenceArea(
+                                    "r" + sequenceIndex,
+                                    aminoAcidSequence.charAt(sequenceIndex) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                                    Color.lightGray, 0.2f, rewindIonPercentHeight));
+                        }
+                    }
+                }
+            } else if (tagComponent instanceof MassGap) {
+                // nothing to annotate here
+            } else {
+                throw new UnsupportedOperationException("Spectrum annotation not implemented for tag component " + tagComponent.getClass() + ".");
             }
         }
     }

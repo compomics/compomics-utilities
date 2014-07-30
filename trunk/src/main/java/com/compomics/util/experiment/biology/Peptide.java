@@ -920,7 +920,7 @@ public class Peptide extends ExperimentObject {
      * sequence
      */
     public boolean isSameSequence(Peptide anotherPeptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        AminoAcidPattern pattern = new AminoAcidPattern(anotherPeptide.getSequence());
+        AminoAcidSequence pattern = new AminoAcidSequence(anotherPeptide.getSequence());
         return pattern.length() == sequence.length() && pattern.matches(sequence, matchingType, massTolerance);
     }
 
@@ -1232,8 +1232,7 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptide.sequence);
-        modifiedSequence += AminoAcidPattern.getTaggedModifiedSequence(modificationProfile, aminoAcidPattern, mainModificationSites, secondaryModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
+        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, mainModificationSites, secondaryModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
 
         modifiedSequence += "-" + peptide.getCTerminal();
 
@@ -1439,6 +1438,26 @@ public class Peptide extends ExperimentObject {
      */
     public static AminoAcidPattern getSequenceAsPattern(String sequence) {
         return new AminoAcidPattern(sequence);
+    }
+
+    /**
+     * Returns the sequence of this peptide as AminoAcidSequence.
+     *
+     * @return the sequence of this peptide as AminoAcidSequence
+     */
+    public AminoAcidSequence getSequenceAsAminoAcidSequence() {
+        return getSequenceAsAminoAcidSequence(sequence);
+    }
+
+    /**
+     * Returns the given sequence as AminoAcidSequence.
+     *
+     * @param sequence the sequence of interest
+     * 
+     * @return the sequence as AminoAcidSequence
+     */
+    public static AminoAcidSequence getSequenceAsAminoAcidSequence(String sequence) {
+        return new AminoAcidSequence(sequence);
     }
 
     /**

@@ -25,7 +25,7 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * The location in the sequence, 1 is the first residue.
      */
-    private int modifiedSite; // @TODO: in the future try to use the AminoAcidPattern instead
+    private int modifiedSite;
     /**
      * A boolean indicating whether the modification is confidently localized
      * onto the sequence. Not applicable to fixed or terminal modifications.

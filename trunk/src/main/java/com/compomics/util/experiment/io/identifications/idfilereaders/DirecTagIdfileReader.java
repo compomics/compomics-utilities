@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -536,11 +537,11 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 }
             }
         }
-        AminoAcidPattern tagPattern = new AminoAcidPattern(residues.toString());
+        AminoAcidSequence tagAaSequence = new AminoAcidSequence(residues.toString());
         for (int i : modificationMatches.keySet()) {
-            tagPattern.addModificationMatch(i, modificationMatches.get(i));
+            tagAaSequence.addModificationMatch(i, modificationMatches.get(i));
         }
-        Tag tag = new Tag(nGap, tagPattern, cGap);
+        Tag tag = new Tag(nGap, tagAaSequence, cGap);
         Integer chargeIndex = tagLineContent.get("TagChargeState");
         if (chargeIndex == null) {
             throw new IllegalArgumentException("Column TagChargeState not found.");

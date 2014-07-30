@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.spectrum_annotators;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
@@ -13,6 +14,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.io.FileNotFoundException;
@@ -110,8 +112,23 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                     }
                 }
                 offset += aminoAcidPattern.length();
-            } else {
+            } else if (component instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
+                for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                    if (aminoAcidSequence.charAt(i) == 'D'
+                            || aminoAcidSequence.charAt(i) == 'E'
+                            || aminoAcidSequence.charAt(i) == 'S'
+                            || aminoAcidSequence.charAt(i) == 'T') {
+                        int index = i + offset;
+                        aaMin = Math.min(index, aaMin);
+                        aaMax = Math.max(index, aaMax);
+                    }
+                }
+                offset += aminoAcidSequence.length();
+            } else if (component instanceof MassGap) {
                 offset++;
+            } else {
+                throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
             }
         }
         if (aaMin < tagLength) {
@@ -126,18 +143,33 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             if (component instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
                 for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.D)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.E)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.S)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.T)) {
+                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.K)
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.N)
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.Q)
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.R)) {
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);
                     }
                 }
                 offset += aminoAcidPattern.length();
-            } else {
+            } else if (component instanceof AminoAcidSequence) {
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
+                for (int i = 0; i < aminoAcidSequence.length(); i++) {
+                    if (aminoAcidSequence.charAt(i) == 'K'
+                            || aminoAcidSequence.charAt(i) == 'N'
+                            || aminoAcidSequence.charAt(i) == 'Q'
+                            || aminoAcidSequence.charAt(i) == 'R') {
+                        int index = i + offset;
+                        aaMin = Math.min(index, aaMin);
+                        aaMax = Math.max(index, aaMax);
+                    }
+                }
+                offset += aminoAcidSequence.length();
+            } else if (component instanceof MassGap) {
                 offset++;
+            } else {
+                throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
             }
         }
         if (aaMin < tagLength) {

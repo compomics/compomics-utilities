@@ -131,10 +131,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     boolean dbVersion = content.contains("N/A");
                     if (dbVersion) {
                         updateMappingsButton.setText("Download");
+                        updateMappingsButton.setEnabled(true);
                     } else {
                         updateMappingsButton.setText("Update");
+                        updateMappingsButton.setEnabled(speciesUpdateExist());
                     }
-                    updateMappingsButton.setEnabled(true);
+
                     break;
                 }
             }
@@ -189,7 +191,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
         updateMappingsButton.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() > 0
                 && speciesJComboBox.getSelectedIndex() > 0
-                && speciesJComboBox.getSelectedIndex() < speciesJComboBox.getItemCount() - 1);
+                && speciesJComboBox.getSelectedIndex() < speciesJComboBox.getItemCount() - 1
+                && speciesUpdateExist());
     }
 
     /**
@@ -389,11 +392,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-            updateMappingsButton.setEnabled(true);
             if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null) {
                 updateMappingsButton.setText("Download");
+                updateMappingsButton.setEnabled(true);
             } else {
                 updateMappingsButton.setText("Update");
+                updateMappingsButton.setEnabled(speciesUpdateExist());
             }
         } else {
             updateMappingsButton.setText("Download");
@@ -514,9 +518,10 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 downloadMappings();
             } else { // update
 
+                boolean speciesUpdate = speciesUpdateExist();
+
                 // check if newer mappings are available
                 Integer latestEnsemblVersion = geneFactory.getCurrentEnsemblVersion(getEnsemblType());
-
                 String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
                 String selectedSpecies = getSelectedSpecies();
                 String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
@@ -679,5 +684,37 @@ public class SpeciesDialog extends javax.swing.JDialog {
         }
 
         return "unknown"; // shouldn't be possible
+    }
+
+    /**
+     * Returns true if a newer version of the species mapping exists in
+     * Ensemble.
+     *
+     * @return rue if a newer version of the species mapping exists in Ensemble
+     */
+    private boolean speciesUpdateExist() {
+
+        Integer latestEnsemblVersion = geneFactory.getCurrentEnsemblVersion(getEnsemblType());
+        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
+        String selectedSpecies = getSelectedSpecies();
+        String selectedDb = genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies);
+        String currentEnsemblVersionAsString = genePreferences.getEnsemblVersion(selectedDb);
+
+        if (currentEnsemblVersionAsString != null) {
+
+            currentEnsemblVersionAsString = currentEnsemblVersionAsString.substring(currentEnsemblVersionAsString.indexOf(" ") + 1);
+            Integer currentEnsemblVersion;
+
+            try {
+                currentEnsemblVersion = new Integer(currentEnsemblVersionAsString);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                currentEnsemblVersion = latestEnsemblVersion;
+            }
+
+            return currentEnsemblVersion < latestEnsemblVersion;
+        }
+
+        return true;
     }
 }

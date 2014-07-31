@@ -1068,6 +1068,10 @@ public class GenePreferences implements Serializable {
      */
     public boolean downloadMappings(WaitingHandler waitingHandler, String currentEnsemblSpeciesType, String selectedSpecies, boolean commandLine) {
 
+        if (waitingHandler.isReport()) {
+            waitingHandler.appendReport("Downloading GO and gene mappings.", true, true);
+        }
+
         try {
             // clear old data
             clearOldResults();
@@ -1112,6 +1116,9 @@ public class GenePreferences implements Serializable {
                     }
                 } else {
                     waitingHandler.setWaitingText("GO Mappings Downloaded.");
+                    if (waitingHandler.isReport()) {
+                        waitingHandler.appendReport("GO mappings downloaded.", true, true);
+                    }
                 }
             }
             if (!waitingHandler.isRunCanceled()) {
@@ -1120,6 +1127,9 @@ public class GenePreferences implements Serializable {
 
                 if (!waitingHandler.isRunCanceled()) {
                     waitingHandler.setWaitingText("Gene Mappings Downloaded.");
+                    if (waitingHandler.isReport()) {
+                        waitingHandler.appendReport("Gene mappings downloaded.", true, true);
+                    }
                 }
             }
 

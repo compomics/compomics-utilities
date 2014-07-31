@@ -340,7 +340,7 @@ public class ProteinTree {
 
         if (printExpectedImportTime) {
             int nSeconds = getExpectedImportTime();
-            String report = "Expected import time: ";
+            String report = "Estimated import time: ";
 
             if (nSeconds < 120) {
                 report += nSeconds + " seconds.";

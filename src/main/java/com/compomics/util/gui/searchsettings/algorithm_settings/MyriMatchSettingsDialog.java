@@ -298,6 +298,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         computeXCorrlLabel.setText("Compute XCorr");
 
         computeXCorrCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        computeXCorrCmb.setSelectedIndex(1);
 
         isotopeErrorRangeLabel.setText("Isotope Error Range");
 

@@ -125,7 +125,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
         }
 
-        softwareVersions = tempSoftwareVersions;
+        softwareVersions.putAll(tempSoftwareVersions);
 
         // get the list of fixed modifications
         fixedModifications = new ArrayList<SearchModification>();

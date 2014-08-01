@@ -118,6 +118,10 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         if (myriMatchParameters.getNumberOfBatches() != null) {
             numbBatchesTxt.setText(myriMatchParameters.getNumberOfBatches() + "");
         }
+
+        if (myriMatchParameters.getMaxPeakCount() != null) {
+            maxPeakCountTxt.setText(myriMatchParameters.getMaxPeakCount() + "");
+        }
     }
 
     /**
@@ -200,6 +204,11 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
             result.setNumberOfBatches(new Integer(input));
         }
 
+        input = maxPeakCountTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setMaxPeakCount(new Integer(input));
+        }
+
         return result;
     }
 
@@ -246,6 +255,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         numbBatchesTxt = new javax.swing.JTextField();
         fragmentationMethodLabel = new javax.swing.JLabel();
         fragmentationMethodCmb = new javax.swing.JComboBox();
+        maxPeakCountLabel = new javax.swing.JLabel();
+        maxPeakCountTxt = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -399,7 +410,17 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
 
         fragmentationMethodLabel.setText("Fragmentation Method");
 
-        fragmentationMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CID", "ETD" }));
+        fragmentationMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CID", "HCD", "ETD" }));
+
+        maxPeakCountLabel.setText("Max Peak Count");
+
+        maxPeakCountTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPeakCountTxt.setText("100");
+        maxPeakCountTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPeakCountTxtKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
@@ -474,7 +495,11 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(fragmentationMethodLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fragmentationMethodCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(fragmentationMethodCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxPeakCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maxPeakCountTxt)))
                 .addContainerGap())
         );
 
@@ -541,6 +566,10 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numbBatchesLabel)
                     .addComponent(numbBatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxPeakCountLabel)
+                    .addComponent(maxPeakCountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -785,6 +814,15 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_numbBatchesTxtKeyReleased
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxPeakCountTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPeakCountTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxPeakCountTxtKeyReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -806,6 +844,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         valid = GuiUtilities.validateIntegerInput(this, numIntensityClassesLabel, numIntensityClassesTxt, "number of intensity classes", "Intensity Classes Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, classSizeMultiplierLabel, classSizeMultiplierTxt, "class size multiplier", "Class Size Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numbBatchesLabel, numbBatchesTxt, "number of batches", "Number of Batches Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxPeakCountLabel, maxPeakCountTxt, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
 
         // isotope range: the low value should be lower than the high value
         try {
@@ -863,6 +902,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel isotopeErrorRangeDividerLabel;
     private javax.swing.JLabel isotopeErrorRangeLabel;
     private javax.swing.JTextField lowIsotopeErrorRangeTxt;
+    private javax.swing.JLabel maxPeakCountLabel;
+    private javax.swing.JTextField maxPeakCountTxt;
     private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JTextField maxPrecursorMassTxt;
     private javax.swing.JLabel maxPtmsLabel;

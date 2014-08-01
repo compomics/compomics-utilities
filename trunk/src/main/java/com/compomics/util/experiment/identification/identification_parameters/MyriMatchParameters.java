@@ -26,7 +26,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximum number of spectrum matches.
      */
-    private Integer numberOfSpectrumMarches = 10;
+    private Integer numberOfSpectrumMatches = 10;
     /**
      * The TicCutoffPercentage.
      */
@@ -88,6 +88,10 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z)
      */
     private String fragmentationRule = "CID";
+    /**
+     * The max number of peaks to use.
+     */
+    private Integer maxPeakCount = 100;
 
     /**
      * Constructor.
@@ -111,9 +115,55 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             if (maxPeptideLength != msgfParameters.getMaxPeptideLength()) {
                 return false;
             }
-            if (numberOfSpectrumMarches != msgfParameters.getNumberOfSpectrumMatches()) {
+            if (numberOfSpectrumMatches != msgfParameters.getNumberOfSpectrumMatches()) {
                 return false;
             }
+            double diff = Math.abs(ticCutoffPercentage - msgfParameters.getTicCutoffPercentage());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
+            if (maxDynamicMods != msgfParameters.getMaxDynamicMods()) {
+                return false;
+            }
+            if (minTerminiCleavages != msgfParameters.getMinTerminiCleavages()) {
+                return false;
+            }
+            diff = Math.abs(minPrecursorMass - msgfParameters.getMinPrecursorMass());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
+            diff = Math.abs(maxPrecursorMass - msgfParameters.getMaxPrecursorMass());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
+            if (useSmartPlusThreeModel != msgfParameters.getUseSmartPlusThreeModel()) {
+                return false;
+            }
+            if (computeXCorr != msgfParameters.getComputeXCorr()) {
+                return false;
+            }
+            if (numIntensityClasses != msgfParameters.getNumIntensityClasses()) {
+                return false;
+            }
+            if (classSizeMultiplier != msgfParameters.getClassSizeMultiplier()) {
+                return false;
+            }
+            if (numberOfBatches != msgfParameters.getNumberOfBatches()) {
+                return false;
+            }
+            if (lowerIsotopeCorrection != msgfParameters.getLowerIsotopeCorrectionRange()) {
+                return false;
+            }
+            if (upperIsotopeCorrection != msgfParameters.getUpperIsotopeCorrectionRange()) {
+                return false;
+            }
+            if (!fragmentationRule.equalsIgnoreCase(msgfParameters.getFragmentationRule())) {
+                return false;
+            }
+            if (maxPeakCount != msgfParameters.getMaxPeakCount()) {
+                return false;
+            }
+
             return true;
         }
 
@@ -145,7 +195,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         output.append(maxPeptideLength);
         output.append(newLine);
         output.append("NUMBER_SPECTRUM_MATCHES=");
-        output.append(numberOfSpectrumMarches);
+        output.append(numberOfSpectrumMatches);
         output.append(newLine);
         output.append("TIC_CUTOFF_PERCENTAGE=");
         output.append(ticCutoffPercentage);
@@ -185,6 +235,9 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("FRAGMENTATION_RULE=");
         output.append(fragmentationRule);
+        output.append(newLine);
+        output.append("MAX_PEAK_COUNT=");
+        output.append(maxPeakCount);
         output.append(newLine);
 
         return output.toString();
@@ -232,7 +285,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * @return the numberOfSpectrumMarches
      */
     public Integer getNumberOfSpectrumMatches() {
-        return numberOfSpectrumMarches;
+        return numberOfSpectrumMatches;
     }
 
     /**
@@ -241,7 +294,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * @param numberOfSpectrumMarches the numberOfSpectrumMarches to set
      */
     public void setNumberOfSpectrumMatches(Integer numberOfSpectrumMarches) {
-        this.numberOfSpectrumMarches = numberOfSpectrumMarches;
+        this.numberOfSpectrumMatches = numberOfSpectrumMarches;
     }
 
     /**
@@ -484,6 +537,24 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
+     * Returns the max peak count.
+     *
+     * @return the max peak count
+     */
+    public Integer getMaxPeakCount() {
+        return maxPeakCount;
+    }
+
+    /**
+     * Set the max peak count.
+     *
+     * @param maxPeakCount
+     */
+    public void setMaxPeakCount(Integer maxPeakCount) {
+        this.maxPeakCount = maxPeakCount;
+    }
+
+    /**
      * Tries to map the utilities enzyme to the enzymes supported by MyriMatch.
      *
      * @param enzyme the utilities enzyme
@@ -533,7 +604,6 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         }
 
         // enzymes not supported: Trypsin + CNBr, Asp-N + Glu-C, Lys-N (K), Thermolysin, no P rule
-
         return myriMatchEnzymeAsString;
     }
 }

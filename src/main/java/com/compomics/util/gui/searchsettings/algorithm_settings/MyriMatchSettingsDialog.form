@@ -180,6 +180,11 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentationMethodCmb" max="32767" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="maxPeakCountLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="maxPeakCountTxt" max="32767" attributes="2"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -258,6 +263,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="numbBatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numbBatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxPeakCountLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPeakCountTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -492,12 +502,27 @@
             <Component class="javax.swing.JComboBox" name="fragmentationMethodCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
+                  <StringArray count="3">
                     <StringItem index="0" value="CID"/>
-                    <StringItem index="1" value="ETD"/>
+                    <StringItem index="1" value="HCD"/>
+                    <StringItem index="2" value="ETD"/>
                   </StringArray>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxPeakCountLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Max Peak Count"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPeakCountTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="100"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPeakCountTxtKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

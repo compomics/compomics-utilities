@@ -620,6 +620,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             myriMatchParameters.setNumberOfBatches(option);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id);
+            Integer option = new Integer(arg);
+            myriMatchParameters.setMaxPeakCount(option);
+        }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
 

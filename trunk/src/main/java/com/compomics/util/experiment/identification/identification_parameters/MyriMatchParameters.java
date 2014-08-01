@@ -60,7 +60,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * If true, a Sequest-like cross correlation (xcorr) score will be
      * calculated for the top ranking hits in each spectrum’s result set.
      */
-    private Boolean computeXCorr = true;
+    private Boolean computeXCorr = false;
     /**
      * The number of intensity classes.
      */

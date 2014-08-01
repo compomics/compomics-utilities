@@ -134,7 +134,7 @@ public enum IdentificationParametersCLIParams {
     MYRIMATCH_FRAGMENTATION("myrimatch_fragmentation", "MyriMatch fragmentation method, cid (b, y), etd (c, z*) or manual (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z).", false),
     MYRIMATCH_TERMINI("myrimatch_termini", "MyriMatch number of enzymatic termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false),
     MYRIMATCH_SMART_PLUS_THREE("myrimatch_plus_three", "MyriMatch smart plus three option, 1: true, 0: false, default is '1'.", false),
-    MYRIMATCH_XCORR("myrimatch_xcorr", "MyriMatch xcorr option, 1: true, 0: false, default is '1'.", false),
+    MYRIMATCH_XCORR("myrimatch_xcorr", "MyriMatch xcorr option, 1: true, 0: false, default is '0'.", false),
     MYRIMATCH_TIC_CUTOFF("myrimatch_tic_cutoff", "MyriMatch TIC cutoff percentage, default is '0.98'.", false),
     MYRIMATCH_INTENSTITY_CLASSES("myrimatch_intensity_classes", "MyriMatch number of intensity classes, default is '3'.", false),
     MYRIMATCH_CLASS_MULTIPLIER("myrimatch_class_multiplier", "MyriMatch class multiplier option, default is '2'.", false),

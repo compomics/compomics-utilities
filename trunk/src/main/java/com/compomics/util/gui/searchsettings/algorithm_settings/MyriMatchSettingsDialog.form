@@ -336,6 +336,7 @@
                     <StringItem index="1" value="No"/>
                   </StringArray>
                 </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="isotopeErrorRangeLabel">

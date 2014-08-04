@@ -516,8 +516,8 @@
                                 </Property>
                               </Properties>
                               <Events>
-                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseExited"/>
                                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseReleased"/>
+                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseMoved"/>
                               </Events>
                             </Component>
@@ -621,8 +621,8 @@
                                 </Property>
                               </Properties>
                               <Events>
-                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseExited"/>
                                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseReleased"/>
+                                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseMoved"/>
                               </Events>
                             </Component>

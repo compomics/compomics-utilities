@@ -1297,11 +1297,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         int column = fixedModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
+            String ptmName = (String) fixedModsTable.getValueAt(row, fixedModsTable.getColumn("Name").getModelIndex());
+            PTM ptm = ptmFactory.getPTM(ptmName);
+            fixedModsTable.setToolTipText(ptm.getHtmlTooltip());
+            
             if (column == fixedModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
+        } else {
+            fixedModsTable.setToolTipText(null);
         }
     }//GEN-LAST:event_fixedModsTableMouseMoved
 
@@ -1349,11 +1355,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         int column = modificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
+            String ptmName = (String) modificationsTable.getValueAt(row, modificationsTable.getColumn("Name").getModelIndex());
+            PTM ptm = ptmFactory.getPTM(ptmName);
+            modificationsTable.setToolTipText(ptm.getHtmlTooltip());
+            
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
+        } else {
+            modificationsTable.setToolTipText(null);
         }
     }//GEN-LAST:event_modificationsTableMouseMoved
 
@@ -1437,11 +1449,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         int column = variableModsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
+            String ptmName = (String) variableModsTable.getValueAt(row, variableModsTable.getColumn("Name").getModelIndex());
+            PTM ptm = ptmFactory.getPTM(ptmName);
+            variableModsTable.setToolTipText(ptm.getHtmlTooltip());
+            
             if (column == variableModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
+        } else {
+            variableModsTable.setToolTipText(null);
         }
     }//GEN-LAST:event_variableModsTableMouseMoved
 

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,56 +9,54 @@ import java.util.Set;
  * This class stores and provides mutations expected for amino acids. This class
  * is its own factory.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class MutationMatrix implements Serializable {
 
     /**
-     * The name of this mutation matrix
+     * The name of this mutation matrix.
      */
     private final String name;
     /**
-     * The description of the mutation matrix
+     * The description of the mutation matrix.
      */
     private final String description;
     /**
-     * Map of the possible amino acid mutations: original aa -> mutated aa
+     * Map of the possible amino acid mutations: original aa -> mutated aa.
      */
     private final HashMap<Character, HashSet<Character>> mutations = new HashMap<Character, HashSet<Character>>(26);
     /**
      * Reverse map of the possible amino acid mutations: mutated aa -> original
-     * aa
+     * aa.
      */
     private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<Character, HashSet<Character>>(26);
     /**
-     * Mutation matrix allowing for a single base mutation
+     * Mutation matrix allowing for a single base mutation.
      */
     public final MutationMatrix singleBaseSubstitution = singleBaseSubstitution();
     /**
-     * Mutation matrix allowing for a single base transitions mutation
+     * Mutation matrix allowing for a single base transitions mutation.
      */
     public final MutationMatrix transitionsSingleBaseSubstitution = transitionsSingleBaseSubstitution();
     /**
-     * Mutation matrix allowing for a single base transversion mutation
+     * Mutation matrix allowing for a single base transversion mutation.
      */
     public final MutationMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
     /**
-     * Mutation matrix grouping synonymous amino acids.
-     * Amino acids are grouped according to their side chain properties:
-     * - Non-polar aliphatic groups: {'G', 'A', 'V', 'L', 'M', 'I'}
-     * - Aromatic groups: {'F', 'Y', 'W'}
-     * - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'}
-     * - Basic groups: {'K', 'R', 'H'}
-     * - Acidic groups: {'D', 'E'}
+     * Mutation matrix grouping synonymous amino acids. Amino acids are grouped
+     * according to their side chain properties: - Non-polar aliphatic groups:
+     * {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F', 'Y', 'W'} - Polar
+     * neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic groups: {'K', 'R',
+     * 'H'} - Acidic groups: {'D', 'E'}.
      */
     public final MutationMatrix synonymousMutation = synonymousMutation();
     /**
-     * Returns the implemented default mutation matrices
+     * Returns the implemented default mutation matrices.
      */
-    public final MutationMatrix[] defaultMutationMatrices = new MutationMatrix[] {singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution};
+    public final MutationMatrix[] defaultMutationMatrices = new MutationMatrix[]{singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution};
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param name the name of this mutation matrix
      * @param description the description of the mutation matrix
@@ -140,7 +137,7 @@ public class MutationMatrix implements Serializable {
     }
 
     /**
-     * Adds the content of a mutation matrix in this matrix
+     * Adds the content of a mutation matrix in this matrix.
      *
      * @param otherMatrix the other matrix to add
      */
@@ -185,9 +182,11 @@ public class MutationMatrix implements Serializable {
     }
 
     /**
-     * Returns the mutation matrix allowing for a single base transitions mutation.
+     * Returns the mutation matrix allowing for a single base transitions
+     * mutation.
      *
-     * @return the mutation matrix allowing for a single base transitions mutation
+     * @return the mutation matrix allowing for a single base transitions
+     * mutation
      */
     private static MutationMatrix transitionsSingleBaseSubstitution() {
         MutationMatrix result = new MutationMatrix("Transition Mutation", "Single base transitions substitutions.");
@@ -225,9 +224,11 @@ public class MutationMatrix implements Serializable {
     }
 
     /**
-     * Returns the mutation matrix allowing for a single base transversion mutation.
+     * Returns the mutation matrix allowing for a single base transversion
+     * mutation.
      *
-     * @return the mutation matrix allowing for a single base transversion mutation
+     * @return the mutation matrix allowing for a single base transversion
+     * mutation
      */
     private static MutationMatrix transversalSingleBaseSubstitution() {
         MutationMatrix result = new MutationMatrix("Transversion Mutation", "Single base transversion substitutions.");
@@ -265,14 +266,12 @@ public class MutationMatrix implements Serializable {
     }
 
     /**
-     * Returns a mutation matrix grouping synonymous amino acids.
-     * Amino acids are grouped according to their side chain properties:
-     * - Non-polar aliphatic groups: {'G', 'A', 'V', 'L', 'M', 'I'}
-     * - Aromatic groups: {'F', 'Y', 'W'}
-     * - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'}
-     * - Basic groups: {'K', 'R', 'H'}
-     * - Acidic groups: {'D', 'E'}
-     * 
+     * Returns a mutation matrix grouping synonymous amino acids. Amino acids
+     * are grouped according to their side chain properties: - Non-polar
+     * aliphatic groups: {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F',
+     * 'Y', 'W'} - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic
+     * groups: {'K', 'R', 'H'} - Acidic groups: {'D', 'E'}.
+     *
      * @return a mutation matrix grouping synonymous amino acids
      */
     private static MutationMatrix synonymousMutation() {
@@ -324,5 +323,4 @@ public class MutationMatrix implements Serializable {
         }
         return result;
     }
-
 }

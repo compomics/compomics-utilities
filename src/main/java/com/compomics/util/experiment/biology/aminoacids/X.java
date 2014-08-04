@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.aminoacids;
 
 import com.compomics.util.experiment.biology.AminoAcid;
+import java.util.ArrayList;
 
 /**
  * Unknown amino acid (Mascot).
@@ -33,5 +34,19 @@ public class X extends AminoAcid {
     @Override
     public char[] getCombinations() {
         return new char[0];
+    }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        ArrayList<String> uniqueCodes = new ArrayList<String>();
+        for (char aa : getSubAminoAcids()) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            for (String code : aminoAcid.getStandardGeneticCode()) {
+                if (!uniqueCodes.contains(code)) {
+                    uniqueCodes.add(code);
+                }
+            }
+        }
+        return (String[]) uniqueCodes.toArray();
     }
 }

@@ -34,4 +34,9 @@ public class Tryptophan extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"TGG"};
+    }
 }

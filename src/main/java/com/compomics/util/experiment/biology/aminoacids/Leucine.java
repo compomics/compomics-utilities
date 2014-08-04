@@ -34,4 +34,9 @@ public class Leucine extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'J', 'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"TTA", "TTG", "CTT", "CTC", "CTA", "CTG"};
+    }
 }

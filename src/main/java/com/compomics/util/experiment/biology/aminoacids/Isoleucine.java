@@ -34,4 +34,9 @@ public class Isoleucine extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'J', 'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"ATT", "ATC", "ATA"};
+    }
 }

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
  * This class models a post-translational modification.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PTM extends ExperimentObject {
 
@@ -355,5 +357,44 @@ public class PTM extends ExperimentObject {
                 || type == PTM.MODCAA
                 || type == PTM.MODCP
                 || type == PTM.MODCPAA;
+    }
+
+    /**
+     * Returns information about the PTM as an HTML tooltip.
+     *
+     * @return information about the PTM as an HTML tooltip
+     */
+    public String getHtmlTooltip() {
+
+        String tooltip = "<html>";
+
+        tooltip += "Name: " + name + "<br>";
+        tooltip += "Mass: " + Util.roundDouble(mass, 4) + "<br>";
+        tooltip += "Type: ";
+
+        if (type == MODAA) {
+            tooltip += "Particular amino acid(s)";
+        } else if (type == MODN || type == MODNAA) {
+            tooltip += "Protein N terminus";
+        } else if (type == MODC || type == MODCAA) {
+            tooltip += "Protein C terminus";
+        } else if (type == MODNP || type == MODNPAA) {
+            tooltip += "Peptide N terminus";
+        } else if (type == MODCP || type == MODCPAA) {
+            tooltip += "Peptide C terminus";
+        }
+
+        tooltip += "<br>";
+        
+        tooltip += "Target: ";
+        if (!pattern.getAminoAcidsAtTarget().isEmpty()) {
+            tooltip += pattern.toString().substring(1, pattern.toString().length() - 1);
+        } else {
+            tooltip += "All";
+        }
+        
+        tooltip += "</html>";
+
+        return tooltip;
     }
 }

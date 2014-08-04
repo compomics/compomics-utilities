@@ -34,4 +34,9 @@ public class Threonine extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"ACT", "ACC", "ACA", "ACG"};
+    }
 }

@@ -34,4 +34,9 @@ public class Asparagine extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'B', 'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"AAT", "AAC"};
+    }
 }

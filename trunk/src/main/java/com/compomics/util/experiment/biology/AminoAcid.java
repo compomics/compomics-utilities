@@ -91,6 +91,15 @@ public abstract class AminoAcid implements Serializable {
     public static char[] getAminoAcids() {
         return aminoAcidChars;
     }
+    
+    /**
+     * Returns the single letter code as character.
+     * 
+     * @return the single letter code as character
+     */
+    public char getSingleLetterCodeAsChar() {
+        return singleLetterCode.charAt(0);
+    }
 
     /**
      * Convenience method returning an arrayList of all implemented amino acids.
@@ -298,5 +307,71 @@ public abstract class AminoAcid implements Serializable {
             stringBuilder.append(aa);
         }
         return stringBuilder.toString();
+    }
+    
+    /**
+     * Returns the standard genetic triplets associated to this amino acid.
+     * 
+     * @return the standard genetic triplets associated to this amino acid
+     */
+    public abstract String[] getStandardGeneticCode();
+    /**
+     * Returns the amino acid from the standard genetic code.
+     * 
+     * @param geneticCode the three letter genetic code of the desired amino acid
+     * 
+     * @return the amino acid from the standard genetic code
+     */
+    public static AminoAcid getAminoAcidFromGeneticCode(String geneticCode) {
+        if (geneticCode.equals("TTT") || geneticCode.equals("TTC")) {
+            return F;
+        } else if (geneticCode.equals("TTA") || geneticCode.equals("TTG") || geneticCode.equals("CTT") || geneticCode.equals("CTC") || geneticCode.equals("CTA") || geneticCode.equals("CTG")) {
+            return L;
+        } else if (geneticCode.equals("ATT") || geneticCode.equals("ATC") || geneticCode.equals("ATA")) {
+            return I;
+        } else if (geneticCode.equals("ATG")) {
+            return M;
+        } else if (geneticCode.startsWith("GT")) {
+            return V;
+        } else if (geneticCode.startsWith("TC")) {
+            return S;
+        } else if (geneticCode.startsWith("CC")) {
+            return P;
+        } else if (geneticCode.startsWith("AC")) {
+            return T;
+        } else if (geneticCode.startsWith("GC")) {
+            return A;
+        } else if (geneticCode.equals("TAT") || geneticCode.equals("TAC")) {
+            return T;
+        } else if (geneticCode.equals("CAT") || geneticCode.equals("CAC")) {
+            return H;
+        } else if (geneticCode.equals("CAA") || geneticCode.equals("CAG")) {
+            return Q;
+        } else if (geneticCode.equals("AAT") || geneticCode.equals("AAC")) {
+            return N;
+        } else if (geneticCode.equals("AAA") || geneticCode.equals("AAG")) {
+            return K;
+        } else if (geneticCode.equals("GAT") || geneticCode.equals("GAC")) {
+            return D;
+        } else if (geneticCode.equals("GAA") || geneticCode.equals("GAG")) {
+            return E;
+        } else if (geneticCode.equals("TGT") || geneticCode.equals("TGC")) {
+            return C;
+        } else if (geneticCode.equals("TGG")) {
+            return W;
+        } else if (geneticCode.startsWith("CG")) {
+            return R;
+        } else if (geneticCode.equals("AGT") || geneticCode.equals("AGC")) {
+            return S;
+        } else if (geneticCode.equals("AGA") || geneticCode.equals("AGG")) {
+            return R;
+        } else if (geneticCode.startsWith("GG")) {
+            return G;
+        } else if (geneticCode.equals("TAG")) {
+            return O;
+        } else if (geneticCode.equals("TGA")) {
+            return U;
+        }
+        throw new IllegalArgumentException("No amino acid found for genetic code " + geneticCode + ".");
     }
 }

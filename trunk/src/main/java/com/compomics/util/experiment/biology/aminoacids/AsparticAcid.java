@@ -34,4 +34,9 @@ public class AsparticAcid extends AminoAcid {
     public char[] getCombinations() {
         return new char[]{'B', 'X'};
     }
+
+    @Override
+    public String[] getStandardGeneticCode() {
+        return new String[] {"GAT", "GAC"};
+    }
 }

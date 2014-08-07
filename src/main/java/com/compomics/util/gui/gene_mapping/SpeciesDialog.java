@@ -518,8 +518,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 downloadMappings();
             } else { // update
 
-                boolean speciesUpdate = speciesUpdateExist();
-
                 // check if newer mappings are available
                 Integer latestEnsemblVersion = geneFactory.getCurrentEnsemblVersion(getEnsemblType());
                 String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();

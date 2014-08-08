@@ -362,9 +362,10 @@ public class MutationMatrix implements Serializable {
     
     
     /**
-     * Indicates whether 
+     * Indicates whether the two MutationMatrix are the same.
+     * 
      * @param mutationMatrix
-     * @return 
+     * @return whether the two MutationMatrix are the same
      */
     public boolean isSameAs(MutationMatrix mutationMatrix) {
         if (this.equals(mutationMatrix)) {

@@ -142,8 +142,7 @@ public class AnnotationPreferences implements Serializable {
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption
      * @param newSpectrum boolean indicating whether this is a new spectrum
-     * @param matchingType the matching type to map ptms on the peptide sequence
-     * @param mzTolerance the ms2 m/z tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -155,20 +154,19 @@ public class AnnotationPreferences implements Serializable {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
         if (newSpectrum && automaticAnnotation) {
-            resetAutomaticAnnotation(matchingType, mzTolerance);
+            resetAutomaticAnnotation(sequenceMatchingPreferences);
         } else if (neutralLossesSequenceDependant) {
-            neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, matchingType, mzTolerance);
+            neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences);
         }
     }
 
     /**
      * Updates the neutral losses and charge annotation settings.
      * 
-     * @param matchingType the matching type to map ptms on the peptide sequence
-     * @param mzTolerance the ms2 m/z tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -180,7 +178,7 @@ public class AnnotationPreferences implements Serializable {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public void resetAutomaticAnnotation(AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public void resetAutomaticAnnotation(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         selectedCharges.clear();
         int precusorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
         if (precusorCharge == 1) {
@@ -190,7 +188,7 @@ public class AnnotationPreferences implements Serializable {
                 selectedCharges.add(charge);
             }
         }
-        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption,matchingType, mzTolerance);
+        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption,sequenceMatchingPreferences);
     }
 
     /**

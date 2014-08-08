@@ -5,6 +5,8 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,38 +36,21 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     private int length = -1;
     /**
      * The list of targeted amino acids at a given index. For trypsin: 0 -> {R,
-     * K} 1 -> {}
+     * K} 1 -> {all but P}
      */
     private HashMap<Integer, ArrayList<AminoAcid>> aaTargeted = null;
     /**
      * The list of excluded amino acids at a given index For trypsin: 0 -> {} 1
      * -> {P}
+     *
+     * @deprecated target all but this one instead
      */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = null; // @TODO: get rid of this and use ontly targeted
+    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = null;
     /**
      * The modifications carried by the amino acid sequence at target amino
      * acids.
      */
-    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = null; // @TODO: do we need modifications on excluded amino acids?
-
-    /**
-     * The different types of amino acid matching.
-     */
-    public static enum MatchingType {
-
-        /**
-         * Matches character strings only.
-         */
-        string,
-        /**
-         * Matches amino acids.
-         */
-        aminoAcid,
-        /**
-         * Matches amino acids of indistinguishable masses.
-         */
-        indistiguishibleAminoAcids;
-    }
+    private HashMap<Integer, ArrayList<ModificationMatch>> targetModifications = null;
 
     /**
      * Creates a blank pattern. All maps are null.
@@ -127,9 +112,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
         HashMap<Integer, ArrayList<AminoAcid>> otherExcluded = aminoAcidPattern.getAaExcluded();
         if (otherExcluded != null) {
-            aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExcluded.size());
+            // Backward compatibility
             for (int index : otherExcluded.keySet()) {
-                aaExcluded.put(index, (ArrayList<AminoAcid>) otherExcluded.get(index).clone());
+                setExcluded(index, otherExcluded.get(index));
             }
         }
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = aminoAcidPattern.getModificationMatches();
@@ -153,6 +138,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Returns the map of excluded amino acids. Null if not set.
      *
+     * @deprecated use targeted amino acids only
      * @return the map of excluded amino acids
      */
     public HashMap<Integer, ArrayList<AminoAcid>> getAaExcluded() {
@@ -191,21 +177,18 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
 
-        if (aaTargeted.size() < fromRow || aaExcluded.size() < fromRow || fromRow < 0 || toRow < 0) {
+        if (aaTargeted.size() < fromRow || fromRow < 0 || toRow < 0) {
             throw new IllegalArgumentException("Illegal row index: " + fromRow);
         }
-        if (aaTargeted.size() < toRow || aaExcluded.size() < fromRow || toRow < 0 || fromRow < 0) {
+        if (aaTargeted.size() < toRow || toRow < 0 || fromRow < 0) {
             throw new IllegalArgumentException("Illegal row index: " + toRow);
         }
 
         ArrayList<AminoAcid> toRowDataTarget = aaTargeted.get(toRow);
-        ArrayList<AminoAcid> toRowDataExcluded = aaExcluded.get(toRow);
 
         aaTargeted.put(toRow, aaTargeted.get(fromRow));
-        aaExcluded.put(toRow, aaExcluded.get(fromRow));
 
         aaTargeted.put(fromRow, toRowDataTarget);
-        aaExcluded.put(fromRow, toRowDataExcluded);
 
         if (target == fromRow) {
             target = toRow;
@@ -255,7 +238,46 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(1);
         }
         aaTargeted.put(index, targets);
-        length = -1;
+        if (index + 1 > length) {
+            length = index + 1;
+        }
+    }
+
+    /**
+     * Excludes the given amino acids from the targeted amino acids at the given
+     * index.
+     *
+     * @param index the index of the excluded amino acid
+     * @param exceptions the amino acids to exclude
+     */
+    public void setExcluded(int index, ArrayList<AminoAcid> exceptions) {
+        if (aaTargeted == null) {
+            aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(1);
+        }
+        if (exceptions == null || exceptions.isEmpty()) {
+            aaTargeted.put(index, new ArrayList<AminoAcid>());
+        } else {
+            ArrayList<AminoAcid> notExcluded = new ArrayList<AminoAcid>();
+            ArrayList<AminoAcid> targeted = aaTargeted.get(index);
+            if (targeted == null || targeted.isEmpty()) {
+                for (char aa : AminoAcid.getUniqueAminoAcids()) {
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+                    if (!exceptions.contains(aminoAcid)) {
+                        notExcluded.add(aminoAcid);
+                    }
+                }
+            } else {
+                for (AminoAcid aminoAcid : targeted) {
+                    if (!exceptions.contains(aminoAcid)) {
+                        notExcluded.add(aminoAcid);
+                    }
+                }
+            }
+            aaTargeted.put(index, notExcluded);
+        }
+        if (index + 1 > length) {
+            length = index + 1;
+        }
     }
 
     /**
@@ -268,23 +290,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public ArrayList<AminoAcid> getTargetedAA(int index) {
         if (aaTargeted != null) {
             ArrayList<AminoAcid> result = aaTargeted.get(index);
-            if (result != null) {
-                return result;
-            }
-        }
-        return new ArrayList<AminoAcid>();
-    }
-
-    /**
-     * Returns the excluded amino acids at a given index in the pattern. The
-     * first amino acid is 0.
-     *
-     * @param index the index in the pattern
-     * @return the excluded amino acids
-     */
-    public ArrayList<AminoAcid> getExcludedAA(int index) {
-        if (aaExcluded != null) {
-            ArrayList<AminoAcid> result = aaExcluded.get(index);
             if (result != null) {
                 return result;
             }
@@ -309,41 +314,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Returns the number of excluded amino acids at the given index. The first
-     * amino acid is 0.
-     *
-     * @param index the index of interest
-     *
-     * @return the number of excluded amino acids
-     */
-    public int getNExcludedAA(int index) {
-        if (aaExcluded == null) {
-            return 0;
-        }
-        ArrayList<AminoAcid> aas = getExcludedAA(index);
-        if (aas == null) {
-            return 0;
-        }
-        return aas.size();
-    }
-
-    /**
-     * Sets the amino acids excluded at a given index. There shall be no
-     * excluded amino acid at the targeted index. The first amino acid is 0.
-     * Previous value will be silently overwritten.
-     *
-     * @param index the index in the pattern
-     * @param exclusions the amino acids excluded
-     */
-    public void setExcluded(int index, ArrayList<AminoAcid> exclusions) {
-        if (aaExcluded == null) {
-            aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(1);
-        }
-        aaExcluded.put(index, exclusions);
-        length = -1;
-    }
-
-    /**
      * Removes an amino acid index from the pattern. The first amino acid is 0.
      *
      * @param index the index of the amino acid to remove
@@ -363,19 +333,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
 
-        if (aaExcluded != null) {
-            ArrayList<Integer> indexes = new ArrayList<Integer>(aaExcluded.keySet());
-            Collections.sort(indexes);
-            for (int aa : indexes) {
-                if (aa >= index) {
-                    if (aa > index) {
-                        aaExcluded.put(aa - 1, aaExcluded.get(aa));
-                    }
-                    aaExcluded.remove(aa);
-                }
-            }
-        }
-
         if (targetModifications != null) {
             ArrayList<Integer> indexes = new ArrayList<Integer>(targetModifications.keySet());
             Collections.sort(indexes);
@@ -385,7 +342,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     if (aa > ptmIndex) {
                         targetModifications.put(aa - 1, targetModifications.get(aa));
                     }
-                    aaExcluded.remove(aa);
                 }
             }
         }
@@ -395,25 +351,15 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Returns the amino acid pattern as case insensitive pattern for String
-     * matching using default single letter code of amino acids.
-     *
-     * @return the amino acid pattern as java string pattern
-     */
-    public Pattern getAsStringPattern() {
-        return getAsStringPattern(MatchingType.string, null);
-    }
-
-    /**
-     * Returns the amino acid pattern as case insensitive pattern for String
      * matching.
      *
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the amino acid pattern as java string pattern
      */
-    public Pattern getAsStringPattern(MatchingType matchingType, Double massTolerance) {
+    public Pattern getAsStringPattern(SequenceMatchingPreferences sequenceMatchingPreferences) {
+
+        MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
 
         String regex = "";
         int tempLength = length();
@@ -432,7 +378,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                         if (!toAdd.contains(aa.singleLetterCode)) {
                             toAdd.add(aa.singleLetterCode);
                         }
-                        if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
+                        if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishableAminoAcids) {
                             for (char tempAa : aa.getSubAminoAcids()) {
                                 String value = tempAa + "";
                                 if (!toAdd.contains(value)) {
@@ -445,8 +391,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                                     toAdd.add(value);
                                 }
                             }
-                            if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                                for (char tempAa : aa.getIndistinguishibleAminoAcids(massTolerance)) {
+                            if (matchingType == MatchingType.indistiguishableAminoAcids) {
+                                for (char tempAa : aa.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
                                     String value = tempAa + "";
                                     if (!toAdd.contains(value)) {
                                         toAdd.add(value);
@@ -459,25 +405,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
 
             Collections.sort(toAdd);
-            ArrayList<String> restrictions = new ArrayList<String>();
-            if (aaExcluded != null) {
-                ArrayList<AminoAcid> exclude = aaExcluded.get(i);
-
-                if (exclude != null) {
-                    for (AminoAcid aa : exclude) {
-                        if (!restrictions.contains(aa.singleLetterCode)) {
-                            restrictions.add(aa.singleLetterCode);
-                        }
-                    }
-                }
-            }
 
             regex += "[";
 
             for (String aa : toAdd) {
-                if (!restrictions.contains(aa)) {
-                    regex += aa;
-                }
+                regex += aa;
             }
 
             regex += "]";
@@ -495,30 +427,38 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         StringBuilder result = new StringBuilder();
         int cpt = 0;
         for (int i = 0; i < length(); i++) {
-            ArrayList<AminoAcid> targetedAa = getTargetedAA(i),
-                    excludedAa = getExcludedAA(i);
-            if (!targetedAa.isEmpty() || !excludedAa.isEmpty()) {
+            ArrayList<AminoAcid> targetedAas = getTargetedAA(i);
+            if (targetedAas.isEmpty()) {
+                cpt++;
+            } else if (targetedAas.size() > 15) {
+                ArrayList<AminoAcid> excludedAas = new ArrayList<AminoAcid>();
+                for (char aa : AminoAcid.getUniqueAminoAcids()) {
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+                    if (!targetedAas.contains(aminoAcid)) {
+                        excludedAas.add(aminoAcid);
+                    }
+                }
                 if (cpt > 0) {
                     result.append("(").append(cpt).append(")");
                     cpt = 0;
                 }
-                if (!targetedAa.isEmpty()) {
+                result.append("{");
+                for (AminoAcid aa : excludedAas) {
+                    result.append(aa.singleLetterCode);
+                }
+                result.append("}");
+            } else {
+                if (cpt > 0) {
+                    result.append("(").append(cpt).append(")");
+                    cpt = 0;
+                }
+                if (!targetedAas.isEmpty()) {
                     result.append("[");
-                    for (AminoAcid aa : targetedAa) {
-                        if (!excludedAa.contains(aa)) {
-                            result.append(aa.singleLetterCode);
-                        }
-                    }
-                    result.append("]");
-                } else if (!excludedAa.isEmpty()) {
-                    result.append("{");
-                    for (AminoAcid aa : excludedAa) {
+                    for (AminoAcid aa : targetedAas) {
                         result.append(aa.singleLetterCode);
                     }
-                    result.append("}");
+                    result.append("]");
                 }
-            } else {
-                cpt++;
             }
             if (i == target) {
                 result.append("!");
@@ -528,45 +468,18 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Returns the indexes where the amino acid pattern was found in the input
-     * using default single letter code of amino acids. 1 is the first amino
-     * acid.
-     *
-     * @param input the amino acid input sequence as string
-     *
-     * @return a list of indexes where the amino acid pattern was found
-     */
-    public ArrayList<Integer> getIndexes(String input) {
-        return getIndexes(input, MatchingType.string, Double.NaN);
-    }
-
-    /**
-     * Returns the indexes where the amino acid pattern was found in the input
-     * using default single letter code of amino acids. 1 is the first amino
-     * acid.
-     *
-     * @param input the amino acid input sequence as AminoAcidPattern
-     *
-     * @return a list of indexes where the amino acid pattern was found
-     */
-    public ArrayList<Integer> getIndexes(AminoAcidPattern input) {
-        return getIndexes(input, MatchingType.string, Double.NaN);
-    }
-
-    /**
      * Returns the indexes where the amino acid pattern was found in the input.
      * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as string
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(String input, MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getIndexes(String input, SequenceMatchingPreferences sequenceMatchingPreferences) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         int index = 0;
-        while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
+        while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
             result.add(index + 1);
             index++;
         }
@@ -578,15 +491,14 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * 1 is the first amino acid.
      *
      * @param input the amino acid input sequence as AminoAcidPattern
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a list of indexes where the amino acid pattern was found
      */
-    public ArrayList<Integer> getIndexes(AminoAcidPattern input, MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingPreferences sequenceMatchingPreferences) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         int index = 0;
-        while ((index = firstIndex(input, matchingType, massTolerance, index)) >= 0) {
+        while ((index = firstIndex(input, sequenceMatchingPreferences, index)) >= 0) {
             result.add(index + 1);
             index++;
         }
@@ -594,16 +506,16 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is found in the given amino acid sequence
-     * using default single letter code of amino acids.
+     * Returns the first index where the amino acid pattern is found. -1 if not
+     * found. 0 is the first amino acid.
      *
-     * @param aminoAcidSequence the amino acid sequence
+     * @param aminoAcidSequence the amino acid sequence to look into
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @return a boolean indicating whether the pattern is found in the given
-     * amino acid sequence
+     * @return the first index where the amino acid pattern is found
      */
-    public boolean matches(String aminoAcidSequence) {
-        return matches(aminoAcidSequence, MatchingType.string, Double.NaN);
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
     }
 
     /**
@@ -611,27 +523,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidSequence, matchingType, massTolerance, 0);
-    }
-
-    /**
-     * Returns the first index where the amino acid pattern is found. -1 if not
-     * found. 0 is the first amino acid.
-     *
-     * @param aminoAcidSequence the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     *
-     * @return the first index where the amino acid pattern is found
-     */
-    public int firstIndex(AminoAcidSequence aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidSequence.getSequence(), matchingType, massTolerance, 0);
+    public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidSequence.getSequence(), sequenceMatchingPreferences, 0);
     }
 
     /**
@@ -639,40 +536,37 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidPattern the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
-        return firstIndex(aminoAcidPattern, matchingType, massTolerance, 0);
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidPattern, sequenceMatchingPreferences, 0);
     }
 
     /**
      * Indicates whether the pattern contains a subsequence of amino acids.
      *
      * @param aminoAcidSequence the amino acid sequence to look for
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
+    public boolean contains(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         AminoAcidPattern pattern = new AminoAcidPattern(aminoAcidSequence);
-        return pattern.firstIndex(this, matchingType, massTolerance) >= 0;
+        return pattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
     }
 
     /**
      * Indicates whether the pattern contains a subsequence of amino acids.
      *
      * @param aminoAcidPattern the amino acid sequence to look for
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the first index where the amino acid pattern is found
      */
-    public boolean contains(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
-        return aminoAcidPattern.firstIndex(this, matchingType, massTolerance) >= 0;
+    public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return aminoAcidPattern.firstIndex(this, sequenceMatchingPreferences) >= 0;
     }
 
     /**
@@ -680,13 +574,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(String aminoAcidSequence, MatchingType matchingType, Double massTolerance, int startIndex) {
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidSequence.length();
@@ -697,14 +590,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
             for (int j = 0; j < patternLength; j++) {
                 char aa = aminoAcidSequence.charAt(i + j);
-                boolean reject = isExcluded(aa, j, matchingType, massTolerance);
-                if (reject) {
+                if (!isTargeted(aa, j, sequenceMatchingPreferences)) {
                     match = false;
-                } else {
-                    boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
-                    if (!targeted) {
-                        match = false;
-                    }
                 }
                 if (!match) {
                     break;
@@ -722,13 +609,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * given pattern. -1 if not found. 0 is the first amino acid.
      *
      * @param aminoAcidPattern the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * @param startIndex the start index where to start looking for
      *
      * @return the first index where the amino acid pattern is found
      */
-    public int firstIndex(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance, int startIndex) {
+    public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences, int startIndex) {
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
@@ -742,13 +628,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     boolean aaMatched = false;
                     for (AminoAcid aminoAcid : aminoAcids) {
                         char aa = aminoAcid.singleLetterCode.charAt(0);
-                        boolean reject = isExcluded(aa, j, matchingType, massTolerance);
-                        if (!reject) {
-                            boolean targeted = isTargeted(aa, j, matchingType, massTolerance);
-                            if (targeted) {
-                                aaMatched = true;
-                                break;
-                            }
+                        if (isTargeted(aa, j, sequenceMatchingPreferences)) {
+                            aaMatched = true;
+                            break;
                         }
                     }
                     if (!aaMatched) {
@@ -770,24 +652,25 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @param aa the amino acid as character
      * @param index the index in the pattern
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the given amino acid at the given index of the pattern is
      * targeted
      */
-    public boolean isTargeted(char aa, int index, MatchingType matchingType, Double massTolerance) {
+    public boolean isTargeted(char aa, int index, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
         if (aaTargeted != null) {
+
+            MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
 
             ArrayList<AminoAcid> aaList = aaTargeted.get(index);
 
             if (aaList != null && !aaList.isEmpty()) {
 
                 for (AminoAcid targetedAA : aaList) {
-                    if (aa == targetedAA.singleLetterCode.charAt(0)) {
+                    if (aa == targetedAA.getSingleLetterCodeAsChar()) {
                         return true;
-                    } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
+                    } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishableAminoAcids) {
 
                         for (char tempAA : targetedAA.getSubAminoAcids()) {
                             if (aa == tempAA) {
@@ -801,8 +684,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                             }
                         }
 
-                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                            for (char tempAA : targetedAA.getIndistinguishibleAminoAcids(massTolerance)) {
+                        if (matchingType == MatchingType.indistiguishableAminoAcids) {
+                            for (char tempAA : targetedAA.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
                                 if (aa == tempAA) {
                                     return true;
                                 }
@@ -810,7 +693,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                         }
                     }
                 }
-            } else {
+            } else if (aaList != null) {
                 return true;
             }
         }
@@ -819,196 +702,85 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the given amino acid at the given index of the pattern
-     * shall be excluded.
-     *
-     * @param aa the amino acid as character
-     * @param index the index in the pattern
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     *
-     * @return true if the given amino acid at the given index of the pattern
-     * shall be excluded
-     */
-    public boolean isExcluded(char aa, int index, MatchingType matchingType, Double massTolerance) {
-
-        if (aaExcluded != null) {
-
-            ArrayList<AminoAcid> aaList = aaExcluded.get(index);
-
-            if (aaList != null && !aaList.isEmpty()) {
-                for (AminoAcid vetoAA : aaList) {
-
-                    if (aa == vetoAA.singleLetterCode.charAt(0)) {
-                        return true;
-                    }
-
-                    if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishibleAminoAcids) {
-
-                        for (char tempAA : vetoAA.getSubAminoAcids()) {
-                            if (aa == tempAA) {
-                                return true;
-                            }
-                        }
-
-                        for (char tempAA : vetoAA.getCombinations()) {
-                            if (aa == tempAA) {
-                                return true;
-                            }
-                        }
-
-                        if (matchingType == MatchingType.indistiguishibleAminoAcids) {
-                            for (char tempAA : vetoAA.getIndistinguishibleAminoAcids(massTolerance)) {
-                                if (aa == tempAA) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Indicates whether the pattern is found in the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matches(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
+    public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
      * Indicates whether the pattern is found in the given amino acid sequence.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
-    public boolean matches(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
-        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, matchingType, massTolerance) >= 0;
-    }
-
-    /**
-     * Indicates whether the given amino acid sequence starts with the pattern
-     * using default single letter code of amino acids.
-     *
-     * @param aminoAcidSequence the amino acid sequence
-     *
-     * @return a boolean indicating whether the given amino acid sequence starts
-     * with the pattern
-     */
-    public boolean isStarting(String aminoAcidSequence) {
-        return isStarting(aminoAcidSequence, MatchingType.string, Double.NaN);
-    }
-
-    /**
-     * Indicates whether the given amino acid sequence starts with the pattern
-     * using default single letter code of amino acids.
-     *
-     * @param aminoAcidPattern the amino acid sequence
-     *
-     * @return a boolean indicating whether the given amino acid sequence starts
-     * with the pattern
-     */
-    public boolean isStarting(AminoAcidPattern aminoAcidPattern) {
-        return isStarting(aminoAcidPattern, MatchingType.string, Double.NaN);
+    public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
-        int patternLength = length(); // @TODO: should not use length() here?
-        return matches(aminoAcidSequence.substring(0, patternLength), matchingType, massTolerance);
+    public boolean isStarting(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        int patternLength = length();
+        return matches(aminoAcidSequence.substring(0, patternLength), sequenceMatchingPreferences);
     }
 
     /**
      * Indicates whether the given amino acid sequence starts with the pattern.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence starts
      * with the pattern
      */
-    public boolean isStarting(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
+    public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(0, patternLength, false), matchingType, massTolerance);
-    }
-
-    /**
-     * Indicates whether the given amino acid sequence ends with the pattern
-     * using default single letter code of amino acids.
-     *
-     * @param aminoAcidSequence the amino acid sequence
-     *
-     * @return a boolean indicating whether the given amino acid sequence ends
-     * with the pattern
-     */
-    public boolean isEnding(String aminoAcidSequence) {
-        return isEnding(aminoAcidSequence, MatchingType.string, Double.NaN);
-    }
-
-    /**
-     * Indicates whether the given amino acid sequence ends with the pattern
-     * using default single letter code of amino acids.
-     *
-     * @param aminoAcidPattern the amino acid sequence
-     *
-     * @return a boolean indicating whether the given amino acid sequence ends
-     * with the pattern
-     */
-    public boolean isEnding(AminoAcidPattern aminoAcidPattern) {
-        return isEnding(aminoAcidPattern, MatchingType.string, Double.NaN);
+        return matches(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingPreferences);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidPattern the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(AminoAcidPattern aminoAcidPattern, MatchingType matchingType, Double massTolerance) {
+    public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), matchingType, massTolerance);
+        return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingPreferences);
     }
 
     /**
      * Indicates whether the given amino acid sequence ends with the pattern.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the given amino acid sequence ends
      * with the pattern
      */
-    public boolean isEnding(String aminoAcidSequence, MatchingType matchingType, Double massTolerance) {
+    public boolean isEnding(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), matchingType, massTolerance);
+        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingPreferences);
     }
 
     /**
@@ -1017,15 +789,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * should be loaded in the PTM factory.
      *
      * @param anotherPattern the other AminoAcidPattern
-     * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as
-     * indistinguishable
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (!matches(anotherPattern, matchingType, massTolerance)) {
+        if (!matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
         }
 
@@ -1061,15 +831,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * factory.
      *
      * @param anotherPattern the other AminoAcidPattern
-     * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as
-     * indistinguishable
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same pattern
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (!matches(anotherPattern, matchingType, massTolerance)) {
+        if (!matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
         }
 
@@ -1138,14 +906,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public int length() {
         if (length == -1 || length == 0) { //we need to check the 0 case every time due to backward compatibility issues
-            if ((aaTargeted == null || aaTargeted.isEmpty()) && (aaExcluded == null || aaExcluded.isEmpty())) {
+            if (aaTargeted == null || aaTargeted.isEmpty()) {
                 length = 0;
-            } else if (aaTargeted == null || aaTargeted.isEmpty()) {
-                length = Collections.max(aaExcluded.keySet()) + 1;
-            } else if (aaExcluded == null || aaExcluded.isEmpty()) {
-                length = Collections.max(aaTargeted.keySet()) + 1;
             } else {
-                length = Math.max(Collections.max(aaTargeted.keySet()), Collections.max(aaExcluded.keySet())) + 1;
+                length = Collections.max(aaTargeted.keySet()) + 1;
             }
         }
         return length;
@@ -1183,59 +947,38 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Simple merger for two patterns. To be used carefully.
+     * Simple merger for two patterns.
      *
-     * Example: this: target{0->S} exclusion{} otherPattern: target{0->T}
-     * exclusion{} result (this): target{0->S|T} exclusion{}
-     *
-     * Example of misuse: this: target{0->S} exclusion{0->null, 1>P}
-     * otherPattern: target{0->T, 1->P} exclusion{} result (this):
-     * target{0->S|T, 1->P} exclusion{0->null, 1>P}
+     * Example: this: target{0->S} otherPattern: target{0->T} result (this):
+     * target{0->S|T}
      *
      * @param otherPattern another pattern to be merged with this
      */
     public void merge(AminoAcidPattern otherPattern) {
 
-        HashMap<Integer, ArrayList<AminoAcid>> otherExclusionMap = otherPattern.getAaExcluded();
-        if (otherExclusionMap != null) {
-            for (int i : otherExclusionMap.keySet()) {
-                ArrayList<AminoAcid> otherAAs = otherPattern.getExcludedAA(i);
-                if (!otherAAs.isEmpty()) {
-                    if (aaExcluded == null) {
-                        aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExclusionMap.size());
-                    }
-                    ArrayList<AminoAcid> excludedAA = aaExcluded.get(i);
-                    if (excludedAA == null) {
-                        aaExcluded.put(i, (ArrayList<AminoAcid>) otherAAs.clone());
-                    } else {
-                        for (AminoAcid aa : otherAAs) {
-                            if (!excludedAA.contains(aa)) {
-                                excludedAA.add(aa);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         HashMap<Integer, ArrayList<AminoAcid>> otherInclusionMap = otherPattern.getAaTargeted();
         if (otherInclusionMap != null) {
             for (int i : otherInclusionMap.keySet()) {
-                ArrayList<AminoAcid> otherAAs = otherPattern.getExcludedAA(i);
-                if (!otherAAs.isEmpty()) {
-                    if (aaTargeted == null) {
-                        aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(otherInclusionMap.size());
-                    }
-                    ArrayList<AminoAcid> targetedAA = aaTargeted.get(i);
-                    if (targetedAA == null) {
-                        aaTargeted.put(i, (ArrayList<AminoAcid>) otherAAs.clone());
-                    } else {
+                ArrayList<AminoAcid> otherAAs = otherPattern.getTargetedAA(i);
+                if (aaTargeted == null) {
+                    aaTargeted = new HashMap<Integer, ArrayList<AminoAcid>>(otherInclusionMap.size());
+                }
+                ArrayList<AminoAcid> targetedAA = aaTargeted.get(i);
+                if (targetedAA == null) {
+                    aaTargeted.put(i, (ArrayList<AminoAcid>) otherAAs.clone());
+                } else {
+                    if (!otherAAs.isEmpty()) {
                         for (AminoAcid aa : otherAAs) {
                             if (!targetedAA.contains(aa)) {
                                 targetedAA.add(aa);
                             }
                         }
+                    } else {
+                        targetedAA.clear();
                     }
+                }
+                if (i + 1 > length) {
+                    length = i + 1;
                 }
             }
         }
@@ -1244,9 +987,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (modificationMatches != null) {
             for (int i : modificationMatches.keySet()) {
                 addModificationMatches(i, otherPattern.getModificationMatches().get(i));
+                if (i + 1 > length) {
+                    length = i + 1;
+                }
             }
         }
-        length = -1;
     }
 
     /**
@@ -1256,16 +1001,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void append(AminoAcidPattern otherPattern) {
         int patternLength = length();
-        HashMap<Integer, ArrayList<AminoAcid>> otherExclusionMap = otherPattern.getAaExcluded();
-        if (otherExclusionMap != null) {
-            if (aaExcluded == null) {
-                aaExcluded = new HashMap<Integer, ArrayList<AminoAcid>>(otherExclusionMap.size());
-            }
-            for (int i : otherExclusionMap.keySet()) {
-                int index = patternLength + i;
-                aaExcluded.put(index, (ArrayList<AminoAcid>) otherExclusionMap.get(i).clone());
-            }
-        }
         HashMap<Integer, ArrayList<AminoAcid>> otherTargetedMap = otherPattern.getAaTargeted();
         if (otherTargetedMap != null) {
             if (aaTargeted == null) {
@@ -1307,7 +1042,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     @Override
     public String toString() {
-        return getAsStringPattern().pattern();
+        return asSequence();
     }
 
     /**
@@ -1320,22 +1055,20 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public StringBuilder asStringBuilder() {
         StringBuilder result = new StringBuilder(length());
         for (int i = 0; i < length(); i++) {
-            if (getNTargetedAA(i) == 1 && getNExcludedAA(i) == 0) {
+            if (getNTargetedAA(i) == 1) {
                 result.append(getTargetedAA(i).get(0).singleLetterCode);
             } else {
-                result.append("[");
-                if (getNTargetedAA(i) == 0) {
+                int nTargetedAas = getNTargetedAA(i);
+                if (nTargetedAas == 0) {
                     result.append("X");
+                } else if (nTargetedAas == 1) {
+                    result.append(getTargetedAA(i).get(0).singleLetterCode);
                 } else {
+                    result.append("[");
                     for (AminoAcid aa : getTargetedAA(i)) {
                         result.append(aa.singleLetterCode);
                     }
-                }
-                if (getNExcludedAA(i) > 0) {
-                    result.append("/");
-                    for (AminoAcid aa : getExcludedAA(i)) {
-                        result.append(aa.singleLetterCode);
-                    }
+                    result.append("]");
                 }
             }
         }
@@ -1356,26 +1089,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the component of the amino acid pattern at the given index
      */
     public String asSequence(int index) {
-        String result = "";
-        if (getNTargetedAA(index) == 1 && getNExcludedAA(index) == 0) {
-            result += getTargetedAA(index).get(0).singleLetterCode;
-        } else {
-            result += "[";
-            if (getNTargetedAA(index) == 0) {
-                result += "X";
-            } else {
-                for (AminoAcid aa : getTargetedAA(index)) {
-                    result += aa.singleLetterCode;
-                }
-            }
-            if (getNExcludedAA(index) > 0) {
-                result += "/";
-                for (AminoAcid aa : getExcludedAA(index)) {
-                    result += aa.singleLetterCode;
-                }
-            }
-        }
-        return result;
+        return asStringBuilder().toString();
     }
 
     /**
@@ -1601,7 +1315,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
             int patternIndex = aa - 1;
 
-            if (aminoAcidPattern.getNTargetedAA(patternIndex) > 1 && aminoAcidPattern.getNExcludedAA(patternIndex) > 0) {
+            if (aminoAcidPattern.getNTargetedAA(patternIndex) > 1) {
                 modifiedSequence += "[";
             }
             if (aminoAcidPattern.getNTargetedAA(patternIndex) == 0) {
@@ -1638,13 +1352,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     modifiedSequence += aminoAcid.singleLetterCode;
                 }
             }
-            if (aminoAcidPattern.getNExcludedAA(patternIndex) > 0) {
-                modifiedSequence += "/";
-                for (AminoAcid aminoAcid : aminoAcidPattern.getExcludedAA(patternIndex)) {
-                    modifiedSequence += aminoAcid.singleLetterCode;
-                }
-            }
-            if (aminoAcidPattern.getNTargetedAA(aa) > 1 && aminoAcidPattern.getNExcludedAA(patternIndex) > 0) {
+            if (aminoAcidPattern.getNTargetedAA(aa) > 1) {
                 modifiedSequence += "]";
             }
         }
@@ -1800,14 +1508,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
-        if (aaExcluded != null) {
-            for (int i : aaExcluded.keySet()) {
-                if (i >= startIndex && i <= endIndex) {
-                    ArrayList<AminoAcid> aminoAcids = (ArrayList<AminoAcid>) aaExcluded.get(i).clone();
-                    aminoAcidPattern.setTargeted(i - startIndex, aminoAcids);
-                }
-            }
-        }
         if (updateTarget) {
             aminoAcidPattern.setTarget(getTarget() - startIndex);
         } else {
@@ -1858,12 +1558,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 newPattern.setTargeted(reversed, (ArrayList<AminoAcid>) aaTargeted.get(i).clone());
             }
         }
-        if (aaExcluded != null) {
-            for (int i : aaExcluded.keySet()) {
-                int reversed = length() - i - 1;
-                newPattern.setExcluded(reversed, (ArrayList<AminoAcid>) aaExcluded.get(i).clone());
-            }
-        }
         if (targetModifications != null) {
             for (int i : targetModifications.keySet()) {
                 int reversed = length() - i + 1;
@@ -1886,22 +1580,22 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidPattern)) {
             return false;
         } else {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
-            return isSameAs(aminoAcidPattern, matchingType, massTolerance);
+            return isSameAs(aminoAcidPattern, sequenceMatchingPreferences);
         }
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidPattern)) {
             return false;
         } else {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) anotherCompontent;
-            return isSameSequenceAndModificationStatusAs(aminoAcidPattern, matchingType, massTolerance);
+            return isSameSequenceAndModificationStatusAs(aminoAcidPattern, sequenceMatchingPreferences);
         }
     }
 }

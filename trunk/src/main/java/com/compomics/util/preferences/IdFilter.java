@@ -134,8 +134,7 @@ public class IdFilter implements Serializable {
      * protein tree of the sequence factory
      *
      * @param peptide the peptide
-     * @param matchingType the desired peptide to protein matching type
-     * @param massTolerance the ms2 mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * @return a boolean indicating whether the peptide passed the test
      *
      * @throws IOException
@@ -143,8 +142,8 @@ public class IdFilter implements Serializable {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public boolean validateProteins(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return validateProteins(peptide, matchingType, massTolerance, SequenceFactory.getInstance().getDefaultProteinTree());
+    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultProteinTree());
     }
 
     /**
@@ -152,8 +151,7 @@ public class IdFilter implements Serializable {
      * peptide to proteins in case it was not done before
      *
      * @param peptide the peptide
-     * @param matchingType the desired peptide to protein matching type
-     * @param massTolerance the ms2 mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * @param proteinTree the protein tree to use for peptide to protein mapping
      *
      * @return a boolean indicating whether the peptide passed the test
@@ -163,10 +161,10 @@ public class IdFilter implements Serializable {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public boolean validateProteins(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ProteinTree proteinTree)
+    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        ArrayList<String> accessions = peptide.getParentProteins(matchingType, massTolerance, proteinTree);
+        ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, proteinTree);
 
         if (accessions.size() > 1) {
             boolean target = false;
@@ -190,14 +188,12 @@ public class IdFilter implements Serializable {
      * Validates the modifications of a peptide.
      *
      * @param peptide the peptide of interest
-     * @param matchingType the peptide-protein matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, AminoAcidPattern.MatchingType matchingType, Double massTolerance, ModificationProfile modificationProfile) {
+    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ModificationProfile modificationProfile) {
 
         // check it it's an unknown peptide
         if (unknownPtm) {
@@ -229,7 +225,7 @@ public class IdFilter implements Serializable {
         // check if there are more ptms than ptm sites
         for (double mass : modMatches.keySet()) {
             try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, matchingType, massTolerance, modificationProfile);
+                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, sequenceMatchingPreferences, modificationProfile);
                 if (possiblePositions.size() < modMatches.get(mass)) {
                     return false;
                 }

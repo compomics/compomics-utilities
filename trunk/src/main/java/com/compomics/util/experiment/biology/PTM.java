@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 
 /**
@@ -242,7 +243,7 @@ public class PTM extends ExperimentObject {
         double massDiff = Math.abs(mass - anotherPTM.getMass());
         return type == anotherPTM.getType()
                 && (massDiff == 0 || massDiff <= 0.0000000000001)
-                && anotherPTM.getPattern().isSameAs(pattern, AminoAcidPattern.MatchingType.string, null);
+                && anotherPTM.getPattern().isSameAs(pattern, SequenceMatchingPreferences.defaultStringMatching);
     }
 
     /**
@@ -385,14 +386,17 @@ public class PTM extends ExperimentObject {
         }
 
         tooltip += "<br>";
-        
+
         tooltip += "Target: ";
         if (!pattern.getAminoAcidsAtTarget().isEmpty()) {
-            tooltip += pattern.toString().substring(1, pattern.toString().length() - 1);
+            String patternAsString = pattern.toString();
+            if (patternAsString.length() > 1) {
+                tooltip += patternAsString.substring(1, patternAsString.length() - 1);
+            }
         } else {
             tooltip += "All";
         }
-        
+
         tooltip += "</html>";
 
         return tooltip;

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.tags.tagcomponents;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 /**
  * An undefined mass gap.
@@ -45,12 +46,12 @@ public class MassGap extends ExperimentObject implements TagComponent {
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
         return (anotherCompontent instanceof MassGap) && anotherCompontent.getMass() == value;
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        return isSameAs(anotherCompontent, matchingType, massTolerance);
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return isSameAs(anotherCompontent, sequenceMatchingPreferences);
     }
 }

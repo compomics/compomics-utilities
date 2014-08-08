@@ -224,7 +224,6 @@ public class Enzyme extends ExperimentObject {
      * @param aaBefore the amino acid before the cleavage site
      * @param aaAfter the amino acid after the cleavage site
      * @return true if the amino acid combination can represent a cleavage site
-     * @deprecated use the isCleavageSite method using chars as input instead
      */
     public boolean isCleavageSite(String aaBefore, String aaAfter) {
         if (aaBefore.length() == 0 || aaAfter.length() == 0) {

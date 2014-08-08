@@ -15,6 +15,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -248,8 +249,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * are in the PTMFactory.
      *
      * @param peptide the peptide of interest
-     * @param matchingType the matching type to map ptms on the peptide sequence
-     * @param mzTolerance the ms2 m/z tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the expected possible neutral losses
      *
@@ -260,7 +260,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -332,7 +332,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
                 throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
             }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance);
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences);
                 if (!indexes.isEmpty()) {
                     Collections.sort(indexes);
                     modMin = indexes.get(0);

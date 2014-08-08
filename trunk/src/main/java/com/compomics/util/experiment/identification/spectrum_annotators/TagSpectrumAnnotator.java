@@ -17,6 +17,7 @@ import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param precursorCharge the new precursor charge
      */
     public void setTag(Tag newTag, int precursorCharge) {
-        if (this.tag == null || !this.tag.isSameAs(newTag, AminoAcidPattern.MatchingType.string, null) || this.precursorCharge != precursorCharge) {
+        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingPreferences.defaultStringMatching) || this.precursorCharge != precursorCharge) {
             this.tag = newTag;
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(newTag);
@@ -77,8 +78,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * are in the PTMFactory.
      *
      * @param tag the tag of interest
-     * @param matchingType the matching type to map ptms on the peptide sequence
-     * @param mzTolerance the ms2 m/z tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the expected possible neutral losses
      *
@@ -88,7 +88,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, AminoAcidPattern.MatchingType matchingType, double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -190,7 +190,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                             throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, matchingType, mzTolerance);
+                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences);
                             if (!indexes.isEmpty()) {
                                 Collections.sort(indexes);
                                 modMin = indexes.get(0);

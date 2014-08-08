@@ -1,8 +1,11 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.aminoacids.*;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Class representing amino acids.
@@ -68,6 +71,11 @@ public abstract class AminoAcid implements Serializable {
     private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
         'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
     /**
+     * A char array of the one letter code of amino acids without combinations of amino acids.
+     */
+    private static final char[] uniqueAminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
+        'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
+    /**
      * The amino acid one letter codes as string array.
      */
     public static final String[] aminoAcidStrings = new String[]{"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N",
@@ -107,12 +115,17 @@ public abstract class AminoAcid implements Serializable {
      * @return an arrayList of all implemented amino acids represented by their
      * character
      */
-    public static ArrayList<String> getAminoAcidsList() {
-        ArrayList<String> aas = new ArrayList<String>(26);
-        for (char aa : getAminoAcids()) {
-            aas.add(aa + "");
-        }
-        return aas;
+    public static List<String> getAminoAcidsList() {
+        return Arrays.asList(aminoAcidStrings);
+    }
+    
+    /**
+     * Returns a char array of the one letter code of amino acids without combinations of amino acids.
+     * 
+     * @return a char array of the one letter code of amino acids without combinations of amino acids
+     */
+    public static char[] getUniqueAminoAcids() {
+        return uniqueAminoAcidChars;
     }
 
     /**
@@ -248,7 +261,7 @@ public abstract class AminoAcid implements Serializable {
      * @return the amino acids which cannot be distinguished using their single
      * character code
      */
-    public ArrayList<Character> getIndistinguishibleAminoAcids(Double massTolerance) {
+    public ArrayList<Character> getIndistinguishableAminoAcids(Double massTolerance) {
         if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
@@ -266,22 +279,21 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * Returns a matching amino acid using the given matching type and
-     * massTolerance. The amino acid is unique for indistinguishable amino acids
-     * when considered as such, then for instance I is returned for both I and
-     * L. The first of the aminoAcidStrings array is returned.
+     * Returns a matching amino acid using the given preferences. 
+     * The amino acid is unique when different possibilities are found, 
+     * then for instance I is returned for both I and
+     * L. The first of the amino acid string array is returned.
      *
      * @param aminoAcid the single letter code of the amino acid of interest
-     * @param matchingType the matching type
-     * @param massTolerance the ms2 mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a matching amino acid using the given matching type and
      * massTolerance
      */
-    public static String getMatchingAminoAcid(String aminoAcid, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public static String getMatchingAminoAcid(String aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences) {
         AminoAcidPattern aaPattern = new AminoAcidPattern(aminoAcid);
         for (String candidateAA : aminoAcidStrings) {
-            if (aaPattern.matches(candidateAA, matchingType, massTolerance)) {
+            if (aaPattern.matches(candidateAA, sequenceMatchingPreferences)) {
                 return candidateAA;
             }
         }
@@ -294,16 +306,15 @@ public abstract class AminoAcid implements Serializable {
      * indistinguishable. See getMatchingAminoAcid for more details.
      *
      * @param sequence the sequence of interest
-     * @param matchingType the matching type
-     * @param massTolerance the ms2 mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the matching sequence
      */
-    public static String getMatchingSequence(String sequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public static String getMatchingSequence(String sequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         StringBuilder stringBuilder = new StringBuilder(sequence.length());
         for (int i = 0; i < sequence.length(); i++) {
             String aa = String.valueOf(sequence.charAt(i));
-            aa = getMatchingAminoAcid(aa, matchingType, massTolerance);
+            aa = getMatchingAminoAcid(aa, sequenceMatchingPreferences);
             stringBuilder.append(aa);
         }
         return stringBuilder.toString();

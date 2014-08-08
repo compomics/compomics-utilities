@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -375,8 +376,8 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide match as refinement parameter
      *
      * @param proteinTree the protein tree to use to map tags to peptides
-     * @param matchingType the sequence matching type
-     * @param massTolerance the mass tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param massTolerance the ms2 mass tolerance to use
      * @param scoreInAscendingOrder boolean indicating whether the tag score is
      * in the ascending order; ie the higher the score, the better the match.
      * @param fixedModifications the fixed modifications to account for
@@ -394,7 +395,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, AminoAcidPattern.MatchingType matchingType, Double massTolerance,
+    public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean ascendingScore, boolean reportFixedPtms)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -417,7 +418,7 @@ public class SpectrumMatch extends IdentificationMatch {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping
-                                = proteinTree.getProteinMapping(tagAssumption.getTag(), matchingType, massTolerance, fixedModifications, variableModifications, true, reportFixedPtms);
+                                = proteinTree.getProteinMapping(tagAssumption.getTag(), sequenceMatchingPreferences, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         for (Peptide peptide : proteinMapping.keySet()) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?

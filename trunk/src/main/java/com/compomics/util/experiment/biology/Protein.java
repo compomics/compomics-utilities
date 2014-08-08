@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -232,16 +233,14 @@ public class Protein extends ExperimentObject {
      * sequence. 1 is the first amino acid.
      *
      * @param peptideSequence the sequence of the peptide of interest
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the list of indexes where a peptide can be found in a protein
      * sequence
      */
-    public ArrayList<Integer> getPeptideStart(String peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public ArrayList<Integer> getPeptideStart(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern(peptideSequence);
-        return aminoAcidPattern.getIndexes(sequence, matchingType, massTolerance);
+        return aminoAcidPattern.getIndexes(sequence, sequenceMatchingPreferences);
     }
 
     /**
@@ -249,23 +248,21 @@ public class Protein extends ExperimentObject {
      * peptide.
      *
      * @param peptideSequence the peptide sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the protein starts with the given
      * peptide
      */
-    public boolean isNTerm(String peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isNTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         String subSequence = sequence.substring(0, peptideSequence.length());
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        if (aminoAcidPattern.matches(subSequence, matchingType, massTolerance)) {
+        if (aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences)) {
             return true;
         }
         subSequence = sequence.substring(0, peptideSequence.length()+1);
         AminoAcidSequence mAminoAcidPattern = new AminoAcidSequence("M");
         mAminoAcidPattern.append(aminoAcidPattern);
-        return mAminoAcidPattern.matches(subSequence, matchingType, massTolerance);
+        return mAminoAcidPattern.matches(subSequence, sequenceMatchingPreferences);
     }
 
     /**
@@ -273,17 +270,15 @@ public class Protein extends ExperimentObject {
      * peptide.
      *
      * @param peptideSequence the peptide sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the protein ends with the given
      * peptide
      */
-    public boolean isCTerm(String peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isCTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        return aminoAcidPattern.matches(subSequence, matchingType, massTolerance);
+        return aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences);
     }
 
     /**
@@ -297,18 +292,16 @@ public class Protein extends ExperimentObject {
      *
      * @param peptideSequence the peptide sequence to check
      * @param enzyme the enzyme to use
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true of the peptide is non-enzymatic
      *
      * @throws IOException
      */
-    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException {
+    public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
 
         // get the surrounding amino acids
-        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1, matchingType, massTolerance);
+        HashMap<Integer, String[]> surroundingAminoAcids = getSurroundingAA(peptideSequence, 1, sequenceMatchingPreferences);
 
         String firstAA = peptideSequence.charAt(0) + "";
         String lastAA = peptideSequence.charAt(peptideSequence.length() - 1) + "";
@@ -323,7 +316,7 @@ public class Protein extends ExperimentObject {
 
             if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
                     || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
-                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) { // @TODO: should use the char versions of the enzyme methods
+                    || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
                 return true;
             }
         }
@@ -338,18 +331,16 @@ public class Protein extends ExperimentObject {
      *
      * @param peptide the sequence of the peptide of interest
      * @param nAA the number of amino acids to include
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the amino acids surrounding a peptide in the protein sequence
      *
      * @throws IOException Exception thrown whenever an error occurred while
      * parsing the protein sequence
      */
-    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IOException {
+    public HashMap<Integer, String[]> getSurroundingAA(String peptide, int nAA, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
 
-        ArrayList<Integer> startIndexes = getPeptideStart(peptide, matchingType, massTolerance);
+        ArrayList<Integer> startIndexes = getPeptideStart(peptide, sequenceMatchingPreferences);
         HashMap<Integer, String[]> result = new HashMap<Integer, String[]>();
 
         for (int startIndex : startIndexes) {

@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.SQLException;
@@ -1228,9 +1229,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler displaying the progress. Can be
      * null. The progress will be displayed as secondary.
-     * @param matchingType the amino acid matching type to use to create peptide
-     * matches
-     * @param massTolerance the mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IllegalArgumentException
      * @throws SQLException
@@ -1238,7 +1237,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    public void buildPeptidesAndProteins(WaitingHandler waitingHandler, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void buildPeptidesAndProteins(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
@@ -1246,7 +1245,7 @@ public abstract class Identification extends ExperimentObject {
         }
         for (String spectrumFile : spectrumIdentificationMap.keySet()) {
             for (String spectrumMatchKey : spectrumIdentificationMap.get(spectrumFile)) {
-                buildPeptidesAndProteins(spectrumMatchKey, matchingType, massTolerance);
+                buildPeptidesAndProteins(spectrumMatchKey, sequenceMatchingPreferences);
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
                     if (waitingHandler.isRunCanceled()) {
@@ -1266,9 +1265,7 @@ public abstract class Identification extends ExperimentObject {
      * parameters.
      *
      * @param spectrumMatchKey The key of the spectrum match to add
-     * @param matchingType the amino acid matching type to use to create peptide
-     * matches
-     * @param massTolerance the mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IllegalArgumentException
      * @throws SQLException
@@ -1276,7 +1273,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void buildPeptidesAndProteins(String spectrumMatchKey, AminoAcidPattern.MatchingType matchingType, Double massTolerance) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void buildPeptidesAndProteins(String spectrumMatchKey, SequenceMatchingPreferences sequenceMatchingPreferences) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         if (spectrumMatch == null) {
@@ -1285,9 +1282,9 @@ public abstract class Identification extends ExperimentObject {
         if (spectrumMatch.getBestPeptideAssumption() != null) {
             Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
             if (peptide.getParentProteinsNoRemapping() == null) {
-                peptide.getParentProteins(matchingType, massTolerance);
+                peptide.getParentProteins(sequenceMatchingPreferences);
             }
-            String peptideKey = peptide.getMatchingKey(matchingType, massTolerance);
+            String peptideKey = peptide.getMatchingKey(sequenceMatchingPreferences);
             PeptideMatch peptideMatch;
 
             if (peptideIdentification.contains(peptideKey)) {

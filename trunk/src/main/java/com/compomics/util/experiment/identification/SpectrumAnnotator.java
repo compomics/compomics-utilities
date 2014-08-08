@@ -18,6 +18,7 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -518,8 +519,7 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param matchingType the matching type to map ptms on the peptide sequence
-     * @param mzTolerance the ms2 m/z tolerance to use
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the expected possible neutral losses
      * @throws IOException
@@ -529,14 +529,13 @@ public abstract class SpectrumAnnotator {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, AminoAcidPattern.MatchingType matchingType,
-            double mzTolerance) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), matchingType, mzTolerance);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences);
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), matchingType, mzTolerance);
+            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), sequenceMatchingPreferences);
         } else {
             throw new IllegalArgumentException("Default neutral loss map not implemented for SpectrumIdentificationAssumption " + spectrumIdentificationAssumption.getClass() + ".");
         }

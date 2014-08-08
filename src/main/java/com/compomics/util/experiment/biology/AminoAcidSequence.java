@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,28 +177,26 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * Indicates whether the sequence is found in the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matches(String aminoAcidSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, matchingType, massTolerance) >= 0;
+    public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
      * Indicates whether the sequence is found in the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
-    public boolean matches(AminoAcidSequence aminoAcidSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        return matches(aminoAcidSequence.getSequence(), matchingType, massTolerance);
+    public boolean matches(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return matches(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
     }
 
     /**
@@ -205,17 +204,12 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * given sequence. -1 if not found. 0 is the first amino acid.
      *
      * @param aminoAcidSequence the amino acid sequence to look into
-     * @param matchingType the type of sequence matching
-     * @param massTolerance the mass tolerance for matching type
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the first index where the amino acid sequence is found
      */
-    public int firstIndex(String aminoAcidSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-        if (matchingType == AminoAcidPattern.MatchingType.string) {
-            setSequenceStringBuilder(false);
-            return aminoAcidSequence.indexOf(sequence);
-        }
-        return getAsAminoAcidPattern().firstIndex(aminoAcidSequence, matchingType, massTolerance, 0);
+    public int firstIndex(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return getAsAminoAcidPattern().firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
     }
 
     /**
@@ -225,15 +219,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * factory.
      *
      * @param anotherPattern the other AminoAcidPattern
-     * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as
-     * indistinguishable
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (!anotherPattern.matches(anotherPattern, matchingType, massTolerance)) {
+        if (!anotherPattern.matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
         }
 
@@ -631,15 +623,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * the PTM factory.
      *
      * @param anotherSequence the other AminoAcidPattern
-     * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as
-     * indistinguishable
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameAs(AminoAcidSequence anotherSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameAs(AminoAcidSequence anotherSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (!matches(anotherSequence, matchingType, massTolerance)) {
+        if (!matches(anotherSequence, sequenceMatchingPreferences)) {
             return false;
         }
 
@@ -674,15 +664,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * of same mass. Modifications should be loaded in the PTM factory.
      *
      * @param anotherSequence the other sequence
-     * @param matchingType the amino acid matching type
-     * @param massTolerance the mass tolerance to use to consider amino acids as
-     * indistinguishable
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return true if the other AminoAcidPattern targets the same sequence
      */
-    public boolean isSameSequenceAndModificationStatusAs(AminoAcidSequence anotherSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameSequenceAndModificationStatusAs(AminoAcidSequence anotherSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (!matches(anotherSequence, matchingType, massTolerance)) {
+        if (!matches(anotherSequence, sequenceMatchingPreferences)) {
             return false;
         }
 
@@ -805,22 +793,22 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidSequence)) {
             return false;
         } else {
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) anotherCompontent;
-            return isSameAs(aminoAcidSequence, matchingType, massTolerance);
+            return isSameAs(aminoAcidSequence, sequenceMatchingPreferences);
         }
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (!(anotherCompontent instanceof AminoAcidSequence)) {
             return false;
         } else {
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) anotherCompontent;
-            return isSameSequenceAndModificationStatusAs(aminoAcidSequence, matchingType, massTolerance);
+            return isSameSequenceAndModificationStatusAs(aminoAcidSequence, sequenceMatchingPreferences);
         }
     }
 }

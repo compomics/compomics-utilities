@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,11 +43,6 @@ public class ProteinMatch extends IdentificationMatch {
      * The splitter in the key between spectrumFile and spectrumTitle.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
-    /**
-     * The maximal share of 'X' allowed in a peptide sequence. 0.25 means that
-     * less than 25% the amino acids can be 'X'
-     */
-    public static final double maxX = 0.25;
 
     /**
      * Constructor for the protein match.
@@ -370,9 +366,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param accession the candidate main accession
      * @param enzyme the enzyme used
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IOException
      * @throws IllegalArgumentException
@@ -382,13 +376,13 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, AminoAcidPattern.MatchingType matchingType, Double massTolerance) 
+    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences) 
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatches) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
-            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, matchingType, massTolerance)) {
+            if (protein.isEnzymaticPeptide(peptideSequence, enzyme, sequenceMatchingPreferences)) {
                 return true;
             }
         }

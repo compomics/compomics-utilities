@@ -16,11 +16,11 @@ public class MutationMatrix implements Serializable {
     /**
      * The name of this mutation matrix.
      */
-    private final String name;
+    private String name;
     /**
      * The description of the mutation matrix.
      */
-    private final String description;
+    private String description;
     /**
      * Map of the possible amino acid mutations: original aa -> mutated aa.
      */
@@ -322,5 +322,72 @@ public class MutationMatrix implements Serializable {
             result.addMutation('Z', originalAminoAcid);
         }
         return result;
+    }
+
+    /**
+     * Returns the name of this mutation matrix.
+     * 
+     * @return the name of this mutation matrix
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of this mutation matrix.
+     * 
+     * @param name the name of this mutation matrix
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the description of this mutation matrix.
+     * 
+     * @return the description of this mutation matrix
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description of this mutation matrix.
+     * 
+     * @param description the description of this mutation matrix
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    
+    /**
+     * Indicates whether 
+     * @param mutationMatrix
+     * @return 
+     */
+    public boolean isSameAs(MutationMatrix mutationMatrix) {
+        if (this.equals(mutationMatrix)) {
+            return true;
+        }
+        if (!name.equals(mutationMatrix.getName())) {
+            return false;
+        }
+        if (!description.equals(mutationMatrix.getDescription())) {
+            return false;
+        }
+        for (Character aa : mutations.keySet()) {
+            HashSet<Character> aaMutations = mutations.get(aa);
+            HashSet<Character> otherMutations = mutationMatrix.getMutatedAminoAcids(aa);
+            if (otherMutations == null || aaMutations.size() != otherMutations.size()) {
+                return false;
+            }
+            for (Character mutatedAa : aaMutations) {
+                if (!otherMutations.contains(mutatedAa)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

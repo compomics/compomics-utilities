@@ -3,6 +3,7 @@ package com.compomics.util.gui;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Color;
 import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 import java.awt.event.MouseEvent;
@@ -39,7 +40,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     /**
      * The example sequence.
      */
-    private String exampleSequence = "MKFILLWALLNLTVALAFNPDYTVSSTPPYLVYLKSDYLPCAGVLIHPLWVITAAHCNLPKLRVILGVTIPADSNEKHLQVIGYE"
+    private final String exampleSequence = "MKFILLWALLNLTVALAFNPDYTVSSTPPYLVYLKSDYLPCAGVLIHPLWVITAAHCNLPKLRVILGVTIPADSNEKHLQVIGYE"
             + "KMIHHPHFSVTSIDHDIMLIKLKTEAELNDYVKLANLPYQTISENTMCSVSTWSYNVCDIYKEPDSLQTVNISVISKPQCRDAYKTYNITENMLCVGIVPGRRQPC"
             + "KEVSAAPAICNGMLQGILSFADGCVLRADVGIYAKIFYYIPWIENVIQNN"; // @TODO: perhaps this should be saved somewhere and reused if the user changes the sequence?
 
@@ -590,7 +591,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence);
+        ArrayList<Integer> indexes = pattern.getIndexes(tempSequence, SequenceMatchingPreferences.defaultStringMatching);
 
         String result = "";
 
@@ -648,8 +649,6 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                     return row == pattern.getTarget();
                 case 2:
                     return getAAasString(pattern.getTargetedAA(row));
-                case 3:
-                    return getAAasString(pattern.getExcludedAA(row));
                 default:
                     return "";
             }
@@ -714,12 +713,6 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         // check for empty target
         if (pattern.getAminoAcidsAtTarget().size() < 1) {
             JOptionPane.showMessageDialog(this, "There has to be at least one amino acid for the targeted residue!", "Empty Target", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-
-        // check for excluded amino acids in target
-        if (pattern.getExcludedAA(pattern.getTarget()) != null && pattern.getExcludedAA(pattern.getTarget()).size() > 0) {
-            JOptionPane.showMessageDialog(this, "Excluded amino acids not allowed for the targeted residue!", "Exclud Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 

@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,9 +48,11 @@ public class ProteinTreeTest extends TestCase {
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
         proteinTree.initiateTree(3, 50, 50, null, true, false);
 
-        HashMap<String, ArrayList<Integer>> testIndexes = proteinTree.getProteinMapping("SSS");
-        Assert.assertTrue(testIndexes.size() == 2);
-        ArrayList<Integer> indexes = testIndexes.get("Q9FHX5");
+        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = proteinTree.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
+        Assert.assertTrue(testIndexes.size() == 1);
+        HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
+        Assert.assertTrue(proteinMapping.size() == 2);
+        ArrayList<Integer> indexes = proteinMapping.get("Q9FHX5");
         String sequence = sequenceFactory.getProtein("Q9FHX5").getSequence();
         Assert.assertTrue(indexes.size() == 3);
         Collections.sort(indexes);
@@ -59,7 +62,7 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-        indexes = testIndexes.get("Q9FHX5_REVERSED");
+        indexes = proteinMapping.get("Q9FHX5_REVERSED");
         sequence = sequenceFactory.getProtein("Q9FHX5_REVERSED").getSequence();
         Assert.assertTrue(indexes.size() == 3);
         Collections.sort(indexes);
@@ -115,12 +118,16 @@ public class ProteinTreeTest extends TestCase {
             }
         }
         
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setMs2MzTolerance(0.5);
+        
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, sequenceMatchingPreferences, 0.5, fixedModifications, variableModifications, false);
         Assert.assertTrue(proteinMapping.isEmpty());
 
         cTermGap += 57.02;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
+        proteinMapping = proteinTree.getProteinMapping(tag, sequenceMatchingPreferences, 0.5, fixedModifications, variableModifications, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         ArrayList<Peptide> peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         ArrayList<Integer> indexes = proteinMapping.get(peptides.get(0)).get("test");
@@ -129,7 +136,7 @@ public class ProteinTreeTest extends TestCase {
 
         nTermGap += 15.99;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
+        proteinMapping = proteinTree.getProteinMapping(tag, sequenceMatchingPreferences, 0.5, fixedModifications, variableModifications, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         indexes = proteinMapping.get(peptides.get(0)).get("test");
@@ -141,7 +148,7 @@ public class ProteinTreeTest extends TestCase {
         cTermGap = AminoAcid.K.monoisotopicMass;
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
 
-        proteinMapping = proteinTree.getProteinMapping(tag, AminoAcidPattern.MatchingType.indistiguishibleAminoAcids, 0.5, fixedModifications, variableModifications, true, false);
+        proteinMapping = proteinTree.getProteinMapping(tag, sequenceMatchingPreferences, 0.5, fixedModifications, variableModifications, false);
         Assert.assertTrue(proteinMapping.size() == 1);
         peptides = new ArrayList<Peptide>(proteinMapping.keySet());
         indexes = proteinMapping.get(peptides.get(0)).get("test");

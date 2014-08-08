@@ -24,7 +24,7 @@ public class TagFactory {
         if (length == 0) {
             return new ArrayList<String>();
         }
-        ArrayList<String> tempList, result = AminoAcid.getAminoAcidsList();
+        ArrayList<String> tempList, result = new ArrayList<String> (AminoAcid.getAminoAcidsList());
         for (int i = 1; i < length; i++) {
             tempList = new ArrayList<String>();
             for (String tag : result) {

@@ -14,6 +14,7 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -52,8 +53,7 @@ public class PhosphoRS {
      * @param mzTolerance The m/z tolerance to use
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
-     * @param matchingType the amino acid matching type to use to map PTMs on
-     * peptides
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a map site -> phosphoRS site probability
      *
@@ -69,7 +69,7 @@ public class PhosphoRS {
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, AminoAcidPattern.MatchingType matchingType)
+            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
@@ -110,15 +110,15 @@ public class PhosphoRS {
 
         for (PTM ptm : ptms) {
             if (ptm.isNTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(1)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
                     possibleSites.add(0);
                 }
             } else if (ptm.isCTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance).contains(peptideLength)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(peptideLength)) {
                     possibleSites.add(peptideLength + 1);
                 }
             }
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, matchingType, mzTolerance)) {
+            for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }

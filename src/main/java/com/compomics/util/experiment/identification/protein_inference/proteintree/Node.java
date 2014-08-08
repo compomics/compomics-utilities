@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,69 +76,9 @@ public class Node implements Serializable {
      * sequence -> protein accession -> index in the protein. An empty map if
      * not found.
      *
-     * @param query the given amino acid pattern to query the tree
-     * @param currentSequence the sequence found until now
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * @param limitXs if true the share of Xs in the peptide sequences will be limited in order to increase sequencing speed.
-     *
-     * @return the protein mapping for the given peptide sequence
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidPattern query, String currentSequence,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance, boolean limitXs) throws IOException, InterruptedException, ClassNotFoundException {
-
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-
-        if (depth == query.length()) {
-            result.put(currentSequence, getAllMappings());
-        } else if (accessions != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
-            for (String accession : accessions.keySet()) {
-                Protein protein = sequenceFactory.getProtein(accession);
-                indexes.put(accession, matchInProtein(protein, accessions.get(accession), query, matchingType, massTolerance));
-            }
-            for (String accession : indexes.keySet()) {
-                for (String tempSequence : indexes.get(accession).keySet()) {
-                    HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
-                    if (mapping == null) {
-                        mapping = new HashMap<String, ArrayList<Integer>>(1);
-                        result.put(tempSequence, mapping);
-                    }
-                    mapping.put(accession, indexes.get(accession).get(tempSequence));
-                }
-            }
-        } else {
-            for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
-                Node node = subtree.get(aa);
-                if (node != null) {
-                    String newSequence = currentSequence + aa;
-                    double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / query.length();
-                    if (!limitXs || xShare <= ProteinMatch.maxX) {
-                        result.putAll(node.getProteinMapping(query, newSequence, matchingType, massTolerance, limitXs));
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
-     * not found.
-     *
      * @param query the given amino acid sequence to query the tree
      * @param currentSequence the sequence found until now
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance for matching type
-     * 'indistiguishibleAminoAcids'. Can be null otherwise
-     * @param limitXs if true the share of Xs in the peptide sequences will be limited in order to increase sequencing speed.
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the protein mapping for the given peptide sequence
      *
@@ -146,7 +87,7 @@ public class Node implements Serializable {
      * @throws ClassNotFoundException
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidSequence query, String currentSequence,
-            AminoAcidPattern.MatchingType matchingType, Double massTolerance, boolean limitXs) throws IOException, InterruptedException, ClassNotFoundException {
+            SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
@@ -157,7 +98,7 @@ public class Node implements Serializable {
             HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
             for (String accession : accessions.keySet()) {
                 Protein protein = sequenceFactory.getProtein(accession);
-                indexes.put(accession, matchInProtein(protein, accessions.get(accession), query, matchingType, massTolerance));
+                indexes.put(accession, matchInProtein(protein, accessions.get(accession), query, sequenceMatchingPreferences));
             }
             for (String accession : indexes.keySet()) {
                 for (String tempSequence : indexes.get(accession).keySet()) {
@@ -170,13 +111,13 @@ public class Node implements Serializable {
                 }
             }
         } else {
-            for (char aa : getNextAminoAcids(query, matchingType, massTolerance)) {
+            for (char aa : getNextAminoAcids(query, sequenceMatchingPreferences)) {
                 Node node = subtree.get(aa);
                 if (node != null) {
                     String newSequence = currentSequence + aa;
                     double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / query.length();
-                    if (!limitXs || xShare <= ProteinMatch.maxX) {
-                        result.putAll(node.getProteinMapping(query, newSequence, matchingType, massTolerance, limitXs));
+                    if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                        result.putAll(node.getProteinMapping(query, newSequence, sequenceMatchingPreferences));
                     }
                 }
             }
@@ -188,62 +129,17 @@ public class Node implements Serializable {
      * Returns the possible next amino acids.
      *
      * @param peptideSequence the peptide sequence as amino acid pattern
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the possible next amino acids
      */
-    private HashSet<Character> getNextAminoAcids(AminoAcidPattern peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
-
-        HashSet<Character> result = new HashSet<Character>();
-
-        for (AminoAcid aa : peptideSequence.getTargetedAA(depth)) {
-
-            if (matchingType == AminoAcidPattern.MatchingType.string) {
-                result.add(aa.singleLetterCode.charAt(0));
-            } else {
-
-                for (char aaChar : aa.getSubAminoAcids()) {
-                    if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
-                        result.add(aaChar);
-                    }
-                }
-
-                for (char aaChar : aa.getCombinations()) {
-                    if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
-                        result.add(aaChar);
-                    }
-                }
-
-                if (matchingType == AminoAcidPattern.MatchingType.indistiguishibleAminoAcids) {
-                    for (char aaChar : aa.getIndistinguishibleAminoAcids(massTolerance)) {
-                        if (!result.contains(aaChar) && !peptideSequence.getExcludedAA(depth).contains(AminoAcid.getAminoAcid(aaChar))) {
-                            result.add(aaChar);
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Returns the possible next amino acids.
-     *
-     * @param peptideSequence the peptide sequence as amino acid pattern
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance
-     *
-     * @return the possible next amino acids
-     */
-    private HashSet<Character> getNextAminoAcids(AminoAcidSequence peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance) {
+    private HashSet<Character> getNextAminoAcids(AminoAcidSequence peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
         HashSet<Character> result = new HashSet<Character>();
 
         char aa = peptideSequence.charAt(depth);
         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            if (matchingType == AminoAcidPattern.MatchingType.string) {
+            if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.string) {
                 result.add(aa);
             } else {
 
@@ -259,8 +155,8 @@ public class Node implements Serializable {
                     }
                 }
 
-                if (matchingType == AminoAcidPattern.MatchingType.indistiguishibleAminoAcids) {
-                    for (char aaChar : aminoAcid.getIndistinguishibleAminoAcids(massTolerance)) {
+                if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
+                    for (char aaChar : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
                         if (!result.contains(aaChar)) {
                             result.add(aaChar);
                         }
@@ -468,52 +364,8 @@ public class Node implements Serializable {
      *
      * @param protein the protein to inspect
      * @param seeds the indexes where to start looking for
-     * @param peptidePattern the peptide sequence as an amino acid pattern
-     * @param peptidePatternLength the length of the peptide pattern
-     * @param peptideLength the peptide length
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance
-     *
-     * @return a list of indexes having the expected sequence
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     */
-    private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
-            AminoAcidPattern peptidePattern, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
-        String proteinSequence = protein.getSequence();
-        HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
-        int peptideLength = peptidePattern.length();
-        for (int startIndex : seeds) {
-            int endIndex = startIndex + peptideLength;
-            if (endIndex <= proteinSequence.length()) {
-                String subSequence = proteinSequence.substring(startIndex, endIndex);
-                if (peptidePattern.matches(subSequence, matchingType, massTolerance)) {
-                    ArrayList<Integer> indexes = results.get(subSequence);
-                    if (indexes == null) {
-                        indexes = new ArrayList<Integer>(0);
-                        results.put(subSequence, indexes);
-                    }
-                    indexes.add(startIndex);
-                }
-            }
-        }
-        return results;
-    }
-
-    /**
-     * Matches a peptide sequence in a protein sequence based on a seedlist.
-     * Returns a map found sequence -> indexes. Example: sequence TESTEIST
-     * seeds: 0, 3, 7 peptideSequence: TEI result: TEI -> {3}
-     *
-     * @param protein the protein to inspect
-     * @param seeds the indexes where to start looking for
      * @param peptideSequence the peptide sequence as an amino acid sequence
-     * @param peptidePatternLength the length of the peptide pattern
-     * @param peptideLength the peptide length
-     * @param matchingType the matching type
-     * @param massTolerance the mass tolerance
+     * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return a list of indexes having the expected sequence
      * @throws IOException
@@ -521,7 +373,7 @@ public class Node implements Serializable {
      * @throws InterruptedException
      */
     private HashMap<String, ArrayList<Integer>> matchInProtein(Protein protein, ArrayList<Integer> seeds,
-            AminoAcidSequence peptideSequence, AminoAcidPattern.MatchingType matchingType, Double massTolerance)
+            AminoAcidSequence peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
@@ -530,7 +382,7 @@ public class Node implements Serializable {
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);
-                if (peptideSequence.matches(subSequence, matchingType, massTolerance)) {
+                if (peptideSequence.matches(subSequence, sequenceMatchingPreferences)) {
                     ArrayList<Integer> indexes = results.get(subSequence);
                     if (indexes == null) {
                         indexes = new ArrayList<Integer>(0);

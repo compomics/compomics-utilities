@@ -225,7 +225,7 @@ public class IonFactory {
     /**
      * This method returns the theoretic ions expected from a tag.
      *
-     * /!\ this method will work only if the PMTs found in the tag are in the
+     * /!\ this method will work only if the PTMs found in the tag are in the
      * PTMFactory.
      *
      * @param tag The considered tag
@@ -343,7 +343,7 @@ public class IonFactory {
                     for (double massOffset : massOffsets) {
                         int aa = ionNumberOffset + i;
                         int subaa = i + 1;
-                        double forwardMass = massOffset + mass;
+                        double forwardMass = massOffset + sequenceMass;
 
                         // add the a-ions
                         for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
@@ -513,7 +513,7 @@ public class IonFactory {
                     for (double massOffset : massOffsets) {
                         int aa = ionNumberOffset + aminoAcidSequence.length() - i;
                         int subaa = aminoAcidSequence.length() - i;
-                        double rewindMass = massOffset + mass;
+                        double rewindMass = massOffset + sequenceMass;
                         double gap = 0;
                         if (massOffset != Atom.O.getMonoisotopicMass()) {
                             gap = massOffset;

@@ -1,17 +1,15 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.MutationMatrix;
 import com.compomics.util.experiment.identification.SearchParameters;
 import java.io.Serializable;
 
 /**
- * The sequence matching options
+ * The sequence matching options.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SequenceMatchingPreferences implements Serializable {
-
 
     /**
      * The different types of amino acid matching.
@@ -31,38 +29,38 @@ public class SequenceMatchingPreferences implements Serializable {
          */
         indistiguishableAminoAcids;
     }
-    
+
     /**
-     * Serialization number for backward compatibility
+     * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = 228961121369106450L;
     /**
-     * The amino acid matching type
+     * The amino acid matching type.
      */
     private MatchingType sequenceMatchingType;
     /**
      * The ms2 m/z tolerance to use for amino acid distinction when
-     * sequenceMatchingType is indistiguishableAminoAcids. Can be null otherwise
+     * sequenceMatchingType is indistiguishableAminoAcids. Can be null otherwise.
      */
     private Double ms2MzTolerance = null;
     /**
-     * Limit the share of Xs a match can contain
+     * Limit the share of Xs a match can contain.
      */
     private Double limitX = null;
     /**
-     * Matrix of allowed mutations
+     * Matrix of allowed mutations.
      */
     private MutationMatrix mutationMatrix = null;
 
     /**
-     * Constructor for empty preferences
+     * Constructor for empty preferences.
      */
     public SequenceMatchingPreferences() {
 
     }
 
     /**
-     * Default string matching
+     * Default string matching.
      */
     public static final SequenceMatchingPreferences defaultStringMatching = getStringMatching();
 
@@ -222,5 +220,4 @@ public class SequenceMatchingPreferences implements Serializable {
         }
         return true;
     }
-
 }

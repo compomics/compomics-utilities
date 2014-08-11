@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.SequenceFactory.ProteinItera
 import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
+import com.compomics.util.experiment.identification.tags.matchers.TagMatcher;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
@@ -1130,7 +1131,7 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = tag.getPeptideMatches(proteinSequence, seedIndex,
+                        HashMap<Integer, ArrayList<Peptide>> matches = TagMatcher.getPeptideMatches(tag, proteinSequence, seedIndex,
                                 componentIndex, sequenceMatchingPreferences, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {

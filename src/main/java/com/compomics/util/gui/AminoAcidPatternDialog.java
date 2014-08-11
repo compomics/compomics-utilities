@@ -540,10 +540,18 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     private String getAAasString(ArrayList<AminoAcid> aminoAcids) {
         String result = "";
         if (aminoAcids != null) {
+            if (aminoAcids.isEmpty()) {
+                for (char aa : AminoAcid.getUniqueAminoAcids()) {
+                    if (!result.equals("")) {
+                        result += ",";
+                    }
+                    result += aa;
+                }
+            }
             for (AminoAcid aa : aminoAcids) {
                 if (!result.contains(aa.singleLetterCode)) {
                     if (!result.equals("")) {
-                        result += ", ";
+                        result += ",";
                     }
                     result += aa.singleLetterCode;
                 }
@@ -560,7 +568,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      */
     private ArrayList<AminoAcid> getAAfromString(String aminoAcids) {
         ArrayList<AminoAcid> result = new ArrayList<AminoAcid>();
-        for (String aa : aminoAcids.split(", ")) {
+        for (String aa : aminoAcids.split(",")) {
             String input = aa.trim();
             input = input.toUpperCase();
             if (!input.equals("")) {

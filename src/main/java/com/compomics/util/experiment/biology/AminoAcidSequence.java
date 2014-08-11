@@ -84,7 +84,11 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public String getSequence() {
         setSequenceStringBuilder(false);
-        return sequence;
+        if (sequence != null) {
+            return sequence;
+        } else {
+            return "";
+        }
     }
 
     /**

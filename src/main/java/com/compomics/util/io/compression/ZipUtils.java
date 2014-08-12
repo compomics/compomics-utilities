@@ -129,24 +129,29 @@ public class ZipUtils {
      * @throws IOException
      */
     public static void addFileToZip(String subDirectory, File file, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
+
         if (file.isDirectory()) {
             throw new IllegalArgumentException("Attempting to add a folder as a file. Use addToZip instead.");
         }
-        byte data[] = new byte[BUFFER];
-        int count;
+
         FileInputStream fi = new FileInputStream(file);
+
         try {
             BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
+
             try {
                 String entryName = subDirectory;
                 if (!subDirectory.equals("")) {
                     entryName += "/";
                 }
+
                 entryName += file.getName();
                 ZipEntry entry = new ZipEntry(entryName);
                 out.putNextEntry(entry);
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                byte data[] = new byte[BUFFER];
+                int count;
 
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }
@@ -186,17 +191,19 @@ public class ZipUtils {
      */
     public static void unzip(File zipFile, File destinationFolder, WaitingHandler waitingHandler) throws IOException {
 
-        byte data[] = new byte[BUFFER];
-        long read = 0, fileLength = zipFile.length();
-
         FileInputStream fi = new FileInputStream(zipFile);
 
         try {
             BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
+
             try {
                 ZipInputStream zis = new ZipInputStream(bis);
+
                 try {
+                    byte data[] = new byte[BUFFER];
+                    long read = 0, fileLength = zipFile.length();
                     ZipEntry entry;
+
                     while ((entry = zis.getNextEntry()) != null) {
 
                         String entryName = entry.getName();
@@ -214,9 +221,12 @@ public class ZipUtils {
                         if (entry.isDirectory()) {
                             destinationFile.mkdirs();
                         } else if (entryFolder.exists() || entryFolder.mkdirs()) {
+
                             FileOutputStream fos = new FileOutputStream(destinationFile);
+
                             try {
                                 BufferedOutputStream bos = new BufferedOutputStream(fos);
+
                                 try {
                                     int count;
 
@@ -238,7 +248,7 @@ public class ZipUtils {
                                 waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
-                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() 
+                            throw new IOException("Folder " + destinationFolder.getAbsolutePath()
                                     + " does not exist and could not be created. "
                                     + "Verify that you have the right to write in this directory.");
                         }

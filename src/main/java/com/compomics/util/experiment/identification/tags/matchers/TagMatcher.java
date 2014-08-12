@@ -16,18 +16,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * This class matches tags to peptides
+ * This class matches tags to peptides.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class TagMatcher {
-
-    
 
     /**
      * Returns the possible peptides which can be created on this sequence
      * indexed by their start index. Null if not found. Note: PTMs must be in
-     * the ptm factory. PTMs are considered at a target amino acid only, longer
+     * the PTM factory. PTMs are considered at a target amino acid only, longer
      * patterns are not taken into account.
      *
      * @param tag the tag to look for
@@ -45,10 +43,12 @@ public class TagMatcher {
      * @return the possible peptides which can be created on this sequence
      * indexed by their start index
      */
-    public static HashMap<Integer, ArrayList<Peptide>> getPeptideMatches(Tag tag, String sequence, int tagIndex, int componentIndex, SequenceMatchingPreferences sequenceMatchingPreferences, double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean reportFixedPtms) {
+    public static HashMap<Integer, ArrayList<Peptide>> getPeptideMatches(Tag tag, String sequence, int tagIndex,
+            int componentIndex, SequenceMatchingPreferences sequenceMatchingPreferences, double massTolerance,
+            ArrayList<String> fixedModifications, ArrayList<String> variableModifications, boolean reportFixedPtms) {
 
         ArrayList<TagComponent> content = tag.getContent();
-        
+
         HashMap<Integer, ArrayList<Peptide>> result = new HashMap<Integer, ArrayList<Peptide>>();
         double minMod = 0;
         for (String modificationName : variableModifications) {
@@ -64,21 +64,31 @@ public class TagMatcher {
         ArrayList<Integer> nTermPossibleIndexes = new ArrayList<Integer>();
         nTermPossibleSequences.add(new AminoAcidSequence());
         nTermPossibleIndexes.add(tagIndex);
+
         for (int i = componentIndex - 1; i >= 0; i--) {
+
             TagComponent tagComponent = content.get(i);
             ArrayList<AminoAcidSequence> newSequences = new ArrayList<AminoAcidSequence>();
             ArrayList<Integer> newIndexes = new ArrayList<Integer>();
             Iterator<Integer> nTermPossibleIndexesIterator = nTermPossibleIndexes.iterator();
+
             if (tagComponent instanceof AminoAcidPattern) {
+
                 for (AminoAcidSequence nTermSequence : nTermPossibleSequences) {
+
                     int aaIndex = nTermPossibleIndexesIterator.next();
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                     int startIndex = aaIndex - aminoAcidPattern.length();
+
                     if (startIndex >= 0) {
+
                         String subSequence = sequence.substring(startIndex, aaIndex);
+
                         if (aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences)) {
+
                             AminoAcidSequence newSequence = new AminoAcidSequence(subSequence, aminoAcidPattern.getModificationMatches());
                             boolean goodTerminalPTms = true;
+
                             if (i == 0) {
                                 for (String modificationName : fixedModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -122,18 +132,28 @@ public class TagMatcher {
                     }
                 }
             } else if (tagComponent instanceof AminoAcidSequence) {
+
                 for (AminoAcidSequence nTermSequence : nTermPossibleSequences) {
+
                     int aaIndex = nTermPossibleIndexesIterator.next();
                     AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                     int startIndex = aaIndex - aminoAcidSequence.length();
+
                     if (startIndex >= 0) {
+
                         String subSequence = sequence.substring(startIndex, aaIndex);
+
                         if (aminoAcidSequence.matches(subSequence, sequenceMatchingPreferences)) {
+
                             AminoAcidSequence newSequence = new AminoAcidSequence(subSequence, aminoAcidSequence.getModificationMatches());
                             boolean goodTerminalPTms = true;
+
                             if (i == 0) {
+
                                 for (String modificationName : fixedModifications) {
+
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
+
                                     if (ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODN && startIndex == 0) {
                                         boolean found = false;
                                         for (ModificationMatch modificationMatch : newSequence.getModificationsAt(1)) {
@@ -174,18 +194,24 @@ public class TagMatcher {
                     }
                 }
             } else if (tagComponent instanceof MassGap) {
+
                 double massGap = tagComponent.getMass();
+
                 for (AminoAcidSequence nTermSequence : nTermPossibleSequences) {
+
                     int aaIndex = nTermPossibleIndexesIterator.next();
                     int currentIndex = aaIndex;
                     ArrayList<Double> possiblePatternsMasses = new ArrayList<Double>();
                     ArrayList<AminoAcidSequence> possibleSequences = new ArrayList<AminoAcidSequence>();
                     ArrayList<AminoAcidSequence> validSequences = new ArrayList<AminoAcidSequence>();
+
                     while (--aaIndex >= 0) {
+
                         char aa = sequence.charAt(aaIndex);
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double fixedMass = 0;
                         ArrayList<ModificationMatch> fixedModificationMatches = new ArrayList<ModificationMatch>();
+
                         for (String modificationName : fixedModifications) {
                             PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                             AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -194,19 +220,26 @@ public class TagMatcher {
                                 fixedModificationMatches.add(new ModificationMatch(modificationName, false, 1));
                             }
                         }
+
                         if (possiblePatternsMasses.isEmpty()) {
+
                             AminoAcidSequence newPattern = new AminoAcidSequence(aminoAcid.singleLetterCode);
+
                             if (reportFixedPtms) {
                                 for (ModificationMatch modificationMatch : fixedModificationMatches) {
                                     newPattern.addModificationMatch(1, modificationMatch);
                                 }
                             }
+
                             double noModMass = aminoAcid.monoisotopicMass + fixedMass;
                             possibleSequences.add(newPattern);
                             possiblePatternsMasses.add(noModMass);
+
                             for (String modificationName : variableModifications) {
+
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
+
                                 if (ptm.getType() == PTM.MODAA && ptmPattern.isTargeted(aa, ptmPattern.getTarget(), sequenceMatchingPreferences)) {
                                     newPattern = new AminoAcidSequence(aminoAcid.singleLetterCode);
                                     newPattern.addModificationMatch(1, new ModificationMatch(modificationName, true, 1));
@@ -219,21 +252,27 @@ public class TagMatcher {
                             ArrayList<Double> newPossibleSequencesMasses = new ArrayList<Double>();
                             ArrayList<AminoAcidSequence> newPossibleSequences = new ArrayList<AminoAcidSequence>();
                             Iterator<AminoAcidSequence> newPossibleSequencesMassesIterator = possibleSequences.iterator();
+
                             for (double mass : possiblePatternsMasses) {
                                 AminoAcidSequence aminoAcidSequence = newPossibleSequencesMassesIterator.next();
                                 AminoAcidSequence newSequence = new AminoAcidSequence(aminoAcid.singleLetterCode);
                                 double noModMass = aminoAcid.monoisotopicMass + fixedMass + mass;
                                 newSequence.append(aminoAcidSequence);
+
                                 if (reportFixedPtms) {
                                     for (ModificationMatch modificationMatch : fixedModificationMatches) {
                                         newSequence.addModificationMatch(1, modificationMatch);
                                     }
                                 }
+
                                 newPossibleSequences.add(newSequence);
                                 newPossibleSequencesMasses.add(noModMass);
+
                                 for (String modificationName : variableModifications) {
+
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                     AminoAcidPattern ptmPattern = ptm.getPattern();
+
                                     if (ptm.getType() == PTM.MODAA && ptmPattern.isTargeted(aa, ptmPattern.getTarget(), sequenceMatchingPreferences)) {
                                         newSequence = new AminoAcidSequence(aminoAcid.singleLetterCode);
                                         newSequence.append(aminoAcidSequence);
@@ -244,13 +283,16 @@ public class TagMatcher {
                                     }
                                 }
                             }
+
                             possibleSequences.clear();
                             possiblePatternsMasses.clear();
                             possibleSequences = newPossibleSequences;
                             possiblePatternsMasses = newPossibleSequencesMasses;
                         }
+
                         ArrayList<ModificationMatch> nTermModifications = new ArrayList<ModificationMatch>();
                         double fixedNTermModifications = 0;
+
                         for (String modificationName : fixedModifications) {
                             PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                             if (ptm.getType() == PTM.MODNP) {
@@ -259,6 +301,7 @@ public class TagMatcher {
                                 break;
                             }
                         }
+
                         if (aaIndex == 0) {
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -269,11 +312,15 @@ public class TagMatcher {
                                 }
                             }
                         }
+
                         Iterator<AminoAcidSequence> possibleSequencesIterator = possibleSequences.iterator();
                         Iterator<Double> possiblePatternsMassesIterator = possiblePatternsMasses.iterator();
+
                         while (possibleSequencesIterator.hasNext()) {
+
                             AminoAcidSequence aminoAcidSequence = possibleSequencesIterator.next();
                             double mass = possiblePatternsMassesIterator.next();
+
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -376,15 +423,19 @@ public class TagMatcher {
                 nTermPossibleSequences = newSequences;
             }
         }
+
         TagComponent componentAtIndex = content.get(componentIndex);
         int componentAtIndexLength;
         int endTagIndex = tagIndex - 1;
         HashMap<Integer, ArrayList<ModificationMatch>> modificationsAtIndex = null;
+
         if (componentAtIndex instanceof AminoAcidPattern) {
+
             AminoAcidPattern tagPattern = (AminoAcidPattern) componentAtIndex;
             componentAtIndexLength = tagPattern.length();
             modificationsAtIndex = tagPattern.getModificationMatches();
             endTagIndex += componentAtIndexLength;
+
             // if the component is at the N-term check its n-term modifications
             if (componentIndex == 0) {
                 boolean goodTerminalPTms = true;
@@ -424,6 +475,7 @@ public class TagMatcher {
                     return result;
                 }
             }
+
             // if the component is at the C-term check its c-term modifications
             if (componentIndex == content.size() - 1) {
                 boolean goodTerminalPTms = true;
@@ -464,10 +516,12 @@ public class TagMatcher {
                 }
             }
         } else if (componentAtIndex instanceof AminoAcidSequence) {
+
             AminoAcidSequence tagSequence = (AminoAcidSequence) componentAtIndex;
             componentAtIndexLength = tagSequence.length();
             modificationsAtIndex = tagSequence.getModificationMatches();
             endTagIndex += componentAtIndexLength;
+
             // if the component is at the N-term check its n-term modifications
             if (componentIndex == 0) {
                 boolean goodTerminalPTms = true;
@@ -507,9 +561,12 @@ public class TagMatcher {
                     return result;
                 }
             }
+
             // if the component is at the C-term check its c-term modifications
             if (componentIndex == content.size() - 1) {
+
                 boolean goodTerminalPTms = true;
+
                 for (String modificationName : fixedModifications) {
                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                     if (ptm.getType() == PTM.MODCP || ptm.getType() == PTM.MODC && endTagIndex == sequenceLastIndex) {
@@ -549,26 +606,36 @@ public class TagMatcher {
         } else {
             throw new UnsupportedOperationException("Tag mapping not supported for tag component " + componentAtIndex.getClass() + ".");
         }
+
         // Check tag components to the C-term
         ArrayList<AminoAcidSequence> cTermPossibleSequences = new ArrayList<AminoAcidSequence>();
         ArrayList<Integer> cTermPossibleIndexes = new ArrayList<Integer>();
         cTermPossibleSequences.add(new AminoAcidSequence());
         cTermPossibleIndexes.add(endTagIndex);
+
         for (int i = componentIndex + 1; i < content.size(); i++) {
+
             TagComponent tagComponent = content.get(i);
             ArrayList<AminoAcidSequence> newSequences = new ArrayList<AminoAcidSequence>();
             ArrayList<Integer> newIndexes = new ArrayList<Integer>();
             Iterator<Integer> cTermPossibleIndexesIterator = cTermPossibleIndexes.iterator();
+
             if (tagComponent instanceof AminoAcidPattern) {
+
                 for (AminoAcidSequence cTermSequence : cTermPossibleSequences) {
+
                     int aaIndex = cTermPossibleIndexesIterator.next();
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                     int endIndex = aaIndex + aminoAcidPattern.length();
+
                     if (endIndex <= sequenceLastIndex) {
+
                         String subSequence = sequence.substring(aaIndex, endIndex);
+
                         if (aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences)) {
                             AminoAcidSequence newSequence = new AminoAcidSequence(subSequence, aminoAcidPattern.getModificationMatches());
                             boolean goodTerminalPTms = true;
+
                             if (i == 0) {
                                 for (String modificationName : fixedModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -612,15 +679,21 @@ public class TagMatcher {
                     }
                 }
             } else if (tagComponent instanceof AminoAcidSequence) {
+
                 for (AminoAcidSequence cTermSequence : cTermPossibleSequences) {
+
                     int aaIndex = cTermPossibleIndexesIterator.next();
                     AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                     int endIndex = aaIndex + aminoAcidSequence.length();
+
                     if (endIndex <= sequenceLastIndex) {
+
                         String subSequence = sequence.substring(aaIndex, endIndex);
                         if (aminoAcidSequence.matches(subSequence, sequenceMatchingPreferences)) {
+
                             AminoAcidSequence newSequence = new AminoAcidSequence(subSequence, aminoAcidSequence.getModificationMatches());
                             boolean goodTerminalPTms = true;
+
                             if (i == 0) {
                                 for (String modificationName : fixedModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -664,18 +737,23 @@ public class TagMatcher {
                     }
                 }
             } else if (tagComponent instanceof MassGap) {
+
                 double massGap = tagComponent.getMass();
                 for (AminoAcidSequence cTermSequence : cTermPossibleSequences) {
+
                     int aaIndex = cTermPossibleIndexesIterator.next();
                     int currentIndex = aaIndex;
                     ArrayList<Double> possibleSequencesMasses = new ArrayList<Double>();
                     ArrayList<AminoAcidSequence> possibleSequences = new ArrayList<AminoAcidSequence>();
                     ArrayList<AminoAcidSequence> validSequences = new ArrayList<AminoAcidSequence>();
+
                     while (++aaIndex <= sequenceLastIndex) {
+
                         char aa = sequence.charAt(aaIndex);
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double fixedMass = 0;
                         ArrayList<ModificationMatch> fixedModificationMatches = new ArrayList<ModificationMatch>();
+
                         for (String modificationName : fixedModifications) {
                             PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                             AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -684,18 +762,23 @@ public class TagMatcher {
                                 fixedModificationMatches.add(new ModificationMatch(modificationName, false, 1));
                             }
                         }
+
                         if (possibleSequencesMasses.isEmpty()) {
+
                             AminoAcidSequence newSequence = new AminoAcidSequence(aminoAcid.singleLetterCode);
                             int modIndex = newSequence.length();
+
                             if (reportFixedPtms) {
                                 for (ModificationMatch modificationMatch : fixedModificationMatches) {
                                     modificationMatch.setModificationSite(modIndex);
                                     newSequence.addModificationMatch(modIndex, modificationMatch);
                                 }
                             }
+
                             double noModMass = aminoAcid.monoisotopicMass + fixedMass;
                             possibleSequences.add(newSequence);
                             possibleSequencesMasses.add(noModMass);
+
                             for (String modificationName : variableModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -708,23 +791,29 @@ public class TagMatcher {
                                 }
                             }
                         } else {
+
                             ArrayList<Double> newPossiblePatternsMasses = new ArrayList<Double>();
                             ArrayList<AminoAcidSequence> newPossibleSequences = new ArrayList<AminoAcidSequence>();
                             Iterator<AminoAcidSequence> newPossibleSequencesMassesIterator = possibleSequences.iterator();
+
                             for (double mass : possibleSequencesMasses) {
+
                                 AminoAcidSequence aminoAcidSequence = newPossibleSequencesMassesIterator.next();
                                 AminoAcidSequence newSequence = new AminoAcidSequence(aminoAcidSequence);
                                 double noModMass = aminoAcid.monoisotopicMass + fixedMass + mass;
                                 newSequence.append(aminoAcid.singleLetterCode);
                                 int modIndex = newSequence.length();
+
                                 if (reportFixedPtms) {
                                     for (ModificationMatch modificationMatch : fixedModificationMatches) {
                                         modificationMatch.setModificationSite(modIndex);
                                         newSequence.addModificationMatch(modIndex, modificationMatch);
                                     }
                                 }
+
                                 newPossibleSequences.add(newSequence);
                                 newPossiblePatternsMasses.add(noModMass);
+
                                 for (String modificationName : variableModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                     AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -738,13 +827,16 @@ public class TagMatcher {
                                     }
                                 }
                             }
+
                             possibleSequences.clear();
                             possibleSequencesMasses.clear();
                             possibleSequences = newPossibleSequences;
                             possibleSequencesMasses = newPossiblePatternsMasses;
                         }
+
                         double fixedCTermModifications = 0;
                         ArrayList<ModificationMatch> cTermModifications = new ArrayList<ModificationMatch>();
+
                         for (String modificationName : fixedModifications) {
                             PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                             if (ptm.getType() == PTM.MODCP) {
@@ -753,6 +845,7 @@ public class TagMatcher {
                                 break;
                             }
                         }
+
                         if (aaIndex == sequenceLastIndex) {
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -763,12 +856,16 @@ public class TagMatcher {
                                 }
                             }
                         }
+
                         Iterator<AminoAcidSequence> possibleSequencesIterator = possibleSequences.iterator();
                         Iterator<Double> possibleSequencesMassesIterator = possibleSequencesMasses.iterator();
+
                         while (possibleSequencesIterator.hasNext()) {
+
                             AminoAcidSequence aminoAcidSequence = possibleSequencesIterator.next();
                             double mass = possibleSequencesMassesIterator.next();
                             int lastAminoAcidIndex = aminoAcidSequence.length() - 1;
+
                             for (String modificationName : fixedModifications) {
                                 PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
                                 AminoAcidPattern ptmPattern = ptm.getPattern();
@@ -778,6 +875,7 @@ public class TagMatcher {
                                     break;
                                 }
                             }
+
                             if (aaIndex == lastAminoAcidIndex) {
                                 for (String modificationName : fixedModifications) {
                                     PTM ptm = PTMFactory.getInstance().getPTM(modificationName);
@@ -789,6 +887,7 @@ public class TagMatcher {
                                     }
                                 }
                             }
+
                             if (mass + fixedCTermModifications + minMod > massGap + massTolerance) {
                                 possibleSequencesIterator.remove();
                                 possibleSequencesMassesIterator.remove();
@@ -876,20 +975,25 @@ public class TagMatcher {
                 cTermPossibleSequences = newSequences;
             }
         }
+
         // create all possible peptide sequences by adding all possible N and C term to the seed sequence
         String seedSequence = sequence.substring(tagIndex, tagIndex + componentAtIndexLength);
         Iterator<Integer> nTermPossibleIndexesIterator = nTermPossibleIndexes.iterator();
-        for (AminoAcidSequence nTermPattern : nTermPossibleSequences) {
-            int nTermIndex = nTermPossibleIndexesIterator.next();
 
+        for (AminoAcidSequence nTermPattern : nTermPossibleSequences) {
+
+            int nTermIndex = nTermPossibleIndexesIterator.next();
             StringBuilder nTermSequence = new StringBuilder(nTermPattern.length() + seedSequence.length());
             nTermSequence.append(nTermPattern.getSequence());
             nTermSequence.append(seedSequence);
+
             for (AminoAcidSequence cTermPattern : cTermPossibleSequences) {
+
                 StringBuilder peptideSequence = new StringBuilder(nTermPattern.length() + seedSequence.length() + cTermPattern.length());
                 peptideSequence.append(nTermSequence);
                 ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
                 HashMap<Integer, ArrayList<ModificationMatch>> nTermModifications = nTermPattern.getModificationMatches();
+
                 if (nTermModifications != null) {
                     for (int i : nTermModifications.keySet()) {
                         for (ModificationMatch modificationMatch : nTermModifications.get(i)) {
@@ -897,6 +1001,7 @@ public class TagMatcher {
                         }
                     }
                 }
+
                 if (modificationsAtIndex != null) {
                     for (int i : modificationsAtIndex.keySet()) {
                         for (ModificationMatch modificationMatch : modificationsAtIndex.get(i)) {
@@ -904,8 +1009,10 @@ public class TagMatcher {
                         }
                     }
                 }
+
                 peptideSequence.append(cTermPattern.getSequence());
                 HashMap<Integer, ArrayList<ModificationMatch>> cTermModifications = cTermPattern.getModificationMatches();
+
                 if (cTermModifications != null) {
                     for (int i : cTermModifications.keySet()) {
                         for (ModificationMatch modificationMatch : cTermModifications.get(i)) {
@@ -913,8 +1020,10 @@ public class TagMatcher {
                         }
                     }
                 }
+
                 Peptide peptide = new Peptide(peptideSequence.toString(), modificationMatches);
                 ArrayList<Peptide> peptides = result.get(nTermIndex);
+
                 if (peptides == null) {
                     peptides = new ArrayList<Peptide>();
                     result.put(nTermIndex, peptides);
@@ -922,8 +1031,7 @@ public class TagMatcher {
                 peptides.add(peptide);
             }
         }
+
         return result;
     }
-    
-    
 }

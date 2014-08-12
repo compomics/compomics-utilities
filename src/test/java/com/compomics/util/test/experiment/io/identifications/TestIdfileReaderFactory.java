@@ -17,8 +17,9 @@ import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
 
 /**
- * Tests the id file reader registration service used in the IdFileReaderFactory.
- * 
+ * Tests the id file reader registration service used in the
+ * IdFileReaderFactory.
+ *
  * @author Lennart Martens
  */
 public class TestIdfileReaderFactory extends TestCase {
@@ -37,12 +38,14 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReader tifr = new IdfileReader() {
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, true);
-    }
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+                    throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+                return getAllSpectrumMatches(waitingHandler, true);
+            }
 
-    @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            @Override
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) 
+                    throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
 
@@ -86,7 +89,9 @@ public class TestIdfileReaderFactory extends TestCase {
 
         IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
         try {
-            Assert.assertNull("Should have been unable to register TestIdfileReader in IdfileReaderFactory as it lacks a constructor with a single parameter of type java.io.File!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist")));
+            Assert.assertNull("Should have been unable to register TestIdfileReader in IdfileReaderFactory as "
+                    + "it lacks a constructor with a single parameter of type java.io.File!", 
+                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist")));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
@@ -97,7 +102,8 @@ public class TestIdfileReaderFactory extends TestCase {
         Assert.assertNull(result);
         // See if it works!
         try {
-            Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test" + ifr.getExtension())));
+            Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!", 
+                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test" + ifr.getExtension())));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain registered IdfileReader: " + e.getMessage());
         }
@@ -109,7 +115,8 @@ public class TestIdfileReaderFactory extends TestCase {
         // Finally, try to register something else.
         IdfileReaderFactory.registerIdFileReader(this.getClass(), ".schtuff");
         try {
-            Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!", IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff")));
+            Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!", 
+                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff")));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
@@ -125,12 +132,14 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, true);
-    }
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+                throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            return getAllSpectrumMatches(waitingHandler, true);
+        }
 
-    @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        @Override
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, 
+                boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
         }

@@ -116,7 +116,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     public final double nTermCorrection = 0;
     /**
-     * Map of the tags found indexed by amino acid sequence
+     * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
 
@@ -442,14 +442,14 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         int tagMapKeyLength = 0;
         if (secondaryMaps) {
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-        tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
-        
+
         String spectrumFileName = getInputFile().getName();
         if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
@@ -497,22 +497,22 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     currentMatch.addHit(Advocate.direcTag.getIndex(), tagAssumption, true);
                 }
             }
+
             if (currentMatch != null && currentMatch.hasAssumption()) {
-                
-        if (secondaryMaps) {
-                HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength);
-                for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-                    for (String key : advocateMap.keySet()) {
-                        LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
-                        if (tagMatches == null) {
-                            tagMatches = new LinkedList<SpectrumMatch>();
-                            tagsMap.put(key, tagMatches);
+                if (secondaryMaps) {
+                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength);
+                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
+                        for (String key : advocateMap.keySet()) {
+                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+                            if (tagMatches == null) {
+                                tagMatches = new LinkedList<SpectrumMatch>();
+                                tagsMap.put(key, tagMatches);
+                            }
+                            tagMatches.add(currentMatch);
                         }
-                        tagMatches.add(currentMatch);
                     }
                 }
-        }
-                
+
                 result.add(currentMatch);
             }
         } finally {
@@ -572,25 +572,25 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 }
             }
         }
-        
+
         AminoAcidSequence tagAaSequence = new AminoAcidSequence(residues.toString());
         for (int i : modificationMatches.keySet()) {
             tagAaSequence.addModificationMatch(i, modificationMatches.get(i));
         }
         Tag tag = new Tag(nGap, tagAaSequence, cGap);
-        
+
         Integer chargeIndex = tagLineContent.get("TagChargeState");
         if (chargeIndex == null) {
             throw new IllegalArgumentException("Column TagChargeState not found.");
         }
         int charge = new Integer(components[chargeIndex]);
-        
+
         Integer eValueIndex = tagLineContent.get("Total");
         if (eValueIndex == null) {
             throw new IllegalArgumentException("Column Total not found.");
         }
         double eValue = new Double(components[eValueIndex]);
-        
+
         return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), eValue);
     }
 

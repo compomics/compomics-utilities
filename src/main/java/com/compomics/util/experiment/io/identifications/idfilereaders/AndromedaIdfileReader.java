@@ -43,11 +43,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      */
     private String fileName;
     /**
-     * A map of the peptides found in this file
+     * A map of the peptides found in this file.
      */
     private HashMap<String, LinkedList<Peptide>> peptideMap;
     /**
-     * The length of the keys of the peptide map
+     * The length of the keys of the peptide map.
      */
     private int peptideMapKeyLength;
 
@@ -84,7 +84,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter(100);
         }
-        long currentIndex = 0;
+
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         index = new HashMap<String, Long>();
@@ -96,7 +96,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 title = line.substring(1);
                 newTitle = true;
             } else if (newTitle) {
-                currentIndex = bufferedRandomAccessFile.getFilePointer();
+                long currentIndex = bufferedRandomAccessFile.getFilePointer();
                 index.put(title, currentIndex);
                 newTitle = false;
                 if (waitingHandler != null) {
@@ -112,12 +112,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");

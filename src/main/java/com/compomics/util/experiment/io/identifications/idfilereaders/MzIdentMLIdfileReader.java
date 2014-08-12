@@ -70,11 +70,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private ArrayList<SearchModification> fixedModifications;
     /**
-     * A map of the peptides found in this file
+     * A map of the peptides found in this file.
      */
     private HashMap<String, LinkedList<Peptide>> peptideMap;
     /**
-     * The length of the keys of the peptide map
+     * The length of the keys of the peptide map.
      */
     private int peptideMapKeyLength;
 
@@ -165,13 +165,13 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (secondaryMaps) {
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
             peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
         }
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
-        
+
         DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
         AnalysisData analysisData = dataCollection.getAnalysisData();
 
@@ -315,15 +315,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     // create the peptide
                     Peptide peptide = new Peptide(mzIdentMLPeptide.getPeptideSequence(), utilitiesModifications);
-        if (secondaryMaps) {
-        String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
-        LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-        if (peptidesForTag == null) {
-            peptidesForTag = new LinkedList<Peptide>();
-            peptideMap.put(subSequence, peptidesForTag);
-        }
-        peptidesForTag.add(peptide);
-        }
+                    if (secondaryMaps) {
+                        String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
+                        LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
+                        if (peptidesForTag == null) {
+                            peptidesForTag = new LinkedList<Peptide>();
+                            peptideMap.put(subSequence, peptidesForTag);
+                        }
+                        peptidesForTag.add(peptide);
+                    }
 
                     // get the e-value and advocate
                     HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);

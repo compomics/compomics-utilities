@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -14,9 +15,11 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -39,6 +42,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * The name of the Andromeda result file.
      */
     private String fileName;
+    /**
+     * A map of the peptides found in this file
+     */
+    private HashMap<String, LinkedList<Peptide>> peptideMap;
+    /**
+     * The length of the keys of the peptide map
+     */
+    private int peptideMapKeyLength;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -101,13 +112,24 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
+
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
+        if (secondaryMaps) {
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
+        }
+
+        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
 
         for (String title : index.keySet()) {
 
@@ -119,7 +141,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
             while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.startsWith(">")) {
-                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt), true);
+                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt, secondaryMaps), true);
                 cpt++;
             }
             result.add(currentMatch);
@@ -133,14 +155,15 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
+     * @param secondaryMaps if true the peptides and tags will be kept in maps
+     *
      * @return the corresponding assumption
      */
-    private PeptideAssumption getAssumptionFromLine(String line, int rank) {
+    private PeptideAssumption getAssumptionFromLine(String line, int rank, boolean secondaryMaps) {
 
         String[] temp = line.trim().split("\t");
-        String[] temp1 = temp[5].split(";");
 
-        temp1 = temp[4].split(",");
+        String[] temp1 = temp[4].split(",");
         ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
 
         for (int aa = 0; aa < temp1.length; aa++) {
@@ -150,7 +173,19 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
             }
         }
 
-        Peptide peptide = new Peptide(temp[0], modMatches);
+        String sequence = temp[0];
+        Peptide peptide = new Peptide(sequence, modMatches);
+
+        if (secondaryMaps) {
+            String subSequence = sequence.substring(0, peptideMapKeyLength);
+            LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
+            if (peptidesForTag == null) {
+                peptidesForTag = new LinkedList<Peptide>();
+                peptideMap.put(subSequence, peptidesForTag);
+            }
+            peptidesForTag.add(peptide);
+        }
+
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         double score = new Double(temp[1]);
 
@@ -169,5 +204,20 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         versions.add("1.4.0.0");
         result.put("Andromeda", versions);
         return result;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+        return peptideMap;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
     }
 }

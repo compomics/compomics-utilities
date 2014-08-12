@@ -1,9 +1,10 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -19,10 +20,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -112,6 +115,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * fragment.
      */
     public final double nTermCorrection = 0;
+    /**
+     * Map of the tags found indexed by amino acid sequence
+     */
+    private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -429,13 +436,26 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
+
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
+        int tagMapKeyLength = 0;
+        if (secondaryMaps) {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+        tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+        }
+        
         String spectrumFileName = getInputFile().getName();
         if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
             waitingHandler.setSecondaryProgressCounter(0);
         }
-        HashSet<SpectrumMatch> result = new HashSet<SpectrumMatch>();
+        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
         int sCpt = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID"),
                 chargeColumnIndex = spectrumLineContent.get("Charge");
@@ -478,6 +498,21 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 }
             }
             if (currentMatch != null && currentMatch.hasAssumption()) {
+                
+        if (secondaryMaps) {
+                HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength);
+                for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
+                    for (String key : advocateMap.keySet()) {
+                        LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+                        if (tagMatches == null) {
+                            tagMatches = new LinkedList<SpectrumMatch>();
+                            tagsMap.put(key, tagMatches);
+                        }
+                        tagMatches.add(currentMatch);
+                    }
+                }
+        }
+                
                 result.add(currentMatch);
             }
         } finally {
@@ -537,21 +572,25 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 }
             }
         }
+        
         AminoAcidSequence tagAaSequence = new AminoAcidSequence(residues.toString());
         for (int i : modificationMatches.keySet()) {
             tagAaSequence.addModificationMatch(i, modificationMatches.get(i));
         }
         Tag tag = new Tag(nGap, tagAaSequence, cGap);
+        
         Integer chargeIndex = tagLineContent.get("TagChargeState");
         if (chargeIndex == null) {
             throw new IllegalArgumentException("Column TagChargeState not found.");
         }
         int charge = new Integer(components[chargeIndex]);
+        
         Integer eValueIndex = tagLineContent.get("Total");
         if (eValueIndex == null) {
             throw new IllegalArgumentException("Column Total not found.");
         }
         double eValue = new Double(components[eValueIndex]);
+        
         return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, new Charge(Charge.PLUS, charge), eValue);
     }
 
@@ -653,5 +692,20 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         versions.add(tagsGeneratorVersion);
         result.put(tagsGenerator, versions);
         return result;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+        return new HashMap<String, LinkedList<Peptide>>();
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+        return tagsMap;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
     }
 }

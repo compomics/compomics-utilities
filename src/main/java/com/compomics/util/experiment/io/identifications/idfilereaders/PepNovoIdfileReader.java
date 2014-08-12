@@ -2,11 +2,12 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -22,10 +23,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -62,6 +65,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * fragment.
      */
     public final double nTermCorrection = 0;
+    /**
+     * Map of the tags found indexed by amino acid sequence
+     */
+    private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -150,13 +157,25 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
+
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        int tagMapKeyLength = 0;
+        if (secondaryMaps) {
+            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+        }
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        HashSet<SpectrumMatch> spectrumMatches = new HashSet<SpectrumMatch>();
+        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<SpectrumMatch>();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -185,6 +204,21 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                 cpt++;
             }
             if (solutionsFound) {
+
+                if (secondaryMaps) {
+                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength);
+                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
+                        for (String key : advocateMap.keySet()) {
+                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+                            if (tagMatches == null) {
+                                tagMatches = new LinkedList<SpectrumMatch>();
+                                tagsMap.put(key, tagMatches);
+                            }
+                            tagMatches.add(currentMatch);
+                        }
+                    }
+                }
+
                 spectrumMatches.add(currentMatch);
             }
 
@@ -371,5 +405,20 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         versions.add("3.1 (beta)");
         result.put("PepNovo+", versions);
         return result;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+        return new HashMap<String, LinkedList<Peptide>>();
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+        return tagsMap;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
     }
 }

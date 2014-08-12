@@ -534,13 +534,14 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     /**
      * Returns the given list of amino acids as a comma separated String.
      *
-     * @param aminoAcids the given list of amino acids
+     * @param targetedAminoAcids the given list of targeted amino acids
+     *
      * @return the given list of amino acids as a comma separated String
      */
-    private String getAAasString(ArrayList<AminoAcid> aminoAcids) {
+    private String getTargetedAAasString(ArrayList<AminoAcid> targetedAminoAcids) {
         String result = "";
-        if (aminoAcids != null) {
-            if (aminoAcids.isEmpty()) {
+        if (targetedAminoAcids != null) {
+            if (targetedAminoAcids.isEmpty()) {
                 for (char aa : AminoAcid.getUniqueAminoAcids()) {
                     if (!result.equals("")) {
                         result += ",";
@@ -548,12 +549,35 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                     result += aa;
                 }
             }
-            for (AminoAcid aa : aminoAcids) {
+            for (AminoAcid aa : targetedAminoAcids) {
                 if (!result.contains(aa.singleLetterCode)) {
                     if (!result.equals("")) {
                         result += ",";
                     }
                     result += aa.singleLetterCode;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the given list of amino acids as a comma separated String.
+     *
+     * @param targetedAminoAcids the given list of targeted amino acids
+     *
+     * @return the given list of amino acids as a comma separated String
+     */
+    private String getExcludedAAasString(ArrayList<AminoAcid> targetedAminoAcids) {
+        String result = "";
+        if (targetedAminoAcids == null || !targetedAminoAcids.isEmpty()) {
+            for (char aa : AminoAcid.getUniqueAminoAcids()) {
+                AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+                if (targetedAminoAcids == null || !targetedAminoAcids.contains(aminoAcid)) {
+                    if (!result.equals("")) {
+                        result += ",";
+                    }
+                    result += aa;
                 }
             }
         }
@@ -656,7 +680,9 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 case 1:
                     return row == pattern.getTarget();
                 case 2:
-                    return getAAasString(pattern.getTargetedAA(row));
+                    return getTargetedAAasString(pattern.getTargetedAA(row));
+                case 3:
+                    return getExcludedAAasString(pattern.getTargetedAA(row));
                 default:
                     return "";
             }
@@ -669,10 +695,18 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                     pattern.setTarget(row);
                 } else if (column == 2) {
                     ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
-                    pattern.setTargeted(row, aa);
+                    if (aa.isEmpty()) {
+                        pattern.removeAA(row);
+                    } else {
+                        pattern.setTargeted(row, aa);
+                    }
                 } else if (column == 3) {
                     ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
-                    pattern.setExcluded(row, aa);
+                    if (aa.isEmpty()) {
+                        pattern.setTargeted(row, aa);
+                    } else {
+                        pattern.setExcluded(row, aa);
+                    }
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),

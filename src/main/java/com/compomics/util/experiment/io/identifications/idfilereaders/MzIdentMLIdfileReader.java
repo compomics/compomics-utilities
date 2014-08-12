@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -14,10 +15,12 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import javax.xml.bind.JAXBException;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisData;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisSoftware;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisSoftwareList;
@@ -66,6 +69,14 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * The names of the fixed modifications.
      */
     private ArrayList<SearchModification> fixedModifications;
+    /**
+     * A map of the peptides found in this file
+     */
+    private HashMap<String, LinkedList<Peptide>> peptideMap;
+    /**
+     * The length of the keys of the peptide map
+     */
+    private int peptideMapKeyLength;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -146,9 +157,21 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
 
-        HashSet<SpectrumMatch> foundPeptides = new HashSet<SpectrumMatch>();
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        if (secondaryMaps) {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
+        }
+
+        LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        
         DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
         AnalysisData analysisData = dataCollection.getAnalysisData();
 
@@ -292,6 +315,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     // create the peptide
                     Peptide peptide = new Peptide(mzIdentMLPeptide.getPeptideSequence(), utilitiesModifications);
+        if (secondaryMaps) {
+        String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
+        LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
+        if (peptidesForTag == null) {
+            peptidesForTag = new LinkedList<Peptide>();
+            peptideMap.put(subSequence, peptidesForTag);
+        }
+        peptidesForTag.add(peptide);
+        }
 
                     // get the e-value and advocate
                     HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
@@ -1125,7 +1157,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     waitingHandler.increaseSecondaryProgressCounter();
                 }
 
-                foundPeptides.add(currentMatch);
+                result.add(currentMatch);
             }
 
             if (waitingHandler != null) {
@@ -1135,7 +1167,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
         }
 
-        return foundPeptides;
+        return result;
     }
 
     /**
@@ -1186,5 +1218,20 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
         return softwareVersions;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+        return peptideMap;
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
+    }
+
+    @Override
+    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+        return new HashMap<String, LinkedList<SpectrumMatch>>();
     }
 }

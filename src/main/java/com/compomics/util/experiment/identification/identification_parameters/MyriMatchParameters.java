@@ -285,6 +285,9 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * @return the numberOfSpectrumMarches
      */
     public Integer getNumberOfSpectrumMatches() {
+        if (numberOfSpectrumMatches == null) {
+            numberOfSpectrumMatches = 10;
+        }
         return numberOfSpectrumMatches;
     }
 
@@ -542,6 +545,9 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * @return the max peak count
      */
     public Integer getMaxPeakCount() {
+        if (maxPeakCount == null) {
+            maxPeakCount = 100;
+        }
         return maxPeakCount;
     }
 

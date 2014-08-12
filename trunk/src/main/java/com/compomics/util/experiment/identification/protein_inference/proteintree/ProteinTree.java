@@ -1803,6 +1803,20 @@ public class ProteinTree {
         }
         return length;
     }
+    
+    /**
+     * Returns the initial tag size of the tree.
+     * 
+     * @return the initial tag size of the tree
+     * 
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException 
+     */
+    public Integer getInitialTagSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return componentsFactory.getInitialSize();
+    }
 
     /**
      * Runnable used for the indexing of a protein sequence.

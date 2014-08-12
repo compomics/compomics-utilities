@@ -3,10 +3,12 @@ package com.compomics.util.experiment.io.identifications;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import javax.xml.bind.JAXBException;
 
-import java.util.HashSet;
 
 /**
  * This interface will retrieve spectrum matches from any identification file.
@@ -44,17 +46,58 @@ public interface IdfileReader {
     /**
      * Retrieves all the identifications from an identification file as a list
      * of spectrum matches It is very important to close the file reader after
+     * creation. Peptides are mapped by default.
+     *
+     * @param waitingHandler a waiting handler displaying the progress (can be
+     * null). The secondary progress methods will be called.
+     * 
+     * @return a list of spectrum matches
+     * 
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException 
+     * @throws JAXBException
+     */
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+
+    /**
+     * Retrieves all the identifications from an identification file as a list
+     * of spectrum matches It is very important to close the file reader after
      * creation.
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
+     * 
+     * @param secondaryMaps if true the peptides and tags will be kept in maps
+     * 
      * @return a list of spectrum matches
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while parsing the file
-     * @throws Exception exception thrown whenever an error occurred while
-     * working with the file
+     * 
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException 
+     * @throws JAXBException
      */
-    public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception;
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+    /**
+     * Returns a map of all the peptides found in this file in a map indexed by the beginning of the peptide sequence, the size of the subsequence is the one of the initial size the protein tree in the sequence factory.
+     * 
+     * @return a map of all the peptides found in this file in a map indexed by the beginning of the peptide sequence
+     */
+    public HashMap<String, LinkedList<Peptide>> getPeptidesMap();
+    /**
+     * Returns a map of all simple tags found in this file indexed by the beginning of the amino acid sequence. A simple tag is a triplet consisting of a mass gap, an amino acid sequence and a mass gap. The size of the subsequence is the one of the initial size the protein tree in the sequence factory.
+     * 
+     * @return a map of all simple tags found in this file indexed by the beginning of the amino acid sequence
+     */
+    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap();
+    /**
+     * Returns a map of all tags found in this file indexed by the beginning of the longest amino acid sequence. The size of the subsequence is the one of the initial size the protein tree in the sequence factory.
+     * 
+     * @return a map of all tags found in this file indexed by the beginning of the amino acid sequence
+     */
+    public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap();
 }

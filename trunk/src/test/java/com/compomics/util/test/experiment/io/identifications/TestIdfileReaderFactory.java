@@ -1,5 +1,6 @@
 package com.compomics.util.test.experiment.io.identifications;
 
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
@@ -9,13 +10,16 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import javax.xml.bind.JAXBException;
 
 /**
- * Created with IntelliJ IDEA. User: martlenn Date: 8/09/12 Time: 23:42 To
- * change this template use File | Settings | File Templates.
+ * Tests the id file reader registration service used in the IdFileReaderFactory.
+ * 
+ * @author Lennart Martens
  */
 public class TestIdfileReaderFactory extends TestCase {
 
@@ -31,14 +35,23 @@ public class TestIdfileReaderFactory extends TestCase {
 
         // First register a new, incorrect class (missing required constructor taking single java.io.File argument).
         IdfileReader tifr = new IdfileReader() {
-            public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+            @Override
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
+
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+                return null;
             }
 
+            @Override
             public String getExtension() {
                 return ".crazyThingThatDoesNotExist";
             }
 
+            @Override
             public void close() throws IOException {
                 // Does nothing.
             }
@@ -50,6 +63,24 @@ public class TestIdfileReaderFactory extends TestCase {
                 versions.add("X.Y.Z");
                 result.put("testIdfileReaderRegistration", versions);
                 return result;
+            }
+
+            @Override
+            public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+                // Does nothing.
+                return null;
+            }
+
+            @Override
+            public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+                // Does nothing.
+                return null;
+            }
+
+            @Override
+            public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+                // Does nothing.
+                return null;
             }
         };
 
@@ -93,15 +124,23 @@ public class TestIdfileReaderFactory extends TestCase {
             // Does nothing.
         }
 
-        public HashSet<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, Exception {
+        @Override
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, true);
+    }
+
+    @Override
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
         }
 
+        @Override
         public String getExtension() {
             return ".yourNotBelievingThisAreYou";
         }
 
+        @Override
         public void close() throws IOException {
             // Does nothing.
         }
@@ -113,6 +152,24 @@ public class TestIdfileReaderFactory extends TestCase {
             versions.add("X.Y.Z");
             result.put("testIdfileReaderRegistration", versions);
             return result;
+        }
+
+        @Override
+        public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
+            // Does nothing.
+            return null;
+        }
+
+        @Override
+        public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
+            // Does nothing.
+            return null;
+        }
+
+        @Override
+        public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+            // Does nothing.
+            return null;
         }
     }
 }

@@ -17,6 +17,7 @@ import java.io.*;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -1366,7 +1367,7 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(Set<SpectrumMatch> spectrumMatches, boolean ascendingScore)
+    public void addSpectrumMatches(Iterable<SpectrumMatch> spectrumMatches, boolean ascendingScore)
             throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
             addSpectrumMatch(spectrumMatch, ascendingScore);

@@ -66,7 +66,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      */
     public final double nTermCorrection = 0;
     /**
-     * Map of the tags found indexed by amino acid sequence
+     * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
 

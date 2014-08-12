@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
 
-
 /**
  * This interface will retrieve spectrum matches from any identification file.
  *
@@ -18,10 +17,10 @@ import javax.xml.bind.JAXBException;
  */
 public interface IdfileReader {
 
-
     /**
-     * Returns the names and versions of the software used to generate the identification
-     * file in a map, e.g., Mascot -> (2.2 and 2.3) and X!Tandem -> Sledgehammer (2013.09.01.1). Null if not known.
+     * Returns the names and versions of the software used to generate the
+     * identification file in a map, e.g., Mascot -> (2.2 and 2.3) and X!Tandem
+     * -> Sledgehammer (2013.09.01.1). Null if not known.
      *
      * @return the version of the software used to generate the identification
      * file, null if not known
@@ -36,7 +35,7 @@ public interface IdfileReader {
      * filename) of the file that this IdfileReader can read.
      */
     public String getExtension();
-    
+
     /**
      * Closes the file reader.
      *
@@ -51,17 +50,18 @@ public interface IdfileReader {
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
-     * 
+     *
      * @return a list of spectrum matches
-     * 
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws ClassNotFoundException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
 
     /**
      * Retrieves all the identifications from an identification file as a list
@@ -70,35 +70,50 @@ public interface IdfileReader {
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
-     * 
+     *
      * @param secondaryMaps if true the peptides and tags will be kept in maps
-     * 
+     *
      * @return a list of spectrum matches
-     * 
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws SQLException
      * @throws ClassNotFoundException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+
     /**
-     * Returns a map of all the peptides found in this file in a map indexed by the beginning of the peptide sequence, the size of the subsequence is the one of the initial size the protein tree in the sequence factory.
-     * 
-     * @return a map of all the peptides found in this file in a map indexed by the beginning of the peptide sequence
+     * Returns a map of all the peptides found in this file in a map indexed by
+     * the beginning of the peptide sequence, the size of the subsequence is the
+     * one of the initial size the protein tree in the sequence factory.
+     *
+     * @return a map of all the peptides found in this file in a map indexed by
+     * the beginning of the peptide sequence
      */
     public HashMap<String, LinkedList<Peptide>> getPeptidesMap();
+
     /**
-     * Returns a map of all simple tags found in this file indexed by the beginning of the amino acid sequence. A simple tag is a triplet consisting of a mass gap, an amino acid sequence and a mass gap. The size of the subsequence is the one of the initial size the protein tree in the sequence factory.
-     * 
-     * @return a map of all simple tags found in this file indexed by the beginning of the amino acid sequence
+     * Returns a map of all simple tags found in this file indexed by the
+     * beginning of the amino acid sequence. A simple tag is a triplet
+     * consisting of a mass gap, an amino acid sequence and a mass gap. The size
+     * of the subsequence is the one of the initial size the protein tree in the
+     * sequence factory.
+     *
+     * @return a map of all simple tags found in this file indexed by the
+     * beginning of the amino acid sequence
      */
     public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap();
+
     /**
-     * Returns a map of all tags found in this file indexed by the beginning of the longest amino acid sequence. The size of the subsequence is the one of the initial size the protein tree in the sequence factory.
-     * 
-     * @return a map of all tags found in this file indexed by the beginning of the amino acid sequence
+     * Returns a map of all tags found in this file indexed by the beginning of
+     * the longest amino acid sequence. The size of the subsequence is the one
+     * of the initial size the protein tree in the sequence factory.
+     *
+     * @return a map of all tags found in this file indexed by the beginning of
+     * the amino acid sequence
      */
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap();
 }

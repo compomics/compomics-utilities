@@ -39,15 +39,15 @@ public class SpectrumMatch extends IdentificationMatch {
     private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = new HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>>();
     /**
      * Map of the identification algorithm assumption: advocate number -> score
-     * -> assumptions
+     * -> assumptions.
      */
     private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>();
     /**
-     * A tag assumptions map. advocate number -> assumptions
+     * A tag assumptions map. advocate number -> assumptions.
      */
     private HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> tagAssumptionsMap = null;
     /**
-     * The size of the keys used for the tag assumptions map
+     * The size of the keys used for the tag assumptions map.
      */
     private int tagAssumptionsMapKeySize = -1;
     /**
@@ -240,7 +240,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     /**
      * Returns a list of the top scoring assumptions for the given advocate.
-     * 
+     *
      * @param advocateId the index of the advocate of interest
      * @return a list of the top scoring assumptions for the given advocate
      */
@@ -440,11 +440,13 @@ public class SpectrumMatch extends IdentificationMatch {
 
         return spectrumMatch;
     }
-    
+
     /**
-     * Returns a map containing the tag assumptions of this spectrum assumptions indexed by the beginning of the longest amino acid sequence.
-     * @param keySize
-     * @return 
+     * Returns a map containing the tag assumptions of this spectrum assumptions
+     * indexed by the beginning of the longest amino acid sequence.
+     *
+     * @param keySize the key size
+     * @return a map containing the tag assumptions of this spectrum assumptions
      */
     public HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> getTagAssumptionsMap(int keySize) {
         if (tagAssumptionsMap == null || keySize != tagAssumptionsMapKeySize) {
@@ -461,7 +463,9 @@ public class SpectrumMatch extends IdentificationMatch {
                             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
                             String longestSequence = tagAssumption.getTag().getLongestAminoAcidSequence();
                             if (longestSequence.length() < keySize) {
-                                throw new IllegalArgumentException("Tag " + tagAssumption.getTag() + " cannot be indexed. Longest amino acid sequence " + longestSequence + " should be of length >= " + keySize + ".");
+                                throw new IllegalArgumentException("Tag " + tagAssumption.getTag() 
+                                        + " cannot be indexed. Longest amino acid sequence " + longestSequence 
+                                        + " should be of length >= " + keySize + ".");
                             }
                             String subSequence = longestSequence.substring(0, keySize);
                             ArrayList<TagAssumption> tagAssumptions = advocateMap.get(subSequence);
@@ -478,12 +482,11 @@ public class SpectrumMatch extends IdentificationMatch {
         }
         return tagAssumptionsMap;
     }
-    
+
     /**
      * Removes the tags assumptions Map to free memory.
      */
     public void removeTagAssumptionsMap() {
         tagAssumptionsMap = null;
     }
-    
 }

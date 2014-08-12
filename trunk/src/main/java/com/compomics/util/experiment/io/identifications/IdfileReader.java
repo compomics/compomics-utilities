@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identifications;
 
+import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;

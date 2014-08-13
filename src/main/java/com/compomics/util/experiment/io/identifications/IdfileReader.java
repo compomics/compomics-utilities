@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,7 +47,7 @@ public interface IdfileReader {
     /**
      * Retrieves all the identifications from an identification file as a list
      * of spectrum matches It is very important to close the file reader after
-     * creation. Peptides are mapped by default.
+     * creation. Using this method secondary maps are not filled
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
@@ -60,18 +61,21 @@ public interface IdfileReader {
      * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
 
     /**
      * Retrieves all the identifications from an identification file as a list
      * of spectrum matches It is very important to close the file reader after
-     * creation.
+     * creation. Secondary peptide and tag maps are filled according to the file
+     * content and the sequence matching preferences. If the sequence matching
+     * preferences are null, the maps are not filled.
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
      *
-     * @param secondaryMaps if true the peptides and tags will be kept in maps
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * use for the creation of the secondary maps
      *
      * @return a list of spectrum matches
      *
@@ -82,13 +86,14 @@ public interface IdfileReader {
      * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) 
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
 
     /**
      * Returns a map of all the peptides found in this file in a map indexed by
-     * the beginning of the peptide sequence, the size of the subsequence is the
-     * one of the initial size the protein tree in the sequence factory.
+     * the beginning of the peptide sequence. The size of the subsequence is the
+     * one of the initial size the protein tree in the sequence factory. The
+     * subsequence is unique according to the given sequence matching
+     * preferences.
      *
      * @return a map of all the peptides found in this file in a map indexed by
      * the beginning of the peptide sequence
@@ -100,7 +105,8 @@ public interface IdfileReader {
      * beginning of the amino acid sequence. A simple tag is a triplet
      * consisting of a mass gap, an amino acid sequence and a mass gap. The size
      * of the subsequence is the one of the initial size the protein tree in the
-     * sequence factory.
+     * sequence factory. The subsequence is unique according to the given
+     * sequence matching preferences.
      *
      * @return a map of all simple tags found in this file indexed by the
      * beginning of the amino acid sequence
@@ -110,7 +116,9 @@ public interface IdfileReader {
     /**
      * Returns a map of all tags found in this file indexed by the beginning of
      * the longest amino acid sequence. The size of the subsequence is the one
-     * of the initial size the protein tree in the sequence factory.
+     * of the initial size the protein tree in the sequence factory. The
+     * subsequence is unique according to the given sequence matching
+     * preferences.
      *
      * @return a map of all tags found in this file indexed by the beginning of
      * the amino acid sequence

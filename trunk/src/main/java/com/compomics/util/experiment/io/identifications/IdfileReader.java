@@ -47,7 +47,7 @@ public interface IdfileReader {
     /**
      * Retrieves all the identifications from an identification file as a list
      * of spectrum matches It is very important to close the file reader after
-     * creation. Using this method secondary maps are not filled
+     * creation. Using this method secondary maps are not filled.
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
@@ -86,7 +86,8 @@ public interface IdfileReader {
      * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
 
     /**
      * Returns a map of all the peptides found in this file in a map indexed by

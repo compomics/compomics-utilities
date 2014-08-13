@@ -1,7 +1,6 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -40,26 +39,31 @@ public class IdFilter implements Serializable {
     private int maxPepLength;
     /**
      * Mascot maximal e-value allowed.
+     *
      * @deprecated
      */
     private double mascotMaxEvalue;
     /**
      * OMSSA maximal e-value allowed.
+     *
      * @deprecated
      */
     private double omssaMaxEvalue;
     /**
      * X!Tandem maximal e-value allowed.
+     *
      * @deprecated
      */
     private double xtandemMaxEvalue;
     /**
      * MS-GF+ maximal e-value allowed.
+     *
      * @deprecated
      */
     private double msgfMaxEvalue;
     /**
      * MS Amanda maximal e-value allowed.
+     *
      * @deprecated
      */
     private double msAmandaMaxEvalue;
@@ -111,12 +115,13 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide assumption based on the peptide length, share of Xs in the sequence and maximal
-     * e-values allowed.
+     * Validates the peptide assumption based on the peptide length, share of Xs
+     * in the sequence and maximal e-values allowed.
      *
      * @param assumption the assumption to validate
-     * @param sequenceMatchingPreferences the sequence matching preferences containing the maximal share of Xs allowed
-     * 
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * containing the maximal share of Xs allowed
+     *
      * @return a boolean indicating whether the assumption passed the test
      */
     public boolean validatePeptideAssumption(PeptideAssumption assumption, SequenceMatchingPreferences sequenceMatchingPreferences) {
@@ -128,8 +133,8 @@ public class IdFilter implements Serializable {
                 || (minPepLength > 0 && sequenceLength < minPepLength)) {
             return false;
         }
-        
-                    double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
+
+        double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
         if (xShare > sequenceMatchingPreferences.getLimitX()) {
             return false;
         }
@@ -356,7 +361,7 @@ public class IdFilter implements Serializable {
     public void setMinPepLength(int minPepLength) {
         this.minPepLength = minPepLength;
     }
-    
+
     /**
      * Indicates whether this filter is the same as another one.
      *

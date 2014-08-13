@@ -115,7 +115,7 @@ public class Node implements Serializable {
                 Node node = subtree.get(aa);
                 if (node != null) {
                     String newSequence = currentSequence + aa;
-                    double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / query.length();
+                    double xShare = ((double) Util.getOccurrence(newSequence, 'X')) / newSequence.length();
                     if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
                         result.putAll(node.getProteinMapping(query, newSequence, sequenceMatchingPreferences));
                     }

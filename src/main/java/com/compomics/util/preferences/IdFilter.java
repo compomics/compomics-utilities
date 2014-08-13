@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -110,18 +111,26 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide assumption based on the peptide length and maximal
+     * Validates the peptide assumption based on the peptide length, share of Xs in the sequence and maximal
      * e-values allowed.
      *
      * @param assumption the assumption to validate
+     * @param sequenceMatchingPreferences the sequence matching preferences containing the maximal share of Xs allowed
+     * 
      * @return a boolean indicating whether the assumption passed the test
      */
-    public boolean validatePeptideAssumption(PeptideAssumption assumption) {
+    public boolean validatePeptideAssumption(PeptideAssumption assumption, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        int pepLength = assumption.getPeptide().getSequence().length();
+        String peptideSequence = assumption.getPeptide().getSequence();
+        int sequenceLength = peptideSequence.length();
 
-        if ((maxPepLength > 0 && pepLength > maxPepLength)
-                || (minPepLength > 0 && pepLength < minPepLength)) {
+        if ((maxPepLength > 0 && sequenceLength > maxPepLength)
+                || (minPepLength > 0 && sequenceLength < minPepLength)) {
+            return false;
+        }
+        
+                    double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
+        if (xShare > sequenceMatchingPreferences.getLimitX()) {
             return false;
         }
 

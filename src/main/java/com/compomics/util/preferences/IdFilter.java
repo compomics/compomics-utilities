@@ -115,18 +115,17 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide assumption based on the peptide length, share of Xs
-     * in the sequence and maximal e-values allowed.
+     * Validates the peptide based on the peptide length and share of Xs in the sequence.
      *
-     * @param assumption the assumption to validate
+     * @param peptide the peptide to validate
      * @param sequenceMatchingPreferences the sequence matching preferences
      * containing the maximal share of Xs allowed
      *
-     * @return a boolean indicating whether the assumption passed the test
+     * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validatePeptideAssumption(PeptideAssumption assumption, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        String peptideSequence = assumption.getPeptide().getSequence();
+        String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
 
         if ((maxPepLength > 0 && sequenceLength > maxPepLength)

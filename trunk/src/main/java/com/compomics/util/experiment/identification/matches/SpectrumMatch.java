@@ -443,12 +443,17 @@ public class SpectrumMatch extends IdentificationMatch {
 
     /**
      * Returns a map containing the tag assumptions of this spectrum assumptions
-     * indexed by the beginning of the longest amino acid sequence.
+     * indexed by the beginning of the longest amino acid sequence. The
+     * beginning of the sequence is made unique according to the sequence
+     * matching preferences.
      *
-     * @param keySize the key size
+     * @param keySize the size to use for the keys
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
      * @return a map containing the tag assumptions of this spectrum assumptions
+     * indexed by the beginning of the longest amino acid sequence
      */
-    public HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> getTagAssumptionsMap(int keySize) {
+    public HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> getTagAssumptionsMap(int keySize, SequenceMatchingPreferences sequenceMatchingPreferences) {
         if (tagAssumptionsMap == null || keySize != tagAssumptionsMapKeySize) {
             tagAssumptionsMap = new HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>>(assumptionsMap.size());
             for (int advocate : assumptionsMap.keySet()) {
@@ -463,8 +468,8 @@ public class SpectrumMatch extends IdentificationMatch {
                             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
                             String longestSequence = tagAssumption.getTag().getLongestAminoAcidSequence();
                             if (longestSequence.length() < keySize) {
-                                throw new IllegalArgumentException("Tag " + tagAssumption.getTag() 
-                                        + " cannot be indexed. Longest amino acid sequence " + longestSequence 
+                                throw new IllegalArgumentException("Tag " + tagAssumption.getTag()
+                                        + " cannot be indexed. Longest amino acid sequence " + longestSequence
                                         + " should be of length >= " + keySize + ".");
                             }
                             String subSequence = longestSequence.substring(0, keySize);

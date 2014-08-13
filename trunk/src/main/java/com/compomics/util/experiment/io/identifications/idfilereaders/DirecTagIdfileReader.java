@@ -14,6 +14,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -437,14 +438,14 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, true);
+        return getAllSpectrumMatches(waitingHandler, null);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
-        if (secondaryMaps) {
+        if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
             tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
             tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
@@ -499,8 +500,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             }
 
             if (currentMatch != null && currentMatch.hasAssumption()) {
-                if (secondaryMaps) {
-                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength);
+
+                if (sequenceMatchingPreferences != null) {
+                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
                     for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
                         for (String key : advocateMap.keySet()) {
                             LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);

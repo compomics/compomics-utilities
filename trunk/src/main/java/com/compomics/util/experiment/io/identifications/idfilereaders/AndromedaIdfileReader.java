@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -11,6 +12,7 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -112,20 +114,19 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, true);
+        return getAllSpectrumMatches(waitingHandler, null);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean secondaryMaps) 
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        if (secondaryMaps) {
+        if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
             peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
             peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
@@ -143,7 +144,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
             while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.startsWith(">")) {
-                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt, secondaryMaps), true);
+                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt, sequenceMatchingPreferences), true);
                 cpt++;
             }
             result.add(currentMatch);
@@ -157,11 +158,12 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
-     * @param secondaryMaps if true the peptides and tags will be kept in maps
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * use to fill the secondary maps
      *
      * @return the corresponding assumption
      */
-    private PeptideAssumption getAssumptionFromLine(String line, int rank, boolean secondaryMaps) {
+    private PeptideAssumption getAssumptionFromLine(String line, int rank, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
         String[] temp = line.trim().split("\t");
 
@@ -178,8 +180,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         String sequence = temp[0];
         Peptide peptide = new Peptide(sequence, modMatches);
 
-        if (secondaryMaps) {
+        if (sequenceMatchingPreferences != null) {
             String subSequence = sequence.substring(0, peptideMapKeyLength);
+            subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
             LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
             if (peptidesForTag == null) {
                 peptidesForTag = new LinkedList<Peptide>();

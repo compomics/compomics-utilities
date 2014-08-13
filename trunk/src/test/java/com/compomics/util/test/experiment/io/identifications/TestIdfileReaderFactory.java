@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.io.identifications.IdfileReaderFactory;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -38,14 +39,12 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReader tifr = new IdfileReader() {
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
-                    throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-                return getAllSpectrumMatches(waitingHandler, true);
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+                return getAllSpectrumMatches(waitingHandler, null);
             }
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, boolean mapPeptides) 
-                    throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
 
@@ -90,7 +89,7 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
         try {
             Assert.assertNull("Should have been unable to register TestIdfileReader in IdfileReaderFactory as "
-                    + "it lacks a constructor with a single parameter of type java.io.File!", 
+                    + "it lacks a constructor with a single parameter of type java.io.File!",
                     IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist")));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
@@ -102,7 +101,7 @@ public class TestIdfileReaderFactory extends TestCase {
         Assert.assertNull(result);
         // See if it works!
         try {
-            Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!", 
+            Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!",
                     IdfileReaderFactory.getInstance().getFileReader(new File("c:/test" + ifr.getExtension())));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain registered IdfileReader: " + e.getMessage());
@@ -115,7 +114,7 @@ public class TestIdfileReaderFactory extends TestCase {
         // Finally, try to register something else.
         IdfileReaderFactory.registerIdFileReader(this.getClass(), ".schtuff");
         try {
-            Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!", 
+            Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!",
                     IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff")));
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
@@ -132,14 +131,12 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
-                throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-            return getAllSpectrumMatches(waitingHandler, true);
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            return getAllSpectrumMatches(waitingHandler, null);
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, 
-                boolean mapPeptides) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
         }

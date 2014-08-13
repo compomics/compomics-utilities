@@ -25,10 +25,10 @@ public class PepNovoIdfileReaderTest extends TestCase {
 
     @Test
     public void testGetAllSpectrumMatches() throws Exception {
-        LinkedList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, false);
+        LinkedList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null);
         for (SpectrumMatch sm : allSpectrumMatches) {
             if (sm.getKey().contains("Scan 835")) {
-                assertEquals("test.mgf_cus_7: Scan 835 (rt=12.4589) [NQIGDKEK]", sm.getKey());         
+                assertEquals("test.mgf_cus_7: Scan 835 (rt=12.4589) [NQIGDKEK]", sm.getKey());
             }
         }
     }

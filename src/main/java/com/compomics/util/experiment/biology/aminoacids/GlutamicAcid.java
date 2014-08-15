@@ -39,4 +39,9 @@ public class GlutamicAcid extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"GAA", "GAG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

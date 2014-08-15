@@ -39,4 +39,9 @@ public class Lysine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"AAA", "AAG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

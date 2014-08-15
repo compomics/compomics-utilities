@@ -414,12 +414,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
-        return tagsMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return tagsMap;
     }
 }

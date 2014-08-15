@@ -39,4 +39,9 @@ public class Isoleucine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"ATT", "ATC", "ATA"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

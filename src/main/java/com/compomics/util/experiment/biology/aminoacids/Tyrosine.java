@@ -39,4 +39,9 @@ public class Tyrosine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TAT", "TAC"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

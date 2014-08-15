@@ -1230,11 +1230,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         return new HashMap<String, LinkedList<SpectrumMatch>>();
     }

@@ -39,4 +39,9 @@ public class Selenocysteine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TGA"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

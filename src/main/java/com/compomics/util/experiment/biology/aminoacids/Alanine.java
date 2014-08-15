@@ -39,4 +39,9 @@ public class Alanine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"GCT", "GCC", "GCA", "GCG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

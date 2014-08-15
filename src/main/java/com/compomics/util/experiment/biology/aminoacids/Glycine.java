@@ -39,4 +39,9 @@ public class Glycine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"GGT", "GGC", "GGA", "GGG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

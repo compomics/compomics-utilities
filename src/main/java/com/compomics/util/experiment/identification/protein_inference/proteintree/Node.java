@@ -91,6 +91,11 @@ public class Node implements Serializable {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
+        AminoAcidSequence aminoAcidSequence = new AminoAcidSequence("SHFH");
+        if (aminoAcidSequence.matches(currentSequence, sequenceMatchingPreferences)) {
+            int debug = 1;
+        }
+        
         if (depth == query.length()) {
             result.put(currentSequence, getAllMappings());
         } else if (accessions != null) {
@@ -173,8 +178,10 @@ public class Node implements Serializable {
      *
      * @param maxNodeSize the maximal node size allowed when splitting
      * @param maxDepth the maximum depth
-     * @return returns true if the node was actually splitted and thus needs to
+     * 
+     * @return returns true if the node was actually split and thus needs to
      * be saved in indexed mode
+     * 
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException

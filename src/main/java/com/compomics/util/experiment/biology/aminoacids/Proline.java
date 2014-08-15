@@ -39,4 +39,9 @@ public class Proline extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"CCT", "CCC", "CCA", "CCG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

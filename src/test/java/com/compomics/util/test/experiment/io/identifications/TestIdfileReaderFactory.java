@@ -74,12 +74,6 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
-                // Does nothing.
-                return null;
-            }
-
-            @Override
             public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
                 // Does nothing.
                 return null;
@@ -162,12 +156,6 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-            // Does nothing.
-            return null;
-        }
-
-        @Override
-        public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
             // Does nothing.
             return null;
         }

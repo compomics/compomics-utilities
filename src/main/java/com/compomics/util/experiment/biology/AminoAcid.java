@@ -71,7 +71,8 @@ public abstract class AminoAcid implements Serializable {
     private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
         'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'B', 'J', 'Z', 'X'};
     /**
-     * A char array of the one letter code of amino acids without combinations of amino acids.
+     * A char array of the one letter code of amino acids without combinations
+     * of amino acids.
      */
     private static final char[] uniqueAminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
         'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
@@ -99,10 +100,10 @@ public abstract class AminoAcid implements Serializable {
     public static char[] getAminoAcids() {
         return aminoAcidChars;
     }
-    
+
     /**
      * Returns the single letter code as character.
-     * 
+     *
      * @return the single letter code as character
      */
     public char getSingleLetterCodeAsChar() {
@@ -118,11 +119,13 @@ public abstract class AminoAcid implements Serializable {
     public static List<String> getAminoAcidsList() {
         return Arrays.asList(aminoAcidStrings);
     }
-    
+
     /**
-     * Returns a char array of the one letter code of amino acids without combinations of amino acids.
-     * 
-     * @return a char array of the one letter code of amino acids without combinations of amino acids
+     * Returns a char array of the one letter code of amino acids without
+     * combinations of amino acids.
+     *
+     * @return a char array of the one letter code of amino acids without
+     * combinations of amino acids
      */
     public static char[] getUniqueAminoAcids() {
         return uniqueAminoAcidChars;
@@ -233,6 +236,15 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
+     * Indicates whether the amino acid object refers to a combination of amino
+     * acids like B, J, Z or X.
+     *
+     * @return an boolean indicating whether the amino acid object refers to a
+     * combination of amino acids like B, J, Z or X
+     */
+    public abstract boolean iscombination();
+
+    /**
      * In case of a combination of amino acids, returns the comprised amino
      * acids or amino acid groups represented by their single letter code.
      * Example: Z -> {G, Q}.
@@ -279,10 +291,10 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * Returns a matching amino acid using the given preferences. 
-     * The amino acid is unique when different possibilities are found, 
-     * then for instance I is returned for both I and
-     * L. The first of the amino acid string array is returned.
+     * Returns a matching amino acid using the given preferences. The amino acid
+     * is unique when different possibilities are found, then for instance I is
+     * returned for both I and L. The first of the amino acid string array is
+     * returned.
      *
      * @param aminoAcid the single letter code of the amino acid of interest
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -291,10 +303,25 @@ public abstract class AminoAcid implements Serializable {
      * massTolerance
      */
     public static String getMatchingAminoAcid(String aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        AminoAcid aa = AminoAcid.getAminoAcid(aminoAcid);
         AminoAcidPattern aaPattern = new AminoAcidPattern(aminoAcid);
         for (String candidateAA : aminoAcidStrings) {
             if (aaPattern.matches(candidateAA, sequenceMatchingPreferences)) {
-                return candidateAA;
+                if (!aa.iscombination()) {
+                    return candidateAA;
+                } else {
+                    char[] subAas = aa.getSubAminoAcids();
+                    boolean subAa = false;
+                    for (char aaChar : subAas) {
+                        if (aaChar == candidateAA.charAt(0)) {
+                            subAa = true;
+                            break;
+                        }
+                    }
+                    if (!subAa) {
+                        return candidateAA;
+                    }
+                }
             }
         }
         throw new IllegalArgumentException("No unique amino acid found for amino acid " + aminoAcid);
@@ -319,18 +346,20 @@ public abstract class AminoAcid implements Serializable {
         }
         return stringBuilder.toString();
     }
-    
+
     /**
      * Returns the standard genetic triplets associated to this amino acid.
-     * 
+     *
      * @return the standard genetic triplets associated to this amino acid
      */
     public abstract String[] getStandardGeneticCode();
+
     /**
      * Returns the amino acid from the standard genetic code.
-     * 
-     * @param geneticCode the three letter genetic code of the desired amino acid
-     * 
+     *
+     * @param geneticCode the three letter genetic code of the desired amino
+     * acid
+     *
      * @return the amino acid from the standard genetic code
      */
     public static AminoAcid getAminoAcidFromGeneticCode(String geneticCode) {

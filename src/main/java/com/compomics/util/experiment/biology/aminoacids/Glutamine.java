@@ -39,4 +39,9 @@ public class Glutamine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"CAA", "CAG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

@@ -39,4 +39,9 @@ public class Arginine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"CGT", "CGC", "CGA", "CGG", "AGA", "AGG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

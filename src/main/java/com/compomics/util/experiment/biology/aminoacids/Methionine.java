@@ -39,4 +39,9 @@ public class Methionine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"ATG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

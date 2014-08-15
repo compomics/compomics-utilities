@@ -985,7 +985,7 @@ public class ProteinTree {
                 AminoAcidSequence peptideAminoAcidSequence = new AminoAcidSequence(peptideSequence);                
                 Double limitX = null;
                 if (sequenceMatchingPreferences.hasLimitX()) {
-                    limitX = sequenceMatchingPreferences.getLimitX() / peptideSequence.length() * initialTagSize;
+                    limitX = sequenceMatchingPreferences.getLimitX() * peptideSequence.length() / initialTagSize;
                 }
                 HashSet<String> initialTags = getInitialTags(peptideAminoAcidSequence, sequenceMatchingPreferences, limitX);
 
@@ -1319,7 +1319,7 @@ public class ProteinTree {
                 result = newResults;
             }
         }
-        if (limitX != null) {
+        if (limitX != null && limitX < 1) {
             HashSet<String> filtered = new HashSet<String>();
             for (String sequence : result) {
                 double xShare = ((double) Util.getOccurrence(sequence, 'X')) / sequence.length();

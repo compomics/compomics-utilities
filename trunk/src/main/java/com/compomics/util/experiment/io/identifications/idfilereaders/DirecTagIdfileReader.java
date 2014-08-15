@@ -480,6 +480,21 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                     }
                     if (!sId.equals(lastId)) {
                         if (currentMatch != null && currentMatch.hasAssumption()) {
+
+                            if (sequenceMatchingPreferences != null) {
+                                HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
+                                for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
+                                    for (String key : advocateMap.keySet()) {
+                                        LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+                                        if (tagMatches == null) {
+                                            tagMatches = new LinkedList<SpectrumMatch>();
+                                            tagsMap.put(key, tagMatches);
+                                        }
+                                        tagMatches.add(currentMatch);
+                                    }
+                                }
+                            }
+
                             result.add(currentMatch);
                         }
                         String spectrumTitle = sId + "";
@@ -702,12 +717,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap() {
-        return tagsMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return tagsMap;
     }
 }

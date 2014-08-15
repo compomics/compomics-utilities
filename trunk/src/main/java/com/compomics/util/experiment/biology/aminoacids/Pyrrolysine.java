@@ -39,4 +39,9 @@ public class Pyrrolysine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TAG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

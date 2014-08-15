@@ -39,4 +39,9 @@ public class Phenylalanine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TTT", "TTC"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

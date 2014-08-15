@@ -39,4 +39,9 @@ public class Valine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"GTT", "GTC", "GTA", "GTG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

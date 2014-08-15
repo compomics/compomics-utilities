@@ -112,17 +112,5 @@ public interface IdfileReader {
      * @return a map of all simple tags found in this file indexed by the
      * beginning of the amino acid sequence
      */
-    public HashMap<String, LinkedList<SpectrumMatch>> getSimpleTagsMap();
-
-    /**
-     * Returns a map of all tags found in this file indexed by the beginning of
-     * the longest amino acid sequence. The size of the subsequence is the one
-     * of the initial size the protein tree in the sequence factory. The
-     * subsequence is unique according to the given sequence matching
-     * preferences.
-     *
-     * @return a map of all tags found in this file indexed by the beginning of
-     * the amino acid sequence
-     */
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap();
 }

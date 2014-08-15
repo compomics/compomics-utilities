@@ -39,4 +39,9 @@ public class Serine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"AGT", "AGC"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

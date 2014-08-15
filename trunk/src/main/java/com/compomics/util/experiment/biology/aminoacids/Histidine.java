@@ -39,4 +39,9 @@ public class Histidine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"CAT", "CAC"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

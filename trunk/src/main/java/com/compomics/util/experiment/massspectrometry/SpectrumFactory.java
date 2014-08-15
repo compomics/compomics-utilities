@@ -721,7 +721,7 @@ public class SpectrumFactory {
      * @throws MzMLUnmarshallerException exception thrown whenever an error
      * occurred while parsing the file
      */
-    public Spectrum getSpectrum(String spectrumKey) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
+    public Spectrum getSpectrum(String spectrumKey) throws IOException, MzMLUnmarshallerException {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
         return getSpectrum(fileName, spectrumTitle);
@@ -747,7 +747,7 @@ public class SpectrumFactory {
      * @throws MzMLUnmarshallerException exception thrown whenever an error
      * occurred while parsing the file
      */
-    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, IllegalArgumentException, MzMLUnmarshallerException {
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, MzMLUnmarshallerException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");

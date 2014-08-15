@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.identifications.idfilereaders;
+package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.identification.SearchParameters;

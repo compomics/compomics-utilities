@@ -39,4 +39,9 @@ public class Leucine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TTA", "TTG", "CTT", "CTC", "CTA", "CTG"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

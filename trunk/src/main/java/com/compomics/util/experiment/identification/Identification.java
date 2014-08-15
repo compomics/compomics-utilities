@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification;
 
 import com.compomics.util.Util;
 import com.compomics.util.db.ObjectsCache;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch.MatchType;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
@@ -17,10 +16,8 @@ import java.io.*;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * This class contains identification results.

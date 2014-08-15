@@ -39,4 +39,9 @@ public class Cysteine extends AminoAcid {
     public String[] getStandardGeneticCode() {
         return new String[] {"TGT", "TGC"};
     }
+
+    @Override
+    public boolean iscombination() {
+        return false;
+    }
 }

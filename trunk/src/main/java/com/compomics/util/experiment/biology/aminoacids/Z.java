@@ -49,4 +49,9 @@ public class Z extends AminoAcid {
         }
         return (String[]) uniqueCodes.toArray();
     }
+
+    @Override
+    public boolean iscombination() {
+        return true;
+    }
 }

@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
@@ -29,6 +28,10 @@ public class Peptide extends ExperimentObject {
      * The peptide sequence.
      */
     private String sequence;
+    /**
+     * The peptide sequence with the modified residues indicated in lower case.
+     */
+    private String sequenceWithLowerCasePtms;
     /**
      * The peptide mass.
      */
@@ -175,6 +178,43 @@ public class Peptide extends ExperimentObject {
      */
     public String getSequence() {
         return sequence;
+    }
+
+    /**
+     * Returns the peptide sequence as a String where the modified residues are
+     * in lower case.
+     *
+     * @return the peptide sequence with the modified residues in lowercase
+     */
+    public String getSequenceWithLowerCasePtms() {
+
+        if (sequenceWithLowerCasePtms != null) {
+            return sequenceWithLowerCasePtms;
+        } else {
+
+            StringBuilder peptideSequence = new StringBuilder(sequence.length());
+
+            for (int i = 0; i < sequence.length(); i++) {
+
+                boolean modified = false;
+
+                for (int j = 0; j < modifications.size() && !modified; j++) {
+                    if (modifications.get(j).getModificationSite() == (i + 1)) {
+                        modified = true;
+                    }
+                }
+
+                if (modified) {
+                    peptideSequence.append(sequence.substring(i, i + 1).toLowerCase());
+                } else {
+                    peptideSequence.append(sequence.charAt(i));
+                }
+            }
+
+            sequenceWithLowerCasePtms = peptideSequence.toString();
+
+            return sequenceWithLowerCasePtms;
+        }
     }
 
     /**
@@ -519,7 +559,7 @@ public class Peptide extends ExperimentObject {
      * a peptide.
      *
      * @param peptideKey the key of a peptide
-     * 
+     *
      * @return a list of names of the variable modifications found in the key
      */
     public static ArrayList<String> getModificationFamily(String peptideKey) {
@@ -918,7 +958,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param anotherPeptide the other peptide to compare
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * 
+     *
      * @return a boolean indicating whether the other peptide has the same
      * sequence
      */
@@ -1368,7 +1408,7 @@ public class Peptide extends ExperimentObject {
      * Returns the given sequence as AminoAcidSequence.
      *
      * @param sequence the sequence of interest
-     * 
+     *
      * @return the sequence as AminoAcidSequence
      */
     public static AminoAcidSequence getSequenceAsAminoAcidSequence(String sequence) {

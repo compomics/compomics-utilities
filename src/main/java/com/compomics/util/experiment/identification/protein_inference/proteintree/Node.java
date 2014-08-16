@@ -2,11 +2,9 @@ package com.compomics.util.experiment.identification.protein_inference.proteintr
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
@@ -91,20 +89,18 @@ public class Node implements Serializable {
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
-        AminoAcidSequence aminoAcidSequence = new AminoAcidSequence("SHFH");
-        if (aminoAcidSequence.matches(currentSequence, sequenceMatchingPreferences)) {
-            int debug = 1;
-        }
-        
         if (depth == query.length()) {
             result.put(currentSequence, getAllMappings());
         } else if (accessions != null) {
+
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
             HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+
             for (String accession : accessions.keySet()) {
                 Protein protein = sequenceFactory.getProtein(accession);
                 indexes.put(accession, matchInProtein(protein, accessions.get(accession), query, sequenceMatchingPreferences));
             }
+
             for (String accession : indexes.keySet()) {
                 for (String tempSequence : indexes.get(accession).keySet()) {
                     HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
@@ -127,6 +123,7 @@ public class Node implements Serializable {
                 }
             }
         }
+
         return result;
     }
 
@@ -144,30 +141,30 @@ public class Node implements Serializable {
 
         char aa = peptideSequence.charAt(depth);
         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.string) {
-                result.add(aa);
-            } else {
+        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.string) {
+            result.add(aa);
+        } else {
 
-                for (char aaChar : aminoAcid.getSubAminoAcids()) {
+            for (char aaChar : aminoAcid.getSubAminoAcids()) {
+                if (!result.contains(aaChar)) {
+                    result.add(aaChar);
+                }
+            }
+
+            for (char aaChar : aminoAcid.getCombinations()) {
+                if (!result.contains(aaChar)) {
+                    result.add(aaChar);
+                }
+            }
+
+            if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
+                for (char aaChar : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
                     if (!result.contains(aaChar)) {
                         result.add(aaChar);
-                    }
-                }
-
-                for (char aaChar : aminoAcid.getCombinations()) {
-                    if (!result.contains(aaChar)) {
-                        result.add(aaChar);
-                    }
-                }
-
-                if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
-                    for (char aaChar : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
-                        if (!result.contains(aaChar)) {
-                            result.add(aaChar);
-                        }
                     }
                 }
             }
+        }
 
         return result;
     }
@@ -178,10 +175,10 @@ public class Node implements Serializable {
      *
      * @param maxNodeSize the maximal node size allowed when splitting
      * @param maxDepth the maximum depth
-     * 
-     * @return returns true if the node was actually split and thus needs to
-     * be saved in indexed mode
-     * 
+     *
+     * @return returns true if the node was actually split and thus needs to be
+     * saved in indexed mode
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException

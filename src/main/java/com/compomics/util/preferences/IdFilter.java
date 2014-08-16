@@ -115,7 +115,8 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide based on the peptide length and share of Xs in the sequence.
+     * Validates the peptide based on the peptide length and share of Xs in the
+     * sequence.
      *
      * @param peptide the peptide to validate
      * @param sequenceMatchingPreferences the sequence matching preferences

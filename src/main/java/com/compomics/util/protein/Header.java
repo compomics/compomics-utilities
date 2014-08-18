@@ -68,9 +68,9 @@ public class Header implements Cloneable, Serializable {
      * only an internally consistent naming scheme included to be able to later
      * separate the databases. For example when linking to the online version of
      * the database. The links themselves are not included as these might change
-     * outside the control of the compomics-utilities library. Note that the
-     * type is set to unknown by default, and is set to the correct type during
-     * the parsing of the header.
+     * outside the control of the compomics-utilities library. Note that the type
+     * is set to unknown by default, and is set to the correct type during the
+     * parsing of the header.
      */
     private DatabaseType databaseType = DatabaseType.Unknown;
 
@@ -83,12 +83,12 @@ public class Header implements Cloneable, Serializable {
      */
     public enum DatabaseType {
 
-        UniProt("UniProtKB", "14681372"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"),
+        UniProt("UniProtKB", "14681372"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"), 
         PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"), M_Tuberculosis("TBDatabase (TBDB)", "18835847"),
-        H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), D_Melanogaster("D_Melanogaster", null),
+        H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), D_Melanogaster("D_Melanogaster", null), 
         Listeria("Listeria", null), GAFFA("GAFFA", null), UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null),
         IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), Unknown(null, null);
-
+        
         /**
          * The full name of the database.
          */
@@ -97,10 +97,9 @@ public class Header implements Cloneable, Serializable {
          * The PubMed id of the database.
          */
         String pmid;
-
         /**
          * Constructor.
-         *
+         * 
          * @param fullName the full name
          * @param pmid the PubMed ID.
          */
@@ -108,19 +107,19 @@ public class Header implements Cloneable, Serializable {
             this.fullName = fullName;
             this.pmid = pmid;
         }
-
+        
         /**
          * Returns the full name of the database, null if not set.
-         *
+         * 
          * @return the full name of the database
          */
         public String getFullName() {
             return fullName;
         }
-
+        
         /**
          * Returns the PubMed id of the database, null if not set.
-         *
+         * 
          * @return the PubMed id of the database
          */
         public String getPmid() {
@@ -560,11 +559,12 @@ public class Header implements Cloneable, Serializable {
                     // try to parse as a generic header with splitters
                     // should look something like this: 
                     // >generic_some_tag|proten_accession|a description for this protein
+
                     result.databaseType = DatabaseType.Generic_Split_Header;
                     result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
-
+                    
                     String subHeader = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
-
+                    
                     if (subHeader.indexOf("|") != -1) {
                         result.iAccession = subHeader.substring(0, subHeader.indexOf("|"));
                         result.iDescription = subHeader.substring(subHeader.indexOf("|") + 1).trim();
@@ -587,6 +587,7 @@ public class Header implements Cloneable, Serializable {
 
                     // try to get the gene name and taxonomy
                     //parseUniProtDescription(result);  // @TOOD: not sure if the header has the right format...
+
                 } else if (aFASTAHeader.matches("^sp\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -782,6 +783,7 @@ public class Header implements Cloneable, Serializable {
                     // >GAFFA|"accession"|"species"/unknown
                     // Example:
                     //  >GAFFA|cgb_GMPQSG401A00X3_1_cgb_pilot_F1_1|unknown
+
                     result.databaseType = DatabaseType.GAFFA;
                     try {
                         result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
@@ -945,9 +947,9 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * Returns the accession or if this is null the rest. This is a quick fix
+     * Returns the accession or if this is null the rest. This is a quick fix 
      * for unsupported custom headers.
-     *
+     * 
      * @return the accession or if this is null the rest
      */
     public String getAccessionOrRest() {
@@ -1414,6 +1416,7 @@ public class Header implements Cloneable, Serializable {
     public static String getDatabaseTypeAsString(DatabaseType databaseType) {
 
         // @TODO: use names end users are familiar with
+
         switch (databaseType) {
             case UniProt:
                 return "UniProtKB";

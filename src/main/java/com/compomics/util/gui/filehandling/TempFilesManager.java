@@ -35,7 +35,7 @@ public class TempFilesManager {
         boolean exception = false;
         for (File tempFolder : tempFolders) {
             try {
-                Util.deleteDir(tempFolder);
+                boolean success = Util.deleteDir(tempFolder); // @TODO: what to do if the file could not be deleted?
             } catch (Exception e) {
                 e.printStackTrace();
                 exception = true;

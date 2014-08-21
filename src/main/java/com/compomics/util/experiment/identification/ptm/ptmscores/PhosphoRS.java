@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
@@ -173,6 +172,7 @@ public class PhosphoRS {
                         ArrayList<Double> currentDeltas = new ArrayList<Double>();
                         ArrayList<ArrayList<Double>> scored = new ArrayList<ArrayList<Double>>();
                         boolean noIons = false;
+
                         for (ArrayList<Integer> profile : possibleProfiles) {
                             if (!subMapGoofy.containsKey(profile)) {
                                 if (!noIons) {
@@ -193,6 +193,7 @@ public class PhosphoRS {
                                         break;
                                     }
                                 }
+
                                 if (!alreadyScored) {
                                     Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
                                     for (int pos : profile) {

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.spectrum_annotators;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;

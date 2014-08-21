@@ -126,33 +126,29 @@ public class PtmSiteMapping {
     }
 
     /**
-     * Aligns a serie of integer on possible targets maximizing the number of
+     * Aligns a series of integer on possible targets maximizing the number of
      * matched targets.
      *
-     * Example: 
-     * 
-     * input = { 
-     * 0 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 
-     * 1 -> {12}, 
-     * 2 -> {3, 12, 14}, 
-     * 8 -> {12},
-     * 13 -> {3, 12, 14}, 
-     * 25 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 
-     * 15 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 
-     * 6 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 
-     * 99 -> {3} }
+     * Example:
      *
-     * result = 
-     * {1 -> null, 8 -> 12, 99 -> 3, 13 -> 14, 2 -> null, 0 -> 2, 6 -> 100, 15 -> 18, 25 -> 30}
+     * input = { 0 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 1 -> {12}, 2 -> {3,
+     * 12, 14}, 8 -> {12}, 13 -> {3, 12, 14}, 25 -> {100, 2, 12, 14, 18, 30,
+     * 115, 1000}, 15 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 6 -> {100, 2, 12,
+     * 14, 18, 30, 115, 1000}, 99 -> {3} }
+     *
+     * result = {1 -> null, 8 -> 12, 99 -> 3, 13 -> 14, 2 -> null, 0 -> 2, 6 ->
+     * 100, 15 -> 18, 25 -> 30}
      *
      * @param input the input map
      * @return a map of the doublets created.
      */
     public static HashMap<Integer, Integer> alignAll(HashMap<Integer, ArrayList<Integer>> input) {
+
         HashMap<Integer, Integer> tempResult, result = new HashMap<Integer, Integer>();
         if (input == null || input.isEmpty()) {
             return result;
         }
+
         HashMap<Integer, ArrayList<Integer>> inputCopy = new HashMap<Integer, ArrayList<Integer>>();
         for (int i1 : input.keySet()) {
             inputCopy.put(i1, new ArrayList<Integer>());
@@ -160,8 +156,11 @@ public class PtmSiteMapping {
                 inputCopy.get(i1).add(i2);
             }
         }
+
         while (!inputCopy.isEmpty()) {
+
             HashMap<Integer, ArrayList<Integer>> sizesMap = new HashMap<Integer, ArrayList<Integer>>();
+
             for (int i : inputCopy.keySet()) {
                 if (inputCopy.get(i) != null && !inputCopy.get(i).isEmpty()) {
                     int size = inputCopy.get(i).size();
@@ -173,17 +172,20 @@ public class PtmSiteMapping {
                     inputCopy.remove(i);
                 }
             }
+
             ArrayList<Integer> sizes = new ArrayList<Integer>(sizesMap.keySet());
             Collections.sort(sizes);
             int size = sizes.get(0);
             ArrayList<Integer> serie1 = new ArrayList<Integer>();
             int i1temp = sizesMap.get(size).get(0);
             ArrayList<Integer> serie2 = inputCopy.get(i1temp);
+
             for (int i1 : sizesMap.get(size)) {
-                if (Util.sameLists(inputCopy.get(i1temp), inputCopy.get(i1))) {
+                if (Util.sameLists(serie2, inputCopy.get(i1))) {
                     serie1.add(i1);
                 }
             }
+
             tempResult = alignAll(serie1, serie2);
             result.putAll(tempResult);
 
@@ -198,10 +200,12 @@ public class PtmSiteMapping {
                     inputCopy.get(i1).remove(i2);
                 }
             }
+
             for (Integer i1 : serie1) {
                 inputCopy.remove(i1);
                 sizesMap.get(size).remove(i1);
             }
+
             ArrayList<Integer> toRemove1 = new ArrayList<Integer>();
             for (int i1 : inputCopy.keySet()) {
                 if (inputCopy.get(i1).isEmpty()) {
@@ -209,13 +213,16 @@ public class PtmSiteMapping {
                     result.put(i1, null);
                 }
             }
+
             for (int i1 : toRemove1) {
                 inputCopy.remove(i1);
             }
+
             if (sizesMap.get(size).isEmpty()) {
                 sizesMap.remove(size);
             }
         }
+
         return result;
     }
 }

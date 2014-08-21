@@ -529,6 +529,29 @@ public class Util {
     }
 
     /**
+     * Convenience methods indicating whether the content of two lists have the
+     * same content. Assumes that the first list is already sorted.
+     *
+     * @param list1 the first list
+     * @param list2 the second list
+     * @return a boolean indicating whether list1 has the same content as list2
+     */
+    public static boolean sameListsFirstListSorted(ArrayList list1, ArrayList list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        ArrayList list2copy = new ArrayList(list2);
+        Collections.sort(list2copy);
+        for (int i = 0; i < list1.size(); i++) {
+            if (!list1.get(i).equals(list2copy.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Returns the occurrence of a character in a string.
      *
      * @param input the string of interest

@@ -86,7 +86,7 @@ public class PhosphoRS {
             }
         }
         if (nPTM == 0) {
-            throw new IllegalArgumentException("Given PTMs not found in the peptide for A-score calculation.");
+            throw new IllegalArgumentException("Given PTMs not found in the peptide for PhosphoRS calculation.");
         }
 
         PTM refPTM = ptms.get(0);
@@ -284,7 +284,7 @@ public class PhosphoRS {
         } else if (possibleSites.size() == nPTM) {
             profileToScoreMap.put(possibleSites, 100.0);
         } else {
-            throw new IllegalArgumentException("Found less potential modification sites than PTMs during A-score calculation. Peptide key: " + peptide.getKey());
+            throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
         HashMap<Integer, Double> scores = new HashMap<Integer, Double>();

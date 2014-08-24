@@ -40,7 +40,8 @@ public class SequenceMatchingPreferences implements Serializable {
     private MatchingType sequenceMatchingType;
     /**
      * The ms2 m/z tolerance to use for amino acid distinction when
-     * sequenceMatchingType is indistiguishableAminoAcids. Can be null otherwise.
+     * sequenceMatchingType is indistiguishableAminoAcids. Can be null
+     * otherwise.
      */
     private Double ms2MzTolerance = null;
     /**
@@ -194,14 +195,23 @@ public class SequenceMatchingPreferences implements Serializable {
         if (sequenceMatchingType != proteinInferencePreferences.getSequenceMatchingType()) {
             return false;
         }
-        if (ms2MzTolerance != null && ms2MzTolerance != proteinInferencePreferences.getMs2MzTolerance()) {
-            return false;
+        if (ms2MzTolerance != null && proteinInferencePreferences.getMs2MzTolerance() != null) {
+            double diff = Math.abs(ms2MzTolerance - proteinInferencePreferences.getMs2MzTolerance());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
         }
         if (ms2MzTolerance == null && proteinInferencePreferences.getMs2MzTolerance() != null) {
             return false;
         }
-        if (hasLimitX() && proteinInferencePreferences.hasLimitX() && limitX != proteinInferencePreferences.getLimitX()) {
+        if (ms2MzTolerance != null && proteinInferencePreferences.getMs2MzTolerance() == null) {
             return false;
+        }
+        if (hasLimitX() && proteinInferencePreferences.hasLimitX()) {
+            double diff = Math.abs(limitX - proteinInferencePreferences.getLimitX());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
         }
         if (hasLimitX() && !proteinInferencePreferences.hasLimitX()) {
             return false;

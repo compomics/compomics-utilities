@@ -135,7 +135,7 @@ public class IdFilter implements Serializable {
         }
 
         double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
-        if (xShare > sequenceMatchingPreferences.getLimitX()) {
+        if (sequenceMatchingPreferences.hasLimitX() && xShare > sequenceMatchingPreferences.getLimitX()) {
             return false;
         }
 

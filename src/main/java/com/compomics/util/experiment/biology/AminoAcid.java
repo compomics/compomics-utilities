@@ -277,7 +277,7 @@ public abstract class AminoAcid implements Serializable {
         if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
-        if (indistinguishableAACache == null || indistinguishableAACacheMass != massTolerance) {
+        if (indistinguishableAACache == null || indistinguishableAACacheMass.doubleValue() != massTolerance.doubleValue()) {
             ArrayList<Character> result = new ArrayList<Character>();
             for (char aa : getAminoAcids()) {
                 if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {

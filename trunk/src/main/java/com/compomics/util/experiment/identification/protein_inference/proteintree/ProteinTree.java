@@ -982,7 +982,7 @@ public class ProteinTree {
 
                 result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
-                AminoAcidSequence peptideAminoAcidSequence = new AminoAcidSequence(peptideSequence);                
+                AminoAcidSequence peptideAminoAcidSequence = new AminoAcidSequence(peptideSequence);
                 Double limitX = null;
                 if (sequenceMatchingPreferences.hasLimitX()) {
                     limitX = sequenceMatchingPreferences.getLimitX() * peptideSequence.length() / initialTagSize;
@@ -1127,7 +1127,7 @@ public class ProteinTree {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> results = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         for (String tagSeed : seeds.keySet()) {
             double xShare = ((double) Util.getOccurrence(tagSeed, 'X')) / tagSeed.length();
-                if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+            if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
@@ -1168,11 +1168,16 @@ public class ProteinTree {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private HashSet<String> getInitialTags(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, Double limitX) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    private HashSet<String> getInitialTags(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, Double limitX)
+            throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
         int initialTagSize = componentsFactory.getInitialSize();
         HashSet<String> result = new HashSet<String>();
+
         for (int i = 0; i < initialTagSize; i++) {
+
             AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
+
             if (result.isEmpty()) {
                 if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.string) {
                     String originalAa = aminoAcid.singleLetterCode;
@@ -1249,17 +1254,17 @@ public class ProteinTree {
                     if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.string) {
                         String originalAa = aminoAcid.singleLetterCode;
                         newResults.add(sequence + aminoAcid.singleLetterCode);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa.charAt(0));
-                        if (mutatedAas != null) {
-                            for (Character mutatedAa : mutatedAas) {
-                                String newAa = String.valueOf(mutatedAa);
-                                if (!result.contains(newAa)) {
-                                    result.add(sequence + newAa);
+                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
+                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa.charAt(0));
+                            if (mutatedAas != null) {
+                                for (Character mutatedAa : mutatedAas) {
+                                    String newAa = String.valueOf(mutatedAa);
+                                    if (!result.contains(newAa)) {
+                                        result.add(sequence + newAa);
+                                    }
                                 }
                             }
                         }
-                            }
                     } else {
                         for (char originalAa : aminoAcid.getSubAminoAcids()) {
                             String newTag = sequence + originalAa;
@@ -1268,14 +1273,14 @@ public class ProteinTree {
                             }
                             if (sequenceMatchingPreferences.hasMutationMatrix()) {
                                 HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa);
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    newTag = sequence + String.valueOf(mutatedAa);
-                                    if (!result.contains(newTag)) {
-                                        result.add(newTag);
+                                if (mutatedAas != null) {
+                                    for (Character mutatedAa : mutatedAas) {
+                                        newTag = sequence + String.valueOf(mutatedAa);
+                                        if (!result.contains(newTag)) {
+                                            result.add(newTag);
+                                        }
                                     }
                                 }
-                            }
                             }
                         }
                         for (char newAa : aminoAcid.getCombinations()) {
@@ -1283,24 +1288,6 @@ public class ProteinTree {
                             if (!newResults.contains(newTag)) {
                                 newResults.add(newTag);
                             }
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(newAa);
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    newTag = sequence + String.valueOf(mutatedAa);
-                                    if (!result.contains(newTag)) {
-                                        result.add(newTag);
-                                    }
-                                }
-                            }
-                            }
-                        }
-                        if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.indistiguishableAminoAcids) {
-                            for (char newAa : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
-                                String newTag = sequence + newAa;
-                                if (!newResults.contains(newTag)) {
-                                    newResults.add(newTag);
-                                }
                             if (sequenceMatchingPreferences.hasMutationMatrix()) {
                                 HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(newAa);
                                 if (mutatedAas != null) {
@@ -1312,6 +1299,24 @@ public class ProteinTree {
                                     }
                                 }
                             }
+                        }
+                        if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.indistiguishableAminoAcids) {
+                            for (char newAa : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
+                                String newTag = sequence + newAa;
+                                if (!newResults.contains(newTag)) {
+                                    newResults.add(newTag);
+                                }
+                                if (sequenceMatchingPreferences.hasMutationMatrix()) {
+                                    HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(newAa);
+                                    if (mutatedAas != null) {
+                                        for (Character mutatedAa : mutatedAas) {
+                                            newTag = sequence + String.valueOf(mutatedAa);
+                                            if (!result.contains(newTag)) {
+                                                result.add(newTag);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1803,16 +1808,16 @@ public class ProteinTree {
         }
         return length;
     }
-    
+
     /**
      * Returns the initial tag size of the tree.
-     * 
+     *
      * @return the initial tag size of the tree
-     * 
+     *
      * @throws SQLException
      * @throws IOException
      * @throws ClassNotFoundException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     public Integer getInitialTagSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return componentsFactory.getInitialSize();

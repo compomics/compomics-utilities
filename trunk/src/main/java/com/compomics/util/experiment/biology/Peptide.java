@@ -335,7 +335,7 @@ public class Peptide extends ExperimentObject {
 
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
-                if (xShare <= sequenceMatchingPreferences.getLimitX()) {
+                if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
                     HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
                     for (String accession : subMapping.keySet()) {
                         if (!parentProteins.contains(accession)) {
@@ -792,7 +792,9 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, ModificationProfile modificationProfile)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+
         ArrayList<Integer> sites = new ArrayList<Integer>();
+
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
             if (Math.abs(ptm.getMass() - ptmMass) < sequenceMatchingPreferences.getMs2MzTolerance()) {
@@ -803,6 +805,7 @@ public class Peptide extends ExperimentObject {
                 }
             }
         }
+
         return sites;
     }
 

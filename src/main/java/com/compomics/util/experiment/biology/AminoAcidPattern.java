@@ -957,6 +957,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     public void merge(AminoAcidPattern otherPattern) {
 
         HashMap<Integer, ArrayList<AminoAcid>> otherInclusionMap = otherPattern.getAaTargeted();
+
         if (otherInclusionMap != null) {
             for (int i : otherInclusionMap.keySet()) {
                 ArrayList<AminoAcid> otherAAs = otherPattern.getTargetedAA(i);
@@ -1551,13 +1552,16 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * pattern
      */
     public AminoAcidPattern reverse() {
+
         AminoAcidPattern newPattern = new AminoAcidPattern();
+
         if (aaTargeted != null) {
             for (int i : aaTargeted.keySet()) {
                 int reversed = length() - i - 1;
                 newPattern.setTargeted(reversed, (ArrayList<AminoAcid>) aaTargeted.get(i).clone());
             }
         }
+
         if (targetModifications != null) {
             for (int i : targetModifications.keySet()) {
                 int reversed = length() - i + 1;
@@ -1573,9 +1577,11 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         if (target > -1) {
             newPattern.setTarget(length() - target - 1);
         }
+
         return newPattern;
     }
 

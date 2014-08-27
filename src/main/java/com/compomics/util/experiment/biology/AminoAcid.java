@@ -414,4 +414,16 @@ public abstract class AminoAcid implements Serializable {
         }
         throw new IllegalArgumentException("No amino acid found for genetic code " + geneticCode + ".");
     }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof AminoAcid) {
+            if (((AminoAcid) obj).singleLetterCode.equalsIgnoreCase(singleLetterCode)) { // @TODO: is this all we need to check..?
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

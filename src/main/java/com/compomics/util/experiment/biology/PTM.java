@@ -390,9 +390,7 @@ public class PTM extends ExperimentObject {
         tooltip += "Target: ";
         if (!pattern.getAminoAcidsAtTarget().isEmpty()) {
             String patternAsString = pattern.toString();
-            if (patternAsString.length() > 1) {
-                tooltip += patternAsString.substring(1, patternAsString.length() - 1);
-            }
+            tooltip += patternAsString;
         } else {
             tooltip += "All";
         }

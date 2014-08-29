@@ -419,15 +419,19 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Returns the pattern in the prosite format.
+     * Returns the pattern in the PROSITE format.
      *
-     * @return the pattern in the prosite format
+     * @return the pattern in the PROSITE format
      */
     public String getPrositeFormat() {
+
         StringBuilder result = new StringBuilder();
         int cpt = 0;
+
         for (int i = 0; i < length(); i++) {
+
             ArrayList<AminoAcid> targetedAas = getTargetedAA(i);
+
             if (targetedAas.isEmpty()) {
                 cpt++;
             } else if (targetedAas.size() > 15) {
@@ -460,10 +464,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     result.append("]");
                 }
             }
+
             if (i == target) {
                 result.append("!");
             }
         }
+
         return result.toString();
     }
 
@@ -662,7 +668,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (aaTargeted != null) {
 
             MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
-
             ArrayList<AminoAcid> aaList = aaTargeted.get(index);
 
             if (aaList != null && !aaList.isEmpty()) {
@@ -711,7 +716,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acid sequence
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+        return /*length() == aminoAcidSequence.length() &&*/ firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
@@ -724,7 +729,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
+        return /*length() == aminoAcidPattern.length() &&*/ firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
     }
 
     /**
@@ -905,7 +910,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the length of the pattern in amino acids
      */
     public int length() {
-        if (length == -1 || length == 0) { //we need to check the 0 case every time due to backward compatibility issues
+        if (length == -1 || length == 0) { // we need to check the 0 case every time due to backward compatibility issues
             if (aaTargeted == null || aaTargeted.isEmpty()) {
                 length = 0;
             } else {

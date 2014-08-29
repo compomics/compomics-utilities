@@ -924,7 +924,8 @@ public class PTMFactory implements Serializable {
                         taken.put(pos, ptm.getMass());
                         peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
                     } else if (taken.get(pos) != ptm.getMass()) {
-                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" 
+                                + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
                     }
                 }
             } else if (ptm.getType() == PTM.MODC) {

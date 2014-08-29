@@ -938,6 +938,7 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
         }
+
         return possibleSites;
     }
 

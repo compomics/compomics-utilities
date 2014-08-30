@@ -592,6 +592,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         int lastIndex = aminoAcidPatternLength - patternLength;
 
         for (int i = startIndex; i <= lastIndex; i++) {
+
             boolean match = true;
 
             for (int j = 0; j < patternLength; j++) {
@@ -603,10 +604,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                     break;
                 }
             }
+
             if (match) {
                 return i + target;
             }
         }
+
         return -1;
     }
 

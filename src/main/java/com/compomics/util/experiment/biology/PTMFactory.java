@@ -1013,7 +1013,9 @@ public class PTMFactory implements Serializable {
                                     modification = ptm.getMass();
                                     aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
                                 } else if (modification != ptm.getMass()) {
-                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" + modification + ", " + ptm.getMass() + ") at position " + aa + " in pattern " + aminoAcidPattern.asSequence() + " of tag " + tag.asSequence() + ".");
+                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" 
+                                            + modification + ", " + ptm.getMass() + ") at position " + aa + " in pattern " 
+                                            + aminoAcidPattern.asSequence() + " of tag " + tag.asSequence() + ".");
                                 }
                             }
                         } else if (ptm.getType() == PTM.MODCP && componentNumber == tag.getContent().size() && aa == aminoAcidPattern.length()) {

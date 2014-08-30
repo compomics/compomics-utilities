@@ -38,7 +38,7 @@ public class PTMScoringPreferences implements Serializable {
     /**
      * The probabilistic score selected.
      */
-    private PtmScore selectedProbabilisticScore = PtmScore.PhosphoRS;
+    private PtmScore selectedProbabilisticScore = PtmScore.AScore;
     /**
      * Boolean indicating whether the threshold should be FLR based.
      */

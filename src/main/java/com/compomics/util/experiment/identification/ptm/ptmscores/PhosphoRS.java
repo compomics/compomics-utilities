@@ -142,11 +142,13 @@ public class PhosphoRS {
             HashMap<Double, Peak> reducedSpectrum = new HashMap<Double, Peak>();
 
             while (minMz < maxMz) {
+
                 tempMax = minMz + 100;
                 MSnSpectrum tempSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle()
                         + "_PhosphoRS_minMZ_" + minMz, spectrum.getSubSpectrum(minMz, tempMax), spectrum.getFileName());
                 ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
                 HashMap<ArrayList<Integer>, ArrayList<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
+
                 for (double ionMz : siteDeterminingIons) {
                     if (ionMz > minMz && ionMz <= maxMz) {
                         ArrayList<ArrayList<Integer>> profiles = siteDeterminingIonsMap.get(ionMz);
@@ -255,6 +257,7 @@ public class PhosphoRS {
 
                     reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
                 }
+
                 minMz = tempMax;
             }
 
@@ -387,8 +390,10 @@ public class PhosphoRS {
         }
 
         for (int i = 2; i <= nPtms; i++) {
+
             ArrayList<ArrayList<Integer>> tempresult = new ArrayList<ArrayList<Integer>>(result);
             result = new ArrayList<ArrayList<Integer>>();
+
             for (ArrayList<Integer> tempProfile : tempresult) {
                 int lastPos = tempProfile.get(tempProfile.size() - 1);
                 for (int pos : possibleSites) {

@@ -252,7 +252,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals("dm345_3L-sense", h.getID());
         Assert.assertEquals(234353534 , h.getStartLocation());
         Assert.assertEquals(234353938, h.getEndLocation());
-        Assert.assertTrue(h.getAccession() == null);
+        Assert.assertEquals("dm345_3L-sense", h.getAccession());
         Assert.assertTrue(h.getForeignAccession() == null);
         Assert.assertTrue(h.getForeignDescription() == null);
         Assert.assertTrue(h.getForeignID() == null);

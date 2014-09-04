@@ -854,7 +854,8 @@ public class SequenceFactory {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) 
+            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingHandler != null) {
             waitingHandler.resetSecondaryProgressCounter();

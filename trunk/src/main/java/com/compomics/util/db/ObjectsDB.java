@@ -208,8 +208,6 @@ public class ObjectsDB implements Serializable {
     /**
      * Indicates whether the database contains the given table.
      *
-     * @TODO: not sure to which extend this is Derby dependent...
-     *
      * @param tableName the name of the table of interest
      *
      * @return a boolean indicating whether the database contains the given
@@ -221,7 +219,7 @@ public class ObjectsDB implements Serializable {
     public boolean hasTable(String tableName) throws SQLException {
         DatabaseMetaData dmd = dbConnection.getMetaData();
         boolean result = false;
-        ResultSet rs = dmd.getTables(null, null, tableName.toUpperCase(), null);
+        ResultSet rs = dmd.getTables(null, null, tableName.toUpperCase(), null); //@TODO: not sure to which extend this is Derby dependent...
         try {
             result = rs.next();
         } finally {

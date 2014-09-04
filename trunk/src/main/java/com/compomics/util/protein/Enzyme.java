@@ -383,7 +383,6 @@ public class Enzyme implements Cloneable {
      * @return Protein[] with the resultant peptides.
      */
     public Protein[] cleave(Protein aProtein, int minPeptideLength, int maxPeptideLength) {
-        Vector result = null;
 
         // We'll need a lot of stuff here.
         //  - a Vector for all the startindices
@@ -540,7 +539,7 @@ public class Enzyme implements Cloneable {
         // Let's construct the Protein instances for them and
         // then return them!
         int liSize = interMed.size();
-        result = new Vector(liSize);
+        Vector result = new Vector(liSize);
         Header header = aProtein.getHeader();
 
         // Create the Proteins and store them.

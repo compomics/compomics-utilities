@@ -159,11 +159,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null);
+        return getAllSpectrumMatches(waitingHandler, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
         if (sequenceMatchingPreferences != null) {
@@ -416,5 +416,15 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         return tagsMap;
+    }
+
+    @Override
+    public void clearTagsMap() {
+        tagsMap.clear();
+    }
+
+    @Override
+    public void clearPeptidesMap() {
+        // No peptides here
     }
 }

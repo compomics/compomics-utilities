@@ -764,6 +764,60 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         return newSequence;
     }
 
+    /**
+     * Indicates whether the given sequence contains an amino acid which is in
+     * fact a combination of amino acids.
+     *
+     * @param sequence the sequence of interest
+     *
+     * @return a boolean indicating whether the given sequence contains an amino
+     * acid which is in fact a combination of amino acids
+     */
+    public static boolean hasCombination(String sequence) {
+        for (int i = 0; i < sequence.length(); i++) {
+            char aa = sequence.charAt(i);
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (aminoAcid.iscombination()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns a list of all combinations which can be created from a sequence
+     * when expanding ambiguous amino acids like Xs.
+     *
+     * @param sequence the sequence of interest
+     *
+     * @return a list of all combinations which can be created from a sequence
+     * when expanding ambiguous amino acids like Xs
+     */
+    public static ArrayList<StringBuilder> getCombinations(String sequence) {
+        ArrayList<StringBuilder> newCombination, combination = new ArrayList<StringBuilder>();
+        for (int i = 0; i < sequence.length(); i++) {
+            newCombination = new ArrayList<StringBuilder>();
+            char aa = sequence.charAt(i);
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            for (char newAa : aminoAcid.getSubAminoAcids(false)) {
+                if (combination.isEmpty()) {
+                    StringBuilder stringBuilder = new StringBuilder(sequence.length());
+                    stringBuilder.append(newAa);
+                    newCombination.add(stringBuilder);
+                } else {
+                    for (StringBuilder stringBuilder : combination) {
+                        StringBuilder newStringBuilder = new StringBuilder(sequence.length());
+                        newStringBuilder.append(stringBuilder);
+                        newStringBuilder.append(newAa);
+                        newCombination.add(newStringBuilder);
+                    }
+                }
+            }
+            combination = newCombination;
+        }
+        return combination;
+    }
+
     @Override
     public String toString() {
         setSequenceStringBuilder(false);

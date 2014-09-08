@@ -22,13 +22,13 @@ public class B extends AminoAcid {
     public B() {
         singleLetterCode = "B";
         threeLetterCode = "Asx";
-        name = "B_Mascot";
+        name = "Asparagine or Aspartic Acid";
         averageMass = 114.595;
         monoisotopicMass = 114.534935;
     }
 
     @Override
-    public char[] getSubAminoAcids() {
+    public char[] getSubAminoAcids(boolean includeCombinations) {
         return new char[]{'N', 'D'};
     }
 

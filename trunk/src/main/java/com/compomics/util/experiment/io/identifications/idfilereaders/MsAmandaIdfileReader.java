@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -109,11 +110,11 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null);
+        return getAllSpectrumMatches(waitingHandler, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -285,9 +286,22 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaEValue, Util.getFileName(msAmandaCsvFile));
 
                 MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore);
-                peptideAssumption.addUrParam(scoreParam);
 
-                currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, true);
+                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+                    ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+                    for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));
+                        for (ModificationMatch modificationMatch : modificationMatches) {
+                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                        }
+                        PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                        peptideAssumption.addUrParam(scoreParam);
+                        currentMatch.addHit(Advocate.msAmanda.getIndex(), newAssumption, false);
+                    }
+                } else {
+                    peptideAssumption.addUrParam(scoreParam);
+                    currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, false);
+                }
 
                 if (waitingHandler != null && progressUnit != 0) {
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
@@ -331,5 +345,15 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         return new HashMap<String, LinkedList<SpectrumMatch>>();
+    }
+
+    @Override
+    public void clearTagsMap() {
+        // No tags here
+    }
+
+    @Override
+    public void clearPeptidesMap() {
+        peptideMap.clear();
     }
 }

@@ -40,11 +40,11 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-                return getAllSpectrumMatches(waitingHandler, null);
+                return getAllSpectrumMatches(waitingHandler, null, true);
             }
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
 
@@ -77,6 +77,16 @@ public class TestIdfileReaderFactory extends TestCase {
             public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
                 // Does nothing.
                 return null;
+            }
+
+            @Override
+            public void clearTagsMap() {
+                // Does nothing.
+            }
+
+            @Override
+            public void clearPeptidesMap() {
+                // Does nothing.
             }
         };
 
@@ -126,11 +136,11 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-            return getAllSpectrumMatches(waitingHandler, null);
+            return getAllSpectrumMatches(waitingHandler, null, true);
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
         }
@@ -164,6 +174,16 @@ public class TestIdfileReaderFactory extends TestCase {
         public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
             // Does nothing.
             return null;
+        }
+
+        @Override
+        public void clearTagsMap() {
+            // Does nothing.
+        }
+
+        @Override
+        public void clearPeptidesMap() {
+            // Does nothing.
         }
     }
 }

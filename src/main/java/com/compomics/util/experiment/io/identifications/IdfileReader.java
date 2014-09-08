@@ -76,7 +76,9 @@ public interface IdfileReader {
      *
      * @param sequenceMatchingPreferences the sequence matching preferences to
      * use for the creation of the secondary maps
-     * @param expandAaCombinations if true, a peptide assumption (not implemented for tag assumptions) will be created for all possible amino acid combination for peptide sequences containing an ambiguity like an X
+     * @param expandAaCombinations if true, a peptide assumption (not
+     * implemented for tag assumptions) will be created for all possible amino
+     * acid combination for peptide sequences containing an ambiguity like an X
      *
      * @return a list of spectrum matches
      *
@@ -87,7 +89,7 @@ public interface IdfileReader {
      * @throws InterruptedException
      * @throws JAXBException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
 
     /**
@@ -114,14 +116,14 @@ public interface IdfileReader {
      * beginning of the amino acid sequence
      */
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap();
-    
+
     /**
-     * Clears the tags map
+     * Clears the tags map.
      */
     public void clearTagsMap();
-    
+
     /**
-     * Clears the peptides map
+     * Clears the peptides map.
      */
     public void clearPeptidesMap();
 }

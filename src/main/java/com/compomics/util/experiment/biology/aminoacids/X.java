@@ -21,14 +21,17 @@ public class X extends AminoAcid {
     public X() {
         singleLetterCode = "X";
         threeLetterCode = "Xaa";
-        name = "Unknown_Mascot";
+        name = "X";
         averageMass = 110; // @TODO: is this the correct mass to use? 118 is the average...
         monoisotopicMass = 110; // @TODO: is this the correct mass to use? 118 is the average...
     }
 
     @Override
-    public char[] getSubAminoAcids() {
+    public char[] getSubAminoAcids(boolean includeCombinations) {
+        if (includeCombinations) {
         return new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'Z'};
+        }
+        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
     }
 
     @Override

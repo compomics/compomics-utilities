@@ -246,12 +246,25 @@ public abstract class AminoAcid implements Serializable {
 
     /**
      * In case of a combination of amino acids, returns the comprised amino
-     * acids or amino acid groups represented by their single letter code.
+     * acids or amino acid groups represented by their single letter code including sub combinations.
      * Example: Z -> {G, Q}.
      *
      * @return the actual amino acids
      */
-    public abstract char[] getSubAminoAcids();
+    public char[] getSubAminoAcids() {
+        return getSubAminoAcids(true);
+    }
+
+    /**
+     * In case of a combination of amino acids, returns the comprised amino
+     * acids or amino acid groups represented by their single letter code.
+     * Example: Z -> {G, Q}.
+     *
+     * @param includeCombinations if true, sub-amino acids which are amino acids combinations like Z will also be included
+     * 
+     * @return the actual amino acids
+     */
+    public abstract char[] getSubAminoAcids(boolean includeCombinations);
 
     /**
      * Returns the amino acids combinations which might represent this amino
@@ -415,9 +428,10 @@ public abstract class AminoAcid implements Serializable {
         throw new IllegalArgumentException("No amino acid found for genetic code " + geneticCode + ".");
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof AminoAcid) {
-            if (((AminoAcid) obj).singleLetterCode.equalsIgnoreCase(singleLetterCode)) { // @TODO: is this all we need to check..?
+            if (((AminoAcid) obj).singleLetterCode.equalsIgnoreCase(singleLetterCode)) {
                 return true;
             } else {
                 return false;

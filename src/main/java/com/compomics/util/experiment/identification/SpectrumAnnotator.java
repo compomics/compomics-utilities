@@ -250,20 +250,22 @@ public abstract class SpectrumAnnotator {
             spectrumKey = spectrum.getSpectrumKey();
             this.intensityLimit = intensityLimit;
 
+            ArrayList<Double> tempMz;
             if (intensityLimit == 0) {
                 peakMap = spectrum.getPeakMap();
-                mz = new ArrayList<Double>(peakMap.keySet());
+                tempMz = new ArrayList<Double>(peakMap.keySet());
             } else {
                 peakMap = new HashMap<Double, Peak>();
-                mz = new ArrayList<Double>();
+                tempMz = new ArrayList<Double>();
                 for (Peak peak : spectrum.getPeakList()) {
                     if (peak.intensity > intensityLimit) {
                         peakMap.put(peak.mz, peak);
-                        mz.add(peak.mz);
+                        tempMz.add(peak.mz);
                     }
                 }
             }
-            Collections.sort(mz); // @TODO: possible null pointer..?
+            Collections.sort(tempMz);
+            mz = tempMz;
             spectrumAnnotation.clear();
             unmatchedIons.clear();
         }

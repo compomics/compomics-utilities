@@ -26,7 +26,7 @@ public class Methionine extends AminoAcid {
     }
 
     @Override
-    public char[] getSubAminoAcids() {
+    public char[] getSubAminoAcids(boolean includeCombinations) {
         return new char[]{'M'};
     }
 

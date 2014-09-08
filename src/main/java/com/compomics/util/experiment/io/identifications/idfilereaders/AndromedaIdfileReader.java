@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -116,11 +117,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null);
+        return getAllSpectrumMatches(waitingHandler, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
@@ -144,7 +145,21 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
             while ((line = bufferedRandomAccessFile.getNextLine()) != null
                     && !line.startsWith(">")) {
-                currentMatch.addHit(Advocate.andromeda.getIndex(), getAssumptionFromLine(line, cpt, sequenceMatchingPreferences), true);
+                PeptideAssumption peptideAssumption = getAssumptionFromLine(line, cpt, sequenceMatchingPreferences);
+                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+                    Peptide peptide = peptideAssumption.getPeptide();
+                    ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+                    for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));
+                        for (ModificationMatch modificationMatch : modificationMatches) {
+                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                        }
+                        PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                        currentMatch.addHit(Advocate.andromeda.getIndex(), newAssumption, true);
+                    }
+                } else {
+                    currentMatch.addHit(Advocate.andromeda.getIndex(), peptideAssumption, true);
+                }
                 cpt++;
             }
             result.add(currentMatch);
@@ -219,5 +234,15 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         return new HashMap<String, LinkedList<SpectrumMatch>>();
+    }
+
+    @Override
+    public void clearTagsMap() {
+        // No tags here
+    }
+
+    @Override
+    public void clearPeptidesMap() {
+        peptideMap.clear();
     }
 }

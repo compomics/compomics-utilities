@@ -76,6 +76,8 @@ public class TestHeader extends TestCase {
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
 
+        // @TODO: extend with the newly added header types!!!
+        
         // First of all, two trivial cases: 'null' and empty String.
         Header h = Header.parseFromFASTA(null);
         Assert.assertTrue(h == null);

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 /**
  * This class is used to report a message to the user.
  *
- *
  * @author Marc Vaudel
  */
 public class FeedBack {
@@ -109,7 +108,7 @@ public class FeedBack {
 
     /**
      * Creates a general feed with no key word.
-     * 
+     *
      * @param title the title of the feed
      * @param message the message
      * @return the corresponding feed

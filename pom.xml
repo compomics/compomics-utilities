@@ -288,7 +288,7 @@
                             <include>*</include>
                             <serverId>genesis-maven2-repo</serverId>
                             <url>scp://genesis.ugent.be/</url>
-                            <toDir>/home/maven/public_html/maven2/com/compomics/javadoc/</toDir>
+                            <toDir>/home/maven/public_html/maven2/com/compomics/utilities/javadoc/</toDir>
                         </configuration>
                     </execution>
                 </executions>

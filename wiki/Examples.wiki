@@ -14,6 +14,8 @@
 
 For the complete source code of all demos see the [http://code.google.com/p/compomics-utilities/source/checkout Source tab]. The source of the demos are in the com.compomics.util.examples package.
 
+See also the  [http://genesis.ugent.be/maven2/com/compomics/utilities/javadoc/ compomics-utilities JavaDoc].
+
 ----
 
 ==Spectrum Panel==

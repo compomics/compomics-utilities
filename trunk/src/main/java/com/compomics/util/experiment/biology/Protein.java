@@ -256,13 +256,13 @@ public class Protein extends ExperimentObject {
     public boolean isNTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         String subSequence = sequence.substring(0, peptideSequence.length());
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        if (aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences)) {
+        if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
             return true;
         }
         subSequence = sequence.substring(0, peptideSequence.length()+1);
         AminoAcidSequence mAminoAcidPattern = new AminoAcidSequence("M");
         mAminoAcidPattern.append(aminoAcidPattern);
-        return mAminoAcidPattern.matches(subSequence, sequenceMatchingPreferences);
+        return mAminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
     }
 
     /**
@@ -278,7 +278,7 @@ public class Protein extends ExperimentObject {
     public boolean isCTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
-        return aminoAcidPattern.matches(subSequence, sequenceMatchingPreferences);
+        return aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
     }
 
     /**

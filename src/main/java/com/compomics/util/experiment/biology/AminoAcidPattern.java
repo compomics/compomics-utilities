@@ -718,8 +718,34 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a boolean indicating whether the pattern is found in the given
      * amino acid sequence
      */
+    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+    }
+
+    /**
+     * Indicates whether the pattern is found in the given amino acid sequence.
+     *
+     * @param aminoAcidPattern the amino acid sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return a boolean indicating whether the pattern is found in the given
+     * amino acid sequence
+     */
+    public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
+    }
+
+    /**
+     * Indicates whether the pattern is matches the given amino acid sequence in .
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return a boolean indicating whether the pattern is found in the given
+     * amino acid sequence
+     */
     public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        return /*length() == aminoAcidSequence.length() &&*/ firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+        return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
@@ -732,7 +758,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        return /*length() == aminoAcidPattern.length() &&*/ firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
+        return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingPreferences) >= 0;
     }
 
     /**
@@ -746,7 +772,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isStarting(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidSequence.substring(0, patternLength), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidSequence.substring(0, patternLength), sequenceMatchingPreferences);
     }
 
     /**
@@ -760,7 +786,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingPreferences);
     }
 
     /**
@@ -774,7 +800,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingPreferences);
     }
 
     /**
@@ -788,7 +814,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isEnding(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         int patternLength = length();
-        return matches(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingPreferences);
+        return matchesIn(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingPreferences);
     }
 
     /**
@@ -1236,10 +1262,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them. Note: this
-     * does not include html start end tags or terminal annotation.
+ this method will work only if the PTM found in the peptide are in the
+ PTMFactory. /!\ This method uses the modifications as set in the
+ modification matches of this peptide and displays all of them. Note: this
+ does not include html start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -1285,9 +1311,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+ This method will work only if the PTM found in the peptide are in the
+ PTMFactory. /!\ This method uses the modifications as set in the
+ modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param aminoAcidPattern the amino acid pattern to annotate

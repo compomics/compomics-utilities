@@ -147,6 +147,7 @@ public class ZipUtils {
 
                 entryName += file.getName();
                 ZipEntry entry = new ZipEntry(entryName);
+                entry.setSize(file.length());
                 out.putNextEntry(entry);
                 byte data[] = new byte[BUFFER];
                 int count;
@@ -191,6 +192,11 @@ public class ZipUtils {
      */
     public static void unzip(File zipFile, File destinationFolder, WaitingHandler waitingHandler) throws IOException {
 
+        long fileLength = getUnzippedSize(zipFile);
+        if (fileLength <= 0) {
+            fileLength = zipFile.length(); //@TODO: find a better solution when no size is available
+        }
+        
         FileInputStream fi = new FileInputStream(zipFile);
 
         try {
@@ -201,7 +207,7 @@ public class ZipUtils {
 
                 try {
                     byte data[] = new byte[BUFFER];
-                    long read = 0, fileLength = zipFile.length();
+                    long read = 0;    
                     ZipEntry entry;
 
                     while ((entry = zis.getNextEntry()) != null) {
@@ -235,17 +241,17 @@ public class ZipUtils {
                                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                                             break;
                                         }
-                                        read += count;
+                                        if (waitingHandler != null && fileLength > 0) {
+                                            read += count;
+                                            int progress = (int) (100 * read / fileLength);
+                                            waitingHandler.setSecondaryProgressCounter(progress);
+                                        }
                                     }
                                 } finally {
                                     bos.close();
                                 }
                             } finally {
                                 fos.close();
-                            }
-                            if (waitingHandler != null) {
-                                int progress = (int) (100 * read / fileLength);
-                                waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
                             throw new IOException("Folder " + destinationFolder.getAbsolutePath()
@@ -265,5 +271,46 @@ public class ZipUtils {
         } finally {
             fi.close();
         }
+    }
+    
+    /**
+     * Returns the uncompressed size of the archive in bytes as sum of the uncompressed entry sizes.
+     * 
+     * @param zipFile the file of interest
+     * 
+     * @return the uncompressed size of the archive
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public static long getUnzippedSize(File zipFile) throws FileNotFoundException, IOException {
+        
+        long size = 0;
+        
+        FileInputStream fi = new FileInputStream(zipFile);
+
+        try {
+            BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
+
+            try {
+                ZipInputStream zis = new ZipInputStream(bis);
+
+                try {
+                    ZipEntry entry;
+
+                    while ((entry = zis.getNextEntry()) != null) {
+                        size += entry.getSize();
+                    }
+                } finally {
+                    zis.close();
+                }
+            } finally {
+                bis.close();
+            }
+        } finally {
+            fi.close();
+        }
+        
+        return size;
     }
 }

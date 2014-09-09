@@ -688,7 +688,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODAA:
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.matches(sequence, sequenceMatchingPreferences);
+                    return pattern.matchesIn(sequence, sequenceMatchingPreferences);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -698,7 +698,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matches(tempSequence, sequenceMatchingPreferences)) {
+                                if (pattern.matchesIn(tempSequence, sequenceMatchingPreferences)) {
                                     return true;
                                 }
                             }
@@ -850,7 +850,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matches(tempSequence, sequenceMatchingPreferences)) {
+                                if (pattern.matchesIn(tempSequence, sequenceMatchingPreferences)) {
                                     for (int tempIndex : pattern.getIndexes(tempSequence, sequenceMatchingPreferences)) {
                                         Integer sequenceIndex = tempIndex - target;
                                         if (!possibleSites.contains(sequenceIndex)) {
@@ -968,7 +968,7 @@ public class Peptide extends ExperimentObject {
      */
     public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
         AminoAcidSequence pattern = new AminoAcidSequence(anotherPeptide.getSequence());
-        return pattern.length() == sequence.length() && pattern.matches(sequence, sequenceMatchingPreferences);
+        return pattern.matches(sequence, sequenceMatchingPreferences);
     }
 
     /**

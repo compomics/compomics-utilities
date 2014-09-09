@@ -186,12 +186,38 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return a boolean indicating whether the sequence is found in the given
      * amino acid sequence
      */
+    public boolean matchesIn(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
+    }
+
+    /**
+     * Indicates whether the sequence is found in the given amino acid sequence.
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return a boolean indicating whether the sequence is found in the given
+     * amino acid sequence
+     */
+    public boolean matchesIn(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return matchesIn(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
+    }
+
+    /**
+     * Indicates whether the sequence matches the given amino acid sequence in size and according to the given matching preferences.
+     *
+     * @param aminoAcidSequence the amino acid sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return a boolean indicating whether the sequence is found in the given
+     * amino acid sequence
+     */
     public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
     }
 
     /**
-     * Indicates whether the sequence is found in the given amino acid sequence.
+     * Indicates whether the sequence matches the given amino acid sequence in size and according to the given matching preferences.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -472,10 +498,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * this method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them. Note: this
-     * does not include HTML start end tags or terminal annotation.
+ this method will work only if the PTM found in the peptide are in the
+ PTMFactory. /!\ This method uses the modifications as set in the
+ modification matches of this peptide and displays all of them. Note: this
+ does not include HTML start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -522,9 +548,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
-     * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+ This method will work only if the PTM found in the peptide are in the
+ PTMFactory. /!\ This method uses the modifications as set in the
+ modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate

@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.db.ObjectsCache;
 import com.compomics.util.db.ObjectsDB;
-import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -442,7 +441,7 @@ public class ProteinTreeComponentsFactory {
 
     /**
      * Returns the default folder to use when storing the trees.
-     * 
+     *
      * @return the default folder to use when storing the trees
      */
     public static String getDefaultDbFolderPath() {
@@ -451,16 +450,17 @@ public class ProteinTreeComponentsFactory {
 
     /**
      * Sets the default folder to use when storing the trees.
-     * 
-     * @param defaultDbFolderPath the default folder to use when storing the trees
+     *
+     * @param defaultDbFolderPath the default folder to use when storing the
+     * trees
      */
     public static void setDefaultDbFolderPath(String defaultDbFolderPath) {
         ProteinTreeComponentsFactory.defaultDbFolderPath = defaultDbFolderPath;
     }
-    
+
     /**
      * Returns the cache used to store the nodes.
-     * 
+     *
      * @return the cache used to store the nodes
      */
     public ObjectsCache getCache() {
@@ -469,44 +469,46 @@ public class ProteinTreeComponentsFactory {
 
     /**
      * Deletes the outdated trees.
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public static void deletOutdatedTrees() throws IOException {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         File folder = utilitiesUserPreferences.getProteinTreeFolder();
         if (folder.exists()) {
             for (File dbFolder : folder.listFiles()) {
-                try {
-                    ObjectsCache tempCache = new ObjectsCache();
-                    ObjectsDB objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, tempCache);
-                    boolean upToDate = true;
+                if (dbFolder.isDirectory() && dbFolder.getName().contains(folderSeparator)) {
                     try {
-                        String version = getVersion(objectsDB);
-                        if (version != null && version.equals(ProteinTree.version)) {
-                            String fastaFilePath = getFastaFilePath(objectsDB);
-                            if (fastaFilePath != null) {
-                                File fastaFile = new File(fastaFilePath);
-                                if (!fastaFile.exists()) { //@TODO: check if the drive is available
+                        ObjectsCache tempCache = new ObjectsCache();
+                        ObjectsDB objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, tempCache);
+                        boolean upToDate = true;
+                        try {
+                            String version = getVersion(objectsDB);
+                            if (version != null && version.equals(ProteinTree.version)) {
+                                String fastaFilePath = getFastaFilePath(objectsDB);
+                                if (fastaFilePath != null) {
+                                    File fastaFile = new File(fastaFilePath);
+                                    if (!fastaFile.exists()) { //@TODO: check if the drive is available
+                                        upToDate = false;
+                                    }
+                                } else {
                                     upToDate = false;
                                 }
                             } else {
                                 upToDate = false;
                             }
-                        } else {
+                        } catch (Exception e) {
                             upToDate = false;
                         }
+                        objectsDB.close();
+                        if (!upToDate) {
+                            DerbyUtil.closeConnection();
+                            Util.deleteDir(folder);
+                            //TODO: Restore connections?
+                        }
                     } catch (Exception e) {
-                        upToDate = false;
+                        // Possibly not a tree, skip
                     }
-                    objectsDB.close();
-                    if (!upToDate) {
-                        DerbyUtil.closeConnection();
-                        Util.deleteDir(folder);
-                        //TODO: Restore connections?
-                    }
-                } catch (Exception e) {
-                    // Possibly not a tree, skip
                 }
             }
         }

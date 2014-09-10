@@ -26,7 +26,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      */
     private IdFilter userFilter = null;
     /**
-     * The original filter
+     * The original filter.
      */
     private IdFilter originalFilter;
 

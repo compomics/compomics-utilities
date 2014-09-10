@@ -197,6 +197,12 @@ public class ZipUtils {
             fileLength = zipFile.length(); //@TODO: find a better solution when no size is available
         }
 
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+        }
+
         FileInputStream fi = new FileInputStream(zipFile);
 
         try {
@@ -243,8 +249,12 @@ public class ZipUtils {
                                         }
                                         if (waitingHandler != null && fileLength > 0) {
                                             read += count;
-                                            int progress = (int) (100 * read / fileLength);
-                                            waitingHandler.setSecondaryProgressCounter(progress);
+                                            int progress = (int) (100.0 * read / fileLength);
+                                            if (progress > 100) {
+                                                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                                            } else {
+                                                waitingHandler.setSecondaryProgressCounter(progress);
+                                            }
                                         }
                                     }
                                 } finally {

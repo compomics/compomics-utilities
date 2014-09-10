@@ -736,7 +736,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the pattern is matches the given amino acid sequence in .
+     * Indicates whether the pattern is matches the given amino acid sequence in
+     * .
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -1262,10 +1263,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
- this method will work only if the PTM found in the peptide are in the
- PTMFactory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them. Note: this
- does not include html start end tags or terminal annotation.
+     * this method will work only if the PTM found in the peptide are in the
+     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification matches of this peptide and displays all of them. Note: this
+     * does not include HTML start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -1275,6 +1276,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
+
         HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -1304,6 +1306,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, useShortName);
     }
@@ -1311,9 +1314,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
- This method will work only if the PTM found in the peptide are in the
- PTMFactory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them.
+     * This method will work only if the PTM found in the peptide are in the
+     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification matches of this peptide and displays all of them.
      *
      * @param modificationProfile the modification profile of the search
      * @param aminoAcidPattern the amino acid pattern to annotate
@@ -1413,6 +1416,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         String taggedResidue = "";
         PTMFactory ptmFactory = PTMFactory.getInstance();
         PTM ptm = ptmFactory.getPTM(ptmName);
+
         if (ptm.getType() == PTM.MODAA) {
             if (!useHtmlColorCoding) {
                 if (useShortName) {
@@ -1437,6 +1441,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         } else {
             taggedResidue += residue;
         }
+
         return taggedResidue;
     }
 
@@ -1449,7 +1454,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * amino acids
      */
     public ArrayList<String> getAllPossibleSequences() {
+
         ArrayList<StringBuilder> stringBuilders = new ArrayList<StringBuilder>();
+
         for (int i = 0; i < length(); i++) {
             if (stringBuilders.isEmpty()) {
                 if (aaTargeted != null) {
@@ -1487,16 +1494,19 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 stringBuilders = newBuilders;
             }
         }
+
         ArrayList<String> results = new ArrayList<String>(stringBuilders.size());
         for (StringBuilder stringBuilder : stringBuilders) {
             results.add(stringBuilder.toString());
         }
+
         return results;
     }
 
     @Override
     public Double getMass() {
         double mass = 0;
+
         for (int i = 0; i < length(); i++) {
             if (aaTargeted != null) {
                 ArrayList<AminoAcid> aminoAcids = aaTargeted.get(i);
@@ -1519,6 +1529,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         return mass;
     }
 
@@ -1534,7 +1545,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return a sub pattern
      */
     public AminoAcidPattern getSubPattern(int startIndex, int endIndex, boolean updateTarget) {
+
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
+
         if (aaTargeted != null) {
             for (int i : aaTargeted.keySet()) {
                 if (i >= startIndex && i <= endIndex) {
@@ -1543,11 +1556,13 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         if (updateTarget) {
             aminoAcidPattern.setTarget(getTarget() - startIndex);
         } else {
             aminoAcidPattern.setTarget(getTarget());
         }
+
         if (targetModifications != null) {
             for (int i : targetModifications.keySet()) {
                 if (i > startIndex && i <= endIndex + 1) {
@@ -1561,6 +1576,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         return aminoAcidPattern;
     }
 

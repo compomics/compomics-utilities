@@ -104,9 +104,9 @@ public class AnnotationPreferences implements Serializable {
      */
     private int deNovoCharge = 1;
     /**
-     * If there are more than one matching peak for a given annotation setting this
-     * value to true results in the most accurate peak being annotated, while
-     * setting this to false annotates the most intense peak.
+     * If there are more than one matching peak for a given annotation setting
+     * this value to true results in the most accurate peak being annotated,
+     * while setting this to false annotates the most intense peak.
      */
     private Boolean highResolutionAnnotation = true;
 
@@ -142,7 +142,7 @@ public class AnnotationPreferences implements Serializable {
      * assumption
      * @param newSpectrum boolean indicating whether this is a new spectrum
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
      * @throws IllegalArgumentException exception thrown whenever an error
@@ -164,7 +164,7 @@ public class AnnotationPreferences implements Serializable {
 
     /**
      * Updates the neutral losses and charge annotation settings.
-     * 
+     *
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws IOException exception thrown whenever an error occurred while
@@ -187,7 +187,7 @@ public class AnnotationPreferences implements Serializable {
                 selectedCharges.add(charge);
             }
         }
-        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption,sequenceMatchingPreferences);
+        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences);
     }
 
     /**
@@ -528,9 +528,9 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Returns true if the peak annotation should be based on the most accurate 
+     * Returns true if the peak annotation should be based on the most accurate
      * mz value, false bases the annotation on the most intense peak.
-     * 
+     *
      * @return the highResolutionAnnotation
      */
     public boolean isHighResolutionAnnotation() {
@@ -541,9 +541,9 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Set if the peak annotation should be based on the most accurate 
-     * mz value, or on the most intense peak.
-     * 
+     * Set if the peak annotation should be based on the most accurate mz value,
+     * or on the most intense peak.
+     *
      * @param highResolutionAnnotation the highResolutionAnnotation to set
      */
     public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {

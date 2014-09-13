@@ -34,10 +34,6 @@ public class ProteinTreeComponentsFactory {
      */
     private static String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
     /**
-     * Boolean indicating whether the factory is in debug mode.
-     */
-    private boolean debug = false;
-    /**
      * The objects db used to retrieve saved nodes.
      */
     private ObjectsDB objectsDB;
@@ -473,17 +469,22 @@ public class ProteinTreeComponentsFactory {
      * @throws IOException
      */
     public static void deletOutdatedTrees() throws IOException {
+
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         File folder = utilitiesUserPreferences.getProteinTreeFolder();
+
         if (folder.exists()) {
             for (File dbFolder : folder.listFiles()) {
                 if (dbFolder.isDirectory() && dbFolder.getName().contains(folderSeparator)) {
+
                     try {
                         ObjectsCache tempCache = new ObjectsCache();
                         ObjectsDB objectsDB = new ObjectsDB(dbFolder.getAbsolutePath(), dbName, false, tempCache);
                         boolean upToDate = true;
+
                         try {
                             String version = getVersion(objectsDB);
+
                             if (version != null && version.equals(ProteinTree.version)) {
                                 String fastaFilePath = getFastaFilePath(objectsDB);
                                 if (fastaFilePath != null) {
@@ -500,11 +501,12 @@ public class ProteinTreeComponentsFactory {
                         } catch (Exception e) {
                             upToDate = false;
                         }
+
                         objectsDB.close();
+
                         if (!upToDate) {
                             DerbyUtil.closeConnection();
-                            Util.deleteDir(folder);
-                            //TODO: Restore connections?
+                            Util.deleteDir(folder); //TODO: Restore connections?
                         }
                     } catch (Exception e) {
                         // Possibly not a tree, skip

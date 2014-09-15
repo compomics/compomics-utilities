@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
@@ -20,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class estimates the A-score as described in
@@ -60,7 +60,7 @@ public class AScore {
      * @throws SQLException
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
+            HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false, sequenceMatchingPreferences);
     }
@@ -95,7 +95,7 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true, sequenceMatchingPreferences);
@@ -134,7 +134,7 @@ public class AScore {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
@@ -344,7 +344,7 @@ public class AScore {
      * @return the candidate A-score in a map
      */
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap, ArrayList<Integer> charges, int precursorCharge,
+            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap, ArrayList<Integer> charges, int precursorCharge,
             double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
@@ -539,7 +539,7 @@ public class AScore {
      * @return a map PTM localization -> score
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();

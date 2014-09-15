@@ -14,6 +14,7 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Enum listing the PSM scores implemented in compomics utilities.
@@ -120,7 +121,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getDecreasingScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    public static double getDecreasingScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
         double score = getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters, psmScore);
@@ -146,7 +147,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
         return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters, psmScore);
@@ -168,7 +169,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, PsmScores psmScore) {
         switch (psmScore) {
             case native_score:

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Annotates a spectrum with information from a tag.
@@ -235,7 +236,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
+    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
             int precursorCharge, MSnSpectrum spectrum, Tag tag, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
@@ -263,7 +264,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
                     ArrayList<Integer> tempCharges;
 
-                    // have to treat precursor charges separetly, as to not increase the max charge for the other ions
+                    // have to treat precursor charges separately, as to not increase the max charge for the other ions
                     if (fragmentIon.getType() == Ion.IonType.PRECURSOR_ION) {
                         tempCharges = precursorCharges;
                     } else {
@@ -273,10 +274,12 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                     for (int charge : tempCharges) {
                         if (chargeValidated(fragmentIon, charge, precursorCharge)) {
                             String key = IonMatch.getPeakAnnotation(fragmentIon, new Charge(Charge.PLUS, charge));
-                            if (!spectrumAnnotation.containsKey(key) && !unmatchedIons.contains(key)) {
-                                matchInSpectrum(fragmentIon, charge);
+                            boolean matchFound = false;
+                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
+                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
+                                matchFound = matchInSpectrum(fragmentIon, charge);
                             }
-                            if (!unmatchedIons.contains(key)) {
+                            if (alreadyAnnotated || matchFound) {
                                 result.add(spectrumAnnotation.get(key));
                             }
                         }
@@ -289,7 +292,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
         return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, tag, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
     }
 }

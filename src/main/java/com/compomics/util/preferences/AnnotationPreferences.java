@@ -1,6 +1,7 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
@@ -13,6 +14,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * This class contains the spectrum annotation preferences.
@@ -56,8 +59,14 @@ public class AnnotationPreferences implements Serializable {
     private boolean automaticAnnotation = true;
     /**
      * The types of ions to annotate.
+     *
+     * @deprecated use selectedIonsMap instead
      */
     private HashMap<Ion.IonType, ArrayList<Integer>> selectedIons = new HashMap<Ion.IonType, ArrayList<Integer>>();
+    /**
+     * The types of ions to annotate.
+     */
+    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
     /**
      * The neutral losses searched for.
      */
@@ -271,8 +280,28 @@ public class AnnotationPreferences implements Serializable {
      *
      * @return the type of ions annotated
      */
-    public HashMap<Ion.IonType, ArrayList<Integer>> getIonTypes() {
-        return selectedIons;
+    public HashMap<Ion.IonType, HashSet<Integer>> getIonTypes() {
+        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
+            backwardsCompatibilitySelectedIonsFix();
+        }
+        return selectedIonsMap;
+    }
+
+    /**
+     * Backwards compatibility fix for the selection ions.
+     */
+    private void backwardsCompatibilitySelectedIonsFix() {
+        selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
+        Iterator<IonType> iterator = selectedIons.keySet().iterator();
+        while (iterator.hasNext()) {
+            IonType tempIonType = iterator.next();
+            ArrayList<Integer> tempIntegers = selectedIons.get(tempIonType);
+            HashSet<Integer> tempSet = new HashSet<Integer>();
+            for (Integer temp : tempIntegers) {
+                tempSet.add(temp);
+            }
+            selectedIonsMap.put(tempIonType, tempSet);
+        }
     }
 
     /**
@@ -280,11 +309,14 @@ public class AnnotationPreferences implements Serializable {
      *
      * @return the type of peptide fragment ions annotated
      */
-    public ArrayList<Integer> getFragmentIonTypes() {
-        if (selectedIons.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-            return new ArrayList<Integer>();
+    public HashSet<Integer> getFragmentIonTypes() {
+        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
+            backwardsCompatibilitySelectedIonsFix();
+        }
+        if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
+            return new HashSet<Integer>();
         } else {
-            return selectedIons.get(Ion.IonType.PEPTIDE_FRAGMENT_ION);
+            return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION);
         }
     }
 
@@ -292,7 +324,7 @@ public class AnnotationPreferences implements Serializable {
      * Clears the ion types annotated.
      */
     public void clearIonTypes() {
-        selectedIons.clear();
+        selectedIonsMap.clear();
     }
 
     /**
@@ -302,10 +334,13 @@ public class AnnotationPreferences implements Serializable {
      * @param subType the ion sub type
      */
     public void addIonType(Ion.IonType ionType, int subType) {
-        if (!selectedIons.containsKey(ionType)) {
-            selectedIons.put(ionType, new ArrayList<Integer>());
+        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
+            backwardsCompatibilitySelectedIonsFix();
         }
-        this.selectedIons.get(ionType).add(subType);
+        if (!selectedIonsMap.containsKey(ionType)) {
+            selectedIonsMap.put(ionType, new HashSet<Integer>());
+        }
+        this.selectedIonsMap.get(ionType).add(subType);
     }
 
     /**
@@ -314,11 +349,14 @@ public class AnnotationPreferences implements Serializable {
      * @param ionType a new ion type to annotate
      */
     public void addIonType(Ion.IonType ionType) {
-        if (!selectedIons.containsKey(ionType)) {
-            selectedIons.put(ionType, new ArrayList<Integer>());
+        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
+            backwardsCompatibilitySelectedIonsFix();
+        }
+        if (!selectedIonsMap.containsKey(ionType)) {
+            selectedIonsMap.put(ionType, new HashSet<Integer>());
         }
         for (int subType : Ion.getPossibleSubtypes(ionType)) {
-            this.selectedIons.get(ionType).add(subType);
+            this.selectedIonsMap.get(ionType).add(subType);
         }
     }
 

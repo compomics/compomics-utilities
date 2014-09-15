@@ -18,7 +18,7 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
     /**
      * Map containing user refinement parameters.
      */
-    private HashMap<String, UrParameter> urParams = new HashMap<String, UrParameter>();
+    private HashMap<String, UrParameter> urParams = new HashMap<String, UrParameter>(8);
 
     /**
      * Method to add a user refinement parameter.

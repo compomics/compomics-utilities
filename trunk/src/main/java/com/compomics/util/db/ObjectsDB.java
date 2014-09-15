@@ -797,6 +797,7 @@ public class ObjectsDB implements Serializable {
         } finally {
             stmt.close();
         }
+
         return result;
     }
 
@@ -814,12 +815,11 @@ public class ObjectsDB implements Serializable {
         }
 
         ArrayList<String> tableContent = new ArrayList<String>();
-
         Statement stmt = dbConnection.createStatement();
+
         try {
             ResultSet results = stmt.executeQuery("select * from " + tableName);
             try {
-
                 while (results.next()) {
                     String key = results.getString(1);
                     if (key.startsWith(LONG_KEY_PREFIX)) {
@@ -827,13 +827,13 @@ public class ObjectsDB implements Serializable {
                     }
                     tableContent.add(key);
                 }
-
             } finally {
                 results.close();
             }
         } finally {
             stmt.close();
         }
+
         return tableContent;
     }
 
@@ -851,12 +851,11 @@ public class ObjectsDB implements Serializable {
         }
 
         HashSet<String> tableContent = new HashSet<String>();
-
         Statement stmt = dbConnection.createStatement();
+        
         try {
             ResultSet results = stmt.executeQuery("select * from " + tableName);
             try {
-
                 while (results.next()) {
                     String key = results.getString(1);
                     if (key.startsWith(LONG_KEY_PREFIX)) {
@@ -864,13 +863,13 @@ public class ObjectsDB implements Serializable {
                     }
                     tableContent.add(key);
                 }
-
             } finally {
                 results.close();
             }
         } finally {
             stmt.close();
         }
+
         return tableContent;
     }
 

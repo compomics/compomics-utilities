@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Convenience class for the content of a PTM table.
@@ -220,7 +221,7 @@ public class PtmtableContent {
      * @return the PTM plot series in the JFreechart format for one PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
+            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
 
         //@TODO: use Peptide.getNoModPeptide instead
@@ -280,7 +281,7 @@ public class PtmtableContent {
      * @return the PtmtableContent object
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses,
+            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
 
         PtmtableContent ptmTableContent = new PtmtableContent();

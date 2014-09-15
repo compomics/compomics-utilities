@@ -160,7 +160,7 @@ public abstract class Ion extends ExperimentObject {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (String name : names) {
             result.append("-").append(name);
         }

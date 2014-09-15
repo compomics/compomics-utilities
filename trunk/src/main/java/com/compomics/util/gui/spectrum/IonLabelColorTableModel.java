@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,10 +31,12 @@ public class IonLabelColorTableModel extends DefaultTableModel {
      * @param iontypes
      * @param neutralLosses
      */
-    public IonLabelColorTableModel(HashMap<IonType, ArrayList<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
+    public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
+
         ionMap = new HashMap<String, Ion>();
         keys = new ArrayList<String>();
         Ion currentIon;
+
         for (IonType ionType : iontypes.keySet()) {
             if (ionType == IonType.IMMONIUM_ION) {
                 //@TODO: we usually group immonium ions, is it a good idea?

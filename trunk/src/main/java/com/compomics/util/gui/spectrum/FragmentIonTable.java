@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JLabel;
@@ -38,7 +39,7 @@ public class FragmentIonTable extends JTable {
     /**
      * The list of currently selected fragment ion types.
      */
-    private ArrayList<Integer> currentFragmentIonTypes;
+    private HashSet<Integer> currentFragmentIonTypes;
     /**
      * The list of the currently selected neutral loss types.
      */
@@ -88,7 +89,7 @@ public class FragmentIonTable extends JTable {
     public FragmentIonTable(
             Peptide currentPeptide,
             ArrayList<ArrayList<IonMatch>> allAnnotations,
-            ArrayList<Integer> currentFragmentIonTypes,
+            HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
             boolean singleCharge, boolean twoCharges) {
         super();
@@ -131,7 +132,7 @@ public class FragmentIonTable extends JTable {
             Peptide currentPeptide,
             ArrayList<ArrayList<IonMatch>> allAnnotations,
             ArrayList<MSnSpectrum> allSpectra,
-            ArrayList<Integer> currentFragmentIonTypes,
+            HashSet<Integer> currentFragmentIonTypes,
             NeutralLossesMap neutralLosses,
             boolean singleCharge, boolean twoCharges) {
         super();

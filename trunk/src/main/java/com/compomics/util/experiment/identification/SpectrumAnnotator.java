@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
@@ -25,6 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 /**
@@ -125,8 +125,10 @@ public abstract class SpectrumAnnotator {
      *
      * @param theoreticIon the theoretic ion
      * @param inspectedCharge the expected charge
+     * @return true if a match was found, false if the ion was added to the
+     * unmatched ions list
      */
-    protected void matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
+    protected boolean matchInSpectrum(Ion theoreticIon, int inspectedCharge) {
 
         Charge charge = new Charge(Charge.PLUS, inspectedCharge);
         IonMatch bestMatch = null;
@@ -145,10 +147,14 @@ public abstract class SpectrumAnnotator {
                 && (fragmentMz >= mz.get(0) - deltaMz)
                 && (fragmentMz <= mz.get(mz.size() - 1) + deltaMz)) {
 
+            Peak tempPeak = new Peak(0, 0);
+            IonMatch tempMatch = new IonMatch(tempPeak, theoreticIon, charge);
+
             // iterate all the peaks and find the best matching peak, if any
             for (int i = 0; i < mz.size(); i++) {
 
-                IonMatch tempMatch = new IonMatch(new Peak(mz.get(i), 0), theoreticIon, charge);
+                tempPeak.setMz(mz.get(i));
+                tempMatch.peak = tempPeak;
 
                 if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
 
@@ -229,7 +235,6 @@ public abstract class SpectrumAnnotator {
 //                    indexMax = index;
 //                }
 //            }
-
         }
 
         if (bestMatch != null) {
@@ -237,6 +242,8 @@ public abstract class SpectrumAnnotator {
         } else {
             unmatchedIons.add(IonMatch.getPeakAnnotation(theoreticIon, charge));
         }
+
+        return bestMatch != null;
     }
 
     /**
@@ -409,7 +416,8 @@ public abstract class SpectrumAnnotator {
      * most intense peak
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, ArrayList<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, 
+            HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
 
     /**
      * Returns the spectrum currently inspected.
@@ -558,7 +566,7 @@ public abstract class SpectrumAnnotator {
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    protected ArrayList<IonMatch> matchPeak(HashMap<Ion.IonType, ArrayList<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak) {
+    protected ArrayList<IonMatch> matchPeak(HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
@@ -603,7 +611,7 @@ public abstract class SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(HashMap<Ion.IonType, ArrayList<Integer>> iontypes,
+    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();

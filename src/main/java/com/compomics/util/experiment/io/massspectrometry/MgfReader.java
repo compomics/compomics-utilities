@@ -892,19 +892,21 @@ public class MgfReader {
             Integer value;
             charge = charge.trim();
 
-            try {
-                if (charge.endsWith("+")) {
-                    value = new Integer(charge.substring(0, charge.length() - 1));
-                    result.add(new Charge(Charge.PLUS, value));
-                } else if (charge.endsWith("-")) {
-                    value = new Integer(charge.substring(0, charge.length() - 1));
-                    result.add(new Charge(Charge.MINUS, value));
-                } else if (!charge.equalsIgnoreCase("Mr")) {
-                    result.add(new Charge(Charge.PLUS, new Integer(charge)));
+            if (!charge.isEmpty()) {
+                try {
+                    if (charge.endsWith("+")) {
+                        value = new Integer(charge.substring(0, charge.length() - 1));
+                        result.add(new Charge(Charge.PLUS, value));
+                    } else if (charge.endsWith("-")) {
+                        value = new Integer(charge.substring(0, charge.length() - 1));
+                        result.add(new Charge(Charge.MINUS, value));
+                    } else if (!charge.equalsIgnoreCase("Mr")) {
+                        result.add(new Charge(Charge.PLUS, new Integer(charge)));
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("\'" + charge + "\' could not be processed as a valid precursor charge!");
                 }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException(charge + " could not be processed as a valid precursor charge!");
             }
         }
 

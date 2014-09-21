@@ -1186,7 +1186,8 @@ public class Peptide extends ExperimentObject {
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
-        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
@@ -1195,15 +1196,15 @@ public class Peptide extends ExperimentObject {
             int modSite = modMatch.getModificationSite();
             if (modMatch.isVariable()) {
                 if (modMatch.isConfident()) {
-                    if (!mainModificationSites.containsKey(modSite)) {
-                        mainModificationSites.put(modSite, new ArrayList<String>());
+                    if (!confidentModificationSites.containsKey(modSite)) {
+                        confidentModificationSites.put(modSite, new ArrayList<String>());
                     }
-                    mainModificationSites.get(modSite).add(modName);
+                    confidentModificationSites.get(modSite).add(modName);
                 } else {
-                    if (!secondaryModificationSites.containsKey(modSite)) {
-                        secondaryModificationSites.put(modSite, new ArrayList<String>());
+                    if (!representativeModificationSites.containsKey(modSite)) {
+                        representativeModificationSites.put(modSite, new ArrayList<String>());
                     }
-                    secondaryModificationSites.get(modSite).add(modName);
+                    representativeModificationSites.get(modSite).add(modName);
                 }
             } else if (!excludeAllFixedPtms) {
                 if (!fixedModificationSites.containsKey(modSite)) {
@@ -1212,7 +1213,7 @@ public class Peptide extends ExperimentObject {
                 fixedModificationSites.get(modSite).add(modName);
             }
         }
-        return getTaggedModifiedSequence(modificationProfile, this, mainModificationSites, secondaryModificationSites,
+        return getTaggedModifiedSequence(modificationProfile, this, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
     }
 
@@ -1238,16 +1239,18 @@ public class Peptide extends ExperimentObject {
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
      * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. /!\ This method uses the modifications as set in the
-     * modification matches of this peptide and displays all of them.
+     * PTMFactory.
      *
      * @param modificationProfile the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
-     * @param mainModificationSites the main variable modification sites in a
+     * @param confidentModificationSites the confidently localized variable modification sites in a
      * map: aa number -> list of modifications (1 is the first AA) (can be null)
-     * @param secondaryModificationSites the secondary variable modification
-     * sites in a map: aa number -> list of modifications (1 is the first AA)
+     * @param representativeAmbiguousModificationSites the representative site of the ambiguously localized variable modifications
+     * in a map: aa number -> list of modifications (1 is the first AA)
+     * (can be null)
+     * @param secondaryAmbiguousModificationSites the secondary sites of the ambiguously localized variable modifications
+     * in a map: aa number -> list of modifications (1 is the first AA)
      * (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number -> list of modifications (1 is the first AA) (can be null)
@@ -1257,15 +1260,18 @@ public class Peptide extends ExperimentObject {
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites,
+            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags,
             boolean useShortName) {
 
-        if (mainModificationSites == null) {
-            mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+        if (confidentModificationSites == null) {
+            confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
         }
-        if (secondaryModificationSites == null) {
-            secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
+        if (representativeAmbiguousModificationSites == null) {
+            representativeAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+        }
+        if (secondaryAmbiguousModificationSites == null) {
+            secondaryAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
         }
         if (fixedModificationSites == null) {
             fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -1279,7 +1285,7 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, mainModificationSites, secondaryModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
+        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
 
         modifiedSequence += "-" + peptide.getCTerminal();
 

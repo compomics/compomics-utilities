@@ -106,7 +106,7 @@ public class MSnSpectrum extends Spectrum {
     }
 
     /**
-     * Returns the peak list as an mgf bloc.
+     * Returns the peak list as an mgf bloc. @TODO: move this to the massspectrometry.export package
      *
      * @param additionalTags additional tags which will be added after the BEGIN
      * IONS tag in alphabetic order

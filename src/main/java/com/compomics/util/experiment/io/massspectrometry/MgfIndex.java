@@ -18,8 +18,8 @@ public class MgfIndex extends ExperimentObject {
      */
     private HashMap<String, Long> indexMap;
     /**
-     * A map of all the spectrum titles and which index they have in the file,
-     * i.e., the first spectrum has index 0, the second index 1, etc.
+     * A map of all the spectrum titles and which rank they have in the file,
+     * i.e., the first spectrum has rank 0, the second rank 1, etc.
      */
     private HashMap<String, Integer> spectrumNumberIndexMap;
     /**

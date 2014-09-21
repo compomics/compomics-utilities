@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -138,5 +139,16 @@ public class Peak extends ExperimentObject {
      */
     public int compareTo(Peak p) {
         return Double.compare(this.getIntensity(), p.getIntensity());
+    }
+    
+    /**
+     * Returns the mass of the compound with the given charge.
+     * 
+     * @param chargeValue the value of the charge
+     * 
+     * @return the mass of the compound with the given charge
+     */
+    public double getMass(int chargeValue) {
+        return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
 }

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 
@@ -197,5 +198,16 @@ public class Precursor extends ExperimentObject {
      */
     public Precursor getRecalibratedPrecursor(double mzCorrection, double rtCorrection) {
         return new Precursor(rt - rtCorrection, mz - mzCorrection, intensity, possibleCharges);
+    }
+    
+    /**
+     * Returns the mass of the compound with the given charge.
+     * 
+     * @param chargeValue the value of the charge
+     * 
+     * @return the mass of the compound with the given charge
+     */
+    public double getMass(int chargeValue) {
+        return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
 }

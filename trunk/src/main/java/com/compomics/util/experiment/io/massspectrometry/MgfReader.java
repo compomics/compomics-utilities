@@ -29,26 +29,26 @@ public class MgfReader {
     }
 
     /**
-     * Reads an MGF file and retrieves a list of spectra.
-     *
-     * @param aFile the mgf file
-     * @return list of MSnSpectra imported from the file
-     * @throws FileNotFoundException Exception thrown if a problem is
-     * encountered reading the file
-     * @throws IOException Exception thrown if a problem is encountered reading
-     * the file
-     * @throws IllegalArgumentException thrown when a parameter in the file
-     * cannot be parsed correctly
+     * Returns the next spectrum found in the mgf file. Null if none found.
+     * 
+     * @param br a buffered reader
+     * @param fileName the name of the mgf file 
+     * 
+     * @return the next spectrum found in the mgf file
+     * 
+     * @throws IOException 
      */
-    public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
-
-        ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
-        double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1.0, rt2 = -1.0;
-        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
-        String scanNumber = "", spectrumTitle = "";
-        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
-        BufferedReader br = new BufferedReader(new FileReader(aFile));
+    public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
         String line;
+        HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
+        double precursorMz = 0;
+        double precursorIntensity = 0;
+        double rt = -1.0;
+        double rt1 = -1.0;
+        double rt2 = -1.0;
+        ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
+        String scanNumber = "";
+        String spectrumTitle = "";
 
         while ((line = br.readLine()) != null) {
 
@@ -56,21 +56,12 @@ public class MgfReader {
 
             if (line.equals("BEGIN IONS")) {
                 // reset the spectrum details
-                spectrum = new HashMap<Double, Peak>();
-                precursorMz = 0;
-                precursorIntensity = 0;
-                rt = -1.0;
-                rt1 = -1.0;
-                rt2 = -1.0;
-                precursorCharges = new ArrayList<Charge>();
-                scanNumber = "";
-                spectrumTitle = "";
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
+                    System.out.println("An exception was thrown when trying to decode the mgf title '" + spectrumTitle + "'.");
                     e.printStackTrace();
                 }
             } else if (line.startsWith("CHARGE")) {
@@ -85,8 +76,8 @@ public class MgfReader {
                     precursorIntensity = 0.0;
                 }
             } else if (line.startsWith("RTINSECONDS")) {
+                String rtInput = line.substring(line.indexOf('=') + 1);
                 try {
-                    String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
                         String tempRt = rtWindow[0];
@@ -100,7 +91,7 @@ public class MgfReader {
                         rt2 = new Double(rtWindow[1]);
                     }
                 } catch (Exception e) {
-                    System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);
+                    System.out.println("An exception was thrown when trying to decode the retention time " + rtInput + " in spectrum " + spectrumTitle + ".");
                     e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
@@ -133,11 +124,11 @@ public class MgfReader {
                 } else {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
-                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, aFile.getName());
+                MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 if (scanNumber.length() > 0) {
                     msnSpectrum.setScanNumber(scanNumber);
                 }
-                spectra.add(msnSpectrum);
+                return msnSpectrum;
             } else if (!line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
@@ -150,7 +141,33 @@ public class MgfReader {
             }
         }
 
-        br.close();
+        return null;
+    }
+
+    /**
+     * Reads an MGF file and retrieves a list of spectra.
+     *
+     * @param aFile the mgf file
+     * @return list of MSnSpectra imported from the file
+     * @throws FileNotFoundException Exception thrown if a problem is
+     * encountered reading the file
+     * @throws IOException Exception thrown if a problem is encountered reading
+     * the file
+     * @throws IllegalArgumentException thrown when a parameter in the file
+     * cannot be parsed correctly
+     */
+    public ArrayList<MSnSpectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
+
+        ArrayList<MSnSpectrum> spectra = new ArrayList<MSnSpectrum>();
+        BufferedReader br = new BufferedReader(new FileReader(aFile));
+        try {
+            MSnSpectrum spectrum;
+            while ((spectrum = getSpectrum(br, aFile.getName())) != null) {
+                spectra.add(spectrum);
+            }
+        } finally {
+            br.close();
+        }
         return spectra;
     }
 
@@ -1006,7 +1023,8 @@ public class MgfReader {
     }
 
     /**
-     * Writes an apl file from an MGF file.
+     * Writes an apl file from an MGF file. @TODO: move to
+     * massspectrometry.export
      *
      * @param mgfFile the mgf file
      * @param aplFile the target apl file

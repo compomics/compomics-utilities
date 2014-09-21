@@ -511,7 +511,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
-        HashMap<Integer, ArrayList<String>> mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+        
+        HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
+        HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
@@ -521,15 +523,15 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     String modName = modificationMatch.getTheoreticPtm();
                     if (modificationMatch.isVariable()) {
                         if (modificationMatch.isConfident()) {
-                            if (!mainModificationSites.containsKey(modSite)) {
-                                mainModificationSites.put(modSite, new ArrayList<String>());
+                            if (!confidentModificationSites.containsKey(modSite)) {
+                                confidentModificationSites.put(modSite, new ArrayList<String>());
                             }
-                            mainModificationSites.get(modSite).add(modName);
+                            confidentModificationSites.get(modSite).add(modName);
                         } else {
-                            if (!secondaryModificationSites.containsKey(modSite)) {
-                                secondaryModificationSites.put(modSite, new ArrayList<String>());
+                            if (!representativeModificationSites.containsKey(modSite)) {
+                                representativeModificationSites.put(modSite, new ArrayList<String>());
                             }
-                            secondaryModificationSites.get(modSite).add(modName);
+                            representativeModificationSites.get(modSite).add(modName);
                         }
                     } else if (!excludeAllFixedPtms) {
                         if (!fixedModificationSites.containsKey(modSite)) {
@@ -541,23 +543,25 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             }
         }
         setSequenceStringBuilder(false);
-        return getTaggedModifiedSequence(modificationProfile, sequence, mainModificationSites, secondaryModificationSites,
+        return getTaggedModifiedSequence(modificationProfile, sequence, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
                 fixedModificationSites, useHtmlColorCoding, useShortName);
     }
 
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
- This method will work only if the PTM found in the peptide are in the
- PTMFactory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them.
+     * This method will work only if the PTM found in the peptide are in the
+     * PTMFactory. 
      *
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate
-     * @param mainModificationSites the main variable modification sites in a
+     * @param confidentModificationSites the confidently localized variable modification sites in a
      * map: aa number -> list of modifications (1 is the first AA) (can be null)
-     * @param secondaryModificationSites the secondary variable modification
-     * sites in a map: aa number -> list of modifications (1 is the first AA)
+     * @param representativeAmbiguousModificationSites the representative site of the ambiguously localized variable modifications
+     * in a map: aa number -> list of modifications (1 is the first AA)
+     * (can be null)
+     * @param secondaryAmbiguousModificationSites the secondary sites of the ambiguously localized variable modifications
+     * in a map: aa number -> list of modifications (1 is the first AA)
      * (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number -> list of modifications (1 is the first AA) (can be null)
@@ -567,15 +571,18 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, String sequence,
-            HashMap<Integer, ArrayList<String>> mainModificationSites, HashMap<Integer, ArrayList<String>> secondaryModificationSites,
+            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding,
             boolean useShortName) {
 
-        if (mainModificationSites == null) {
-            mainModificationSites = new HashMap<Integer, ArrayList<String>>();
+        if (confidentModificationSites == null) {
+            confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
         }
-        if (secondaryModificationSites == null) {
-            secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
+        if (representativeAmbiguousModificationSites == null) {
+            representativeAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+        }
+        if (secondaryAmbiguousModificationSites == null) {
+            secondaryAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
         }
         if (fixedModificationSites == null) {
             fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -588,17 +595,21 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             int aaIndex = aa - 1;
             char aminoAcid = sequence.charAt(aaIndex);
 
-            if (mainModificationSites.containsKey(aa) && !mainModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : mainModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, true, useHtmlColorCoding, useShortName));
+            if (confidentModificationSites.containsKey(aa) && !confidentModificationSites.get(aa).isEmpty()) {
+                for (String ptmName : confidentModificationSites.get(aa)) { //There should be only one
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
                 }
-            } else if (secondaryModificationSites.containsKey(aa) && !secondaryModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : secondaryModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, false, useHtmlColorCoding, useShortName));
+            } else if (representativeAmbiguousModificationSites.containsKey(aa) && !representativeAmbiguousModificationSites.get(aa).isEmpty()) {
+                for (String ptmName : representativeAmbiguousModificationSites.get(aa)) { //There should be only one
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 2, useHtmlColorCoding, useShortName));
+                }
+            } else if (secondaryAmbiguousModificationSites.containsKey(aa) && !secondaryAmbiguousModificationSites.get(aa).isEmpty()) {
+                for (String ptmName : secondaryAmbiguousModificationSites.get(aa)) { //There should be only one
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 3, useHtmlColorCoding, useShortName));
                 }
             } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
                 for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, true, useHtmlColorCoding, useShortName));
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
                 }
             } else {
                 modifiedSequence.append(aminoAcid);
@@ -609,19 +620,21 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Returns the single residue as a tagged string (HTML color or PTM tag).
+     * Returns the single residue as a tagged string (HTML color or PTM tag). Modified sites are color coded according to three levels:
+     * 1- black foreground, colored background
+     * 2- colored foreground, white background
+     * 3- colored foreground
      *
      * @param residue the residue to tag
      * @param ptmName the name of the PTM
      * @param modificationProfile the modification profile
-     * @param mainPtm if true, white font is used on colored background, if
-     * false colored font on white background
+     * @param localizationConfidenceLevel the localization confidence level
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      * @return the single residue as a tagged string
      */
-    private static String getTaggedResidue(char residue, String ptmName, ModificationProfile modificationProfile, boolean mainPtm, boolean useHtmlColorCoding, boolean useShortName) {
+    private static String getTaggedResidue(char residue, String ptmName, ModificationProfile modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
 
         StringBuilder taggedResidue = new StringBuilder();
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -635,10 +648,15 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 }
             } else {
                 Color ptmColor = modificationProfile.getColor(ptmName);
-                if (mainPtm) {
+                if (localizationConfidenceLevel == 1) {
                     taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
-                } else {
+                } else if (localizationConfidenceLevel == 2) {
                     taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                } else if (localizationConfidenceLevel == 3) {
+//                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
+                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                } else {
+                    throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
                 }
             }
         } else {

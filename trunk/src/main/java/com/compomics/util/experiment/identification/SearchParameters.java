@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
@@ -979,6 +980,12 @@ public class SearchParameters implements Serializable {
         if (result.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()) == null) {
             MyriMatchParameters myriMatchParameters = new MyriMatchParameters();
             result.setIdentificationAlgorithmParameter(myriMatchParameters.getAlgorithm().getIndex(), myriMatchParameters);
+        }
+
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) == null) {
+            CometParameters cometParameters = new CometParameters();
+            result.setIdentificationAlgorithmParameter(cometParameters.getAlgorithm().getIndex(), cometParameters);
         }
 
         // compatibility check

@@ -9,6 +9,7 @@ import java.util.Iterator;
  * rescoring algorithm, etc.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class Advocate {
 
@@ -63,7 +64,7 @@ public class Advocate {
     /**
      * The Comet search engine, free version of Sequest.
      */
-    public static final Advocate comet = new Advocate(10, "Comet", AdvocateType.search_engine);
+    public static final Advocate comet = new Advocate(10, "Comet", AdvocateType.search_engine); // @TODO: add a color for Comet!
     /**
      * The ProteinLynx search engine, waters instruments.
      */
@@ -393,7 +394,9 @@ public class Advocate {
         } else if (this == msgf) {
             return "20829449"; // @TODO: update to the real ms-gf+ citation when available
         } else if (this == myriMatch) {
-            return "17269722 ";
+            return "17269722";
+        } else if (this == comet) {
+            return "23148064";
         } else {
             return null;
         }
@@ -459,6 +462,8 @@ public class Advocate {
             return Advocate.msgf;
         } else if (idFileName.toLowerCase().endsWith("csv")) {
             return Advocate.msAmanda;
+        } else if (idFileName.toLowerCase().endsWith("txt")) {
+            return Advocate.comet;
         }
         return null;
     }

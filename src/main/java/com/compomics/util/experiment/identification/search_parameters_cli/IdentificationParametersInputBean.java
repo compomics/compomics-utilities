@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
@@ -654,6 +655,108 @@ public class IdentificationParametersInputBean {
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), msAmandaParameters);
 
+        ///////////////////////////////////
+        // Comet parameters
+        ///////////////////////////////////
+        CometParameters cometParameters = new CometParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
+            Integer option = new Integer(arg);
+            cometParameters.setNumberOfSpectrumMatches(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_PTMS.id);
+            Integer option = new Integer(arg);
+            cometParameters.setMaxVariableMods(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
+            Integer option = new Integer(arg);
+            cometParameters.setMinPeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id);
+            Double option = new Double(arg);
+            cometParameters.setMinPeakIntensity(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id);
+            Integer option = new Integer(arg);
+            cometParameters.setRemovePrecursor(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id);
+            Double option = new Double(arg);
+            cometParameters.setRemovePrecursorTolerance(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id);
+            Double option = new Double(arg);
+            cometParameters.setLowerClearMzRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id);
+            Double option = new Double(arg);
+            cometParameters.setUpperClearMzRange(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id);
+            Integer option = new Integer(arg);
+            cometParameters.setEnzymeType(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
+            Integer option = new Integer(arg);
+            cometParameters.setIsotopeCorrection(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id);
+            Double option = new Double(arg);
+            cometParameters.setMinPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id);
+            Double option = new Double(arg);
+            cometParameters.setMaxPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id);
+            Integer option = new Integer(arg);
+            cometParameters.setMaxFragmentCharge(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_METH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_METH.id);
+            Integer option = new Integer(arg);
+            cometParameters.setRemoveMethionine(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id);
+            Integer option = new Integer(arg);
+            cometParameters.setBatchSize(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id);
+            Integer option = new Integer(arg);
+            cometParameters.setTheoreticalFragmentIonsSumOnly(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id);
+            Double option = new Double(arg);
+            cometParameters.setFragmentBinOffset(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_TOLERANCE.id);
+            Double option = new Double(arg);
+            cometParameters.setFragmentBinTolerance(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id);
+            Integer option = new Integer(arg);
+            cometParameters.setUseSparseMatrix(option == 1);
+        }
+        
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
+        
         ///////////////////////////////////
         // PepNovo+ parameters
         ///////////////////////////////////
@@ -1934,7 +2037,7 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        // @TODO: add MS-GF+, MS Amanda and DirecTag parameters!!!
+        // @TODO: add MS-GF+, MS Amanda, DirecTag, MyriMatch and Comet parameters!!!
         return true;
     }
 }

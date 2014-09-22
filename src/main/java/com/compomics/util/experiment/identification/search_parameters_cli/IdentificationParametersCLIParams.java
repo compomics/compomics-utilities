@@ -141,6 +141,28 @@ public enum IdentificationParametersCLIParams {
     MYRIMATCH_NUM_BATCHES("myrimatch_num_batches", "MyriMatch number of batches option, default is '50'.", false),
     MYRIMATCH_MAX_PEAK_COUNT("myrimatch_max_peak", "MyriMatch max number of peaks option, default is '100'.", false),
     //////////////////////////////////
+    // Comet specific parameters
+    //////////////////////////////////
+    COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false),
+    COMET_PTMS("comet_num_ptms", "Comet max number of PTMs per peptide, default is '10'.", false),
+    COMET_MIN_PEAKS("comet_min_peaks", "Comet min number of peaks for a spectrum, default is '10'.", false),
+    COMET_MIN_PEAK_INTENSITY("comet_min_peak_int", "Comet min peak intensity, default is '0.0'.", false),
+    COMET_REMOVE_PRECURSOR("comet_remove_prec", "Comet remove precursor, 0: off, 1: on, 2: as expected for ETD/ECD spectra, default is '0'.", false),
+    COMET_REMOVE_PRECURSOR_TOLERANCE("comet_remove_prec_tol", "Comet remove precursor tolerance, default is '1.5'.", false),
+    COMET_CLEAR_MZ_RANGE_LOWER("comet_clear_mz_range_lower", "Comet clear mz range lower, default is '0.0'.", false),
+    COMET_CLEAR_MZ_RANGE_UPPER("comet_clear_mz_range_upper", "Comet clear mz range upper, default is '0.0'.", false),
+    COMET_ENZYME_TYPE("comet_enzyme_type", "Comet enzyme type, 1: semi-specific, 2: full-enzyme, 8: unspecific N-term, 9: unspecific C-term, default is '2'.", false),
+    COMET_ISOTOPE_CORRECTION("comet_isotope_correction", "Comet isotope correction, 0: off, 1: -1,0,+1,+2,+3, 2: -8,-4,0,+4,+8, default is '0'.", false),
+    COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minumum precursor mass, default is '0.0'.", false),
+    COMET_MAX_PREC_MASS("comet_max_prec_mass", "Comet maximum precursor mass, default is '10000.0'.", false),
+    COMET_MAX_FRAGMENT_CHARGE("comet_max_frag_charge", "Comet maximum fragment charge [1-5], default is '3'.", false),
+    COMET_REMOVE_METH("comet_remove_meth", "Comet remove methionine, 1: true, 0: false, default is '0'.", false),
+    COMET_BATCH_SIZE("comet_batch_size", "Comet batch size, '0' means load and search all spectra at once, default is '0'.", false),
+    COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, default is '1'.", false),
+    COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.4'.", false),
+    COMET_FRAGMENT_BIN_TOLERANCE("comet_frag_bin_tol", "Comet fragment bin tolerance, default is '1.0005'.", false),
+    COMET_USE_SPARSE_MATRIX("comet_sparse_matrix", "Comet use sparse matrix, 1: true, 0: false, default is '0'.", false),
+    //////////////////////////////////
     // PepNovo+ specific parameters
     //////////////////////////////////
     PEPNOVO_HITLIST_LENGTH("pepnovo_hitlist_length", "PepNovo+ number of de novo solutions [0-2000], default is '10'.", false),

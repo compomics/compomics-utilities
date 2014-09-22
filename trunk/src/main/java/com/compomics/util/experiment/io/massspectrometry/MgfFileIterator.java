@@ -6,34 +6,33 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
- * An iterator of the spectra in an mgf file
+ * An iterator of the spectra in an mgf file.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class MgfFileIterator {
 
     /**
-     * The reader going through the file
+     * The reader going through the file.
      */
     private BufferedReader br;
     /**
-     * The next spectrum in the file
+     * The next spectrum in the file.
      */
     private MSnSpectrum nextSpectrum = null;
     /**
-     * The name of the mgf file
+     * The name of the mgf file.
      */
     private String mgfFileName;
     /**
-     * The rank of the spectrum
+     * The rank of the spectrum.
      */
     private int rank;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param mgfFile the file to go through
      *
@@ -46,7 +45,7 @@ public class MgfFileIterator {
         nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
         rank = 1;
         if (nextSpectrum.getScanNumber() == null) {
-        nextSpectrum.setScanNumber(rank + "");
+            nextSpectrum.setScanNumber(rank + "");
         } else {
             while (nextSpectrum.getScanNumber().equals(++rank + ""));
         }
@@ -69,8 +68,10 @@ public class MgfFileIterator {
      * @throws java.io.IOException
      */
     public MSnSpectrum next() throws IOException {
+
         MSnSpectrum currentSpectrum = nextSpectrum;
         nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+
         if (nextSpectrum == null) {
             br.close();
         } else if (nextSpectrum.getScanNumber() == null) {
@@ -78,7 +79,7 @@ public class MgfFileIterator {
         } else {
             while (nextSpectrum.getScanNumber().equals(++rank + ""));
         }
+
         return currentSpectrum;
     }
-
 }

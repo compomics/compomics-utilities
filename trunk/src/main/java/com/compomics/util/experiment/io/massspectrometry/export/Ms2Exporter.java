@@ -5,7 +5,6 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
-import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,9 +14,9 @@ import java.util.Date;
 import java.util.HashMap;
 
 /**
- * This converter writes spectrum files in MS2 format
+ * This converter writes spectrum files in MS2 format.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class Ms2Exporter {
 
@@ -33,18 +32,18 @@ public class Ms2Exporter {
     public static void mgfToMs2(File mgfFile, File destinationFile) throws IOException {
 
         FileWriter fileWriter = new FileWriter(destinationFile);
+
         try {
             BufferedWriter bw = new BufferedWriter(fileWriter);
+
             try {
                 writeHeader(bw);
-
                 MgfFileIterator mgfFileIterator = new MgfFileIterator(mgfFile);
 
                 while (mgfFileIterator.hasNext()) {
                     MSnSpectrum spectrum = mgfFileIterator.next();
                     writeSpectrum(bw, spectrum);
                 }
-
             } finally {
                 bw.close();
             }
@@ -82,22 +81,25 @@ public class Ms2Exporter {
      * @throws IOException
      */
     public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum) throws IOException {
+
         String scanNumber = spectrum.getScanNumber(); //@TODO: parse scan ranges?
         Precursor precursor = spectrum.getPrecursor();
         bw.write("S\t" + scanNumber + "\t" + scanNumber + "\t" + precursor.getMz());
         bw.newLine();
+
         ArrayList<Charge> charges = precursor.getPossibleCharges();
         for (Charge charge : charges) {
             bw.write("Z\t" + charge.value + "\t" + precursor.getMass(charge.value));
             bw.newLine();
         }
+
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
         for (double mz : spectrum.getOrderedMzValues()) {
             Peak peak = peakMap.get(mz);
             bw.write(peak.mz + " " + peak.intensity);
             bw.newLine();
         }
+
         bw.newLine();
     }
-
 }

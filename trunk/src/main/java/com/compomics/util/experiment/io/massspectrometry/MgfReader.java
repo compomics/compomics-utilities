@@ -39,6 +39,7 @@ public class MgfReader {
      * @throws IOException 
      */
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
+
         String line;
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
         double precursorMz = 0;

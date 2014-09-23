@@ -204,7 +204,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Indicates whether the sequence matches the given amino acid sequence in size and according to the given matching preferences.
+     * Indicates whether the sequence matches the given amino acid sequence in
+     * size and according to the given matching preferences.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -217,7 +218,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Indicates whether the sequence matches the given amino acid sequence in size and according to the given matching preferences.
+     * Indicates whether the sequence matches the given amino acid sequence in
+     * size and according to the given matching preferences.
      *
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -498,10 +500,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     /**
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
- this method will work only if the PTM found in the peptide are in the
- PTMFactory. /!\ This method uses the modifications as set in the
- modification matches of this peptide and displays all of them. Note: this
- does not include HTML start end tags or terminal annotation.
+     * this method will work only if the PTM found in the peptide are in the
+     * PTMFactory. /!\ This method uses the modifications as set in the
+     * modification matches of this peptide and displays all of them. Note: this
+     * does not include HTML start end tags or terminal annotation.
      *
      * @param modificationProfile the modification profile of the search
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -511,7 +513,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the modified sequence as a tagged string
      */
     public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean useShortName, boolean excludeAllFixedPtms) {
-        
+
         HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -551,18 +553,19 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * Returns the modified sequence as an tagged string with potential
      * modification sites color coded or with PTM tags, e.g, &lt;mox&gt;. /!\
      * This method will work only if the PTM found in the peptide are in the
-     * PTMFactory. 
+     * PTMFactory.
      *
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate
-     * @param confidentModificationSites the confidently localized variable modification sites in a
-     * map: aa number -> list of modifications (1 is the first AA) (can be null)
-     * @param representativeAmbiguousModificationSites the representative site of the ambiguously localized variable modifications
-     * in a map: aa number -> list of modifications (1 is the first AA)
-     * (can be null)
-     * @param secondaryAmbiguousModificationSites the secondary sites of the ambiguously localized variable modifications
-     * in a map: aa number -> list of modifications (1 is the first AA)
-     * (can be null)
+     * @param confidentModificationSites the confidently localized variable
+     * modification sites in a map: aa number -> list of modifications (1 is the
+     * first AA) (can be null)
+     * @param representativeAmbiguousModificationSites the representative site
+     * of the ambiguously localized variable modifications in a map: aa number
+     * -> list of modifications (1 is the first AA) (can be null)
+     * @param secondaryAmbiguousModificationSites the secondary sites of the
+     * ambiguously localized variable modifications in a map: aa number -> list
+     * of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number -> list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -620,10 +623,10 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Returns the single residue as a tagged string (HTML color or PTM tag). Modified sites are color coded according to three levels:
-     * 1- black foreground, colored background
-     * 2- colored foreground, white background
-     * 3- colored foreground
+     * Returns the single residue as a tagged string (HTML color or PTM tag).
+     * Modified sites are color coded according to three levels: 1- black
+     * foreground, colored background 2- colored foreground, white background 3-
+     * colored foreground
      *
      * @param residue the residue to tag
      * @param ptmName the name of the PTM
@@ -654,7 +657,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
                 } else if (localizationConfidenceLevel == 3) {
 //                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
-                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+//                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                    taggedResidue.append(residue);
                 } else {
                     throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
                 }

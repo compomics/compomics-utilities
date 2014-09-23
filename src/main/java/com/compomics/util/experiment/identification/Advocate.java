@@ -57,14 +57,14 @@ public class Advocate {
      */
     public static final Advocate direcTag = new Advocate(8, "DirecTag", AdvocateType.sequencing_algorithm, new java.awt.Color(189, 183, 107));
     /**
-     * The byonic search engine integrated in the byonic protein metrics
+     * The Byonic search engine integrated in the Byonic protein metrics
      * interface.
      */
     public static final Advocate byonic = new Advocate(9, "Byonic", AdvocateType.search_engine);
     /**
      * The Comet search engine, free version of Sequest.
      */
-    public static final Advocate comet = new Advocate(10, "Comet", AdvocateType.search_engine); // @TODO: add a color for Comet!
+    public static final Advocate comet = new Advocate(10, "Comet", AdvocateType.search_engine, new java.awt.Color(255, 160, 122));
     /**
      * The ProteinLynx search engine, waters instruments.
      */
@@ -122,7 +122,7 @@ public class Advocate {
      */
     public static final Advocate spectrumMill = new Advocate(24, "SpectrumMill", AdvocateType.search_engine);
     /**
-     * The ZCore search engine, etd search engine.
+     * The ZCore search engine, ETD search engine.
      */
     public static final Advocate zCore = new Advocate(25, "ZCore", AdvocateType.search_engine);
     /**

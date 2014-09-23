@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
-import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 
@@ -622,25 +621,5 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public void setUseSparseMatrix(Boolean useSparseMatrix) {
         this.useSparseMatrix = useSparseMatrix;
-    }
-
-    /**
-     * Tries to map the utilities enzyme to the enzymes supported by Comet.
-     *
-     * @param enzyme the utilities enzyme
-     * @return the Comet enzyme as a string, or null of no mapping is found
-     */
-    public static String enzymeMapping(Enzyme enzyme) {
-
-        String cometEnzymeNumberAsString = null; // @TODO: mapping should be read from the comet enzyme file
-
-        String enzymeName = enzyme.getName();
-        if (enzymeName.equalsIgnoreCase("No Enzyme")) {
-            cometEnzymeNumberAsString = "0";
-        } else if (enzymeName.equalsIgnoreCase("Trypsin")) {
-            cometEnzymeNumberAsString = "1";
-        } // @TODO: add more enzyme mappings
-
-        return cometEnzymeNumberAsString;
     }
 }

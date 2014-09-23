@@ -10,31 +10,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * ExportWriter for the export to text files
+ * ExportWriter for the export to text files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class TextWriter extends ExportWriter {
 
     /**
-     * Writer
+     * Writer.
      */
     private final BufferedWriter writer;
     /**
-     * The separator
+     * The separator.
      */
     private final String separator;
     /**
-     * The number of lines to include between sections
+     * The number of lines to include between sections.
      */
     private final int nSeparationLines;
     /**
-     * The number of sections written
+     * The number of sections written.
      */
     private int nSections = 0;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param destinationFile the file where to write the report
      * @param separator separator between two values
@@ -107,5 +107,4 @@ public class TextWriter extends ExportWriter {
     public void decreseDepth() {
         // Nothing to do here
     }
-
 }

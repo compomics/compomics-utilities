@@ -1,40 +1,41 @@
 package com.compomics.util.io.export;
 
 /**
- * enum of the different formats available for the exports.
+ * Enum of the different formats available for the exports.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public enum ExportFormat {
-    
+
     /**
-     * Text
+     * Text.
      */
     text(0, "Text", "txt", "Tab separated text format"),
     /**
-     * Excel file
+     * Excel file.
      */
     excel(1, "Excel", "xls", "Microsoft Excel format");
 
     /**
-     * The index of the format
+     * The index of the format.
      */
     public final int index;
     /**
-     * The name of the format
+     * The name of the format.
      */
     public final String name;
     /**
-     * The extention to use for this format
+     * The extention to use for this format.
      */
     public final String extention;
     /**
-     * Description of the format
+     * Description of the format.
      */
     public final String description;
+
     /**
      * Constructor.
-     * 
+     *
      * @param index The index of the format
      * @param name The name of the format
      * @param extention The extention to use for this format
@@ -47,24 +48,27 @@ public enum ExportFormat {
         this.description = description;
     }
     /**
-     * The default export format to use for command line exports
+     * The default export format to use for command line exports.
      */
     public static final ExportFormat commandLineDefaultOption = text;
     /**
-     * The default export format to use for gui exports
+     * The default export format to use for GUI exports.
      */
     public static final ExportFormat guiDefaultOption = excel;
+
     /**
-     * Returns the command line description when the format is used as command line argument.
-     * 
-     * @return the command line description when the format is used as command line argument
+     * Returns the command line description when the format is used as command
+     * line argument.
+     *
+     * @return the command line description when the format is used as command
+     * line argument
      */
     public static String getCommandLineOption() {
         StringBuilder options = new StringBuilder();
         for (ExportFormat exportFormat : values()) {
             if (options.length() == 0) {
                 options.append("The format to use for the export: ");
-            }else {
+            } else {
                 options.append(", ");
             }
             options.append(exportFormat.extention).append(": ").append(exportFormat.description);
@@ -74,12 +78,13 @@ public enum ExportFormat {
         }
         return options.toString();
     }
-    
+
     /**
-     * Returns the export format designed by the given command line option. Null if not found.
-     * 
+     * Returns the export format designed by the given command line option. Null
+     * if not found.
+     *
      * @param commandLineOption the command line option
-     * 
+     *
      * @return the export format designed by the given command line option
      */
     public static ExportFormat getFormatFromCommandLineOption(String commandLineOption) {
@@ -90,5 +95,4 @@ public enum ExportFormat {
         }
         return null;
     }
-    
 }

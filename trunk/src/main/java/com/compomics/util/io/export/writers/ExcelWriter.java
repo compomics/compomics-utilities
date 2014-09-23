@@ -15,63 +15,63 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 
 /**
- * ExportWriter for the export to excel files
+ * ExportWriter for the export to excel files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ExcelWriter extends ExportWriter {
 
     /**
-     * The workbook for excel exports
+     * The workbook for excel exports.
      */
     private HSSFWorkbook workbook;
     /**
-     * The workbook style to use for an excel export
+     * The workbook style to use for an excel export.
      */
     private WorkbookStyle workbookStyle = null;
     /**
-     * The destination file
+     * The destination file.
      */
     private final File destinationFile;
     /**
-     * The sheet number of the current sheet
+     * The sheet number of the current sheet.
      */
     private int sheetNumber;
     /**
-     * The current sheet
+     * The current sheet.
      */
     private HSSFSheet currentSheet;
     /**
-     * The current hierarchical depth
+     * The current hierarchical depth.
      */
     private int hierarchicalDepth = 0;
     /**
-     * Map of the rows for depth change: depth -> starting row
+     * Map of the rows for depth change: depth -> starting row.
      */
     private final HashMap<Integer, Integer> collapsedRow = new HashMap<Integer, Integer>();
     /**
-     * The current row number
+     * The current row number.
      */
     private int rowNumber = 0;
     /**
-     * The current cell number
+     * The current cell number.
      */
     private int cellNumber = 0;
     /**
-     * The current row
+     * The current row.
      */
     private HSSFRow currentRow = null;
     /**
-     * The current cell content
+     * The current cell content.
      */
     private StringBuilder currentCellContent = new StringBuilder();
     /**
-     * The current cell style
+     * The current cell style.
      */
     private CellStyle currentCellStyle = null;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param destinationFile the file where to write the data
      */
@@ -83,7 +83,7 @@ public class ExcelWriter extends ExportWriter {
 
     /**
      * Returns the workbook style.
-     * 
+     *
      * @return the workbook style
      */
     public WorkbookStyle getWorkbookStyle() {
@@ -92,7 +92,7 @@ public class ExcelWriter extends ExportWriter {
 
     /**
      * Sets the workbook style.
-     * 
+     *
      * @param workbookStyle the workbook style
      */
     public void setWorkbookStyle(WorkbookStyle workbookStyle) {
@@ -101,7 +101,7 @@ public class ExcelWriter extends ExportWriter {
 
     /**
      * Return the workBook.
-     * 
+     *
      * @return the workBook
      */
     public HSSFWorkbook getWorkbook() {
@@ -253,5 +253,4 @@ public class ExcelWriter extends ExportWriter {
         }
         hierarchicalDepth--;
     }
-
 }

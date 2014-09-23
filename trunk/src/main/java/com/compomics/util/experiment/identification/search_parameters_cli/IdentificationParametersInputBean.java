@@ -754,9 +754,9 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             cometParameters.setUseSparseMatrix(option == 1);
         }
-        
+
         searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
-        
+
         ///////////////////////////////////
         // PepNovo+ parameters
         ///////////////////////////////////

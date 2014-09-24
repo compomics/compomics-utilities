@@ -1260,9 +1260,9 @@ public class Peptide extends ExperimentObject {
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
-            HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags,
-            boolean useShortName) {
+            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, 
+            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, 
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
         if (confidentModificationSites == null) {
             confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -1285,7 +1285,8 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites, representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
+        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites, 
+                representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
 
         modifiedSequence += "-" + peptide.getCTerminal();
 

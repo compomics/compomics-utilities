@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.37.7</version>
+    <version>3.37.8</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
 
@@ -534,6 +534,14 @@
             <artifactId>poi</artifactId>
             <version>3.9</version>
         </dependency>
+
+        <!-- can be used to create excel 2007 workbooks -->
+        <!--<dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>-->
+
     </dependencies>
 
 

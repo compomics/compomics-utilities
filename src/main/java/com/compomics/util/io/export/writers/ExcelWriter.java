@@ -248,10 +248,8 @@ public class ExcelWriter extends ExportWriter {
         if (originalRow == null) {
             throw new IllegalArgumentException("No original row found for hierarchical depth " + originalRow + ".");
         }
-        if (hierarchicalDepth > 1) {
-            currentSheet.groupRow(originalRow, rowNumber);
-            currentSheet.setRowGroupCollapsed(originalRow, true);
-        }
+        currentSheet.groupRow(originalRow, rowNumber);
+        currentSheet.setRowGroupCollapsed(originalRow, true);
         hierarchicalDepth--;
     }
 }

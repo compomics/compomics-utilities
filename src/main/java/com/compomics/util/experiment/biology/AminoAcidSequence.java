@@ -574,7 +574,9 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, String sequence,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
+            HashMap<Integer, ArrayList<String>> confidentModificationSites, 
+            HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, 
+            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding,
             boolean useShortName) {
 
@@ -637,17 +639,19 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param useShortName if true the short names are used in the tags
      * @return the single residue as a tagged string
      */
-    private static String getTaggedResidue(char residue, String ptmName, ModificationProfile modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
+    public static String getTaggedResidue(char residue, String ptmName, ModificationProfile modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
 
         StringBuilder taggedResidue = new StringBuilder();
         PTMFactory ptmFactory = PTMFactory.getInstance();
         PTM ptm = ptmFactory.getPTM(ptmName);
         if (ptm.getType() == PTM.MODAA) {
             if (!useHtmlColorCoding) {
-                if (useShortName) {
-                    taggedResidue.append(residue).append("<").append(ptmFactory.getShortName(ptmName)).append(">");
-                } else {
-                    taggedResidue.append(residue).append("<").append(ptmName).append(">");
+                if (localizationConfidenceLevel == 1 || localizationConfidenceLevel == 2) {
+                    if (useShortName) {
+                        taggedResidue.append(residue).append("<").append(ptmFactory.getShortName(ptmName)).append(">");
+                    } else {
+                        taggedResidue.append(residue).append("<").append(ptmName).append(">");
+                    }
                 }
             } else {
                 Color ptmColor = modificationProfile.getColor(ptmName);

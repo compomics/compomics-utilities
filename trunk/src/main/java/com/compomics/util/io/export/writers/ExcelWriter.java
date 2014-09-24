@@ -207,6 +207,7 @@ public class ExcelWriter extends ExportWriter {
         if (currentCellStyle != null) {
             cell.setCellStyle(currentCellStyle);
         }
+        currentCellStyle = null;
     }
 
     @Override

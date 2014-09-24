@@ -163,9 +163,9 @@ public class ExcelWriter extends ExportWriter {
     public void startNewSection(String sectionTitle, WorkbookStyle textStyle) throws IOException {
         if (currentCellContent.length() > 0) {
             addSeparator();
-            rowNumber = 0;
-            cellNumber = 0;
         }
+        rowNumber = 0;
+        cellNumber = 0;
         String sheetName = sectionTitle;
         if (sheetName == null) {
             sheetName = sheetNumber++ + "";

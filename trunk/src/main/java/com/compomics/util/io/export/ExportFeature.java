@@ -16,11 +16,11 @@ public interface ExportFeature extends Serializable {
     static final long serialVersionUID = -4158077697265471589L;
 
     /**
-     * Returns the column titles of the feature.
+     * Returns the column title of the feature.
      *
-     * @return the column titles of the feature
+     * @return the column title of the feature
      */
-    public String[] getTitles();
+    public String getTitle();
 
     /**
      * Returns the description of the feature.

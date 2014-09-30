@@ -84,7 +84,7 @@ public class TextWriter extends ExportWriter {
     }
 
     @Override
-    public void addSeparator() throws IOException {
+    public void addSeparator(WorkbookStyle textStyle) throws IOException {
         writer.write(separator);
     }
 

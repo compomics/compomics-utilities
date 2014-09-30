@@ -9,44 +9,45 @@ import org.apache.commons.math.MathException;
 /**
  * This class can be used to draw roc curves from experimental data.
  *
- * @author Marc
+ * @author Marc Vauel
  */
 public class DataRoc implements ROC {
 
     /**
-     * The x values of the ROC points
+     * The x values of the ROC points.
      */
     private ArrayList<Double> xValues;
 
     /**
-     * The y values of the ROC points
+     * The y values of the ROC points.
      */
     private ArrayList<Double> yValues;
     /**
-     * The method to use to interpolate between points
+     * The method to use to interpolate between points.
      */
     private RocInterpolation rocInterpolation;
 
     /**
-     * Enum listing the possible ways of interpolating points on the ROC
+     * Enum listing the possible ways of interpolating points on the ROC.
      */
     public static enum RocInterpolation {
+
         /**
-         * Returns the maximum value of the two surrounding points
+         * Returns the maximum value of the two surrounding points.
          */
-        maximum, 
+        maximum,
         /**
-         * Returns a linear interpolation of the two surrounding points
+         * Returns a linear interpolation of the two surrounding points.
          */
-        linear, 
+        linear,
         /**
-         * Returns the minimal value of the two surrounding points
+         * Returns the minimal value of the two surrounding points.
          */
         minimum;
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param controlValues the control values
      * @param patientValues the patient values
@@ -116,7 +117,7 @@ public class DataRoc implements ROC {
             if (xBefore == null || xValue < specificity && xValue > xBefore) {
                 xBefore = xValue;
                 yBefore = yValues.get(i);
-            } else if (xValue > specificity || i == xValues.size()-1) {
+            } else if (xValue > specificity || i == xValues.size() - 1) {
                 xAfter = xValue;
                 yAfter = yValues.get(i);
                 break;
@@ -144,7 +145,7 @@ public class DataRoc implements ROC {
             if (xBefore == null || yValue < sensitivity && yValue > yBefore) {
                 yBefore = yValue;
                 xBefore = xValues.get(i);
-            } else if (yValue > sensitivity || i == yValues.size()-1) {
+            } else if (yValue > sensitivity || i == yValues.size() - 1) {
                 yAfter = yValue;
                 xAfter = xValues.get(i);
                 break;
@@ -176,17 +177,17 @@ public class DataRoc implements ROC {
     @Override
     public double getAuc() throws MathException {
         double auc = 0;
-        for (int i = 0 ; i < xValues.size()-1 ; i++) {
-            double xAfter = xValues.get(i+1);
+        for (int i = 0; i < xValues.size() - 1; i++) {
+            double xAfter = xValues.get(i + 1);
             double xBefore = xValues.get(i);
             if (rocInterpolation == RocInterpolation.minimum) {
-                auc += yValues.get(i)*(xAfter - xBefore);
+                auc += yValues.get(i) * (xAfter - xBefore);
             } else if (rocInterpolation == RocInterpolation.maximum) {
-                auc += yValues.get(i+1)*(xAfter - xBefore);
+                auc += yValues.get(i + 1) * (xAfter - xBefore);
             } else if (rocInterpolation == RocInterpolation.linear) {
                 double yBefore = yValues.get(i);
-                double yAfter = yValues.get(i+1);
-                auc += ((yAfter + yBefore)/2) * (xAfter - xBefore);
+                double yAfter = yValues.get(i + 1);
+                auc += ((yAfter + yBefore) / 2) * (xAfter - xBefore);
             } else {
                 throw new UnsupportedOperationException("No AUC calculation implemented for ROC interpolation " + rocInterpolation + ".");
             }

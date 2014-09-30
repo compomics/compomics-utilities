@@ -7,7 +7,7 @@ import org.apache.commons.math.MathException;
 /**
  * This class can be used to draw roc curves from experimental data.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class DistributionRoc implements ROC {
 
@@ -19,6 +19,7 @@ public class DistributionRoc implements ROC {
      * The patient distribution.
      */
     private final Distribution distributionPatient;
+
     /**
      * Constructor. The patient distribution should be higher (to the right)
      * than the control distribution.
@@ -36,7 +37,7 @@ public class DistributionRoc implements ROC {
         double x = distributionPatient.getValueAtCumulativeProbability(specificity);
         return distributionControl.getCumulativeProbabilityAt(x);
     }
-    
+
     @Override
     public double getSpecificityAt(double sensitivity) throws MathException {
         double x = distributionControl.getValueAtCumulativeProbability(sensitivity);
@@ -45,29 +46,28 @@ public class DistributionRoc implements ROC {
 
     @Override
     public double[][] getxYValues() throws MathException {
-         double[][] result = new double[101][2];
-         for (int i = 0 ; i <= 100 ; i++) {
-             double x = ((double) i) / 100;
-             double y = getValueAt(x);
-             result[i][0] = x;
-             result[i][1] = y;
-         }
-         return result;
+        double[][] result = new double[101][2];
+        for (int i = 0; i <= 100; i++) {
+            double x = ((double) i) / 100;
+            double y = getValueAt(x);
+            result[i][0] = x;
+            result[i][1] = y;
+        }
+        return result;
     }
 
     @Override
-    public double getAuc()throws MathException {
+    public double getAuc() throws MathException {
         int nBins = 1000;
         double binSize = 1.0 / nBins;
         double halfBin = binSize / 2;
         double auc = 0.0;
-        for (int i = 0 ; i < nBins ; i++) {
-            double x = i*binSize + halfBin;
+        for (int i = 0; i < nBins; i++) {
+            double x = i * binSize + halfBin;
             double y = getValueAt(x);
             auc += y;
         }
         auc *= binSize;
         return auc;
     }
-    
 }

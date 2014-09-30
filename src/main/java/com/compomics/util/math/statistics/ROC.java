@@ -7,56 +7,45 @@ import org.apache.commons.math.MathException;
  *
  * @author Marc Vaudel
  */
-public class ROC {
+public interface ROC {
 
     /**
-     * The control distribution.
-     */
-    private Distribution distributionControl;
-    /**
-     * The patient distribution.
-     */
-    private Distribution distributionPatient;
-
-    /**
-     * Constructor. The patient distribution should be higher (to the right)
-     * than the control distribution.
-     *
-     * @param distributionControl the control distribution
-     * @param distributionPatient the patient distribution
-     */
-    public ROC(Distribution distributionControl, Distribution distributionPatient) {
-        this.distributionControl = distributionControl;
-        this.distributionPatient = distributionPatient;
-    }
-
-    /**
-     * Returns the sensitivity at a given specificity, i.e., 1-type 2 error, the
-     * number of true healthy for a given type 1 error, the number of false
+     * Returns the sensitivity at a given 1-specificity, i.e., 1-type 2 error,
+     * the number of true healthy for a given type 1 error, the number of false
      * healthy.
      *
      * @param specificity the specificity (0.1 is 10%)
-     * 
+     *
      * @return the sensitivity at the given specificity (0.1 is 10%)
-     * 
+     *
      * @throws org.apache.commons.math.MathException
      */
-    public double getValueAt(double specificity) throws MathException {
-        double x = distributionPatient.getValueAtCumulativeProbability(specificity);
-        return distributionControl.getCumulativeProbabilityAt(x);
-    }
-    
+    public double getValueAt(double specificity) throws MathException;
+
     /**
-     * Returns the specificity at a given sensitivity.
-     * 
+     * Returns the 1-specificity at a given sensitivity.
+     *
      * @param sensitivity the sensitivity (0.1 is 10%)
-     * 
-     * @return the corresponding specificity (0.1 is 10%)
-     * 
-     * @throws MathException 
+     *
+     * @return the corresponding 1-specificity (0.1 is 10%)
+     *
+     * @throws MathException
      */
-    public double getSpecificityAt(double sensitivity) throws MathException {
-        double x = distributionControl.getValueAtCumulativeProbability(sensitivity);
-        return distributionPatient.getCumulativeProbabilityAt(x);
-    }
+    public double getSpecificityAt(double sensitivity) throws MathException;
+
+    /**
+     * Returns xy values to draw the curve.
+     *
+     * @return xy values to draw the curve
+     *
+     * @throws MathException
+     */
+    public double[][] getxYValues() throws MathException;
+
+    /**
+     * Returns an estimation of the area under the curve.
+     *
+     * @return an estimation of the area under the curve
+     */
+    public double getAuc()throws MathException;
 }

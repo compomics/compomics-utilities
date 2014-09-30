@@ -125,7 +125,18 @@ public abstract class ExportWriter {
      *
      * @throws IOException
      */
-    public abstract void addSeparator() throws IOException;
+    public void addSeparator() throws IOException {
+        addSeparator(null);
+    }
+
+    /**
+     * Adds a separator.
+     * 
+     * @param textStyle the style to use, overwrites any previous/default
+     *
+     * @throws IOException
+     */
+    public abstract void addSeparator(WorkbookStyle textStyle) throws IOException;
 
     /**
      * Adds a separator.

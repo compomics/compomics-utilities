@@ -170,6 +170,7 @@ public class ExcelWriter extends ExportWriter {
         if (sheetName == null) {
             sheetName = sheetNumber++ + "";
         }
+        currentRow = null;
         currentSheet = workbook.createSheet(sheetName);
     }
 
@@ -198,11 +199,33 @@ public class ExcelWriter extends ExportWriter {
     }
 
     @Override
-    public void addSeparator() throws IOException {
-
+    public void addSeparator(WorkbookStyle textStyle) throws IOException {
+        if (currentRow == null) {
+            if (currentSheet == null) {
+                throw new IllegalArgumentException("No section started to write in.");
+            }
+            currentRow = currentSheet.createRow(rowNumber);
+            rowNumber++;
+            if (textStyle != null) {
+                currentRow.setHeightInPoints(textStyle.getStandardHeight());
+            } else if (workbookStyle != null) {
+                currentRow.setHeightInPoints(workbookStyle.getStandardHeight());
+            } else {
+                currentRow.setHeightInPoints(12.75f);
+            }
+        }
         Cell cell = currentRow.createCell(cellNumber);
         cellNumber++;
-        cell.setCellValue(currentCellContent.toString());
+        String content = currentCellContent.toString();
+        try {
+            Double value = new Double(content);
+            cell.setCellValue(value);
+            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+        } catch (Exception e) {
+            if (!content.equals("")) {
+                cell.setCellValue(content);
+            }
+        }
         currentCellContent = new StringBuilder();
         if (currentCellStyle != null) {
             cell.setCellStyle(currentCellStyle);

@@ -11,9 +11,9 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 
 /**
- * Default style for excel sheets
+ * Default style for excel sheets.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class DefaultStyle implements WorkbookStyle {
 

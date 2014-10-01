@@ -42,7 +42,7 @@ public abstract class SpectrumAnnotator {
     /**
      * The theoretic fragment ions.
      */
-    protected ArrayList<Ion> theoreticalFragmentIons;
+    protected HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> theoreticalFragmentIons;
     /**
      * The Fragment factory which will generate the fragment ions.
      */
@@ -238,9 +238,9 @@ public abstract class SpectrumAnnotator {
         }
 
         if (bestMatch != null) {
-            spectrumAnnotation.put(IonMatch.getPeakAnnotation(theoreticIon, charge), bestMatch);
+            spectrumAnnotation.put(IonMatch.getMatchKey(theoreticIon, charge.value), bestMatch);
         } else {
-            unmatchedIons.add(IonMatch.getPeakAnnotation(theoreticIon, charge));
+            unmatchedIons.add(IonMatch.getMatchKey(theoreticIon, charge.value));
         }
 
         return bestMatch != null;
@@ -416,8 +416,7 @@ public abstract class SpectrumAnnotator {
      * most intense peak
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, 
-            HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
 
     /**
      * Returns the spectrum currently inspected.
@@ -499,24 +498,82 @@ public abstract class SpectrumAnnotator {
     /**
      * Updates the mass shifts.
      */
-    private void updateMassShifts() {
+    protected void updateMassShifts() {
         spectrumAnnotation.clear();
         unmatchedIons.clear();
         if (theoreticalFragmentIons != null) {
-            for (Ion ion : theoreticalFragmentIons) {
-                if (ion.getType() == IonType.PEPTIDE_FRAGMENT_ION) {
-                    if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
-                    } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
-                    }
+            HashMap<Integer, ArrayList<Ion>> peptideFragmentIons = theoreticalFragmentIons.get(IonType.PEPTIDE_FRAGMENT_ION.index);
+            ArrayList<Ion> ions = peptideFragmentIons.get(PeptideFragmentIon.A_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
                 }
-                if (ion.getType() == IonType.TAG_FRAGMENT_ION) {
-                    if (ion.getSubType() == TagFragmentIon.A_ION || ion.getSubType() == TagFragmentIon.B_ION || ion.getSubType() == TagFragmentIon.C_ION) {
-                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
-                    } else if (ion.getSubType() == TagFragmentIon.X_ION || ion.getSubType() == TagFragmentIon.Y_ION || ion.getSubType() == TagFragmentIon.Z_ION) {
-                        ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
-                    }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.B_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.C_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.X_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.Y_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.Z_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                }
+            }
+            peptideFragmentIons = theoreticalFragmentIons.get(IonType.TAG_FRAGMENT_ION.index);
+            ions = peptideFragmentIons.get(PeptideFragmentIon.A_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.B_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.C_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.X_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.Y_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
+                }
+            }
+            ions = peptideFragmentIons.get(PeptideFragmentIon.Z_ION);
+            if (ions != null) {
+                for (Ion ion : ions) {
+                    ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
                 }
             }
         }
@@ -575,15 +632,23 @@ public abstract class SpectrumAnnotator {
             charges.add(precursorCharge + 1);
         }
 
-        for (Ion peptideIon : theoreticalFragmentIons) {
-            if (iontypes.containsKey(peptideIon.getType())
-                    && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())) {
-                for (int charge : charges) {
-                    if (chargeValidated(peptideIon, charge, precursorCharge)
-                            && lossesValidated(neutralLosses, peptideIon)) {
-                        IonMatch ionMatch = new IonMatch(peak, peptideIon, new Charge(Charge.PLUS, charge));
-                        if (Math.abs(ionMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
-                            result.add(ionMatch);
+        for (Ion.IonType ionType : iontypes.keySet()) {
+            HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+            if (ionMap != null) {
+                HashSet<Integer> subtypes = iontypes.get(ionType);
+                for (int subType : subtypes) {
+                    ArrayList<Ion> ions = ionMap.get(subType);
+                    if (ions != null) {
+                        for (Ion ion : ions) {
+                            for (int charge : charges) {
+                                if (chargeValidated(ion, charge, precursorCharge)
+                                        && lossesValidated(neutralLosses, ion)) {
+                                    IonMatch ionMatch = new IonMatch(peak, ion, new Charge(Charge.PLUS, charge));
+                                    if (Math.abs(ionMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
+                                        result.add(ionMatch);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -615,16 +680,25 @@ public abstract class SpectrumAnnotator {
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
-        for (Ion peptideIon : theoreticalFragmentIons) {
-            if (iontypes.containsKey(peptideIon.getType())
-                    && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
-                    && lossesValidated(neutralLosses, peptideIon)) {
-                for (int charge : charges) {
-                    if (chargeValidated(peptideIon, charge, precursorCharge)) {
-                        if (!result.containsKey(charge)) {
-                            result.put(charge, new ArrayList<Ion>());
+        for (Ion.IonType ionType : iontypes.keySet()) {
+            HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+            if (ionMap != null) {
+                HashSet<Integer> subtypes = iontypes.get(ionType);
+                for (int subType : subtypes) {
+                    ArrayList<Ion> ions = ionMap.get(subType);
+                    if (ions != null) {
+                        for (Ion ion : ions) {
+                            for (int charge : charges) {
+                                if (chargeValidated(ion, charge, precursorCharge)) {
+                                    ArrayList<Ion> resultsAtCharge = result.get(charge);
+                                    if (resultsAtCharge == null) {
+                                        resultsAtCharge = new ArrayList<Ion>();
+                                        result.put(charge, resultsAtCharge);
+                                    }
+                                    resultsAtCharge.add(ion);
+                                }
+                            }
                         }
-                        result.get(charge).add(peptideIon);
                     }
                 }
             }

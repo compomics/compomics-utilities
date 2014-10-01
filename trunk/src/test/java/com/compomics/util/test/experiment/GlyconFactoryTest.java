@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.GlyconFactory;
-import com.compomics.util.experiment.biology.ions.Glycon;
+import com.compomics.util.experiment.biology.ions.Glycan;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -25,8 +25,8 @@ public class GlyconFactoryTest extends TestCase {
         File ptmFile = new File("src/test/resources/experiment/glycons.xml");
         try {
             glyconFactory.importGlycons(ptmFile);
-            ArrayList<Glycon> glycons = glyconFactory.getGlycons();
-            Glycon testGlycon = glycons.get(0);
+            ArrayList<Glycan> glycons = glyconFactory.getGlycons();
+            Glycan testGlycon = glycons.get(0);
         } catch (Exception e) {
             e.printStackTrace();
         }

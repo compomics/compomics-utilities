@@ -14,8 +14,9 @@ public class Hydrogen extends Atom {
      * Constructor.
      */
     public Hydrogen() {
+        monoisotopicMass = 1.00782503207;
         isotopeMap = new HashMap<Integer, Double>();
-        isotopeMap.put(0, 1.00782503207);
+        isotopeMap.put(0, monoisotopicMass);
         isotopeMap.put(1, 2.0141017778);
         isotopeMap.put(2, 3.0160492777);
         isotopeMap.put(3, 4.02781);

@@ -160,6 +160,30 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
+     * Returns a key for the ion match uniquely representing a peak annotation.
+     *
+     * @param ion the ion matched
+     * @param charge the charge
+     *
+     * @return a key for the ion mathc
+     */
+    public static String getMatchKey(Ion ion, int charge) {
+        StringBuilder key = new StringBuilder();
+        key.append(ion.getType().index).append("_");
+        key.append(ion.getSubType()).append("_");
+        if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
+            key.append(fragmentIon.getNumber()).append("_");
+        } else if (ion.getType() == Ion.IonType.TAG_FRAGMENT_ION) {
+            TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
+            key.append(tagFragmentIon.getSubNumber()).append("_");
+        }
+        key.append(ion.getNeutralLossesAsString()).append("_");
+        key.append(charge);
+        return key.toString();
+    }
+
+    /**
      * Returns the annotation to use for a given ion and charge as a String.
      *
      * @param html if true, returns the annotation as HTML with subscripts tags
@@ -169,25 +193,25 @@ public class IonMatch extends ExperimentObject {
      */
     public static String getPeakAnnotation(boolean html, Ion ion, Charge charge) {
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
                 if (html) {
-                    result += "<html>";
+                    result.append("<html>");
                 }
-                result += ion.getSubTypeAsString();
+                result.append(ion.getSubTypeAsString());
 
                 // add fragment ion number
                 PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
                 if (html) {
-                    result += "<sub>" + fragmentIon.getNumber() + "</sub>";
+                    result.append("<sub>").append(fragmentIon.getNumber()).append("</sub>");
                 } else {
-                    result += fragmentIon.getNumber();
+                    result.append(fragmentIon.getNumber());
                 }
 
                 // add charge
-                result += charge.getChargeAsFormattedString();
+                result.append(charge.getChargeAsFormattedString());
 
                 // add any neutral losses
                 if (html) {
@@ -195,36 +219,36 @@ public class IonMatch extends ExperimentObject {
 
                     for (int i = 0; i < neutralLoss.length(); i++) {
                         if (Character.isDigit(neutralLoss.charAt(i))) {
-                            result += "<sub>" + neutralLoss.charAt(i) + "</sub>";
+                            result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
                         } else {
-                            result += neutralLoss.charAt(i);
+                            result.append(neutralLoss.charAt(i));
                         }
                     }
                 } else {
-                    result += ion.getNeutralLossesAsString();
+                    result.append(ion.getNeutralLossesAsString());
                 }
                 if (html) {
-                    result += "</html>";
+                    result.append("</html>");
                 }
-                return result;
+                return result.toString();
             case TAG_FRAGMENT_ION:
                 TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
 
                 if (html) {
-                    result += "<html>";
+                    result.append("<html>");
                 }
                 // add type
-                result += ion.getSubTypeAsString();
+                result.append(ion.getSubTypeAsString());
 
                 // add fragment ion number
                 if (html) {
-                    result += "<sub>" + tagFragmentIon.getSubNumber() + "</sub>";
+                    result.append("<sub>").append(tagFragmentIon.getSubNumber()).append("</sub>");
                 } else {
-                    result += tagFragmentIon.getSubNumber();
+                    result.append(tagFragmentIon.getSubNumber());
                 }
 
                 // add charge
-                result += charge.getChargeAsFormattedString();
+                result.append(charge.getChargeAsFormattedString());
 
                 // add any neutral losses
                 if (html) {
@@ -232,54 +256,54 @@ public class IonMatch extends ExperimentObject {
 
                     for (int i = 0; i < neutralLoss.length(); i++) {
                         if (Character.isDigit(neutralLoss.charAt(i))) {
-                            result += "<sub>" + neutralLoss.charAt(i) + "</sub>";
+                            result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
                         } else {
-                            result += neutralLoss.charAt(i);
+                            result.append(neutralLoss.charAt(i));
                         }
                     }
                 } else {
-                    result += ion.getNeutralLossesAsString();
+                    result.append(ion.getNeutralLossesAsString());
                 }
 
                 if (html) {
-                    result += "</html>";
+                    result.append("</html>");
                 }
-                return result;
+                return result.toString();
             case PRECURSOR_ION:
                 if (html) {
-                    result += "<html>";
+                    result.append("<html>");
                 }
-                result += ion.getSubTypeAsString() + "-";
+                result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
-                result += charge.getChargeAsFormattedString();
+                result.append(charge.getChargeAsFormattedString());
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();
                 if (html) {
                     for (int i = 0; i < neutralLoss.length(); i++) {
                         if (Character.isDigit(neutralLoss.charAt(i))) {
-                            result += "<sub>" + neutralLoss.charAt(i) + "</sub>";
+                            result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
                         } else {
-                            result += neutralLoss.charAt(i);
+                            result.append(neutralLoss.charAt(i));
                         }
                     }
                 } else {
-                    result += neutralLoss;
+                    result.append(neutralLoss);
                 }
                 if (html) {
-                    result += "</html>";
+                    result.append("</html>");
                 }
-                return result;
+                return result.toString();
             default:
                 if (html) {
-                    result += "<html>";
+                    result.append("<html>");
                 }
-                result += ion.getName();
+                result.append(ion.getName());
                 if (html) {
-                    result += "</html>";
+                    result.append("</html>");
                 }
-                return result;
+                return result.toString();
         }
     }
 

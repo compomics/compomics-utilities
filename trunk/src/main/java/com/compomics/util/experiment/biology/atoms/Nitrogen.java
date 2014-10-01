@@ -14,12 +14,13 @@ public class Nitrogen extends Atom {
      * Constructor.
      */
     public Nitrogen() {
+        monoisotopicMass = 14.0030740048;
         isotopeMap = new HashMap<Integer, Double>();
         isotopeMap.put(-4, 10.04165);
         isotopeMap.put(-3, 11.02609);
         isotopeMap.put(-2, 12.0186132);
         isotopeMap.put(-1, 13.00573861);
-        isotopeMap.put(0, 14.0030740048);
+        isotopeMap.put(0, monoisotopicMass);
         isotopeMap.put(1, 15.0001088982);
         isotopeMap.put(2, 16.0061017);
         isotopeMap.put(3, 17.008450);

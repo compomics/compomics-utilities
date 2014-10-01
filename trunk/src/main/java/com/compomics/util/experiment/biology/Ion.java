@@ -26,35 +26,48 @@ public abstract class Ion extends ExperimentObject {
         /**
          * Identifier for a peptide fragment ion.
          */
-        PEPTIDE_FRAGMENT_ION,
+        PEPTIDE_FRAGMENT_ION(0),
         /**
          * A tag fragment ion
          */
-        TAG_FRAGMENT_ION,
+        TAG_FRAGMENT_ION(1),
         /**
          * Identifier for an MH ion. The number of H is not represented here.
          */
-        PRECURSOR_ION,
+        PRECURSOR_ION(2),
         /**
          * Identifier for an immonium ion.
          */
-        IMMONIUM_ION,
+        IMMONIUM_ION(3),
         /**
          * Identifier for a reporter ion.
          */
-        REPORTER_ION,
+        REPORTER_ION(4),
         /**
-         * Identifier for a glycon.
+         * Identifier for a glycan.
          */
-        GLYCON,
+        GLYCAN(5),
         /**
          * Identifier for an elementary ion.
          */
-        ELEMENTARY_ION,
+        ELEMENTARY_ION(6),
         /**
          * Identifier for an unknown ion.
          */
-        UNKNOWN;
+        UNKNOWN(7);
+    
+        /**
+         * The index of the type
+         */
+    public final int index;
+    /**
+     * Constructor.
+     * 
+     * @param index the index of the type
+     */
+    private IonType(int index) {
+        this.index = index;
+    }
     }
     /**
      * Type of ion.
@@ -106,8 +119,8 @@ public abstract class Ion extends ExperimentObject {
         switch (ionType) {
             case ELEMENTARY_ION:
                 return ElementaryIon.getPossibleSubtypes();
-            case GLYCON:
-                return Glycon.getPossibleSubtypes();
+            case GLYCAN:
+                return Glycan.getPossibleSubtypes();
             case IMMONIUM_ION:
                 return ImmoniumIon.getPossibleSubtypes();
             case PEPTIDE_FRAGMENT_ION:
@@ -212,7 +225,7 @@ public abstract class Ion extends ExperimentObject {
     public static ArrayList<IonType> getImplementedIonTypes() {
         ArrayList<IonType> result = new ArrayList<IonType>();
         result.add(IonType.ELEMENTARY_ION);
-        result.add(IonType.GLYCON);
+        result.add(IonType.GLYCAN);
         result.add(IonType.IMMONIUM_ION);
         result.add(IonType.PEPTIDE_FRAGMENT_ION);
         result.add(IonType.TAG_FRAGMENT_ION);
@@ -248,8 +261,8 @@ public abstract class Ion extends ExperimentObject {
                 return "Immonium ion";
             case REPORTER_ION:
                 return "Reporter ion";
-            case GLYCON:
-                return "Glycon";
+            case GLYCAN:
+                return "Glycan";
             case ELEMENTARY_ION:
                 return "Elementary ion";
             case UNKNOWN:
@@ -274,8 +287,8 @@ public abstract class Ion extends ExperimentObject {
         switch (ionType) {
             case ELEMENTARY_ION:
                 return new ElementaryIon("new ElementaryIon", 0.0, subType);
-            case GLYCON:
-                return new Glycon("new Glycon", "new Glycon");
+            case GLYCAN:
+                return new Glycan("new Glycan", "new Glycan");
             case IMMONIUM_ION:
                 return new ImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:
@@ -303,8 +316,8 @@ public abstract class Ion extends ExperimentObject {
         switch (ionType) {
             case ELEMENTARY_ION:
                 return new ElementaryIon("new ElementaryIon", 0.0, subType);
-            case GLYCON:
-                return new Glycon("new Glycon", "new Glycon");
+            case GLYCAN:
+                return new Glycan("new Glycon", "new Glycon");
             case IMMONIUM_ION:
                 return new ImmoniumIon(subType);
             case PEPTIDE_FRAGMENT_ION:

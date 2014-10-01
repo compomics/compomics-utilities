@@ -46,10 +46,12 @@ public class FragmentFactoryTest extends TestCase {
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
 
-        ArrayList<Ion> fragments = fragmentFactory.getFragmentIons(peptide);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(peptide);
+        HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
 
-        for (Ion ion : fragments) {
-            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+        // add the theoretical masses to the table
+        for (Integer subType : fragmentIons.keySet()) {
+            for (Ion ion : fragmentIons.get(subType)) {
                 PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
                 if (peptideFragmentIon.getNeutralLosses().isEmpty()) {
                     if (peptideFragmentIon.getNumber() == 1) {
@@ -378,10 +380,12 @@ public class FragmentFactoryTest extends TestCase {
         neutralLosses.put(NeutralLoss.NH3, 9);
         double protonMass = ElementaryIon.proton.getTheoreticMass();
 
-        ArrayList<Ion> fragments = fragmentFactory.getFragmentIons(tag);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(tag);
+        HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.TAG_FRAGMENT_ION.index);
 
-        for (Ion ion : fragments) {
-            if (ion.getType() == Ion.IonType.TAG_FRAGMENT_ION) {
+        // add the theoretical masses to the table
+        for (Integer subType : fragmentIons.keySet()) {
+            for (Ion ion : fragmentIons.get(subType)) {
                 TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
                 if (tagFragmentIon.getNeutralLosses().isEmpty()) {
                     if (tagFragmentIon.getNumber() == 1) {

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.biology;
 
-import com.compomics.util.experiment.biology.ions.Glycon;
+import com.compomics.util.experiment.biology.ions.Glycan;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -25,7 +25,7 @@ public class GlyconFactory {
     /**
      * The glycons.
      */
-    private static ArrayList<Glycon> glycons = new ArrayList<Glycon>();
+    private static ArrayList<Glycan> glycons = new ArrayList<Glycan>();
 
     /**
      * Constructor for the glycon factory.
@@ -50,7 +50,7 @@ public class GlyconFactory {
      *
      * @return all glycons imported
      */
-    public ArrayList<Glycon> getGlycons() {
+    public ArrayList<Glycan> getGlycons() {
         return glycons;
     }
 
@@ -109,37 +109,37 @@ public class GlyconFactory {
         }
         type = parser.next();
         String shortName = parser.getText().trim();
-        Glycon currentGlycon = new Glycon(shortName, name);
+        Glycan currentGlycon = new Glycan(shortName, name);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("underivatisedMass")) {
             type = parser.next();
         }
         type = parser.next();
         Double mass = new Double(parser.getText().trim());
-        currentGlycon.addMass(Glycon.UNDERIVATED_MASS, mass);
+        currentGlycon.addMass(Glycan.UNDERIVATED_MASS, mass);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("permethylatedMass")) {
             type = parser.next();
         }
         type = parser.next();
         mass = new Double(parser.getText().trim());
-        currentGlycon.addMass(Glycon.PERMETHYLATED_MASS, mass);
+        currentGlycon.addMass(Glycan.PERMETHYLATED_MASS, mass);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("deuteromethylatedMass")) {
             type = parser.next();
         }
         type = parser.next();
         mass = new Double(parser.getText().trim());
-        currentGlycon.addMass(Glycon.DEUTEROMETHYLATED_MASS, mass);
+        currentGlycon.addMass(Glycan.DEUTEROMETHYLATED_MASS, mass);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("peracetylatedMass")) {
             type = parser.next();
         }
         type = parser.next();
         mass = new Double(parser.getText().trim());
-        currentGlycon.addMass(Glycon.PERACETYLATED_MASS, mass);
+        currentGlycon.addMass(Glycan.PERACETYLATED_MASS, mass);
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("deuteroacetylatedMass")) {
             type = parser.next();
         }
         type = parser.next();
         mass = new Double(parser.getText().trim());
-        currentGlycon.addMass(Glycon.DEUTEROACETYLATED_MASS, mass);
+        currentGlycon.addMass(Glycan.DEUTEROACETYLATED_MASS, mass);
         glycons.add(currentGlycon);
     }
 }

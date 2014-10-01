@@ -364,12 +364,14 @@ public class FragmentIonTable extends JTable {
 
         // get all fragmentions for the peptide
         IonFactory fragmentFactory = IonFactory.getInstance();
-        ArrayList<Ion> fragmentIons = fragmentFactory.getFragmentIons(currentPeptide);
+        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(currentPeptide);
+        HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
 
         // add the theoretical masses to the table
-        for (Ion ion : fragmentIons) {
+        for (Integer subType : fragmentIons.keySet()) {
+        for (Ion ion : fragmentIons.get(subType)) {
             // @TODO: implement neutral losses
-            if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && ion.getNeutralLosses().isEmpty()) {
+            if (ion.getNeutralLosses().isEmpty()) {
                 PeptideFragmentIon fragmention = (PeptideFragmentIon) ion;
                 double fragmentMzChargeOne = (ion.getTheoreticMass() + 1 * ElementaryIon.proton.getTheoreticMass()) / 1;
                 double fragmentMzChargeTwo = (ion.getTheoreticMass() + 2 * ElementaryIon.proton.getTheoreticMass()) / 2;
@@ -447,6 +449,7 @@ public class FragmentIonTable extends JTable {
                     }
                 }
             }
+        }
         }
 
         // @TODO: implement a better way to handle charge
@@ -625,7 +628,7 @@ public class FragmentIonTable extends JTable {
             // do nothing
         }
         try {
-            getColumn("y").setCellRenderer(new FragmentIonTableCellRenderer(yIonsSinglyCharged, Color.RED, Color.WHITE));
+            getColumn("z").setCellRenderer(new FragmentIonTableCellRenderer(zIonsSinglyCharged, Color.RED, Color.WHITE));
         } catch (IllegalArgumentException e) {
             // do nothing
         }

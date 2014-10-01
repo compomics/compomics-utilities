@@ -54,15 +54,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide);
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
-                for (Ion ion : theoreticalFragmentIons) {
-                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                        if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
-                        } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
-                        }
-                    }
-                }
+                updateMassShifts();
             }
             spectrumAnnotation.clear();
             unmatchedIons.clear();
@@ -134,38 +126,43 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
         }
 
         if (theoreticalFragmentIons != null) {
-            for (Ion peptideIon : theoreticalFragmentIons) {
+            for (Ion.IonType ionType : iontypes.keySet()) {
+                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+                if (ionMap != null) {
+                    HashSet<Integer> subtypes = iontypes.get(ionType);
+                    for (int subType : subtypes) {
+                        ArrayList<Ion> ions = ionMap.get(subType);
+                        if (ions != null) {
+                            for (Ion ion : ions) {
 
-                if (iontypes.containsKey(peptideIon.getType())
-                        && iontypes.get(peptideIon.getType()).contains(peptideIon.getSubType())
-                        && lossesValidated(neutralLosses, peptideIon)) {
+                                ArrayList<Integer> tempCharges;
 
-                    ArrayList<Integer> tempCharges;
+                                // have to treat precursor charges separately, as to not increase the max charge for the other ions
+                                if (ionType == Ion.IonType.PRECURSOR_ION) {
+                                    tempCharges = precursorCharges;
+                                } else {
+                                    tempCharges = charges;
+                                }
 
-                    // have to treat precursor charges separately, as to not increase the max charge for the other ions
-                    if (peptideIon.getType() == Ion.IonType.PRECURSOR_ION) {
-                        tempCharges = precursorCharges;
-                    } else {
-                        tempCharges = charges;
-                    }
-
-                    for (int charge : tempCharges) {
-                        if (chargeValidated(peptideIon, charge, precursorCharge)) {
-                            String key = IonMatch.getPeakAnnotation(peptideIon, new Charge(Charge.PLUS, charge));
-                            boolean matchFound = false;
-                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                matchFound = matchInSpectrum(peptideIon, charge);
-                            }
-                            if (alreadyAnnotated || matchFound) {
-                                result.add(spectrumAnnotation.get(key));
+                                for (int charge : tempCharges) {
+                                    if (chargeValidated(ion, charge, precursorCharge)) {
+                                        String key = IonMatch.getMatchKey(ion, charge);
+                                        boolean matchFound = false;
+                                        boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
+                                        if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
+                                            matchFound = matchInSpectrum(ion, charge);
+                                        }
+                                        if (alreadyAnnotated || matchFound) {
+                                            result.add(spectrumAnnotation.get(key));
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
         return result;
     }
 

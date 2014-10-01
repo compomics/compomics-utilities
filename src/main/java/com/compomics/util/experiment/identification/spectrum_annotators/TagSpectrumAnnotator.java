@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -47,9 +46,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     /**
-     * Sets a new peptide to match.
+     * Sets a new tag to match.
      *
-     * @param newTag the new peptide
+     * @param newTag the new tag
      * @param precursorCharge the new precursor charge
      */
     public void setTag(Tag newTag, int precursorCharge) {
@@ -58,15 +57,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             this.precursorCharge = precursorCharge;
             theoreticalFragmentIons = fragmentFactory.getFragmentIons(newTag);
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
-                for (Ion ion : theoreticalFragmentIons) {
-                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                        if (ion.getSubType() == PeptideFragmentIon.A_ION || ion.getSubType() == PeptideFragmentIon.B_ION || ion.getSubType() == PeptideFragmentIon.C_ION) {
-                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
-                        } else if (ion.getSubType() == PeptideFragmentIon.X_ION || ion.getSubType() == PeptideFragmentIon.Y_ION || ion.getSubType() == PeptideFragmentIon.Z_ION) {
-                            ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
-                        }
-                    }
-                }
+                updateMassShifts();
             }
             spectrumAnnotation.clear();
             unmatchedIons.clear();
@@ -75,7 +66,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * Returns the possible neutral losses expected by default for a given
-     * peptide. /!\ this method will work only if the PTM found in the peptide
+     * tag. /!\ this method will work only if the PTM found in the tag
      * are in the PTMFactory.
      *
      * @param tag the tag of interest
@@ -89,7 +80,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences) 
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -256,31 +247,35 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         }
 
         if (theoreticalFragmentIons != null) {
-            for (Ion fragmentIon : theoreticalFragmentIons) {
+            for (Ion.IonType ionType : iontypes.keySet()) {
+                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType);
+                if (ionMap != null) {
+                    HashSet<Integer> subtypes = iontypes.get(ionType);
+                    for (int subType : subtypes) {
+                        ArrayList<Ion> ions = ionMap.get(subType);
+                        if (ions != null) {
+                            for (Ion ion : ions) {
+                                ArrayList<Integer> tempCharges;
+                                // have to treat precursor charges separately, as to not increase the max charge for the other ions
+                                if (ionType == Ion.IonType.PRECURSOR_ION) {
+                                    tempCharges = precursorCharges;
+                                } else {
+                                    tempCharges = charges;
+                                }
 
-                if (iontypes.containsKey(fragmentIon.getType())
-                        && iontypes.get(fragmentIon.getType()).contains(fragmentIon.getSubType())
-                        && lossesValidated(neutralLosses, fragmentIon)) {
-
-                    ArrayList<Integer> tempCharges;
-
-                    // have to treat precursor charges separately, as to not increase the max charge for the other ions
-                    if (fragmentIon.getType() == Ion.IonType.PRECURSOR_ION) {
-                        tempCharges = precursorCharges;
-                    } else {
-                        tempCharges = charges;
-                    }
-
-                    for (int charge : tempCharges) {
-                        if (chargeValidated(fragmentIon, charge, precursorCharge)) {
-                            String key = IonMatch.getPeakAnnotation(fragmentIon, new Charge(Charge.PLUS, charge));
-                            boolean matchFound = false;
-                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                matchFound = matchInSpectrum(fragmentIon, charge);
-                            }
-                            if (alreadyAnnotated || matchFound) {
-                                result.add(spectrumAnnotation.get(key));
+                                for (int charge : tempCharges) {
+                                    if (chargeValidated(ion, charge, precursorCharge)) {
+                                        String key = IonMatch.getMatchKey(ion, charge);
+                                        boolean matchFound = false;
+                                        boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
+                                        if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
+                                            matchFound = matchInSpectrum(ion, charge);
+                                        }
+                                        if (alreadyAnnotated || matchFound) {
+                                            result.add(spectrumAnnotation.get(key));
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

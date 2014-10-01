@@ -2,10 +2,8 @@ package com.compomics.util.experiment.biology.ions;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * A precursor ion.

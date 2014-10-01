@@ -116,10 +116,11 @@ public class PhosphoRS {
                 if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(peptideLength)) {
                     possibleSites.add(peptideLength + 1);
                 }
-            }
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
-                if (!possibleSites.contains(potentialSite)) {
-                    possibleSites.add(potentialSite);
+            } else {
+                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
+                    if (!possibleSites.contains(potentialSite)) {
+                        possibleSites.add(potentialSite);
+                    }
                 }
             }
         }
@@ -181,7 +182,13 @@ public class PhosphoRS {
                                     noIons = true;
                                     Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
                                     for (int pos : profile) {
-                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                                        int index = pos;
+                                        if (index == 0) {
+                                            index = 1;
+                                        } else if (index == peptideLength + 1) {
+                                            index = peptideLength;
+                                        }
+                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
                                     double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
                                     scores.add(score);
@@ -199,7 +206,13 @@ public class PhosphoRS {
                                 if (!alreadyScored) {
                                     Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
                                     for (int pos : profile) {
-                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                                        int index = pos;
+                                        if (index == 0) {
+                                            index = 1;
+                                        } else if (index == peptideLength + 1) {
+                                            index = peptideLength;
+                                        }
+                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
                                     double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
                                     scores.add(score);
@@ -270,7 +283,13 @@ public class PhosphoRS {
                 Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
 
                 for (int pos : profile) {
-                    tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, pos));
+                    int index = pos;
+                    if (index == 0) {
+                        index = 1;
+                    } else if (index == peptideLength + 1) {
+                        index = peptideLength;
+                    }
+                    tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                 }
 
                 double score = getPhosphoRsScore(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);

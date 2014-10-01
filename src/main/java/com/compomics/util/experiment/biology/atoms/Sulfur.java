@@ -14,6 +14,7 @@ public class Sulfur extends Atom {
      * Constructor.
      */
     public Sulfur() {
+        monoisotopicMass = 31.97207100;
         isotopeMap = new HashMap<Integer, Double>();
         isotopeMap.put(-6, 26.02788);
         isotopeMap.put(-5, 27.01883);
@@ -21,7 +22,7 @@ public class Sulfur extends Atom {
         isotopeMap.put(-3, 28.99661);
         isotopeMap.put(-2, 29.984903);
         isotopeMap.put(-1, 30.9795547);
-        isotopeMap.put(0, 31.97207100);
+        isotopeMap.put(0, monoisotopicMass);
         isotopeMap.put(1, 32.97145876);
         isotopeMap.put(2, 33.96786690);
         isotopeMap.put(3, 34.96903216);

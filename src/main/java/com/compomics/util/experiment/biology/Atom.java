@@ -43,6 +43,10 @@ public abstract class Atom extends ExperimentObject {
     public static final Atom P = new Phosphorus();
 
     /**
+     * The monoisotopic mass. Access is faster then querying the isotope map.
+     */
+    protected Double monoisotopicMass;
+    /**
      * Map of the isotope masses relative to the monoisotopic peak (+1 for
      * carbon 13).
      */
@@ -66,7 +70,7 @@ public abstract class Atom extends ExperimentObject {
      * @return the monoisotopic mass in Da
      */
     public Double getMonoisotopicMass() {
-        return getIsotopeMass(0);
+        return monoisotopicMass;
     }
 
     /**

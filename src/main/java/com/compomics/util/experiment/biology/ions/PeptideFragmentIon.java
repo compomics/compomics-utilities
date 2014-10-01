@@ -64,12 +64,11 @@ public class PeptideFragmentIon extends Ion {
      */
     public PeptideFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
         if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
+            this.neutralLosses = neutralLosses;
         }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
         this.theoreticMass = mass;
-        this.neutralLosses.addAll(neutralLosses);
         this.number = number;
     }
 

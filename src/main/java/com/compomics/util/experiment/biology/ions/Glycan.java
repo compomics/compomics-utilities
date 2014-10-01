@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * This class will models a glycon fragment.
+ * This class represents a glycan.
  *
  * @author Marc Vaudel
  */
-public class Glycon extends Ion {
+public class Glycan extends Ion {
 
     /**
      * Serial number for backward compatibility.
@@ -39,32 +39,32 @@ public class Glycon extends Ion {
      */
     public final static int DEUTEROACETYLATED_MASS = 4;
     /**
-     * Masses of this glycon.
+     * Masses of this glycan.
      */
     private HashMap<Integer, Double> theoreticMasses = new HashMap<Integer, Double>();
 
     /**
-     * Constructor for a glycon.
+     * Constructor for a glycan.
      *
-     * @param name The name of the glycon
-     * @param longName A shortened name for the glycon
+     * @param name The name of the glycan
+     * @param longName A shortened name for the glycan
      */
-    public Glycon(String name, String longName) {
-        type = IonType.GLYCON;
+    public Glycan(String name, String longName) {
+        type = IonType.GLYCAN;
         this.name = name;
         this.longName = longName;
     }
     /**
-     * The glycon short name which can be displayed on a spectrum.
+     * The glycan short name which can be displayed on a spectrum.
      */
     private String name;
     /**
-     * The glycon full name.
+     * The glycan full name.
      */
     private String longName;
 
     /**
-     * Add a mass for this glycon.
+     * Add a mass for this glycan.
      *
      * @param massType mass type indexed according to the static field
      * @param value Value of the mass
@@ -74,7 +74,7 @@ public class Glycon extends Ion {
     }
 
     /**
-     * Get the glycon mass.
+     * Get the glycan mass.
      *
      * @param aType Type of mass requested indexed according to static int.
      * @return the requested mass
@@ -95,13 +95,13 @@ public class Glycon extends Ion {
 
     @Override
     public int getSubType() {
-        //@TODO: implement all glycon types
+        //@TODO: implement all glycan types
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getSubTypeAsString() {
-        //@TODO: implement all glycon types
+        //@TODO: implement all glycan types
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

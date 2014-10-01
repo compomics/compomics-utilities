@@ -181,11 +181,12 @@ public class AScore {
                 if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(peptideLength)) {
                     possibleSites.add(peptideLength + 1);
                 }
-            }
+            } else {
             for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
                 if (!possibleSites.contains(potentialSite)) {
                     possibleSites.add(potentialSite);
                 }
+            }
             }
         }
 

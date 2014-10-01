@@ -8,7 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -147,7 +149,6 @@ public class ZipUtils {
 
                 entryName += file.getName();
                 ZipEntry entry = new ZipEntry(entryName);
-                entry.setSize(file.length());
                 out.putNextEntry(entry);
                 byte data[] = new byte[BUFFER];
                 int count;
@@ -192,11 +193,6 @@ public class ZipUtils {
      */
     public static void unzip(File zipFile, File destinationFolder, WaitingHandler waitingHandler) throws IOException {
 
-        long fileLength = getUnzippedSize(zipFile);
-        if (fileLength <= 0) {
-            fileLength = zipFile.length(); //@TODO: find a better solution when no size is available
-        }
-
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
@@ -212,6 +208,14 @@ public class ZipUtils {
                 ZipInputStream zis = new ZipInputStream(bis);
 
                 try {
+                    // find the total size if all the uncompressed files
+                    long fileLength = 0;
+                    ZipFile tempZipFile = new ZipFile(zipFile);
+                    for (Enumeration<? extends ZipEntry> e = tempZipFile.entries(); e.hasMoreElements();) {
+                        ZipEntry ze = e.nextElement();
+                        fileLength += ze.getSize();
+                    }
+
                     byte data[] = new byte[BUFFER];
                     long read = 0;
                     ZipEntry entry;
@@ -281,47 +285,5 @@ public class ZipUtils {
         } finally {
             fi.close();
         }
-    }
-
-    /**
-     * Returns the uncompressed size of the archive in bytes as sum of the
-     * uncompressed entry sizes.
-     *
-     * @param zipFile the file of interest
-     *
-     * @return the uncompressed size of the archive
-     *
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public static long getUnzippedSize(File zipFile) throws FileNotFoundException, IOException {
-
-        long size = 0;
-
-        FileInputStream fi = new FileInputStream(zipFile);
-
-        try {
-            BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
-
-            try {
-                ZipInputStream zis = new ZipInputStream(bis);
-
-                try {
-                    ZipEntry entry;
-
-                    while ((entry = zis.getNextEntry()) != null) {
-                        size += entry.getSize();
-                    }
-                } finally {
-                    zis.close();
-                }
-            } finally {
-                bis.close();
-            }
-        } finally {
-            fi.close();
-        }
-
-        return size;
     }
 }

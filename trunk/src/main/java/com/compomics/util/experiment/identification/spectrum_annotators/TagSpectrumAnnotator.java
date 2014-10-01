@@ -14,7 +14,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
-import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
@@ -248,7 +247,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
         if (theoreticalFragmentIons != null) {
             for (Ion.IonType ionType : iontypes.keySet()) {
-                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType);
+                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
                 if (ionMap != null) {
                     HashSet<Integer> subtypes = iontypes.get(ionType);
                     for (int subType : subtypes) {

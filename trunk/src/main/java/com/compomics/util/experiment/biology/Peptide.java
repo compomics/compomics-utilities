@@ -411,11 +411,11 @@ public class Peptide extends ExperimentObject {
             }
         }
         Collections.sort(tempModifications);
-        String result = sequence;
+        StringBuilder result = new StringBuilder(sequence);
         for (String mod : tempModifications) {
-            result += MODIFICATION_SEPARATOR + mod;
+            result.append(MODIFICATION_SEPARATOR).append(mod);
         }
-        return result;
+        return result.toString();
     }
 
     /**

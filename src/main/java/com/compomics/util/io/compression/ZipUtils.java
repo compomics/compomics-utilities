@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
  * Convenience class for the handling of zip files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ZipUtils {
 
@@ -33,10 +34,12 @@ public class ZipUtils {
      * @param destinationFile the destination file
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
+     * @param totalUncompressedFileSize the total uncompressed size, a value
+     * less than 0 will result in an indeterminate progress bar
      *
      * @throws IOException
      */
-    public static void zip(File originFile, File destinationFile, WaitingHandler waitingHandler) throws IOException {
+    public static void zip(File originFile, File destinationFile, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
 
         FileOutputStream fos = new FileOutputStream(destinationFile);
         try {
@@ -44,7 +47,7 @@ public class ZipUtils {
             try {
                 ZipOutputStream out = new ZipOutputStream(bos);
                 try {
-                    addToZip(originFile, out, waitingHandler);
+                    addToZip(originFile, out, waitingHandler, totalUncompressedFileSize);
                 } finally {
                     out.close();
                 }
@@ -64,12 +67,14 @@ public class ZipUtils {
      * @param out the zip stream
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
+     * @param totalUncompressedFileSize the total uncompressed size, a value
+     * less than 0 will result in an indeterminate progress bar
      *
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void addToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
-        addToZip(file, "", out, waitingHandler);
+    public static void addToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
+        addToZip(file, "", out, waitingHandler, totalUncompressedFileSize);
     }
 
     /**
@@ -82,11 +87,13 @@ public class ZipUtils {
      * @param out the zip stream
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
+     * @param totalUncompressedFileSize the total uncompressed size, a value
+     * less than 0 will result in an indeterminate progress bar
      *
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void addToZip(File file, String subDirectory, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
+    public static void addToZip(File file, String subDirectory, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
         if (file.isDirectory()) {
             String directory = subDirectory;
             if (!subDirectory.equals("")) {
@@ -95,10 +102,10 @@ public class ZipUtils {
             directory += file.getName();
             addFolderToZip(directory, out);
             for (File subFile : file.listFiles()) {
-                addToZip(subFile, subDirectory, out, waitingHandler);
+                addToZip(subFile, subDirectory, out, waitingHandler, totalUncompressedFileSize);
             }
         } else {
-            addFileToZip(subDirectory, file, out, waitingHandler);
+            addFileToZip(subDirectory, file, out, waitingHandler, totalUncompressedFileSize);
         }
     }
 
@@ -109,12 +116,14 @@ public class ZipUtils {
      * @param out the zip stream
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
+     * @param totalUncompressedFileSize the total uncompressed size, a value
+     * less than 0 will result in an indeterminate progress bar
      *
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void addFileToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
-        addFileToZip("", file, out, waitingHandler);
+    public static void addFileToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
+        addFileToZip("", file, out, waitingHandler, totalUncompressedFileSize);
     }
 
     /**
@@ -126,11 +135,13 @@ public class ZipUtils {
      * @param out the zip stream
      * @param waitingHandler a waiting handler allowing canceling the process
      * (can be null)
+     * @param totalUncompressedFileSize the total uncompressed size, a value
+     * less than 0 will result in an indeterminate progress bar
      *
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static void addFileToZip(String subDirectory, File file, ZipOutputStream out, WaitingHandler waitingHandler) throws IOException {
+    public static void addFileToZip(String subDirectory, File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
 
         if (file.isDirectory()) {
             throw new IllegalArgumentException("Attempting to add a folder as a file. Use addToZip instead.");
@@ -152,10 +163,29 @@ public class ZipUtils {
                 out.putNextEntry(entry);
                 byte data[] = new byte[BUFFER];
                 int count;
+                long write = 0;
+
+                int previousProgress = 0;
+                if (waitingHandler != null) {
+                    previousProgress = waitingHandler.getSecondaryProgressCounter();
+                }
 
                 while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                        return;
+                    if (waitingHandler != null) {
+                        if (waitingHandler.isRunCanceled()) {
+                            return;
+                        }
+                        if (totalUncompressedFileSize > 0) {
+                            write += count;
+                            int progress = (int) (100.0 * write / totalUncompressedFileSize) + previousProgress;
+                            if (progress > 100) {
+                                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                            } else {
+                                waitingHandler.setSecondaryProgressCounter(progress);
+                            }
+                        } else {
+                            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                        }
                     }
                     out.write(data, 0, count);
                 }
@@ -248,16 +278,18 @@ public class ZipUtils {
 
                                     while ((count = zis.read(data, 0, BUFFER)) != -1) {
                                         bos.write(data, 0, count);
-                                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                            break;
-                                        }
-                                        if (waitingHandler != null && fileLength > 0) {
-                                            read += count;
-                                            int progress = (int) (100.0 * read / fileLength);
-                                            if (progress > 100) {
-                                                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-                                            } else {
-                                                waitingHandler.setSecondaryProgressCounter(progress);
+                                        if (waitingHandler != null) {
+                                            if (waitingHandler.isRunCanceled()) {
+                                                return;
+                                            }
+                                            if (fileLength > 0) {
+                                                read += count;
+                                                int progress = (int) (100.0 * read / fileLength);
+                                                if (progress > 100) {
+                                                    waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                                                } else {
+                                                    waitingHandler.setSecondaryProgressCounter(progress);
+                                                }
                                             }
                                         }
                                     }

@@ -55,19 +55,20 @@ public abstract class Ion extends ExperimentObject {
          * Identifier for an unknown ion.
          */
         UNKNOWN(7);
-    
+
         /**
-         * The index of the type
+         * The index of the type.
          */
-    public final int index;
-    /**
-     * Constructor.
-     * 
-     * @param index the index of the type
-     */
-    private IonType(int index) {
-        this.index = index;
-    }
+        public final int index;
+
+        /**
+         * Constructor.
+         *
+         * @param index the index of the type
+         */
+        private IonType(int index) {
+            this.index = index;
+        }
     }
     /**
      * Type of ion.

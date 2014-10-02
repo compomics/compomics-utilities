@@ -159,7 +159,7 @@ public class AScore {
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param peptideSpectrumAnnotator a spectrum annotator to annotate the spectra
+     * @param spectrumAnnotator a spectrum annotator to annotate the spectra
      *
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
@@ -175,7 +175,7 @@ public class AScore {
      * @throws SQLException
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, 
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses,
             SequenceMatchingPreferences sequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
@@ -223,11 +223,11 @@ public class AScore {
                     possibleSites.add(peptideLength + 1);
                 }
             } else {
-            for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
-                if (!possibleSites.contains(potentialSite)) {
-                    possibleSites.add(potentialSite);
+                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
+                    if (!possibleSites.contains(potentialSite)) {
+                        possibleSites.add(potentialSite);
+                    }
                 }
-            }
             }
         }
 

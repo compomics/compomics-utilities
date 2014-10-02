@@ -3,7 +3,7 @@ package com.compomics.util.memory;
 /**
  * This class provides information on the memory consumption status.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class MemoryConsumptionStatus {
 

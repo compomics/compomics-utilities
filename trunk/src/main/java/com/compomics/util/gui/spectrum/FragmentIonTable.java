@@ -369,87 +369,87 @@ public class FragmentIonTable extends JTable {
 
         // add the theoretical masses to the table
         for (Integer subType : fragmentIons.keySet()) {
-        for (Ion ion : fragmentIons.get(subType)) {
-            // @TODO: implement neutral losses
-            if (ion.getNeutralLosses().isEmpty()) {
-                PeptideFragmentIon fragmention = (PeptideFragmentIon) ion;
-                double fragmentMzChargeOne = (ion.getTheoreticMass() + 1 * ElementaryIon.proton.getTheoreticMass()) / 1;
-                double fragmentMzChargeTwo = (ion.getTheoreticMass() + 2 * ElementaryIon.proton.getTheoreticMass()) / 2;
+            for (Ion ion : fragmentIons.get(subType)) {
+                // @TODO: implement neutral losses
+                if (ion.getNeutralLosses().isEmpty()) {
+                    PeptideFragmentIon fragmention = (PeptideFragmentIon) ion;
+                    double fragmentMzChargeOne = (ion.getTheoreticMass() + 1 * ElementaryIon.proton.getTheoreticMass()) / 1;
+                    double fragmentMzChargeTwo = (ion.getTheoreticMass() + 2 * ElementaryIon.proton.getTheoreticMass()) / 2;
 
-                int fragmentNumber = fragmention.getNumber();
+                    int fragmentNumber = fragmention.getNumber();
 
-                if (currentFragmentIonTypes.contains(fragmention.getSubType())) {
+                    if (currentFragmentIonTypes.contains(fragmention.getSubType())) {
 
-                    if (fragmention.getSubType() == PeptideFragmentIon.A_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("a").getModelIndex());
-                        }
-                    } else if (fragmention.getSubType() == PeptideFragmentIon.B_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b").getModelIndex());
-                        }
-                        if (twoCharges) {
-                            setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++").getModelIndex());
-                        }
-
-                        if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                        if (fragmention.getSubType() == PeptideFragmentIon.A_ION) {
                             if (singleCharge) {
-                                setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-H2O").getModelIndex());
+                                setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("a").getModelIndex());
+                            }
+                        } else if (fragmention.getSubType() == PeptideFragmentIon.B_ION) {
+                            if (singleCharge) {
+                                setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b").getModelIndex());
                             }
                             if (twoCharges) {
-                                setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++-H2O").getModelIndex());
+                                setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++").getModelIndex());
                             }
-                        }
 
-                        if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                if (singleCharge) {
+                                    setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-H2O").getModelIndex());
+                                }
+                                if (twoCharges) {
+                                    setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++-H2O").getModelIndex());
+                                }
+                            }
+
+                            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                if (singleCharge) {
+                                    setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-NH3").getModelIndex());
+                                }
+                                if (twoCharges) {
+                                    setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++-NH3").getModelIndex());
+                                }
+                            }
+                        } else if (fragmention.getSubType() == PeptideFragmentIon.C_ION) {
                             if (singleCharge) {
-                                setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-NH3").getModelIndex());
+                                setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("c").getModelIndex());
+                            }
+                        } else if (fragmention.getSubType() == PeptideFragmentIon.Y_ION) {
+                            if (singleCharge) {
+                                setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y").getModelIndex());
                             }
                             if (twoCharges) {
-                                setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++-NH3").getModelIndex());
+                                setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++").getModelIndex());
                             }
-                        }
-                    } else if (fragmention.getSubType() == PeptideFragmentIon.C_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("c").getModelIndex());
-                        }
-                    } else if (fragmention.getSubType() == PeptideFragmentIon.Y_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y").getModelIndex());
-                        }
-                        if (twoCharges) {
-                            setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++").getModelIndex());
-                        }
 
-                        if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
-                            if (singleCharge) {
-                                setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-H2O").getModelIndex());
+                            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                if (singleCharge) {
+                                    setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-H2O").getModelIndex());
+                                }
+                                if (twoCharges) {
+                                    setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++-H2O").getModelIndex());
+                                }
                             }
-                            if (twoCharges) {
-                                setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++-H2O").getModelIndex());
-                            }
-                        }
 
-                        if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                if (singleCharge) {
+                                    setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-NH3").getModelIndex());
+                                }
+                                if (twoCharges) {
+                                    setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++-NH3").getModelIndex());
+                                }
+                            }
+                        } else if (fragmention.getSubType() == PeptideFragmentIon.X_ION) {
                             if (singleCharge) {
-                                setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-NH3").getModelIndex());
+                                setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("x").getModelIndex());
                             }
-                            if (twoCharges) {
-                                setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++-NH3").getModelIndex());
+                        } else if (fragmention.getSubType() == PeptideFragmentIon.Z_ION) {
+                            if (singleCharge) {
+                                setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("z").getModelIndex());
                             }
-                        }
-                    } else if (fragmention.getSubType() == PeptideFragmentIon.X_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("x").getModelIndex());
-                        }
-                    } else if (fragmention.getSubType() == PeptideFragmentIon.Z_ION) {
-                        if (singleCharge) {
-                            setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("z").getModelIndex());
                         }
                     }
                 }
             }
-        }
         }
 
         // @TODO: implement a better way to handle charge

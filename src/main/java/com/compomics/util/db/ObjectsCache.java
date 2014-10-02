@@ -158,7 +158,7 @@ public class ObjectsCache {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      */
-    public void removeObject(String dbName, String tableName, String objectKey) {
+    public synchronized void removeObject(String dbName, String tableName, String objectKey) {
         String cacheKey = getCacheKey(dbName, tableName, objectKey);
         loadedObjectsKeys.remove(cacheKey);
         if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
@@ -174,7 +174,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @return the entry of interest, null if not present in the cache
      */
-    private CacheEntry getEntry(String dbName, String tableName, String objectKey) {
+    private synchronized CacheEntry getEntry(String dbName, String tableName, String objectKey) {
         if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
             return loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
         }
@@ -190,7 +190,7 @@ public class ObjectsCache {
      *
      * @return the object of interest, null if not present in the cache
      */
-    public Object getObject(String dbName, String tableName, String objectKey) {
+    public synchronized Object getObject(String dbName, String tableName, String objectKey) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
             return entry.getObject();
@@ -209,7 +209,7 @@ public class ObjectsCache {
      * @return returns a boolean indicating that the entry was in cache and has
      * been updated. False otherwise.
      */
-    public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
+    public synchronized boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
             entry.setModified(true);
@@ -233,7 +233,7 @@ public class ObjectsCache {
      * @throws SQLException
      * @throws java.lang.InterruptedException
      */
-    public void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
+    public synchronized void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (dbName.contains(cacheSeparator)) {
             throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
         } else if (tableName.contains(cacheSeparator)) {
@@ -272,7 +272,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
+    public synchronized void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
         saveObjects(entryKeys, null, true);
     }
 
@@ -287,7 +287,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
+    public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
         saveObjects(entryKeys, waitingHandler, true);
     }
 
@@ -304,7 +304,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
+    public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
         if (waitingHandler != null) {
             waitingHandler.resetSecondaryProgressCounter();
             if (clearEntries) {
@@ -323,7 +323,7 @@ public class ObjectsCache {
             CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
 
             if (entry == null) {
-                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
+                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey); // @TODO: how is this possible??
             } else {
                 if (entry.isModified()) {
                     if (!toSave.containsKey(dbName)) {
@@ -393,7 +393,7 @@ public class ObjectsCache {
      * writing the object
      * @throws java.lang.InterruptedException
      */
-    public void saveObject(String entryKey) throws IOException, SQLException, InterruptedException {
+    public synchronized void saveObject(String entryKey) throws IOException, SQLException, InterruptedException {
         saveObject(entryKey, true);
     }
 
@@ -411,7 +411,7 @@ public class ObjectsCache {
      * writing the object
      * @throws java.lang.InterruptedException
      */
-    public void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
+    public synchronized void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
         String[] splittedKey = getKeyComponents(entryKey);
         String dbName = splittedKey[0];
         String tableName = splittedKey[1];
@@ -457,7 +457,7 @@ public class ObjectsCache {
      * writing the object
      * @throws java.lang.InterruptedException
      */
-    public void updateCache() throws IOException, SQLException, InterruptedException {
+    public synchronized void updateCache() throws IOException, SQLException, InterruptedException {
 
         while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
                 || (automatedMemoryManagement && !memoryCheck())) {
@@ -487,7 +487,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
+    public synchronized void reduceMemoryConsumption(double share, WaitingHandler waitingHandler) throws IOException, SQLException {
         int toRemove = (int) (share * loadedObjectsKeys.size());
         ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
         loadedObjectsKeys.drainTo(keysToRemove, toRemove);
@@ -502,7 +502,7 @@ public class ObjectsCache {
      * @param objectKey the object key
      * @return a boolean indicating whether an object is loaded in the cache
      */
-    public boolean inCache(String dbName, String tableName, String objectKey) {
+    public synchronized boolean inCache(String dbName, String tableName, String objectKey) {
         return loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName) && loadedObjectsMap.get(dbName).get(tableName).containsKey(objectKey);
     }
 
@@ -517,7 +517,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
+    public synchronized void saveCache(WaitingHandler waitingHandler, boolean emptyCache) throws IOException, SQLException {
 
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter((loadedObjectsKeys.size() * 2) + 1);
@@ -592,7 +592,7 @@ public class ObjectsCache {
      *
      * @return a boolean indicating whether the cache is empty
      */
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return loadedObjectsKeys.isEmpty();
     }
 

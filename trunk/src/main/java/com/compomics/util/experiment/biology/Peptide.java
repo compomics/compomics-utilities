@@ -154,6 +154,15 @@ public class Peptide extends ExperimentObject {
     public ArrayList<ModificationMatch> getModificationMatches() {
         return modifications;
     }
+    
+    /**
+     * Sets new modification matches for the peptide.
+     * 
+     * @param modificationMatches the new modification matches
+     */
+    public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
+        this.modifications = modificationMatches;
+    }
 
     /**
      * Clears the list of imported modification matches.

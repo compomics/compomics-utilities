@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
@@ -451,7 +452,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
 
-        String spectrumFileName = getInputFile().getName();
+        String spectrumFileName = Util.getFileName(getInputFile());
         if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
             waitingHandler.setSecondaryProgressCounter(0);
@@ -504,6 +505,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                         currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
                         currentMatch.setSpectrumNumber(sId);
                         lastId = sId;
+                    }
+                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
+                        waitingHandler.increaseSecondaryProgressCounter();
                     }
                 } else if (line.startsWith("T")) {
                     ++rank;

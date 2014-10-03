@@ -155,6 +155,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
                                         if (alreadyAnnotated || matchFound) {
                                             if (!result.contains(spectrumAnnotation.get(key))) { // @TODO: there has to be a better way...
                                                 result.add(spectrumAnnotation.get(key));
+                                            } else {
+                                                int debug = 1;
                                             }
                                         }
                                     }

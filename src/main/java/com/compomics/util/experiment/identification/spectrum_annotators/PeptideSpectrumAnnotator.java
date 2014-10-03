@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -125,19 +124,20 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
             precursorCharges.add(i);
         }
 
-        if (theoreticalFragmentIons != null) {
-            for (Ion.IonType ionType : iontypes.keySet()) {
-                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
-                if (ionMap != null) {
-                    HashSet<Integer> subtypes = iontypes.get(ionType);
-                    for (int subType : subtypes) {
-                        ArrayList<Ion> ions = ionMap.get(subType);
-                        if (ions != null) {
-                            for (Ion ion : ions) {
+        for (Ion.IonType ionType : iontypes.keySet()) {
+            HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+            if (ionMap != null) {
+                HashSet<Integer> subtypes = iontypes.get(ionType);
+                for (int subType : subtypes) {
+                    ArrayList<Ion> ions = ionMap.get(subType);
+                    if (ions != null) {
+                        for (Ion ion : ions) {
+
+                            if (lossesValidated(neutralLosses, ion)) {
 
                                 ArrayList<Integer> tempCharges;
 
-                                // have to treat precursor charges separately, as to not increase the max charge for the other ions
+                                // have to treat precursor charges separately, as to not increase the max charge for the other ion types
                                 if (ionType == Ion.IonType.PRECURSOR_ION) {
                                     tempCharges = precursorCharges;
                                 } else {
@@ -153,7 +153,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
                                             matchFound = matchInSpectrum(ion, charge);
                                         }
                                         if (alreadyAnnotated || matchFound) {
-                                            result.add(spectrumAnnotation.get(key));
+                                            if (!result.contains(spectrumAnnotation.get(key))) { // @TODO: there has to be a better way...
+                                                result.add(spectrumAnnotation.get(key));
+                                            }
                                         }
                                     }
                                 }
@@ -163,6 +165,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
                 }
             }
         }
+
         return result;
     }
 

@@ -43,7 +43,7 @@ public class PeptideFragmentIon extends Ion {
     /**
      * The neutral losses found on the ion.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>(2);
     /**
      * Position of the ion in the peptide for peptide ions.
      */
@@ -63,8 +63,8 @@ public class PeptideFragmentIon extends Ion {
      * @param neutralLosses the neutral losses of the ion
      */
     public PeptideFragmentIon(int fragmentType, int number, double mass, ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses == null) {
-            this.neutralLosses = neutralLosses;
+        if (neutralLosses != null) {
+            this.neutralLosses.addAll(neutralLosses);
         }
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;

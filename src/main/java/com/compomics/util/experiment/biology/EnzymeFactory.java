@@ -101,22 +101,26 @@ public class EnzymeFactory {
         XmlPullParser parser = factory.newPullParser();
         // Create a reader for the input file.
         BufferedReader br = new BufferedReader(new FileReader(enzymeFile));
-        // Set the XML Pull Parser to read from this reader.
-        parser.setInput(br);
-        // Start the parsing.
-        int type = parser.next();
 
-        enzymes = new HashMap<String, Enzyme>();
-        // Go through the whole document.
-        while (type != XmlPullParser.END_DOCUMENT) {
+        try {
+            // Set the XML Pull Parser to read from this reader.
+            parser.setInput(br);
+            // Start the parsing.
+            int type = parser.next();
+
+            enzymes = new HashMap<String, Enzyme>();
+            // Go through the whole document.
+            while (type != XmlPullParser.END_DOCUMENT) {
             // If we find a 'MSModSpec' start tag,
-            // we should parse the mod.
-            if (type == XmlPullParser.START_TAG && parser.getName().equals("enzyme")) {
-                parseEnzyme(parser);
+                // we should parse the mod.
+                if (type == XmlPullParser.START_TAG && parser.getName().equals("enzyme")) {
+                    parseEnzyme(parser);
+                }
+                type = parser.next();
             }
-            type = parser.next();
+        } finally {
+            br.close();
         }
-        br.close();
     }
 
     /**
@@ -399,9 +403,7 @@ public class EnzymeFactory {
 
         // @TODO: no cv terms found!!!
         // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), Lys-N (K), "Thermolysin, no P rule" 
-        
         // supply a *child* term of MS:1001045
-
         return cvTerm;
     }
 }

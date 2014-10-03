@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * This interface will retrieve spectrum matches from any identification file.
@@ -60,9 +61,10 @@ public interface IdfileReader {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      * @throws JAXBException
+     * @throws org.xmlpull.v1.XmlPullParserException
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
 
     /**
      * Retrieves all the identifications from an identification file as a list
@@ -88,9 +90,10 @@ public interface IdfileReader {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      * @throws JAXBException
+     * @throws org.xmlpull.v1.XmlPullParserException
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException;
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
 
     /**
      * Returns a map of all the peptides found in this file in a map indexed by

@@ -287,7 +287,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                 MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore);
 
-                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
                     ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                         Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));

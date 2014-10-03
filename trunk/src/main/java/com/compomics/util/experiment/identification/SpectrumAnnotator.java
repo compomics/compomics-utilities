@@ -353,9 +353,9 @@ public abstract class SpectrumAnnotator {
 
     /**
      * Returns a boolean indicating whether the neutral losses of the given
-     * fragment ion are fit the requirement of the given neutral losses map.
+     * fragment ion fit the requirement of the given neutral losses map.
      *
-     * @param neutralLosses Map of expected neutral losses: neutral loss.
+     * @param neutralLosses map of expected neutral losses: neutral loss.
      * @param theoreticIon the ion of interest
      * @return a boolean indicating whether the neutral losses of the given
      * fragment ion are fit the requirement of the given neutral losses map
@@ -539,38 +539,39 @@ public abstract class SpectrumAnnotator {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
                 }
             }
-            peptideFragmentIons = theoreticalFragmentIons.get(IonType.TAG_FRAGMENT_ION.index);
-            ions = peptideFragmentIons.get(PeptideFragmentIon.A_ION);
+
+            HashMap<Integer, ArrayList<Ion>> tagFragmentIons = theoreticalFragmentIons.get(IonType.TAG_FRAGMENT_ION.index);
+            ions = tagFragmentIons.get(TagFragmentIon.A_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
                 }
             }
-            ions = peptideFragmentIons.get(PeptideFragmentIon.B_ION);
+            ions = tagFragmentIons.get(TagFragmentIon.B_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
                 }
             }
-            ions = peptideFragmentIons.get(PeptideFragmentIon.C_ION);
+            ions = tagFragmentIons.get(TagFragmentIon.C_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftNTerm);
                 }
             }
-            ions = peptideFragmentIons.get(PeptideFragmentIon.X_ION);
+            ions = tagFragmentIons.get(TagFragmentIon.X_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
                 }
             }
-            ions = peptideFragmentIons.get(PeptideFragmentIon.Y_ION);
+            ions = tagFragmentIons.get(TagFragmentIon.Y_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
                 }
             }
-            ions = peptideFragmentIons.get(PeptideFragmentIon.Z_ION);
+            ions = tagFragmentIons.get(TagFragmentIon.Z_ION);
             if (ions != null) {
                 for (Ion ion : ions) {
                     ion.setTheoreticMass(ion.getTheoreticMass() + massShift + massShiftCTerm);
@@ -680,6 +681,7 @@ public abstract class SpectrumAnnotator {
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
+
         for (Ion.IonType ionType : iontypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
@@ -688,14 +690,16 @@ public abstract class SpectrumAnnotator {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            for (int charge : charges) {
-                                if (chargeValidated(ion, charge, precursorCharge)) {
-                                    ArrayList<Ion> resultsAtCharge = result.get(charge);
-                                    if (resultsAtCharge == null) {
-                                        resultsAtCharge = new ArrayList<Ion>();
-                                        result.put(charge, resultsAtCharge);
+                            if (lossesValidated(neutralLosses, ion)) {
+                                for (int charge : charges) {
+                                    if (chargeValidated(ion, charge, precursorCharge)) {
+                                        ArrayList<Ion> resultsAtCharge = result.get(charge);
+                                        if (resultsAtCharge == null) {
+                                            resultsAtCharge = new ArrayList<Ion>();
+                                            result.put(charge, resultsAtCharge);
+                                        }
+                                        resultsAtCharge.add(ion);
                                     }
-                                    resultsAtCharge.add(ion);
                                 }
                             }
                         }
@@ -703,6 +707,7 @@ public abstract class SpectrumAnnotator {
                 }
             }
         }
+
         return result;
     }
 

@@ -64,9 +64,9 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     /**
-     * Returns the possible neutral losses expected by default for a given
-     * tag. /!\ this method will work only if the PTM found in the tag
-     * are in the PTMFactory.
+     * Returns the possible neutral losses expected by default for a given tag.
+     * /!\ this method will work only if the PTM found in the tag are in the
+     * PTMFactory.
      *
      * @param tag the tag of interest
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -254,24 +254,30 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                         ArrayList<Ion> ions = ionMap.get(subType);
                         if (ions != null) {
                             for (Ion ion : ions) {
-                                ArrayList<Integer> tempCharges;
-                                // have to treat precursor charges separately, as to not increase the max charge for the other ions
-                                if (ionType == Ion.IonType.PRECURSOR_ION) {
-                                    tempCharges = precursorCharges;
-                                } else {
-                                    tempCharges = charges;
-                                }
 
-                                for (int charge : tempCharges) {
-                                    if (chargeValidated(ion, charge, precursorCharge)) {
-                                        String key = IonMatch.getMatchKey(ion, charge);
-                                        boolean matchFound = false;
-                                        boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
-                                        if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
-                                            matchFound = matchInSpectrum(ion, charge);
-                                        }
-                                        if (alreadyAnnotated || matchFound) {
-                                            result.add(spectrumAnnotation.get(key));
+                                if (lossesValidated(neutralLosses, ion)) {
+
+                                    ArrayList<Integer> tempCharges;
+                                    // have to treat precursor charges separately, as to not increase the max charge for the other ions
+                                    if (ionType == Ion.IonType.PRECURSOR_ION) {
+                                        tempCharges = precursorCharges;
+                                    } else {
+                                        tempCharges = charges;
+                                    }
+
+                                    for (int charge : tempCharges) {
+                                        if (chargeValidated(ion, charge, precursorCharge)) {
+                                            String key = IonMatch.getMatchKey(ion, charge);
+                                            boolean matchFound = false;
+                                            boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
+                                            if (!alreadyAnnotated && !unmatchedIons.contains(key)) {
+                                                matchFound = matchInSpectrum(ion, charge);
+                                            }
+                                            if (alreadyAnnotated || matchFound) {
+                                                if (!result.contains(spectrumAnnotation.get(key))) { // @TODO: there has to be a better way...
+                                                    result.add(spectrumAnnotation.get(key));
+                                                }
+                                            }
                                         }
                                     }
                                 }

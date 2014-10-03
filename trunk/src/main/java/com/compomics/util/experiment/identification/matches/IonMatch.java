@@ -165,7 +165,7 @@ public class IonMatch extends ExperimentObject {
      * @param ion the ion matched
      * @param charge the charge
      *
-     * @return a key for the ion mathc
+     * @return a key for the ion match
      */
     public static String getMatchKey(Ion ion, int charge) {
         StringBuilder key = new StringBuilder();

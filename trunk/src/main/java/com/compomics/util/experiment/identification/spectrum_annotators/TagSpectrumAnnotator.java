@@ -274,9 +274,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                                                 matchFound = matchInSpectrum(ion, charge);
                                             }
                                             if (alreadyAnnotated || matchFound) {
-                                                if (!result.contains(spectrumAnnotation.get(key))) { // @TODO: there has to be a better way...
-                                                    result.add(spectrumAnnotation.get(key));
-                                                }
+                                                result.add(spectrumAnnotation.get(key));
                                             }
                                         }
                                     }

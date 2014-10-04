@@ -498,6 +498,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
                             result.add(currentMatch);
                         }
+                        sId = sId+1;
                         String spectrumTitle = sId + "";
                         if (spectrumFactory.fileLoaded(spectrumFileName)) {
                             spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, sId);

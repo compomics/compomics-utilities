@@ -3,3 +3,4 @@ com.compomics.util.experiment.io.identifications.idfilereaders.MzIdentMLIdfileRe
 com.compomics.util.experiment.io.identifications.idfilereaders.PepNovoIdfileReader
 com.compomics.util.experiment.io.identifications.idfilereaders.DirecTagIdfileReader
 com.compomics.util.experiment.io.identifications.idfilereaders.MsAmandaIdfileReader
+com.compomics.util.experiment.io.identifications.idfilereaders.PepxmlIdfileReader

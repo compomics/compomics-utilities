@@ -153,11 +153,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
                                             matchFound = matchInSpectrum(ion, charge);
                                         }
                                         if (alreadyAnnotated || matchFound) {
-                                            if (!result.contains(spectrumAnnotation.get(key))) { // @TODO: there has to be a better way...
-                                                result.add(spectrumAnnotation.get(key));
-                                            } else {
-                                                int debug = 1;
-                                            }
+                                            result.add(spectrumAnnotation.get(key));
                                         }
                                     }
                                 }

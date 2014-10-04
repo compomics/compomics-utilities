@@ -954,7 +954,7 @@ public class SpectrumFactory {
 
     /**
      * Returns the spectrum title of the spectrum of the given number in the
-     * given file. 0 is the first spectrum. Null if not found.
+     * given file. 1 is the first spectrum. Null if not found.
      *
      * @param mgfFile the name of the mgf file of interest
      * @param spectrumNumber the number of the spectrum in the file
@@ -966,7 +966,7 @@ public class SpectrumFactory {
         if (mgfIndex == null) {
             return null;
         }
-        return mgfIndex.getSpectrumTitle(spectrumNumber);
+        return mgfIndex.getSpectrumTitle(spectrumNumber-1);
     }
 
     /**

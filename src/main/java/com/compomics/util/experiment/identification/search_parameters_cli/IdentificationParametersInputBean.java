@@ -744,11 +744,6 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             cometParameters.setFragmentBinOffset(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_TOLERANCE.id);
-            Double option = new Double(arg);
-            cometParameters.setFragmentBinTolerance(option);
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id);
             Integer option = new Integer(arg);

@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
@@ -2233,6 +2234,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         if (xtandemParameters != null) {
             xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
             xtandemParameters.setQuickPyrolidone(!pyroConflict);
+        }
+        
+        // Adapt Comet options
+        CometParameters cometParameters = (CometParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex());
+        if (cometParameters != null) {
+            double binoffset = fragmentAccuracy/2;
+            cometParameters.setFragmentBinOffset(binoffset);
         }
 
         return tempSearchParameters;

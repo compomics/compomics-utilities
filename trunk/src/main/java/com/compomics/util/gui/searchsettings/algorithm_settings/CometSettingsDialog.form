@@ -363,23 +363,22 @@
                                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="removeMethionineLabel" max="32767" attributes="0"/>
-                                              <Component id="batchSizeLabel" min="-2" pref="250" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="maxPtmsLabel" min="-2" pref="250" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                      </Group>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="isotopeCorrectionLabel" alignment="1" min="-2" pref="250" max="-2" attributes="0"/>
                                               <Component id="enzymeTypeLabel" alignment="1" min="-2" pref="250" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="removeMethionineLabel" max="32767" attributes="0"/>
+                                                  <Component id="batchSizeLabel" min="-2" pref="250" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Component id="maxPtmsLabel" min="-2" pref="250" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -626,15 +625,9 @@
                                   <Component id="correlationScoreTypeCmb" min="-2" pref="189" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="fragmentBinToleranceLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                                      <Component id="useSparseMatrixLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="useSparseMatrixLabel" min="-2" pref="250" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="useSparseMatrixCmb" max="32767" attributes="0"/>
-                                      <Component id="fragmentBinToleranceTxt" pref="189" max="32767" attributes="2"/>
-                                  </Group>
+                                  <Component id="useSparseMatrixCmb" min="-2" pref="189" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
@@ -654,17 +647,12 @@
                               <Component id="fragmentBinOffsetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentBinOffsetTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="fragmentBinToleranceLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="fragmentBinToleranceTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="useSparseMatrixLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="useSparseMatrixCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="185" max="32767" attributes="0"/>
+                          <EmptySpace pref="206" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -697,20 +685,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fragmentBinOffsetTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="fragmentBinToleranceLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Fragment Bin Tolerance"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="fragmentBinToleranceTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="1.0005"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fragmentBinToleranceTxtKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="useSparseMatrixLabel">

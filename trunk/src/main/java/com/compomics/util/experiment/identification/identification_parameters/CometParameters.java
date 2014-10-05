@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
+import com.compomics.util.experiment.identification.SearchParameters;
 
 /**
  * The Comet specific parameters.
@@ -63,7 +64,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * searches -1, 0, +1, +2, and +3 isotope offsets and 2: searches -8, -4, 0,
      * +4, +8 isotope offsets (for +4/+8 stable isotope labeling).
      */
-    private Integer isotopeCorrection = 0;
+    private Integer isotopeCorrection = 1;
     /**
      * The minimum precursor mass.
      */
@@ -92,15 +93,11 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * The correlation score type. This parameter specifies how theoretical
      * fragment ion peaks are represented.
      */
-    private Boolean theoreticalFragmentIonsSumOnly = true;
+    private Boolean theoreticalFragmentIonsSumOnly = false;
     /**
      * The fragment bin offset.
      */
-    private Double fragmentBinOffset = 0.4;
-    /**
-     * The fragment bin tolerance.
-     */
-    private Double fragmentBinTolerance = 1.0005;
+    private Double fragmentBinOffset = 0.0;
     /**
      * Controls whether or not internal sparse matrix data representation is
      * used.
@@ -179,10 +176,6 @@ public class CometParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             diff = Math.abs(fragmentBinOffset - cometParameters.getFragmentBinOffset());
-            if (diff > 0.0000000000001) {
-                return false;
-            }
-            diff = Math.abs(fragmentBinTolerance - cometParameters.getFragmentBinTolerance());
             if (diff > 0.0000000000001) {
                 return false;
             }
@@ -265,8 +258,6 @@ public class CometParameters implements IdentificationAlgorithmParameter {
         output.append("FRAGMENT_BIN_OFFSET=");
         output.append(fragmentBinOffset);
         output.append(newLine);
-        output.append("FRAGMENT_BIN_TOLERANCE=");
-        output.append(fragmentBinTolerance);
         output.append(newLine);
         output.append("USE_SPARSE_MATRIX=");
         output.append(useSparseMatrix);
@@ -585,24 +576,6 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public void setFragmentBinOffset(Double fragmentBinOffset) {
         this.fragmentBinOffset = fragmentBinOffset;
-    }
-
-    /**
-     * Returns the fragment ion bin tolerance.
-     *
-     * @return the fragmentBinTolerance
-     */
-    public Double getFragmentBinTolerance() {
-        return fragmentBinTolerance;
-    }
-
-    /**
-     * Set the fragment ion bin tolerance.
-     *
-     * @param fragmentBinTolerance the fragmentBinTolerance to set
-     */
-    public void setFragmentBinTolerance(Double fragmentBinTolerance) {
-        this.fragmentBinTolerance = fragmentBinTolerance;
     }
 
     /**

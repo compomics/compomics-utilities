@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * This class sorts the proteins into groups.
@@ -175,6 +177,7 @@ public class ProteinTree {
     /**
      * Initiates the tree.
      *
+     * @param nThreads the number of threads to use
      * @param initialTagSize the initial tag size
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500 giving an approximate
@@ -191,15 +194,16 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime, displayProgress);
+        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime, displayProgress, nThreads);
     }
 
     /**
      * Initiates the tree. Note: speed and memory are calibrated for the no
      * enzyme case.
      *
+     * @param nThreads the number of threads to use
      * @param initialTagSize the initial size of peptide tag. Large initial size
      * are fast to query, low initial size are fast to initiate. I typically use
      * 3 for databases containing less than 100 000 proteins giving an
@@ -215,13 +219,14 @@ public class ProteinTree {
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
      * @param displayProgress display progress
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         // delete outdated trees
@@ -264,7 +269,7 @@ public class ProteinTree {
             }
 
             if (needImport) {
-                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress);
+                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress, nThreads);
             }
         } catch (IOException e) {
             componentsFactory.delete();
@@ -327,12 +332,14 @@ public class ProteinTree {
      * user. Can be null.
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
+     * @param nThreads the number of threads to use
+     *
      * @throws IOException
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws ClassNotFoundException
      */
-    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress)
+    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (printExpectedImportTime) {
@@ -436,7 +443,7 @@ public class ProteinTree {
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
+                loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, displayProgress);
                 if (first) {
                     first = false;
                 }
@@ -457,7 +464,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, first, waitingHandler, displayProgress);
+            loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, displayProgress);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -544,14 +551,22 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      */
     private synchronized void loadTags(ArrayList<String> tags,
-            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, boolean loadLengths, WaitingHandler waitingHandler, boolean displayProgress)
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, int nThreads, WaitingHandler waitingHandler, boolean displayProgress)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
         // find the tags in the proteins and create a node per tag found
-        indexProteinsSingleThread(tags, initialTagSize, enzyme, waitingHandler, displayProgress);
+        if (nThreads == 1) {
+            indexProteinsSingleThread(tags, initialTagSize, enzyme, waitingHandler, displayProgress);
+        } else {
+            indexProteins(tags, initialTagSize, enzyme, waitingHandler, displayProgress, nThreads);
+        }
 
         // split the nodes and save them in the db
-        processRawNodesSingleThread(tags, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+        if (nThreads == 1) {
+            processRawNodesSingleThread(tags, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+        } else {
+            processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress, nThreads);
+        }
 
         // clear memory before further processing
         tree.clear();
@@ -645,18 +660,12 @@ public class ProteinTree {
      * @throws SQLException
      */
     private void indexProteins(ArrayList<String> tags,
-            int initialTagSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress)
+            int initialTagSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
         ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
         ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
-        int nAccessions;
-        if (sequenceFactory.isDefaultReversed()) {
-            nAccessions = sequenceFactory.getNTargetSequences();
-        } else {
-            nAccessions = sequenceFactory.getNSequences();
-        }
+        ExecutorService pool = Executors.newFixedThreadPool(nThreads);
 
         ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
 
@@ -668,12 +677,13 @@ public class ProteinTree {
                     processFinishedIndexers(sequenceIndexers, initialTagSize);
                 }
                 SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, displayProgress);
-                new Thread(sequenceIndexer, "sequence indexing").start();
+                pool.submit(new Thread(sequenceIndexer, "sequence indexing"));
                 sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
                 sequenceIndexers.add(sequenceIndexer);
             }
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
+                    pool.shutdownNow();
                     emptyCache();
                     return;
                 }
@@ -682,13 +692,14 @@ public class ProteinTree {
 
         if (!sequenceBuffer.isEmpty()) {
             SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, displayProgress);
-            new Thread(sequenceIndexer, "sequence indexing").start();
+            pool.submit(new Thread(sequenceIndexer, "sequence indexing"));
             sequenceIndexers.add(sequenceIndexer);
         }
 
         while (!sequenceIndexers.isEmpty()) {
             processFinishedIndexers(sequenceIndexers, initialTagSize);
         }
+        pool.shutdown();
     }
 
     /**
@@ -768,11 +779,11 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
+    private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
 
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
         ArrayList<NodeSplitter> nodeSplitters = new ArrayList<NodeSplitter>(nThreads);
+        ExecutorService pool = Executors.newFixedThreadPool(nThreads);
 
         for (String tag : tree.keySet()) {
 
@@ -783,12 +794,13 @@ public class ProteinTree {
             }
 
             NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
-            new Thread(nodeSplitter, "Node splitting of tag " + tag).start();
+            pool.submit(new Thread(nodeSplitter, "Node splitting of tag " + tag));
             nodeSplitters.add(nodeSplitter);
 
             if (waitingHandler != null) {
                 if (waitingHandler.isRunCanceled() || waitingHandler.isRunFinished()) {
                     emptyCache();
+                    pool.shutdownNow();
                     return;
                 }
             }
@@ -797,6 +809,7 @@ public class ProteinTree {
         while (!nodeSplitters.isEmpty()) {
             processFinishedNodeSplitters(nodeSplitters, null); // @TODO: add waiting handler
         }
+        pool.shutdown();
     }
 
     /**

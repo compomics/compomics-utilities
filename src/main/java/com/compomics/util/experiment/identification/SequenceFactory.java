@@ -1159,7 +1159,23 @@ public class SequenceFactory {
      * @throws SQLException
      */
     public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        return getDefaultProteinTree(null, false);
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
+        return getDefaultProteinTree(nThreads, null, false);
+    }
+
+    /**
+     * Returns the default protein tree corresponding to the database loaded in
+     * factory.
+     *
+     * @return the default protein tree
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
+    public ProteinTree getDefaultProteinTree(int nThreads) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        return getDefaultProteinTree(nThreads, null, false);
     }
 
     /**
@@ -1178,13 +1194,35 @@ public class SequenceFactory {
      * @throws SQLException
      */
     public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        return getDefaultProteinTree(waitingHandler, true);
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
+        return getDefaultProteinTree(nThreads, waitingHandler, true);
     }
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
      * factory.
      *
+     * @param nThreads the number of threads to use
+     * @param waitingHandler waiting handler displaying progress to the user
+     * during the initiation of the tree
+     *
+     * @return the default protein tree
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException
+     * @throws SQLException
+     */
+    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        return getDefaultProteinTree(nThreads, waitingHandler, true);
+    }
+
+    /**
+     * Returns the default protein tree corresponding to the database loaded in
+     * factory.
+     *
+     * @param nThreads the number of threads to use
      * @param waitingHandler waiting handler displaying progress to the user
      * during the initiation of the tree
      * @param displayProgress display progress
@@ -1195,7 +1233,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException
      * @throws SQLException
      */
-    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -1211,7 +1249,7 @@ public class SequenceFactory {
             defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
 
             int tagLength = 3;
-            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress);
+            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress, nThreads);
             emptyCache();
 
             int treeSize = memoryPreference / 4;

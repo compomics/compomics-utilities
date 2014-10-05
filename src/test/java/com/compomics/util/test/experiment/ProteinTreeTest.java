@@ -46,7 +46,7 @@ public class ProteinTreeTest extends TestCase {
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        proteinTree.initiateTree(3, 50, 50, null, true, false);
+        proteinTree.initiateTree(3, 50, 50, null, true, false, 1);
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = proteinTree.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
         Assert.assertTrue(testIndexes.size() == 1);
@@ -91,7 +91,7 @@ public class ProteinTreeTest extends TestCase {
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        proteinTree.initiateTree(3, 50, 50, null, true, false);
+        proteinTree.initiateTree(3, 50, 50, null, true, false, 1);
 
         // TESTMRITESTCKTESTK
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("LTEST");

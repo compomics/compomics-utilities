@@ -2159,6 +2159,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         } else {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), new MsAmandaParameters());
         }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), new CometParameters());
+        }
         if (searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) != null) {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()));
         } else {

@@ -31,34 +31,34 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
- * Simple IdfileReader for Pepxml files
+ * Simple IdfileReader for Pepxml files.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PepxmlIdfileReader implements IdfileReader {
 
     /**
-     * List of the spectrum matches in the file
+     * List of the spectrum matches in the file.
      */
     private LinkedList<SpectrumMatch> spectrumMatches = null;
 
     /**
-     * The name of the search engine which was used to create the file
+     * The name of the search engine which was used to create the file.
      */
     private String searchEngine = null;
 
     /**
-     * The version of the search engine which was used to create the file
+     * The version of the search engine which was used to create the file.
      */
     private String searchEngineVersion = null;
 
     /**
-     * The file to parse
+     * The file to parse.
      */
     private File idFile;
 
     /**
-     * The name of the spectrum file
+     * The name of the spectrum file.
      */
     private String inputFileName;
     /**
@@ -67,7 +67,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
 
     /**
-     * The sequence matching preferences
+     * The sequence matching preferences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences = null;
     /**
@@ -80,7 +80,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     private int peptideMapKeyLength = 0;
 
     /**
-     * Blank constructor for instantiation purposes
+     * Blank constructor for instantiation purposes.
      */
     public PepxmlIdfileReader() {
 
@@ -99,7 +99,7 @@ public class PepxmlIdfileReader implements IdfileReader {
      * Parses the identification file.
      *
      * @param waitingHandler waiting handler returning information about the
-     * progress and allowing cancelling the parsing.
+     * progress and allowing canceling the parsing.
      * @param expandAaCombinations if true the combinations of amino acids will
      * be expanded
      * @param overwriteExtension if true, the extension of the input file will
@@ -112,7 +112,8 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @throws ClassNotFoundException
      * @throws InterruptedException
      */
-    private void parseFile(WaitingHandler waitingHandler, boolean expandAaCombinations, boolean overwriteExtension) throws XmlPullParserException, FileNotFoundException, IOException, SQLException, ClassNotFoundException, InterruptedException {
+    private void parseFile(WaitingHandler waitingHandler, boolean expandAaCombinations, boolean overwriteExtension)
+            throws XmlPullParserException, FileNotFoundException, IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -124,8 +125,10 @@ public class PepxmlIdfileReader implements IdfileReader {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
+
         // Create a reader for the input file.
         BufferedReader br = new BufferedReader(new FileReader(idFile));
+
         try {
             // Set the XML Pull Parser to read from this reader.
             parser.setInput(br);
@@ -137,6 +140,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             spectrumMatches = new LinkedList<SpectrumMatch>();
             SpectrumMatch currentMatch = null;
             Integer currentCharge = null;
+
             // Go through the whole document.
             while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 String tagName = parser.getName();
@@ -263,7 +267,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses a search hit.
      *
-     * @param parser the xml parser
+     * @param parser the XML parser
      * @param charge the charge of the hit
      *
      * @return the peptide assumption in the search hit
@@ -272,10 +276,12 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @throws IOException
      */
     private PeptideAssumption parseSearchHit(XmlPullParser parser, Integer charge) throws XmlPullParserException, IOException {
+
         Integer rank = null;
         String sequence = null;
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
         Double score = null;
+
         for (int i = 0; i < parser.getAttributeCount(); i++) {
             String name = parser.getAttributeName(i);
             if (name.equals("hit_rank")) {
@@ -289,13 +295,17 @@ public class PepxmlIdfileReader implements IdfileReader {
                 sequence = parser.getAttributeValue(i).trim();
             }
         }
+
         int type;
         while ((type = parser.next()) != XmlPullParser.START_TAG) {
         }
+
         String tagName = parser.getName();
         if (tagName.equals("modification_info")) {
+
             // The peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
             ArrayList<Integer> variableModificationSites = new ArrayList<Integer>();
+
             for (int i = 0; i < parser.getAttributeCount(); i++) {
                 String attributeName = parser.getAttributeName(i);
                 if (attributeName.equals("modified_peptide")) {
@@ -315,6 +325,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     }
                 }
             }
+
             while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 tagName = parser.getName();
                 if (tagName != null) {
@@ -362,6 +373,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                 }
             }
         }
+
         while (type != XmlPullParser.END_DOCUMENT) {
             tagName = parser.getName();
             if (tagName != null) {
@@ -389,6 +401,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             }
             type = parser.next();
         }
+
         Peptide peptide = new Peptide(sequence, modificationMatches);
         Advocate advocate = Advocate.getAdvocate(searchEngine);
         return new PeptideAssumption(peptide, rank, advocate.getIndex(), new Charge(Charge.PLUS, charge), score, idFile.getName());
@@ -397,16 +410,18 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses a spectrum query
      *
-     * @param parser the xml parser
+     * @param parser the XML parser
      *
-     * @return the specrtum match in this spectrum query
+     * @return the spectrum match in this spectrum query
      *
      * @throws XmlPullParserException
      * @throws IOException
      */
     private SpectrumMatch parseSpectrumQuery(XmlPullParser parser) throws XmlPullParserException, IOException {
+
         Integer scanNumber = null;
         String spectrumId = null;
+
         for (int i = 0; i < parser.getAttributeCount(); i++) {
             String name = parser.getAttributeName(i);
             if (name.equals("spectrum")) {
@@ -420,23 +435,27 @@ public class PepxmlIdfileReader implements IdfileReader {
                 }
             }
         }
+
         if (scanNumber == null) {
             throw new IllegalArgumentException("No start scan found for spectrum " + spectrumId + ".");
         }
+
         String spectrumTitle = scanNumber + "";
         if (spectrumFactory.fileLoaded(inputFileName)) {
             spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
         }
+
         String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
         spectrumMatch.setSpectrumNumber(scanNumber);
+
         return spectrumMatch;
     }
 
     /**
-     * Parses the run summary
+     * Parses the run summary.
      *
-     * @param parser the xml parser
+     * @param parser the XML parser
      * @param overwriteExtension if true, the extension of the input file will
      * be overwritten to mgf
      *
@@ -444,6 +463,7 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @throws IOException
      */
     private void parseRunSummary(XmlPullParser parser, boolean overwriteExtension) throws XmlPullParserException, IOException {
+        
         // Something like  <msms_run_summary base_name="D:\path\filename" raw_data="extention"> is expected 
         String path = "";
         for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -454,17 +474,19 @@ public class PepxmlIdfileReader implements IdfileReader {
                 path += parser.getAttributeValue(i);
             }
         }
+        
         if (overwriteExtension) {
             path += ".mgf";
         }
+        
         File spectrumFile = new File(path);
         inputFileName = Util.getFileName(spectrumFile);
     }
 
     /**
-     * Parses the search summary
+     * Parses the search summary.
      *
-     * @param parser the xml parser
+     * @param parser the XML parser
      *
      * @throws XmlPullParserException
      * @throws IOException
@@ -500,12 +522,15 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         return getAllSpectrumMatches(waitingHandler, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences 
+            sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, 
+            SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         if (spectrumMatches == null) {
             this.sequenceMatchingPreferences = sequenceMatchingPreferences;
             parseFile(waitingHandler, expandAaCombinations, true);
@@ -532,5 +557,4 @@ public class PepxmlIdfileReader implements IdfileReader {
     public void clearPeptidesMap() {
         peptideMap.clear();
     }
-
 }

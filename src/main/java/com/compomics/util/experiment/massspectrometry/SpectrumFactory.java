@@ -233,10 +233,10 @@ public class SpectrumFactory {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
     }
-    
+
     /**
      * Returns the name of an index file based on the given spectrum file name.
-     * 
+     *
      * @param spectrumFileName the name of the spectrum file
      *
      * @return the corresponding name of the index file
@@ -966,7 +966,7 @@ public class SpectrumFactory {
         if (mgfIndex == null) {
             return null;
         }
-        return mgfIndex.getSpectrumTitle(spectrumNumber-1);
+        return mgfIndex.getSpectrumTitle(spectrumNumber - 1);
     }
 
     /**

@@ -1301,7 +1301,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             String ptmName = (String) fixedModsTable.getValueAt(row, fixedModsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
             fixedModsTable.setToolTipText(ptm.getHtmlTooltip());
-            
+
             if (column == fixedModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
@@ -1359,7 +1359,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             String ptmName = (String) modificationsTable.getValueAt(row, modificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
             modificationsTable.setToolTipText(ptm.getHtmlTooltip());
-            
+
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
@@ -1453,7 +1453,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             String ptmName = (String) variableModsTable.getValueAt(row, variableModsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
             variableModsTable.setToolTipText(ptm.getHtmlTooltip());
-            
+
             if (column == variableModsTable.getColumn(" ").getModelIndex()) {
                 this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
             } else {
@@ -2235,11 +2235,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             xtandemParameters.setProteinQuickAcetyl(!acetylConflict);
             xtandemParameters.setQuickPyrolidone(!pyroConflict);
         }
-        
+
         // Adapt Comet options
         CometParameters cometParameters = (CometParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex());
         if (cometParameters != null) {
-            double binoffset = fragmentAccuracy/2;
+            double binoffset = fragmentAccuracy / 2;
             cometParameters.setFragmentBinOffset(binoffset);
         }
 

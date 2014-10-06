@@ -297,7 +297,7 @@ public class SequenceFactory {
                 }
             }
             reading = false;
-            
+
             return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
 
         } catch (IOException e) {
@@ -681,12 +681,13 @@ public class SequenceFactory {
         File destinationFile = new File(directory, getIndexName(fastaIndex.getFileName()));
         SerializationUtils.writeObject(fastaIndex, destinationFile);
     }
-    
+
     /**
-     * Returns the name of the fasta index corresponding to the given fasta file name.
-     * 
+     * Returns the name of the fasta index corresponding to the given fasta file
+     * name.
+     *
      * @param fastaName the name of the fasta file
-     * 
+     *
      * @return the name of the index
      */
     public static String getIndexName(String fastaName) {
@@ -854,7 +855,7 @@ public class SequenceFactory {
      * @throws FileNotFoundException
      * @throws ClassNotFoundException
      */
-    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler) 
+    public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingHandler != null) {
@@ -1167,6 +1168,7 @@ public class SequenceFactory {
      * Returns the default protein tree corresponding to the database loaded in
      * factory.
      *
+     * @param nThreads the number of threads to use
      * @return the default protein tree
      * @throws IOException
      * @throws InterruptedException

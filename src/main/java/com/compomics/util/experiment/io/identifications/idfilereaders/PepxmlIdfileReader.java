@@ -229,9 +229,12 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                                     Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));
                                     for (ModificationMatch modificationMatch : modificationMatches) {
-                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), 
+                                                modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                                     }
-                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), 
+                                            peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), 
+                                            peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                                     currentMatch.addHit(advocate.getIndex(), newAssumption, false);
                                 }
                             } else {
@@ -392,7 +395,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                         try {
                             score = new Double(value);
                         } catch (Exception e) {
-                            throw new IllegalArgumentException("Impossible to parse expectation value " + value + ". number expected.");
+                            throw new IllegalArgumentException("Impossible to parse expectation value " + value + ". Number expected.");
                         }
                     }
                 } else if (type == XmlPullParser.END_TAG && tagName.equals("search_hit")) {
@@ -431,7 +434,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                 try {
                     scanNumber = new Integer(value.trim());
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("An error occurred while parsing start_scan " + value + " integer expected.");
+                    throw new IllegalArgumentException("An error occurred while parsing start_scan " + value + ". Integer expected.");
                 }
             }
         }

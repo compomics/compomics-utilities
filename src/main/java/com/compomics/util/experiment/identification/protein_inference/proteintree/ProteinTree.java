@@ -1822,6 +1822,7 @@ public class ProteinTree {
      * Retrieves the length of a protein.
      *
      * @param accession the accession of the protein of interest
+     * 
      * @return the length of this protein
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -1829,6 +1830,25 @@ public class ProteinTree {
      * @throws java.lang.InterruptedException
      */
     public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
+        Integer length = proteinLengthsCache.get(accession);
+        if (length == null) {
+            return getProteinLengthSynchronized(accession);
+        }
+        return length;
+    }
+
+    /**
+     * Retrieves the length of a protein.
+     *
+     * @param accession the accession of the protein of interest
+     * 
+     * @return the length of this protein
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws java.lang.InterruptedException
+     */
+    private synchronized Integer getProteinLengthSynchronized(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         Integer length = proteinLengthsCache.get(accession);
         if (length == null) {
             Protein protein = sequenceFactory.getProtein(accession);

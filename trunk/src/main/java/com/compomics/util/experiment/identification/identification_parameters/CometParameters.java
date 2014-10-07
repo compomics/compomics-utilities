@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.SearchParameters;
 
 /**
  * The Comet specific parameters.
@@ -88,7 +87,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * sets of 5000 spectra until all data have been analyzed. Set this
      * parameter to 0 to load and search all spectra at once.
      */
-    private Integer batchSize = 0;
+    private Integer batchSize = 5000; // @TODO: find an optimal default value
     /**
      * The correlation score type. This parameter specifies how theoretical
      * fragment ion peaks are represented.

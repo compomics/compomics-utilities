@@ -129,11 +129,31 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Getter for the peptide keys.
+     * @deprecated renamed getPeptideMatchesKeys()
      *
      * @return subordinated peptide keys
      */
-    public ArrayList<String> getPeptideMatches() { // @TODO: should be renamed to getPeptideKeys
+    public ArrayList<String> getPeptideMatches() {
+        return getPeptideMatchesKeys();
+    }
+
+    /**
+     * Getter for the peptide keys.
+     *
+     * @return subordinated peptide keys
+     */
+    public ArrayList<String> getPeptideMatchesKeys() {
         return peptideMatches;
+    }
+
+    /**
+     * Add a subordinated peptide key.
+     * @deprecated renamed addPeptideMatchKey
+     * 
+     * @param peptideMatchKey a peptide key
+     */
+    public void addPeptideMatch(String peptideMatchKey) {
+        addPeptideMatchKey(peptideMatchKey);
     }
 
     /**
@@ -141,10 +161,19 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKey a peptide key
      */
-    public void addPeptideMatch(String peptideMatchKey) { // @TODO: should be renamed to addPeptideKey
+    public void addPeptideMatchKey(String peptideMatchKey) {
         if (!peptideMatches.contains(peptideMatchKey)) {
             peptideMatches.add(peptideMatchKey);
         }
+    }
+    
+    /**
+     * Sets the peptide keys for this protein match
+     * 
+     * @param peptideMatchKeys 
+     */
+    public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
+        peptideMatches = peptideMatchKeys;
     }
 
     /**

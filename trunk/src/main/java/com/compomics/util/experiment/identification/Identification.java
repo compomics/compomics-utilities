@@ -681,6 +681,45 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.updatePeptideMatch(peptideMatch);
         }
     }
+    
+    /**
+     * Updates a peptide match where the key was changed.
+     * 
+     * @param oldKey the old peptide key
+     * @param peptideMatch the new peptide match
+     * 
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException 
+     */
+    public void updatePeptideMatch(String oldKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
+        removePeptideMatch(oldKey);
+        String newKey = peptideMatch.getKey();
+        peptideIdentification.add(newKey);
+        identificationDB.addPeptideMatch(peptideMatch);
+        for (String accession : peptideMatch.getTheoreticPeptide().getParentProteinsNoRemapping()) {
+            ArrayList<String> proteinGroups = proteinMap.get(accession);
+            if (proteinGroups != null) {
+                for (String proteinKey : proteinGroups) {
+                    ProteinMatch proteinMatch = getProteinMatch(proteinKey);
+                    ArrayList<String> oldPeptideMatches = proteinMatch.getPeptideMatchesKeys();
+                    ArrayList<String> newPeptideMatches = new ArrayList<String>(oldPeptideMatches);
+                    boolean found = false;
+                    for (String peptideMatchKey : oldPeptideMatches) {
+                        if (peptideMatchKey.equals(oldKey)) {
+                            found = true;
+                        } else {
+                            newPeptideMatches.add(peptideMatchKey);
+                        }
+                    }
+                    if (found) {
+                        newPeptideMatches.add(newKey);
+                        proteinMatch.setPeptideKeys(newPeptideMatches);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Updates a protein match in the database.
@@ -1068,7 +1107,7 @@ public abstract class Identification extends ExperimentObject {
     public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
         ProteinMatch proteinMatch = getProteinMatch(proteinKey, false);
         if (proteinMatch != null) {
-            PeptideMatch peptideMatch = getPeptideMatch(proteinMatch.getPeptideMatches().get(0), false);
+            PeptideMatch peptideMatch = getPeptideMatch(proteinMatch.getPeptideMatchesKeys().get(0), false);
             if (peptideMatch != null) {
                 SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
                 if (spectrumMatch != null) {
@@ -1313,8 +1352,8 @@ public abstract class Identification extends ExperimentObject {
                 if (proteinMatch == null) {
                     throw new IllegalArgumentException("Protein match " + proteinKey + " not found.");
                 }
-                if (!proteinMatch.getPeptideMatches().contains(peptideKey)) {
-                    proteinMatch.addPeptideMatch(peptideKey);
+                if (!proteinMatch.getPeptideMatchesKeys().contains(peptideKey)) {
+                    proteinMatch.addPeptideMatchKey(peptideKey);
                     identificationDB.updateProteinMatch(proteinMatch);
                 }
             } else {

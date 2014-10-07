@@ -161,8 +161,12 @@ public class ObjectsCache {
     public synchronized void removeObject(String dbName, String tableName, String objectKey) {
         String cacheKey = getCacheKey(dbName, tableName, objectKey);
         loadedObjectsKeys.remove(cacheKey);
-        if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
-            loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
+        HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
+        if (dbObjects != null) {
+            HashMap<String, CacheEntry> tableObjects = dbObjects.get(tableName);
+            if (tableObjects != null) {
+                tableObjects.remove(objectKey);
+            }
         }
     }
 
@@ -174,9 +178,13 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @return the entry of interest, null if not present in the cache
      */
-    private synchronized CacheEntry getEntry(String dbName, String tableName, String objectKey) {
-        if (loadedObjectsMap.containsKey(dbName) && loadedObjectsMap.get(dbName).containsKey(tableName)) {
-            return loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+    private CacheEntry getEntry(String dbName, String tableName, String objectKey) {
+        HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
+        if (dbObjects != null) {
+            HashMap<String, CacheEntry> tableObjects = dbObjects.get(tableName);
+            if (tableObjects != null) {
+                return tableObjects.get(objectKey);
+            }
         }
         return null;
     }
@@ -190,7 +198,7 @@ public class ObjectsCache {
      *
      * @return the object of interest, null if not present in the cache
      */
-    public synchronized Object getObject(String dbName, String tableName, String objectKey) {
+    public Object getObject(String dbName, String tableName, String objectKey) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
             return entry.getObject();
@@ -209,14 +217,27 @@ public class ObjectsCache {
      * @return returns a boolean indicating that the entry was in cache and has
      * been updated. False otherwise.
      */
-    public synchronized boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
+    public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
         CacheEntry entry = getEntry(dbName, tableName, objectKey);
         if (entry != null) {
-            entry.setModified(true);
-            entry.setObject(object);
-            return true;
+            return updateObjectSynchronized(entry, object);
         }
         return false;
+    }
+
+    /**
+     * Sets that a match has been modified and returns true in case of success.
+     *
+     * @param entry the entry to update
+     * @param object the object updated
+     *
+     * @return returns a boolean indicating that the entry was in cache and has
+     * been updated. False otherwise.
+     */
+    private synchronized boolean updateObjectSynchronized(CacheEntry entry, Object object) {
+        entry.setModified(true);
+        entry.setObject(object);
+        return true;
     }
 
     /**
@@ -272,7 +293,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public synchronized void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
+    public void saveObjects(ArrayList<String> entryKeys) throws IOException, SQLException {
         saveObjects(entryKeys, null, true);
     }
 
@@ -287,7 +308,7 @@ public class ObjectsCache {
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
+    public void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler) throws IOException, SQLException {
         saveObjects(entryKeys, waitingHandler, true);
     }
 
@@ -320,19 +341,23 @@ public class ObjectsCache {
             String dbName = splittedKey[0];
             String tableName = splittedKey[1];
             String objectKey = splittedKey[2];
-            CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+            CacheEntry entry = getEntry(dbName, tableName, objectKey);
 
             if (entry == null) {
-                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey); // @TODO: how is this possible??
+                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
             } else {
                 if (entry.isModified()) {
-                    if (!toSave.containsKey(dbName)) {
-                        toSave.put(dbName, new HashMap<String, HashMap<String, Object>>());
+                    HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
+                    if (dbMap == null) {
+                        dbMap = new HashMap<String, HashMap<String, Object>>();
+                        toSave.put(dbName, dbMap);
                     }
-                    if (!toSave.get(dbName).containsKey(tableName)) {
-                        toSave.get(dbName).put(tableName, new HashMap<String, Object>());
+                    HashMap<String, Object> tableMap = dbMap.get(tableName);
+                    if (tableMap == null) {
+                        tableMap = new HashMap<String, Object>();
+                        dbMap.put(tableName, tableMap);
                     }
-                    toSave.get(dbName).get(tableName).put(objectKey, entry.getObject());
+                    tableMap.put(objectKey, entry.getObject());
                 }
             }
 

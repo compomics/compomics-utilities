@@ -355,7 +355,7 @@ public class Peptide extends ExperimentObject {
             }
 
             Collections.sort(parentProteins);
-        }
+            }
 
         return parentProteins;
     }

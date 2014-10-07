@@ -46,12 +46,17 @@ public class ProcessingPreferences implements Serializable {
      * map: advocate index -> list of score indexes.
      */
     private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
+    /**
+     * The number of threads to use
+     */
+    private int nThreads;
 
     /**
      * Constructor with default settings.
      */
     public ProcessingPreferences() {
         initializeAlgorithmScores();
+        nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
     }
 
     /**
@@ -255,5 +260,23 @@ public class ProcessingPreferences implements Serializable {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the number of threads to use.
+     * 
+     * @return the number of threads to use
+     */
+    public int getnThreads() {
+        return nThreads;
+    }
+
+    /**
+     * Sets the number of threads to use.
+     * 
+     * @param nThreads the number of threads to use
+     */
+    public void setnThreads(int nThreads) {
+        this.nThreads = nThreads;
     }
 }

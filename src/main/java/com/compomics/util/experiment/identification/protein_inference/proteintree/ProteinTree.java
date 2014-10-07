@@ -84,11 +84,11 @@ public class ProteinTree {
     /**
      * Size of the cache of the most queried peptides.
      */
-    private int cacheSize = 5000;
+    private int cacheSize = 100;
     /**
      * Indicates whether the cache should be used.
      */
-    private boolean useCache = false;
+    private boolean useCache = true;
     /**
      * Cache of the last queried peptides.
      */
@@ -1419,6 +1419,27 @@ public class ProteinTree {
      * @throws IOException
      */
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
+
+        Node result = tree.get(tag);
+
+        if (result == null) {
+
+            result = getNodeSynchronized(tag);
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a node related to a tag and updates the cache. Null if not found.
+     *
+     * @param tag the tag of interest
+     * @return the corresponding node
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    private synchronized Node getNodeSynchronized(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
         Node result = tree.get(tag);
 

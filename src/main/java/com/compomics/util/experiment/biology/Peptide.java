@@ -154,10 +154,10 @@ public class Peptide extends ExperimentObject {
     public ArrayList<ModificationMatch> getModificationMatches() {
         return modifications;
     }
-    
+
     /**
      * Sets new modification matches for the peptide.
-     * 
+     *
      * @param modificationMatches the new modification matches
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
@@ -355,7 +355,7 @@ public class Peptide extends ExperimentObject {
             }
 
             Collections.sort(parentProteins);
-            }
+        }
 
         return parentProteins;
     }
@@ -1253,14 +1253,15 @@ public class Peptide extends ExperimentObject {
      * @param modificationProfile the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
-     * @param confidentModificationSites the confidently localized variable modification sites in a
-     * map: aa number -> list of modifications (1 is the first AA) (can be null)
-     * @param representativeAmbiguousModificationSites the representative site of the ambiguously localized variable modifications
-     * in a map: aa number -> list of modifications (1 is the first AA)
-     * (can be null)
-     * @param secondaryAmbiguousModificationSites the secondary sites of the ambiguously localized variable modifications
-     * in a map: aa number -> list of modifications (1 is the first AA)
-     * (can be null)
+     * @param confidentModificationSites the confidently localized variable
+     * modification sites in a map: aa number -> list of modifications (1 is the
+     * first AA) (can be null)
+     * @param representativeAmbiguousModificationSites the representative site
+     * of the ambiguously localized variable modifications in a map: aa number
+     * -> list of modifications (1 is the first AA) (can be null)
+     * @param secondaryAmbiguousModificationSites the secondary sites of the
+     * ambiguously localized variable modifications in a map: aa number -> list
+     * of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number -> list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -1269,8 +1270,8 @@ public class Peptide extends ExperimentObject {
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, Peptide peptide,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, 
-            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites, 
+            HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
+            HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites,
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
         if (confidentModificationSites == null) {
@@ -1294,7 +1295,7 @@ public class Peptide extends ExperimentObject {
 
         modifiedSequence += peptide.getNTerminal() + "-";
 
-        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites, 
+        modifiedSequence += AminoAcidSequence.getTaggedModifiedSequence(modificationProfile, peptide.sequence, confidentModificationSites,
                 representativeAmbiguousModificationSites, secondaryAmbiguousModificationSites, fixedModificationSites, useHtmlColorCoding, useShortName);
 
         modifiedSequence += "-" + peptide.getCTerminal();

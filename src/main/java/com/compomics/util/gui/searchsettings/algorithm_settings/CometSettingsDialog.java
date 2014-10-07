@@ -32,9 +32,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
     public CometSettingsDialog(java.awt.Frame parent, CometParameters cometParameters) {
         super(parent, true);
         if (cometParameters != null) {
-        this.cometParameters = cometParameters;
+            this.cometParameters = cometParameters;
         } else {
-            cometParameters = new CometParameters();
+            this.cometParameters = new CometParameters();
         }
         initComponents();
         setUpGUI();
@@ -931,7 +931,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
     public boolean validateInput(boolean showMessage) {
 
         boolean valid = true;
-        
+
         valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimum number of peaks", "Minimum Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minPeakIntensityLbl, minPeakIntensityTxt, "minimum peak intensity", "Minimim Peak Intensity Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, removePrecursorPeakLabel, removePrecursorPeakToleranceTxt, "remove precursor peak tolerance", "Precursor Peak Error", true, showMessage, valid);
@@ -962,7 +962,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         } catch (NumberFormatException e) {
             // ignore, handled above
         }
-        
+
         // precursor mass range: the low value should be lower than the high value
         try {
             double lowValue = Double.parseDouble(minPrecursorMassTxt.getText().trim());
@@ -980,9 +980,8 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         } catch (NumberFormatException e) {
             // ignore, handled above
         }
-        
-        // @TODO: add more tests?
 
+        // @TODO: add more tests?
         okButton.setEnabled(valid);
 
         return valid;

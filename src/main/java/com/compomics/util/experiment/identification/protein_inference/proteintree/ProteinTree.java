@@ -1423,7 +1423,6 @@ public class ProteinTree {
         Node result = tree.get(tag);
 
         if (result == null) {
-
             result = getNodeSynchronized(tag);
         }
 

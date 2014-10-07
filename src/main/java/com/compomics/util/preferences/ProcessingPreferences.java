@@ -47,7 +47,7 @@ public class ProcessingPreferences implements Serializable {
      */
     private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
     /**
-     * The number of threads to use
+     * The number of threads to use.
      */
     private int nThreads;
 

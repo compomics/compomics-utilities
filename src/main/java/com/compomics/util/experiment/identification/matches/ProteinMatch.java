@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.Protein;
@@ -168,7 +167,7 @@ public class ProteinMatch extends IdentificationMatch {
     }
     
     /**
-     * Sets the peptide keys for this protein match
+     * Sets the peptide keys for this protein match.
      * 
      * @param peptideMatchKeys 
      */

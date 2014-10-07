@@ -1199,7 +1199,6 @@ public class SequenceFactory {
      *
      * @param nThreads the number of threads to use
      *
-     * @param nThreads the number of threads to use
      * @return the default protein tree
      *
      * @throws IOException

@@ -31,7 +31,11 @@ public class CometSettingsDialog extends javax.swing.JDialog {
      */
     public CometSettingsDialog(java.awt.Frame parent, CometParameters cometParameters) {
         super(parent, true);
+        if (cometParameters != null) {
         this.cometParameters = cometParameters;
+        } else {
+            cometParameters = new CometParameters();
+        }
         initComponents();
         setUpGUI();
         fillGUI();

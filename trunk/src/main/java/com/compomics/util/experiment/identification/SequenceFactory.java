@@ -212,9 +212,36 @@ public class SequenceFactory {
                 Protein targetProtein = getProtein(targetAccession, reindex);
                 return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
             } catch (Exception e) {
-                // Back to old school mode
+                // ignore
             }
         }
+
+        Protein currentProtein = currentProteinMap.get(accession);
+
+        if (currentProtein == null) {
+           currentProtein = getProteinSynchronized(accession, reindex);
+        }
+        if (currentProtein == null) {
+            throw new IllegalArgumentException("Protein not found: " + accession + ".");
+        }
+        return currentProtein;
+    }
+
+    /**
+     * Returns the desired protein. Eventually re-indexes the database if the
+     * protein is not found. Synchronized version serving as a queue for threads.
+     *
+     * @param accession accession of the desired protein
+     * @param reindex a boolean indicating whether the database should be
+     * re-indexed in case the protein is not found.
+     * @return the desired protein
+     * @throws IOException thrown whenever an error is encountered while reading
+     * the FASTA file
+     * @throws IllegalArgumentException thrown whenever an error is encountered
+     * while reading the FASTA file
+     * @throws InterruptedException
+     */
+    private synchronized Protein getProteinSynchronized(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         Protein currentProtein = currentProteinMap.get(accession);
 
@@ -230,20 +257,9 @@ public class SequenceFactory {
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
 
-            currentProtein = getProtein(accession, index, 1);
-
-            if (loadedProteins.size() == nCache) {
-                currentProteinMap.remove(loadedProteins.get(0));
-                currentHeaderMap.remove(loadedProteins.get(0));
-                loadedProteins.remove(0);
-            }
-
-            loadedProteins.add(accession);
-            currentProteinMap.put(accession, currentProtein);
+            return getProtein(accession, index, 1);
         }
-        if (currentProtein == null) {
-            throw new IllegalArgumentException("Protein not found: " + accession + ".");
-        }
+
         return currentProtein;
     }
 
@@ -261,7 +277,7 @@ public class SequenceFactory {
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    private synchronized Protein getProtein(String accession, long index, long waitingTime) throws InterruptedException, IOException, IllegalArgumentException {
+    private synchronized Protein getProtein(String accession, long index, long waitingTime) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -296,14 +312,27 @@ public class SequenceFactory {
                     sequence += line;
                 }
             }
+
+            Protein currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
+
+            while (loadedProteins.size() >= nCache) {
+                currentProteinMap.remove(loadedProteins.get(0));
+                currentHeaderMap.remove(loadedProteins.get(0));
+                loadedProteins.remove(0);
+            }
+
+            loadedProteins.add(accession);
+            currentProteinMap.put(accession, currentProtein);
+
             reading = false;
 
-            return new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
+            return currentProtein;
 
         } catch (IOException e) {
             reading = false;
             if (waitingTime < timeOut) {
                 wait(waitingTime);
+                e.printStackTrace();
                 return getProtein(accession, index, 2 * waitingTime);
             } else {
                 throw e;
@@ -497,7 +526,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    private synchronized FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
 
         FastaIndex tempFastaIndex;
         if (!overwrite) {
@@ -1169,7 +1198,10 @@ public class SequenceFactory {
      * factory.
      *
      * @param nThreads the number of threads to use
+     *
+     * @param nThreads the number of threads to use
      * @return the default protein tree
+     *
      * @throws IOException
      * @throws InterruptedException
      * @throws ClassNotFoundException

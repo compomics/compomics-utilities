@@ -728,7 +728,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public void clearTagsMap() {
+        if (tagsMap != null) {
         tagsMap.clear();
+        }
     }
 
     @Override

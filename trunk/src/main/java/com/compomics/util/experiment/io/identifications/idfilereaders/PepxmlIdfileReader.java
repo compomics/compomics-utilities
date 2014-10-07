@@ -229,11 +229,11 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
                                     Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));
                                     for (ModificationMatch modificationMatch : modificationMatches) {
-                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), 
+                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
                                                 modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                                     }
-                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), 
-                                            peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), 
+                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
+                                            peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(),
                                             peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                                     currentMatch.addHit(advocate.getIndex(), newAssumption, false);
                                 }
@@ -466,7 +466,7 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @throws IOException
      */
     private void parseRunSummary(XmlPullParser parser, boolean overwriteExtension) throws XmlPullParserException, IOException {
-        
+
         // Something like  <msms_run_summary base_name="D:\path\filename" raw_data="extention"> is expected 
         String path = "";
         for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -477,11 +477,11 @@ public class PepxmlIdfileReader implements IdfileReader {
                 path += parser.getAttributeValue(i);
             }
         }
-        
+
         if (overwriteExtension) {
             path += ".mgf";
         }
-        
+
         File spectrumFile = new File(path);
         inputFileName = Util.getFileName(spectrumFile);
     }
@@ -525,14 +525,13 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         return getAllSpectrumMatches(waitingHandler, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences 
-            sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
             SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         if (spectrumMatches == null) {
             this.sequenceMatchingPreferences = sequenceMatchingPreferences;
@@ -558,6 +557,8 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public void clearPeptidesMap() {
-        peptideMap.clear();
+        if (peptideMap != null) {
+            peptideMap.clear();
+        }
     }
 }

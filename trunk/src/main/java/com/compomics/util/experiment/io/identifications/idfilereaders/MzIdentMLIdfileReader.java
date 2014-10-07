@@ -1255,6 +1255,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public void clearPeptidesMap() {
-        peptideMap.clear();
+        if (peptideMap != null) {
+            peptideMap.clear();
+        }
     }
 }

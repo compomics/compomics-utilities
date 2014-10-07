@@ -420,7 +420,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public void clearTagsMap() {
-        tagsMap.clear();
+        if (tagsMap != null) {
+            tagsMap.clear();
+        }
     }
 
     @Override

@@ -354,6 +354,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public void clearPeptidesMap() {
-        peptideMap.clear();
+        if (peptideMap != null) {
+            peptideMap.clear();
+        }
     }
 }

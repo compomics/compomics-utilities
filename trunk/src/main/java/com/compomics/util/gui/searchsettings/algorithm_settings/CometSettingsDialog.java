@@ -118,9 +118,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         }
 
         if (cometParameters.getRemoveMethionine()) {
-            removeMethionineCmb.setSelectedIndex(1);
-        } else {
             removeMethionineCmb.setSelectedIndex(0);
+        } else {
+            removeMethionineCmb.setSelectedIndex(1);
         }
 
         if (cometParameters.getBatchSize() != null) {
@@ -142,9 +142,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         }
 
         if (cometParameters.getUseSparseMatrix()) {
-            removeMethionineCmb.setSelectedIndex(0);
+            useSparseMatrixCmb.setSelectedIndex(0);
         } else {
-            removeMethionineCmb.setSelectedIndex(1);
+            useSparseMatrixCmb.setSelectedIndex(1);
         }
     }
 
@@ -236,7 +236,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
             result.setMaxVariableMods(new Integer(input));
         }
 
-        result.setTheoreticalFragmentIonsSumOnly(removeMethionineCmb.getSelectedIndex() == 0);
+        result.setTheoreticalFragmentIonsSumOnly(correlationScoreTypeCmb.getSelectedIndex() == 1);
 
         input = fragmentBinOffsetTxt.getText().trim();
         if (!input.equals("")) {

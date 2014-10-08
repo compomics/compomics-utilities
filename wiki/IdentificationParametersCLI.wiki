@@ -8,6 +8,21 @@ Note that in most cases it is not recommended to use the command line to generat
 
 Also note that most of the search engine specific settings listed below are for expert usage only. Changes from the default settings should be done with care.
 
+ * [#General_command_lines General command lines]
+ * [#General_parameters General parameters]
+ * [#X!Tandem_advanced_parameters X!Tandem advanced parameters]
+ * [#MS-GF+_advanced_parameters MS-GF+ advanced parameters]
+ * [#MS Amanda_advanced_parameters MS Amanda advanced parameters]
+ * [#OMSSA_advanced_parameters OMSSA advanced parameters]
+ * [#MyriMatch_advanced_parameters MyriMatch advanced parameters]
+ * [#Comet_advanced_parameters Comet advanced parameters]
+ * [#PepNovo+_advanced_parameters PepNovo+ advanced parameters]
+ * [#DirecTag_advanced_parameters DirecTag advanced parameters]
+ * [#Comma_Separated_List Comma Separated List]
+ * [#Help Help]
+
+----
+
 *General command lines*
 
 {{{

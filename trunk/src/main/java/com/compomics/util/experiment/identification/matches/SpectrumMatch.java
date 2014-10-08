@@ -290,7 +290,7 @@ public class SpectrumMatch extends IdentificationMatch {
 
     /**
      * Returns the spectrum number in the spectrum file. Returns null if not
-     * implemented (for versions older than 3.4.17 for instance).
+     * implemented (versions older than 3.4.17). 1 is the first spectrum.
      *
      * @return the spectrum number in the spectrum file
      */
@@ -299,7 +299,7 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Sets the spectrum number in the spectrum file.
+     * Sets the spectrum number in the spectrum file. 1 is the first spectrum.
      *
      * @param spectrumNumber the spectrum number in the spectrum file
      */

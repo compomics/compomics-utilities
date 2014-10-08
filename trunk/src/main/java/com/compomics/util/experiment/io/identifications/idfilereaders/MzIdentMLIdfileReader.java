@@ -210,9 +210,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                 // see if we can find the spectrum index
                 String spectrumId = spectrumIdentResult.getSpectrumID();
-                Integer spectrumNumber = null;
+                Integer spectrumIndex = null;
                 if (spectrumId != null && spectrumId.startsWith("index=")) {
-                    spectrumNumber = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
+                    spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
                 }
 
                 // get the spectrum file name
@@ -223,7 +223,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
 
                 // set spectrum index, used if title is not provided
-                if (spectrumNumber != null) {
+                if (spectrumIndex != null) {
+                    int spectrumNumber = spectrumIndex + 1;
                     currentMatch.setSpectrumNumber(spectrumNumber);
                 }
 

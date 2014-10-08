@@ -338,26 +338,35 @@ public class Peptide extends ExperimentObject {
             ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
         if (remap && parentProteins == null) {
-
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, sequenceMatchingPreferences);
-            parentProteins = new ArrayList<String>();
-
-            for (String peptideSequence : proteinMapping.keySet()) {
-                double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
-                if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                    for (String accession : subMapping.keySet()) {
-                        if (!parentProteins.contains(accession)) {
-                            parentProteins.add(accession);
-                        }
-                    }
-                }
-            }
-
-            Collections.sort(parentProteins);
+            setParentProteins(proteinMapping, sequenceMatchingPreferences);
         }
 
         return parentProteins;
+    }
+
+    /**
+     * Sets the parent proteins in the attribute list.
+     *
+     * @param proteinMapping the protein mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     */
+    public synchronized void setParentProteins(HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        parentProteins = new ArrayList<String>();
+
+        for (String peptideSequence : proteinMapping.keySet()) {
+            double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
+            if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                for (String accession : subMapping.keySet()) {
+                    if (!parentProteins.contains(accession)) {
+                        parentProteins.add(accession);
+                    }
+                }
+            }
+        }
+
+        Collections.sort(parentProteins);
     }
 
     /**

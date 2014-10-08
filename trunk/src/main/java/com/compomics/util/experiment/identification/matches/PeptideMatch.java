@@ -49,6 +49,15 @@ public class PeptideMatch extends IdentificationMatch {
         }
         return matchKey;
     }
+    
+    /**
+     * Sets a new key for the match.
+     * 
+     * @param newKey a new key for the match
+     */
+    public void setKey(String newKey) {
+        this.matchKey = newKey;
+    }
 
     /**
      * Constructor for the peptide match.

@@ -153,7 +153,7 @@ public enum IdentificationParametersCLIParams {
     COMET_CLEAR_MZ_RANGE_UPPER("comet_clear_mz_range_upper", "Comet clear mz range upper, default is '0.0'.", false),
     COMET_ENZYME_TYPE("comet_enzyme_type", "Comet enzyme type, 1: semi-specific, 2: full-enzyme, 8: unspecific N-term, 9: unspecific C-term, default is '2'.", false),
     COMET_ISOTOPE_CORRECTION("comet_isotope_correction", "Comet isotope correction, 0: off, 1: -1,0,+1,+2,+3, 2: -8,-4,0,+4,+8, default is '0'.", false),
-    COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minumum precursor mass, default is '0.0'.", false),
+    COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minimum precursor mass, default is '0.0'.", false),
     COMET_MAX_PREC_MASS("comet_max_prec_mass", "Comet maximum precursor mass, default is '10000.0'.", false),
     COMET_MAX_FRAGMENT_CHARGE("comet_max_frag_charge", "Comet maximum fragment charge [1-5], default is '3'.", false),
     COMET_REMOVE_METH("comet_remove_meth", "Comet remove methionine, 1: true, 0: false, default is '0'.", false),

@@ -259,7 +259,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -omssa_format            OMSSA output format. 0: omx, 1: csv, default is 'omx'.
 }}}
 
-==MyriMatch advanced parameters==
+==`MyriMatch` advanced parameters==
 
 {{{
 -myrimatch_min_pep_length MyriMatch minumum peptide length, default is '6'.
@@ -353,7 +353,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 
-==PepNovo+ advanced parameters==
+==`PepNovo+` advanced parameters==
 
 {{{
 -pepnovo_hitlist_length   PepNovo+ number of de novo solutions [0-2000], default is '10'.
@@ -371,7 +371,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -pepnovo_generate_blast   PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.
 }}}
 
-==DirecTag advanced parameters==
+==`DirecTag` advanced parameters==
 
 {{{
 -directag_tic_cutoff      DirecTag TIC cutoff in percent, default is '85'.

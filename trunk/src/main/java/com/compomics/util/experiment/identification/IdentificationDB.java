@@ -801,7 +801,7 @@ public class IdentificationDB implements Serializable {
      * @param objectKey the key of the object
      * @param useDB if useDB is false, null will be returned if the object is not in the cache
      * 
-     * @returnan object from the database
+     * @return an object from the database
      * 
      * @throws SQLException
      * @throws IOException

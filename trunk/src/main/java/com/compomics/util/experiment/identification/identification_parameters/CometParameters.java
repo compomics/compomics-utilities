@@ -87,7 +87,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * sets of 5000 spectra until all data have been analyzed. Set this
      * parameter to 0 to load and search all spectra at once.
      */
-    private Integer batchSize = 5000; // @TODO: find an optimal default value
+    private Integer batchSize = 0;
     /**
      * The correlation score type. This parameter specifies how theoretical
      * fragment ion peaks are represented.
@@ -101,7 +101,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Controls whether or not internal sparse matrix data representation is
      * used.
      */
-    private Boolean useSparseMatrix = false;
+    private Boolean useSparseMatrix = true;
 
     /**
      * Constructor.

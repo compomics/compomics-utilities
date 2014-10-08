@@ -280,6 +280,15 @@ public class IdentificationDB implements Serializable {
             objectsDB.deleteObject(peptideParameterTable, key);
         }
     }
+    
+    /**
+     * Returns the names of the tables containing peptide parameters.
+     * 
+     * @return the names of the tables containing peptide parameters
+     */
+    public ArrayList<String> getPeptideParametersTables() {
+        return peptideParametersTables;
+    }
 
     /**
      * Deletes a spectrum match from the database.
@@ -783,6 +792,24 @@ public class IdentificationDB implements Serializable {
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
         return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
+    }
+    
+    /**
+     * Returns an object from the database.
+     * 
+     * @param table the name of the table
+     * @param objectKey the key of the object
+     * @param useDB if useDB is false, null will be returned if the object is not in the cache
+     * 
+     * @returnan object from the database
+     * 
+     * @throws SQLException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException 
+     */
+    public Object getObject(String table, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return objectsDB.retrieveObject(table, objectKey, true);
     }
 
     /**

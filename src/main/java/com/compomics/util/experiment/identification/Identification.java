@@ -681,20 +681,27 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.updatePeptideMatch(peptideMatch);
         }
     }
-    
+
     /**
      * Updates a peptide match where the key was changed.
-     * 
+     *
      * @param oldKey the old peptide key
      * @param peptideMatch the new peptide match
-     * 
+     *
      * @throws SQLException
      * @throws IOException
-     * @throws InterruptedException 
+     * @throws InterruptedException
+     * @throws java.lang.ClassNotFoundException
      */
     public void updatePeptideMatch(String oldKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
-        removePeptideMatch(oldKey);
         String newKey = peptideMatch.getKey();
+        for (String paramterTable : identificationDB.getPeptideParametersTables()) {
+            UrParameter parameter = (UrParameter) identificationDB.getObject(paramterTable, oldKey, true);
+            if (parameter != null) {
+                addPeptideMatchParameter(newKey, parameter);
+            }
+        }
+        removePeptideMatch(oldKey);
         peptideIdentification.add(newKey);
         identificationDB.addPeptideMatch(peptideMatch);
         for (String accession : peptideMatch.getTheoreticPeptide().getParentProteinsNoRemapping()) {

@@ -6,7 +6,7 @@ IdentificationParametersCLI can be used to create an identification parameter fi
 
 Note that in most cases it is not recommended to use the command line to generate the identification parameter file, but rather to set up the wanted identification parameter file in the GUI, save it, and than use it in the command line processing.
 
-Also note that most X!Tandem, MS-GF+, MS Amanda, OMSSA, PepNovo+ and DirecTag settings listed below are for expert usage only. Changes from the default settings should be done with care.
+Also note that most of the search engine specific settings listed below are for expert usage only. Changes from the default settings should be done with care.
 
 *General command lines*
 
@@ -289,6 +289,54 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 
 -myrimatch_max_peak       MyriMatch max peak count option, default is '100'.
 }}}
+
+*Comet advanced parameters*
+
+{{{
+-comet_num_matches        Comet maximum number of spectrum matches, default is '10'.
+
+-comet_num_ptms           Comet max number of PTMs per peptide, default is '10'.
+
+-comet_min_peaks          Comet min number of peaks for a spectrum, default is '10'.
+
+-comet_min_peak_int       Comet min peak intensity, default is '0.0'.
+
+-comet_remove_prec        Comet remove precursor, 0: off, 1: on, 
+                          2: as expected for ETD/ECD spectra, default is '0'.
+
+-comet_remove_prec_tol    Comet remove precursor tolerance, default is '1.5'.
+
+-comet_clear_mz_range_lower
+                          Comet clear mz range lower, default is '0.0'.
+
+-comet_clear_mz_range_upper
+                          Comet clear mz range upper, default is '0.0'.
+
+-comet_enzyme_type        Comet enzyme type, 1: semi-specific, 2: full-enzyme, 
+                          8: unspecific N-term, 9: unspecific C-term, default is '2'.
+
+-comet_isotope_correction Comet isotope correction, 0: off, 1: -1,0,+1,+2,+3, 
+                          2: -8,-4,0,+4,+8, default is '0'.
+
+-comet_min_prec_mass      Comet minimum precursor mass, default is '0.0'.
+
+-comet_max_prec_mass      Comet maximum precursor mass, default is '10000.0'.
+
+-comet_max_frag_charge    Comet maximum fragment charge [1-5], default is '3'.
+
+-comet_remove_meth        Comet remove methionine, 1: true, 0: false, default is '0'.
+
+-comet_batch_size         Comet batch size, '0' means load and search all spectra at once, 
+                          default is '0'.
+
+-comet_theoretical_fragment_ions
+                          Comet theoretical_fragment_ions option, default is '1'.
+
+-comet_frag_bin_offset    Comet fragment bin offset, default is '0.0'.
+
+-comet_sparse_matrix      Comet use sparse matrix, 1: true, 0: false, default is '1'.
+}}}
+
 
 *PepNovo+ advanced parameters*
 

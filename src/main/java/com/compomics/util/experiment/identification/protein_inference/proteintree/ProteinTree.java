@@ -1053,27 +1053,38 @@ public class ProteinTree {
                 if (!reversed && useCache) {
                     long timeEnd = System.currentTimeMillis();
                     long queryTime = timeEnd - timeStart;
-
-                    if (queryTime <= queryTimeThreshold) {
-                        lastQueriedPeptidesCache.put(peptideSequence, result);
-                        lastQueriedPeptidesCacheContent.add(peptideSequence);
-                        if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
-                            String key = lastQueriedPeptidesCacheContent.pollLast();
-                            lastQueriedPeptidesCache.remove(key);
-                        }
-                    } else {
-                        lastSlowQueriedPeptidesCache.put(peptideSequence, result);
-                        lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
-                        if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
-                            String key = lastSlowQueriedPeptidesCacheContent.pollLast();
-                            lastSlowQueriedPeptidesCache.remove(key);
-                        }
-                    }
+                    addToCache(peptideSequence, result, queryTime);
                 }
             }
         }
 
         return result;
+    }
+
+    /**
+     * Adds a mapping to the cache.
+     *
+     * @param peptideSequence the newly mapped peptide sequence
+     * @param mapping the protein mapping
+     * @param queryTime the mapping time
+     */
+    private synchronized void addToCache(String peptideSequence, HashMap<String, HashMap<String, ArrayList<Integer>>> mapping, long queryTime) {
+
+        if (queryTime <= queryTimeThreshold) {
+            lastQueriedPeptidesCache.put(peptideSequence, mapping);
+            lastQueriedPeptidesCacheContent.add(peptideSequence);
+            if (lastQueriedPeptidesCacheContent.size() > cacheSize) {
+                String key = lastQueriedPeptidesCacheContent.pollLast();
+                lastQueriedPeptidesCache.remove(key);
+            }
+        } else {
+            lastSlowQueriedPeptidesCache.put(peptideSequence, mapping);
+            lastSlowQueriedPeptidesCacheContent.add(peptideSequence);
+            if (lastSlowQueriedPeptidesCacheContent.size() > cacheSize) {
+                String key = lastSlowQueriedPeptidesCacheContent.pollLast();
+                lastSlowQueriedPeptidesCache.remove(key);
+            }
+        }
     }
 
     /**
@@ -1822,7 +1833,7 @@ public class ProteinTree {
      * Retrieves the length of a protein.
      *
      * @param accession the accession of the protein of interest
-     * 
+     *
      * @return the length of this protein
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -1841,7 +1852,7 @@ public class ProteinTree {
      * Retrieves the length of a protein.
      *
      * @param accession the accession of the protein of interest
-     * 
+     *
      * @return the length of this protein
      * @throws SQLException
      * @throws ClassNotFoundException

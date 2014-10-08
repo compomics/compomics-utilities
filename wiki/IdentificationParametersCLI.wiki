@@ -23,7 +23,7 @@ Also note that most of the search engine specific settings listed below are for 
 
 ----
 
-*General command lines*
+==General command lines==
 
 {{{
 java -cp SearchGUI-X.Y.Z.jar 
@@ -40,7 +40,7 @@ java -cp DeNovoGUI-X.Y.Z.jar
 com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
-*General parameters*
+==General parameters==
 
 {{{
 -db	                The sequence database in FASTA format.
@@ -76,7 +76,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -mods                   Lists the available modifications.
 }}}
 
-*X!Tandem advanced parameters*
+==X!Tandem advanced parameters==
 
 {{{
 -xtandem_dynamic_range    X!Tandem 'spectrum, dynamic range' option, default is '100'.
@@ -125,7 +125,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -xtandem_skyline_path     X!Tandem 'spectrum, skyline path' option.
 }}}
 
-*MS-GF+ advanced parameters*
+==MS-GF+ advanced parameters==
 
 {{{
 -msgf_decoy               MS-GF+ search decoys option, 1: true, 0: false, default is '0'.
@@ -160,7 +160,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -msgf_num_ptms            MS-GF+ max number of PTMs per peptide, default is '2'.
 }}}
 
-*MS Amanda advanced parameters*
+==MS Amanda advanced parameters==
 
 {{{
 -ms_amanda_decoy          MS Amanda generate decoys option, 0: false, 1: true, default is '0'.
@@ -173,7 +173,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -ms_amanda_mono           MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.
 }}}
 
-*OMSSA advanced parameters*
+==OMSSA advanced parameters==
 
 {{{
 -omssa_memory            OMSSA map sequences in memory option, 1: true, 0: false, default is '1'.
@@ -259,7 +259,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -omssa_format            OMSSA output format. 0: omx, 1: csv, default is 'omx'.
 }}}
 
-*MyriMatch advanced parameters*
+==MyriMatch advanced parameters==
 
 {{{
 -myrimatch_min_pep_length MyriMatch minumum peptide length, default is '6'.
@@ -305,7 +305,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -myrimatch_max_peak       MyriMatch max peak count option, default is '100'.
 }}}
 
-*Comet advanced parameters*
+==Comet advanced parameters==
 
 {{{
 -comet_num_matches        Comet maximum number of spectrum matches, default is '10'.
@@ -353,7 +353,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 }}}
 
 
-*PepNovo+ advanced parameters*
+==PepNovo+ advanced parameters==
 
 {{{
 -pepnovo_hitlist_length   PepNovo+ number of de novo solutions [0-2000], default is '10'.
@@ -371,7 +371,7 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -pepnovo_generate_blast   PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.
 }}}
 
-*DirecTag advanced parameters*
+==DirecTag advanced parameters==
 
 {{{
 -directag_tic_cutoff      DirecTag TIC cutoff in percent, default is '85'.
@@ -435,6 +435,6 @@ When using comma separated lists as input for the the PTMs, please pay attention
 
 ----
 
-== Help==
+==Help==
 
 If you experience any problems with the command lines or have any suggestion please contact us via the [https://groups.google.com/group/peptide-shaker PeptideShaker mailing list].

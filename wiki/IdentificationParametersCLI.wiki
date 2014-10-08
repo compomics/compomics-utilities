@@ -12,7 +12,7 @@ Also note that most of the search engine specific settings listed below are for 
  * [#General_parameters General parameters]
  * [#X!Tandem_advanced_parameters X!Tandem advanced parameters]
  * [#MS-GF+_advanced_parameters MS-GF+ advanced parameters]
- * [#MS Amanda_advanced_parameters MS Amanda advanced parameters]
+ * [#MS_Amanda_advanced_parameters MS Amanda advanced parameters]
  * [#OMSSA_advanced_parameters OMSSA advanced parameters]
  * [#MyriMatch_advanced_parameters MyriMatch advanced parameters]
  * [#Comet_advanced_parameters Comet advanced parameters]

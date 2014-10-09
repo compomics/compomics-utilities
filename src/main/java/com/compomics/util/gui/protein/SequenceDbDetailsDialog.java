@@ -8,6 +8,7 @@ import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
+import com.compomics.util.protein.Header.DatabaseType;
 import java.awt.Frame;
 import java.awt.Image;
 import java.io.File;
@@ -15,8 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
+import java.util.TreeMap;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerListModel;
@@ -88,12 +90,49 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
+
         FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
         if (fastaIndex != null) {
             fileTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
             utilitiesUserPreferences.setDbFolder(sequenceFactory.getCurrentFastaFile());
             dbNameTxt.setText(fastaIndex.getName());
-            typeCmb.setSelectedItem(Header.getDatabaseTypeAsString(fastaIndex.getDatabaseType()));
+
+            // show the database type information
+            if (fastaIndex.getDatabaseTypes().size() == 1) {
+                typeJTextField.setText(Header.getDatabaseTypeAsString(fastaIndex.getMainDatabaseType()));
+            } else {
+
+                Iterator<DatabaseType> iterator = fastaIndex.getDatabaseTypes().keySet().iterator();
+                TreeMap<Integer, ArrayList<DatabaseType>> sortedDatabaseTypes = new TreeMap<Integer, ArrayList<DatabaseType>>();
+
+                while (iterator.hasNext()) {
+                    DatabaseType tempDatabaseType = iterator.next();
+                    Integer counter = fastaIndex.getDatabaseTypes().get(tempDatabaseType);
+
+                    ArrayList<DatabaseType> tempList = sortedDatabaseTypes.get(counter);
+                    if (tempList == null) {
+                        tempList = new ArrayList<DatabaseType>();
+                    }
+                    tempList.add(tempDatabaseType);
+                    sortedDatabaseTypes.put(counter, tempList);
+                }
+
+                String tempText = "";
+                Iterator<Integer> iteratorInt = sortedDatabaseTypes.descendingKeySet().iterator();
+
+                while (iteratorInt.hasNext()) {
+                    Integer tempInt = iteratorInt.next();
+                    for (int i = 0; i < sortedDatabaseTypes.get(tempInt).size(); i++) {
+                        if (!tempText.isEmpty()) {
+                            tempText += ", ";
+                        }
+                        tempText += Header.getDatabaseTypeAsString(sortedDatabaseTypes.get(tempInt).get(i)) + " (" + tempInt + ")";
+                    }
+                }
+
+                typeJTextField.setText(tempText);
+            }
+
             versionTxt.setText(fastaIndex.getVersion());
             lastModifiedTxt.setText(new Date(fastaIndex.getLastModified()).toString());
             String nSequences = fastaIndex.getNSequences() + " sequences";
@@ -123,8 +162,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             } else {
                 accessionsSpinner.setEnabled(false);
             }
-        } else {
-            typeCmb.setSelectedItem(Header.getDatabaseTypeAsString(Header.DatabaseType.Unknown));
         }
     }
 
@@ -476,7 +513,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         databaseInformationPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         dbNameTxt = new javax.swing.JTextField();
-        typeCmb = new javax.swing.JComboBox();
         typeLabel = new javax.swing.JLabel();
         fileTxt = new javax.swing.JTextField();
         decoyFlagTxt = new javax.swing.JTextField();
@@ -491,6 +527,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         browseButton = new javax.swing.JButton();
         fileLabel = new javax.swing.JLabel();
         advancedButton = new javax.swing.JButton();
+        typeJTextField = new javax.swing.JTextField();
         previewPanel = new javax.swing.JPanel();
         proteinYxtScrollPane = new javax.swing.JScrollPane();
         proteinTxt = new javax.swing.JTextArea();
@@ -501,6 +538,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Database");
+        setMinimumSize(new java.awt.Dimension(500, 500));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -524,30 +562,32 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         nameLabel.setText("Name");
 
         dbNameTxt.setEditable(false);
+        dbNameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        typeCmb.setModel(new DefaultComboBoxModel(Header.getDatabaseTypesAsString()));
-        typeCmb.setPreferredSize(new java.awt.Dimension(200, 22));
-
-        typeLabel.setText("Type");
+        typeLabel.setText("Type(s)");
 
         fileTxt.setEditable(false);
-        fileTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fileTxt.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         decoyFlagTxt.setEditable(false);
+        decoyFlagTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         decoyTagLabel.setText("Decoy Tag");
 
         versionLabel.setText("Version");
 
         versionTxt.setEditable(false);
+        versionTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         lastModifiedLabel.setText("Modified");
 
         lastModifiedTxt.setEditable(false);
+        lastModifiedTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         sizeLabel.setText("Size");
 
         sizeTxt.setEditable(false);
+        sizeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         decoyButton.setText("Decoy");
         decoyButton.setPreferredSize(new java.awt.Dimension(75, 25));
@@ -574,6 +614,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             }
         });
 
+        typeJTextField.setEditable(false);
+        typeJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
         javax.swing.GroupLayout databaseInformationPanelLayout = new javax.swing.GroupLayout(databaseInformationPanel);
         databaseInformationPanel.setLayout(databaseInformationPanelLayout);
         databaseInformationPanelLayout.setHorizontalGroup(
@@ -581,10 +624,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, databaseInformationPanelLayout.createSequentialGroup()
                         .addComponent(fileLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fileTxt)
+                        .addComponent(fileTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -592,29 +635,29 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(advancedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
-                                .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(versionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
-                                .addComponent(decoyTagLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(decoyFlagTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, databaseInformationPanelLayout.createSequentialGroup()
-                                .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dbNameTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)))
-                        .addGap(35, 35, 35)
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(typeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lastModifiedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(sizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(typeCmb, 0, 280, Short.MAX_VALUE)
-                            .addComponent(lastModifiedTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-                            .addComponent(sizeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))))
+                        .addComponent(sizeTxt))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(typeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(typeJTextField))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(decoyTagLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(decoyFlagTxt))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(versionTxt))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(nameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dbNameTxt))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(lastModifiedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lastModifiedTxt)))
                 .addContainerGap())
         );
 
@@ -635,21 +678,27 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
-                    .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(typeLabel)
-                    .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(typeJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(versionLabel)
-                    .addComponent(lastModifiedLabel)
-                    .addComponent(lastModifiedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(versionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(decoyTagLabel)
-                    .addComponent(decoyFlagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(decoyFlagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sizeLabel)
                     .addComponent(sizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lastModifiedLabel)
+                    .addComponent(lastModifiedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -682,7 +731,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+                    .addComponent(proteinYxtScrollPane)
                     .addGroup(previewPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(proteinLabel)
@@ -697,7 +746,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinLabel)
@@ -736,8 +785,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(databaseInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(databaseInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -910,7 +959,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JTextField sizeTxt;
     private javax.swing.JLabel targetDecoyTxt;
-    private javax.swing.JComboBox typeCmb;
+    private javax.swing.JTextField typeJTextField;
     private javax.swing.JLabel typeLabel;
     private javax.swing.JLabel versionLabel;
     private javax.swing.JTextField versionTxt;

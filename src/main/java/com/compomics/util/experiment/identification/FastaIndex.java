@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Header.DatabaseType;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,9 +45,13 @@ public class FastaIndex extends ExperimentObject {
      */
     private int nTarget;
     /**
-     * The database type.
+     * The main database type.
      */
-    private DatabaseType databaseType = DatabaseType.Unknown;
+    private DatabaseType mainDatabaseType = DatabaseType.Unknown;
+    /**
+     * A map of all the database types and how often they occur.
+     */
+    private HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<Header.DatabaseType, Integer>();
     /**
      * The version of the database.
      */
@@ -77,11 +82,15 @@ public class FastaIndex extends ExperimentObject {
      * @param nTarget Number of target sequences found in the database
      * @param lastModified a long indicating the last time the indexed file was
      * modified
-     * @param databaseType the database type
+     * @param mainDatabaseType the main database type
+     * @param databaseTypes map of all the database types and how often they
+     * occur
      * @param decoyTag the decoy tag
      * @param version the database version
      */
-    public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name, boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified, DatabaseType databaseType, String decoyTag, String version) {
+    public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name,
+            boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified,
+            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, String version) {
         this.indexes = indexes;
         this.decoyAccessions = decoyAccessions;
         this.fileName = fileName;
@@ -90,7 +99,8 @@ public class FastaIndex extends ExperimentObject {
         this.isDefaultReversed = isDefaultReversed;
         this.nTarget = nTarget;
         this.lastModified = lastModified;
-        this.databaseType = databaseType;
+        this.mainDatabaseType = mainDatabaseType;
+        this.databaseTypes = databaseTypes;
         this.decoyTag = decoyTag;
         this.version = version;
     }
@@ -183,21 +193,39 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Indicates the database type.
+     * Returns the main database type.
      *
-     * @return the database type.
+     * @return the main database type.
      */
-    public DatabaseType getDatabaseType() {
-        return databaseType;
+    public DatabaseType getMainDatabaseType() {
+        return mainDatabaseType;
     }
 
     /**
-     * Sets the database type.
+     * Sets the main database type.
      *
-     * @param databaseType the database type
+     * @param mainDatabaseType the main database type
      */
-    public void setDatabaseType(DatabaseType databaseType) {
-        this.databaseType = databaseType;
+    public void setMainDatabaseType(DatabaseType mainDatabaseType) {
+        this.mainDatabaseType = mainDatabaseType;
+    }
+
+    /**
+     * Returns the map of the database types and how often they occur.
+     *
+     * @return the map of the database types
+     */
+    public HashMap<Header.DatabaseType, Integer> getDatabaseTypes() {
+        return databaseTypes;
+    }
+
+    /**
+     * Set the database types map.
+     *
+     * @param databaseTypes the database types
+     */
+    public void setDatabaseTypes(HashMap<Header.DatabaseType, Integer> databaseTypes) {
+        this.databaseTypes = databaseTypes;
     }
 
     /**

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.swing.JProgressBar;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -219,7 +220,7 @@ public class SequenceFactory {
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null) {
-           currentProtein = getProteinSynchronized(accession, reindex);
+            currentProtein = getProteinSynchronized(accession, reindex);
         }
         if (currentProtein == null) {
             throw new IllegalArgumentException("Protein not found: " + accession + ".");
@@ -229,7 +230,8 @@ public class SequenceFactory {
 
     /**
      * Returns the desired protein. Eventually re-indexes the database if the
-     * protein is not found. Synchronized version serving as a queue for threads.
+     * protein is not found. Synchronized version serving as a queue for
+     * threads.
      *
      * @param accession accession of the desired protein
      * @param reindex a boolean indicating whether the database should be
@@ -555,7 +557,6 @@ public class SequenceFactory {
         String decoyTag = null;
         String name = null;
         String version = null;
-        Header.DatabaseType databaseType = null;
         File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
 
         if (indexFile.exists()) {
@@ -563,7 +564,6 @@ public class SequenceFactory {
                 tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
                 decoyTag = tempFastaIndex.getDecoyTag();
                 version = tempFastaIndex.getVersion();
-                databaseType = tempFastaIndex.getDatabaseType();
                 name = tempFastaIndex.getName();
             } catch (Exception e) {
                 // Fail silently
@@ -571,7 +571,7 @@ public class SequenceFactory {
         }
 
         System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
-        tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, databaseType, version, waitingHandler);
+        tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, version, waitingHandler);
 
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             try {
@@ -590,7 +590,7 @@ public class SequenceFactory {
      * @param fastaFile the FASTA file
      * @param progressBar a progress bar showing the progress
      * @param decoyTag the decoy tag. Will be inferred if null.
-     * @param databaseType the database type. Will be inferred if null.
+     * @param mainDatabaseType the main database type. Will be inferred if null.
      * @param version the version. last modification of the file will be used if
      * null.
      * @param name the name of the database. Set to file name if null.
@@ -606,7 +606,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, Header.DatabaseType databaseType, String version,
+    private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, String version,
             WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException, IllegalArgumentException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
@@ -621,12 +621,12 @@ public class SequenceFactory {
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
-        boolean decoy = false, defaultReversed = false, multipleType = false;
+        boolean decoy = false, defaultReversed = false;
         int nTarget = 0;
         long index = bufferedRandomAccessFile.getFilePointer();
-        if (databaseType == null) {
-            databaseType = Header.DatabaseType.Unknown;
-        }
+
+        // a map of the database header types
+        HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<Header.DatabaseType, Integer>();
 
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
 
@@ -647,14 +647,17 @@ public class SequenceFactory {
                 }
                 if (decoyTag == null || !isDecoy(accession, decoyTag)) {
                     nTarget++;
-                    if (!multipleType) {
-                        if (databaseType == Header.DatabaseType.Unknown) {
-                            databaseType = fastaHeader.getDatabaseType();
-                        } else if (fastaHeader.getDatabaseType() != databaseType && databaseType != Header.DatabaseType.Generic_Header) {
-                            databaseType = Header.DatabaseType.Unknown;
-                            multipleType = true;
-                        }
+
+                    // get the database type
+                    Header.DatabaseType tempDatabaseType = fastaHeader.getDatabaseType();
+                    Integer typeCounter = databaseTypes.get(tempDatabaseType);
+
+                    if (typeCounter == null) {
+                        databaseTypes.put(tempDatabaseType, 1);
+                    } else {
+                        databaseTypes.put(tempDatabaseType, typeCounter + 1);
                     }
+
                 } else {
                     decoyAccessions.add(accession);
                     if (!decoy) {
@@ -694,7 +697,19 @@ public class SequenceFactory {
             name = fileName;
         }
 
-        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, databaseType, decoyTag, version);
+        // find the main database type
+        Header.DatabaseType mainDatabaseType = null;
+        int maxCounter = 0;
+        Iterator<Header.DatabaseType> iterator = databaseTypes.keySet().iterator();
+        while (iterator.hasNext()) {
+            Header.DatabaseType tempDatabaseType = iterator.next();
+            if (databaseTypes.get(tempDatabaseType) > maxCounter) {
+                maxCounter = databaseTypes.get(tempDatabaseType);
+                mainDatabaseType = tempDatabaseType;
+            }
+        }
+
+        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, mainDatabaseType, databaseTypes, decoyTag, version);
     }
 
     /**

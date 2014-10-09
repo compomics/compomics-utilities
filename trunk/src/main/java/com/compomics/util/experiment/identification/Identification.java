@@ -729,11 +729,6 @@ public abstract class Identification extends ExperimentObject {
                 }
             }
         }
-            int debug = 1;
-        if (peptideIdentification.contains(oldKey)) {
-            debug = 2;
-        }
-        debug++;
     }
 
     /**

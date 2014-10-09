@@ -282,7 +282,7 @@ public abstract class AminoAcid implements Serializable {
      * getActualAminoAcids() and getCombinations() amino acids, not
      * comprehensively though, and the amino acid itself.
      *
-     * @param massTolerance the mass tolerance
+     * @param massTolerance the mass tolerance for amino acid distinction
      *
      * @return the amino acids which cannot be distinguished using their single
      * character code
@@ -292,16 +292,25 @@ public abstract class AminoAcid implements Serializable {
             throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
         }
         if (indistinguishableAACache == null || indistinguishableAACacheMass.doubleValue() != massTolerance.doubleValue()) {
-            ArrayList<Character> result = new ArrayList<Character>();
-            for (char aa : getAminoAcids()) {
-                if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
-                    result.add(aa);
-                }
-            }
-            indistinguishableAACache = result;
-            indistinguishableAACacheMass = massTolerance;
+            setIndistinguishibleAACache(massTolerance);
         }
         return indistinguishableAACache;
+    }
+
+    /**
+     * Sets the indistinguishibleAACache.
+     *
+     * @param massTolerance the mass tolerance for amino acid distinction
+     */
+    public synchronized void setIndistinguishibleAACache(Double massTolerance) {
+        ArrayList<Character> result = new ArrayList<Character>();
+        for (char aa : getAminoAcids()) {
+            if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
+                result.add(aa);
+            }
+        }
+        indistinguishableAACache = result;
+        indistinguishableAACacheMass = massTolerance;
     }
 
     /**

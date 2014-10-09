@@ -102,13 +102,14 @@ public class Node implements Serializable {
             }
 
             for (String accession : indexes.keySet()) {
-                for (String tempSequence : indexes.get(accession).keySet()) {
+                HashMap<String, ArrayList<Integer>> accessionIndexes = indexes.get(accession);
+                for (String tempSequence : accessionIndexes.keySet()) {
                     HashMap<String, ArrayList<Integer>> mapping = result.get(tempSequence);
                     if (mapping == null) {
                         mapping = new HashMap<String, ArrayList<Integer>>(1);
                         result.put(tempSequence, mapping);
                     }
-                    mapping.put(accession, indexes.get(accession).get(tempSequence));
+                    mapping.put(accession, accessionIndexes.get(tempSequence));
                 }
             }
         } else {
@@ -320,8 +321,7 @@ public class Node implements Serializable {
                     ArrayList<Integer> indexes = result.get(accession);
 
                     if (indexes == null) {
-                        indexes = new ArrayList<Integer>(subResult.get(accession).size());
-                        indexes.addAll(subResult.get(accession));
+                        indexes = new ArrayList<Integer>(subResult.get(accession));
                         result.put(accession, indexes);
                     } else {
                         indexes.addAll(subResult.get(accession));
@@ -346,7 +346,7 @@ public class Node implements Serializable {
                 ArrayList<Integer> indexes = result.get(accession);
 
                 if (indexes == null) {
-                    indexes = new ArrayList<Integer>(0);
+                    indexes = new ArrayList<Integer>(1);
                     result.put(accession, indexes);
                 }
 
@@ -389,7 +389,7 @@ public class Node implements Serializable {
                 if (peptideSequence.matches(subSequence, sequenceMatchingPreferences)) {
                     ArrayList<Integer> indexes = results.get(subSequence);
                     if (indexes == null) {
-                        indexes = new ArrayList<Integer>(0);
+                        indexes = new ArrayList<Integer>(1);
                         results.put(subSequence, indexes);
                     }
                     indexes.add(startIndex);

@@ -686,6 +686,7 @@ public abstract class Identification extends ExperimentObject {
      * Updates a peptide match where the key was changed.
      *
      * @param oldKey the old peptide key
+     * @param newKey  the new peptide key
      * @param peptideMatch the new peptide match
      *
      * @throws SQLException
@@ -693,8 +694,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException
      * @throws java.lang.ClassNotFoundException
      */
-    public void updatePeptideMatch(String oldKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
-        String newKey = peptideMatch.getKey();
+    public void updatePeptideMatch(String oldKey, String newKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         for (String paramterTable : identificationDB.getPeptideParametersTables()) {
             UrParameter parameter = (UrParameter) identificationDB.getObject(paramterTable, oldKey, true);
             if (parameter != null) {
@@ -702,6 +702,8 @@ public abstract class Identification extends ExperimentObject {
             }
         }
         removePeptideMatch(oldKey);
+        peptideMatch.setKey(newKey);
+        peptideIdentification.remove(oldKey);
         peptideIdentification.add(newKey);
         identificationDB.addPeptideMatch(peptideMatch);
         for (String accession : peptideMatch.getTheoreticPeptide().getParentProteinsNoRemapping()) {
@@ -710,7 +712,7 @@ public abstract class Identification extends ExperimentObject {
                 for (String proteinKey : proteinGroups) {
                     ProteinMatch proteinMatch = getProteinMatch(proteinKey);
                     ArrayList<String> oldPeptideMatches = proteinMatch.getPeptideMatchesKeys();
-                    ArrayList<String> newPeptideMatches = new ArrayList<String>(oldPeptideMatches);
+                    ArrayList<String> newPeptideMatches = new ArrayList<String>(oldPeptideMatches.size());
                     boolean found = false;
                     for (String peptideMatchKey : oldPeptideMatches) {
                         if (peptideMatchKey.equals(oldKey)) {
@@ -723,9 +725,15 @@ public abstract class Identification extends ExperimentObject {
                         newPeptideMatches.add(newKey);
                         proteinMatch.setPeptideKeys(newPeptideMatches);
                     }
+                    updateProteinMatch(proteinMatch);
                 }
             }
         }
+            int debug = 1;
+        if (peptideIdentification.contains(oldKey)) {
+            debug = 2;
+        }
+        debug++;
     }
 
     /**

@@ -317,6 +317,7 @@ public class Peptide extends ExperimentObject {
         return getParentProteins(true, sequenceMatchingPreferences);
     }
 
+    private boolean mapping = false;
     /**
      * Returns the parent proteins and eventually remaps the peptide to the
      * protein. Note, the maximal share of 'X's in the sequence is set according
@@ -338,20 +339,11 @@ public class Peptide extends ExperimentObject {
             ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
         if (remap && parentProteins == null) {
+            if (mapping) {
+                throw new IllegalArgumentException("Two threads attempt to map peptide " + sequence + ".");
+            }
+            mapping = true;
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, sequenceMatchingPreferences);
-            setParentProteins(proteinMapping, sequenceMatchingPreferences);
-        }
-
-        return parentProteins;
-    }
-
-    /**
-     * Sets the parent proteins in the attribute list.
-     *
-     * @param proteinMapping the protein mapping
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     */
-    public synchronized void setParentProteins(HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping, SequenceMatchingPreferences sequenceMatchingPreferences) {
         parentProteins = new ArrayList<String>();
 
         for (String peptideSequence : proteinMapping.keySet()) {
@@ -367,6 +359,10 @@ public class Peptide extends ExperimentObject {
         }
 
         Collections.sort(parentProteins);
+            mapping = false;
+        }
+
+        return parentProteins;
     }
 
     /**

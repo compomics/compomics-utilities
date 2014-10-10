@@ -317,7 +317,6 @@ public class Peptide extends ExperimentObject {
         return getParentProteins(true, sequenceMatchingPreferences);
     }
 
-    private boolean mapping = false;
     /**
      * Returns the parent proteins and eventually remaps the peptide to the
      * protein. Note, the maximal share of 'X's in the sequence is set according
@@ -339,27 +338,22 @@ public class Peptide extends ExperimentObject {
             ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
         if (remap && parentProteins == null) {
-            if (mapping) {
-                throw new IllegalArgumentException("Two threads attempt to map peptide " + sequence + ".");
-            }
-            mapping = true;
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, sequenceMatchingPreferences);
-        parentProteins = new ArrayList<String>();
+            parentProteins = new ArrayList<String>();
 
-        for (String peptideSequence : proteinMapping.keySet()) {
-            double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
-            if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                for (String accession : subMapping.keySet()) {
-                    if (!parentProteins.contains(accession)) {
-                        parentProteins.add(accession);
+            for (String peptideSequence : proteinMapping.keySet()) {
+                double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
+                if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                    HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                    for (String accession : subMapping.keySet()) {
+                        if (!parentProteins.contains(accession)) {
+                            parentProteins.add(accession);
+                        }
                     }
                 }
             }
-        }
 
-        Collections.sort(parentProteins);
-            mapping = false;
+            Collections.sort(parentProteins);
         }
 
         return parentProteins;

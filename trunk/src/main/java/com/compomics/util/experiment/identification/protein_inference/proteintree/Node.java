@@ -307,7 +307,12 @@ public class Node implements Serializable {
     public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
 
         if (accessions != null) {
-            return accessions;
+            HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>(accessions.size());
+            for (String accession : accessions.keySet()) {
+                ArrayList<Integer> indexes = new ArrayList<Integer>(accessions.get(accession));
+                result.put(accession, indexes);
+            }
+            return result;
         } else {
 
             HashMap<String, ArrayList<Integer>> result = new HashMap<String, ArrayList<Integer>>();

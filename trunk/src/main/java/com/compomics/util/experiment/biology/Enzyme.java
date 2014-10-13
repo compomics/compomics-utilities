@@ -9,6 +9,7 @@ import java.util.HashMap;
  * This class models an enzyme.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class Enzyme extends ExperimentObject {
 
@@ -45,6 +46,11 @@ public class Enzyme extends ExperimentObject {
      * end of the resulting peptide has to be enzymatic.
      */
     private Boolean isSemiSpecific = false;
+    /**
+     * If true, the enzyme does not cleave, i.e., the whole protein sequence is
+     * used.
+     */
+    private Boolean isWholeProtein = false;
 
     /**
      * Constructor for an Enzyme.
@@ -61,7 +67,7 @@ public class Enzyme extends ExperimentObject {
      * the cleavage
      */
     public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter) {
-        this(id, name, aminoAcidBefore, restrictionBefore, aminoAcidAfter, restrictionAfter, false);
+        this(id, name, aminoAcidBefore, restrictionBefore, aminoAcidAfter, restrictionAfter, false, false);
     }
 
     /**
@@ -79,11 +85,14 @@ public class Enzyme extends ExperimentObject {
      * the cleavage
      * @param isSemiSpecific if true, the enzyme is considered as semi-specific,
      * meaning that only one end of the resulting peptide has to be enzymatic
+     * @param isWholeProtein if true, the enzyme does not cleave, i.e., the
+     * whole protein sequence is used.
      */
-    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter, Boolean isSemiSpecific) {
+    public Enzyme(int id, String name, String aminoAcidBefore, String restrictionBefore, String aminoAcidAfter, String restrictionAfter, Boolean isSemiSpecific, Boolean isWholeProtein) {
         this.id = id;
         this.name = name;
         this.isSemiSpecific = isSemiSpecific;
+        this.isWholeProtein = isWholeProtein;
         for (char aa : aminoAcidBefore.toCharArray()) {
             this.aminoAcidBefore.add(aa);
         }
@@ -129,7 +138,6 @@ public class Enzyme extends ExperimentObject {
         } else {
 
             // @TODO: should [X] be used more??
-
             if (aminoAcidBefore.size() > 0) {
                 result += "[";
                 for (Character aa : aminoAcidBefore) {
@@ -343,6 +351,7 @@ public class Enzyme extends ExperimentObject {
                 if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
                     results.add(currentPeptide);
                 }
+
                 for (int nMc : mc.keySet()) {
                     mc.get(nMc).add(currentPeptide);
                     while (mc.get(nMc).size() > nMc + 1) {
@@ -356,15 +365,17 @@ public class Enzyme extends ExperimentObject {
                         results.add(mcSequence);
                     }
                 }
+
                 currentPeptide = "";
             }
+
             currentPeptide += aa;
         }
-
 
         if (currentPeptide.length() >= nMin && currentPeptide.length() <= nMax && !results.contains(currentPeptide)) {
             results.add(currentPeptide);
         }
+
         for (int nMc : mc.keySet()) {
             mc.get(nMc).add(currentPeptide);
             while (mc.get(nMc).size() > nMc + 1) {
@@ -411,6 +422,12 @@ public class Enzyme extends ExperimentObject {
         if (!this.getRestrictionAfter().equals(otherEnzyme.getRestrictionAfter())) {
             return false;
         }
+        if (this.isSemiSpecific() != otherEnzyme.isSemiSpecific()) {
+            return false;
+        }
+        if (this.isWholeProtein() != otherEnzyme.isWholeProtein()) {
+            return false;
+        }
 
         return true;
     }
@@ -431,8 +448,31 @@ public class Enzyme extends ExperimentObject {
      */
     public boolean isSemiSpecific() {
         if (isSemiSpecific == null) {
-            return false;
+            isSemiSpecific = false;
         }
         return isSemiSpecific;
+    }
+
+    /**
+     * Set if the enzyme does not cleave at all, i.e., the whole protein is
+     * used.
+     *
+     * @param isWholeProtein if the enzyme does not cleave at all
+     */
+    public void setWholeProtein(boolean isWholeProtein) {
+        this.isWholeProtein = isWholeProtein;
+    }
+
+    /**
+     * Returns true if the enzyme does not cleave at all, i.e., the whole
+     * protein is used.
+     *
+     * @return true if the enzyme does not cleave at all
+     */
+    public boolean isWholeProtein() {
+        if (isWholeProtein == null) {
+            isWholeProtein = name.equalsIgnoreCase("Whole Protein") || name.equalsIgnoreCase("Top-Down");
+        }
+        return isWholeProtein;
     }
 }

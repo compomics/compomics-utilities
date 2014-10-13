@@ -18,6 +18,7 @@ import java.util.HashMap;
  * This factory will provide the implemented enzymes.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class EnzymeFactory {
 
@@ -111,7 +112,7 @@ public class EnzymeFactory {
             enzymes = new HashMap<String, Enzyme>();
             // Go through the whole document.
             while (type != XmlPullParser.END_DOCUMENT) {
-            // If we find a 'MSModSpec' start tag,
+                // If we find a 'MSModSpec' start tag,
                 // we should parse the mod.
                 if (type == XmlPullParser.START_TAG && parser.getName().equals("enzyme")) {
                     parseEnzyme(parser);
@@ -196,8 +197,17 @@ public class EnzymeFactory {
         String semiSpecificAsText = aParser.getText().trim();
         boolean semiSpecific = semiSpecificAsText.equalsIgnoreCase("yes");
 
+        // wholeProtein
+        type = aParser.next();
+        while (!(type == XmlPullParser.START_TAG && aParser.getName().equals("wholeProtein"))) {
+            type = aParser.next();
+        }
+        aParser.next();
+        String wholeProteinAsText = aParser.getText().trim();
+        boolean wholeProtein = wholeProteinAsText.equalsIgnoreCase("yes");
+
         // create the enzyme
-        enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter, semiSpecific));
+        enzymes.put(name, new Enzyme(id, name, aaBefore, restrictionBefore, aaAfter, restrictionAfter, semiSpecific, wholeProtein));
     }
 
     /**

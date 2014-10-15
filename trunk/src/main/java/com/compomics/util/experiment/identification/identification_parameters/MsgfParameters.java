@@ -422,7 +422,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         String msgfEnzymeIndex = null;
 
         String enzymeName = enzyme.getName();
-        if (enzymeName.equalsIgnoreCase("No Enzyme")) {
+        if (enzyme.isUnspecific()) { // "No Enzyme"  or "Unspecific"
             msgfEnzymeIndex = "0";
         } else if (enzymeName.equalsIgnoreCase("Trypsin")) {
             msgfEnzymeIndex = "1";

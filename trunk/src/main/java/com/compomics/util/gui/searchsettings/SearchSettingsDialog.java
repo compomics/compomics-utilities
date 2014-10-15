@@ -324,7 +324,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         enzymeLabel.setText("Enzyme");
 
-        enzymesCmb.setMaximumRowCount(12);
+        enzymesCmb.setMaximumRowCount(15);
         enzymesCmb.setModel(new DefaultComboBoxModel(loadEnzymes()));
         enzymesCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -550,11 +550,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         });
         fixedModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                fixedModsTableMouseExited(evt);
-            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 fixedModsTableMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fixedModsTableMouseExited(evt);
             }
         });
         fixedModsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -644,11 +644,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         });
         variableModsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                variableModsTableMouseExited(evt);
-            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 variableModsTableMouseReleased(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                variableModsTableMouseExited(evt);
             }
         });
         variableModsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {

@@ -571,7 +571,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         String myriMatchEnzymeAsString = null;
 
         String enzymeName = enzyme.getName();
-        if (enzymeName.equalsIgnoreCase("No Enzyme")) {
+        if (enzyme.isUnspecific()) { // "No Enzyme"  or "Unspecific"
             myriMatchEnzymeAsString = "unspecific cleavage";
         } else if (enzymeName.equalsIgnoreCase("Trypsin")
                 || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {

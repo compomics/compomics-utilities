@@ -108,6 +108,15 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
+     * Returns true if the enzyme is unspecific, i.e., cleaves at every residue.
+     *
+     * @return true if the enzyme is unspecific
+     */
+    public boolean isUnspecific() {
+        return id == 17;
+    }
+
+    /**
      * Get the enzyme name.
      *
      * @return The enzyme name as String
@@ -135,6 +144,8 @@ public class Enzyme extends ExperimentObject {
 
         if (name.equals("Asp-N + Glu-C")) { //  special case as this enzyme has two cleavage sites
             result = "[E]|[X],[X]|[D]"; // @TODO: should be made generic if we stop using omssa enzymes...
+        } else if (isUnspecific()) { // unspecific cleavage
+            result = "[X]|[X]";
         } else {
 
             // @TODO: should [X] be used more??

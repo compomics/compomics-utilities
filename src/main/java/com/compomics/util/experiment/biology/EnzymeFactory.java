@@ -268,7 +268,7 @@ public class EnzymeFactory {
         } else if (prideEnzymeName.equalsIgnoreCase("semi-tryptic")) { // @TODO: other ways to annotate this?
             tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Semi-Tryptic");
         } else if (prideEnzymeName.equalsIgnoreCase("no enzyme")) { // @TODO: other ways to annotate this?
-            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("No Enzyme");
+            tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Unspecific");
         } else if (prideEnzymeName.equalsIgnoreCase("chymotrypsin, no p rule")) {
             tempEnzyme = EnzymeFactory.getInstance().getEnzyme("Chymotrypsin, no P rule (FYWL)");
         } else if (prideEnzymeName.equalsIgnoreCase("asp-n de")
@@ -386,7 +386,7 @@ public class EnzymeFactory {
         if (enzymeName.equalsIgnoreCase("Trypsin")
                 || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001251", enzymeName, null);
-        } else if (enzymeName.equalsIgnoreCase("No Enzyme")) {
+        } else if (enzymeName.equalsIgnoreCase("No Enzyme") || enzymeName.equalsIgnoreCase("Unspecific")) { // note: no enzyme is only kept for backwards oompatibility
             cvTerm = new CvTerm("PSI-MS", "MS:1001091", enzymeName, null);
         } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001303", enzymeName, null);

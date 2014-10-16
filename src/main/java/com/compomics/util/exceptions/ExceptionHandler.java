@@ -1,24 +1,23 @@
 package com.compomics.util.exceptions;
 
-import com.compomics.util.gui.waiting.waitinghandlers.WaitingDialog;
-import com.compomics.util.waiting.WaitingHandler;
 import java.util.HashSet;
 
 /**
- * Interface for the general handling of exceptions
+ * Interface for the general handling of exceptions.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public abstract class ExceptionHandler {
 
     /**
      * List of caught exceptions.
      */
-    protected HashSet<String> exceptionCaught = new HashSet<String>();    
+    protected HashSet<String> exceptionCaught = new HashSet<String>();
     /**
      * If true exceptions will be ignored.
      */
     protected boolean ignoreExceptions = false;
+
     /**
      * Catches an exception and informs the user.
      *
@@ -30,12 +29,11 @@ public abstract class ExceptionHandler {
             exceptionCaught.add(getExceptionType(e));
             notifyUser(e);
         }
-        
     }
-    
+
     /**
      * Notifies the user that an exception was caught.
-     * 
+     *
      * @param e the exception to catch
      */
     protected abstract void notifyUser(Exception e);
@@ -61,7 +59,7 @@ public abstract class ExceptionHandler {
 
     /**
      * Sets whether exceptions should be ignored.
-     * 
+     *
      * @param ignoreExceptions if true exceptions will be ignored
      */
     public void setIgnoreExceptions(boolean ignoreExceptions) {

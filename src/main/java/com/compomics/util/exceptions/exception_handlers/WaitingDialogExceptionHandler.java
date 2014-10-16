@@ -4,9 +4,9 @@ import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingDialog;
 
 /**
- * Exception handler for processes making use of a waiting dialog
+ * Exception handler for processes making use of a waiting dialog.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class WaitingDialogExceptionHandler extends ExceptionHandler {
 
@@ -46,12 +46,10 @@ public class WaitingDialogExceptionHandler extends ExceptionHandler {
         if (getExceptionType(e).equals("Protein not found")) {
             waitingDialog.appendReport("Please see the database help page (http://code.google.com/p/peptide-shaker/#Database_Help).", true, true);
         } else {
-
             if (toolIssuesPage != null) {
                 waitingDialog.appendReport("Please contact the developers (" + toolIssuesPage + ").", true, true);
             } else {
                 waitingDialog.appendReport("Please contact the developers.", true, true);
-                waitingDialog.appendReport("Please contact the developers.<br>", true, true);
             }
         }
     }

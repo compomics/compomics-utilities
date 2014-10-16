@@ -24,7 +24,7 @@ public abstract class ExceptionHandler {
      *
      * @param e the exception caught
      */
-    public void catchException(Exception e) {
+    public synchronized void catchException(Exception e) {
         if (!ignoreExceptions && !exceptionCaught.contains(getExceptionType(e))) {
             e.printStackTrace();
             exceptionCaught.add(getExceptionType(e));

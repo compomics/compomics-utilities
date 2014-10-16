@@ -2,8 +2,6 @@ package com.compomics.util.exceptions.exception_handlers;
 
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.gui.JOptionEditorPane;
-import java.util.ArrayList;
-import java.util.HashSet;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -62,8 +60,8 @@ public class FrameExceptionHandler extends ExceptionHandler {
                 }
             } else {
 
-                    // @TODO: add handling of out of memory errors
-                    // @TODO: silently ignore some error types? i.e., just send the error to the log file
+                // @TODO: add handling of out of memory errors
+                // @TODO: silently ignore some error types? i.e., just send the error to the log file
                 String error = "";
 
                 if (e.getLocalizedMessage() != null) {

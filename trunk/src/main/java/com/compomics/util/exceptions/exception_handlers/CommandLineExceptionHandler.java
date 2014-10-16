@@ -4,9 +4,9 @@ import com.compomics.util.exceptions.ExceptionHandler;
 import java.util.ArrayList;
 
 /**
- * Exception handler for command line processes
+ * Exception handler for command line processes.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class CommandLineExceptionHandler extends ExceptionHandler {
 
@@ -14,16 +14,16 @@ public class CommandLineExceptionHandler extends ExceptionHandler {
      * List of caught exceptions.
      */
     private ArrayList<String> exceptionCaught = new ArrayList<String>();
+
     /**
-     * Constructor
+     * Constructor.
      */
     public CommandLineExceptionHandler() {
-        
+
     }
-    
+
     @Override
     public void notifyUser(Exception e) {
         // Do something here?
     }
-
 }

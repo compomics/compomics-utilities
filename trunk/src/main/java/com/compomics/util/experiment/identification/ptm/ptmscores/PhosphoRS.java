@@ -110,7 +110,7 @@ public class PhosphoRS {
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
             PeptideSpectrumAnnotator spectrumAnnotator)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-
+        
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for PhosphoRS calculation.");
         }

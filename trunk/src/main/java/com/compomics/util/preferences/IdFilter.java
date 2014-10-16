@@ -213,7 +213,8 @@ public class IdFilter implements Serializable {
         if (unknownPtm) {
             ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
             for (ModificationMatch modMatch : modificationMatches) {
-                if (modMatch.getTheoreticPtm().equals(PTMFactory.unknownPTM.getName())) {
+                String ptmName = modMatch.getTheoreticPtm();
+                if (ptmName.equals(PTMFactory.unknownPTM.getName())) {
                     return false;
                 }
             }

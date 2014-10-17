@@ -279,7 +279,7 @@ public class GenePreferences implements Serializable {
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
-                + "<Attribute name = \"external_gene_id\" />"
+                + "<Attribute name = \"external_gene_name\" />"
                 + "<Attribute name = \"chromosome_name\" />"
                 + "</Dataset>"
                 + "</Query>";

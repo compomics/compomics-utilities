@@ -25,10 +25,10 @@ public class ReporterIonQuantification extends Quantification {
      */
     private ArrayList<String> controlSamples;
     /**
-     * List of normalisation factors. The key should be the same as for the
+     * List of normalization factors. The key should be the same as for the
      * sample assignment.
      */
-    private HashMap<String, Double> normalisationFactors = new HashMap<String, Double>();
+    private HashMap<String, Double> normalizationFactors = new HashMap<String, Double>();
     /**
      * The reporter method.
      */
@@ -110,16 +110,16 @@ public class ReporterIonQuantification extends Quantification {
     }
 
     /**
-     * Returns the indexes of the samples labelled as control.
+     * Returns the indexes of the samples labeled as control.
      *
-     * @return the indexes of the samples labelled as control
+     * @return the indexes of the samples labeled as control
      */
     public ArrayList<String> getControlSamples() {
         return controlSamples;
     }
 
     /**
-     * Sets the indexes of the samples labelled as control.
+     * Sets the indexes of the samples labeled as control.
      *
      * @param controlSamples the indexes of the samples to label as control
      */
@@ -128,40 +128,40 @@ public class ReporterIonQuantification extends Quantification {
     }
 
     /**
-     * Indicates whether the normalisation factors are set.
+     * Indicates whether the normalization factors are set.
      *
-     * @return a boolean indicating whether the normalisation factors are set
+     * @return a boolean indicating whether the normalization factors are set
      */
     public boolean hasNormalisationFactors() {
-        return !normalisationFactors.isEmpty();
+        return !normalizationFactors.isEmpty();
     }
 
     /**
-     * Resets the normalisation factors.
+     * Resets the normalization factors.
      */
     public void resetNormalisationFactors() {
-        normalisationFactors.clear();
+        normalizationFactors.clear();
     }
 
     /**
-     * Adds a normalisation factor.
+     * Adds a normalization factor.
      *
      * @param reporterIonName the index of the sample
-     * @param normalisationFactor the normalisation factor
+     * @param normalisationFactor the normalization factor
      */
     public void addNormalisationFactor(String reporterIonName, double normalisationFactor) {
-        normalisationFactors.put(reporterIonName, normalisationFactor);
+        normalizationFactors.put(reporterIonName, normalisationFactor);
     }
 
     /**
-     * Returns the normalisation factor for the given sample.
+     * Returns the normalization factor for the given sample.
      *
      * @param reporterIonName the index of the sample
      *
-     * @return the normalisation factor, 1.0 if not set.
+     * @return the normalization factor, 1.0 if not set.
      */
     public double getNormalisationFactor(String reporterIonName) {
-        Double normalisationFactor = normalisationFactors.get(reporterIonName);
+        Double normalisationFactor = normalizationFactors.get(reporterIonName);
         if (normalisationFactor == null) {
             return 1.0;
         }

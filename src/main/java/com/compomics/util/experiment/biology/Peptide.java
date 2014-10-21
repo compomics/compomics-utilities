@@ -394,41 +394,23 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the reference key of a peptide. index = SEQUENCE_mod1_mod2 with
-     * modifications ordered alphabetically.
+     * Returns the reference key of a peptide. index =
+     * SEQUENCE_modMass1_modMass2 with modMass1 and modMass2 modification masses
+     * ordered alphabetically.
      *
      * Note: the key is not unique for indistinguishable sequences, see
-     * getMatchingKey(AminoAcidPattern.MatchingType matchingType, Double
-     * massTolerance).
+     * getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences).
+     * Modifications must be loaded in the PTM factory
      *
      * @return the index of a peptide
      */
     public String getKey() {
-        ArrayList<String> tempModifications = new ArrayList<String>();
-        for (ModificationMatch mod : getModificationMatches()) {
-            if (mod.isVariable()) {
-                if (mod.getTheoreticPtm() != null) {
-                    if (mod.isConfident() || mod.isInferred()) {
-                        tempModifications.add(mod.getTheoreticPtm() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
-                    } else {
-                        tempModifications.add(mod.getTheoreticPtm());
-                    }
-                } else {
-                    tempModifications.add("unknown-modification");
-                }
-            }
-        }
-        Collections.sort(tempModifications);
-        StringBuilder result = new StringBuilder(sequence);
-        for (String mod : tempModifications) {
-            result.append(MODIFICATION_SEPARATOR).append(mod);
-        }
-        return result.toString();
+        return getKey(sequence, modifications);
     }
 
     /**
-     * Returns the reference key of a peptide. key = SEQUENCE_mod1_mod2 with
-     * modifications ordered alphabetically.
+     * Returns the reference key of a peptide. key = SEQUENCE_mod1_mod2 modMass1
+     * and modMass2 modification masses ordered alphabetically.
      *
      * @param sequence the sequence of the peptide
      * @param modificationMatches list of modification matches
@@ -440,10 +422,12 @@ public class Peptide extends ExperimentObject {
         for (ModificationMatch mod : modificationMatches) {
             if (mod.isVariable()) {
                 if (mod.getTheoreticPtm() != null) {
+                    String ptmName = mod.getTheoreticPtm();
+                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
                     if (mod.isConfident() || mod.isInferred()) {
-                        tempModifications.add(mod.getTheoreticPtm() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
+                        tempModifications.add(ptm.getMass() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
                     } else {
-                        tempModifications.add(mod.getTheoreticPtm());
+                        tempModifications.add(ptm.getMass() + "");
                     }
                 } else {
                     tempModifications.add("unknown-modification");
@@ -488,12 +472,13 @@ public class Peptide extends ExperimentObject {
      * peptide.
      *
      * @param peptideKey the peptide key
-     * @param modification the name of the modification
+     * @param modificationMass the mass of the modification
      * @return the number of modifications
      */
-    public static int getModificationCount(String peptideKey, String modification) {
+    public static int getModificationCount(String peptideKey, Double modificationMass) {
+        String modKey = modificationMass + "";
         String test = peptideKey + MODIFICATION_SEPARATOR;
-        return test.split(modification).length - 1;
+        return test.split(modKey).length - 1;
     }
 
     /**
@@ -520,23 +505,24 @@ public class Peptide extends ExperimentObject {
      * the peptide indexed by the given key.
      *
      * @param peptideKey the peptide key
-     * @param modification the name of the modification
+     * @param ptmMAss the mass of the modification
      * @return the number of modifications confidently localized
      */
-    public static ArrayList<Integer> getNModificationLocalized(String peptideKey, String modification) {
+    public static ArrayList<Integer> getNModificationLocalized(String peptideKey, Double ptmMass) {
         String test = peptideKey;
         ArrayList<Integer> result = new ArrayList<Integer>();
         boolean first = true;
+        String modKey = ptmMass + "";
         for (String modificationSplit : test.split(MODIFICATION_SEPARATOR)) {
             if (!first) {
                 String[] localizationSplit = modificationSplit.split(MODIFICATION_LOCALIZATION_SEPARATOR);
                 if (localizationSplit.length == 2) {
-                    if (localizationSplit[0].equals(modification)) {
+                    if (localizationSplit[0].equals(modKey)) {
                         try {
                             result.add(Integer.valueOf(localizationSplit[1]));
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Cannot parse modification localization "
-                                    + localizationSplit.toString() + " for modification " + modification + " in peptide key " + peptideKey);
+                                    + localizationSplit.toString() + " for modification of mass " + ptmMass + " in peptide key " + peptideKey);
                         }
                     }
                 }
@@ -563,8 +549,8 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a list of names of the variable modifications found in the key of
-     * a peptide.
+     * Returns a list of masses of the variable modifications found in the key
+     * of a peptide.
      *
      * @param peptideKey the key of a peptide
      *

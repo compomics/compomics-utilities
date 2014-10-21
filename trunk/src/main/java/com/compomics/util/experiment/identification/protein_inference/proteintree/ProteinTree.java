@@ -528,7 +528,9 @@ public class ProteinTree {
             }
 
             double ratio = BasicMathFunctions.percentile(ratios, 0.05);
-            return (int) (1.2 * sequenceFactory.getCurrentFastaFile().length() / (1000 * ratio));
+            int timeInSeconds = (int) (1.2 * sequenceFactory.getCurrentFastaFile().length() / (1000 * ratio));
+            timeInSeconds = Math.max(timeInSeconds, 1);
+            return timeInSeconds;
         }
     }
 

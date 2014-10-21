@@ -19,8 +19,8 @@ public class Selenocysteine extends AminoAcid {
      */
     public Selenocysteine() {
         singleLetterCode = "U";
-        threeLetterCode = "SeC";
-        name = "U_Mascot";
+        threeLetterCode = "Sec";
+        name = "Selenocysteine";
         averageMass = 150.0379;
         monoisotopicMass = 150.95363;
     }

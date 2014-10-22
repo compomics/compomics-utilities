@@ -505,7 +505,7 @@ public class Peptide extends ExperimentObject {
      * the peptide indexed by the given key.
      *
      * @param peptideKey the peptide key
-     * @param ptmMAss the mass of the modification
+     * @param ptmMass the mass of the modification
      * @return the number of modifications confidently localized
      */
     public static ArrayList<Integer> getNModificationLocalized(String peptideKey, Double ptmMass) {

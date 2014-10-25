@@ -23,21 +23,10 @@ public class Phenylalanine extends AminoAcid {
         name = "Phenylalanine";
         averageMass = 147.1739;
         monoisotopicMass = 147.068414;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'F'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TTT", "TTC"};
+        subAminoAcidsWithoutCombination = new char[]{'F'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TTT", "TTC"};
     }
 
     @Override

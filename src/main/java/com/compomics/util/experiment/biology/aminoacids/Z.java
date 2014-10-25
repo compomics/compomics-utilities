@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.aminoacids;
 
 import com.compomics.util.experiment.biology.AminoAcid;
-import java.util.ArrayList;
 
 /**
  * Glu or Gln: Glx (Mascot).
@@ -24,30 +23,10 @@ public class Z extends AminoAcid {
         name = "Glutamine or Glutamic Acid";
         averageMass = 128.6216;
         monoisotopicMass = 128.5505855;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'Q', 'E'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        ArrayList<String> uniqueCodes = new ArrayList<String>();
-        for (char aa : getSubAminoAcids()) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            for (String code : aminoAcid.getStandardGeneticCode()) {
-                if (!uniqueCodes.contains(code)) {
-                    uniqueCodes.add(code);
-                }
-            }
-        }
-        return (String[]) uniqueCodes.toArray();
+        subAminoAcidsWithoutCombination = new char[]{'Q', 'E'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = getStandardGeneticCodeForCombination();
     }
 
     @Override

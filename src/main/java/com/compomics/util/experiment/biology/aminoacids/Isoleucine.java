@@ -23,21 +23,10 @@ public class Isoleucine extends AminoAcid {
         name = "Isoleucine";
         averageMass = 113.1576;
         monoisotopicMass = 113.084064;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'I'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'J', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"ATT", "ATC", "ATA"};
+        subAminoAcidsWithoutCombination = new char[]{'I'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'J', 'X'};
+        standardGeneticCode = new String[] {"ATT", "ATC", "ATA"};
     }
 
     @Override

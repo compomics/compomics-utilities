@@ -23,21 +23,10 @@ public class Proline extends AminoAcid {
         name = "Proline";
         averageMass = 97.1152;
         monoisotopicMass = 97.052764;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'P'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"CCT", "CCC", "CCA", "CCG"};
+        subAminoAcidsWithoutCombination = new char[]{'P'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"CCT", "CCC", "CCA", "CCG"};
     }
 
     @Override

@@ -23,21 +23,10 @@ public class AsparticAcid extends AminoAcid {
         name = "Aspartic Acid";
         averageMass = 115.0874;
         monoisotopicMass = 115.026943;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'D'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'B', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"GAT", "GAC"};
+        subAminoAcidsWithoutCombination = new char[]{'D'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'B', 'X'};
+        standardGeneticCode = new String[] {"GAT", "GAC"};
     }
 
     @Override

@@ -23,21 +23,10 @@ public class Arginine extends AminoAcid {
         name = "Arginine";
         averageMass = 156.1857;
         monoisotopicMass = 156.101111;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'R'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"CGT", "CGC", "CGA", "CGG", "AGA", "AGG"};
+        subAminoAcidsWithoutCombination = new char[]{'R'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"CGT", "CGC", "CGA", "CGG", "AGA", "AGG"};
     }
 
     @Override

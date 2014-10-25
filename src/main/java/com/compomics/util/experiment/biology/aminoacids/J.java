@@ -24,30 +24,10 @@ public class J extends AminoAcid {
         name = "Isoleucine or Leucine";
         averageMass = 113.15980;
         monoisotopicMass = 113.08407;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'I', 'L'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        ArrayList<String> uniqueCodes = new ArrayList<String>();
-        for (char aa : getSubAminoAcids()) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            for (String code : aminoAcid.getStandardGeneticCode()) {
-                if (!uniqueCodes.contains(code)) {
-                    uniqueCodes.add(code);
-                }
-            }
-        }
-        return (String[]) uniqueCodes.toArray();
+        subAminoAcidsWithoutCombination = new char[]{'I', 'L'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = getStandardGeneticCodeForCombination();
     }
 
     @Override

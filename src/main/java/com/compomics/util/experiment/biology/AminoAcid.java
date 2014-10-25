@@ -39,12 +39,13 @@ public abstract class AminoAcid implements Serializable {
     public static final AminoAcid V = new Valine();
     public static final AminoAcid W = new Tryptophan();
     public static final AminoAcid Y = new Tyrosine();
+    public static final AminoAcid U = new Selenocysteine();
+    public static final AminoAcid O = new Pyrrolysine();
     public static final AminoAcid B = new B();
+    public static final AminoAcid J = new J();
     public static final AminoAcid Z = new Z();
     public static final AminoAcid X = new X();
-    public static final AminoAcid U = new Selenocysteine();
-    public static final AminoAcid J = new J();
-    public static final AminoAcid O = new Pyrrolysine();
+    
     /**
      * Single letter code of the amino acid.
      */
@@ -66,6 +67,30 @@ public abstract class AminoAcid implements Serializable {
      */
     public double monoisotopicMass;
     /**
+     * Cache of the indistinguishable amino acids.
+     */
+    private ArrayList<Character> indistinguishableAACache = null;
+    /**
+     * The mass tolerance used for the indistinguishable amino acids in cache.
+     */
+    private Double indistinguishableAACacheMass = null;
+    /**
+     * The sub amino acids
+     */
+    protected char[] subAminoAcidsWithoutCombination;
+    /**
+     * The sub amino acids
+     */
+    protected char[] subAminoAcidsWithCombination;
+    /**
+     * The amino acid combinations
+     */
+    protected char[] aminoAcidCombinations;
+    /**
+     * The standard genetic code
+     */
+    protected String[] standardGeneticCode;
+    /**
      * The amino acid one letter codes as char array.
      */
     private static final char[] aminoAcidChars = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N',
@@ -81,15 +106,6 @@ public abstract class AminoAcid implements Serializable {
      */
     public static final String[] aminoAcidStrings = new String[]{"A", "C", "D", "E", "F", "G", "H", "I", "K", "L", "M", "N",
         "P", "Q", "R", "S", "T", "Y", "U", "O", "V", "W", "B", "J", "Z", "X"};
-
-    /**
-     * Cache of the indistinguishable amino acids.
-     */
-    private ArrayList<Character> indistinguishableAACache = null;
-    /**
-     * The mass tolerance used for the indistinguishable amino acids in cache.
-     */
-    private Double indistinguishableAACacheMass = null;
 
     /**
      * Convenience method returning an array of all implemented amino acids
@@ -265,7 +281,13 @@ public abstract class AminoAcid implements Serializable {
      *
      * @return the actual amino acids
      */
-    public abstract char[] getSubAminoAcids(boolean includeCombinations);
+    public char[] getSubAminoAcids(boolean includeCombinations) {
+        if (includeCombinations) {
+            return subAminoAcidsWithCombination;
+        } else {
+            return subAminoAcidsWithoutCombination;
+        }
+    }
 
     /**
      * Returns the amino acids combinations which might represent this amino
@@ -274,7 +296,9 @@ public abstract class AminoAcid implements Serializable {
      * @return the amino acids combinations which might represent this amino
      * acid
      */
-    public abstract char[] getCombinations();
+    public char[] getCombinations() {
+        return aminoAcidCombinations;
+    }
 
     /**
      * Returns the amino acids which cannot be distinguished from this amino
@@ -375,7 +399,9 @@ public abstract class AminoAcid implements Serializable {
      *
      * @return the standard genetic triplets associated to this amino acid
      */
-    public abstract String[] getStandardGeneticCode();
+    public String[] getStandardGeneticCode() {
+        return standardGeneticCode;
+    }
 
     /**
      * Returns the amino acid from the standard genetic code.
@@ -436,6 +462,28 @@ public abstract class AminoAcid implements Serializable {
             return U;
         }
         throw new IllegalArgumentException("No amino acid found for genetic code " + geneticCode + ".");
+    }
+
+    /**
+     * Returns the genetic code as combination of the sub amino acid genetic
+     * codes.
+     *
+     * @return the genetic code as combination of the sub amino acid genetic
+     * codes
+     */
+    protected String[] getStandardGeneticCodeForCombination() {
+        ArrayList<String> uniqueCodes = new ArrayList<String>();
+        for (char aa : getSubAminoAcids()) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (!aminoAcid.iscombination()) {
+                for (String code : aminoAcid.getStandardGeneticCode()) {
+                    if (!uniqueCodes.contains(code)) {
+                        uniqueCodes.add(code);
+                    }
+                }
+            }
+        }
+        return uniqueCodes.toArray(new String[uniqueCodes.size()]);
     }
 
     @Override

@@ -23,21 +23,10 @@ public class Leucine extends AminoAcid {
         name = "Leucine";
         averageMass = 113.1576;
         monoisotopicMass = 113.084064;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'L'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'J', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TTA", "TTG", "CTT", "CTC", "CTA", "CTG"};
+        subAminoAcidsWithoutCombination = new char[]{'L'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'J', 'X'};
+        standardGeneticCode = new String[] {"TTA", "TTG", "CTT", "CTC", "CTA", "CTG"};
     }
 
     @Override

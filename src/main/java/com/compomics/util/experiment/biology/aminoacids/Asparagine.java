@@ -23,21 +23,10 @@ public class Asparagine extends AminoAcid {
         name = "Asparagine";
         averageMass = 114.1026;
         monoisotopicMass = 114.042927;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'N'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'B', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"AAT", "AAC"};
+        subAminoAcidsWithoutCombination = new char[]{'N'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'B', 'X'};
+        standardGeneticCode = new String[] {"AAT", "AAC"};
     }
 
     @Override

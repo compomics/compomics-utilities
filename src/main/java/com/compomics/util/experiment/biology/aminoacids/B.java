@@ -25,30 +25,10 @@ public class B extends AminoAcid {
         name = "Asparagine or Aspartic Acid";
         averageMass = 114.595;
         monoisotopicMass = 114.534935;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'N', 'D'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        ArrayList<String> uniqueCodes = new ArrayList<String>();
-        for (char aa : getSubAminoAcids()) {
-            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            for (String code : aminoAcid.getStandardGeneticCode()) {
-                if (!uniqueCodes.contains(code)) {
-                    uniqueCodes.add(code);
-                }
-            }
-        }
-        return (String[]) uniqueCodes.toArray();
+        subAminoAcidsWithoutCombination = new char[]{'N', 'D'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = getStandardGeneticCodeForCombination();
     }
 
     @Override

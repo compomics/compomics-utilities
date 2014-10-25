@@ -23,21 +23,10 @@ public class Alanine extends AminoAcid {
         name = "Alanine";
         averageMass = 71.0779;
         monoisotopicMass = 71.037114;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'A'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"GCT", "GCC", "GCA", "GCG"};
+        subAminoAcidsWithoutCombination = new char[]{'A'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"GCT", "GCC", "GCA", "GCG"};
     }
 
     @Override

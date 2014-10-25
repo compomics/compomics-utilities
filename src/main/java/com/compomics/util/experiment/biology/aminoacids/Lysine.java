@@ -23,21 +23,10 @@ public class Lysine extends AminoAcid {
         name = "Lysine";
         averageMass = 128.1723;
         monoisotopicMass = 128.094963;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'K'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"AAA", "AAG"};
+        subAminoAcidsWithoutCombination = new char[]{'K'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"AAA", "AAG"};
     }
 
     @Override

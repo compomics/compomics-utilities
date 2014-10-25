@@ -23,21 +23,10 @@ public class Glutamine extends AminoAcid {
         name = "Glutamine";
         averageMass = 128.1292;
         monoisotopicMass = 128.058578;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'Q'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'Z', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"CAA", "CAG"};
+        subAminoAcidsWithoutCombination = new char[]{'Q'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'Z', 'X'};
+        standardGeneticCode = new String[] {"CAA", "CAG"};
     }
 
     @Override

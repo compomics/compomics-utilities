@@ -23,21 +23,10 @@ public class Tyrosine extends AminoAcid {
         name = "Tyrosine";
         averageMass = 163.1733;
         monoisotopicMass = 163.06332;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'Y'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TAT", "TAC"};
+        subAminoAcidsWithoutCombination = new char[]{'Y'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TAT", "TAC"};
     }
 
     @Override

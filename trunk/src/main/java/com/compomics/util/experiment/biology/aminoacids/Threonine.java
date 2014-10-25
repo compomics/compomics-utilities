@@ -23,21 +23,10 @@ public class Threonine extends AminoAcid {
         name = "Threonine";
         averageMass = 101.1039;
         monoisotopicMass = 101.047679;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'T'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"ACT", "ACC", "ACA", "ACG"};
+        subAminoAcidsWithoutCombination = new char[]{'T'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"ACT", "ACC", "ACA", "ACG"};
     }
 
     @Override

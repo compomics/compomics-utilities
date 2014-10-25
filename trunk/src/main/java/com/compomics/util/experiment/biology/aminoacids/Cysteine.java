@@ -23,21 +23,10 @@ public class Cysteine extends AminoAcid {
         name = "Cysteine";
         averageMass = 103.1429;
         monoisotopicMass = 103.009185;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'C'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TGT", "TGC"};
+        subAminoAcidsWithoutCombination = new char[]{'C'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TGT", "TGC"};
     }
 
     @Override

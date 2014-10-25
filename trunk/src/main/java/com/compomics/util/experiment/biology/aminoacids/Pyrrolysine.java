@@ -23,21 +23,10 @@ public class Pyrrolysine extends AminoAcid {
         name = "Pyrrolysine";
         averageMass = 255.3134;
         monoisotopicMass = 255.158295;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'O'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TAG"};
+        subAminoAcidsWithoutCombination = new char[]{'O'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TAG"};
     }
 
     @Override

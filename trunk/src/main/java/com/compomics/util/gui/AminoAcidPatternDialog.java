@@ -436,7 +436,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
-        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<AminoAcid>());
+        pattern.setTargeted(patternDesignTable.getRowCount(), new ArrayList<Character>(1));
         repaintTable();
     }//GEN-LAST:event_addJMenuItemActionPerformed
 
@@ -538,7 +538,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      *
      * @return the given list of amino acids as a comma separated String
      */
-    private String getTargetedAAasString(ArrayList<AminoAcid> targetedAminoAcids) {
+    private String getTargetedAAasString(ArrayList<Character> targetedAminoAcids) {
         String result = "";
         if (targetedAminoAcids != null) {
             if (targetedAminoAcids.isEmpty()) {
@@ -549,12 +549,12 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                     result += aa;
                 }
             }
-            for (AminoAcid aa : targetedAminoAcids) {
-                if (!result.contains(aa.singleLetterCode)) {
+            for (Character aa : targetedAminoAcids) {
+                if (!result.contains(aa + "")) {
                     if (!result.equals("")) {
                         result += ",";
                     }
-                    result += aa.singleLetterCode;
+                    result += aa;
                 }
             }
         }
@@ -568,12 +568,11 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      *
      * @return the given list of amino acids as a comma separated String
      */
-    private String getExcludedAAasString(ArrayList<AminoAcid> targetedAminoAcids) {
+    private String getExcludedAAasString(ArrayList<Character> targetedAminoAcids) {
         String result = "";
         if (targetedAminoAcids == null || !targetedAminoAcids.isEmpty()) {
             for (char aa : AminoAcid.getUniqueAminoAcids()) {
-                AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                if (targetedAminoAcids == null || !targetedAminoAcids.contains(aminoAcid)) {
+                if (targetedAminoAcids == null || !targetedAminoAcids.contains(aa)) {
                     if (!result.equals("")) {
                         result += ",";
                     }
@@ -590,18 +589,19 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      * @param aminoAcids the comma separated String
      * @return the corresponding list of amino acids
      */
-    private ArrayList<AminoAcid> getAAfromString(String aminoAcids) {
-        ArrayList<AminoAcid> result = new ArrayList<AminoAcid>();
+    private ArrayList<Character> getAAfromString(String aminoAcids) {
+        ArrayList<Character> result = new ArrayList<Character>();
         for (String aa : aminoAcids.split(",")) {
             String input = aa.trim();
             input = input.toUpperCase();
             if (!input.equals("")) {
                 for (int i = 0; i < input.length(); i++) {
-                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(input.charAt(i));
+                    char aaChar = input.charAt(i);
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
                     if (aminoAcid == null) {
-                        throw new IllegalArgumentException("Cannot parse " + input.charAt(i) + " into an amino acid");
+                        throw new IllegalArgumentException("Cannot parse " + aaChar + " into an amino acid");
                     } else {
-                        result.add(aminoAcid);
+                        result.add(aaChar);
                     }
                 }
             }
@@ -694,14 +694,14 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
                 if (column == 1) {
                     pattern.setTarget(row);
                 } else if (column == 2) {
-                    ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
+                    ArrayList<Character> aa = getAAfromString(aValue.toString());
                     if (aa.isEmpty()) {
                         pattern.removeAA(row);
                     } else {
                         pattern.setTargeted(row, aa);
                     }
                 } else if (column == 3) {
-                    ArrayList<AminoAcid> aa = getAAfromString(aValue.toString());
+                    ArrayList<Character> aa = getAAfromString(aValue.toString());
                     if (aa.isEmpty()) {
                         pattern.setTargeted(row, aa);
                     } else {

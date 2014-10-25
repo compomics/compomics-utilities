@@ -23,21 +23,10 @@ public class GlutamicAcid extends AminoAcid {
         name = "Glutamic Acid";
         averageMass = 129.114;
         monoisotopicMass = 129.042593;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'E'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'Z', 'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"GAA", "GAG"};
+        subAminoAcidsWithoutCombination = new char[]{'E'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'Z', 'X'};
+        standardGeneticCode = new String[] {"GAA", "GAG"};
     }
 
     @Override

@@ -23,21 +23,10 @@ public class Valine extends AminoAcid {
         name = "Valine";
         averageMass = 99.1311;
         monoisotopicMass = 99.068414;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'V'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"GTT", "GTC", "GTA", "GTG"};
+        subAminoAcidsWithoutCombination = new char[]{'V'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"GTT", "GTC", "GTA", "GTG"};
     }
 
     @Override

@@ -674,8 +674,8 @@ public class PTMFactory implements Serializable {
                 || ptm.getType() == PTM.MODCAA
                 || ptm.getType() == PTM.MODCPAA) {
             result += "\t\t<MSModSpec_residues>\n";
-            for (AminoAcid aa : ptm.getPattern().getAminoAcidsAtTarget()) {
-                result += "\t\t\t<MSModSpec_residues_E>" + aa.singleLetterCode + "</MSModSpec_residues_E>\n";
+            for (Character aa : ptm.getPattern().getAminoAcidsAtTarget()) {
+                result += "\t\t\t<MSModSpec_residues_E>" + aa + "</MSModSpec_residues_E>\n";
             }
             result += "\t\t</MSModSpec_residues>\n";
         }

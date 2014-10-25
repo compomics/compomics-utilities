@@ -157,12 +157,14 @@ public class SpectrumFactory {
      * Add spectra to the factory.
      *
      * @param spectrumFile The spectrum file, can be mgf or mzML
+     * 
      * @throws FileNotFoundException Exception thrown whenever the file was not
      * found
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the file
      * @throws ClassNotFoundException Exception thrown whenever an error
      * occurred while deserializing the index .cui file.
+     * 
      * @deprecated use the version with the waiting handler instead
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException {

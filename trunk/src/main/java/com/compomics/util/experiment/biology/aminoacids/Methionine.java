@@ -23,21 +23,10 @@ public class Methionine extends AminoAcid {
         name = "Methionine";
         averageMass = 131.1961;
         monoisotopicMass = 131.040485;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'M'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"ATG"};
+        subAminoAcidsWithoutCombination = new char[]{'M'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"ATG"};
     }
 
     @Override

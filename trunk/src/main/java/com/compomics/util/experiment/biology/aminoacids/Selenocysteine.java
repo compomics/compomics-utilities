@@ -23,21 +23,10 @@ public class Selenocysteine extends AminoAcid {
         name = "Selenocysteine";
         averageMass = 150.0379;
         monoisotopicMass = 150.95363;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'U'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TGA"};
+        subAminoAcidsWithoutCombination = new char[]{'U'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TGA"};
     }
 
     @Override

@@ -23,21 +23,10 @@ public class Histidine extends AminoAcid {
         name = "Histidine";
         averageMass = 137.1393;
         monoisotopicMass = 137.058912;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'H'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"CAT", "CAC"};
+        subAminoAcidsWithoutCombination = new char[]{'H'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"CAT", "CAC"};
     }
 
     @Override

@@ -314,7 +314,8 @@ public class IonFactory {
                 ArrayList<Double> patternMasses = new ArrayList<Double>();
                 for (int i = 0; i < aminoAcidPattern.length(); i++) {
                     ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
-                    for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
+                    for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
+                        AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.monoisotopicMass;
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
                             String ptmName = modificationMatch.getTheoreticPtm();
@@ -669,7 +670,8 @@ public class IonFactory {
                 ArrayList<Double> patternMasses = new ArrayList<Double>();
                 for (int i = aminoAcidPattern.length() - 1; i >= 0; i--) {
                     ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
-                    for (AminoAcid aminoAcid : aminoAcidPattern.getTargetedAA(i)) {
+                    for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
+                        AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
                         double mass = aminoAcid.monoisotopicMass;
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
                             String ptmName = modificationMatch.getTheoreticPtm();

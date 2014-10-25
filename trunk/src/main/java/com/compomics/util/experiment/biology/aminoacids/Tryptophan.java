@@ -23,21 +23,10 @@ public class Tryptophan extends AminoAcid {
         name = "Tryptophan";
         averageMass = 186.2099;
         monoisotopicMass = 186.079313;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'W'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"TGG"};
+        subAminoAcidsWithoutCombination = new char[]{'W'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"TGG"};
     }
 
     @Override

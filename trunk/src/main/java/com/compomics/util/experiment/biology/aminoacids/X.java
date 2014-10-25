@@ -24,19 +24,10 @@ public class X extends AminoAcid {
         name = "X";
         averageMass = 110; // @TODO: is this the correct mass to use? 118 is the average...
         monoisotopicMass = 110; // @TODO: is this the correct mass to use? 118 is the average...
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        if (includeCombinations) {
-            return new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'Z'};
-        }
-        return new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[0];
+        subAminoAcidsWithoutCombination = new char[]{'V'};
+        subAminoAcidsWithCombination = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W', 'Z'};
+        aminoAcidCombinations = new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y', 'U', 'O', 'V', 'W'};
+        standardGeneticCode = getStandardGeneticCodeForCombination();
     }
 
     @Override

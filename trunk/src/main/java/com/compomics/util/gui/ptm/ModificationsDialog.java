@@ -1086,11 +1086,11 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                     return ptmFactory.getPTM(name).getType();
                 case 5:
                     String residues = "";
-                    for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
+                    for (Character residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
                         if (!residues.equals("")) {
                             residues += ", ";
                         }
-                        residues += residue.singleLetterCode;
+                        residues += residue;
                     }
                     return residues;
                 case 6:
@@ -1189,11 +1189,11 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                     return ptmFactory.getPTM(name).getType();
                 case 5:
                     String residues = "";
-                    for (AminoAcid residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
+                    for (Character residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
                         if (!residues.equals("")) {
                             residues += ", ";
                         }
-                        residues += residue.singleLetterCode;
+                        residues += residue;
                     }
                     return residues;
                 case 6:

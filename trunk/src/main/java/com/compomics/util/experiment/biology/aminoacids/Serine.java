@@ -23,21 +23,10 @@ public class Serine extends AminoAcid {
         name = "Serine";
         averageMass = 87.0773;
         monoisotopicMass = 87.032028;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'S'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"AGT", "AGC"};
+        subAminoAcidsWithoutCombination = new char[]{'S'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"AGT", "AGC"};
     }
 
     @Override

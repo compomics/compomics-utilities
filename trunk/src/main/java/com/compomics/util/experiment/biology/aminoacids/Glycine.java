@@ -23,21 +23,10 @@ public class Glycine extends AminoAcid {
         name = "Glycine";
         averageMass = 57.0513;
         monoisotopicMass = 57.021464;
-    }
-
-    @Override
-    public char[] getSubAminoAcids(boolean includeCombinations) {
-        return new char[]{'G'};
-    }
-
-    @Override
-    public char[] getCombinations() {
-        return new char[]{'X'};
-    }
-
-    @Override
-    public String[] getStandardGeneticCode() {
-        return new String[] {"GGT", "GGC", "GGA", "GGG"};
+        subAminoAcidsWithoutCombination = new char[]{'G'};
+        subAminoAcidsWithCombination = subAminoAcidsWithoutCombination;
+        aminoAcidCombinations = new char[]{'X'};
+        standardGeneticCode = new String[] {"GGT", "GGC", "GGA", "GGG"};
     }
 
     @Override

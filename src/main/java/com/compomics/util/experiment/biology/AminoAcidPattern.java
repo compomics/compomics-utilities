@@ -977,7 +977,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Correct deprecated patterns
+     * Correct deprecated patterns.
      */
     private void backwardCompatibilityCheck() {
         if (aaTargeted != null) {

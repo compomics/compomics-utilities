@@ -21,7 +21,9 @@ public class CompareVersionNumbers implements Comparator<String> {
                 oldversionnumber = Integer.parseInt(a.next());
                 newversionnumber = Integer.parseInt(b.next());
                 if (newversionnumber > oldversionnumber) {
-                    compareInt = 1;
+                    return 1;
+                } else if (newversionnumber < oldversionnumber) {
+                    return -1;
                 }
             }
             if (b.hasNext() && !a.hasNext()) {

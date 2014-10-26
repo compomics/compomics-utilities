@@ -45,7 +45,7 @@ public abstract class AminoAcid implements Serializable {
     public static final AminoAcid J = new J();
     public static final AminoAcid Z = new Z();
     public static final AminoAcid X = new X();
-    
+
     /**
      * Single letter code of the amino acid.
      */
@@ -75,19 +75,19 @@ public abstract class AminoAcid implements Serializable {
      */
     private Double indistinguishableAACacheMass = null;
     /**
-     * The sub amino acids
+     * The sub amino acids.
      */
     protected char[] subAminoAcidsWithoutCombination;
     /**
-     * The sub amino acids
+     * The sub amino acids.
      */
     protected char[] subAminoAcidsWithCombination;
     /**
-     * The amino acid combinations
+     * The amino acid combinations.
      */
     protected char[] aminoAcidCombinations;
     /**
-     * The standard genetic code
+     * The standard genetic code.
      */
     protected String[] standardGeneticCode;
     /**

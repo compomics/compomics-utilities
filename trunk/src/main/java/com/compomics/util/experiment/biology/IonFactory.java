@@ -527,7 +527,7 @@ public class IonFactory {
                             for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
                                 boolean found = false;
                                 for (NeutralLoss neutralLoss : possibleNeutralLosses) {
-                        // @TODO: we keep only different neutral losses. We might want to change that when people 
+                                    // @TODO: we keep only different neutral losses. We might want to change that when people 
                                     //       are working with modifications having reproducible motifs like ubiquitin or some glycons.
                                     if (ptmNeutralLoss.isSameAs(neutralLoss)) {
                                         found = true;
@@ -889,7 +889,7 @@ public class IonFactory {
                             for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
                                 boolean found = false;
                                 for (NeutralLoss neutralLoss : possibleNeutralLosses) {
-                        // @TODO: we keep only different neutral losses. We might want to change that when people 
+                                    // @TODO: we keep only different neutral losses. We might want to change that when people 
                                     //       are working with modifications having reproducible motifs like ubiquitin or some glycons.
                                     if (ptmNeutralLoss.isSameAs(neutralLoss)) {
                                         found = true;

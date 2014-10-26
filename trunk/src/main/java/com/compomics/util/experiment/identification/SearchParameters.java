@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.biology.Enzyme;
+import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
@@ -994,6 +995,11 @@ public class SearchParameters implements Serializable {
             if (pepnovoParameters.getPepNovoPtmMap() == null || pepnovoParameters.getPepNovoPtmMap().isEmpty()) {
                 pepnovoParameters.setPepNovoPtmMap(result.getPepNovoPtmMap());
             }
+        }
+        
+        // compatibility check
+        if (result.getEnzyme().getName().equals("no enzyme")) {
+            result.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
         }
 
         return result;

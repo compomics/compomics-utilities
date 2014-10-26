@@ -87,14 +87,14 @@ public class Node implements Serializable {
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidSequence query, String currentSequence,
             SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException {
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = new HashMap<String, HashMap<String, ArrayList<Integer>>>(1);
 
         if (depth == query.length()) {
             result.put(currentSequence, getAllMappings());
         } else if (accessions != null) {
 
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+            HashMap<String, HashMap<String, ArrayList<Integer>>> indexes = new HashMap<String, HashMap<String, ArrayList<Integer>>>(1);
 
             for (String accession : accessions.keySet()) {
                 Protein protein = sequenceFactory.getProtein(accession);

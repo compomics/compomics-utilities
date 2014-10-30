@@ -1097,10 +1097,9 @@ public class ProteinTree {
      * @param tag the tag to look for in the tree. Must contain a consecutive
      * amino acid sequence of longer or equal size than the initialTagSize of
      * the tree.
+     * @param tagMatcher the tag matcher to use
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the ms2 m/z tolerance
-     * @param fixedModifications the fixed modifications to consider
-     * @param variableModifications the variable modifications to consider
      * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
      * reported in the Peptide object
      *
@@ -1111,9 +1110,9 @@ public class ProteinTree {
      * @throws ClassNotFoundException
      * @throws java.sql.SQLException
      */
-    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance, ArrayList<String> fixedModifications, ArrayList<String> variableModifications,
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-
+        
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = null;
         AminoAcidSequence longestAminoAcidSequence = null;
@@ -1157,8 +1156,8 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = TagMatcher.getPeptideMatches(tag, proteinSequence, seedIndex,
-                                componentIndex, sequenceMatchingPreferences, massTolerance, fixedModifications, variableModifications, reportFixedPtms);
+                        HashMap<Integer, ArrayList<Peptide>> matches = tagMatcher.getPeptideMatches(tag, proteinSequence, seedIndex,
+                                componentIndex, sequenceMatchingPreferences, massTolerance,reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {
                                 HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);
@@ -1545,6 +1544,10 @@ public class ProteinTree {
         for (int i = 0; i < limit; i++) {
             String tempTag = tagsInTree.pollLast();
             Node tempNode = tree.get(tempTag);
+            if (tempNode == null) {
+                // another thread already reduced the cache size
+                break;
+            }
             treeSize -= tempNode.getSize();
             tree.remove(tempTag);
         }

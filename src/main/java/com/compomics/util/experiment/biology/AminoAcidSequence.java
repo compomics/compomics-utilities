@@ -71,8 +71,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = sequence.getModificationMatches();
         if (modificationMatches != null) {
             modifications = new HashMap<Integer, ArrayList<ModificationMatch>>(modificationMatches.size());
-            for (int index : modificationMatches.keySet()) {
-                modifications.put(index, (ArrayList<ModificationMatch>) modificationMatches.get(index).clone());
+            for (int site : modificationMatches.keySet()) {
+                ArrayList<ModificationMatch> oldModifications = modificationMatches.get(site);
+                ArrayList<ModificationMatch> newModifications = new ArrayList<ModificationMatch>(oldModifications.size());
+                for (ModificationMatch modificationMatch : oldModifications) {
+                    newModifications.add(modificationMatch.clone());
+                }
+                modifications.put(site, newModifications);
             }
         }
     }
@@ -339,17 +344,18 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @param otherSequence the other sequence to append.
      */
-    public void append(AminoAcidSequence otherSequence) {
+    public void appendCTerm(AminoAcidSequence otherSequence) {
         setSequenceStringBuilder(true);
         int previousLength = length();
         sequenceStringBuilder.append(otherSequence.getSequence());
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherSequence.getModificationMatches();
         if (modificationMatches != null) {
-            for (int i : modificationMatches.keySet()) {
-                int newIndex = i + previousLength;
-                for (ModificationMatch oldModificationMatch : modificationMatches.get(i)) {
-                    ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.isVariable(), newIndex);
-                    addModificationMatch(newIndex, newModificationMatch);
+            for (int otherSite : modificationMatches.keySet()) {
+                int newSite = otherSite + previousLength;
+                for (ModificationMatch oldModificationMatch : modificationMatches.get(otherSite)) {
+                    ModificationMatch newModificationMatch = oldModificationMatch.clone();
+                    oldModificationMatch.setModificationSite(newSite);
+                    addModificationMatch(newSite, newModificationMatch);
                 }
             }
         }
@@ -361,9 +367,91 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param otherSequence a series of unmodified amino acids represented by
      * their single letter code
      */
-    public void append(String otherSequence) {
+    public void appendCTerm(String otherSequence) {
         setSequenceStringBuilder(true);
         sequenceStringBuilder.append(otherSequence);
+    }
+
+    /**
+     * Inserts another sequence in this sequence.
+     *
+     * @param offset the index where this sequence should be inserted, 0 is the
+     * first amino acid.
+     * @param otherSequence the other sequence to insert.
+     */
+    public void insert(int offset, AminoAcidSequence otherSequence) {
+        setSequenceStringBuilder(true);
+        sequenceStringBuilder.insert(0, otherSequence.getSequence());
+        int otherSequenceLength = otherSequence.length();
+        HashMap<Integer, ArrayList<ModificationMatch>> otherModificationMatches = otherSequence.getModificationMatches();
+        if (otherModificationMatches != null || modifications != null) {
+            int otherSize = 0;
+            if (otherModificationMatches != null) {
+                otherSize = otherModificationMatches.size();
+            }
+            int newSize = 0;
+            if (modifications != null) {
+                newSize = modifications.size();
+            }
+            HashMap<Integer, ArrayList<ModificationMatch>> newModificationMatches = new HashMap<Integer, ArrayList<ModificationMatch>>(otherSize + newSize);
+            if (otherModificationMatches != null) {
+                for (int site : otherModificationMatches.keySet()) {
+                    ArrayList<ModificationMatch> modMatches = otherModificationMatches.get(site);
+                    ArrayList<ModificationMatch> newModMatches = new ArrayList<ModificationMatch>(modMatches.size());
+                    for (ModificationMatch modificationMatch : modMatches) {
+                        newModMatches.add(modificationMatch.clone());
+                    }
+                    newModificationMatches.put(site, newModMatches);
+                }
+            }
+            if (modifications != null) {
+                for (int site : modifications.keySet()) {
+                    int newSite = site + otherSequenceLength;
+                    ArrayList<ModificationMatch> modMatches = modifications.get(site);
+                    ArrayList<ModificationMatch> newModMatches = new ArrayList<ModificationMatch>(modMatches.size());
+                    for (ModificationMatch oldModificationMatch : modifications.get(site)) {
+                        ModificationMatch newModificationMatch = oldModificationMatch.clone();
+                        oldModificationMatch.setModificationSite(newSite);
+                        newModMatches.add(newModificationMatch);
+                    }
+                    newModificationMatches.put(site, newModMatches);
+                }
+            }
+            modifications = newModificationMatches;
+        }
+    }
+
+    /**
+     * Inserts another sequence in this sequence.
+     *
+     * @param offset the index where this sequence should be inserted, 0 is the
+     * first amino acid.
+     * @param otherSequence the other sequence to insert.
+     */
+    public void insert(int offset, String otherSequence) {
+        setSequenceStringBuilder(true);
+        sequenceStringBuilder.insert(offset, otherSequence);
+    }
+
+    /**
+     * Appends another sequence at the beginning of this sequence keeping the
+     * original order.
+     *
+     * @param otherSequence the other sequence to append.
+     */
+    public void appendNTerm(AminoAcidSequence otherSequence) {
+        insert(0, otherSequence);
+    }
+
+    /**
+     * Appends a series of unmodified amino acids to the beginning sequence
+     * keeping the original order.
+     *
+     * @param otherSequence a series of unmodified amino acids represented by
+     * their single letter code
+     */
+    public void appendNTerm(String otherSequence) {
+        insert(0, otherSequence);
     }
 
     /**
@@ -574,8 +662,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the tagged modified sequence as a string
      */
     public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, String sequence,
-            HashMap<Integer, ArrayList<String>> confidentModificationSites, 
-            HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites, 
+            HashMap<Integer, ArrayList<String>> confidentModificationSites,
+            HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> fixedModificationSites, boolean useHtmlColorCoding,
             boolean useShortName) {

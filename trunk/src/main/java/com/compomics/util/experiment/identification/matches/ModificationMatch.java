@@ -154,4 +154,16 @@ public class ModificationMatch extends ExperimentObject {
         }
         return variable == anotherModificationMatch.isVariable();
     }
+    
+    /**
+     * Clones the modification match into a new match with the same attributes.
+     * 
+     * @return a new modification match with the same attributes
+     */
+    public ModificationMatch clone() {
+        ModificationMatch newMatch = new ModificationMatch(theoreticPtm, variable, modifiedSite);
+        newMatch.setConfident(confident);
+        newMatch.setInferred(inferred);
+        return newMatch;
+    }
 }

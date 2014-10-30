@@ -141,7 +141,7 @@ public class Tag extends ExperimentObject {
                 TagComponent lastComponent = content.get(content.size() - 1);
                 if (lastComponent instanceof AminoAcidSequence) {
                     AminoAcidSequence sequence = (AminoAcidSequence) lastComponent;
-                    sequence.append(aminoAcidSequence);
+                    sequence.appendCTerm(aminoAcidSequence);
                     return;
                 }
             }
@@ -204,7 +204,7 @@ public class Tag extends ExperimentObject {
                         lastAminoAcidPattern.append(new AminoAcidPattern(currentSequence));
                     }
                 } else {
-                    lastAminoAcidSequence.append(currentSequence);
+                    lastAminoAcidSequence.appendCTerm(currentSequence);
                 }
             } else {
                 throw new UnsupportedOperationException("Longest amino acid sequence not implemented for tag component " + tagComponent.getClass() + ".");

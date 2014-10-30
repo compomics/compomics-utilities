@@ -207,6 +207,10 @@ public class SequenceFactory {
      */
     private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
+        if (fastaIndex == null) {
+            throw new IllegalArgumentException("Protein sequences not loaded in the sequence factory.");
+        }
+        
         if (isDefaultReversed() && isDecoyAccession(accession)) {
             String targetAccession = getDefaultTargetAccession(accession);
             try {
@@ -427,6 +431,7 @@ public class SequenceFactory {
      * at a time.
      *
      * @param fastaFile the FASTA file to load
+     * 
      * @throws FileNotFoundException exception thrown if the file was not found
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file
@@ -436,7 +441,6 @@ public class SequenceFactory {
      * parsing of the protein headers
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
-     * @deprecated use the version with the WaitingHandler instead
      */
     public void loadFastaFile(File fastaFile) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException, IllegalArgumentException {
         loadFastaFile(fastaFile, null);

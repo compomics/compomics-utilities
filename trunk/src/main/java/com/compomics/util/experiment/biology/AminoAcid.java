@@ -404,7 +404,7 @@ public abstract class AminoAcid implements Serializable {
     }
 
     /**
-     * Returns the amino acid from the standard genetic code.
+     * Returns the amino acid from the standard genetic code. Null if not coding for an amino acid.
      *
      * @param geneticCode the three letter genetic code of the desired amino
      * acid
@@ -431,7 +431,7 @@ public abstract class AminoAcid implements Serializable {
         } else if (geneticCode.startsWith("GC")) {
             return A;
         } else if (geneticCode.equals("TAT") || geneticCode.equals("TAC")) {
-            return T;
+            return Y;
         } else if (geneticCode.equals("CAT") || geneticCode.equals("CAC")) {
             return H;
         } else if (geneticCode.equals("CAA") || geneticCode.equals("CAG")) {
@@ -461,7 +461,7 @@ public abstract class AminoAcid implements Serializable {
         } else if (geneticCode.equals("TGA")) {
             return U;
         }
-        throw new IllegalArgumentException("No amino acid found for genetic code " + geneticCode + ".");
+        return null;
     }
 
     /**

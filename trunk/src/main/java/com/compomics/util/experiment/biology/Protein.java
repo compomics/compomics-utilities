@@ -261,7 +261,7 @@ public class Protein extends ExperimentObject {
         }
         subSequence = sequence.substring(0, peptideSequence.length()+1);
         AminoAcidSequence mAminoAcidPattern = new AminoAcidSequence("M");
-        mAminoAcidPattern.append(aminoAcidPattern);
+        mAminoAcidPattern.appendCTerm(aminoAcidPattern);
         return mAminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
     }
 

@@ -24,136 +24,136 @@ import java.util.Iterator;
 public class TagMatcher {
 
     /**
-     * Mass of the fixed peptide N-term modifications
+     * Mass of the fixed peptide N-term modifications.
      */
     private double fixedNTermPeptideModificationsMass = 0;
     /**
-     * List of the fixed peptide N-term modifications
+     * List of the fixed peptide N-term modifications.
      */
     private ArrayList<String> fixedNTermPeptideModification = null;
     /**
-     * mass of the fixed peptide C-term modifications
+     * mass of the fixed peptide C-term modifications.
      */
     private double fixedCTermPeptideModificationsMass = 0;
     /**
-     * List of the fixed peptide C-term modifications
+     * List of the fixed peptide C-term modifications.
      */
     private ArrayList<String> fixedCTermPeptideModification = null;
     /**
-     * Mass of the fixed protein N-term modifications
+     * Mass of the fixed protein N-term modifications.
      */
     private double fixedNTermProteinModificationsMass = 0;
     /**
-     * List of the fixed protein N-term modifications
+     * List of the fixed protein N-term modifications.
      */
     private ArrayList<String> fixedNTermProteinModification = null;
     /**
-     * Mass of the fixed protein C-term modifications
+     * Mass of the fixed protein C-term modifications.
      */
     private double fixedCTermProteinModificationsMass = 0;
     /**
-     * List of the fixed protein C-term modifications
+     * List of the fixed protein C-term modifications.
      */
     private ArrayList<String> fixedCTermProteinModification = null;
     /**
      * Map of the fixed modifications at specific amino acids: targeted amino
-     * acid -> list of modifications
+     * acid -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModifications = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on peptide
-     * N-terminus: targeted amino acid -> list of modifications
+     * N-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsPeptideNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on protein
-     * N-terminus: targeted amino acid -> list of modifications
+     * N-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsProteinNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on peptide
-     * C-terminus: targeted amino acid -> list of modifications
+     * C-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsPeptideCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on protein
-     * C-terminus: targeted amino acid -> list of modifications
+     * C-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsProteinCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids:
-     * targeted amino acid -> list of modifications
+     * targeted amino acid -> list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * peptide N-terminus: targeted amino acid -> list of modifications
+     * peptide N-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsPeptideNtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * protein N-terminus: targeted amino acid -> list of modifications
+     * protein N-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsProteinNtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * peptide C-terminus: targeted amino acid -> list of modifications
+     * peptide C-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsPeptideCtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * protein C-terminus: targeted amino acid -> list of modifications
+     * protein C-terminus: targeted amino acid -> list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsProteinCtermMasses = new HashMap<Character, Double>(1);
     /**
-     * list of variable N-terminal peptide modifications
+     * List of variable N-terminal peptide modifications.
      */
     private ArrayList<String> variableNTermPeptideModifications = null;
     /**
-     * list of variable C-terminal peptide modifications
+     * List of variable C-terminal peptide modifications.
      */
     private ArrayList<String> variableCTermPeptideModifications = null;
     /**
-     * list of variable N-terminal protein modifications
+     * List of variable N-terminal protein modifications.
      */
     private ArrayList<String> variableNTermProteinModifications = null;
     /**
-     * list of variable C-terminal protein modifications
+     * List of variable C-terminal protein modifications.
      */
     private ArrayList<String> variableCTermProteinModifications = null;
     /**
      * Map of the variable modifications at specific amino acid: possible target
-     * -> list of modifications
+     * -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModifications = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
-     * N-terminus: possible target -> list of modifications
+     * N-terminus: possible target -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtPeptideNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
-     * N-terminus: possible target -> list of modifications
+     * N-terminus: possible target -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtProteinNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
-     * C-terminus: possible target -> list of modifications
+     * C-terminus: possible target -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtPeptideCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
-     * C-terminus: possible target -> list of modifications
+     * C-terminus: possible target -> list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtProteinCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Smallest variable modification mass to account for when sequencing to the
-     * N-terminus
+     * N-terminus.
      */
     private double minNtermMod = 0;
     /**
      * Smallest variable modification mass to account for when sequencing to the
-     * C-terminus
+     * C-terminus.
      */
     private double minCtermMod = 0;
 
@@ -637,11 +637,11 @@ public class TagMatcher {
                 ArrayList<SequenceSegment> possibleSequences = new ArrayList<SequenceSegment>(1);
                 ArrayList<SequenceSegment> validSequences = new ArrayList<SequenceSegment>(1);
 
-                    if (nTerminus) {
-                        aaIndex--;
-                    } else {
-                        aaIndex++;
-                    }
+                if (nTerminus) {
+                    aaIndex--;
+                } else {
+                    aaIndex++;
+                }
                 while (aaIndex >= 0 && aaIndex < sequence.length()) {
 
                     char aa = sequence.charAt(aaIndex);

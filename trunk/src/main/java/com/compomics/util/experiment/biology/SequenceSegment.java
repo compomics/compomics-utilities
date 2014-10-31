@@ -5,30 +5,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Segment of sequence indexed on a protein sequence
+ * Segment of sequence indexed on a protein sequence.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SequenceSegment {
 
     /**
-     * The amino acid sequence of this fragment
+     * The amino acid sequence of this fragment.
      */
     private AminoAcidSequence aminoAcidSequence;
-
     /**
-     * the index on the protein
+     * The index on the protein.
      */
     private int indexOnProtein;
-
     /**
-     * the mass of the segment
+     * The mass of the segment.
      */
     private double mass;
 
     /**
      * Constructor.
-     * 
+     *
      * @param indexOnProtein index on the protein sequence
      * @param aminoAcidSequence the amino acid sequence of this fragment
      */
@@ -45,7 +43,7 @@ public class SequenceSegment {
 
     /**
      * Constructor.
-     * 
+     *
      * @param indexOnProtein index on the protein sequence
      */
     public SequenceSegment(int indexOnProtein) {
@@ -54,7 +52,7 @@ public class SequenceSegment {
 
     /**
      * Constructor.
-     * 
+     *
      * @param sequenceSegment another sequence segment
      * @param indexOnProtein the index on the protein
      */
@@ -70,7 +68,7 @@ public class SequenceSegment {
 
     /**
      * Constructor.
-     * 
+     *
      * @param sequenceSegment another sequence segment
      */
     public SequenceSegment(SequenceSegment sequenceSegment) {
@@ -79,7 +77,7 @@ public class SequenceSegment {
 
     /**
      * Appends a sequence segment to the N-terminus.
-     * 
+     *
      * @param sequenceSegment a sequence segment
      */
     public void appendNTerminus(SequenceSegment sequenceSegment) {
@@ -89,7 +87,7 @@ public class SequenceSegment {
 
     /**
      * Appends a sequence segment to the C-terminus.
-     * 
+     *
      * @param sequenceSegment a sequence segment
      */
     public void appendCTerminus(SequenceSegment sequenceSegment) {
@@ -99,7 +97,7 @@ public class SequenceSegment {
 
     /**
      * Appends an amino acid to the N-terminus.
-     * 
+     *
      * @param aminoAcid an amino acid
      */
     public void appendNTerminus(AminoAcid aminoAcid) {
@@ -109,7 +107,7 @@ public class SequenceSegment {
 
     /**
      * Appends an amino acid to the C-terminus.
-     * 
+     *
      * @param aminoAcid an amino acid
      */
     public void appendCTerminus(AminoAcid aminoAcid) {
@@ -119,8 +117,8 @@ public class SequenceSegment {
 
     /**
      * Adds a modification to the N-terminus.
-     * 
-     * @param modificationMatch a mosidication match
+     *
+     * @param modificationMatch a modification match
      */
     public void addModificationNTerminus(ModificationMatch modificationMatch) {
         PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
@@ -129,8 +127,8 @@ public class SequenceSegment {
 
     /**
      * Adds a modification to the N-terminus.
-     * 
-     * @param modificationMatch a mosidication match
+     *
+     * @param modificationMatch a modification match
      * @param modificationMass the mass of the modification
      */
     public void addModificationNTerminus(ModificationMatch modificationMatch, double modificationMass) {
@@ -140,7 +138,7 @@ public class SequenceSegment {
 
     /**
      * Adds a modification to the C-terminus.
-     * 
+     *
      * @param modificationMatch a mosidication match
      */
     public void addModificationCTerminus(ModificationMatch modificationMatch) {
@@ -150,7 +148,7 @@ public class SequenceSegment {
 
     /**
      * Adds a modification to the C-terminus.
-     * 
+     *
      * @param modificationMatch a mosidication match
      * @param modificationMass the mass of the modification
      */
@@ -161,7 +159,7 @@ public class SequenceSegment {
 
     /**
      * Adds a mass to the mass of the segment.
-     * 
+     *
      * @param mass the mass to add
      */
     public void addMass(Double mass) {
@@ -170,7 +168,7 @@ public class SequenceSegment {
 
     /**
      * Returns the amino acid sequence of the segment.
-     * 
+     *
      * @return the amino acid sequence of the segment
      */
     public AminoAcidSequence getAminoAcidSequence() {
@@ -179,7 +177,7 @@ public class SequenceSegment {
 
     /**
      * Returns the index on the protein as set.
-     * 
+     *
      * @return the index on the protein as set
      */
     public int getIndexOnProtein() {
@@ -188,7 +186,7 @@ public class SequenceSegment {
 
     /**
      * Sets the index on the protein.
-     * 
+     *
      * @param indexOnProtein the index on the protein
      */
     public void setIndexOnProtein(int indexOnProtein) {
@@ -197,7 +195,7 @@ public class SequenceSegment {
 
     /**
      * Returns the mass of the segment.
-     * 
+     *
      * @return the mass of the segment
      */
     public double getMass() {
@@ -206,25 +204,25 @@ public class SequenceSegment {
 
     /**
      * Returns the length of the segment.
-     * 
+     *
      * @return the length of the segment
      */
     public int length() {
         return aminoAcidSequence.length();
     }
-    
+
     /**
      * Returns the sequence of the segment.
-     * 
+     *
      * @return the sequence of the segment
      */
     public String getSequence() {
         return aminoAcidSequence.asSequence();
     }
-    
+
     /**
      * Returns the modifications on this segment.
-     * 
+     *
      * @return the modifications on this segment
      */
     public HashMap<Integer, ArrayList<ModificationMatch>> getModificationMatches() {

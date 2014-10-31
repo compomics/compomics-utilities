@@ -355,10 +355,7 @@ public class IdentificationDB implements Serializable {
     public void addSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException, InterruptedException {
         String key = spectrumMatch.getKey();
         String tableName = getSpectrumMatchTable(key);
-        if (!psmTables.contains(tableName)) {
-            objectsDB.addTable(tableName);
-            psmTables.add(tableName);
-        }
+        checkTable(psmTables, tableName);
         objectsDB.insertObject(tableName, key, spectrumMatch, true);
     }
 
@@ -767,11 +764,25 @@ public class IdentificationDB implements Serializable {
      */
     public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getSpectrumParameterTable(key, urParameter);
-        if (!psmParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName);
-            psmParametersTables.add(tableName);
-        }
+        checkTable(psmParametersTables, tableName);
         objectsDB.insertObject(tableName, key, urParameter, true);
+    }
+    
+    /**
+     * Verifies that a table exists and creates it if not.
+     * 
+     * @param tableList the list containing the created tables
+     * @param tableName the name of the table
+     * 
+     * @throws SQLException
+     * @throws IOException
+     * @throws InterruptedException 
+     */
+    public synchronized void checkTable(ArrayList<String> tableList, String tableName) throws SQLException, IOException, InterruptedException {
+        if (!tableList.contains(tableName)) {
+            objectsDB.addTable(tableName);
+            tableList.add(tableName);
+        }
     }
 
     /**
@@ -825,10 +836,7 @@ public class IdentificationDB implements Serializable {
      */
     public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
-        if (!peptideParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName);
-            peptideParametersTables.add(tableName);
-        }
+        checkTable(peptideParametersTables, tableName);
         objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
@@ -865,10 +873,7 @@ public class IdentificationDB implements Serializable {
      */
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
-        if (!proteinParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName);
-            proteinParametersTables.add(tableName);
-        }
+        checkTable(proteinParametersTables, tableName);
         objectsDB.insertObject(tableName, key, urParameter, true);
     }
 
@@ -908,7 +913,7 @@ public class IdentificationDB implements Serializable {
     public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         String tableName = getParameterTable(urParameter);
         if (!matchParametersTables.contains(tableName)) {
-            objectsDB.addTable(tableName);
+        checkTable(matchParametersTables, tableName);
             matchParametersTables.add(tableName);
         }
         objectsDB.insertObject(tableName, key, urParameter, true);

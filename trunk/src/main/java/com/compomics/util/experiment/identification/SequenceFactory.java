@@ -215,10 +215,6 @@ public class SequenceFactory {
             throw new IllegalArgumentException("Protein sequences not loaded in the sequence factory.");
         }
 
-        if (isDecoyAccession(accession)) {
-            int debug = 1;
-        }
-
         Protein currentProtein = currentProteinMap.get(accession);
 
         if (currentProtein == null && isDefaultReversed() && isDecoyAccession(accession)) {

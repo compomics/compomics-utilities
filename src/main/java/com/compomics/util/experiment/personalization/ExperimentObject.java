@@ -18,7 +18,7 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
     /**
      * Map containing user refinement parameters.
      */
-    private HashMap<String, UrParameter> urParams = new HashMap<String, UrParameter>(0);
+    private HashMap<String, UrParameter> urParams = null;
 
     /**
      * Method to add a user refinement parameter.
@@ -26,6 +26,9 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      * @param parameter The parameter
      */
     public void addUrParam(UrParameter parameter) {
+        if (urParams == null) {
+            urParams = new HashMap<String, UrParameter>(1);
+        }
         urParams.put(getParameterKey(parameter), parameter);
     }
 
@@ -36,6 +39,9 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
+        if (urParams == null) {
+            return null;
+        }
         return urParams.get(getParameterKey(parameter));
     }
 

@@ -80,6 +80,10 @@ public class SequenceFactory {
      * The time out in milliseconds when querying the file.
      */
     public final static long timeOut = 10000;
+    /**
+     * Indicates whether the decoy hits should be kept in memory
+     */
+    private boolean decoyInMemory = true;
 
     /**
      * Constructor.
@@ -210,24 +214,90 @@ public class SequenceFactory {
         if (fastaIndex == null) {
             throw new IllegalArgumentException("Protein sequences not loaded in the sequence factory.");
         }
-        
-        if (isDefaultReversed() && isDecoyAccession(accession)) {
-            String targetAccession = getDefaultTargetAccession(accession);
-            try {
-                Protein targetProtein = getProtein(targetAccession, reindex);
-                return new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
-            } catch (Exception e) {
-                // ignore
-            }
+
+        if (isDecoyAccession(accession)) {
+            int debug = 1;
         }
 
         Protein currentProtein = currentProteinMap.get(accession);
+
+        if (currentProtein == null && isDefaultReversed() && isDecoyAccession(accession)) {
+            if (decoyInMemory) {
+                currentProtein = getDecoyProteinFromTargetSynchronized(accession, reindex);
+            } else {
+                currentProtein = getDecoyProteinFromTarget(accession, reindex);
+            }
+        }
 
         if (currentProtein == null) {
             currentProtein = getProteinSynchronized(accession, reindex);
         }
         if (currentProtein == null) {
             throw new IllegalArgumentException("Protein not found: " + accession + ".");
+        }
+        return currentProtein;
+    }
+
+    /**
+     * Returns a decoy protein from a target protein or looks for the sequence
+     * in the cache if not found.
+     *
+     * @param accession the accession of the decoy protein to look for
+     * @param reindex a boolean indicating whether the database should be
+     * re-indexed in case the protein is not found.
+     *
+     * @return the protein of interest, null if not found
+     *
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
+     */
+    public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+
+        // check whether another thread did the job already
+        Protein currentProtein = currentProteinMap.get(accession);
+        if (currentProtein == null) {
+            currentProtein = getDecoyProteinFromTarget(accession, reindex);
+        }
+        return currentProtein;
+    }
+
+    /**
+     * Returns a decoy protein from a target protein or looks for the sequence
+     * in the cache if not found.
+     *
+     * @param accession the accession of the decoy protein to look for
+     * @param reindex a boolean indicating whether the database should be
+     * re-indexed in case the protein is not found.
+     *
+     * @return the protein of interest, null if not found
+     *
+     * @throws IOException
+     * @throws IllegalArgumentException
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException
+     */
+    public Protein getDecoyProteinFromTarget(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        Protein currentProtein = null;
+        String targetAccession = getDefaultTargetAccession(accession);
+        try {
+            Protein targetProtein = currentProteinMap.get(targetAccession);
+            if (targetProtein == null && decoyInMemory) {
+                currentProtein = getProteinSynchronized(accession, reindex);
+            } else {
+                if (targetProtein == null) {
+                    targetProtein = getProtein(targetAccession, reindex);
+                }
+                currentProtein = new Protein(accession, targetProtein.getDatabaseType(), reverseSequence(targetProtein.getSequence()), true);
+                if (decoyInMemory) {
+                    addProteinToCache(accession, currentProtein);
+                }
+            }
+        } catch (Exception e) {
+            // ignore
         }
         return currentProtein;
     }
@@ -321,14 +391,7 @@ public class SequenceFactory {
 
             Protein currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
 
-            while (loadedProteins.size() >= nCache) {
-                currentProteinMap.remove(loadedProteins.get(0));
-                currentHeaderMap.remove(loadedProteins.get(0));
-                loadedProteins.remove(0);
-            }
-
-            loadedProteins.add(accession);
-            currentProteinMap.put(accession, currentProtein);
+            addProteinToCache(accession, currentProtein);
 
             reading = false;
 
@@ -344,6 +407,23 @@ public class SequenceFactory {
                 throw e;
             }
         }
+    }
+
+    /**
+     * Adds a protein to the cache and keeps it under the desired size.
+     *
+     * @param accession the accession of the protein to add
+     * @param protein the protein to add
+     */
+    private synchronized void addProteinToCache(String accession, Protein protein) {
+        while (loadedProteins.size() >= nCache) {
+            currentProteinMap.remove(loadedProteins.get(0));
+            currentHeaderMap.remove(loadedProteins.get(0));
+            loadedProteins.remove(0);
+        }
+
+        loadedProteins.add(accession);
+        currentProteinMap.put(accession, protein);
     }
 
     /**
@@ -431,7 +511,7 @@ public class SequenceFactory {
      * at a time.
      *
      * @param fastaFile the FASTA file to load
-     * 
+     *
      * @throws FileNotFoundException exception thrown if the file was not found
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file
@@ -1366,6 +1446,24 @@ public class SequenceFactory {
      */
     public ProteinIterator getProteinIterator(boolean targetOnly) throws FileNotFoundException {
         return new ProteinIterator(currentFastaFile, targetOnly);
+    }
+
+    /**
+     * Returns whether decoys should be kept in memory.
+     *
+     * @return true if decoys should be kept in memory
+     */
+    public boolean isDecoyInMemory() {
+        return decoyInMemory;
+    }
+
+    /**
+     * Sets whether decoys should be kept in memory.
+     *
+     * @param decoyInMemory true if decoys should be kept in memory
+     */
+    public void setDecoyInMemory(boolean decoyInMemory) {
+        this.decoyInMemory = decoyInMemory;
     }
 
     /**

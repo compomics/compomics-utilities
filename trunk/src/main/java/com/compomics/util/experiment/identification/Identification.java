@@ -686,7 +686,7 @@ public abstract class Identification extends ExperimentObject {
      * Updates a peptide match where the key was changed.
      *
      * @param oldKey the old peptide key
-     * @param newKey  the new peptide key
+     * @param newKey the new peptide key
      * @param peptideMatch the new peptide match
      *
      * @throws SQLException
@@ -1228,14 +1228,14 @@ public abstract class Identification extends ExperimentObject {
      * occurred while saving the file
      * @throws java.lang.InterruptedException
      */
-    public void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore)
+    public synchronized void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore)
             throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
 
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
-        boolean containsSpectrumKey = spectrumIdentificationMap.containsKey(spectrumFile);
+        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
 
-        if (containsSpectrumKey && spectrumIdentificationMap.get(spectrumFile).contains(spectrumKey)) {
+        if (spectrumKeys != null && spectrumKeys.contains(spectrumKey)) {
             SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey, true);
             if (oldMatch == null) {
                 throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
@@ -1252,10 +1252,11 @@ public abstract class Identification extends ExperimentObject {
             }
             identificationDB.updateSpectrumMatch(oldMatch);
         } else {
-            if (!containsSpectrumKey) {
-                spectrumIdentificationMap.put(spectrumFile, new ArrayList<String>());
+            if (spectrumKeys == null) {
+                spectrumKeys = new ArrayList<String>(1000);
+                spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
             }
-            spectrumIdentificationMap.get(spectrumFile).add(spectrumKey);
+            spectrumKeys.add(spectrumKey);
             try {
                 identificationDB.addSpectrumMatch(newMatch);
             } catch (IOException e) {

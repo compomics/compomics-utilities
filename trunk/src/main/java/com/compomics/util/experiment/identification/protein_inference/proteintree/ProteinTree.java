@@ -1536,7 +1536,7 @@ public class ProteinTree {
      *
      * @param share the share of the cache to remove. 0.5 means 50%
      */
-    public void reduceNodeCacheSize(double share) {
+    public synchronized void reduceNodeCacheSize(double share) {
         double limit = tree.size();
         if (limit > 100) {
             limit = share * limit;

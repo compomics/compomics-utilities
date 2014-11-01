@@ -1,8 +1,5 @@
 package com.compomics.util.experiment.io.identifications;
 
-import com.compomics.util.Util;
-import com.compomics.util.experiment.identification.Advocate;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +33,7 @@ public class IdfileReaderFactory {
     private static HashMap<String, Class> idFileReaders = new HashMap<String, Class>();
 
     /**
-     * Static initialiser block that checks for registered IdfileReaders through
+     * Static initializer block that checks for registered IdfileReaders through
      * the Java service loader
      */
     static {
@@ -129,6 +126,7 @@ public class IdfileReaderFactory {
         //        that get the actual file to read some lines prior to making up their mind; thus constitutes 
         //        an actual format check rather than an extension check.
         Iterator<String> extensions = idFileReaders.keySet().iterator();
+
         while (extensions.hasNext()) {
             String key = extensions.next();
             String extension = key.toLowerCase();

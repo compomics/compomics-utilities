@@ -1112,7 +1112,7 @@ public class ProteinTree {
      */
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean reportFixedPtms) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        
+
         int initialTagSize = componentsFactory.getInitialSize();
         AminoAcidPattern longestAminoAcidPattern = null;
         AminoAcidSequence longestAminoAcidSequence = null;
@@ -1156,8 +1156,8 @@ public class ProteinTree {
                 for (String accession : seeds.get(tagSeed).keySet()) {
                     String proteinSequence = sequenceFactory.getProtein(accession).getSequence();
                     for (int seedIndex : seeds.get(tagSeed).get(accession)) {
-                        HashMap<Integer, ArrayList<Peptide>> matches = tagMatcher.getPeptideMatches(tag, proteinSequence, seedIndex,
-                                componentIndex, sequenceMatchingPreferences, massTolerance,reportFixedPtms);
+                        HashMap<Integer, ArrayList<Peptide>> matches = tagMatcher.getPeptideMatches(tag, accession, proteinSequence, seedIndex,
+                                componentIndex, sequenceMatchingPreferences, massTolerance, reportFixedPtms);
                         for (int aa : matches.keySet()) {
                             for (Peptide peptide : matches.get(aa)) {
                                 HashMap<String, ArrayList<Integer>> proteinToIndexMap = results.get(peptide);

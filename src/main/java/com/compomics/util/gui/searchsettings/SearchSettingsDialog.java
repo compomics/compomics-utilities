@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Di
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -2173,6 +2174,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()));
         } else {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), new DirecTagParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), new PNovoParameters());
         }
 
         String dbPath = databaseSettingsTxt.getText().trim();

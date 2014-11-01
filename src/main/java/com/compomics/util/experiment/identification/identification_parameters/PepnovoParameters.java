@@ -18,7 +18,7 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal hit list length for PepNovo+. Max is 20.
      */
-    private Integer hitListLength = 4;
+    private Integer hitListLength = 10;
     /**
      * Indicates whether the precursor charge estimation option.
      */

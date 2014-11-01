@@ -81,7 +81,7 @@ public class SequenceFactory {
      */
     public final static long timeOut = 10000;
     /**
-     * Indicates whether the decoy hits should be kept in memory
+     * Indicates whether the decoy hits should be kept in memory.
      */
     private boolean decoyInMemory = true;
 

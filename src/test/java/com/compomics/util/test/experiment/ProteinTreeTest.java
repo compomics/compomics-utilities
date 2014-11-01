@@ -157,6 +157,8 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.size() == 1);
         Assert.assertTrue(indexes.get(0) == 11);
         
+        tagMatcher.clearCache();
+        
         proteinTree.close();
         proteinTree.deleteDb();
     }

@@ -14,7 +14,6 @@ import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * This class matches tags to peptides.
@@ -157,15 +156,15 @@ public class TagMatcher {
      */
     private double minCtermMod = 0;
     /**
-     * If true the possible sequence segments will be stored in caches
+     * If true the possible sequence segments will be stored in caches.
      */
     private boolean useCache = true;
     /**
-     * The sequence segments cache for N-term sequencing
+     * The sequence segments cache for N-term sequencing.
      */
     private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> nTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
     /**
-     * The sequence segments cache for C-term sequencing
+     * The sequence segments cache for C-term sequencing.
      */
     private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> cTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
 
@@ -700,6 +699,7 @@ public class TagMatcher {
         } else {
             throw new IllegalArgumentException("Tag component " + tagComponent.getClass() + " not implemented for sequence matching.");
         }
+
         return newSequences;
     }
 
@@ -735,11 +735,11 @@ public class TagMatcher {
 
     /**
      * Adds a cache for the given protein and returns it.
-     * 
+     *
      * @param accession the accession of the protein
      * @param nTerminus indicates whether the sequencing goes toward the N
      * (true) or the C (false) terminus
-     * 
+     *
      * @return a cache for the given protein
      */
     private synchronized HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> addProteinCache(String accession, boolean nTerminus) {
@@ -762,10 +762,10 @@ public class TagMatcher {
 
     /**
      * Adds a cache for the given index and returns it.
-     * 
+     *
      * @param proteinCache the protein cache
      * @param currentIndex the index of interest
-     * 
+     *
      * @return a cache for the given index
      */
     private synchronized HashMap<Integer, ArrayList<SequenceSegment>> addIndexCache(HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> proteinCache, int currentIndex) {
@@ -821,7 +821,7 @@ public class TagMatcher {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param currentIndex the current indexing level on the protein sequence
      * @param aaIndex the amino acid index
-     * @param reportFixedPtms if true fixed ptms will be reported as
+     * @param reportFixedPtms if true fixed PTMs will be reported as
      * modification matches
      * @param nTerminus indicates whether the sequencing goes toward the N
      * (true) or the C (false) terminus
@@ -834,14 +834,14 @@ public class TagMatcher {
 
     /**
      * Adds the possible new sequence segments generated when appending the
-     * given amino acid
+     * given amino acid.
      *
      * @param sequence the protein sequence
      * @param possibleSequences the possible previous sequences
      * @param aminoAcid the amino acid object
      * @param currentIndex the current indexing level on the protein sequence
      * @param aaIndex the amino acid index
-     * @param reportFixedPtms if true fixed ptms will be reported as
+     * @param reportFixedPtms if true fixed PTMs will be reported as
      * modification matches
      * @param nTerminus indicates whether the sequencing goes toward the N
      * (true) or the C (false) terminus
@@ -1177,7 +1177,7 @@ public class TagMatcher {
     }
 
     /**
-     * Clears the cache
+     * Clears the cache.
      */
     public void clearCache() {
         nTermCache.clear();
@@ -1190,6 +1190,6 @@ public class TagMatcher {
      * @param useCache if true a cache will be used
      */
     public void setUseCache(boolean useCache) {
-
+        this.useCache = useCache;
     }
 }

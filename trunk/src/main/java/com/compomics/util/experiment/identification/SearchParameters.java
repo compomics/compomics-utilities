@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Ms
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -996,7 +997,13 @@ public class SearchParameters implements Serializable {
                 pepnovoParameters.setPepNovoPtmMap(result.getPepNovoPtmMap());
             }
         }
-        
+
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()) == null) {
+            PNovoParameters pnovoParameters = new PNovoParameters();
+            result.setIdentificationAlgorithmParameter(pnovoParameters.getAlgorithm().getIndex(), pnovoParameters);
+        }
+
         // compatibility check
         if (result.getEnzyme().getName().equals("no enzyme")) {
             result.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));

@@ -130,6 +130,10 @@ public class Advocate {
      */
     public static final Advocate percolator = new Advocate(26, "Percolator", AdvocateType.rescoring_algorithm);
     /**
+     * The pNovo+ de novo sequencing algorithm.
+     */
+    public static final Advocate pNovo = new Advocate(27, "pNovo+", AdvocateType.sequencing_algorithm); // @TODO: add a color for pNovo+
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
@@ -248,7 +252,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[28 + userAdvocates.size()];
+        Advocate[] result = new Advocate[29 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -277,6 +281,7 @@ public class Advocate {
         result[++i] = spectrumMill;
         result[++i] = zCore;
         result[++i] = percolator;
+        result[++i] = pNovo;
         result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {
@@ -385,6 +390,8 @@ public class Advocate {
             return "14976030";
         } else if (this == pepnovo) {
             return "15858974";
+        } else if (this == pNovo) {
+            return "23272783";
         } else if (this == andromeda) {
             return "21254760";
         } else if (this == direcTag) {

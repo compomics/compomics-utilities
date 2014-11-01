@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Ms
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -897,6 +898,32 @@ public class IdentificationParametersInputBean {
         }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
+
+        ///////////////////////////////////
+        // pNovo+ parameters
+        ///////////////////////////////////
+        PNovoParameters pNovoParameters = new PNovoParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
+            Integer option = new Integer(arg);
+            pNovoParameters.setNumberOfPeptides(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id);
+            Integer option = new Integer(arg);
+            pNovoParameters.setLowerPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id);
+            Integer option = new Integer(arg);
+            pNovoParameters.setUpperPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id);
+            pNovoParameters.setActicationType(arg);
+        }
+
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
     }
 
     /**

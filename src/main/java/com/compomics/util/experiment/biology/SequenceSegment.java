@@ -20,7 +20,7 @@ public class SequenceSegment {
      */
     private int indexOnProtein;
     /**
-     * The number of mutations in that sequence segment
+     * The number of mutations in that sequence segment.
      */
     private int nMutations = 0;
     /**
@@ -237,7 +237,7 @@ public class SequenceSegment {
     }
     
     /**
-     * Increases the number of mutations
+     * Increases the number of mutations.
      */
     public void increaseMutationCount() {
         nMutations++;
@@ -251,6 +251,4 @@ public class SequenceSegment {
     public int getnMutations() {
         return nMutations;
     }
-    
-    
 }

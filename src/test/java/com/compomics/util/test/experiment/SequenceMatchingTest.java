@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
@@ -16,12 +10,12 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * This class tests the matching of amino acids
+ * This class tests the matching of amino acids.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class SequenceMatchingTest extends TestCase {
-    
+
     /**
      * Tests the import and the mapping of a few peptide sequences.
      *
@@ -32,14 +26,14 @@ public class SequenceMatchingTest extends TestCase {
      * @throws InterruptedException
      */
     public void testSequenceMatchingPreferences() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        
+
         String ref = "TESTIKTEST";
         String testAminoAcid = "TESTJKTEST";
         String testIndistinguishible = "TESTLQTEST";
         String test1Mutation = "TESTLQTETT";
         String test2Mutations = "TESTLQTETS";
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence("TESTIKTEST");
-        
+
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.string);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
@@ -47,7 +41,7 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(!aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-        
+
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.aminoAcid);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
@@ -55,7 +49,7 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(!aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-        
+
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setMs2MzTolerance(0.5);
@@ -64,8 +58,7 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-        
-        
+
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setMs2MzTolerance(0.5);
@@ -77,8 +70,7 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-        
-        
+
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setMs2MzTolerance(0.5);
@@ -88,6 +80,5 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-        
     }
 }

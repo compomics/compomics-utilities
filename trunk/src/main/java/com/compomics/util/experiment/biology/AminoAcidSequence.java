@@ -166,7 +166,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 sequenceStringBuilder = new StringBuilder(sequence);
                 sequence = null;
             } else {
-                sequenceStringBuilder = new StringBuilder();
+                sequenceStringBuilder = new StringBuilder(1);
             }
         } else if (sequence == null && sequenceStringBuilder != null) {
             sequence = sequenceStringBuilder.toString();

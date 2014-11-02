@@ -112,7 +112,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
                 long currentIndex = bufferedRandomAccessFile.getFilePointer();
 
                 String[] splitLine = line.split("\\t");
-                String spectrumTitle = splitLine[1];
+                String spectrumTitle = splitLine[1].trim();
                 index.put(spectrumTitle, currentIndex);
 
                 if (waitingHandler != null) {
@@ -207,7 +207,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * @return the spectrum file name
      */
     public String getMgfFileName() {
-        return fileName.substring(0, fileName.length() - 4);
+        return fileName.substring(0, fileName.length() - 4) + ".mgf";
     }
 
     @Override

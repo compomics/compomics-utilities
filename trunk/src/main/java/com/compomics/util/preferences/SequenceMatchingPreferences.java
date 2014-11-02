@@ -53,7 +53,7 @@ public class SequenceMatchingPreferences implements Serializable {
      */
     private MutationMatrix mutationMatrix = null;
     /**
-     * The maximal number of mutations allowed per peptide
+     * The maximal number of mutations allowed per peptide.
      */
     private Integer maxMutationsPerPeptide = null;
 
@@ -186,8 +186,9 @@ public class SequenceMatchingPreferences implements Serializable {
     }
 
     /**
-     * Returns the maximal number of mutations allowed per peptide. Null if not set.
-     * 
+     * Returns the maximal number of mutations allowed per peptide. Null if not
+     * set.
+     *
      * @return the maximal number of mutations allowed per peptide
      */
     public Integer getMaxMutationsPerPeptide() {
@@ -196,8 +197,9 @@ public class SequenceMatchingPreferences implements Serializable {
 
     /**
      * Sets the maximal number of mutations allowed per peptide.
-     * 
-     * @param maxMutationsPerPeptide the maximal number of mutations allowed per peptide
+     *
+     * @param maxMutationsPerPeptide the maximal number of mutations allowed per
+     * peptide
      */
     public void setMaxMutationsPerPeptide(Integer maxMutationsPerPeptide) {
         this.maxMutationsPerPeptide = maxMutationsPerPeptide;
@@ -252,6 +254,4 @@ public class SequenceMatchingPreferences implements Serializable {
         }
         return true;
     }
-    
-    
 }

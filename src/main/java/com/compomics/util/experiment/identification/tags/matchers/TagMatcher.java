@@ -160,7 +160,13 @@ public class TagMatcher {
      */
     private boolean useCache = true;
     /**
-     * The sequence segments cache for N-term sequencing.
+     * If true the indexing of the sequence will be executed in a synchronized
+     * method. Use this in case different threads might attempt to sequence the
+     * same sequence at the same index at the same time.
+     */
+    private boolean synchronizedIndexing = false;
+    /**
+     * The sequence segments cache for N-term sequencing
      */
     private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> nTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
     /**
@@ -665,7 +671,11 @@ public class TagMatcher {
                     if (useCache) {
                         possibleSequences = indexCache.get(aaIndex);
                         if (possibleSequences == null) {
-                            possibleSequences = addSequenceSegmentsToCache(indexCache, sequence, sequenceAminoAcid, sequenceMatchingPreferences, currentIndex, aaIndex, reportFixedPtms, nTerminus);
+                            if (synchronizedIndexing) {
+                                possibleSequences = addSequenceSegmentsToCacheSynchronized(indexCache, sequence, sequenceAminoAcid, sequenceMatchingPreferences, currentIndex, aaIndex, reportFixedPtms, nTerminus);
+                            } else {
+                                possibleSequences = addSequenceSegmentsToCache(indexCache, sequence, sequenceAminoAcid, sequenceMatchingPreferences, currentIndex, aaIndex, reportFixedPtms, nTerminus);
+                            }
                         }
                     } else {
                         possibleSequences = getCombinationsForAminoAcid(sequence, possibleSequences, sequenceAminoAcid, sequenceMatchingPreferences, currentIndex, aaIndex, reportFixedPtms, nTerminus);
@@ -750,7 +760,7 @@ public class TagMatcher {
             proteinCache = cTermCache.get(accession);
         }
         if (proteinCache == null) {
-            proteinCache = new HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>();
+            proteinCache = new HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>(1);
             if (nTerminus) {
                 nTermCache.put(accession, proteinCache);
             } else {
@@ -771,7 +781,7 @@ public class TagMatcher {
     private synchronized HashMap<Integer, ArrayList<SequenceSegment>> addIndexCache(HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>> proteinCache, int currentIndex) {
         HashMap<Integer, ArrayList<SequenceSegment>> indexCache = proteinCache.get(currentIndex);
         if (indexCache == null) {
-            indexCache = new HashMap<Integer, ArrayList<SequenceSegment>>();
+            indexCache = new HashMap<Integer, ArrayList<SequenceSegment>>(1);
             proteinCache.put(currentIndex, indexCache);
         }
         return indexCache;
@@ -795,7 +805,29 @@ public class TagMatcher {
      *
      * @return the new possible sequences
      */
-    public synchronized ArrayList<SequenceSegment> addSequenceSegmentsToCache(HashMap<Integer, ArrayList<SequenceSegment>> indexCache, String sequence, AminoAcid aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences, int currentIndex, int aaIndex, boolean reportFixedPtms, boolean nTerminus) {
+    public synchronized ArrayList<SequenceSegment> addSequenceSegmentsToCacheSynchronized(HashMap<Integer, ArrayList<SequenceSegment>> indexCache, String sequence, AminoAcid aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences, int currentIndex, int aaIndex, boolean reportFixedPtms, boolean nTerminus) {
+        return addSequenceSegmentsToCache(indexCache, sequence, aminoAcid, sequenceMatchingPreferences, currentIndex, aaIndex, reportFixedPtms, nTerminus);
+    }
+
+    /**
+     * Adds the possible new sequence segments generated when appending the
+     * given amino acid to the given cache and returns the list of possible
+     * segments.
+     *
+     * @param indexCache the cache for this index on the sequence
+     * @param sequence the protein sequence
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param aminoAcid the amino acid object
+     * @param currentIndex the current indexing level on the protein sequence
+     * @param aaIndex the amino acid index
+     * @param reportFixedPtms if true fixed ptms will be reported as
+     * modification matches
+     * @param nTerminus indicates whether the sequencing goes toward the N
+     * (true) or the C (false) terminus
+     *
+     * @return the new possible sequences
+     */
+    public ArrayList<SequenceSegment> addSequenceSegmentsToCache(HashMap<Integer, ArrayList<SequenceSegment>> indexCache, String sequence, AminoAcid aminoAcid, SequenceMatchingPreferences sequenceMatchingPreferences, int currentIndex, int aaIndex, boolean reportFixedPtms, boolean nTerminus) {
         // check whether another thread already did the job
         ArrayList<SequenceSegment> result = indexCache.get(aaIndex);
         if (result == null) {
@@ -1191,5 +1223,17 @@ public class TagMatcher {
      */
     public void setUseCache(boolean useCache) {
         this.useCache = useCache;
+    }
+
+    /**
+     * Sets whether the indexing of the sequence should be executed in a
+     * synchronized method. Use this in case different threads might attempt to
+     * sequence the same sequence at the same index at the same time.
+     *
+     * @param synchronizedIndexing true if the indexing of the sequence should
+     * be executed in a synchronized method
+     */
+    public void setSynchronizedIndexing(boolean synchronizedIndexing) {
+        this.synchronizedIndexing = synchronizedIndexing;
     }
 }

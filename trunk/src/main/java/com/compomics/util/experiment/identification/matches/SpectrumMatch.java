@@ -392,8 +392,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param tagMatcher the tag matcher to use
      * @param ascendingScore indicates whether the score is ascending when hits
      * get better
-     * @param reportFixedPtms a boolean indicating whether fixed PTMs should be
-     * reported in the Peptide object
      *
      * @return a new spectrum match containing the peptide assumptions made from
      * the tag assumptions.
@@ -404,7 +402,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @throws SQLException
      */
     public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
-            boolean scoreInAscendingOrder, boolean ascendingScore, boolean reportFixedPtms)
+            boolean scoreInAscendingOrder, boolean ascendingScore)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
@@ -426,7 +424,7 @@ public class SpectrumMatch extends IdentificationMatch {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping
-                                = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance, reportFixedPtms);
+                                = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
                         for (Peptide peptide : proteinMapping.keySet()) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile()); //@TODO: change the score based on tag to peptide matching?

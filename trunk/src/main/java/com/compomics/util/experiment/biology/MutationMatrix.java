@@ -33,15 +33,15 @@ public class MutationMatrix implements Serializable {
     /**
      * Mutation matrix allowing for a single base mutation.
      */
-    public final MutationMatrix singleBaseSubstitution = singleBaseSubstitution();
+    public static final MutationMatrix singleBaseSubstitution = singleBaseSubstitution();
     /**
      * Mutation matrix allowing for a single base transitions mutation.
      */
-    public final MutationMatrix transitionsSingleBaseSubstitution = transitionsSingleBaseSubstitution();
+    public static final MutationMatrix transitionsSingleBaseSubstitution = transitionsSingleBaseSubstitution();
     /**
      * Mutation matrix allowing for a single base transversion mutation.
      */
-    public final MutationMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
+    public static final MutationMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
     /**
      * Mutation matrix grouping synonymous amino acids. Amino acids are grouped
      * according to their side chain properties: - Non-polar aliphatic groups:
@@ -49,11 +49,11 @@ public class MutationMatrix implements Serializable {
      * neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic groups: {'K', 'R',
      * 'H'} - Acidic groups: {'D', 'E'}.
      */
-    public final MutationMatrix synonymousMutation = synonymousMutation();
+    public static final MutationMatrix synonymousMutation = synonymousMutation();
     /**
      * Returns the implemented default mutation matrices.
      */
-    public final MutationMatrix[] defaultMutationMatrices = new MutationMatrix[]{singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution};
+    public static final MutationMatrix[] defaultMutationMatrices = new MutationMatrix[]{singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousMutation};
 
     /**
      * Constructor.
@@ -80,17 +80,13 @@ public class MutationMatrix implements Serializable {
             mutatedAas = new HashSet<Character>();
             mutations.put(originalAa, mutatedAas);
         }
-        if (!mutatedAas.contains(mutatedAa)) {
             mutatedAas.add(mutatedAa);
-        }
         HashSet<Character> originalAas = mutationsReverse.get(originalAa);
         if (originalAas == null) {
             originalAas = new HashSet<Character>();
             mutationsReverse.put(mutatedAa, originalAas);
         }
-        if (!originalAas.contains(originalAa)) {
             originalAas.add(originalAa);
-        }
     }
 
     /**
@@ -168,9 +164,11 @@ public class MutationMatrix implements Serializable {
                             geneCodeStringBuilder.setCharAt(i, base);
                             String newCode = geneCodeStringBuilder.toString();
                             AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                            if (originalAa != mutatedAa) {
-                                result.addMutation(originalAa, mutatedAa);
+                            if (mutatedAminoAcid != null) {
+                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
+                                if (originalAa != mutatedAa) {
+                                    result.addMutation(originalAa, mutatedAa);
+                                }
                             }
                         }
                         geneCodeStringBuilder.setCharAt(i, originalBase);
@@ -210,9 +208,11 @@ public class MutationMatrix implements Serializable {
                             geneCodeStringBuilder.setCharAt(i, base);
                             String newCode = geneCodeStringBuilder.toString();
                             AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                            if (originalAa != mutatedAa) {
-                                result.addMutation(originalAa, mutatedAa);
+                            if (mutatedAminoAcid != null) {
+                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
+                                if (originalAa != mutatedAa) {
+                                    result.addMutation(originalAa, mutatedAa);
+                                }
                             }
                         }
                         geneCodeStringBuilder.setCharAt(i, originalBase);
@@ -252,9 +252,11 @@ public class MutationMatrix implements Serializable {
                             geneCodeStringBuilder.setCharAt(i, base);
                             String newCode = geneCodeStringBuilder.toString();
                             AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                            if (originalAa != mutatedAa) {
-                                result.addMutation(originalAa, mutatedAa);
+                            if (mutatedAminoAcid != null) {
+                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
+                                if (originalAa != mutatedAa) {
+                                    result.addMutation(originalAa, mutatedAa);
+                                }
                             }
                         }
                         geneCodeStringBuilder.setCharAt(i, originalBase);
@@ -326,7 +328,7 @@ public class MutationMatrix implements Serializable {
 
     /**
      * Returns the name of this mutation matrix.
-     * 
+     *
      * @return the name of this mutation matrix
      */
     public String getName() {
@@ -335,7 +337,7 @@ public class MutationMatrix implements Serializable {
 
     /**
      * Sets the name of this mutation matrix.
-     * 
+     *
      * @param name the name of this mutation matrix
      */
     public void setName(String name) {
@@ -344,7 +346,7 @@ public class MutationMatrix implements Serializable {
 
     /**
      * Returns the description of this mutation matrix.
-     * 
+     *
      * @return the description of this mutation matrix
      */
     public String getDescription() {
@@ -353,17 +355,16 @@ public class MutationMatrix implements Serializable {
 
     /**
      * Sets the description of this mutation matrix.
-     * 
+     *
      * @param description the description of this mutation matrix
      */
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    
+
     /**
      * Indicates whether the two MutationMatrix are the same.
-     * 
+     *
      * @param mutationMatrix
      * @return whether the two MutationMatrix are the same
      */

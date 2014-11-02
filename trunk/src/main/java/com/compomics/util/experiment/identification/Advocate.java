@@ -132,7 +132,7 @@ public class Advocate {
     /**
      * The pNovo+ de novo sequencing algorithm.
      */
-    public static final Advocate pNovo = new Advocate(27, "pNovo+", AdvocateType.sequencing_algorithm); // @TODO: add a color for pNovo+
+    public static final Advocate pNovo = new Advocate(27, "pNovo+", AdvocateType.sequencing_algorithm, new Color(253, 192, 134));
     /**
      * Advocate type for mzId files where no software is annotated.
      */

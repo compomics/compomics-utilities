@@ -20,6 +20,10 @@ public class SequenceSegment {
      */
     private int indexOnProtein;
     /**
+     * The number of mutations in that sequence segment
+     */
+    private int nMutations = 0;
+    /**
      * The mass of the segment.
      */
     private double mass;
@@ -64,6 +68,7 @@ public class SequenceSegment {
             this.indexOnProtein = indexOnProtein;
         }
         mass = sequenceSegment.getMass();
+        nMutations = sequenceSegment.getnMutations();
     }
 
     /**
@@ -83,6 +88,7 @@ public class SequenceSegment {
     public void appendNTerminus(SequenceSegment sequenceSegment) {
         aminoAcidSequence.appendNTerm(sequenceSegment.getAminoAcidSequence());
         mass += sequenceSegment.getMass();
+        nMutations += sequenceSegment.getnMutations();
     }
 
     /**
@@ -93,6 +99,7 @@ public class SequenceSegment {
     public void appendCTerminus(SequenceSegment sequenceSegment) {
         aminoAcidSequence.appendCTerm(sequenceSegment.getAminoAcidSequence());
         mass += sequenceSegment.getMass();
+        nMutations += sequenceSegment.getnMutations();
     }
 
     /**
@@ -228,4 +235,22 @@ public class SequenceSegment {
     public HashMap<Integer, ArrayList<ModificationMatch>> getModificationMatches() {
         return aminoAcidSequence.getModificationMatches();
     }
+    
+    /**
+     * Increases the number of mutations
+     */
+    public void increaseMutationCount() {
+        nMutations++;
+    }
+
+    /**
+     * Returns the number of mutations.
+     * 
+     * @return the number of mutations
+     */
+    public int getnMutations() {
+        return nMutations;
+    }
+    
+    
 }

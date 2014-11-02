@@ -52,6 +52,10 @@ public class SequenceMatchingPreferences implements Serializable {
      * Matrix of allowed mutations.
      */
     private MutationMatrix mutationMatrix = null;
+    /**
+     * The maximal number of mutations allowed per peptide
+     */
+    private Integer maxMutationsPerPeptide = null;
 
     /**
      * Constructor for empty preferences.
@@ -182,6 +186,24 @@ public class SequenceMatchingPreferences implements Serializable {
     }
 
     /**
+     * Returns the maximal number of mutations allowed per peptide. Null if not set.
+     * 
+     * @return the maximal number of mutations allowed per peptide
+     */
+    public Integer getMaxMutationsPerPeptide() {
+        return maxMutationsPerPeptide;
+    }
+
+    /**
+     * Sets the maximal number of mutations allowed per peptide.
+     * 
+     * @param maxMutationsPerPeptide the maximal number of mutations allowed per peptide
+     */
+    public void setMaxMutationsPerPeptide(Integer maxMutationsPerPeptide) {
+        this.maxMutationsPerPeptide = maxMutationsPerPeptide;
+    }
+
+    /**
      * Indicates whether another protein inference preferences is the same as
      * this one.
      *
@@ -230,4 +252,6 @@ public class SequenceMatchingPreferences implements Serializable {
         }
         return true;
     }
+    
+    
 }

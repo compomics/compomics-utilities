@@ -147,23 +147,30 @@ public class Node implements Serializable {
         } else {
 
             for (char aaChar : aminoAcid.getSubAminoAcids()) {
-                if (!result.contains(aaChar)) {
-                    result.add(aaChar);
-                }
+                result.add(aaChar);
             }
 
             for (char aaChar : aminoAcid.getCombinations()) {
-                if (!result.contains(aaChar)) {
-                    result.add(aaChar);
-                }
+                result.add(aaChar);
             }
 
             if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
                 for (char aaChar : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
-                    if (!result.contains(aaChar)) {
-                        result.add(aaChar);
+                    result.add(aaChar);
+                }
+            }
+
+            if (sequenceMatchingPreferences.hasMutationMatrix()) {
+                HashSet<Character> mutatedResults = new HashSet<Character>(result);
+                for (Character originalAa : result) {
+                    HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa);
+                    if (mutatedAas != null) {
+                        for (Character mutatedAa : mutatedAas) {
+                            result.add(mutatedAa);
+                        }
                     }
                 }
+                result = mutatedResults;
             }
         }
 

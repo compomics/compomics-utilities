@@ -231,6 +231,7 @@ public class SequenceFactory {
         if (currentProtein == null) {
             throw new IllegalArgumentException("Protein not found: " + accession + ".");
         }
+
         return currentProtein;
     }
 
@@ -1004,22 +1005,23 @@ public class SequenceFactory {
             Header currentHeader = getHeader(accession);
 
             String decoyAccession = getDefaultDecoyAccession(currentProtein.getAccession());
-            Header decoyHeader = Header.parseFromFASTA(currentHeader.toString());
-            decoyHeader.setAccession(decoyAccession);
-            decoyHeader.setDescription(getDefaultDecoyDescription(decoyHeader.getDescription()));
+            String currentRawHeader = currentHeader.getRawHeader();
 
-            String decoySequence = reverseSequence(currentProtein.getSequence());
+            // replace the accession number
+            String escapedString = java.util.regex.Pattern.quote(accession);
+            currentRawHeader = currentRawHeader.replaceAll(escapedString, decoyAccession);
 
-            bufferedWriter.write(currentHeader.toString() + System.getProperty("line.separator"));
+            // add decoy to the description
+            escapedString = java.util.regex.Pattern.quote(currentHeader.getDescription());
+            currentRawHeader = currentRawHeader.replaceAll(escapedString, getDefaultDecoyDescription(currentHeader.getDescription()));
+
+            // write the target protein to the fasta file
+            bufferedWriter.write(currentHeader.getRawHeader() + System.getProperty("line.separator"));
             bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
 
-            // @TODO: this might not be the best way of doing this, but was easier than trying to change the parsing in the Header class...
-            if (decoyHeader.toString().equalsIgnoreCase(currentHeader.toString())) {
-                decoyHeader.setRest(decoyAccession);
-            }
-
-            bufferedWriter.write(decoyHeader.toString() + System.getProperty("line.separator"));
-            bufferedWriter.write(decoySequence + System.getProperty("line.separator"));
+            // write the decoy protein to the fasta file
+            bufferedWriter.write(currentRawHeader + System.getProperty("line.separator"));
+            bufferedWriter.write(reverseSequence(currentProtein.getSequence()) + System.getProperty("line.separator"));
 
             // possible fix for the dbtoolkit uniprot format
 //            Protein currentProtein = getProtein(accession);

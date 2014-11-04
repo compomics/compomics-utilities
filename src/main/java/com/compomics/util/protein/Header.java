@@ -182,6 +182,10 @@ public class Header implements Cloneable, Serializable {
      */
     private String iRest = null;
     /**
+     * This variable holds the raw complete unformatted header.
+     */
+    private String iRawHeader = null;
+    /**
      * This StringBuffer holds all the addenda for this header.
      */
     private StringBuffer iAddenda = null;
@@ -213,8 +217,13 @@ public class Header implements Cloneable, Serializable {
         } else if (aFASTAHeader.trim().equals("")) {
             result = new Header();
             result.iRest = "";
+            result.iRawHeader = "";
         } else {
             result = new Header();
+
+            // save the raw unformatted header
+            result.iRawHeader = aFASTAHeader;
+
             // Remove leading '>', if present.
             if (aFASTAHeader.startsWith(">")) {
                 aFASTAHeader = aFASTAHeader.substring(1);
@@ -566,7 +575,6 @@ public class Header implements Cloneable, Serializable {
                     // try to parse as a generic header with splitters
                     // should look something like this: 
                     // >generic_some_tag|proten_accession|a description for this protein
-
                     result.databaseType = DatabaseType.Generic_Split_Header;
                     result.iID = aFASTAHeader.substring(0, aFASTAHeader.indexOf("|"));
 
@@ -594,7 +602,6 @@ public class Header implements Cloneable, Serializable {
 
                     // try to get the gene name and taxonomy
                     //parseUniProtDescription(result);  // @TOOD: not sure if the header has the right format...
-
                 } else if (aFASTAHeader.matches("^sp\\|[^|]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (September 2008 and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -708,7 +715,7 @@ public class Header implements Cloneable, Serializable {
                             result.iEnd = Integer.parseInt(aFASTAHeader.substring(separation + 1, index2).trim());
                         } catch (NumberFormatException e) {
                             throw new IllegalArgumentException("Incorrect genome to protein sequence header. "
-                                + "Expected something like '>dm345_3L-sense (something) [234353-234359] (something)', but found '" + aFASTAHeader + "'!");
+                                    + "Expected something like '>dm345_3L-sense (something) [234353-234359] (something)', but found '" + aFASTAHeader + "'!");
                         }
                     }
 
@@ -727,7 +734,6 @@ public class Header implements Cloneable, Serializable {
                     int secondPipeLoc = aFASTAHeader.indexOf("|", firstPipeLoc + 1);
                     int thirdPipeLoc = aFASTAHeader.indexOf("|", secondPipeLoc + 1);
                     result.iDescription = aFASTAHeader.substring(secondPipeLoc + 1, thirdPipeLoc).trim();
-                    result.iID = "";
                     // Check for the presence of a location.
                     int index;
                     if ((index = result.iAccession.indexOf(" (")) > 0) {
@@ -802,7 +808,6 @@ public class Header implements Cloneable, Serializable {
                     // >GAFFA|"accession"|"species"/unknown
                     // Example:
                     //  >GAFFA|cgb_GMPQSG401A00X3_1_cgb_pilot_F1_1|unknown
-
                     result.databaseType = DatabaseType.GAFFA;
                     try {
                         result.iAccession = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1, aFASTAHeader.lastIndexOf("|"));
@@ -1060,6 +1065,14 @@ public class Header implements Cloneable, Serializable {
         iRest = aRest;
     }
 
+    public String getRawHeader() {
+        return iRawHeader;
+    }
+
+    public void setRawHeader(String aRawHeader) {
+        iRawHeader = aRawHeader;
+    }
+
     /**
      * Returns a simplified protein description for a UniProt header. For
      * example "GRP78_HUMAN 78 kDa glucose-regulated protein OS=Homo sapiens
@@ -1163,7 +1176,8 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method reports on the entire header.
+     * This method reports on the entire processed(!) header. To get the raw
+     * header use getRawHeader instead.
      *
      * @return String with the full header.
      */
@@ -1172,7 +1186,8 @@ public class Header implements Cloneable, Serializable {
     }
 
     /**
-     * This method reports on the entire header, with the given decoy tag added.
+     * This method reports on the entire processed(!) header, with the given
+     * decoy tag added. To get the raw header use getRawHeader instead.
      *
      * @param decoyTag the decoy tag to add
      * @return String with the full header.

@@ -179,7 +179,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         }
         try {
             Protein protein = sequenceFactory.getProtein(accession);
-            proteinTxt.setText(sequenceFactory.getHeader(accession).toString() + System.getProperty("line.separator") + protein.getSequence());
+            proteinTxt.setText(sequenceFactory.getHeader(accession).getRawHeader() + System.getProperty("line.separator") + protein.getSequence());
             proteinTxt.setCaretPosition(0);
             String decoyFlag = decoyFlagTxt.getText().trim();
             if (!decoyFlag.equals("")) {

@@ -208,7 +208,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * have a charge strictly smaller than the precursor ion charge.
      *
      * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges

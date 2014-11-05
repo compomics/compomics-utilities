@@ -603,7 +603,7 @@ public class FTP {
 
     /**
      * Login user to a host with username <i>user</i> and no password
-     * such as HP server which uses the form "<username>/<password>,user.<group>.
+     * such as HP server which uses the form "&lt;username&gt;/&lt;password&gt;,user.&lt;group&gt;.
      *
      * @param   user    String with the username (and possibly coded information such as password).
      */

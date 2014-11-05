@@ -3,8 +3,8 @@ package com.compomics.util.experiment.identification.matches;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
- * This class models the match between theoretic ptm and identification results.
- * <p/>
+ * This class models the match between theoretic PTM and identification results.
+ *
  * @author Marc Vaudel
  */
 public class ModificationMatch extends ExperimentObject {

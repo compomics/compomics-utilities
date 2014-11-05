@@ -102,7 +102,7 @@ public class DirecTagParameters implements Serializable, IdentificationAlgorithm
     /**
      * If DirecTag determines a spectrum to be multiply charged and this
      * parameter is true, the spectrum will be copied and treated as if it was
-     * all possible charge states from +2 to +<NumChargeStates>. If this
+     * all possible charge states from +2 to +&lt;NumChargeStates&gt;. If this
      * parameter is false, the spectrum will simply be treated as a +2.
      * (http://fenchurch.mc.vanderbilt.edu/bumbershoot/directag)
      */

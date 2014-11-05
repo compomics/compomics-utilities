@@ -21,7 +21,7 @@ public class ReporterIon extends Ion {
      */
     static final long serialVersionUID = 1109011048958734120L;
     /**
-     * Map of the implemented reporter ions. Name -> reporter ion
+     * Map of the implemented reporter ions. Name &gt; reporter ion
      */
     private static HashMap<String, ReporterIon> implementedIons = new HashMap<String, ReporterIon>();
     /**

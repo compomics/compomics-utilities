@@ -73,7 +73,7 @@ public abstract class Identification extends ExperimentObject {
      */
     protected HashMap<String, HashMap<String, UrParameter>> urParameters = new HashMap<String, HashMap<String, UrParameter>>();
     /**
-     * Map of long keys (>100 characters) which will be referenced by their
+     * Map of long keys (&gt;100 characters) which will be referenced by their
      * index for file creation/database storage.
      *
      * @deprecated use the database instead

@@ -23,8 +23,8 @@ import java.util.HashSet;
 public class PtmtableContent {
 
     /**
-     * The content of the table: modification status -> fragment ion type
-     * according to the peptide fragment ion static fields-> aa number -> list
+     * The content of the table: modification status &gt; fragment ion type
+     * according to the peptide fragment ion static fields &gt; aa number &gt; list
      * of intensities.
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>> map;

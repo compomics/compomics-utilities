@@ -36,7 +36,7 @@ public class ObjectsCache {
      */
     private double memoryShare = 0.8;
     /**
-     * Map of the loaded matches. db -> table -> object key -> object.
+     * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
     private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
     /**
@@ -602,8 +602,8 @@ public class ObjectsCache {
     }
 
     /**
-     * Returns the key components in an array: 0 -> DB name 1 -> table name 2 ->
-     * object key.
+     * Returns the key components in an array: 0 &gt; DB name 1 &gt; table name
+     * 2 &gt; object key.
      *
      * @param cacheKey the key used by the cache
      * @return the components of the key

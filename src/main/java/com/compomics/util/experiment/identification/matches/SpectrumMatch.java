@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 /**
  * This class models a spectrum match.
- * <p/>
+ *
  * @author Marc Vaudel
  */
 public class SpectrumMatch extends IdentificationMatch {
@@ -39,12 +39,12 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = new HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>>();
     /**
-     * Map of the identification algorithm assumption: advocate number -> score
-     * -> assumptions.
+     * Map of the identification algorithm assumption: advocate number &gt; score
+     * &gt; assumptions.
      */
     private HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>();
     /**
-     * A tag assumptions map. advocate number -> assumptions.
+     * A tag assumptions map. advocate number &gt; assumptions.
      */
     private HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> tagAssumptionsMap = null;
     /**

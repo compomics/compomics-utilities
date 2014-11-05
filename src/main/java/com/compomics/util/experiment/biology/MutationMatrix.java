@@ -22,11 +22,11 @@ public class MutationMatrix implements Serializable {
      */
     private String description;
     /**
-     * Map of the possible amino acid mutations: original aa -> mutated aa.
+     * Map of the possible amino acid mutations: original aa &gt; mutated aa.
      */
     private final HashMap<Character, HashSet<Character>> mutations = new HashMap<Character, HashSet<Character>>(26);
     /**
-     * Reverse map of the possible amino acid mutations: mutated aa -> original
+     * Reverse map of the possible amino acid mutations: mutated aa &gt; original
      * aa.
      */
     private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<Character, HashSet<Character>>(26);

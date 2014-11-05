@@ -32,7 +32,7 @@ public class TestCaseLM {
 
     /**
      * This method will read a Properties file from the current ClassLoader
-     * and return a Properties instance with the Properties from the file. <br />
+     * and return a Properties instance with the Properties from the file. <br>
      * Note: if this doesn't succeed, it'll throw an IllegalArgumentException with
      * some information.
      *
@@ -60,7 +60,7 @@ public class TestCaseLM {
 
     /**
      * This method finds a file from the current classpath and attempts to reconstruct its
-     * full filename. It should work on UNIX as well as Windows platforms. <br />
+     * full filename. It should work on UNIX as well as Windows platforms. <br>
      * Note that a file that is not found results in an IllegalArgumentException with a
      * message.
      *

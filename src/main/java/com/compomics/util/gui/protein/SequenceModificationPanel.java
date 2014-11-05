@@ -61,7 +61,7 @@ public class SequenceModificationPanel extends JPanel {
      * This boolean holds whether or not the given sequence is a modified
      * sequence or a normal peptide sequence.
      *
-     * Normal: KENNY Modified: NH2-K<Ace>ENNY-COOH
+     * Normal: KENNY Modified: NH2-K&lt;Ace&gt;ENNY-COOH
      */
     private boolean isModifiedSequence;
     /**
@@ -343,7 +343,7 @@ public class SequenceModificationPanel extends JPanel {
      *
      * @param lSequence String with peptide sequence.
      * @param boolModifiedSequence Boolean whether lSequence is a Modified
-     * Sequence "NH2-K<Ace>ENNY-COOH" or a Flat Sequence "KENNY".
+     * Sequence "NH2-K&lt;Ace&gt;KENNY-COOH" or a Flat Sequence "KENNY".
      */
     public void setSequence(String lSequence, boolean boolModifiedSequence) {
         isModifiedSequence = boolModifiedSequence;

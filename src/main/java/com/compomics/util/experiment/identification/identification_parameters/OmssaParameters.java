@@ -125,7 +125,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     private Integer maxFragmentCharge = 2;
     /**
-     * Fraction of peaks below the precursor to estimate charge >1.
+     * Fraction of peaks below the precursor to estimate charge &gt;1.
      */
     private Double fractionOfPeaksForChargeEstimation = 0.95;
     /**
@@ -697,19 +697,19 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the fraction of peaks to be retained for charge >1 estimation.
+     * Returns the fraction of peaks to be retained for charge &gt;1 estimation.
      *
-     * @return the fraction of peaks to be retained for charge >1 estimation
+     * @return the fraction of peaks to be retained for charge &gt;1 estimation
      */
     public Double getFractionOfPeaksForChargeEstimation() {
         return fractionOfPeaksForChargeEstimation;
     }
 
     /**
-     * Sets the fraction of peaks to be retained for charge >1 estimation.
+     * Sets the fraction of peaks to be retained for charge &gt;1 estimation.
      *
      * @param fractionOfPeaksForChargeEstimation the fraction of peaks to be
-     * retained for charge >1 estimation
+     * retained for charge &gt;1 estimation
      */
     public void setFractionOfPeaksForChargeEstimation(Double fractionOfPeaksForChargeEstimation) {
         this.fractionOfPeaksForChargeEstimation = fractionOfPeaksForChargeEstimation;

@@ -470,7 +470,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
     /**
      * Getter for the modifications carried by this sequence in a map: aa number
-     * -> modification matches. 1 is the first amino acid.
+     * &gt; modification matches. 1 is the first amino acid.
      *
      * @return the modifications matches as found by the search engine
      */
@@ -660,16 +660,16 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number -> list of modifications (1 is the
+     * modification sites in a map: aa number &gt; list of modifications (1 is the
      * first AA) (can be null)
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
-     * -> list of modifications (1 is the first AA) (can be null)
+     * &gt; list of modifications (1 is the first AA) (can be null)
      * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number -> list
+     * ambiguously localized variable modifications in a map: aa number &gt; list
      * of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number -> list of modifications (1 is the first AA) (can be null)
+     * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags

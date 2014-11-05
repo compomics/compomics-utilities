@@ -5,7 +5,6 @@
  */
 
 package com.compomics.util.interfaces;
-import org.apache.log4j.Logger;
 
 /*
  * CVS information:
@@ -15,8 +14,8 @@ import org.apache.log4j.Logger;
  */
 
 /**
- * This interface defines the default behaviour of any kind of 
- * sequence with a certain mass - be it DNA, portein or something 
+ * This interface defines the default behavior of any kind of 
+ * sequence with a certain mass - be it DNA, protein or something 
  * else.
  *
  * @author	Lennart Martens
@@ -24,7 +23,7 @@ import org.apache.log4j.Logger;
 public interface Sequence {
 
     /**
-     * This method will set the sequence. <br />
+     * This method will set the sequence. <br>
      * Note that most implementations will also allow you
      * to set this via the constructor.
      *

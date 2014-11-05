@@ -326,7 +326,7 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the amino acids surrounding a peptide in the sequence of the
-     * given protein in a map: peptide start index -> (amino acids before, amino
+     * given protein in a map: peptide start index &gt; (amino acids before, amino
      * acids after).
      *
      * @param peptide the sequence of the peptide of interest

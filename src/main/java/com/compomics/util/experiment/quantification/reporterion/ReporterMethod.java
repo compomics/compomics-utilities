@@ -10,12 +10,12 @@ import java.util.Set;
 /**
  * This class contains information relative to a reporter quantification method.
  *
- * @author Marc Vaudel Date: Sep 29, 2010 Time: 5:52:30 PM
+ * @author Marc Vaudel
  */
 public class ReporterMethod {
 
     /**
-     * Map of the reagents. Reagent name -> reagent
+     * Map of the reagents. Reagent name &gt; reagent
      */
     private HashMap<String, Reagent> reagents;
     /**

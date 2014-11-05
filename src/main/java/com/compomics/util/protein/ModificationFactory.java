@@ -25,7 +25,7 @@ import java.util.*;
  * $Date: 2007/07/06 09:41:53 $
  */
 /**
- * This class can be used to generate a Modification instance from a code or title. <br />
+ * This class can be used to generate a Modification instance from a code or title. <br>
  * Modification information is loaded from files or database, as specified in the two available
  * constructors for this Factory.
  *

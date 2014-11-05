@@ -29,17 +29,17 @@ public class GOFactory {
      */
     public final static String separator = "\t";
     /**
-     * Map of all the indexes where a protein can be found: accession ->
+     * Map of all the indexes where a protein can be found: accession &gt;
      * indexes.
      */
     private HashMap<String, ArrayList<Long>> proteinIndexes = new HashMap<String, ArrayList<Long>>();
     /**
      * Map of all the indexes where a GO accession number can be found: GO
-     * accession number -> indexes.
+     * accession number &gt; indexes.
      */
     private HashMap<String, ArrayList<Long>> termIndexes = new HashMap<String, ArrayList<Long>>();
     /**
-     * Map of all the indexes where a GO term can be found: GO term name ->
+     * Map of all the indexes where a GO term can be found: GO term name &gt;
      * indexes.
      */
     private HashMap<String, ArrayList<Long>> termNameIndexes = new HashMap<String, ArrayList<Long>>();

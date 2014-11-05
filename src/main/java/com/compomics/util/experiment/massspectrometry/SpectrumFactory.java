@@ -56,16 +56,16 @@ public class SpectrumFactory {
      */
     private LinkedBlockingDeque<String> loadedPrecursors = new LinkedBlockingDeque<String>();
     /**
-     * Map of the random access files of the loaded mgf files (filename ->
+     * Map of the random access files of the loaded mgf files (filename &gt;
      * random access file).
      */
     private HashMap<String, BufferedRandomAccessFile> mgfFilesMap = new HashMap<String, BufferedRandomAccessFile>();
     /**
-     * Map of the mgf indexes (fileName -> mgf index).
+     * Map of the mgf indexes (fileName &gt; mgf index).
      */
     private HashMap<String, MgfIndex> mgfIndexesMap = new HashMap<String, MgfIndex>();
     /**
-     * Map of the mzML unmarshallers (fileName -> unmarshaller).
+     * Map of the mzML unmarshallers (fileName &gt; unmarshaller).
      */
     private HashMap<String, MzMLUnmarshaller> mzMLUnmarshallers = new HashMap<String, MzMLUnmarshaller>();
     /**

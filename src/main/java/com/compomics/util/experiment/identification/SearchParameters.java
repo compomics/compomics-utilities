@@ -840,7 +840,7 @@ public class SearchParameters implements Serializable {
 
     /**
      * Returns the algorithm specific parameters in a map: algorithm as indexed
-     * in the Advocate class -> parameters. null if not set.
+     * in the Advocate class &gt; parameters. null if not set.
      *
      * @return the algorithm specific parameters in a map
      */

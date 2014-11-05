@@ -21,7 +21,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     /**
      * The dynamic range for spectrum filtering. When the highest peak is given
      * the dynamic range value peaks smaller than one are ignored. e.g. for 100
-     * peaks with an intensity <1% of the highest peak are ignored.
+     * peaks with an intensity &lt;1% of the highest peak are ignored.
      */
     private Double dynamicRange = 100.0;
     /**

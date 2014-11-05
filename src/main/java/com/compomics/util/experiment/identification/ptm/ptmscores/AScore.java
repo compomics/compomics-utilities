@@ -361,7 +361,7 @@ public class AScore {
     }
 
     /**
-     * Returns the A-score for two candidate PTM sites in a map: bestSite ->
+     * Returns the A-score for two candidate PTM sites in a map: bestSite &gt;
      * score. If the sites score equally both will be returned in the map.
      *
      * @param peptide the peptide of interest
@@ -508,7 +508,7 @@ public class AScore {
 
     /**
      * Estimates the peptide score for every modification localization and
-     * returns a map score -> localization.
+     * returns a map score &gt; localization.
      *
      * @param positionToScoreMap the position to score map
      *
@@ -559,7 +559,7 @@ public class AScore {
     }
 
     /**
-     * Returns a map PTM localization -> score.
+     * Returns a map PTM localization &gt; score.
      *
      * @param peptide the peptide of interest
      * @param noModPeptide the peptide without the variable modification of
@@ -573,11 +573,11 @@ public class AScore {
      * @param spectrumAnnotator the spectrum annotator which should be used to
      * annotate the spectrum
      * @param spectrum the spectrum of interest
-     * @param spectrumMap the map of the extracted spectra: depth -> extracted
+     * @param spectrumMap the map of the extracted spectra: depth &gt; extracted
      * spectrum
      * @param possibleSites the possible modification sites
      *
-     * @return a map PTM localization -> score
+     * @return a map PTM localization &gt; score
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
             MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap,

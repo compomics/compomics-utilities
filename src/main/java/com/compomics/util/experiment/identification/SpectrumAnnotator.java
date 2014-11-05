@@ -60,11 +60,11 @@ public abstract class SpectrumAnnotator {
      */
     private ArrayList<Double> mz;
     /**
-     * A map of all peaks mz -> peak.
+     * A map of all peaks mz &gt; peak.
      */
     private HashMap<Double, Peak> peakMap;
     /**
-     * The spectrum annotation as a map: theoretic fragment key -> ionmatch.
+     * The spectrum annotation as a map: theoretic fragment key &gt; ionmatch.
      */
     protected HashMap<String, IonMatch> spectrumAnnotation = new HashMap<String, IonMatch>();
     /**
@@ -406,7 +406,7 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrum the spectrum of interest
      * @param iontypes The expected fragment ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
@@ -618,7 +618,7 @@ public abstract class SpectrumAnnotator {
      * @param charges The charges of the fragment to search for
      * @param precursorCharge The precursor charge as deduced by the search
      * engine
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * maximal position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param peak The peak to match
@@ -669,7 +669,7 @@ public abstract class SpectrumAnnotator {
      * extending class.
      *
      * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges

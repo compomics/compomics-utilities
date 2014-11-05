@@ -21,8 +21,8 @@ public interface IdfileReader {
 
     /**
      * Returns the names and versions of the software used to generate the
-     * identification file in a map, e.g., Mascot -> (2.2 and 2.3) and X!Tandem
-     * -> Sledgehammer (2013.09.01.1). Null if not known.
+     * identification file in a map, e.g., Mascot &gt; (2.2 and 2.3) and X!Tandem
+     * &gt; Sledgehammer (2013.09.01.1). Null if not known.
      *
      * @return the version of the software used to generate the identification
      * file, null if not known

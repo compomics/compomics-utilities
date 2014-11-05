@@ -24,7 +24,7 @@ import java.io.*;
 
 /**
  * This class implements a 'directory listener' to listen for new files and
- * ftp them to a remote FTP server. <<br />
+ * ftp them to a remote FTP server. <br>
  * This class uses the implementation found on the web for an FTP client.
  *
  * @author Lennart Martens

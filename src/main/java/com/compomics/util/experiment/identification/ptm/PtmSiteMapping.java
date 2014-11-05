@@ -18,8 +18,8 @@ public class PtmSiteMapping {
      * excluding outliers.
      *
      * Example: serie1 = {0, 1, 13, 25, 15, 6, 99} serie2 = {100, 2, 12, 14, 18,
-     * 30, 115, 1000} result = {0->null, 1->2, 6->null, 13->12, 15->14, 25->18,
-     * 99->100}
+     * 30, 115, 1000} result = {0&gt;null, 1&gt;2, 6&gt;null, 13&gt;12, 15&gt;14, 25&gt;18,
+     * 99&gt;100}
      *
      * @param serie1 first list of integer
      * @param serie2 second list of integer
@@ -80,8 +80,8 @@ public class PtmSiteMapping {
      * Aligns two series of integer, minimizing the distance between them.
      *
      * Example: serie1 = {0, 1, 13, 25, 15, 6, 99} serie2 = {100, 2, 12, 14, 18,
-     * 30, 115, 1000} result = {0-> 115, 1->2, 6-> 30, 13->12, 15->14, 25->18,
-     * 99->100}
+     * 30, 115, 1000} result = {0&gt; 115, 1&gt;2, 6&gt;30, 13&gt;12, 15&gt;14, 25&gt;18,
+     * 99&gt;100}
      *
      * @param serie1 first list of integer
      * @param serie2 second list of integer
@@ -131,13 +131,13 @@ public class PtmSiteMapping {
      *
      * Example:
      *
-     * input = { 0 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 1 -> {12}, 2 -> {3,
-     * 12, 14}, 8 -> {12}, 13 -> {3, 12, 14}, 25 -> {100, 2, 12, 14, 18, 30,
-     * 115, 1000}, 15 -> {100, 2, 12, 14, 18, 30, 115, 1000}, 6 -> {100, 2, 12,
-     * 14, 18, 30, 115, 1000}, 99 -> {3} }
+     * input = { 0 &gt; {100, 2, 12, 14, 18, 30, 115, 1000}, 1 &gt; {12}, 2 &gt; {3,
+     * 12, 14}, 8 &gt; {12}, 13 &gt; {3, 12, 14}, 25 &gt; {100, 2, 12, 14, 18, 30,
+     * 115, 1000}, 15 &gt; {100, 2, 12, 14, 18, 30, 115, 1000}, 6 &gt; {100, 2, 12,
+     * 14, 18, 30, 115, 1000}, 99 &gt; {3} }
      *
-     * result = {1 -> null, 8 -> 12, 99 -> 3, 13 -> 14, 2 -> null, 0 -> 2, 6 ->
-     * 100, 15 -> 18, 25 -> 30}
+     * result = {1 &gt; null, 8 &gt; 12, 99 &gt; 3, 13 &gt; 14, 2 &gt; null, 0 &gt; 2, 6 &gt;
+     * 100, 15 &gt; 18, 25 &gt; 30}
      *
      * @param input the input map
      * @return a map of the doublets created.

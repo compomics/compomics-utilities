@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class MgfIndex extends ExperimentObject {
 
     /**
-     * The map of all indexes: spectrum title -> index in the file.
+     * The map of all indexes: spectrum title &gt; index in the file.
      */
     private HashMap<String, Long> indexMap;
     /**
@@ -77,9 +77,9 @@ public class MgfIndex extends ExperimentObject {
      * Constructor.
      *
      * @param spectrumTitles an ordered list of all spectrum titles
-     * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param indexMap map of all indexes: spectrum title &gt; index in the file
      * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
-     * -> spectrum index in the file
+     * &gt; spectrum index in the file
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
@@ -114,9 +114,9 @@ public class MgfIndex extends ExperimentObject {
      * @param spectrumTitles an ordered list of all spectrum titles
      * @param duplicatedSpectrumTitles a map of duplicated spectrum titles, and
      * how often each title is duplicated
-     * @param indexMap map of all indexes: spectrum title -> index in the file
+     * @param indexMap map of all indexes: spectrum title &gt; index in the file
      * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
-     * -> spectrum index in the file
+     * &gt; spectrum index in the file
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome

@@ -78,21 +78,21 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     private HashMap<String, String> tagsParameters = new HashMap<String, String>();
     /**
-     * Returns the content of the columns for a spectrum line. Name -> index in
+     * Returns the content of the columns for a spectrum line. Name &gt; index in
      * the column.
      */
     private HashMap<String, Integer> spectrumLineContent = new HashMap<String, Integer>();
     /**
-     * Returns the content of the columns for a tag line. Name -> index in the
+     * Returns the content of the columns for a tag line. Name &gt; index in the
      * column.
      */
     private HashMap<String, Integer> tagLineContent = new HashMap<String, Integer>();
     /**
-     * The indexes at which are the spectra. Spectrum ID -> index.
+     * The indexes at which are the spectra. Spectrum ID &gt; index.
      */
     private HashMap<Integer, Long> spectrumIndexes = new HashMap<Integer, Long>();
     /**
-     * The indexes at which are the tags. Spectrum ID -> indexes.
+     * The indexes at which are the tags. Spectrum ID &gt; indexes.
      */
     private HashMap<Integer, ArrayList<Long>> tagIndexes = new HashMap<Integer, ArrayList<Long>>();
     /**

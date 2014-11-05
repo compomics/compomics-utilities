@@ -1239,16 +1239,16 @@ public class Peptide extends ExperimentObject {
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number -> list of modifications (1 is the
+     * modification sites in a map: aa number &gt; list of modifications (1 is the
      * first AA) (can be null)
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
-     * -> list of modifications (1 is the first AA) (can be null)
+     * &gt; list of modifications (1 is the first AA) (can be null)
      * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number -> list
+     * ambiguously localized variable modifications in a map: aa number &gt; list
      * of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number -> list of modifications (1 is the first AA) (can be null)
+     * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
@@ -1330,7 +1330,7 @@ public class Peptide extends ExperimentObject {
 
     /**
      * Returns an indexed map of all fixed modifications amino acid, (1 is the
-     * first) -> list of modification names.
+     * first) &gt; list of modification names.
      *
      * @return an indexed map of all fixed modifications amino acid
      */

@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * This class models a protein match.
- * <p/>
+ *
  * @author Marc Vaudel
  */
 public class ProteinMatch extends IdentificationMatch {
@@ -128,6 +128,7 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Getter for the peptide keys.
+     *
      * @deprecated renamed getPeptideMatchesKeys()
      *
      * @return subordinated peptide keys
@@ -147,8 +148,9 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Add a subordinated peptide key.
+     *
      * @deprecated renamed addPeptideMatchKey
-     * 
+     *
      * @param peptideMatchKey a peptide key
      */
     public void addPeptideMatch(String peptideMatchKey) {
@@ -165,11 +167,11 @@ public class ProteinMatch extends IdentificationMatch {
             peptideMatches.add(peptideMatchKey);
         }
     }
-    
+
     /**
      * Sets the peptide keys for this protein match.
-     * 
-     * @param peptideMatchKeys 
+     *
+     * @param peptideMatchKeys
      */
     public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
         peptideMatches = peptideMatchKeys;
@@ -200,8 +202,9 @@ public class ProteinMatch extends IdentificationMatch {
 
     /**
      * Convenience method indicating whether a match is decoy based on the match
-     * key. A match is considered decoy if at least one of its accessions is decoy.
-     * 
+     * key. A match is considered decoy if at least one of its accessions is
+     * decoy.
+     *
      * Note: the sequence database should be loaded in the sequence factory
      *
      * @param key the match key
@@ -404,7 +407,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return true if the main accession generates an enzymatic peptide
      */
-    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences) 
+    public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         for (String peptideKey : peptideMatches) {

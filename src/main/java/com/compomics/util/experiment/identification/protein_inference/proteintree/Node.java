@@ -71,7 +71,7 @@ public class Node implements Serializable {
 
     /**
      * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
+     * sequence &gt; protein accession &gt; index in the protein. An empty map if
      * not found.
      *
      * @param query the given amino acid sequence to query the tree
@@ -375,8 +375,8 @@ public class Node implements Serializable {
 
     /**
      * Matches a peptide sequence in a protein sequence based on a seedlist.
-     * Returns a map found sequence -> indexes. Example: sequence TESTEIST
-     * seeds: 0, 3, 7 peptideSequence: TEI result: TEI -> {3}
+     * Returns a map found sequence &gt; indexes. Example: sequence TESTEIST
+     * seeds: 0, 3, 7 peptideSequence: TEI result: TEI &gt; {3}
      *
      * @param protein the protein to inspect
      * @param seeds the indexes where to start looking for
@@ -412,7 +412,7 @@ public class Node implements Serializable {
     }
 
     /**
-     * Returns a map of the amino acids found on the sequence: aa -> indexes. If
+     * Returns a map of the amino acids found on the sequence: aa &gt; indexes. If
      * the termination of the protein is reached the terminal character is used
      * (see static field)
      *

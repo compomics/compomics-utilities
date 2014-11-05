@@ -37,19 +37,19 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     private int length = -1;
     /**
      * The list of targeted amino acids at a given index represented by their
-     * single letter code. For trypsin: 0 -> {R, K} 1 -> {all but P}
+     * single letter code. For trypsin: 0 &gt; {R, K} 1 &gt; {all but P}
      */
     private HashMap<Integer, ArrayList<Character>> residueTargeted = null;
     /**
-     * The list of targeted amino acids at a given index. For trypsin: 0 -> {R,
-     * K} 1 -> {all but P}
+     * The list of targeted amino acids at a given index. For trypsin: 0 &gt; {R,
+     * K} 1 &gt; {all but P}
      *
      * @deprecated use residueTargeted instead
      */
     private HashMap<Integer, ArrayList<AminoAcid>> aaTargeted = null;
     /**
-     * The list of excluded amino acids at a given index For trypsin: 0 -> {} 1
-     * -> {P}
+     * The list of excluded amino acids at a given index For trypsin: 0 &gt; {} 1
+     * &gt; {P}
      *
      * @deprecated target all but this one instead
      */
@@ -1152,8 +1152,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Simple merger for two patterns.
      *
-     * Example: this: target{0->S} otherPattern: target{0->T} result (this):
-     * target{0->S|T}
+     * Example: this: target{0&gt;S} otherPattern: target{0&gt;T} result (this):
+     * target{0&gt;S|T}
      *
      * @param otherPattern another pattern to be merged with this
      */
@@ -1300,7 +1300,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
     /**
      * Getter for the modifications carried by this sequence in a map: aa number
-     * -> modification matches. 1 is the first amino acid.
+     * &gt; modification matches. 1 is the first amino acid.
      *
      * @return the modifications matches as found by the search engine
      */
@@ -1491,12 +1491,12 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @param modificationProfile the modification profile of the search
      * @param aminoAcidPattern the amino acid pattern to annotate
      * @param mainModificationSites the main variable modification sites in a
-     * map: aa number -> list of modifications (1 is the first AA) (can be null)
+     * map: aa number &gt; list of modifications (1 is the first AA) (can be null)
      * @param secondaryModificationSites the secondary variable modification
-     * sites in a map: aa number -> list of modifications (1 is the first AA)
+     * sites in a map: aa number &gt; list of modifications (1 is the first AA)
      * (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number -> list of modifications (1 is the first AA) (can be null)
+     * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags

@@ -108,7 +108,7 @@ public class NucleotideSequenceImpl implements Sequence {
     }
 
     /**
-     * This method will set the sequence. <br />
+     * This method will set the sequence. <br>
      * Note that most implementations will also allow you
      * to set this via the constructor.
      *

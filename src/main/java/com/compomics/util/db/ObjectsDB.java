@@ -272,7 +272,7 @@ public class ObjectsDB implements Serializable {
      * Inserts a set of objects in the given table.
      *
      * @param tableName the name of the table
-     * @param objects map of the objects (object key -> object)
+     * @param objects map of the objects (object key &gt; object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
      *
@@ -287,7 +287,7 @@ public class ObjectsDB implements Serializable {
      * Inserts a set of objects in the given table.
      *
      * @param tableName the name of the table
-     * @param objects map of the objects (object key -> object)
+     * @param objects map of the objects (object key &gt; object)
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
      * @param allNewObjects boolean indicating whether all objects are new

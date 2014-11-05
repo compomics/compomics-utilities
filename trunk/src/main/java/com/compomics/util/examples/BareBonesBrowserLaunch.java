@@ -23,7 +23,7 @@ public class BareBonesBrowserLaunch {
     /**
      * Tries to opens the given URL in the default browser.
      *
-     * @param url
+     * @param url the URL to open
      */
     public static void openURL(String url) {
         String osName = System.getProperty("os.name");

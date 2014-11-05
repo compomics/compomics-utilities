@@ -116,7 +116,7 @@ public class TestNucleotideSequenceImpl extends TestCase {
         Assert.assertEquals("XXITEREGI", aas[0].getSequence());
         Assert.assertEquals("XTLQRERGY", aas[1].getSequence());
 
-        Assert.assertEquals(1054.043115, aas[0].getMass(),0.0);
+        Assert.assertEquals(1054.043115, aas[0].getMass(), 1e-10);
     }
 
     /**

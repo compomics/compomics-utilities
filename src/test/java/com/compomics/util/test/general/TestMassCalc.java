@@ -82,9 +82,9 @@ public class TestMassCalc extends TestCase {
      */
     public void testSettingElementList() {
         try {
-            Assert.assertEquals(74.03678, new MassCalc(MassCalc.MONOELEMENTS).calculateMass("CH3CH2COOH"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(1042.508345, new MassCalc(MassCalc.MONOAA).calculateMass("YSFVATAER"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(5523.659513, new MassCalc(MassCalc.MONONUCLEOTIDES).calculateMass("AGCTAGCTAGCTAGCTAG"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(74.03678, new MassCalc(MassCalc.MONOELEMENTS).calculateMass("CH3CH2COOH"), 1e-10);
+            Assert.assertEquals(1042.508345, new MassCalc(MassCalc.MONOAA).calculateMass("YSFVATAER"), 1e-10);
+            Assert.assertEquals(5523.659513, new MassCalc(MassCalc.MONONUCLEOTIDES).calculateMass("AGCTAGCTAGCTAGCTAG"), 1e-10);
         } catch (UnknownElementMassException uem) {
             logger.error(uem.getMessage(), uem);
             fail(uem.getMessage());
@@ -97,13 +97,13 @@ public class TestMassCalc extends TestCase {
     public void testSelfDefinedFileList() {
         try {
             MassCalc mc = new MassCalc("testSelfDefinedList.properties");
-            Assert.assertEquals(7.0, mc.calculateMass("RWX"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(5.0, mc.calculateMass("RX"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(6.0, mc.calculateMass("RW"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(4.0, mc.calculateMass("R"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(2.0, mc.calculateMass("W"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(1.0, mc.calculateMass("X"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(3.0, mc.calculateMass("WX"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(7.0, mc.calculateMass("RWX"), 1e-10);
+            Assert.assertEquals(5.0, mc.calculateMass("RX"), 1e-10);
+            Assert.assertEquals(6.0, mc.calculateMass("RW"), 1e-10);
+            Assert.assertEquals(4.0, mc.calculateMass("R"), 1e-10);
+            Assert.assertEquals(2.0, mc.calculateMass("W"), 1e-10);
+            Assert.assertEquals(1.0, mc.calculateMass("X"), 1e-10);
+            Assert.assertEquals(3.0, mc.calculateMass("WX"), 1e-10);
         } catch (UnknownElementMassException uem) {
             logger.error(uem.getMessage(), uem);
             fail(uem.getMessage());
@@ -120,13 +120,13 @@ public class TestMassCalc extends TestCase {
             hm.put("W", new Double(2));
             hm.put("X", new Double(1));
             MassCalc mc = new MassCalc(hm);
-            Assert.assertEquals(7.0, mc.calculateMass("RWX"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(5.0, mc.calculateMass("RX"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(6.0, mc.calculateMass("RW"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(4.0, mc.calculateMass("R"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(2.0, mc.calculateMass("W"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(1.0, mc.calculateMass("X"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(3.0, mc.calculateMass("WX"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(7.0, mc.calculateMass("RWX"), 1e-10);
+            Assert.assertEquals(5.0, mc.calculateMass("RX"), 1e-10);
+            Assert.assertEquals(6.0, mc.calculateMass("RW"), 1e-10);
+            Assert.assertEquals(4.0, mc.calculateMass("R"), 1e-10);
+            Assert.assertEquals(2.0, mc.calculateMass("W"), 1e-10);
+            Assert.assertEquals(1.0, mc.calculateMass("X"), 1e-10);
+            Assert.assertEquals(3.0, mc.calculateMass("WX"), 1e-10);
         } catch (UnknownElementMassException uem) {
             logger.error(uem.getMessage(), uem);
             fail(uem.getMessage());
@@ -152,9 +152,9 @@ public class TestMassCalc extends TestCase {
             }
 
             MassCalc mc = new MassCalc(MassCalc.MONOELEMENTS, hm);
-            Assert.assertEquals(74.03678, mc.calculateMass("CH3CH2COOH"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(59.96673, mc.calculateMass("SiO2"), Double.MIN_VALUE * 2);
-            Assert.assertEquals(95.941811, mc.calculateMass("CH3Br"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(74.03678, mc.calculateMass("CH3CH2COOH"), 1e-10);
+            Assert.assertEquals(59.96673, mc.calculateMass("SiO2"), 1e-10);
+            Assert.assertEquals(95.941811, mc.calculateMass("CH3Br"), 1e-10);
 
             // Now for the AA list.
             hm = new HashMap();
@@ -183,9 +183,9 @@ public class TestMassCalc extends TestCase {
         // Regular one.
         try {
             MassCalc mc = new MassCalc(MassCalc.MONOAA);
-            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), 1e-10);
             // This one must fail, but it must fail on the element 'M<Ox>'!
-            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVM<Ox>TAER"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVM<Ox>TAER"), 1e-10);
             // If we get here: panic!
             fail("'calculateMass' method should've failed on M<Ox> but apparently didn't!\n");
         } catch (UnknownElementMassException uem) {
@@ -196,9 +196,9 @@ public class TestMassCalc extends TestCase {
         // One at the start.
         try {
             MassCalc mc = new MassCalc(MassCalc.MONOAA);
-            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), 1e-10);
             // This one must fail, but it must fail on the element 'M<Ox>'!
-            Assert.assertEquals(1102.511725, mc.calculateMass("M<Ox>YSFVTAER"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("M<Ox>YSFVTAER"), 1e-10);
             // If we get here: panic!
             fail("'calculateMass' method should've failed on M<Ox> but apparently didn't!\n");
         } catch (UnknownElementMassException uem) {
@@ -209,9 +209,9 @@ public class TestMassCalc extends TestCase {
         // One at the end.
         try {
             MassCalc mc = new MassCalc(MassCalc.MONOAA);
-            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVMTAER"), 1e-10);
             // This one must fail, but it must fail on the element 'M<Ox>'!
-            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVTAERM<Ox>"), Double.MIN_VALUE * 2);
+            Assert.assertEquals(1102.511725, mc.calculateMass("YSFVTAERM<Ox>"), 1e-10);
             // If we get here: panic!
             fail("'calculateMass' method should've failed on M<Ox> but apparently didn't!\n");
         } catch (UnknownElementMassException uem) {

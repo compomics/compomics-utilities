@@ -26,7 +26,7 @@ public class MirroredSpectraTestDialog extends javax.swing.JDialog {
             File spectrumFileA = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumA.pkl");
             PklFile pklFileA = new PklFile(spectrumFileA);
             
-            File spectrumFileB = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumA.pkl");
+            File spectrumFileB = new File(getJarFilePath() + "/exampleFiles/exampleSpectrumB.pkl");
             PklFile pklFileB = new PklFile(spectrumFileB);
             
             SpectrumPanel spectrumPanel = new SpectrumPanel(

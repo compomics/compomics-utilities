@@ -946,8 +946,7 @@ public abstract class GraphicsPanel extends JPanel {
                 // This HashMap will contain the indices of the points that already carry an annotation
                 // as keys (datasetIndex_peakIndex), and the number of annotations as values.
                 HashMap<String, Integer> annotatedPeaks = new HashMap<String, Integer>();
-                for (int i = 0; i < iAnnotations.size(); i++) {
-                    Object o = iAnnotations.get(i);
+                for (Object o : iAnnotations) {
                     if (o instanceof SpectrumAnnotation) {
                         SpectrumAnnotation sa = (SpectrumAnnotation) o;
                         this.annotate(sa, g, annotatedPeaks);
@@ -1183,9 +1182,9 @@ public abstract class GraphicsPanel extends JPanel {
 
         double maxValue = Double.MIN_VALUE;
 
-        for (int i = 0; i < iXAxisData.size(); i++) {
-            if (iXAxisData.get(i).length > 0 && iXAxisData.get(i)[iXAxisData.get(i).length - 1] > maxValue) {
-                maxValue = iXAxisData.get(i)[iXAxisData.get(i).length - 1];
+        for (double[] iXAxisData1 : iXAxisData) {
+            if (iXAxisData1.length > 0 && iXAxisData1[iXAxisData1.length - 1] > maxValue) {
+                maxValue = iXAxisData1[iXAxisData1.length - 1];
             }
         }
 
@@ -1202,9 +1201,9 @@ public abstract class GraphicsPanel extends JPanel {
 
         double minValue = Double.MAX_VALUE;
 
-        for (int i = 0; i < iXAxisData.size(); i++) {
-            if (iXAxisData.get(i)[0] < minValue) {
-                minValue = iXAxisData.get(i)[0];
+        for (double[] iXAxisData1 : iXAxisData) {
+            if (iXAxisData1[0] < minValue) {
+                minValue = iXAxisData1[0];
             }
         }
 
@@ -1730,14 +1729,14 @@ public abstract class GraphicsPanel extends JPanel {
             count++;
         }
 
+        dataSetCounterMirroredSpectra++;
+
         // rescale the added dataset
         if (iXAxisStartAtZero) {
             this.rescale(0.0, getMaxXAxisValue());
         } else {
             this.rescale(getMinXAxisValue(), getMaxXAxisValue());
         }
-
-        dataSetCounterMirroredSpectra++;
     }
 
     /**
@@ -2447,9 +2446,7 @@ public abstract class GraphicsPanel extends JPanel {
         boolean appended = false;
 
         if (iKnownMassDeltas != null) {
-            Iterator iter = iKnownMassDeltas.keySet().iterator();
-            while (iter.hasNext()) {
-                Double mass = (Double) iter.next();
+            for (Double mass : iKnownMassDeltas.keySet()) {
                 if (Math.abs(mass.doubleValue() - aDelta) < aWindow) {
                     if (appended) {
                         result.append(" ");
@@ -2470,11 +2467,7 @@ public abstract class GraphicsPanel extends JPanel {
                 while (iter1.hasNext()) {
                     Double mass1 = (Double) iter1.next();
 
-                    Iterator iter2 = iKnownMassDeltas.keySet().iterator();
-
-                    while (iter2.hasNext()) {
-
-                        Double mass2 = (Double) iter2.next();
+                    for (Double mass2 : iKnownMassDeltas.keySet()) {
                         Double mass = mass1 + mass2;
 
                         if (Math.abs(mass.doubleValue() - aDelta) < aWindow) {
@@ -2487,7 +2480,7 @@ public abstract class GraphicsPanel extends JPanel {
                                     appended = true;
                                 }
 
-                                result.append(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
+                                result.append(iKnownMassDeltas.get(mass1)).append("").append(iKnownMassDeltas.get(mass2));
                                 addedMassDeltas.add(iKnownMassDeltas.get(mass1) + "" + iKnownMassDeltas.get(mass2));
                             }
                         }

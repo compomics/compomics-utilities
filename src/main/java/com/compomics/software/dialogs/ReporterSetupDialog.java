@@ -278,7 +278,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
             if (!selectedFile.getName().endsWith(".jar")) {
                 JOptionPane.showMessageDialog(this, "The selected file is not a jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
-            } else if (selectedFile.getName().indexOf("Reporter") == -1) {
+            } else if (!selectedFile.getName().contains("Reporter")) {
                 JOptionPane.showMessageDialog(this, "The selected file is not a Reporter jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
             } else {
@@ -301,7 +301,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
         try {
             utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An error occured when reading the user preferences.", "File Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occurred when reading the user preferences.", "File Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 

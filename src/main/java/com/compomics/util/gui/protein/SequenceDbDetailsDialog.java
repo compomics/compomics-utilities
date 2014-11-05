@@ -193,7 +193,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "An error occured while looking for protein " + accession + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occurred while looking for protein " + accession + ".", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -246,7 +246,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 lastSelectedFolder = file.getParent();
                 utilitiesUserPreferences.setDbFolder(file.getParentFile());
 
-                if (file.getName().indexOf(" ") != -1) {
+                if (file.getName().contains(" ")) {
                     file = renameFastaFileName(file);
                     if (file == null) {
                         return false;

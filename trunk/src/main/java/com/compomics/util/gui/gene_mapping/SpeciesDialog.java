@@ -164,8 +164,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
                 speciesList.add(SELECT_SPECIES_TAG);
 
-                for (int i = 0; i < currentSpeciesList.size(); i++) {
-                    String currentSpecies = currentSpeciesList.get(i);
+                for (String currentSpecies : currentSpeciesList) {
                     String tempEnsemblVersion = genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, currentSpecies);
                     if (tempEnsemblVersion == null) {
                         tempEnsemblVersion = "N/A";
@@ -595,7 +594,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
             geneFactory.closeFiles();
         } catch (IOException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "An error occured when clearing the mappings.", "File Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "An error occurred when clearing the mappings.", "File Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -648,7 +647,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
                     e.printStackTrace();
-                    JOptionPane.showMessageDialog(finalRef, "An error occured when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(finalRef, "An error occurred when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
                 }
 
                 // an error occured, clear the possible half downloaded data

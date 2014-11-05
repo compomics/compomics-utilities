@@ -690,7 +690,7 @@ public class GenePreferences implements Serializable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new IOException("An error occured when loading the species and GO domain file.\nGO Analysis Canceled.");
+            throw new IOException("An error occurred when loading the species and GO domain file.\nGO Analysis Canceled.");
         }
     }
 
@@ -1046,9 +1046,9 @@ public class GenePreferences implements Serializable {
 
         } catch (IOException ex) {
             if (commandLine) {
-                System.out.println("An error occured when trying to update the mappings.");
+                System.out.println("An error occurred when trying to update the mappings.");
             } else {
-                JOptionPane.showMessageDialog(null, "An error occured when trying to update the mappings.", "File Error", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An error occurred when trying to update the mappings.", "File Error", JOptionPane.INFORMATION_MESSAGE);
             }
             ex.printStackTrace();
         }
@@ -1145,9 +1145,9 @@ public class GenePreferences implements Serializable {
             waitingHandler.setRunFinished();
 
             if (commandLine) {
-                System.out.println("An error occured when downloading the mappings.");
+                System.out.println("An error occurred when downloading the mappings.");
             } else {
-                JOptionPane.showMessageDialog(null, "An error occured when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An error occurred when downloading the mappings.", "Download Error", JOptionPane.ERROR_MESSAGE);
             }
 
             e.printStackTrace();
@@ -1173,7 +1173,7 @@ public class GenePreferences implements Serializable {
             geneFactory.closeFiles();
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.out.println("An error occured when clearing the mappings.");
+            System.out.println("An error occurred when clearing the mappings.");
         }
     }
 }

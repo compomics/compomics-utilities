@@ -1387,7 +1387,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         }
                     } catch (IOException e) {
                         progressDialog.setRunFinished();
-                        JOptionPane.showMessageDialog(null, "An error occured when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "An error occurred when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
                         e.printStackTrace();
                     }
                 }

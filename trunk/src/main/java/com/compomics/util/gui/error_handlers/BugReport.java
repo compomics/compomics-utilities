@@ -155,7 +155,7 @@ public class BugReport extends javax.swing.JDialog {
             log.append(toolName).append(".log not found.");
             e.printStackTrace();
         } catch (IOException e) {
-            log.append("An error occured while reading resources/").append(toolName).append(".log.");
+            log.append("An error occurred while reading resources/").append(toolName).append(".log.");
             e.printStackTrace();
         }
 
@@ -388,13 +388,13 @@ public class BugReport extends javax.swing.JDialog {
                 }
 
                 if (!finalOutputFile.exists()) {
-                    JOptionPane.showMessageDialog(this, "An error occured when saving the log.", "Save Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "An error occurred when saving the log.", "Save Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this, "The log has been saved to \'" + finalOutputFile.getPath() + "\'.", "Log Saved", JOptionPane.INFORMATION_MESSAGE);
                 }
 
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "An error occured when saving the log file.", "Save Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "An error occurred when saving the log file.", "Save Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }

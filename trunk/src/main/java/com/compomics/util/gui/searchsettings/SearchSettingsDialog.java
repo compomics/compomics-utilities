@@ -2523,7 +2523,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 }
             } catch (IOException ioe) {
                 ioe.printStackTrace(); // @TODO: this exception should be thrown to the GUI!
-                JOptionPane.showMessageDialog(null, "An error occured when trying to load the modifications preferences.",
+                JOptionPane.showMessageDialog(null, "An error occurred when trying to load the modifications preferences.",
                         "Configuration Import Error", JOptionPane.ERROR_MESSAGE);
             }
         }

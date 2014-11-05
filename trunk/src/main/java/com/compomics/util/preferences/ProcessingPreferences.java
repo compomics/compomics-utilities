@@ -43,7 +43,7 @@ public class ProcessingPreferences implements Serializable {
     private Double proteinConfidenceMwPlots = 95.0;
     /**
      * The scores used to score the spectrum matches for every advocate in a
-     * map: advocate index -> list of score indexes.
+     * map: advocate index &gt; list of score indexes.
      */
     private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
     /**

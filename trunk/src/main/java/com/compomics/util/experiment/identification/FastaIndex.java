@@ -106,9 +106,9 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns a map of all indexes of the FASTA file (accession -> index).
+     * Returns a map of all indexes of the FASTA file (accession &gt; index).
      *
-     * @return a map of all indexes of the FASTA file (accession -> index)
+     * @return a map of all indexes of the FASTA file (accession &gt; index)
      */
     public HashMap<String, Long> getIndexes() {
         return indexes;

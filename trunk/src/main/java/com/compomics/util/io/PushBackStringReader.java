@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 
 /**
  * This class implements a PushBackReader for Strings which allows the reading
- * of entire lines as well as the pushing back of entire lines. <br />
+ * of entire lines as well as the pushing back of entire lines. <br>
  * Little more functionality is present at this time.
  *
  * @author Lennart Martens

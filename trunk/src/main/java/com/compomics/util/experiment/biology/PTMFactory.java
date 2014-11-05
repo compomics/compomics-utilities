@@ -309,7 +309,7 @@ public class PTMFactory implements Serializable {
      * Imports the OMSSA indexes from an XML file.
      *
      * @param modificationsFile the modification file
-     * @return a map of all indexes: modification name -> OMSSA index
+     * @return a map of all indexes: modification name &gt; OMSSA index
      * @throws XmlPullParserException
      * @throws FileNotFoundException
      * @throws IOException

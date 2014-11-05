@@ -345,7 +345,7 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Returns the PTMs backed-up as a map. PTM name -> PTM.
+     * Returns the PTMs backed-up as a map. PTM name &gt; PTM.
      *
      * @return the PTMs backed-up as a map
      */

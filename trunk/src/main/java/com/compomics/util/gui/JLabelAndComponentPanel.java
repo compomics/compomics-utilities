@@ -25,9 +25,9 @@ import java.awt.*;
 
 /**
  * This class implements a JPanel that lays out a set of JLabel and a JComponent
- * next to each other. <br />
+ * next to each other. <br>
  * Correct usage of this class is calling the empty constructor
- * and adding label-component pairs via the corresponding 'add' method. <br />
+ * and adding label-component pairs via the corresponding 'add' method. <br>
  * Do not call anything else unless you really want to break the functionality!
  *
  * @author Lennart Martens

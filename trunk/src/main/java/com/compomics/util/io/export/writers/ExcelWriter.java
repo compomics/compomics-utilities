@@ -46,7 +46,7 @@ public class ExcelWriter extends ExportWriter {
      */
     private int hierarchicalDepth = 0;
     /**
-     * Map of the rows for depth change: depth -> starting row.
+     * Map of the rows for depth change: depth &gt; starting row.
      */
     private final HashMap<Integer, Integer> collapsedRow = new HashMap<Integer, Integer>();
     /**

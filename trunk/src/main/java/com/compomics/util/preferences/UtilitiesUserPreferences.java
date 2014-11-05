@@ -78,7 +78,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private File proteinTreeFolder = null;
     /**
-     * Maps saving the protein trees import time in a map: fasta file size ->
+     * Maps saving the protein trees import time in a map: fasta file size &gt;
      * import times. Note: for backward compatibility not initialized here.
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
@@ -595,7 +595,7 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Returns the protein tree import times in a map: file size -> list of
+     * Returns the protein tree import times in a map: file size &gt; list of
      * import sizes.
      *
      * @return the protein tree import times

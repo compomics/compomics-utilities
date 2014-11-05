@@ -27,7 +27,7 @@ import com.compomics.util.general.UnknownElementMassException;
  */
 
 /**
- * This class represents a sequence for a protein or peptide. <br />
+ * This class represents a sequence for a protein or peptide. <br>
  *
  * @see com.compomics.util.interfaces.Sequence
  * @author	Lennart Martens
@@ -38,12 +38,12 @@ public class AASequenceImpl implements Sequence {
     Logger logger = Logger.getLogger(AASequenceImpl.class);
 
     /**
-     * The Kyte & Doolittle score for AA residus.
+     * The Kyte &amp; Doolittle score for AA residues.
      */
     private static Properties iKyte_Doolittle = null;
 
     /**
-     * This variable holds the GRAVY (Kyte & Doolittle) score
+     * This variable holds the GRAVY (Kyte &amp; Doolittle) score
      * for the peptide. <br />
      * It uses lazy caching!
      */
@@ -195,7 +195,7 @@ public class AASequenceImpl implements Sequence {
     }
 
     /**
-     * This method calculates the mass for the current sequence. <br />
+     * This method calculates the mass for the current sequence. <br>
      * Mass cached lazily, so after the first calculation it comes from
      * memory.
      *
@@ -252,7 +252,7 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method is designed to load a sequence and it's set of modifications from a String
-     * which holds the sequence, annotated with all the modifications applied to it. <br />
+     * which holds the sequence, annotated with all the modifications applied to it. <br>
      * Typically, the String parsed should be derived from the 'String getModifiedSequence()'
      * method (see documentation there).
      *
@@ -357,7 +357,7 @@ public class AASequenceImpl implements Sequence {
     }
 
     /**
-     * This method gets the GRAVY score (Kyte&Doolittle) from
+     * This method gets the GRAVY score (Kyte &amp; Doolittle) from
      * the cache, or, if it isn't cached, reconstructs it.
      *
      * @return	double	with the GRAVY coefficient.
@@ -375,7 +375,7 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method will return an estimated 'net' HPLC retention
-     * time for the sequence based on the table by Meek.<br />
+     * time for the sequence based on the table by Meek.<br>
      * It does NOT take a t0 value, specific to a setup, into account.
      *
      * @return	double	with the 'net' HPLC retention time as calculated
@@ -395,7 +395,7 @@ public class AASequenceImpl implements Sequence {
     /**
      * This method will return the sequence with annotated modifications.
      * For this annotation the key of the modifications will be used.
-     * If the key is a formula, it will be enclosed in '<>' as well.
+     * If the key is a formula, it will be enclosed in '&lt;&gt;' as well.
      *
      * @return	String	with the annotated sequence (i.e.: containing the
      *					modifications.
@@ -476,11 +476,11 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method will return an AASequenceImpl that represents
-     * an N-terminal  truncation of the current sequence. <br />
+     * an N-terminal truncation of the current sequence. <br>
      * Note that the applicable modifications (those within the truncation size)
      * are also represented in the truncated sequence!
      *
-     * @param   aTruncationSize int with the amount of N-terminal residus the
+     * @param   aTruncationSize int with the amount of N-terminal residues the
      *                          truncated sequence should have.
      * @return  AASEquenceImpl  with the N-terminal truncated sequence (including modifications).
      */
@@ -516,11 +516,11 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method will return an AASequenceImpl that represents
-     * a C-terminal truncation of the current sequence. <br />
+     * a C-terminal truncation of the current sequence. <br>
      * Note that the applicable modifications (those within the truncation size)
      * are also represented in the truncated sequence!
      *
-     * @param   aTruncationSize int with the amount of C-terminal residus the
+     * @param   aTruncationSize int with the amount of C-terminal residues the
      *                          truncated sequence should have.
      * @return  AASEquenceImpl  with the C-terminal truncated sequence (including modifications).
      */
@@ -559,13 +559,13 @@ public class AASequenceImpl implements Sequence {
 
     /**
      * This method will return an AASequenceImpl that represents
-     * an internal truncation of the current sequence. <br />
+     * an internal truncation of the current sequence. <br >
      * Note that the applicable modifications (those within the truncation size)
      * are also represented in the resulting truncated sequence!
      *
-     * @param   aStart int with the start (N-terminal) residu for the
-     *                          truncation. The first residu is number '1'.
-     * @param   aEnd    int with the end residu (C-terminal; NOT included) for the truncation.
+     * @param   aStart int with the start (N-terminal) residue for the
+     *                          truncation. The first residue is number '1'.
+     * @param   aEnd    int with the end residue (C-terminal; NOT included) for the truncation.
      * @return  AASEquenceImpl  with the C-terminal truncated sequence (including modifications).
      */
     public AASequenceImpl getTruncatedSequence(int aStart, int aEnd) {

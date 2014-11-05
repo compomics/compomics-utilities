@@ -150,7 +150,7 @@ public class BasicMathFunctions {
 
     /**
      * Convenience method returning the standard deviation of a list of doubles.
-     * Returns 0 if the list is null or of size < 2.
+     * Returns 0 if the list is null or of size &lt; 2.
      *
      * @param input input list
      * @return the corresponding standard deviation

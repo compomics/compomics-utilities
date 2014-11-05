@@ -148,7 +148,7 @@ public class Tag extends ExperimentObject {
 
     /**
      * Returns the tag as intelligible sequence of tag components. For example
-     * amino acid tags and mass gaps: &lt;115.2&gt;TAG&lt;110.5&gt.
+     * amino acid tags and mass gaps: &lt;115.2&gt;TAG&lt;110.5&gt;.
      *
      * @return The tag as intelligible sequence for display.
      */
@@ -759,7 +759,7 @@ public class Tag extends ExperimentObject {
 
     /**
      * Indicates whether the tag can be reversed (ie if termini are mass gaps
-     * with mass >= water).
+     * with mass &ge; water).
      *
      * @return whether the tag can be reversed
      */

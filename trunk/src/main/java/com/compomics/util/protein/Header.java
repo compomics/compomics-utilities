@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
  * This class represents the header for a Protein instance. It is meant to work
  * closely with FASTA format notation. The Header class knows how to handle
  * certain often-used headers such as SwissProt and NCBI formatted FASTA
- * headers.<br /> Note that the Header class is it's own factory, and should be
+ * headers.<br> Note that the Header class is it's own factory, and should be
  * used as such.
  *
  * @author Lennart Martens
@@ -44,14 +44,14 @@ public class Header implements Cloneable, Serializable {
     }
     /**
      * The ID String corresponds to the String that is present as the first
-     * element following the opening '>'. It is most notably 'sw' for SwissProt,
-     * and 'gi' for NCBI. <br /> ID is the first element in the abbreviated
+     * element following the opening '&gt;'. It is most notably 'sw' for SwissProt,
+     * and 'gi' for NCBI. <br> ID is the first element in the abbreviated
      * header String.
      */
     private String iID = null;
     /**
      * The foreign ID is the ID of another database this entry is originally
-     * from. Most notably used for SwissProt entries in NCBI. <br /> The foreign
+     * from. Most notably used for SwissProt entries in NCBI. <br> The foreign
      * ID String is an addendum to the accession String in the abbreviated
      * header String.
      */
@@ -59,7 +59,7 @@ public class Header implements Cloneable, Serializable {
     /**
      * The accession String is the unique identifier for the sequence in the
      * respective database. Note that for NCBI, the accession number also
-     * defines a unique moment in time. <br /> Accession String is the second
+     * defines a unique moment in time. <br> Accession String is the second
      * element in the abbreviated header String.
      */
     private String iAccession = null;
@@ -130,13 +130,13 @@ public class Header implements Cloneable, Serializable {
     /**
      * The foreign accession String is an accession String in another database
      * of significance. Most notably used for SwissProt accessions that are kept
-     * in the NCBI database. <br /> The foreign accession String is an addendum
+     * in the NCBI database. <br> The foreign accession String is an addendum
      * to the foreign ID String in the abbreviated header String.
      */
     private String iForeignAccession = null;
     /**
      * The description is a more or less elaborate description of the protein in
-     * question. <br /> The description is the third element (and final) in the
+     * question. <br> The description is the third element (and final) in the
      * abbreviated header String.
      */
     private String iDescription = null;
@@ -171,7 +171,7 @@ public class Header implements Cloneable, Serializable {
     /**
      * The foreign Description is a description for an entry in another DB. Most
      * notably, the SwissProt short description for an entry that is found
-     * within NCBI. <br /> The foreign description is an addendum to the foreign
+     * within NCBI. <br> The foreign description is an addendum to the foreign
      * accession String in the abbreviated header String.
      */
     private String iForeignDescription = null;
@@ -580,7 +580,7 @@ public class Header implements Cloneable, Serializable {
 
                     String subHeader = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
 
-                    if (subHeader.indexOf("|") != -1) {
+                    if (subHeader.contains("|")) {
                         result.iAccession = subHeader.substring(0, subHeader.indexOf("|"));
                         result.iDescription = subHeader.substring(subHeader.indexOf("|") + 1).trim();
                     } else {
@@ -864,7 +864,7 @@ public class Header implements Cloneable, Serializable {
                     int testStart = -1;
                     int testEnd = -1;
 
-                    if ((accessionEndLoc > 0) && (aFASTAHeader.indexOf("(") >= 0) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(") + 1) >= 0)) {
+                    if ((accessionEndLoc > 0) && (aFASTAHeader.contains("(")) && (aFASTAHeader.indexOf(")", aFASTAHeader.indexOf("(") + 1) >= 0)) {
                         // Now we have to see if there is location information present.
                         if (aFASTAHeader.substring(accessionEndLoc + 1, aFASTAHeader.indexOf(")", accessionEndLoc + 2) + 1).matches("[(][0-9]+-[0-9]+[)]") && !aFASTAHeader.substring(accessionEndLoc + 2, aFASTAHeader.indexOf(")", accessionEndLoc + 2)).equals(aFASTAHeader.substring(0, accessionEndLoc).trim())) {
                             // start and end found. Add it to the accession number and remove it from the description.
@@ -885,7 +885,7 @@ public class Header implements Cloneable, Serializable {
                         testDescription = aFASTAHeader.substring(accessionEndLoc).trim();
                         // Find the second occurrence of the accession number, which should be in the description.
                         int enzymicity = -1;
-                        if (testDescription.indexOf("(*") >= 0 && testDescription.indexOf("*)", testDescription.indexOf("(*" + 4)) > 0) {
+                        if (testDescription.contains("(*") && testDescription.indexOf("*)", testDescription.indexOf("(*" + 4)) > 0) {
                             enzymicity = testDescription.indexOf("*)") + 2;
                         }
                         startSecAcc = testDescription.indexOf("(", enzymicity);
@@ -904,7 +904,7 @@ public class Header implements Cloneable, Serializable {
                         //try >nonsense|accession|description
                         if (aFASTAHeader.lastIndexOf("|") >= 0) {
                             String end = aFASTAHeader.substring(aFASTAHeader.indexOf("|") + 1);
-                            if (end.indexOf("|") >= 0) {
+                            if (end.contains("|")) {
                                 result.iAccession = end.substring(0, end.indexOf("|"));
                                 result.iDescription = end.substring(end.indexOf("|") + 1);
                             }
@@ -1101,11 +1101,9 @@ public class Header implements Cloneable, Serializable {
 
     /**
      * This method returns an abbreviated version of the Header, suitable for
-     * inclusion in FASTA formatted files. <br /> The abbreviated header is
-     * composed in the following way: <br />
-     * <pre>
-     *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
-     * </pre>
+     * inclusion in FASTA formatted files. <br> The abbreviated header is
+     * composed in the following way: <br>
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
      *
      * @return String with the abbreviated header.
      */
@@ -1115,11 +1113,10 @@ public class Header implements Cloneable, Serializable {
 
     /**
      * This method returns an abbreviated version of the Header, suitable for
-     * inclusion in FASTA formatted files. <br /> The abbreviated header is
-     * composed in the following way: <br />
-     * <pre>
-     *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
-     * </pre>
+     * inclusion in FASTA formatted files. <br> The abbreviated header is
+     * composed in the following way: <br>
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
+     *
      *
      * @param decoyTag the decoy tag to add
      * @return String with the abbreviated header.
@@ -1236,9 +1233,9 @@ public class Header implements Cloneable, Serializable {
         } else if (this.iID.equalsIgnoreCase("tr")) {
             score = 2;
         } else if (this.iID.equalsIgnoreCase("ipi")) {
-            if (this.iDescription != null && this.iDescription.toUpperCase().indexOf("SWISS-PROT") >= 0) {
+            if (this.iDescription != null && this.iDescription.toUpperCase().contains("SWISS-PROT")) {
                 score = 3;
-            } else if (this.iDescription != null && ((this.iDescription.toUpperCase().indexOf("TREMBL") >= 0) || (this.iDescription.toUpperCase().indexOf("REFSEQ_NP") >= 0))) {
+            } else if (this.iDescription != null && ((this.iDescription.toUpperCase().contains("TREMBL")) || (this.iDescription.toUpperCase().contains("REFSEQ_NP")))) {
                 score = 2;
             } else {
                 score = 1;
@@ -1359,11 +1356,11 @@ public class Header implements Cloneable, Serializable {
 
     /**
      * This method returns an abbreviated version of the Header, suitable for
-     * inclusion in FASTA formatted files. <br /> The abbreviated header is
-     * composed in the following way: <br />
-     * <pre>
-     *     >[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]([addenda])
-     * </pre> Note that the output of this method is identical to that of the
+     * inclusion in FASTA formatted files. <br> The abbreviated header is
+     * composed in the following way: <br>
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]([addenda])
+     * <br>
+     * Note that the output of this method is identical to that of the
      * getAbbreviatedFASTAHeader() if no addenda are present.
      *
      * @return String with the abbreviated header and addenda (if any).
@@ -1380,7 +1377,7 @@ public class Header implements Cloneable, Serializable {
 
     /**
      * This method allows the caller to add information to the header about
-     * location of the sequence in a certain master sequence. <br/> This
+     * location of the sequence in a certain master sequence. <br> This
      * information is typically specified right after the accession number:
      * <pre>
      *     [id]|[accession_string] ([startindex]-[endindex])|...
@@ -1508,7 +1505,7 @@ public class Header implements Cloneable, Serializable {
     private static void parseUniProtDescription(Header header) {
 
         // try to get the gene name from the description
-        if (header.iDescription.indexOf(" GN=") != -1) {
+        if (header.iDescription.contains(" GN=")) {
             int geneStartIndex = header.iDescription.indexOf(" GN=") + 4;
             int geneEndIndex = header.iDescription.indexOf(" ", geneStartIndex);
 
@@ -1520,7 +1517,7 @@ public class Header implements Cloneable, Serializable {
         }
 
         // try to get the protein evidence level from the description
-        if (header.iDescription.indexOf(" PE=") != -1) {
+        if (header.iDescription.contains(" PE=")) {
             int evidenceStartIndex = header.iDescription.indexOf(" PE=") + 4;
             int evidenceEndIndex = header.iDescription.indexOf(" ", evidenceStartIndex);
 
@@ -1534,13 +1531,13 @@ public class Header implements Cloneable, Serializable {
         }
 
         // try to get the taxonomy name from the description
-        if (header.iDescription.indexOf(" OS=") != -1) {
+        if (header.iDescription.contains(" OS=")) {
             int taxonomyStartIndex = header.iDescription.indexOf(" OS=") + 4;
             int taxonomyEndIndex = header.iDescription.indexOf(" GN=");
 
             // have to check if gene name is in the header
             if (taxonomyEndIndex == -1) {
-                if (header.iDescription.indexOf(" PE=") != -1) {
+                if (header.iDescription.contains(" PE=")) {
                     taxonomyEndIndex = header.iDescription.indexOf(" PE=");
                 } else {
                     taxonomyEndIndex = header.iDescription.length();

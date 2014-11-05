@@ -49,7 +49,7 @@ public class IsotopicElement {
      * Static method that gives all the isotopicElements from the isotopicElement.txt file
      * @param lClass A class
      * @param lLogger A logger
-     * @return Vector<IsotopicElement>
+     * @return a Vector of IsotopicElement 
      */
     public static Vector<IsotopicElement> getAllIsotopicElements(Class lClass, Logger lLogger){
         Vector<IsotopicElement> lResult = new Vector<IsotopicElement>();

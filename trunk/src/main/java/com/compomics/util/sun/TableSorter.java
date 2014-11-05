@@ -29,13 +29,13 @@ import javax.swing.table.TableColumnModel;
  * can be reallocated. As requests are made of the sorter (like
  * getValueAt(row, col) it redirects them to its model via the mapping 
  * array. That way the TableSorter appears to hold another copy of the table
- * with the rows in a different order. The sorting algorthm used is stable
+ * with the rows in a different order. The sorting algorithm used is stable
  * which means that it does not move around rows when its comparison
  * function returns 0 to denote that they are equivalent.
- * <br />
- * <b>LM addition</b> <br />
- * The headers now respond by <ctrl>+click by adapting their size to the minimal size
- * necessary to fully display the String rendering of each component in that column. <br />
+ * <br>
+ * <b>LM addition</b> <br>
+ * The headers now respond by Ctrl+click by adapting their size to the minimal size
+ * necessary to fully display the String rendering of each component in that column. <br>
  * Note that this functionality hinges on the fact that resize mode of the table should
  * be set to OFF (yourTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)).
  *

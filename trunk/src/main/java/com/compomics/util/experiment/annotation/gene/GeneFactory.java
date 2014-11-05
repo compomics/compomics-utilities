@@ -34,11 +34,11 @@ public class GeneFactory {
      */
     public final static String separator = "\t";
     /**
-     * Map of the index where a gene can be found Ensembl gene ID -> index.
+     * Map of the index where a gene can be found Ensembl gene ID &gt; index.
      */
     private HashMap<String, Long> geneIdIndexes = new HashMap<String, Long>();
     /**
-     * Map of the index where a gene can be found gene name -> index.
+     * Map of the index where a gene can be found gene name &gt; index.
      */
     private HashMap<String, Long> geneNameIndexes = new HashMap<String, Long>();
     /**

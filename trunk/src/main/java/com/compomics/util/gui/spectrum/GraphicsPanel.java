@@ -842,7 +842,7 @@ public abstract class GraphicsPanel extends JPanel {
      * Invoked by Swing to draw components. Applications should not invoke
      * <code>paint</code> directly, but should instead use the
      * <code>repaint</code> method to schedule the component for redrawing.
-     * <p/>
+     * <p>
      * This method actually delegates the work of painting to three protected
      * methods: <code>paintComponent</code>, <code>paintBorder</code>, and
      * <code>paintChildren</code>. They're called in the order listed to ensure

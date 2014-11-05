@@ -181,7 +181,7 @@ public class ProteinTree {
      * @param initialTagSize the initial tag size
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500 giving an approximate
-     * query time <20ms.
+     * query time &lt;20ms.
      * @param maxPeptideSize the maximum peptide size
      * @param waitingHandler the waiting handler used to display progress to the
      * user. Can be null but strongly recommended :)
@@ -210,7 +210,7 @@ public class ProteinTree {
      * approximate initiation time of 60ms per accession.
      * @param maxNodeSize the maximal size of a node. large nodes will be fast
      * to initiate but slow to query. I typically use 500 giving an approximate
-     * query time <20ms.
+     * query time &lt;20ms.
      * @param maxPeptideSize the maximum peptide size
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
@@ -916,8 +916,8 @@ public class ProteinTree {
      * @param peptideSequence the peptide sequence
      * @param proteinInferencePrefeerences the sequence matching preferences
      *
-     * @return the peptide to protein mapping: peptide sequence -> protein
-     * accession -> index in the protein An empty map if not
+     * @return the peptide to protein mapping: peptide sequence &gt; protein
+     * accession &gt; index in the protein An empty map if not
      *
      * @throws IOException
      * @throws InterruptedException
@@ -946,7 +946,7 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence. peptide sequence -> protein accession -> index in the protein.
+     * sequence. peptide sequence &gt; protein accession &gt; index in the protein.
      * An empty map if not.
      *
      * @param peptideSequence the peptide sequence
@@ -954,7 +954,7 @@ public class ProteinTree {
      * @param reversed boolean indicating whether we are looking at a reversed
      * peptide sequence
      *
-     * @return the peptide to protein mapping: Accession -> list of indexes
+     * @return the peptide to protein mapping: Accession &gt; list of indexes
      * where the peptide can be found on the sequence
      * @throws IOException
      * @throws InterruptedException
@@ -1091,7 +1091,7 @@ public class ProteinTree {
 
     /**
      * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence -> protein accession -> index in the protein. An empty map if
+     * sequence &gt; protein accession &gt; index in the protein. An empty map if
      * not found.
      *
      * @param tag the tag to look for in the tree. Must contain a consecutive
@@ -1758,7 +1758,7 @@ public class ProteinTree {
 
     /**
      * Returns all the positions of the given tags on the given sequence in a
-     * map: tag -> list of indexes in the sequence.
+     * map: tag &gt; list of indexes in the sequence.
      *
      * @param sequence the sequence of interest
      * @param tags the tags of interest
@@ -1963,7 +1963,7 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the indexes: protein accession -> tag -> indexes of the tag
+         * Returns the indexes: protein accession &gt; tag &gt; indexes of the tag
          * on the protein sequence
          *
          * @return the indexes

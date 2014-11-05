@@ -179,7 +179,7 @@ public class MascotEnzymeReader {
     }
 
     /**
-     * This method will return a <b>copy of<b> an Enzyme instance
+     * This method will return a <b>copy of</b> an Enzyme instance
      * for the given name, or 'null' if the enzyme was not found in the current list.
      *
      * @param   aTitle  String with the title (name) of the Enzyme to retrieve.

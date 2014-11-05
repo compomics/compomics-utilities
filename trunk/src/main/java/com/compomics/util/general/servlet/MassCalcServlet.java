@@ -24,7 +24,7 @@ import com.compomics.util.general.UnknownElementMassException;
  * $Date: 2007/07/06 09:41:54 $
  */
 /**
- * This class implements the MassCalc class as a servlet. <br />
+ * This class implements the MassCalc class as a servlet. <br>
  * It also generates its own submission form upon <i>first contact</i>.
  * 
  * @see com.compomics.util.general.MassCalc

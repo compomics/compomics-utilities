@@ -36,8 +36,8 @@ public class ModificationTemplate {
     Logger logger = Logger.getLogger(ModificationTemplate.class);
 
     /**
-     * This HashMap will contain the following 'key-value' mappings: (key --> value) <br />
-     * (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA})
+     * This HashMap will contain the following 'key-value' mappings: (key &gt; value) <br>
+     * (residue &gt; double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA})
      */
     protected HashMap iMassDeltas = null;
 
@@ -62,8 +62,8 @@ public class ModificationTemplate {
      * @param aTitle    String with the title for the modification (eg., Oxidation Met).
      * @param aCode String with the code for the modification (eg., Mox). The code can be used when
      *              annotating a sequence String (eg., NH2-MGTEFSM&lt;Mox&gt;R-COOH).
-     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key --> value) <br />
-     *                      (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br />
+     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key &gt; value) <br>
+     *                      (residue &gt; double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br>
      *                      Note that the residues for the N-terminus and C-terminus are represented
      *                      by the NTERMINUS and CTERMINUS constants, respectively.
      */
@@ -77,8 +77,8 @@ public class ModificationTemplate {
      * @param aTitle    String with the title for the modification (eg., Oxidation Met).
      * @param aCode String with the code for the modification (eg., Mox). The code can be used when
      *              annotating a sequence String (eg., NH2-MGTEFSM&lt;Mox&gt;R-COOH).
-     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key --> value) <br />
-     *                      (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br />
+     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key &gt; value) <br>
+     *                      (residue &gt; double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br>
      *                      Note that the residues for the N-terminus and C-terminus are represented
      *                      by the NTERMINUS and CTERMINUS constants, respectively.
      * @param aArtifact boolean to indicate whether this class is an artifact.
@@ -148,7 +148,7 @@ public class ModificationTemplate {
     }
 
     /**
-     * This method reports on all the residues that can be modified by this Modification. <br />
+     * This method reports on all the residues that can be modified by this Modification. <br>
      * The Collection is a keySet of a HashMap.
      *
      * @return  Collection with the residues that can be modified by this modification.

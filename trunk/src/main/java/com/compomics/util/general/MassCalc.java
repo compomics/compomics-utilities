@@ -22,12 +22,12 @@ import java.text.StringCharacterIterator;
  */
 /**
  * This class takes care of mass calculation, based on a sequence 
- * in IUPAC format. <br />
+ * in IUPAC format. <br>
  * By default it can handle monoisotopic biochemical element masses
- * and monoisotopic single-letter amino acid masses. <br />
+ * and monoisotopic single-letter amino acid masses. <br>
  * The object can be customized with your own mass lists through the
  * use of a properties file, or by directly passing a HashMap.
- * <br /><br />
+ * <br><br>
  * <b>Please note:</b> if you decide on your own lists, be sure to
  *	follow the following guidelines:
  * <ul>
@@ -50,7 +50,7 @@ public class MassCalc {
     static Logger logger = Logger.getLogger(MassCalc.class);
 
     /**
-     * This variable highlights which map was chosen for the elementmasses.
+     * This variable highlights which map was chosen for the element masses.
      */
     private int iChosen = -1;
 
@@ -62,7 +62,7 @@ public class MassCalc {
 
     /**
      * This Vector stores all the HashMaps that can be selected as element
-     * lists. <br />
+     * lists. <br>
      * Please only access them via the proper index, as defined in static vars
      * on this class.
      */
@@ -109,7 +109,7 @@ public class MassCalc {
 
     /**
      * This constructor allows you to specify an identifier to select a
-     * element list to use for calculating a mass. <br />
+     * element list to use for calculating a mass. <br>
      * Please use the finalo vriables on this class as identifiers!
      *
      * @param	aMassListIdentifier	int with the identifier for the
@@ -130,7 +130,7 @@ public class MassCalc {
 
     /**
      * This constructor allows the caller to use an elementlist of
-     * its own making. Simply passing the filename of the file suffices. <br />
+     * its own making. Simply passing the filename of the file suffices. <br>
      *
      * @param	aFilename	String with the name of the file to be loaded.
      *						<b>NOTE!</b> this file must be located in the
@@ -142,8 +142,8 @@ public class MassCalc {
 
     /**
      * This constructor allows the caller to initialize the elementlist
-     * with a HashMap of its own design. <br />
-     * This HashMap needs be structured in the following way: <br />
+     * with a HashMap of its own design. <br>
+     * This HashMap needs be structured in the following way: <br>
      * <ul>
      *  <li>KEY can be one or two letters, the first has to be uppercase,
      *    the second and optional letter has to be lowercase.</li>
@@ -159,8 +159,8 @@ public class MassCalc {
     /**
      * This constructor allows the caller to supplement (or to replace
      * elements in) a built-in elementlist with a HashMap of its own
-     * design. <br />
-     * This HashMap needs be structured in the following way: <br />
+     * design. <br>
+     * This HashMap needs be structured in the following way: <br>
      * <ul>
      *  <li>KEY can be one or two letters, the first has to be uppercase,
      *    the second and optional letter has to be lowercase.</li>

@@ -263,7 +263,7 @@ public abstract class AminoAcid implements Serializable {
     /**
      * In case of a combination of amino acids, returns the comprised amino
      * acids or amino acid groups represented by their single letter code
-     * including sub combinations. Example: Z -> {G, Q}.
+     * including sub combinations. Example: Z &gt; {G, Q}.
      *
      * @return the actual amino acids
      */
@@ -274,7 +274,7 @@ public abstract class AminoAcid implements Serializable {
     /**
      * In case of a combination of amino acids, returns the comprised amino
      * acids or amino acid groups represented by their single letter code.
-     * Example: Z -> {G, Q}.
+     * Example: Z &gt; {G, Q}.
      *
      * @param includeCombinations if true, sub-amino acids which are amino acids
      * combinations like Z will also be included
@@ -291,7 +291,7 @@ public abstract class AminoAcid implements Serializable {
 
     /**
      * Returns the amino acids combinations which might represent this amino
-     * acid. Example: g -> {Z, X}.
+     * acid. Example: g &gt; {Z, X}.
      *
      * @return the amino acids combinations which might represent this amino
      * acid

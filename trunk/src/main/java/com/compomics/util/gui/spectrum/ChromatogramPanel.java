@@ -154,7 +154,7 @@ public class ChromatogramPanel extends GraphicsPanel {
 
     /**
      * This method allows the caller to set the point size for the
-     * profileChromatogram. b>Note</b> that this number needs to be even, so any
+     * profileChromatogram. <b>Note</b> that this number needs to be even, so any
      * uneven number will be replaced by the closest, lower, even integer (e.g.,
      * 5 becomes 4, 13 becomes 12).
      *

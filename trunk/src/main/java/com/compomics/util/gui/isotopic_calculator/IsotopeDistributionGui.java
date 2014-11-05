@@ -38,7 +38,7 @@ import java.util.Hashtable;
 
 /**
  * This class is a GUI that visualizes the isotopic calculator.
- * <p/>
+ * <p>
  * Created by IntelliJ IDEA.
  * User: Niklaas
  * Date: 16-Aug-2010
@@ -424,7 +424,9 @@ public class IsotopeDistributionGui extends JFrame {
     }
 
     /**
-     * @noinspection ALL
+     * Returns the root components.
+     * 
+     * @return the root component
      */
     public JComponent $$$getRootComponent$$$() {
         return jpanContent;

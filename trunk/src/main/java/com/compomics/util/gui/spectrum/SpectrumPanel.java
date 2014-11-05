@@ -689,7 +689,7 @@ public class SpectrumPanel extends GraphicsPanel {
      * assumed to have the following form: ion type + [ion number] + [charge] +
      * [neutral loss]
      * @param iontypes the fragment ion types to include, assumed to be one of
-     * the Ion types, e.g, IonType.PeptideFragmentIon > PeptideFragmentIon.B_ION
+     * the Ion types, e.g, IonType.PeptideFragmentIon &gt; PeptideFragmentIon.B_ION
      * @param neutralLosses list of neutral losses to display
      * @param singleChargeSelected if singly charged fragments are to be
      * included

@@ -63,47 +63,47 @@ public class TagMatcher {
     private HashMap<Character, ArrayList<String>> fixedAaModifications = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on peptide
-     * N-terminus: targeted amino acid -> list of modifications.
+     * N-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsPeptideNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on protein
-     * N-terminus: targeted amino acid -> list of modifications.
+     * N-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsProteinNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on peptide
-     * C-terminus: targeted amino acid -> list of modifications.
+     * C-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsPeptideCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the fixed modifications at specific amino acids on protein
-     * C-terminus: targeted amino acid -> list of modifications.
+     * C-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> fixedAaModificationsProteinCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids:
-     * targeted amino acid -> list of modifications.
+     * targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * peptide N-terminus: targeted amino acid -> list of modifications.
+     * peptide N-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsPeptideNtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * protein N-terminus: targeted amino acid -> list of modifications.
+     * protein N-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsProteinNtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * peptide C-terminus: targeted amino acid -> list of modifications.
+     * peptide C-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsPeptideCtermMasses = new HashMap<Character, Double>(1);
     /**
      * Map of the masses of the fixed modifications at specific amino acids on
-     * protein C-terminus: targeted amino acid -> list of modifications.
+     * protein C-terminus: targeted amino acid &gt; list of modifications.
      */
     private HashMap<Character, Double> fixedAaModificationsProteinCtermMasses = new HashMap<Character, Double>(1);
     /**
@@ -124,27 +124,27 @@ public class TagMatcher {
     private ArrayList<String> variableCTermProteinModifications = null;
     /**
      * Map of the variable modifications at specific amino acid: possible target
-     * -> list of modifications.
+     * &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModifications = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
-     * N-terminus: possible target -> list of modifications.
+     * N-terminus: possible target &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtPeptideNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
-     * N-terminus: possible target -> list of modifications.
+     * N-terminus: possible target &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtProteinNterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on peptide
-     * C-terminus: possible target -> list of modifications.
+     * C-terminus: possible target &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtPeptideCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
      * Map of the variable modifications at specific amino acid on protein
-     * C-terminus: possible target -> list of modifications.
+     * C-terminus: possible target &gt; list of modifications.
      */
     private HashMap<Character, ArrayList<String>> variableAaModificationsAtProteinCterm = new HashMap<Character, ArrayList<String>>(1);
     /**
@@ -501,7 +501,7 @@ public class TagMatcher {
      * @param modificationsAtIndex the seed modifications
      * @param mutationsAtIndex the seeds mutations
      *
-     * @return the possible peptides in a map: index on protein -> list of
+     * @return the possible peptides in a map: index on protein &gt; list of
      * peptides
      */
     public HashMap<Integer, ArrayList<Peptide>> buildPeptides(ArrayList<SequenceSegment> nTermPossibleSequences, String seedSequence, ArrayList<SequenceSegment> cTermPossibleSequences, HashMap<Integer, ArrayList<ModificationMatch>> modificationsAtIndex, int mutationsAtIndex) {

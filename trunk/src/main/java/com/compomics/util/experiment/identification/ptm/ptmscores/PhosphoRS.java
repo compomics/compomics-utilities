@@ -54,7 +54,7 @@ public class PhosphoRS {
      * calculation shall account for neutral losses.
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @return a map site -> phosphoRS site probability
+     * @return a map site &gt; phosphoRS site probability
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -93,7 +93,7 @@ public class PhosphoRS {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator the peptide spectrum annotator to use for spectrum annotation, can be null
      *
-     * @return a map site -> phosphoRS site probability
+     * @return a map site &gt; phosphoRS site probability
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence

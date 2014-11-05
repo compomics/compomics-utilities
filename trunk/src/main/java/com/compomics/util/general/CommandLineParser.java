@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 /**
  * This class provides a generic interface for the parsing of command-line
- * arguments, options and flags. <br /> Arguments are 'stand-alone' Strings,
+ * arguments, options and flags. <br> Arguments are 'stand-alone' Strings,
  * options are preceded by '--' without spaces (like in general GNU practice)
- * and flags are indicated by '-' without spaces. <br /> If there are options
+ * and flags are indicated by '-' without spaces. <br> If there are options
  * that in turn take arguments, these can be specified via a specific
  * constructor.
  *
@@ -52,7 +52,7 @@ public class CommandLineParser {
     private String[] iParams = null;
     /**
      * This String[] will hold all the parameters for those options that take
-     * them. <br /> Structure is: key->option, value->param for that option. <br
+     * them. <br /> Structure is: key: option, value: param for that option. <br
      * /> <i>Please note</i> that this HashMap is only initialized through the
      * use of the <a href="#optionConstr">constructor</a> which takes a String[]
      * with options that take arguments themselves!
@@ -70,7 +70,7 @@ public class CommandLineParser {
     }
 
     /**
-     * <a name="optionConstr" /> This constructor requests the command-line
+     * <a name="optionConstr"></a> This constructor requests the command-line
      * String[] as well as a String[] with a list of options which in turn take
      * a parameter.
      *
@@ -96,7 +96,7 @@ public class CommandLineParser {
 
     /**
      * This method returns 'true' if any arguments are present, 'false'
-     * otherwise. <br /> You are well advised to call this method first, before
+     * otherwise. <br> You are well advised to call this method first, before
      * attempting to retrieve any parameters, as 'null' might be returned.
      *
      * @return	boolean	'true' if arguments are present, 'false' otherwise.
@@ -140,7 +140,7 @@ public class CommandLineParser {
      * This method will report the option parameter for an option that can take
      * a parameter itself. This option has to be specified in the <a
      * href="#optionConstr">constructor</a> that allows you to pass a String[]
-     * with all the options that take a parameter themselves. <br />
+     * with all the options that take a parameter themselves. <br>
      * <b>Note!</b> If no parameter was present, or the option specified is not
      * an option flagged as taking a parameter, 'null' is returned!
      *

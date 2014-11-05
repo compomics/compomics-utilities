@@ -451,8 +451,8 @@ public class Advocate {
      * Returns the advocate based on the identification file name. Null if not
      * found. Note: this method implements a limited number of algorithms and
      * does not support generic files. Use the IdfileReader when possible.
-     * Implemented formats: omx -> OMSSA dat -> Mascot xml -> X!Tandem csv ->
-     * MS-Amanda
+     * Implemented formats: omx &gt; OMSSA dat &gt; Mascot xml &gt; X!Tandem csv
+     * &gt; MS-Amanda.
      *
      * @param idFileName the name of the identification file
      *

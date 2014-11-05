@@ -63,8 +63,8 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      * @param aTitle    String with the title for the modification (eg., Oxidation Met).
      * @param aCode String with the code for the modification (eg., Mox). The code can be used when
      *              annotating a sequence String (eg., NH2-MGTEFSM&lt;Mox&gt;R-COOH).
-     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key --> value) <br />
-     *                      (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br />
+     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key &gt; value) <br>
+     *                      (residue &gt; double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br>
      *                      Note that the residues for the N-terminus and C-terminus are represented
      *                      by the NTERMINUS and CTERMINUS constants, respectively.
      * @param aLocation int with the location for this modification.
@@ -79,8 +79,8 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      * @param aTitle    String with the title for the modification (eg., Oxidation Met).
      * @param aCode String with the code for the modification (eg., Mox). The code can be used when
      *              annotating a sequence String (eg., NH2-MGTEFSM&lt;Mox&gt;R-COOH).
-     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key --> value) <br />
-     *                      (residue-->double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br />
+     * @param aMassDeltas   HashMap with the following 'key-value' mappings: (key &gt; value) <br>
+     *                      (residue &gt; double[]{MONOISOTOPIC_DELTA, AVERAGE_DELTA} <br>
      *                      Note that the residues for the N-terminus and C-terminus are represented
      *                      by the NTERMINUS and CTERMINUS constants, respectively.
      * @param aArtifact boolean to indicate whether this modification is an artifact.

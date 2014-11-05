@@ -69,7 +69,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * @param charges The charges of the fragment to search for
      * @param precursorCharge The precursor charge as deduced by the search
      * engine
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * maximal position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param peak The peak to match
@@ -87,7 +87,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * have a charge strictly smaller than the precursor ion charge.
      *
      * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
@@ -172,7 +172,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * acid number in the sequence. 1 is first amino acid.
      *
      * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges
@@ -223,7 +223,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be s
      * have a charge strictly smaller than the precursor ion charge.
      *
      * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss ->
+     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
      * first position in the sequence (first aa is 1). let null if neutral
      * losses should not be considered.
      * @param charges List of expected charges

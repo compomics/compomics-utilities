@@ -839,6 +839,79 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
+     * Returns a minimum value of a x-axis
+     *
+     * @return a minimum x axis value
+     */
+    public double getiXAxisMin() {
+        return iXAxisMin;
+    }
+
+    /**
+     * Sets a minimum value for a x-axis
+     *
+     * @param iXAxisMin double with a minimum x-axis value
+     */
+    public void setiXAxisMin(double iXAxisMin) {
+        this.iXAxisMin = iXAxisMin;
+    }
+
+    /**
+     * Returns a maximum value of a x-axis
+     *
+     * @return a maximum x axis value
+     */
+    public double getiXAxisMax() {
+        return iXAxisMax;
+    }
+
+    /**
+     * Sets a maximum value for a x-axis
+     *
+     * @param iXAxisMax double with a maximum x-axis value
+     */
+    public void setiXAxisMax(double iXAxisMax) {
+        this.iXAxisMax = iXAxisMax;
+    }
+
+    /**
+     * Returns a minimum value of a y-axis
+     *
+     * @return a minimum y axis value
+     */
+    public double getiYAxisMin() {
+        return iYAxisMin;
+    }
+
+    /**
+     * Sets a minimum value for a y-axis
+     *
+     * @param iYAxisMin double with a minimum y-axis value
+     */
+    public void setiYAxisMin(double iYAxisMin) {
+        this.iYAxisMin = iYAxisMin;
+    }
+
+    /**
+     * Returns a maximum value of a y-axis
+     *
+     * @return a maximum y axis value
+     */
+    public double getiYAxisMax() {
+        return iYAxisMax;
+    }
+
+    /**
+     * Sets a maximum value for a y-axis
+     *
+     * @param iYAxisMax double with a maximum y-axis value
+     */
+    public void setiYAxisMax(double iYAxisMax) {
+        this.iYAxisMax = iYAxisMax;
+    }
+
+    
+    /**
      * Invoked by Swing to draw components. Applications should not invoke
      * <code>paint</code> directly, but should instead use the
      * <code>repaint</code> method to schedule the component for redrawing.
@@ -874,7 +947,7 @@ public abstract class GraphicsPanel extends JPanel {
             iXAxisMax = (int) Math.ceil(iXAxisMax);
             iYAxisMin = (int) Math.floor(iYAxisMin);
             iYAxisMax = (int) Math.ceil(iYAxisMax);
-
+            
             // @TODO: scale?
             drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
 
@@ -1660,6 +1733,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         HashMap peaks = new HashMap(aXAxisData.length);
 
+        
         // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
             peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));

@@ -399,7 +399,7 @@ public class Advocate {
         } else if (this == msAmanda) {
             return "24909410";
         } else if (this == msgf) {
-            return "20829449"; // @TODO: update to the real ms-gf+ citation when available
+            return "25358478";
         } else if (this == myriMatch) {
             return "17269722";
         } else if (this == comet) {

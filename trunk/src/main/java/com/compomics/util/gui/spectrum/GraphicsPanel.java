@@ -1188,6 +1188,17 @@ public abstract class GraphicsPanel extends JPanel {
             }
         }
 
+        if (dataSetCounterMirroredSpectra > 0) {
+            for (double[] iXAxisDataCurrentMirroredSpectrum : iXAxisDataMirroredSpectrum) {
+                for (int i = 0; i < iXAxisDataCurrentMirroredSpectrum.length; i++) {
+                    double lMass = iXAxisDataCurrentMirroredSpectrum[i];
+                    if (lMass > maxValue) {
+                        maxValue = lMass;
+                    }
+                }
+            }
+        }
+
         return maxValue;
     }
 
@@ -1204,6 +1215,17 @@ public abstract class GraphicsPanel extends JPanel {
         for (double[] iXAxisData1 : iXAxisData) {
             if (iXAxisData1[0] < minValue) {
                 minValue = iXAxisData1[0];
+            }
+        }
+
+        if (dataSetCounterMirroredSpectra > 0) {
+            for (double[] iXAxisDataCurrentMirroredSpectrum : iXAxisDataMirroredSpectrum) {
+                for (int i = 0; i < iXAxisDataCurrentMirroredSpectrum.length; i++) {
+                    double lMass = iXAxisDataCurrentMirroredSpectrum[i];
+                    if (lMass < minValue) {
+                        minValue = lMass;
+                    }
+                }
             }
         }
 

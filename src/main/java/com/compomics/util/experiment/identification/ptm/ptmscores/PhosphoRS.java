@@ -212,13 +212,11 @@ public class PhosphoRS {
                     ArrayList<ArrayList<Double>> deltas = new ArrayList<ArrayList<Double>>();
                     int nDeltas = 0;
 
-                    for (int i = 0; i < spectra.size(); i++) {
-
+                    for (MSnSpectrum currentSpectrum : spectra) {
                         ArrayList<Double> scores = new ArrayList<Double>();
                         ArrayList<Double> currentDeltas = new ArrayList<Double>();
                         ArrayList<ArrayList<Double>> scored = new ArrayList<ArrayList<Double>>();
                         boolean noIons = false;
-
                         for (ArrayList<Integer> profile : possibleProfiles) {
                             if (!subMapGoofy.containsKey(profile)) {
                                 if (!noIons) {
@@ -233,7 +231,7 @@ public class PhosphoRS {
                                         }
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
-                                    double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
                                     scores.add(score);
                                 }
                             } else {
@@ -245,7 +243,6 @@ public class PhosphoRS {
                                         break;
                                     }
                                 }
-
                                 if (!alreadyScored) {
                                     Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
                                     for (int pos : profile) {
@@ -257,23 +254,19 @@ public class PhosphoRS {
                                         }
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
-                                    double score = getPhosphoRsScore(tempPeptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
                                     scores.add(score);
                                     scored.add(tempSiteDeterminingIons);
                                 }
                             }
                         }
-
                         Collections.sort(scores, Collections.reverseOrder());
-
                         for (int j = 0; j < scores.size() - 1; j++) {
                             currentDeltas.add(scores.get(j) - scores.get(j + 1));
                         }
-
                         if (currentDeltas.size() > nDeltas) {
                             nDeltas = currentDeltas.size();
                         }
-
                         deltas.add(currentDeltas);
                     }
 

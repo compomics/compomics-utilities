@@ -727,8 +727,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             ArrayList<Character> aaList = residueTargeted.get(index);
 
             if (aaList != null && !aaList.isEmpty()) {
-
-                for (Character targetedAA : aaList) {
+                
+                for (int i = 0; i < aaList.size() ; i++) {
+                    Character targetedAA = aaList.get(i);
                     if (aa == targetedAA) {
                         return true;
                     } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishableAminoAcids) {
@@ -748,7 +749,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                         }
 
                         if (matchingType == MatchingType.indistiguishableAminoAcids) {
-                            for (char tempAA : targetedAminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
+                            ArrayList<Character> indistinguishibleAas = targetedAminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance());
+                            for (int j = 0 ; j < indistinguishibleAas.size() ; j++) {
+                                char tempAA = indistinguishibleAas.get(j);
                                 if (aa == tempAA) {
                                     return true;
                                 }
@@ -790,7 +793,8 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
             if (aaList != null && !aaList.isEmpty()) {
 
-                for (Character targetedAA : aaList) {
+                for (int i = 0 ; i < aaList.size() ; i++) {
+                    Character targetedAA = aaList.get(i);
                     HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(targetedAA);
                     if (mutatedAas != null && mutatedAas.contains(aa)) {
                         return true;

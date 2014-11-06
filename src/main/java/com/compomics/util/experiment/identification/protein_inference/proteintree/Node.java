@@ -394,7 +394,8 @@ public class Node implements Serializable {
         String proteinSequence = protein.getSequence();
         HashMap<String, ArrayList<Integer>> results = new HashMap<String, ArrayList<Integer>>();
         int peptideLength = peptideSequence.length();
-        for (int startIndex : seeds) {
+        for (int i = 0; i < seeds.size(); i++) {
+            int startIndex = seeds.get(i);
             int endIndex = startIndex + peptideLength;
             if (endIndex <= proteinSequence.length()) {
                 String subSequence = proteinSequence.substring(startIndex, endIndex);

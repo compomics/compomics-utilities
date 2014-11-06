@@ -17,40 +17,40 @@ import java.util.HashMap;
 public class SequenceSegment {
 
     /**
-     * The index of the terminus on the protein
+     * The index of the terminus on the protein.
      */
     private int terminalIndex;
     /**
-     * The length of the segment
+     * The length of the segment.
      */
     private int length = 0;
     /**
-     * Map of mutations: index on the segment - mutated character
+     * Map of mutations: index on the segment - mutated character.
      */
     private HashMap<Integer, Character> mutations = null;
     /**
-     * Map of the PTMs: index on the segment - name of the modification
+     * Map of the PTMs: index on the segment - name of the modification.
      */
     private HashMap<Integer, String> modificationMatches = null;
     /**
-     * The previous segment in case this one is a follow-up
+     * The previous segment in case this one is a follow-up.
      */
     private SequenceSegment previousSegment = null;
     /**
      * Boolean indicating whether the segment is sequencing from the N (true) or
-     * the C (false) terminus
+     * the C (false) terminus.
      */
     public final boolean nTerminus;
     /**
-     * The terminal amino acid if mutated
+     * The terminal amino acid if mutated.
      */
     private Character mutationAtTerminus = null;
     /**
-     * The modification located at the terminus
+     * The modification located at the terminus.
      */
     private String modificationAtTerminus = null;
     /**
-     * The mass of the segment
+     * The mass of the segment.
      */
     private double mass = 0;
 
@@ -362,5 +362,4 @@ public class SequenceSegment {
             return sequence.substring(terminalIndex - length, terminalIndex);
         }
     }
-
 }

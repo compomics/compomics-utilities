@@ -66,23 +66,23 @@ public class TagMatcher {
      */
     private HashMap<Character, Double> fixedAaModificationsProteinCtermMasses = new HashMap<Character, Double>(1);
     /**
-     * Map of variable N-terminal peptide modifications: modification name ->
-     * mass
+     * Map of variable N-terminal peptide modifications: modification name &gt;
+     * mass.
      */
     private HashMap<String, Double> variableNTermPeptideModifications = null;
     /**
-     * Map of variable C-terminal peptide modifications: modification name ->
-     * mass
+     * Map of variable C-terminal peptide modifications: modification name &gt;
+     * mass.
      */
     private HashMap<String, Double> variableCTermPeptideModifications = null;
     /**
-     * Map of variable N-terminal protein modifications: modification name ->
-     * mass
+     * Map of variable N-terminal protein modifications: modification name &gt;
+     * mass.
      */
     private HashMap<String, Double> variableNTermProteinModifications = null;
     /**
-     * Map of variable C-terminal protein modifications: modification name ->
-     * mass
+     * Map of variable C-terminal protein modifications: modification name &gt;
+     * mass.
      */
     private HashMap<String, Double> variableCTermProteinModifications = null;
     /**
@@ -133,15 +133,15 @@ public class TagMatcher {
     /**
      * The sequence segments cache for N-term sequencing
      *
-     * Protein accession -> Starting index on protein -> end index on protein ->
-     * Mass -> sequence segment
+     * Protein accession &gt; Starting index on protein &gt; end index on protein &gt;
+     * Mass &gt; sequence segment.
      */
     private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> nTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
     /**
      * The sequence segments cache for C-term sequencing.
      *
-     * Protein accession -> Starting index on protein -> end index on protein ->
-     * Mass -> sequence segment
+     * Protein accession &gt; Starting index on protein &gt; end index on protein &gt;
+     * Mass &gt; sequence segment.
      */
     private HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>> cTermCache = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<SequenceSegment>>>>();
     /**
@@ -960,7 +960,6 @@ public class TagMatcher {
 
             return newPossibleSequences;
         }
-
     }
 
     /**

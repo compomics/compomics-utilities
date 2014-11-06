@@ -67,7 +67,7 @@ public class GOFactory {
     }
 
     /**
-     * Initializes the factory on the given file
+     * Initializes the factory on the given file.
      *
      * @param file the file containing the GO mapping
      * @param waitingHandler a waiting handler allowing display of the progress

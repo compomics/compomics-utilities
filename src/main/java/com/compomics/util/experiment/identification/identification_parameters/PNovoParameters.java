@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
+import java.util.HashMap;
 
 /**
  * pNovo specific parameters.
@@ -30,6 +31,16 @@ public class PNovoParameters implements IdentificationAlgorithmParameter {
      * The activation type (HCD, CID or ETD).
      */
     private String acticationType = "HCD";
+    /**
+     * A map from the pNovo PTM character to the utilities PTM names. pNovo PTM
+     * character &gt; utilities PTM name.
+     */
+    private HashMap<Character, String> pNovoPtmMap;
+    /**
+     * A map from the pNovo character to the original amino acids residue. pNovo
+     * PTM character &gt; original amino acids residue.
+     */
+    private HashMap<Character, Character> pNovoResidueMap;
 
     /**
      * Constructor.
@@ -170,5 +181,71 @@ public class PNovoParameters implements IdentificationAlgorithmParameter {
      */
     public void setActicationType(String acticationType) {
         this.acticationType = acticationType;
+    }
+
+    /**
+     * Returns the pNovo to utilities PTM map. Null if not set.
+     *
+     * @return the pNovo to utilities PTM map, null if not set
+     */
+    public HashMap<Character, String> getPNovoPtmMap() {
+        return pNovoPtmMap;
+    }
+
+    /**
+     * Returns the utilities PTM name corresponding to the given pNovo PTM
+     * character. Null if not found.
+     *
+     * @param pNovoPtmCharacter the pNovo PTM character
+     *
+     * @return the utilities PTM name
+     */
+    public String getUtilitiesPtmName(Character pNovoPtmCharacter) {
+        if (pNovoPtmMap == null) {
+            return null;
+        }
+        return pNovoPtmMap.get(pNovoPtmCharacter);
+    }
+
+    /**
+     * Set the pNovo to utilities PTM map.
+     *
+     * @param pNovoPtmMap the pNovoPtmMap to set
+     */
+    public void setPNovoPtmMap(HashMap<Character, String> pNovoPtmMap) {
+        this.pNovoPtmMap = pNovoPtmMap;
+    }
+
+    /**
+     * Returns the pNovo to original amino acids residue map. Null if not set.
+     *
+     * @return the pNovo to original amino acids residue ma, null if not set
+     */
+    public HashMap<Character, Character> getPNovoPtmResiduesMap() {
+        return pNovoResidueMap;
+    }
+
+    /**
+     * Returns the original amino acids residue corresponding to the given pNovo
+     * PTM character. Null if not found.
+     *
+     * @param pNovoPtmCharacter the pNovo PTM character
+     *
+     * @return the original amino acids residue
+     */
+    public Character getPtmResidue(Character pNovoPtmCharacter) {
+        if (pNovoPtmMap == null) {
+            return null;
+        }
+        return pNovoResidueMap.get(pNovoPtmCharacter);
+    }
+
+    /**
+     * Set the pNovo to original amino acids residue map.
+     *
+     * @param pNovoResidueMap the pNovoResidueMap to set
+     */
+    public void setPNovoPtmResiduesMap(HashMap<Character, Character> pNovoResidueMap) {
+        this.pNovoResidueMap = pNovoResidueMap;
     }
 }

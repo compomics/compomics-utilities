@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
@@ -50,6 +50,24 @@ public class MDScore {
      * @return the MD score
      */
     public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate, ArrayList<String> ptms, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        return getMDScore(spectrumMatch, peptideCandidate, ptms, sequenceMatchingPreferences, null);
+    }
+
+    /**
+     * Returns the MD score for the given peptide in a spectrum match. Null if
+     * not identified by Mascot. If the peptide is the not the best scoring for
+     * Mascot the score will be negative.
+     *
+     * @param peptideCandidate the peptide of interest
+     * @param spectrumMatch the spectrum match of interest
+     * @param ptms the names of the PTMs to score
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param rounding decimal to which the score should be rounded, ignored if
+     * null
+     *
+     * @return the MD score
+     */
+    public static Double getMDScore(SpectrumMatch spectrumMatch, Peptide peptideCandidate, ArrayList<String> ptms, SequenceMatchingPreferences sequenceMatchingPreferences, Integer rounding) {
 
         HashMap<Double, ArrayList<Peptide>> mascotAssumptionsMap = new HashMap<Double, ArrayList<Peptide>>();
         Double firstScore = null, secondScore = null;
@@ -103,6 +121,12 @@ public class MDScore {
             return firstScore;
         }
 
-        return firstScore - secondScore;
+        double score = firstScore - secondScore;
+
+        if (rounding != null) {
+            score = Util.roundDouble(score, rounding);
+        }
+
+        return score;
     }
 }

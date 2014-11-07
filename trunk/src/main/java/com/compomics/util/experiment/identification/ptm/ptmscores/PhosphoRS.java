@@ -93,8 +93,6 @@ public class PhosphoRS {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
-     * @param rounding decimal to which the score should be rounded, ignored if
-     * null
      *
      * @return a map site &gt; phosphoRS site probability
      *
@@ -136,6 +134,8 @@ public class PhosphoRS {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
+     * @param rounding decimal to which the score should be rounded, ignored if
+     * null
      *
      * @return a map site &gt; phosphoRS site probability
      *

@@ -395,48 +395,101 @@ public abstract class GraphicsPanel extends JPanel {
      */
     protected boolean iHighLight = false;
     /**
+     * Boolean that will be 'true' when a point needs highlighting in the
+     * mirrored spectra.
+     */
+    protected boolean iHighLightMirrored = false;
+    /**
      * Index of the point that needs to be highlighted.
      */
     protected int iHighLightIndex = 0;
+    /**
+     * Index of the point that needs to be highlighted in the mirrored spectra.
+     */
+    protected int iHighLightIndexMirrored = 0;
     /**
      * Index of the dataset containing the point that needs to be highlighted.
      */
     protected int iHighLightDatasetIndex = 0;
     /**
+     * Index of the dataset containing the point that needs to be highlighted in
+     * the mirrored spectra.
+     */
+    protected int iHighLightDatasetIndexMirrored = 0;
+    /**
      * Boolean that indicates whether a point has been marked by clicking.
      */
     protected boolean iClicked = false;
+    /**
+     * Boolean that indicates whether a point has been marked by clicking in the
+     * mirrored spectra.
+     */
+    protected boolean iClickedMirrored = false;
     /**
      * Int that indicates which point was clicked.
      */
     protected int iClickedIndex = 0;
     /**
+     * Int that indicates which point was clicked in the mirrored spectra.
+     */
+    protected int iClickedIndexMirrored = 0;
+    /**
      * Int that indicates which dataset contains the clicked point.
      */
     protected int iClickedDataSetIndex = 0;
     /**
+     * Int that indicates which dataset contains the clicked point in the
+     * mirrored spectra.
+     */
+    protected int iClickedDataSetIndexMirrored = 0;
+    /**
      * The Vector that holds all points clicked up to now.
      */
     protected Vector iClickedList = new Vector(15, 5);
+    /**
+     * The Vector that holds all points clicked up to now in the mirrored
+     * spectra.
+     */
+    protected Vector iClickedListMirrored = new Vector(15, 5);
     /**
      * The Vector that holds the dataset indices of all points clicked up to
      * now.
      */
     protected Vector iClickedListDatasetIndices = new Vector(15, 5);
     /**
+     * The Vector that holds the dataset indices of all points clicked up to now
+     * in the mirrored spectra.
+     */
+    protected Vector iClickedListDatasetIndicesMirrored = new Vector(15, 5);
+    /**
      * The Vector that holds a set of stored points from a previously
      * established list.
      */
     protected Vector iStoredSequence = new Vector(15, 5);
+    /**
+     * The Vector that holds a set of stored points from a previously
+     * established list in the mirrored spectra.
+     */
+    protected Vector iStoredSequenceMirrored = new Vector(15, 5);
     /**
      * The Vector that holds the dataset indices of stored points from a
      * previously established list.
      */
     protected Vector iStoredSequenceDatasetIndices = new Vector(15, 5);
     /**
+     * The Vector that holds the dataset indices of stored points from a
+     * previously established list in the mirrored spectra.
+     */
+    protected Vector iStoredSequenceDatasetIndicesMirrored = new Vector(15, 5);
+    /**
      * The Vector that holds a set of Annotation instances.
      */
     protected Vector iAnnotations = new Vector(50, 20);
+    /**
+     * The Vector that holds a set of Annotation instances for the mirrored
+     * spectra.
+     */
+    protected Vector iAnnotationsMirroredSpectra = new Vector(50, 20);
     /**
      * Minimal dragging distance in pixels.
      */
@@ -814,6 +867,33 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
+     * This method sets all the annotations for the mirrored spectra. Passing a
+     * 'null' value for the Vector will result in simply removing all
+     * annotations. Do note that this method will attempt to remove duplicate
+     * annotations on a point by deleting any annotation for which the
+     * combination of annotation label and annotation x-axis value has been seen
+     * before!
+     *
+     * @param aAnnotations Vector with SpectrumAnnotation instances.
+     */
+    public void setAnnotationsMirrored(List<SpectrumAnnotation> aAnnotations) {
+        this.iAnnotationsMirroredSpectra = new Vector(50, 25);
+        if (aAnnotations != null) {
+            // Attempt to remove duplicates.
+            HashSet removeDupes = new HashSet(aAnnotations.size());
+            for (SpectrumAnnotation annotation : aAnnotations) {
+                String key = annotation.getLabel() + annotation.getMZ();
+                if (removeDupes.contains(key)) {
+                    // Duplicate, ignore!
+                } else {
+                    removeDupes.add(key);
+                    this.iAnnotationsMirroredSpectra.add(annotation);
+                }
+            }
+        }
+    }
+
+    /**
      * This method allows the caller to set the procentual minimal,
      * non-inclusive y-axis value threshold (compared to the highest point in
      * the spectrum or chromatogram) a point must pass before being eligible for
@@ -839,78 +919,77 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * Returns a minimum value of a x-axis
+     * Returns the minimum value of the x-axis.
      *
-     * @return a minimum x axis value
+     * @return the minimum the axis value
      */
     public double getiXAxisMin() {
         return iXAxisMin;
     }
 
     /**
-     * Sets a minimum value for a x-axis
+     * Sets the minimum value for the x-axis.
      *
-     * @param iXAxisMin double with a minimum x-axis value
+     * @param aXAxisMin double with the minimum x-axis value
      */
-    public void setiXAxisMin(double iXAxisMin) {
-        this.iXAxisMin = iXAxisMin;
+    public void setiXAxisMin(double aXAxisMin) {
+        this.iXAxisMin = aXAxisMin;
     }
 
     /**
-     * Returns a maximum value of a x-axis
+     * Returns the maximum value of the x-axis.
      *
-     * @return a maximum x axis value
+     * @return the maximum x axis value
      */
     public double getiXAxisMax() {
         return iXAxisMax;
     }
 
     /**
-     * Sets a maximum value for a x-axis
+     * Sets the maximum value for the x-axis.
      *
-     * @param iXAxisMax double with a maximum x-axis value
+     * @param aXAxisMax double with the maximum x-axis value
      */
-    public void setiXAxisMax(double iXAxisMax) {
-        this.iXAxisMax = iXAxisMax;
+    public void setiXAxisMax(double aXAxisMax) {
+        this.iXAxisMax = aXAxisMax;
     }
 
     /**
-     * Returns a minimum value of a y-axis
+     * Returns the minimum value of the y-axis.
      *
-     * @return a minimum y axis value
+     * @return the minimum y axis value
      */
     public double getiYAxisMin() {
         return iYAxisMin;
     }
 
     /**
-     * Sets a minimum value for a y-axis
+     * Sets the minimum value for the y-axis.
      *
-     * @param iYAxisMin double with a minimum y-axis value
+     * @param aYAxisMin double with the minimum y-axis value
      */
-    public void setiYAxisMin(double iYAxisMin) {
-        this.iYAxisMin = iYAxisMin;
+    public void setiYAxisMin(double aYAxisMin) {
+        this.iYAxisMin = aYAxisMin;
     }
 
     /**
-     * Returns a maximum value of a y-axis
+     * Returns the maximum value of the y-axis.
      *
-     * @return a maximum y axis value
+     * @return the maximum y axis value
      */
     public double getiYAxisMax() {
         return iYAxisMax;
     }
 
     /**
-     * Sets a maximum value for a y-axis
+     * Sets the maximum value for the y-axis.
      *
-     * @param iYAxisMax double with a maximum y-axis value
+     * @param aYAxisMax double with the maximum y-axis value
      */
-    public void setiYAxisMax(double iYAxisMax) {
-        this.iYAxisMax = iYAxisMax;
+    public void setiYAxisMax(double aYAxisMax) {
+        this.iYAxisMax = aYAxisMax;
     }
 
-    
     /**
      * Invoked by Swing to draw components. Applications should not invoke
      * <code>paint</code> directly, but should instead use the
@@ -947,14 +1026,15 @@ public abstract class GraphicsPanel extends JPanel {
             iXAxisMax = (int) Math.ceil(iXAxisMax);
             iYAxisMin = (int) Math.floor(iYAxisMin);
             iYAxisMax = (int) Math.ceil(iYAxisMax);
-            
-            // @TODO: scale?
-            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
+
+            // draw the x and y axis
+            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);// @TODO: scale?
 
             // add reference areas that are to be drawn in the back, if any
             drawYAxisReferenceAreas(g, false);
             drawXAxisReferenceAreas(g, false);
 
+            // draw the peaks
             if (currentGraphicsPanelType.equals(GraphicsPanelType.profileChromatogram)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.profileSpectrum)
                     || currentGraphicsPanelType.equals(GraphicsPanelType.isotopicDistributionProfile)) {
@@ -965,75 +1045,137 @@ public abstract class GraphicsPanel extends JPanel {
                     drawMirroredPeaks(g);
                 }
             }
+
+            // draw any measurement lines in the normal spectra
             if (iClicked && iHighLight && iClickedIndex != iHighLightIndex) {
-                // Now we should calculate the distance based on the real values and
-                // draw a line to show this.
+                // Now we should calculate the distance based on the real values and draw a line to show this.
                 this.drawMeasurementLine(iClickedIndex, iClickedDataSetIndex,
-                        iHighLightIndex, iHighLightDatasetIndex, g, Color.blue, 0);
+                        iHighLightIndex, iHighLightDatasetIndex, g, Color.blue, 0, false);
             }
+
+            // draw any measurement lines in the mirrored spectra
+            if (iClickedMirrored && iHighLightMirrored && iClickedIndexMirrored != iHighLightIndexMirrored) {
+                // Now we should calculate the distance based on the real values and draw a line to show this.
+                this.drawMeasurementLine(iClickedIndexMirrored, iClickedDataSetIndexMirrored,
+                        iHighLightIndexMirrored, iHighLightDatasetIndexMirrored, g, Color.blue, 0, true);
+            }
+
+            // hihlight peaks 
             if (iHighLight) {
-                this.highLightPeak(iHighLightIndex, iHighLightDatasetIndex, g);
+                this.highLightPeak(iHighLightIndex, iHighLightDatasetIndex, g, false);
                 iHighLight = false;
             }
+
+            // highlight mirrored peaks
+            if (iHighLightMirrored) {
+                this.highLightPeak(iHighLightIndexMirrored, iHighLightDatasetIndexMirrored, g, true);
+                iHighLightMirrored = false;
+            }
+
+            // highlight clicked peaks
             if (iClicked) {
-                this.highlightClicked(iClickedIndex, iHighLightDatasetIndex, g);
+                this.highlightClicked(iClickedIndex, iHighLightDatasetIndex, g, false);
             }
 
-            // See if there is a daisychain to display.
-            int liClickedSize = iClickedList.size();
-
-            if (liClickedSize > 0) {
-                for (int i = 0; i < liClickedSize; i++) {
-                    // The last one should be connected to iClicked.
-                    int first = ((Integer) iClickedList.get(i)).intValue();
-                    int firstDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i)).intValue();
-
-                    int second, secondDataSetIndex;
-
-                    if ((i + 1) == liClickedSize) {
-                        second = iClickedIndex;
-                        secondDataSetIndex = iClickedDataSetIndex;
-                    } else {
-                        second = ((Integer) iClickedList.get(i + 1)).intValue();
-                        secondDataSetIndex = ((Integer) iClickedListDatasetIndices.get(i + 1)).intValue();
-                    }
-
-                    this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.LIGHT_GRAY, 0);
-                }
+            // highlight clicked mirrored peaks
+            if (iClickedMirrored) {
+                this.highlightClicked(iClickedIndexMirrored, iHighLightDatasetIndexMirrored, g, true);
             }
 
-            // See if there is a secondary daisychain to display.
-            if (iStoredSequence.size() > 0) {
-                for (int i = 1; i < iStoredSequence.size(); i++) {
-                    int first = ((Integer) iStoredSequence.get(i - 1)).intValue();
-                    int second = ((Integer) iStoredSequence.get(i)).intValue();
-                    int firstDataSetIndex = ((Integer) iStoredSequenceDatasetIndices.get(i - 1)).intValue();
-                    int secondDataSetIndex = ((Integer) iStoredSequenceDatasetIndices.get(i)).intValue();
-                    this.drawMeasurementLine(first, firstDataSetIndex,
-                            second, secondDataSetIndex, g, Color.red, g.getFontMetrics().getAscent() + 15);
-                }
-            }
+            // see if there are daisychain to display
+            drawDaisyChain(g, iClickedList, iClickedListDatasetIndices, iClickedIndex, iClickedDataSetIndex, iStoredSequence, iStoredSequenceDatasetIndices, false);
+            
+            // see if there are daisychains to display for the mirrored spectra
+            drawDaisyChain(g, iClickedListMirrored, iClickedListDatasetIndicesMirrored, iClickedIndexMirrored, 
+                    iClickedDataSetIndexMirrored, iStoredSequenceMirrored, iStoredSequenceDatasetIndicesMirrored, true);
 
-            // See if we should annotate and if any are present.
-            if (iAnnotations != null && iAnnotations.size() > 0 && !miniature) {
-                // This HashMap will contain the indices of the points that already carry an annotation
-                // as keys (datasetIndex_peakIndex), and the number of annotations as values.
-                HashMap<String, Integer> annotatedPeaks = new HashMap<String, Integer>();
-                for (Object o : iAnnotations) {
-                    if (o instanceof SpectrumAnnotation) {
-                        SpectrumAnnotation sa = (SpectrumAnnotation) o;
-                        this.annotate(sa, g, annotatedPeaks);
-                    }
-                }
-            }
+            // annotate peaks
+            annotatePeaks(g, iAnnotations, false);
+
+            // annotate mirrored peaks
+            annotatePeaks(g, iAnnotationsMirroredSpectra, true);
 
             // add reference areas that are to be drawn on top of the data, if any{
             drawYAxisReferenceAreas(g, true);
             drawXAxisReferenceAreas(g, true);
 
-            // @TODO scale.
             // (re-)draw the axes to have them appear in front of the data points
-            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax);
+            drawAxes(g, iXAxisMin, iXAxisMax, 2, iYAxisMin, iYAxisMax); // @TODO scale.
+        }
+    }
+
+    /**
+     * Annotate the annotated peaks.
+     *
+     * @param g the <code>Graphics</code> context in which to paint
+     * @param annotations the annotations
+     * @param mirrored if the annotations are for the mirrored spectra
+     */
+    protected void annotatePeaks(Graphics g, Vector annotations, boolean mirrored) {
+        if (annotations != null && annotations.size() > 0 && !miniature) {
+            // This HashMap will contain the indices of the points that already carry an annotation
+            // as keys (datasetIndex_peakIndex), and the number of annotations as values.
+            HashMap<String, Integer> annotatedPeaks = new HashMap<String, Integer>();
+            for (Object o : annotations) {
+                if (o instanceof SpectrumAnnotation) {
+                    SpectrumAnnotation sa = (SpectrumAnnotation) o;
+                    this.annotate(sa, g, annotatedPeaks, mirrored);
+                }
+            }
+        }
+    }
+
+    /**
+     * Draw daisy chains.
+     *
+     * @param g the <code>Graphics</code> context in which to paint
+     * @param clickedList vector that holds all points clicked up to now
+     * @param clickedListDatasetIndices vector that holds the dataset indices of
+     * all points clicked up to now
+     * @param clickedIndex int that indicates which point was clicked
+     * @param clickedDataSetIndex int that indicates which dataset contains the
+     * clicked point
+     * @param storedSequence vector that holds a set of stored points from a
+     * previously established list
+     * @param storedSequenceDatasetIndices  vector that holds the dataset indices
+     * of stored points from a previously established list.
+     * @param mirrored if the daisy chains are for the mirrored spectra
+     */
+    protected void drawDaisyChain(Graphics g, Vector clickedList, Vector clickedListDatasetIndices,
+            int clickedIndex, int clickedDataSetIndex, Vector storedSequence, Vector storedSequenceDatasetIndices, boolean mirrored) {
+
+        int clickedSize = clickedList.size();
+
+        if (clickedSize > 0) {
+            for (int i = 0; i < clickedSize; i++) {
+                // The last one should be connected to iClicked.
+                int first = ((Integer) clickedList.get(i)).intValue();
+                int firstDataSetIndex = ((Integer) clickedListDatasetIndices.get(i)).intValue();
+
+                int second, secondDataSetIndex;
+
+                if ((i + 1) == clickedSize) {
+                    second = clickedIndex;
+                    secondDataSetIndex = clickedDataSetIndex;
+                } else {
+                    second = ((Integer) clickedList.get(i + 1)).intValue();
+                    secondDataSetIndex = ((Integer) clickedListDatasetIndices.get(i + 1));
+                }
+
+                this.drawMeasurementLine(first, firstDataSetIndex, second, secondDataSetIndex, g, Color.LIGHT_GRAY, 0, mirrored);
+            }
+        }
+
+        // See if there are secondary daisychains to display.
+        if (storedSequence.size() > 0) {
+            for (int i = 1; i < storedSequence.size(); i++) {
+                int first = ((Integer) storedSequence.get(i - 1)).intValue();
+                int second = ((Integer) storedSequence.get(i)).intValue();
+                int firstDataSetIndex = ((Integer) storedSequenceDatasetIndices.get(i - 1)).intValue();
+                int secondDataSetIndex = ((Integer) storedSequenceDatasetIndices.get(i)).intValue();
+                this.drawMeasurementLine(first, firstDataSetIndex,
+                        second, secondDataSetIndex, g, Color.red, g.getFontMetrics().getAscent() + 15, mirrored);
+            }
         }
     }
 
@@ -1371,55 +1513,118 @@ public abstract class GraphicsPanel extends JPanel {
              * Invoked when the mouse has been clicked on a component.
              */
             public void mouseClicked(MouseEvent e) {
-                if (iXAxisData != null) {
-                    if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == (MouseEvent.CTRL_DOWN_MASK | MouseEvent.ALT_DOWN_MASK)) {
-                        iStoredSequence = new Vector(15, 5);
-                        iStoredSequenceDatasetIndices = new Vector(15, 5);
-                        repaint();
-                    } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.CTRL_DOWN_MASK) {
-                        iClicked = false;
-                        iClickedList = new Vector(15, 5);
-                        iClickedListDatasetIndices = new Vector(15, 5);
-                        repaint();
-                    } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.SHIFT_DOWN_MASK) {
-                        // If the clicked point is the last one in the list of previously clicked points,
-                        // remove it from the list!
-                        if (iClickedList != null && iClickedList.size() > 0 && iHighLightIndex == iClickedIndex) {
-                            // Retrieve the previously clicked index from the list and set the currently clicked
-                            // one to that value.
-                            iClickedIndex = ((Integer) iClickedList.get(iClickedList.size() - 1)).intValue();
-                            iClickedDataSetIndex = ((Integer) iClickedListDatasetIndices.get(iClickedListDatasetIndices.size() - 1)).intValue();
-                            // Remove the previously clicked index from the list.
-                            iClickedList.remove(iClickedList.size() - 1);
-                            iClickedListDatasetIndices.remove(iClickedListDatasetIndices.size() - 1);
-                            // Repaint.
+
+                // see if we're above or below the x-axis
+                int xAxisYLocation = (getHeight() - currentPadding) / 2; // @TODO: verify that this is correct!
+                boolean aboveXAxis = e.getY() < xAxisYLocation;
+
+                if (dataSetCounterMirroredSpectra == 0) {
+                    aboveXAxis = true;
+                }
+
+                if (aboveXAxis) { // @TODO: merge the above/below code
+                    if (iXAxisData != null) {
+                        if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == (MouseEvent.CTRL_DOWN_MASK | MouseEvent.ALT_DOWN_MASK)) {
+                            iStoredSequence = new Vector(15, 5);
+                            iStoredSequenceDatasetIndices = new Vector(15, 5);
                             repaint();
-                        }
-                    } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.ALT_DOWN_MASK) {
-                        // See if there is a clicked list and if it contains any values.
-                        if (iClickedList != null && iClickedList.size() > 0) {
-                            // Copy the current clickedlist into the stored sequence.
-                            iStoredSequence = (Vector) iClickedList.clone();
-                            iStoredSequence.add(Integer.valueOf(iClickedIndex));
-                            iStoredSequenceDatasetIndices = (Vector) iClickedListDatasetIndices.clone();
-                            iStoredSequenceDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.CTRL_DOWN_MASK) {
                             iClicked = false;
-                            // Reset the clicked list.
                             iClickedList = new Vector(15, 5);
                             iClickedListDatasetIndices = new Vector(15, 5);
                             repaint();
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.SHIFT_DOWN_MASK) {
+                            // If the clicked point is the last one in the list of previously clicked points,
+                            // remove it from the list!
+                            if (iClickedList != null && iClickedList.size() > 0 && iHighLightIndex == iClickedIndex) {
+                                // Retrieve the previously clicked index from the list and set the currently clicked
+                                // one to that value.
+                                iClickedIndex = ((Integer) iClickedList.get(iClickedList.size() - 1)).intValue();
+                                iClickedDataSetIndex = ((Integer) iClickedListDatasetIndices.get(iClickedListDatasetIndices.size() - 1)).intValue();
+                                // Remove the previously clicked index from the list.
+                                iClickedList.remove(iClickedList.size() - 1);
+                                iClickedListDatasetIndices.remove(iClickedListDatasetIndices.size() - 1);
+                                // Repaint.
+                                repaint();
+                            }
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.ALT_DOWN_MASK) {
+                            // See if there is a clicked list and if it contains any values.
+                            if (iClickedList != null && iClickedList.size() > 0) {
+                                // Copy the current clickedlist into the stored sequence.
+                                iStoredSequence = (Vector) iClickedList.clone();
+                                iStoredSequence.add(Integer.valueOf(iClickedIndex));
+                                iStoredSequenceDatasetIndices = (Vector) iClickedListDatasetIndices.clone();
+                                iStoredSequenceDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
+                                iClicked = false;
+                                // Reset the clicked list.
+                                iClickedList = new Vector(15, 5);
+                                iClickedListDatasetIndices = new Vector(15, 5);
+                                repaint();
+                            }
+                        } else if (e.getButton() == MouseEvent.BUTTON1) {
+                            if (iClicked && iClickedIndex != iHighLightIndex) {
+                                // We need the current point to be stored in the previously clicked
+                                // Vector and set the current one as clicked.
+                                iClickedList.add(Integer.valueOf(iClickedIndex));
+                                iClickedListDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
+                            }
+                            iClicked = true;
+                            iClickedIndex = iHighLightIndex;
+                            iClickedDataSetIndex = iHighLightDatasetIndex;
+                            repaint();
                         }
-                    } else if (e.getButton() == MouseEvent.BUTTON1) {
-                        if (iClicked && iClickedIndex != iHighLightIndex) {
-                            // We need the current point to be stored in the previously clicked
-                            // Vector and set the current one as clicked.
-                            iClickedList.add(Integer.valueOf(iClickedIndex));
-                            iClickedListDatasetIndices.add(Integer.valueOf(iClickedDataSetIndex));
+                    }
+                } else {
+                    if (iXAxisDataMirroredSpectrum != null) {
+                        if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == (MouseEvent.CTRL_DOWN_MASK | MouseEvent.ALT_DOWN_MASK)) {
+                            iStoredSequenceMirrored = new Vector(15, 5);
+                            iStoredSequenceDatasetIndicesMirrored = new Vector(15, 5);
+                            repaint();
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.CTRL_DOWN_MASK) {
+                            iClickedMirrored = false;
+                            iClickedListMirrored = new Vector(15, 5);
+                            iClickedListDatasetIndicesMirrored = new Vector(15, 5);
+                            repaint();
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.SHIFT_DOWN_MASK) {
+                            // If the clicked point is the last one in the list of previously clicked points,
+                            // remove it from the list!
+                            if (iClickedListMirrored != null && iClickedListMirrored.size() > 0 && iHighLightIndexMirrored == iClickedIndexMirrored) {
+                                // Retrieve the previously clicked index from the list and set the currently clicked
+                                // one to that value.
+                                iClickedIndexMirrored = ((Integer) iClickedListMirrored.get(iClickedListMirrored.size() - 1)).intValue();
+                                iClickedDataSetIndexMirrored = ((Integer) iClickedListDatasetIndicesMirrored.get(iClickedListDatasetIndicesMirrored.size() - 1)).intValue();
+                                // Remove the previously clicked index from the list.
+                                iClickedListMirrored.remove(iClickedListMirrored.size() - 1);
+                                iClickedListDatasetIndicesMirrored.remove(iClickedListDatasetIndicesMirrored.size() - 1);
+                                // Repaint.
+                                repaint();
+                            }
+                        } else if (e.getButton() == MouseEvent.BUTTON1 && e.getModifiersEx() == MouseEvent.ALT_DOWN_MASK) {
+                            // See if there is a clicked list and if it contains any values.
+                            if (iClickedListMirrored != null && iClickedListMirrored.size() > 0) {
+                                // Copy the current clickedlist into the stored sequence.
+                                iStoredSequenceMirrored = (Vector) iClickedListMirrored.clone();
+                                iStoredSequenceMirrored.add(Integer.valueOf(iClickedIndexMirrored));
+                                iStoredSequenceDatasetIndicesMirrored = (Vector) iClickedListDatasetIndicesMirrored.clone();
+                                iStoredSequenceDatasetIndicesMirrored.add(Integer.valueOf(iClickedDataSetIndexMirrored));
+                                iClicked = false;
+                                // Reset the clicked list.
+                                iClickedListMirrored = new Vector(15, 5);
+                                iClickedListDatasetIndicesMirrored = new Vector(15, 5);
+                                repaint();
+                            }
+                        } else if (e.getButton() == MouseEvent.BUTTON1) {
+                            if (iClickedMirrored && iClickedIndexMirrored != iHighLightIndexMirrored) {
+                                // We need the current point to be stored in the previously clicked
+                                // Vector and set the current one as clicked.
+                                iClickedListMirrored.add(Integer.valueOf(iClickedIndexMirrored));
+                                iClickedListDatasetIndicesMirrored.add(Integer.valueOf(iClickedDataSetIndexMirrored));
+                            }
+                            iClickedMirrored = true;
+                            iClickedIndexMirrored = iHighLightIndexMirrored;
+                            iClickedDataSetIndexMirrored = iHighLightDatasetIndexMirrored;
+                            repaint();
                         }
-                        iClicked = true;
-                        iClickedIndex = iHighLightIndex;
-                        iClickedDataSetIndex = iHighLightDatasetIndex;
-                        repaint();
                     }
                 }
             }
@@ -1456,26 +1661,63 @@ public abstract class GraphicsPanel extends JPanel {
              * no buttons no down).
              */
             public void mouseMoved(MouseEvent e) {
-                if (iXAxisData != null && iXAxisDataInPixels != null) {
+
+                // see if we're above or below the x-axis
+                int y = e.getY();
+
+                int xAxisYLocation = (getHeight() - currentPadding) / 2; // @TODO: verify that this is correct!
+                boolean aboveXAxis = y < xAxisYLocation;
+
+                if (dataSetCounterMirroredSpectra == 0) {
+                    aboveXAxis = true;
+                }
+
+                ArrayList<double[]> xAxisData;
+                ArrayList<int[]> xAxisDataInPixels;
+                ArrayList<int[]> yAxisDataInPixels;
+
+                if (aboveXAxis) {
+                    xAxisData = iXAxisData;
+                    xAxisDataInPixels = iXAxisDataInPixels;
+                    yAxisDataInPixels = iYAxisDataInPixels;
+                } else {
+                    xAxisData = iXAxisDataMirroredSpectrum;
+                    xAxisDataInPixels = iXAxisDataInPixelsMirroredSpectrum;
+                    yAxisDataInPixels = iYAxisDataInPixelsMirroredSpectrum;
+                }
+
+                if (xAxisData != null && xAxisDataInPixels != null) {
                     int x = e.getX();
-                    int y = e.getY();
 
                     // this variable is used to make sure that the most intense peak within range is highlighted
                     int highestPeakInRange = 0;
 
-                    for (int j = 0; j < iXAxisDataInPixels.size(); j++) {
-                        for (int i = 0; i < iXAxisDataInPixels.get(j).length; i++) {
-                            int delta = iXAxisDataInPixels.get(j)[i] - x;
+                    for (int j = 0; j < xAxisDataInPixels.size(); j++) {
+                        for (int i = 0; i < xAxisDataInPixels.get(j).length; i++) {
+                            int delta = xAxisDataInPixels.get(j)[i] - x;
                             if (Math.abs(delta) < iPointDetectionTolerance) {
-                                int deltaYPixels = y - iYAxisDataInPixels.get(j)[i];
-                                if (deltaYPixels < 0
-                                        && Math.abs(deltaYPixels) < (getHeight() - iYAxisDataInPixels.get(j)[i])
-                                        && highestPeakInRange < (getHeight() - iYAxisDataInPixels.get(j)[i])) {
-                                    iHighLight = true;
-                                    iHighLightIndex = i;
-                                    iHighLightDatasetIndex = j;
-                                    highestPeakInRange = (getHeight() - iYAxisDataInPixels.get(j)[i]);
-                                    repaint();
+                                if (aboveXAxis) {
+                                    int deltaYPixels = y - yAxisDataInPixels.get(j)[i];
+                                    if (deltaYPixels < 0
+                                            && Math.abs(deltaYPixels) < (getHeight() - yAxisDataInPixels.get(j)[i])
+                                            && highestPeakInRange < (getHeight() - yAxisDataInPixels.get(j)[i])) {
+                                        iHighLight = true;
+                                        iHighLightIndex = i;
+                                        iHighLightDatasetIndex = j;
+                                        highestPeakInRange = (getHeight() - yAxisDataInPixels.get(j)[i]);
+                                        repaint();
+                                    }
+                                } else {
+                                    int deltaYPixels = yAxisDataInPixels.get(j)[i] - y;
+                                    if (deltaYPixels < 0
+                                            && Math.abs(deltaYPixels) < yAxisDataInPixels.get(j)[i]
+                                            && highestPeakInRange < yAxisDataInPixels.get(j)[i]) {
+                                        iHighLightMirrored = true;
+                                        iHighLightIndexMirrored = i;
+                                        iHighLightDatasetIndexMirrored = j;
+                                        highestPeakInRange = yAxisDataInPixels.get(j)[i];
+                                        repaint();
+                                    }
                                 }
                             } else if (delta >= iPointDetectionTolerance) {
                                 break;
@@ -1693,13 +1935,10 @@ public abstract class GraphicsPanel extends JPanel {
         iXAxisMin = aMinXAxisValue - (aMinXAxisValue % power);
         iXAxisMax = aMaxXAxisValue + (power - (aMaxXAxisValue % power));
 
-        //@TODO just some helpful printouts for when this is refined further.
+        // @TODO: just some helpful printouts for when this is refined further.
         //logger.info(" - Delta: " + delta + "\tAdj. delta: " + (iMassMax-iMassMin) + "\tMinMass: " + iMassMin + "\tMaxMass: " + iMassMax + "\tScale: " + power);
         iYAxisMax = maxInt + (maxInt / 10);
 
-//        if (dataSetCounterMirroredSpectra > 0) {
-//            iYAxisMin = -iYAxisMax;
-//        }
         int liSize = iSpecPanelListeners.size();
         RescalingEvent re = new RescalingEvent(this, aMinXAxisValue, aMaxXAxisValue);
         if (aNotifyListeners) {
@@ -1733,7 +1972,6 @@ public abstract class GraphicsPanel extends JPanel {
 
         HashMap peaks = new HashMap(aXAxisData.length);
 
-        
         // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
             peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
@@ -2317,24 +2555,30 @@ public abstract class GraphicsPanel extends JPanel {
      * This method will draw a highlighting triangle + x-value on top of the
      * marked point.
      *
-     * @param aIndex int with the index of the point to highlight.
+     * @param aIndex int with the index of the point to highlight
      * @param dataSetIndex the index of the dataset
-     * @param g Graphics object to draw the highlighting on.
+     * @param g Graphics object to draw the highlighting on
+     * @param mirrored if true the highlighted peak is from a mirrored spectrum
      */
-    protected void highLightPeak(int aIndex, int dataSetIndex, Graphics g) {
-        this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 0, true, 1);
+    protected void highLightPeak(int aIndex, int dataSetIndex, Graphics g, boolean mirrored) {
+        if (!mirrored) {
+            this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 0, true, 1, mirrored);
+        } else {
+            this.highLight(aIndex, dataSetIndex, g, Color.blue, null, 20, true, 1, mirrored);
+        }
     }
 
     /**
      * This method will draw a highlighting triangle + x-value on top of the
      * clicked marked point.
      *
-     * @param aIndex int with the index of the clicked point to highlight.
+     * @param aIndex int with the index of the clicked point to highlight
      * @param dataSetIndex the index of the dataset
-     * @param g Graphics object to draw the highlighting on.
+     * @param g Graphics object to draw the highlighting on
+     * @param mirrored if true the highlighted peak is from a mirrored spectrum
      */
-    protected void highlightClicked(int aIndex, int dataSetIndex, Graphics g) {
-        this.highLight(aIndex, dataSetIndex, g, Color.BLACK, null, 0, true, 1);
+    protected void highlightClicked(int aIndex, int dataSetIndex, Graphics g, boolean mirrored) {
+        this.highLight(aIndex, dataSetIndex, g, Color.BLACK, null, 0, true, 1, mirrored);
     }
 
     /**
@@ -2352,26 +2596,42 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aShowArrow boolean that indicates whether a downward-pointing
      * arrow and dotted line should be drawn over the point.
      * @param aAnnotationCounter the number of annotation of the given peak
+     * @param mirrored if true the highlighting is done on the mirrored spectra
      */
-    protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow, int aAnnotationCounter) {
+    protected void highLight(int aIndex, int dataSetIndex, Graphics g, Color aColor, String aComment, int aPixelsSpacer, boolean aShowArrow, int aAnnotationCounter, boolean mirrored) {
 
-        int x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
+        int x;
+
+        if (!mirrored) {
+            x = iXAxisDataInPixels.get(dataSetIndex)[aIndex];
+        } else {
+            x = iXAxisDataInPixelsMirroredSpectrum.get(dataSetIndex)[aIndex];
+        }
+
         int y;
 
         if (aPixelsSpacer < 0) {
-            y = iTopPadding;
+            if (!mirrored) {
+                y = iTopPadding;
+            } else {
+                y = -iTopPadding;
+            }
         } else {
-            y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
+            if (!mirrored) {
+                y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
+            } else {
+                y = iYAxisDataInPixelsMirroredSpectrum.get(dataSetIndex)[aIndex] + (aPixelsSpacer / 2); // @TODO: what is the correct aPixelsSpacer value?
+            }
 
             // special case for when top peak is annotated with multiple annotations
             if (y < 0) {
-                y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
+                y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4); // @TODO: what about mirrored spectra?
             }
         }
 
         // Correct for absurd heights.
         if (y < iTopPadding / 3 && dataSetCounterMirroredSpectra == 0) {
-            y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
+            y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4); // @TODO: what about mirrored spectra?
         }
 
         // Temporarily change the color
@@ -2381,10 +2641,17 @@ public abstract class GraphicsPanel extends JPanel {
         // Draw the triangle first, if appropriate.
         int arrowSpacer = 10;
         if (aShowArrow) {
-            g.fillPolygon(new int[]{x - 3, x + 3, x},
-                    new int[]{y - 6, y - 6, y - 3},
-                    3);
-            arrowSpacer = 13;
+            if (!mirrored) {
+                g.fillPolygon(new int[]{x - 3, x + 3, x},
+                        new int[]{y - 6, y - 6, y - 3},
+                        3);
+                arrowSpacer = 13;
+            } else {
+                g.fillPolygon(new int[]{x - 4, x + 4, x},
+                        new int[]{y - 3, y - 3, y - 8},
+                        3);
+                arrowSpacer = -10;
+            }
         }
 
         // Now the x-value.
@@ -2414,8 +2681,16 @@ public abstract class GraphicsPanel extends JPanel {
             }
         } else {
             // No comment, so print the x- and y-value. Note: both are rounded to four decimals
-            String xValue = Double.toString(Util.roundDouble(iXAxisData.get(dataSetIndex)[aIndex], 4));
-            String yValue = Double.toString(Util.roundDouble(iYAxisData.get(dataSetIndex)[aIndex], 4));
+            String xValue;
+            String yValue;
+
+            if (!mirrored) {
+                xValue = Double.toString(Util.roundDouble(iXAxisData.get(dataSetIndex)[aIndex], 4));
+                yValue = Double.toString(Util.roundDouble(iYAxisData.get(dataSetIndex)[aIndex], 4));
+            } else {
+                xValue = Double.toString(Util.roundDouble(iXAxisDataMirroredSpectrum.get(dataSetIndex)[aIndex], 4));
+                yValue = Double.toString(Util.roundDouble(iYAxisDataMirroredSpectrum.get(dataSetIndex)[aIndex], 4));
+            }
 
             String label = "(" + xValue + ", " + yValue + ")";
 
@@ -2423,9 +2698,13 @@ public abstract class GraphicsPanel extends JPanel {
             g.drawString(label, x - halfWayMass, y - arrowSpacer);
         }
 
-        // If we drew above the point, drop a dotted line.
+        // If we drew above/below the point, drop a dotted line.
         if (aPixelsSpacer != 0 && aShowArrow) {
-            dropDottedLine(aIndex, dataSetIndex, y + 2, g);
+            if (!mirrored) {
+                dropDottedLine(aIndex, dataSetIndex, y + 2, g, mirrored);
+            } else {
+                dropDottedLine(aIndex, dataSetIndex, y - 4, g, mirrored);
+            }
         }
 
         // Restore original color.
@@ -2444,23 +2723,35 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aColor Color object with the color for all the drawing.
      * @param aExtraPadding int with an optional amount of extra padding (lower
      * on the graph if positive, higher on the graph if negative)
+     * @param mirrored if true the line is drawn for the mirrored spectra
      */
-    protected void drawMeasurementLine(int aFirstIndex, int aFirstDatasetIndex, int aSecondIndex, int aSecondDatasetIndex, Graphics g, Color aColor, int aExtraPadding) {
+    protected void drawMeasurementLine(int aFirstIndex, int aFirstDatasetIndex, int aSecondIndex, int aSecondDatasetIndex, Graphics g, Color aColor, int aExtraPadding, boolean mirrored) {
 
         // First get the x coordinates of the two points.
-        int x1 = iXAxisDataInPixels.get(aFirstDatasetIndex)[aFirstIndex];
-        int x2 = iXAxisDataInPixels.get(aSecondDatasetIndex)[aSecondIndex];
+        int x1;
+        int x2;
+        ArrayList<double[]> xAxisData;
+
+        if (!mirrored) {
+            x1 = iXAxisDataInPixels.get(aFirstDatasetIndex)[aFirstIndex];
+            x2 = iXAxisDataInPixels.get(aSecondDatasetIndex)[aSecondIndex];
+            xAxisData = iXAxisData;
+        } else {
+            x1 = iXAxisDataInPixelsMirroredSpectrum.get(aFirstDatasetIndex)[aFirstIndex];
+            x2 = iXAxisDataInPixelsMirroredSpectrum.get(aSecondDatasetIndex)[aSecondIndex];
+            xAxisData = iXAxisDataMirroredSpectrum;
+        }
 
         if (x1 == 0 && x2 == 0) {
             return;
         } else if (x1 == 0) {
-            if (iXAxisData.get(aFirstDatasetIndex)[aFirstIndex] < iXAxisMin) {
+            if (xAxisData.get(aFirstDatasetIndex)[aFirstIndex] < iXAxisMin) {
                 x1 = iXPadding + 1;
             } else {
                 x1 = this.getWidth() - iXPadding - 1;
             }
         } else if (x2 == 0) {
-            if (iXAxisData.get(aSecondDatasetIndex)[aSecondIndex] < iXAxisMin) {
+            if (xAxisData.get(aSecondDatasetIndex)[aSecondIndex] < iXAxisMin) {
                 x2 = iXPadding + 1;
             } else {
                 x2 = this.getWidth() - iXPadding - 1;
@@ -2468,7 +2759,7 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         // Now the real x-value difference as a String.
-        double delta = Math.abs(iXAxisData.get(aFirstDatasetIndex)[aFirstIndex] - iXAxisData.get(aSecondDatasetIndex)[aSecondIndex]);
+        double delta = Math.abs(xAxisData.get(aFirstDatasetIndex)[aFirstIndex] - xAxisData.get(aSecondDatasetIndex)[aSecondIndex]);
         String deltaMass = new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
         String deNovoTag = this.findDeltaMassMatches(delta, deltaMassWindow);
 
@@ -2476,7 +2767,13 @@ public abstract class GraphicsPanel extends JPanel {
         int deltaMassWidth = g.getFontMetrics().stringWidth(deltaMass);
 
         // Vertical position of the bar with the position of the highest point + a margin.
-        int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2)) + aExtraPadding;
+        int y;
+
+        if (!mirrored) {
+            y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2)) + aExtraPadding;
+        } else {
+            y = this.getHeight() - iXPadding - aExtraPadding;
+        }
 
         // Draw the line.
         Color originalColor = g.getColor();
@@ -2486,8 +2783,8 @@ public abstract class GraphicsPanel extends JPanel {
         g.drawLine(x2, y - 3, x2, y + 3);
 
         // Drop a dotted line down to the peaks.
-        dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g);
-        dropDottedLine(aSecondIndex, aSecondDatasetIndex, y - 3, g);
+        dropDottedLine(aFirstIndex, aFirstDatasetIndex, y - 3, g, mirrored);
+        dropDottedLine(aSecondIndex, aSecondDatasetIndex, y - 3, g, mirrored);
 
         // Draw the de novo tag.
         int xPosText = Math.min(x1, x2) + (Math.abs(x1 - x2) / 2) - (deNovoTagWidth / 2);
@@ -2511,18 +2808,38 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aTotalHeight int with the height (in pixels) to drop the dotted
      * line from.
      * @param g Graphics object to draw the dotted line on.
+     * @param mirrored if true the line is drawn on the mirrored spectra
      */
-    protected void dropDottedLine(int aPeakIndex, int aDatasetIndex, int aTotalHeight, Graphics g) {
+    protected void dropDottedLine(int aPeakIndex, int aDatasetIndex, int aTotalHeight, Graphics g, boolean mirrored) {
 
-        int x = iXAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
-        int y = iYAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
+        int x;
+        int y;
 
-        // Draw the dotted line.
-        if ((y - aTotalHeight) > 10) {
-            int start = aTotalHeight;
-            while (start < y) {
-                g.drawLine(x, start, x, start + 2);
-                start += 7;
+        if (!mirrored) {
+            x = iXAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
+            y = iYAxisDataInPixels.get(aDatasetIndex)[aPeakIndex];
+        } else {
+            x = iXAxisDataInPixelsMirroredSpectrum.get(aDatasetIndex)[aPeakIndex];
+            y = iYAxisDataInPixelsMirroredSpectrum.get(aDatasetIndex)[aPeakIndex];
+        }
+
+        if (!mirrored) {
+            // Draw the dotted line.
+            if ((y - aTotalHeight) > 10) {
+                int start = aTotalHeight;
+                while (start < y) {
+                    g.drawLine(x, start, x, start + 2);
+                    start += 7;
+                }
+            }
+        } else {
+            // Draw the dotted line.
+            if ((aTotalHeight - y) > 10) {
+                int start = aTotalHeight;
+                while (start > y) {
+                    g.drawLine(x, start, x, start - 2);
+                    start -= 7;
+                }
             }
         }
     }
@@ -2597,8 +2914,9 @@ public abstract class GraphicsPanel extends JPanel {
      * @param aAlreadyAnnotated HashMap with the index of a point as key, and
      * the number of times it has been annotated as value (or 'null' if not yet
      * annotated).
+     * @param mirrored if true the annotation is for the mirrored spectra
      */
-    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlreadyAnnotated) {
+    protected void annotate(SpectrumAnnotation aSA, Graphics g, HashMap<String, Integer> aAlreadyAnnotated, boolean mirrored) {
 
         double xValue = aSA.getMZ();
         double error = Math.abs(aSA.getErrorMargin());
@@ -2606,14 +2924,25 @@ public abstract class GraphicsPanel extends JPanel {
         // Only do those that fall within the current visual range.
         if (!(xValue < iXAxisMin || xValue > iXAxisMax)) {
 
+            ArrayList<double[]> xAxisData;
+            ArrayList<double[]> yAxisData;
+
+            if (!mirrored) {
+                xAxisData = iXAxisData;
+                yAxisData = iYAxisData;
+            } else {
+                xAxisData = iXAxisDataMirroredSpectrum;
+                yAxisData = iYAxisDataMirroredSpectrum;
+            }
+
             // See if any match is to be found.
             boolean foundMatch = false;
             int peakIndex = -1;
             int dataSetIndex = -1;
 
-            for (int j = 0; j < iXAxisData.size(); j++) {
-                for (int i = 0; i < iXAxisData.get(j).length; i++) {
-                    double delta = iXAxisData.get(j)[i] - xValue;
+            for (int j = 0; j < xAxisData.size(); j++) {
+                for (int i = 0; i < xAxisData.get(j).length; i++) {
+                    double delta = xAxisData.get(j)[i] - xValue;
                     if (Math.abs(delta) <= error) {
                         if (!foundMatch) {
                             foundMatch = true;
@@ -2622,7 +2951,7 @@ public abstract class GraphicsPanel extends JPanel {
                         } else {
                             // Oops, we already had one...
                             // Take the one with the largest intensity.
-                            if (iYAxisData.get(j)[i] > iYAxisData.get(dataSetIndex)[peakIndex]) {
+                            if (xAxisData.get(j)[i] > xAxisData.get(dataSetIndex)[peakIndex]) {
                                 peakIndex = i;
                                 dataSetIndex = j;
                             }
@@ -2635,10 +2964,10 @@ public abstract class GraphicsPanel extends JPanel {
 
             // If a match was found and it qualifies against the minimal intensity,
             // we now have a peak index so we can annotate.
-            if (foundMatch && iYAxisData.get(dataSetIndex)[peakIndex] > iAnnotationYAxisThreshold) {
+            if (foundMatch && yAxisData.get(dataSetIndex)[peakIndex] > iAnnotationYAxisThreshold) {
                 //String label = aSA.getLabel() + " (" + new BigDecimal(mz-iMasses[peakIndex]).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")";
                 String label = aSA.getLabel();
-                int spacer = (int) ((iYAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
+                int spacer = (int) ((yAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
                 boolean showArrow = true;
                 String key = dataSetIndex + "_" + peakIndex;
                 if (aAlreadyAnnotated.containsKey(key)) {
@@ -2649,11 +2978,8 @@ public abstract class GraphicsPanel extends JPanel {
                 } else {
                     aAlreadyAnnotated.put(key, Integer.valueOf(1));
                 }
-                this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow, aAlreadyAnnotated.get(key));
+                this.highLight(peakIndex, dataSetIndex, g, aSA.getColor(), label, spacer, showArrow, aAlreadyAnnotated.get(key), mirrored);
             }
-
-            // check if we have mirrored spectra to annotate
-            // @TODO: implement me!
         }
     }
 

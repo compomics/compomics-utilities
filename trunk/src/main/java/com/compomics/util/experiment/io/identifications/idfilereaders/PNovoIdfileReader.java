@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -51,6 +53,10 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
+    /**
+     * The characters used to represent variable modifications in pNovo+.
+     */
+    private List<Character> variableModificationsCharacters = Arrays.asList('B', 'J', 'O', 'U', 'X', 'Z'); // @TODO: is it possible to add more characters..?
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -234,9 +240,17 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         String[] lineComponents = line.trim().split("\t");
 
         Double pNovoScore = new Double(lineComponents[2]);
-        String pNovoSequence = lineComponents[1];
-        //String sequence = "";
+        String pNovoSequence = lineComponents[1]; // @TODO: this sequence contains the variable ptm characters, which are valid amino acids...
+        String sequence = "";
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
+
+        for (int i = 0; i < pNovoSequence.length(); i++) {
+            char currentChar = pNovoSequence.charAt(i);
+
+            if (variableModificationsCharacters.contains(currentChar)) {
+                // @TODO: have to somehow extract/annotate variable ptms
+            }
+        }
 
         // @TODO: convert the variable PTMs
 //        if (!modificationMass.equals("")) {
@@ -256,9 +270,9 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 //        }
 //
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(pNovoSequence);
-//        for (ModificationMatch modificationMatch : modificationMatches) {
-//            aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
-//        }
+        for (ModificationMatch modificationMatch : modificationMatches) {
+            aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
+        }
         Tag tag = new Tag(0, aminoAcidSequence, 0); // @TODO: is this correct?
         TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, new Charge(Charge.PLUS, 1), pNovoScore); // @TODO: how to get the charge?
 
@@ -277,7 +291,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
         return null;
         // @TODO: implement me
-        
+
 //        Map<String, String> invertedPtmMap = pNovoParameters.getPNovoPtmMap();
 //
 //        if (invertedPtmMap == null) {

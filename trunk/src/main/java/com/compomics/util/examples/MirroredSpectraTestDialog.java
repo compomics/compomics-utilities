@@ -85,6 +85,11 @@ public class MirroredSpectraTestDialog extends javax.swing.JDialog {
             currentAnnotations.add(new DefaultSpectrumAnnotation(120, 0.08159999999999457, SpectrumPanel.determineColorOfPeak("iF"), "iF"));
             spectrumPanel.setAnnotationsMirrored(currentAnnotations);
 
+            // add reference areas
+//            spectrumPanel.addReferenceAreaXAxis(new ReferenceArea("1", "A", 500, 600, Color.yellow, 0.5f, false, true, Color.black, true, Color.green, 2f, 1.0, true));
+//            spectrumPanel.addReferenceAreaXAxis(new ReferenceArea("2", "B", 700, 800, Color.yellow, 0.5f, false, true, Color.black, true, Color.green, 2f, 0.8, true));
+//            spectrumPanel.addReferenceAreaXAxis(new ReferenceArea("3", "A", 500, 600, Color.blue, 0.5f, false, true, Color.black, true, Color.green, 2f, 1.0, false));
+            
             // add a third mirrored spectrum
 //            spectrumPanel.addMirroredSpectrum(pklFileA.getMzValues(), pklFileA.getIntensityValues(),
 //                    pklFileA.getPrecursorMz(), "" + pklFileA.getPrecurorCharge(),

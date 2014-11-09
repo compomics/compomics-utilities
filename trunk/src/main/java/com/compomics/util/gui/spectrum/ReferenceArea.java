@@ -64,6 +64,11 @@ public class ReferenceArea {
      * the width of the area from the y-axis and to the right. Range: [0 - 100].
      */
     private double percentLength = 1;
+    /**
+     * If true the reference area is added above the x-axis, false adds the
+     * reference are below the x-axis.
+     */
+    private boolean aboveXAxis = true;
 
     /**
      * Creates a new ReferenceArea.
@@ -76,9 +81,12 @@ public class ReferenceArea {
      * @param alpha the alpha level (transparency) of the reference area
      * @param drawOnTop if the area is to be drawn on top of or behind the data
      * @param drawLabel if the label is to be drawn or not
+     * @param aboveXAxis if true the reference area is added above the x-axis,
+     * false adds the reference are below the x-axis
      * @throws IllegalArgumentException alpha must be in the range 0.0f to 1.0f
      */
-    public ReferenceArea(String identifier, String label, double start, double end, Color areaColor, float alpha, boolean drawOnTop, boolean drawLabel) throws IllegalArgumentException {
+    public ReferenceArea(String identifier, String label, double start, double end, Color areaColor, float alpha,
+            boolean drawOnTop, boolean drawLabel, boolean aboveXAxis) throws IllegalArgumentException {
 
         this.identifier = identifier;
         this.label = label;
@@ -87,6 +95,7 @@ public class ReferenceArea {
         this.areaColor = areaColor;
         this.drawOnTop = drawOnTop;
         this.drawLabel = drawLabel;
+        this.aboveXAxis = aboveXAxis;
 
         // check the validity of alpha
         if (alpha < 0 || alpha > 1) {
@@ -112,10 +121,12 @@ public class ReferenceArea {
      * @param borderColor the border color
      * @param borderWidth the border width
      * @param percentLength the length in percent, [0.0 - 1.0].
+     * @param aboveXAxis if true the reference area is added above the x-axis,
+     * false adds the reference are below the x-axis
      * @throws IllegalArgumentException alpha must be in the range 0.0f to 1.0f
      */
     public ReferenceArea(String identifier, String label, double start, double end, Color areaColor, float alpha, boolean drawOnTop, boolean drawLabel,
-            Color labelColor, boolean boldFont, Color borderColor, float borderWidth, double percentLength) throws IllegalArgumentException {
+            Color labelColor, boolean boldFont, Color borderColor, float borderWidth, double percentLength, boolean aboveXAxis) throws IllegalArgumentException {
 
         this.identifier = identifier;
         this.label = label;
@@ -129,6 +140,7 @@ public class ReferenceArea {
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;
         this.percentLength = percentLength;
+        this.aboveXAxis = aboveXAxis;
 
         // check the validity of alpha
         if (alpha < 0 || alpha > 1) {
@@ -370,7 +382,7 @@ public class ReferenceArea {
 
     /**
      * Returns the reference identifier.
-     * 
+     *
      * @return the identifier
      */
     public String getIdentifier() {
@@ -379,10 +391,31 @@ public class ReferenceArea {
 
     /**
      * Sets the references identifier. Has to be unique.
-     * 
+     *
      * @param identifier the identifier to set
      */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    /**
+     * Returns true if the reference area is added above the x-axis, false adds
+     * the reference are below the x-axis
+     *
+     * @return true if the reference area is added above the x-axis, false adds
+     * the reference are below the x-axis
+     */
+    public boolean isAboveXAxis() {
+        return aboveXAxis;
+    }
+
+    /**
+     * Set if the reference area is to be added above the x-axis, false adds the
+     * reference are below the x-axis
+     *
+     * @param aboveXAxis if the reference area is to be added above the x-axis
+     */
+    public void setAboveXAxis(boolean aboveXAxis) {
+        this.aboveXAxis = aboveXAxis;
     }
 }

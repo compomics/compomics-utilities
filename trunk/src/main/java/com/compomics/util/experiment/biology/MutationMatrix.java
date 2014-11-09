@@ -26,8 +26,21 @@ public class MutationMatrix implements Serializable {
      */
     private final HashMap<Character, HashSet<Character>> mutations = new HashMap<Character, HashSet<Character>>(26);
     /**
-     * Reverse map of the possible amino acid mutations: mutated aa &gt; original
-     * aa.
+     * Map of the possible amino acid mutations: original aa &gt; delta mass
+     * (mutated - original) &gt; mutated aa.
+     */
+    private final HashMap<Character, HashMap<Double, HashSet<Character>>> mutationsMasses = new HashMap<Character, HashMap<Double, HashSet<Character>>>(26);
+    /**
+     * The minimum difference between an original amino acid and the mutated version.
+     */
+    private Double minDelta = null;
+    /**
+     * The maximum difference between an original amino acid and the mutated version.
+     */
+    private Double maxDelta = null;
+    /**
+     * Reverse map of the possible amino acid mutations: mutated aa &gt;
+     * original aa.
      */
     private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<Character, HashSet<Character>>(26);
     /**
@@ -80,13 +93,43 @@ public class MutationMatrix implements Serializable {
             mutatedAas = new HashSet<Character>();
             mutations.put(originalAa, mutatedAas);
         }
-            mutatedAas.add(mutatedAa);
+        mutatedAas.add(mutatedAa);
+        HashMap<Double, HashSet<Character>> deltaMasses = mutationsMasses.get(originalAa);
+        if (deltaMasses == null) {
+            deltaMasses = new HashMap<Double, HashSet<Character>>(1);
+            mutationsMasses.put(originalAa, deltaMasses);
+        }
+        double deltaMass = AminoAcid.getAminoAcid(mutatedAa).monoisotopicMass - AminoAcid.getAminoAcid(originalAa).monoisotopicMass;
+        if (minDelta == null || deltaMass < minDelta) {
+            minDelta = deltaMass;
+        }
+        if (maxDelta == null || deltaMass > maxDelta) {
+            maxDelta = deltaMass;
+        }
+        mutatedAas = deltaMasses.get(deltaMass);
+        if (mutatedAas == null) {
+            mutatedAas = new HashSet<Character>();
+            deltaMasses.put(deltaMass, mutatedAas);
+        }
+        mutatedAas.add(mutatedAa);
         HashSet<Character> originalAas = mutationsReverse.get(originalAa);
         if (originalAas == null) {
             originalAas = new HashSet<Character>();
             mutationsReverse.put(mutatedAa, originalAas);
         }
-            originalAas.add(originalAa);
+        originalAas.add(originalAa);
+    }
+
+    /**
+     * Returns the possible mutated amino acids for the given amino acid as a
+     * map where the list of their single letter code is indexed by the delta mass to the original amino acid. Null if none found.
+     *
+     * @param originalAminoAcid the amino acid of interest
+     *
+     * @return the possible mutated amino acids
+     */
+    public HashMap<Double, HashSet<Character>> getMutatedMasses(Character originalAminoAcid) {
+        return mutationsMasses.get(originalAminoAcid);
     }
 
     /**
@@ -360,6 +403,24 @@ public class MutationMatrix implements Serializable {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns the minimum difference between an original amino acid and the mutated version.
+     * 
+     * @return the minimum difference between an original amino acid and the mutated version
+     */
+    public Double getMinDelta() {
+        return minDelta;
+    }
+
+    /**
+     * Returs the maximum difference between an original amino acid and the mutated version.
+     * 
+     * @return the maximum difference between an original amino acid and the mutated version
+     */
+    public Double getMaxDelta() {
+        return maxDelta;
     }
 
     /**

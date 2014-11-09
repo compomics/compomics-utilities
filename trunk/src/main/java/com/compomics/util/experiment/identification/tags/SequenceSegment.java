@@ -42,9 +42,13 @@ public class SequenceSegment {
      */
     public final boolean nTerminus;
     /**
-     * The terminal amino acid if mutated.
+     * The index of the mutation.
      */
-    private Character mutationAtTerminus = null;
+    private Integer mutationIndex = null;
+    /**
+     * The mutated amino acid.
+     */
+    private Character mutation = null;
     /**
      * The modification located at the terminus.
      */
@@ -76,7 +80,11 @@ public class SequenceSegment {
         this.terminalIndex = sequenceSegment.getTerminalIndex();
         length = sequenceSegment.length();
         previousSegment = sequenceSegment;
-        mutationAtTerminus = sequenceSegment.getMutatedAaAtTerminus();
+        Integer otherMutationIndex = sequenceSegment.getMutationIndex();
+        if (otherMutationIndex != null) {
+            mutationIndex = otherMutationIndex;
+            mutation = sequenceSegment.getMutation();
+        }
         mass = sequenceSegment.getMass();
     }
 
@@ -100,24 +108,24 @@ public class SequenceSegment {
             HashMap<Integer, Character> previousMutations = previousSegment.getMutations();
             if (previousMutations != null) {
                 if (mutations == null) {
-                    if (mutationAtTerminus == null) {
+                    if (mutation == null) {
                         return previousMutations;
                     } else {
                         HashMap<Integer, Character> tempMutations = new HashMap<Integer, Character>(previousMutations.size());
-                        tempMutations.put(length, mutationAtTerminus);
+                        tempMutations.put(mutationIndex, mutation);
                         return tempMutations;
                     }
                 }
                 mutations.putAll(previousMutations);
             }
         }
-        if (mutationAtTerminus != null) {
+        if (mutation != null) {
             if (mutations == null) {
                 HashMap<Integer, Character> tempMutations = new HashMap<Integer, Character>(1);
-                tempMutations.put(length, mutationAtTerminus);
+                tempMutations.put(mutationIndex, mutation);
                 return tempMutations;
             }
-            mutations.put(length, mutationAtTerminus);
+            mutations.put(mutationIndex, mutation);
         }
         return mutations;
     }
@@ -171,19 +179,28 @@ public class SequenceSegment {
      */
     public int getIndexOnProtein() {
         if (nTerminus) {
-            return terminalIndex;
+            return terminalIndex + 1;
         } else {
             return terminalIndex - length;
         }
     }
 
     /**
-     * Returns the amino acid at the terminus if mutated, null otherwise.
+     * Returns the mutation index, null if none.
+     *
+     * @return the mutation index
+     */
+    public Integer getMutationIndex() {
+        return mutationIndex;
+    }
+
+    /**
+     * Returns the mutated amino acid, null if none.
      *
      * @return the amino acid at the terminus if mutated
      */
-    public Character getMutatedAaAtTerminus() {
-        return mutationAtTerminus;
+    public Character getMutation() {
+        return mutation;
     }
 
     /**
@@ -234,7 +251,18 @@ public class SequenceSegment {
         } else {
             terminalIndex += sequenceSegment.length();
         }
-        mutationAtTerminus = sequenceSegment.getMutatedAaAtTerminus();
+        Integer otherMutationIndex = sequenceSegment.getMutationIndex();
+        if (otherMutationIndex != null) {
+            if (mutationIndex == null) {
+                mutationIndex = otherMutationIndex;
+                mutation = sequenceSegment.getMutation();
+            } else {
+                if (mutations == null) {
+                    mutations = new HashMap<Integer, Character>();
+                    mutations.put(otherMutationIndex, mutation);
+                }
+            }
+        }
         mass += sequenceSegment.getMass();
     }
 
@@ -298,18 +326,12 @@ public class SequenceSegment {
      * Appends an amino acid to the terminus of sequencing.
      *
      * @param aminoAcid an amino acid
-     * @param mutated indicates whether the amino acid is the product of a
-     * mutation
      */
-    public void appendTerminus(AminoAcid aminoAcid, boolean mutated) {
+    public void appendTerminus(AminoAcid aminoAcid) {
         if (nTerminus) {
             terminalIndex--;
         } else {
             terminalIndex++;
-        }
-        if (mutated) {
-            char aa = aminoAcid.getSingleLetterCodeAsChar();
-            mutationAtTerminus = aa;
         }
         length++;
         mass += aminoAcid.monoisotopicMass;
@@ -335,6 +357,24 @@ public class SequenceSegment {
         modificationAtTerminus = modification;
         mass += modificationMass;
     }
+    
+    /**
+     * Adds a mutation to the segment
+     * 
+     * @param index the index of the mutated amino acid
+     * @param aa the mutated amino acid
+     */
+    public void addMutation(Integer index, Character aa) {
+        if (mutationIndex == null) {
+            mutationIndex = index;
+            mutation = aa;
+        } else {
+            if (mutations == null) {
+                mutations = new HashMap<Integer, Character>(1);
+            }
+            mutations.put(index, aa);
+        }
+    }
 
     /**
      * Returns the number of mutations.
@@ -343,7 +383,11 @@ public class SequenceSegment {
      */
     public int getnMutations() {
         if (mutations == null) {
-            return 0;
+            if (mutationIndex == null) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
         return mutations.size();
     }

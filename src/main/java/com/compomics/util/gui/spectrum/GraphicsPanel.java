@@ -1084,9 +1084,9 @@ public abstract class GraphicsPanel extends JPanel {
 
             // see if there are daisychain to display
             drawDaisyChain(g, iClickedList, iClickedListDatasetIndices, iClickedIndex, iClickedDataSetIndex, iStoredSequence, iStoredSequenceDatasetIndices, false);
-            
+
             // see if there are daisychains to display for the mirrored spectra
-            drawDaisyChain(g, iClickedListMirrored, iClickedListDatasetIndicesMirrored, iClickedIndexMirrored, 
+            drawDaisyChain(g, iClickedListMirrored, iClickedListDatasetIndicesMirrored, iClickedIndexMirrored,
                     iClickedDataSetIndexMirrored, iStoredSequenceMirrored, iStoredSequenceDatasetIndicesMirrored, true);
 
             // annotate peaks
@@ -1137,7 +1137,7 @@ public abstract class GraphicsPanel extends JPanel {
      * clicked point
      * @param storedSequence vector that holds a set of stored points from a
      * previously established list
-     * @param storedSequenceDatasetIndices  vector that holds the dataset indices
+     * @param storedSequenceDatasetIndices vector that holds the dataset indices
      * of stored points from a previously established list.
      * @param mirrored if the daisy chains are for the mirrored spectra
      */
@@ -1230,22 +1230,36 @@ public abstract class GraphicsPanel extends JPanel {
                     end++;
                 }
 
-                // Vertical position of the bar with the position of the highest point + a margin.
+                // x-axis locations
+                int xAxisYLocation = (this.getHeight() - currentPadding) / 2;
+                xTemp[0] = start + iXPadding;
+                xTemp[1] = end + iXPadding;
+                xTemp[2] = end + iXPadding;
+                xTemp[3] = start + iXPadding;
+
+                // y-axis locations
                 int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2));
                 int areaHeight = this.getHeight() - currentPadding - y;
-                y += (int) (areaHeight - (areaHeight * currentReferenceArea.getPercentLength()));
+                y += (int) (areaHeight - (areaHeight * currentReferenceArea.getPercentLength())); // @TODO: there is a bug here with small below x-axis reference areas...
 
-                xTemp[0] = start + iXPadding;
-                yTemp[0] = y;
+                if (currentReferenceArea.isAboveXAxis()) {
+                    yTemp[0] = y;
+                    yTemp[1] = y;
 
-                xTemp[1] = end + iXPadding;
-                yTemp[1] = y;
-
-                xTemp[2] = end + iXPadding;
-                yTemp[2] = this.getHeight() - currentPadding;
-
-                xTemp[3] = start + iXPadding;
-                yTemp[3] = this.getHeight() - currentPadding;
+                    if (dataSetCounterMirroredSpectra > 0) {
+                        yTemp[2] = this.getHeight() - xAxisYLocation - currentPadding;
+                        yTemp[3] = this.getHeight() - xAxisYLocation - currentPadding;
+                    } else {
+                        yTemp[2] = this.getHeight() - currentPadding;
+                        yTemp[3] = this.getHeight() - currentPadding;
+                    }
+                } else {
+                    y = this.getHeight() - y;
+                    yTemp[0] = this.getHeight() - xAxisYLocation - currentPadding;
+                    yTemp[1] = this.getHeight() - xAxisYLocation - currentPadding;
+                    yTemp[2] = y;
+                    yTemp[3] = y;
+                }
 
                 // draw the polygon
                 g2d.fillPolygon(xTemp, yTemp, xTemp.length);
@@ -1275,7 +1289,11 @@ public abstract class GraphicsPanel extends JPanel {
                     String label = currentReferenceArea.getLabel();
                     int width = g.getFontMetrics().stringWidth(label);
                     int xPosText = xTemp[0] + (Math.abs(xTemp[1] - xTemp[0]) / 2) - (width / 2);
-                    g2d.drawString(label, xPosText, y + (int) fm.getStringBounds(label, g).getHeight() + 8);
+                    if (currentReferenceArea.isAboveXAxis()) {
+                        g2d.drawString(label, xPosText, y + (int) fm.getStringBounds(label, g).getHeight() + 8);
+                    } else {
+                        g2d.drawString(label, xPosText, y - (int) fm.getStringBounds(label, g).getHeight());
+                    }
                 }
             }
         }

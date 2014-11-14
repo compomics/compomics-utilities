@@ -359,7 +359,7 @@ public class SequenceSegment {
     }
     
     /**
-     * Adds a mutation to the segment
+     * Adds a mutation to the segment.
      * 
      * @param index the index of the mutated amino acid
      * @param aa the mutated amino acid

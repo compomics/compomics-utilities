@@ -1901,7 +1901,7 @@ public abstract class GraphicsPanel extends JPanel {
 
                         // exclude background peaks?
                         if (yAxisZoomExcludesBackgroundPeaks) {
-                            annotatedPeak = isPeakAnnotated(iXAxisData.get(j)[i]);
+                            annotatedPeak = isPeakAnnotated(iXAxisData.get(j)[i], false);
                         }
 
                         if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
@@ -1923,14 +1923,13 @@ public abstract class GraphicsPanel extends JPanel {
                     } else {
                         if (iYAxisDataMirroredSpectrum.get(j)[i] > maxInt) {
 
-//                            boolean annotatedPeak = false;
-//
-//                            // exclude background peaks?
-//                            if (yAxisZoomExcludesBackgroundPeaks) {
-//                                annotatedPeak = isPeakAnnotated(iXAxisDataMirroredSpectrum.get(j)[i]);
-//                            }
-                            //if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
-                            if (!yAxisZoomExcludesBackgroundPeaks || showAllPeaks) {
+                            boolean annotatedPeak = false;
+
+                            // exclude background peaks?
+                            if (yAxisZoomExcludesBackgroundPeaks) {
+                                annotatedPeak = isPeakAnnotated(iXAxisDataMirroredSpectrum.get(j)[i], true);
+                            }
+                            if (!yAxisZoomExcludesBackgroundPeaks || (yAxisZoomExcludesBackgroundPeaks && annotatedPeak) || showAllPeaks) {
                                 maxInt = iYAxisDataMirroredSpectrum.get(j)[i];
                             }
                         }
@@ -2632,7 +2631,7 @@ public abstract class GraphicsPanel extends JPanel {
             if (!mirrored) {
                 y = iTopPadding;
             } else {
-                y = -iTopPadding;
+                y = this.getHeight() - iTopPadding;
             }
         } else {
             if (!mirrored) {
@@ -2648,8 +2647,21 @@ public abstract class GraphicsPanel extends JPanel {
         }
 
         // Correct for absurd heights.
-        if (y < iTopPadding / 3 && dataSetCounterMirroredSpectra == 0) {
-            y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4); // @TODO: what about mirrored spectra?
+        if (!mirrored) {
+            if (dataSetCounterMirroredSpectra == 0) {
+                if (y < iTopPadding / 3) {
+                    y = (iTopPadding / 3) - (aAnnotationCounter - 3) * (g.getFontMetrics().getAscent() + 4);
+                }
+            } else {
+                y = iYAxisDataInPixels.get(dataSetIndex)[aIndex] - aPixelsSpacer;
+                if (y < iTopPadding / 3) {
+                    y = maxPadding - aAnnotationCounter * (g.getFontMetrics().getAscent() + 4); // @TODO: check if this makes sense...
+                }
+            }
+        } else {
+            if (y > this.getHeight() - iXPadding) {
+                y = this.getHeight() - iXPadding; // @TODO: check... and what about multiple annotations?
+            }
         }
 
         // Temporarily change the color
@@ -2985,7 +2997,7 @@ public abstract class GraphicsPanel extends JPanel {
             if (foundMatch && yAxisData.get(dataSetIndex)[peakIndex] > iAnnotationYAxisThreshold) {
                 //String label = aSA.getLabel() + " (" + new BigDecimal(mz-iMasses[peakIndex]).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")";
                 String label = aSA.getLabel();
-                int spacer = (int) ((yAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2;
+                int spacer = (int) ((yAxisData.get(dataSetIndex)[peakIndex] - iYAxisMin) / iYScaleUnit) / 2; // @TODO: should this be different if mirrored?
                 boolean showArrow = true;
                 String key = dataSetIndex + "_" + peakIndex;
                 if (aAlreadyAnnotated.containsKey(key)) {
@@ -3041,7 +3053,7 @@ public abstract class GraphicsPanel extends JPanel {
                     boolean annotatedPeak = true;
 
                     if (!showAllPeaks) {
-                        annotatedPeak = isPeakAnnotated(lXAxisValue);
+                        annotatedPeak = isPeakAnnotated(lXAxisValue, true);
                     }
 
                     double lYAxisValue = iYAxisDataMirroredSpectrum.get(j)[i];
@@ -3154,7 +3166,7 @@ public abstract class GraphicsPanel extends JPanel {
                     boolean annotatedPeak = true;
 
                     if (!showAllPeaks) {
-                        annotatedPeak = isPeakAnnotated(lXAxisValue);
+                        annotatedPeak = isPeakAnnotated(lXAxisValue, false);
                     }
 
                     double lYAxisValue = iYAxisData.get(j)[i];
@@ -3428,15 +3440,25 @@ public abstract class GraphicsPanel extends JPanel {
      * annotation.
      *
      * @param xAxisValue the x-axis value
+     * @param mirrored if true checks for the mirrored peaks, false checks the
+     * normal peaks
      * @return true of the given x-axis value is annotated with at least one
      * annotation
      */
-    private boolean isPeakAnnotated(double xAxisValue) {
+    private boolean isPeakAnnotated(double xAxisValue, boolean mirrored) {
+
+        Vector annotations;
+
+        if (!mirrored) {
+            annotations = iAnnotations;
+        } else {
+            annotations = iAnnotationsMirroredSpectra;
+        }
 
         boolean annotatedPeak = false;
 
-        for (int m = 0; m < iAnnotations.size() && !annotatedPeak; m++) {
-            Object o = iAnnotations.get(m);
+        for (int m = 0; m < annotations.size() && !annotatedPeak; m++) {
+            Object o = annotations.get(m);
             if (o instanceof SpectrumAnnotation) {
                 SpectrumAnnotation sa = (SpectrumAnnotation) o;
 

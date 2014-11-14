@@ -14,7 +14,6 @@ import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.matchers.TagMatcher;
 import com.compomics.util.math.BasicMathFunctions;
-import com.compomics.util.memory.MemoryConsumptionStatus;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
 import com.compomics.util.preferences.UtilitiesUserPreferences;

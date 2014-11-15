@@ -1231,16 +1231,21 @@ public abstract class GraphicsPanel extends JPanel {
                 }
 
                 // x-axis locations
-                int xAxisYLocation = (this.getHeight() - currentPadding) / 2;
                 xTemp[0] = start + iXPadding;
                 xTemp[1] = end + iXPadding;
                 xTemp[2] = end + iXPadding;
                 xTemp[3] = start + iXPadding;
 
                 // y-axis locations
-                int y = (int) (iYScaleUnit / iYAxisMax + (iXPadding / 2));
-                int areaHeight = this.getHeight() - currentPadding - y;
-                y += (int) (areaHeight - (areaHeight * currentReferenceArea.getPercentLength())); // @TODO: there is a bug here with small below x-axis reference areas...
+                int xAxisYLocation;
+                if (dataSetCounterMirroredSpectra > 0) {
+                    xAxisYLocation = (this.getHeight() - currentPadding) / 2;
+                } else {
+                    xAxisYLocation = this.getHeight() - currentPadding;
+                }
+
+                double areaHeight = xAxisYLocation - currentPadding;
+                int y = (int) (areaHeight - (areaHeight * currentReferenceArea.getPercentLength())) + currentPadding;
 
                 if (currentReferenceArea.isAboveXAxis()) {
                     yTemp[0] = y;
@@ -1254,7 +1259,7 @@ public abstract class GraphicsPanel extends JPanel {
                         yTemp[3] = this.getHeight() - currentPadding;
                     }
                 } else {
-                    y = this.getHeight() - y;
+                    y = this.getHeight() - y - currentPadding;
                     yTemp[0] = this.getHeight() - xAxisYLocation - currentPadding;
                     yTemp[1] = this.getHeight() - xAxisYLocation - currentPadding;
                     yTemp[2] = y;
@@ -1533,7 +1538,7 @@ public abstract class GraphicsPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
 
                 // see if we're above or below the x-axis
-                int xAxisYLocation = (getHeight() - currentPadding) / 2; // @TODO: verify that this is correct!
+                int xAxisYLocation = (getHeight() - currentPadding) / 2;
                 boolean aboveXAxis = e.getY() < xAxisYLocation;
 
                 if (dataSetCounterMirroredSpectra == 0) {
@@ -1683,7 +1688,7 @@ public abstract class GraphicsPanel extends JPanel {
                 // see if we're above or below the x-axis
                 int y = e.getY();
 
-                int xAxisYLocation = (getHeight() - currentPadding) / 2; // @TODO: verify that this is correct!
+                int xAxisYLocation = (getHeight() - currentPadding) / 2;
                 boolean aboveXAxis = y < xAxisYLocation;
 
                 if (dataSetCounterMirroredSpectra == 0) {
@@ -2158,7 +2163,7 @@ public abstract class GraphicsPanel extends JPanel {
             if (iXAxisLabel.equalsIgnoreCase("m/z")) {
                 g.drawString(iXAxisLabel, this.getWidth() - (currentPadding - (padding / 2)), xAxisYLocation + 4);
             } else {
-                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), xAxisYLocation - (currentPadding / 2)); // @TODO: check this!
+                g.drawString(iXAxisLabel, this.getWidth() - (xAxisLabelWidth + 5), xAxisYLocation - (currentPadding / 2));
             }
 
             // Y-axis.

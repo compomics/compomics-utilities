@@ -63,7 +63,7 @@ public class ReferenceArea {
      * height of the area from the x-axis upwards, while for y-axis area this is
      * the width of the area from the y-axis and to the right. Range: [0 - 100].
      */
-    private double percentLength = 1;
+    private double percentLength = 1; // @TODO: support reference areas at certain x/y values
     /**
      * If true the reference area is added above the x-axis, false adds the
      * reference are below the x-axis.

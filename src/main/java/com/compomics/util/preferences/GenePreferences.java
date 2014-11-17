@@ -273,13 +273,21 @@ public class GenePreferences implements Serializable {
      */
     public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
+        // fix needed to support both default and custom ensembl species
+        String externalReference;
+        if (ensemblSchemaName.equalsIgnoreCase("default")) {
+            externalReference = "<Attribute name = \"external_gene_name\" />";
+        } else {
+            externalReference = "<Attribute name = \"external_gene_id\" />";
+        }
+
         // Construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
-                + "<Attribute name = \"external_gene_name\" />"
+                + externalReference
                 + "<Attribute name = \"chromosome_name\" />"
                 + "</Dataset>"
                 + "</Query>";

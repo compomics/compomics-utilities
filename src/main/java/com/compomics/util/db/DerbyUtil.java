@@ -54,16 +54,19 @@ public class DerbyUtil {
     public static void closeConnection() {
 
         try {
-            // we also need to shut down derby completely to release the file lock in the database folder
+            // shut down derby completely to release the file lock on the database folder
             DriverManager.getConnection("jdbc:derby:;shutdown=true;deregister=false");
-        } catch (SQLException e) {
-            if (e.getMessage().indexOf("Derby system shutdown") == -1) {
-                e.printStackTrace();
-            } else {
-                // ignore, normal derby shut down always results in an exception thrown
+        } catch (SQLException se) {
+            // shutdown throws the XJ015 exception to confirm success
+            if (!se.getSQLState().equals("XJ015")) {
+                // something else went wrong, we need this information for command line debugging
+                se.printStackTrace();
             }
+        } finally {
+            // force garbage collection to unload the EmbeddedDriver so Derby can be restarted
+            System.gc();
+            connectionActive = false;
         }
-        connectionActive = false;
     }
 
     /**
@@ -155,5 +158,4 @@ public class DerbyUtil {
             paths.remove(path);
         }
     }
-
 }

@@ -911,7 +911,7 @@ public class ObjectsDB implements Serializable {
 
         HashSet<String> tableContent = new HashSet<String>();
         Statement stmt = dbConnection.createStatement();
-        
+
         try {
             ResultSet results = stmt.executeQuery("select * from " + tableName);
             try {
@@ -1189,6 +1189,11 @@ public class ObjectsDB implements Serializable {
             String url = "jdbc:derby:" + path + ";create=true";
             dbConnection = DriverManager.getConnection(url);
             DerbyUtil.addActiveConnection(derbyConnectionID, path);
+        }
+
+        // special fix for if derby breaks down and restarts in read only mode
+        if (dbConnection != null) {
+            dbConnection.setReadOnly(false);
         }
 
         this.objectsCache = objectsCache;

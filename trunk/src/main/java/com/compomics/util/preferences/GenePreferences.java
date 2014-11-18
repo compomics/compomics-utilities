@@ -148,6 +148,40 @@ public class GenePreferences implements Serializable {
     }
 
     /**
+     * Download the gene sequences mappings.
+     *
+     * @param destinationFile The destination file where to save the gene
+     * sequences
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     * @param ensemblSchemaName the Ensembl schema name, e.g., default or
+     * plants_mart_18
+     * @param selectedSpecies
+     * @param waitingHandler waiting handler displaying progress and allowing
+     * cancelling the process
+     *
+     * @return true if downloading went OK
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    public boolean downloadGeneSequences(File destinationFile, String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+
+        // Construct data
+        String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<!DOCTYPE Query>"
+                + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"FASTA\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
+                + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
+                + "<Attribute name = \"ensembl_gene_id\" />\n"
+                + "<Attribute name = \"coding\" />"
+                + "</Dataset>\n"
+                + "</Query>"
+                + "</Query>";
+
+        String waitingText = "Downloading gene sequences. Please Wait...";
+        return queryEnsembl(requestXml, waitingText, destinationFile, ensemblType, waitingHandler);
+    }
+
+    /**
      * Download the GO mappings.
      *
      * @param ensemblType the Ensembl type, e.g., default or plants
@@ -156,14 +190,15 @@ public class GenePreferences implements Serializable {
      * @param selectedSpecies
      * @param swissProtMapping if true, use the uniprot_swissprot_accession
      * parameter, if false use the uniprot_sptrembl parameter
-     * @param waitingHandler
-     * @return true of the downloading was OK
+     * @param waitingHandler waiting handler displaying progress and allowing
+     * cancelling the process
+     *
+     * @return true if downloading went OK
+     *
      * @throws MalformedURLException
      * @throws IOException
      */
     public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, boolean swissProtMapping, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
-
-        boolean success = true;
 
         String accessionMapping;
 
@@ -185,7 +220,71 @@ public class GenePreferences implements Serializable {
                 + "</Query>";
 
         // @TODO: have to check if goslim_goa_accession and goslim_goa_description is available
-        if (!waitingHandler.isRunCanceled()) {
+        File tempFile = getGoMappingFile(selectedSpecies);
+
+        String waitingText = "Downloading GO Mappings. Please Wait...";
+        return queryEnsembl(requestXml, waitingText, tempFile, ensemblType, waitingHandler);
+    }
+
+    /**
+     * Sends an xml query to ensembl and writes the result in a text file.
+     *
+     * @param requestXml the xml request
+     * @param destinationFile the file where to save the results
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     *
+     * @return true if downloading went OK
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType) throws MalformedURLException, IOException {
+        return queryEnsembl(requestXml, destinationFile, ensemblType, null);
+    }
+
+    /**
+     * Sends an xml query to ensembl and writes the result in a text file.
+     *
+     * @param requestXml the xml request
+     * @param destinationFile the file where to save the results
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     * @param waitingHandler waiting handler displaying progress and allowing
+     * cancelling the process
+     *
+     * @return true if downloading went OK
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+        return queryEnsembl(requestXml, null, destinationFile, ensemblType, waitingHandler);
+    }
+
+    /**
+     * Sends an xml query to ensembl and writes the result in a text file.
+     *
+     * @param requestXml the xml request
+     * @param destinationFile the file where to save the results
+     * @param ensemblType the Ensembl type, e.g., default or plants
+     * @param waitingHandler waiting handler displaying progress and allowing
+     * cancelling the process
+     * @param waitingText the text to write in case a progress dialog is used
+     *
+     * @return true if downloading went OK
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    public boolean queryEnsembl(String requestXml, String waitingText, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+
+        if (waitingHandler != null && waitingHandler instanceof ProgressDialogX && waitingText == null) {
+            waitingText = "Downloading from Ensembl. Please wait...";
+        }
+        boolean success = true;
+
+        int lastThousand = 0;
+
+        if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
 
             // Send data
             URL url = getEnsemblUrl(ensemblType);
@@ -198,21 +297,23 @@ public class GenePreferences implements Serializable {
                 wr.write(requestXml);
                 wr.flush();
 
-                if (!waitingHandler.isRunCanceled()) {
+                if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
 
-                    waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait...");
+                    if (waitingHandler != null) {
+                        waitingHandler.setWaitingText(waitingText);
+                    }
+                    System.out.println(waitingText);
 
                     int counter = 0;
 
-                    File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GO_MAPPING_FILE_SUFFIX);
-                    boolean fileCreated = tempFile.createNewFile();
+                    boolean fileCreated = destinationFile.createNewFile();
 
-                    if (fileCreated || tempFile.exists()) {
+                    if (fileCreated || destinationFile.exists()) {
 
                         // Get the response
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                         try {
-                            FileWriter w = new FileWriter(tempFile);
+                            FileWriter w = new FileWriter(destinationFile);
                             try {
                                 BufferedWriter bw = new BufferedWriter(w);
 
@@ -228,9 +329,19 @@ public class GenePreferences implements Serializable {
                                             throw new IllegalArgumentException("Query error: " + rowLine);
                                         }
                                     } else {
-                                        while (rowLine != null && !waitingHandler.isRunCanceled() && success) {
-                                            if (waitingHandler instanceof ProgressDialogX) {
-                                                waitingHandler.setWaitingText("Downloading GO Mappings. Please Wait... (" + counter++ + " rows downloaded)");
+                                        while (rowLine != null && success) {
+                                            if (waitingHandler != null) {
+                                                if (waitingHandler.isRunCanceled()) {
+                                                    break;
+                                                }
+                                                if (waitingHandler instanceof ProgressDialogX) {
+                                                    waitingHandler.setWaitingText(waitingText + " (" + counter++ + " rows downloaded)");
+                                                }
+                                            }
+                                            int thousand = ++counter / 10000;
+                                            if (thousand > lastThousand) {
+                                                System.out.println(waitingText + " (" + counter + " rows downloaded)");
+                                                lastThousand = thousand;
                                             }
                                             bw.write(rowLine + System.getProperty("line.separator"));
                                             rowLine = br.readLine();
@@ -246,7 +357,9 @@ public class GenePreferences implements Serializable {
                             br.close();
                         }
                     } else {
-                        waitingHandler.setRunCanceled();
+                        if (waitingHandler != null) {
+                            waitingHandler.setRunCanceled();
+                        }
                         throw new IllegalArgumentException("The mapping file could not be created.");
                     }
                 }
@@ -267,6 +380,7 @@ public class GenePreferences implements Serializable {
      * @param selectedSpecies
      * @param ensemblVersion
      * @param waitingHandler
+     *
      * @throws MalformedURLException
      * @throws IOException
      * @throws IllegalArgumentException
@@ -292,6 +406,7 @@ public class GenePreferences implements Serializable {
                 + "</Dataset>"
                 + "</Query>";
 
+        // @TODO: use the queryEnsembl method here as well?
         if (!waitingHandler.isRunCanceled()) {
 
             // Send data
@@ -312,7 +427,7 @@ public class GenePreferences implements Serializable {
 
                     int counter = 0;
 
-                    File tempFile = new File(getGeneMappingFolder(), selectedSpecies + GENE_MAPPING_FILE_SUFFIX);
+                    File tempFile = getGeneMappingFile(selectedSpecies);
                     boolean fileCreated = tempFile.createNewFile();
 
                     if (fileCreated) {
@@ -1183,5 +1298,13 @@ public class GenePreferences implements Serializable {
             ex.printStackTrace();
             System.out.println("An error occurred when clearing the mappings.");
         }
+    }
+
+    public static File getGeneMappingFile(String speciesName) {
+        return new File(getGeneMappingFolder(), speciesName + GENE_MAPPING_FILE_SUFFIX);
+    }
+
+    public static File getGoMappingFile(String speciesName) {
+        return new File(getGeneMappingFolder(), speciesName + GO_MAPPING_FILE_SUFFIX);
     }
 }

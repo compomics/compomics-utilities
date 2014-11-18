@@ -3,7 +3,10 @@ package com.compomics.util.gui.export.graphics;
 import com.compomics.util.Export;
 import com.compomics.util.enumeration.ImageType;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.io.export.ExportWriter;
+import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Component;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JDialog;
@@ -34,28 +37,39 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      */
     private ProgressDialogX progressDialog;
     /**
-     * The export graphics dialog parent.
-     */
-    private ExportGraphicsDialogParent exportGraphicsDialogParent;
-    /**
      * The parent frame.
      */
     private JFrame frame;
+    /**
+     * The normal icon
+     */
+    private Image normalIcon;
+    /**
+     * The waiting icon
+     */
+    private Image waitingIcon;
+    /**
+     * The last selected folder
+     */
+    private LastSelectedFolder lastSelectedFolder;
 
     /**
      * Create and open a new ExportGraphicsDialog.
      *
      * @param frame the parent frame
-     * @param exportGraphicsDialogParent export graphics dialog parent
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
      * @param modal
      * @param graphicsPanel the graphics panel to export
+     * @param lastSelectedFolder the last selected folder
      */
-    public ExportGraphicsDialog(JFrame frame, ExportGraphicsDialogParent exportGraphicsDialogParent, boolean modal, Component graphicsPanel) {
+    public ExportGraphicsDialog(JFrame frame, Image normalIcon, Image waitingIcon, boolean modal, Component graphicsPanel, LastSelectedFolder lastSelectedFolder) {
         super(frame, modal);
         this.frame = frame;
         this.graphicsPanel = graphicsPanel;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
         initComponents();
-        this.exportGraphicsDialogParent = exportGraphicsDialogParent;
         setLocationRelativeTo(frame);
         setVisible(true);
     }
@@ -64,16 +78,19 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * Create and open a new ExportPlot dialog.
      *
      * @param frame the parent frame
-     * @param exportGraphicsDialogParent export graphics dialog parent
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
      * @param modal
      * @param chartPanel the chart panel to export
+     * @param lastSelectedFolder the last selected folder
      */
-    public ExportGraphicsDialog(JFrame frame, ExportGraphicsDialogParent exportGraphicsDialogParent, boolean modal, ChartPanel chartPanel) {
+    public ExportGraphicsDialog(JFrame frame, Image normalIcon, Image waitingIcon, boolean modal, ChartPanel chartPanel, LastSelectedFolder lastSelectedFolder) {
         super(frame, modal);
         this.frame = frame;
         this.chartPanel = chartPanel;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
         initComponents();
-        this.exportGraphicsDialogParent = exportGraphicsDialogParent;
         setLocationRelativeTo(frame);
         setVisible(true);
     }
@@ -82,16 +99,19 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * Create and open a new ExportGraphicsDialog.
      *
      * @param dialog the parent dialog (has to have a parent JFrame)
-     * @param exportGraphicsDialogParent export graphics dialog parent
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
      * @param modal
      * @param graphicsPanel the graphics panel to export
+     * @param lastSelectedFolder the last selected folder
      */
-    public ExportGraphicsDialog(JDialog dialog, ExportGraphicsDialogParent exportGraphicsDialogParent, boolean modal, Component graphicsPanel) {
+    public ExportGraphicsDialog(JDialog dialog, Image normalIcon, Image waitingIcon, boolean modal, Component graphicsPanel, LastSelectedFolder lastSelectedFolder) {
         super(dialog, modal);
         this.frame = (JFrame) dialog.getParent();
         this.graphicsPanel = graphicsPanel;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
         initComponents();
-        this.exportGraphicsDialogParent = exportGraphicsDialogParent;
         setLocationRelativeTo(dialog);
         setVisible(true);
     }
@@ -100,16 +120,19 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * Create and open a new ExportPlot dialog.
      *
      * @param dialog the parent dialog (has to have a parent JFrame)
-     * @param exportGraphicsDialogParent export graphics dialog parent
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
      * @param modal
      * @param chartPanel the chart panel to export
+     * @param lastSelectedFolder the last selected folder
      */
-    public ExportGraphicsDialog(JDialog dialog, ExportGraphicsDialogParent exportGraphicsDialogParent, boolean modal, ChartPanel chartPanel) {
+    public ExportGraphicsDialog(JDialog dialog, Image normalIcon, Image waitingIcon, boolean modal, ChartPanel chartPanel, LastSelectedFolder lastSelectedFolder) {
         super(dialog, modal);
         this.frame = (JFrame) dialog.getParent();
         this.chartPanel = chartPanel;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
         initComponents();
-        this.exportGraphicsDialogParent = exportGraphicsDialogParent;
         setLocationRelativeTo(dialog);
         setVisible(true);
     }
@@ -261,7 +284,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         this.setVisible(false);
 
-        final JFileChooser chooser = new JFileChooser(exportGraphicsDialogParent.getDefaultExportFolder());
+        final JFileChooser chooser = new JFileChooser(getLastSelectedFolder());
 
         // add the correct file filter based on the format selected
         addFileFilter(chooser);
@@ -270,7 +293,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
 
         if (selection == JFileChooser.APPROVE_OPTION) {
             String selectedFile = chooser.getSelectedFile().getAbsolutePath();
-            exportGraphicsDialogParent.setSelectedExportFolder(selectedFile);
+            lastSelectedFolder.setLastSelectedFolder(ExportWriter.lastFolderKey, selectedFile);
             savePanel(selectedFile, true);
         }
 
@@ -343,14 +366,14 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
         if (saveFile) {
 
             frame.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-            exportGraphicsDialogParent.setSelectedExportFolder(selectedFile);
+            lastSelectedFolder.setLastSelectedFolder(ExportWriter.lastFolderKey, selectedFile);
 
             final String finalSelectedFile = selectedFile;
             final ExportGraphicsDialog tempRef = this;
 
             progressDialog = new ProgressDialogX(frame,
-                    exportGraphicsDialogParent.getNormalIcon(),
-                    exportGraphicsDialogParent.getWaitingIcon(),
+                    normalIcon,
+                    waitingIcon,
                     true);
             progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Saving Figure. Please Wait...");
@@ -480,5 +503,18 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
         }
 
         chooser.setFileFilter(filter);
+    }
+    
+    /**
+     * Returns the last selected folder to use.
+     * 
+     * @return the last selected folder
+     */
+    private String getLastSelectedFolder() {
+        String result = lastSelectedFolder.getLastSelectedFolder(ExportWriter.lastFolderKey);
+        if (result == null) {
+            result = lastSelectedFolder.getLastSelectedFolder();
+        }
+        return result;
     }
 }

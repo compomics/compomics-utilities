@@ -2,7 +2,7 @@ package com.compomics.util.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
-import com.compomics.util.gui.export.graphics.ExportGraphicsDialogParent;
+import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -12,7 +12,7 @@ import javax.swing.*;
  *
  * @author Harald Barsnes
  */
-public class VennDiagramDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent {
+public class VennDiagramDialog extends javax.swing.JDialog {
 
     /**
      * The dialog parent.
@@ -21,7 +21,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
     /**
      * The last selected folder.
      */
-    private String lastSelectedFolder = "user.home";
+    private LastSelectedFolder lastSelectedFolder;
     /**
      * The normal icon for the parent dialog.
      */
@@ -114,7 +114,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
             String[] lines = datasetD.split("\n");
             d.addAll(Arrays.asList(lines));
         }
-        
+
         vennDiagramPanel = new VennDiagramPanel(a, b, c, d,
                 datasetATextField.getText(), datasetBTextField.getText(), datasetCTextField.getText(), datasetDTextField.getText(),
                 datasetAColorJPanel.getBackground(), datasetBColorJPanel.getBackground(), datasetCColorJPanel.getBackground(), datasetDColorJPanel.getBackground());
@@ -574,7 +574,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
      * @param evt
      */
     private void exportPlotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPlotMenuItemActionPerformed
-        new ExportGraphicsDialog(this, this, true, vennDiagramPanel.getChartPanel());
+        new ExportGraphicsDialog(this, getNormalIcon(), getWaitingIcon(), true, vennDiagramPanel.getChartPanel(), lastSelectedFolder);
     }//GEN-LAST:event_exportPlotMenuItemActionPerformed
 
     /**
@@ -644,7 +644,7 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
 
                 // resize the plot area
                 plotLayeredPane.getComponent(3).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
-                
+
                 if (vennDiagramPanel != null) {
                     vennDiagramPanel.resizePlot(plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
                 }
@@ -874,11 +874,11 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
     private javax.swing.JPanel xyPlotPanel;
     // End of variables declaration//GEN-END:variables
 
-    public void setSelectedExportFolder(String selectedFolder) {
+    public void setSelectedExportFolder(LastSelectedFolder selectedFolder) {
         lastSelectedFolder = selectedFolder;
     }
 
-    public String getDefaultExportFolder() {
+    public LastSelectedFolder getDefaultExportFolder() {
         return lastSelectedFolder;
     }
 
@@ -889,10 +889,10 @@ public class VennDiagramDialog extends javax.swing.JDialog implements ExportGrap
     public Image getWaitingIcon() {
         return Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/compomics-utilities.png"));
     }
-    
+
     /**
      * Returns the Venn diagram panel.
-     * 
+     *
      * @return the Venn diagram panel
      */
     public VennDiagramPanel getVennDiagramPanel() {

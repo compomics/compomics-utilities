@@ -26,24 +26,34 @@ public class ProcessingPreferences implements Serializable {
     private boolean aScore = false;
     /**
      * The default protein FDR.
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     private double proteinFDR = 1.0;
     /**
      * The default peptide FDR.
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     private double peptideFDR = 1.0;
     /**
      * The default PSM FDR.
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     private double psmFDR = 1.0;
     /**
      * The minimum confidence required for a protein to be included in the
      * average molecular weight analysis in the Fractions tab.
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     private Double proteinConfidenceMwPlots = 95.0;
     /**
      * The scores used to score the spectrum matches for every advocate in a
      * map: advocate index &gt; list of score indexes.
+     *
+     * @deprecated use the PsmScoringPreferences class instead
      */
     private HashMap<Integer, ArrayList<Integer>> spectrumMatchingScores = null;
     /**
@@ -55,8 +65,8 @@ public class ProcessingPreferences implements Serializable {
      * Constructor with default settings.
      */
     public ProcessingPreferences() {
-        initializeAlgorithmScores();
-        nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1); // @TODO: make it possible for the user to control the number of threads?
+        nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
+//        nThreads = Math.max(Runtime.getRuntime().availableProcessors()-1, 1);
 //        nThreads = 1;
     }
 
@@ -84,6 +94,8 @@ public class ProcessingPreferences implements Serializable {
      * Returns the initial peptide FDR.
      *
      * @return the initial peptide FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public double getPeptideFDR() {
         return peptideFDR;
@@ -93,6 +105,8 @@ public class ProcessingPreferences implements Serializable {
      * Sets the initial peptide FDR.
      *
      * @param peptideFDR the initial peptide FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void setPeptideFDR(double peptideFDR) {
         this.peptideFDR = peptideFDR;
@@ -102,6 +116,8 @@ public class ProcessingPreferences implements Serializable {
      * Returns the initial protein FDR.
      *
      * @return the initial protein FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public double getProteinFDR() {
         return proteinFDR;
@@ -111,6 +127,8 @@ public class ProcessingPreferences implements Serializable {
      * Sets the initial protein FDR.
      *
      * @param proteinFDR the initial protein FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void setProteinFDR(double proteinFDR) {
         this.proteinFDR = proteinFDR;
@@ -120,6 +138,8 @@ public class ProcessingPreferences implements Serializable {
      * Returns the initial PSM FDR.
      *
      * @return the initial PSM FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public double getPsmFDR() {
         return psmFDR;
@@ -129,6 +149,8 @@ public class ProcessingPreferences implements Serializable {
      * Sets the initial PSM FDR.
      *
      * @param psmFDR the initial PSM FDR
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void setPsmFDR(double psmFDR) {
         this.psmFDR = psmFDR;
@@ -139,6 +161,8 @@ public class ProcessingPreferences implements Serializable {
      * the average molecular weight analysis in the Fractions tab.
      *
      * @return the minimum confidence
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public Double getProteinConfidenceMwPlots() {
         if (proteinConfidenceMwPlots == null) {
@@ -152,14 +176,19 @@ public class ProcessingPreferences implements Serializable {
      * average molecular weight analysis in the Fractions tab.
      *
      * @param proteinConfidenceMwPlots minimum confidence
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void setProteinConfidenceMwPlots(Double proteinConfidenceMwPlots) {
         this.proteinConfidenceMwPlots = proteinConfidenceMwPlots;
     }
 
     /**
-     * Sets the default score selection for the implemented advocates. Note:
-     * this silently erases any previous selection.
+     * Sets the default score selection for the implemented advocates. 
+     * 
+     * Note: this silently erases any previous selection.
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void initializeAlgorithmScores() {
         spectrumMatchingScores = new HashMap<Integer, ArrayList<Integer>>(Advocate.values().length);
@@ -169,7 +198,7 @@ public class ProcessingPreferences implements Serializable {
             if (advocate.getType() == Advocate.AdvocateType.sequencing_algorithm || advocate.getType() == Advocate.AdvocateType.spectral_library || advocate.getType() == Advocate.AdvocateType.unknown) {
                 scores.add(PsmScores.precursor_accuracy.index);
 //                           scores.add(PsmScores.ms2_mz_fidelity.index);
-            scores.add(PsmScores.aa_ms2_mz_fidelity.index);
+                scores.add(PsmScores.aa_ms2_mz_fidelity.index);
 //                           scores.add(PsmScores.intensity.index);
                 scores.add(PsmScores.aa_intensity.index);
                 scores.add(PsmScores.complementarity.index);
@@ -183,6 +212,8 @@ public class ProcessingPreferences implements Serializable {
      *
      * @param advocateIndex the index of the advocate
      * @param scores the scores
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public void setScoresForAlgorithm(int advocateIndex, ArrayList<Integer> scores) {
         if (spectrumMatchingScores == null) {
@@ -197,6 +228,8 @@ public class ProcessingPreferences implements Serializable {
      * @param advocateIndex the index of the advocate
      *
      * @return the scores used for a given advocate
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public ArrayList<Integer> getScores(int advocateIndex) {
         if (spectrumMatchingScores == null) {
@@ -211,6 +244,8 @@ public class ProcessingPreferences implements Serializable {
      * @param advocate the index of the advocate of interest
      *
      * @return a boolean indicating whether a score computation is needed
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public boolean isScoringNeeded(int advocate) {
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
@@ -232,6 +267,8 @@ public class ProcessingPreferences implements Serializable {
      * @param advocates the advocates of interest
      *
      * @return a boolean indicating whether a score computation is needed
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public boolean isScoringNeeded(ArrayList<Integer> advocates) {
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
@@ -250,6 +287,8 @@ public class ProcessingPreferences implements Serializable {
      * @param advocates the advocates of interest
      *
      * @return a boolean indicating whether a score computation is needed
+     *
+     * @deprecated use the IdValidationPreferences instead
      */
     public boolean isTargetDecoyNeededForPsmScoring(ArrayList<Integer> advocates) {
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
@@ -265,7 +304,7 @@ public class ProcessingPreferences implements Serializable {
 
     /**
      * Returns the number of threads to use.
-     * 
+     *
      * @return the number of threads to use
      */
     public int getnThreads() {
@@ -274,7 +313,7 @@ public class ProcessingPreferences implements Serializable {
 
     /**
      * Sets the number of threads to use.
-     * 
+     *
      * @param nThreads the number of threads to use
      */
     public void setnThreads(int nThreads) {

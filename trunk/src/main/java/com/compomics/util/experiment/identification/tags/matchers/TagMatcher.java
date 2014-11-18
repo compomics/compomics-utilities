@@ -13,10 +13,16 @@ import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class matches tags to peptides.
@@ -159,6 +165,8 @@ public class TagMatcher {
      * The sequence matching preferences
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
+    
+    private BufferedWriter debugbw = null;
 
     /**
      * Constructor.
@@ -170,6 +178,13 @@ public class TagMatcher {
     public TagMatcher(ArrayList<String> fixedModifications, ArrayList<String> variableModifications, SequenceMatchingPreferences sequenceMatchingPreferences) {
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         importModificationMapping(fixedModifications, variableModifications);
+//        try {
+//            debugbw = new BufferedWriter(new FileWriter(new File("C:\\Users\\mva037\\Desktop\\test\\tagCache.txt")));
+//            debugbw.write("Index\n");
+//        } catch (IOException ex) {
+//            System.out.println("Debug error");
+//            ex.printStackTrace();
+//        }
     }
 
     /**
@@ -638,7 +653,8 @@ public class TagMatcher {
 
                     char sequenceAa = sequence.charAt(aaIndex);
                     AminoAcid sequenceAminoAcid = AminoAcid.getAminoAcid(sequenceAa);
-                    if (useCache) {
+                    int segmentLength = Math.abs(aaIndex - currentIndex);
+                    if (useCache && segmentLength <= 12) {
                         possibleSequences = indexCache.get(aaIndex);
                         if (possibleSequences == null) {
                             if (synchronizedIndexing) {
@@ -652,6 +668,14 @@ public class TagMatcher {
                     }
 
                     if (validateSegments(possibleSequences, validSequences, massGap, massTolerance, sequence, sequenceAa, nTerminus)) {
+                        if (debugbw != null) {
+                        try {
+                            debugbw.write(segmentLength + "\n");
+                            debugbw.flush();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        }
                         break;
                     }
                     if (nTerminus) {
@@ -965,6 +989,7 @@ public class TagMatcher {
      * @param validSequences the valid sequences
      * @param massGap the mass gap
      * @param massTolerance the mass tolerance to use
+     * @param sequence the protein sequence
      * @param sequenceAa the amino acid at terminus on the protein sequence
      * @param nTerminus indicates whether the sequencing goes toward the N
      * (true) or the C (false) terminus

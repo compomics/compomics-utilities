@@ -1,0 +1,40 @@
+package com.compomics.util.preferences;
+
+import java.io.File;
+import java.io.Serializable;
+
+/**
+ * Generic class grouping the protein inference preferences
+ *
+ * @author Marc
+ */
+public class ProteinInferencePreferences implements Serializable {
+
+    /**
+     * Serial version UID for backward compatibility.
+     */
+    static final long serialVersionUID = 447785006299636157L;
+    /**
+     * The database to use for protein inference
+     */
+    private File proteinSequenceDatabase;
+
+    /**
+     * Returns the path to the database used.
+     *
+     * @return the path to the database used
+     */
+    public File getProteinSequenceDatabase() {
+        return proteinSequenceDatabase;
+    }
+
+    /**
+     * Sets the path to the database used.
+     *
+     * @param proteinSequenceDatabase the path to the database used
+     */
+    public void setProteinSequenceDatabase(File proteinSequenceDatabase) {
+        this.proteinSequenceDatabase = proteinSequenceDatabase;
+    }
+
+}

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.psm_scoring;
 
+import com.compomics.util.experiment.ShotgunProtocol;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
@@ -116,15 +117,15 @@ public enum PsmScores {
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
      * @param identificationCharge the precursor charge
-     * @param searchParameters the search parameters
+     * @param shotgunProtocol information on the protocol used
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
     public static double getDecreasingScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, int scoreIndex) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
-        double score = getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters, psmScore);
+        double score = getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol, psmScore);
         if (psmScore.increasing) {
             return -score;
         }
@@ -142,15 +143,15 @@ public enum PsmScores {
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
      * @param identificationCharge the precursor charge
-     * @param searchParameters the search parameters
+     * @param shotgunProtocol information on the protocol used
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, int scoreIndex) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters, psmScore);
+        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol, psmScore);
     }
 
     /**
@@ -164,28 +165,28 @@ public enum PsmScores {
      * @param neutralLosses the neutral losses to annotate
      * @param charges the fragment charges to look for
      * @param identificationCharge the precursor charge
-     * @param searchParameters the search parameters
+     * @param shotgunProtocol information on the protocol used
      * @param psmScore the score to use
      *
      * @return the score of the match
      */
     public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, SearchParameters searchParameters, PsmScores psmScore) {
+            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, PsmScores psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return PrecursorAccuracy.getScore(peptide, identificationCharge, spectrum.getPrecursor(), searchParameters.isPrecursorAccuracyTypePpm());
+                return PrecursorAccuracy.getScore(peptide, identificationCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm());
             case ms2_mz_fidelity:
-                return MS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+                return MS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:
-                return AAMS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+                return AAMS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
             case intensity:
-                return IntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+                return IntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
             case aa_intensity:
-                return AAIntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+                return AAIntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
             case complementarity:
-                return ComplementarityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, searchParameters.getFragmentIonAccuracy(), peptideSpectrumAnnotator);
+                return ComplementarityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
             default:
                 throw new UnsupportedOperationException("Score not implemented.");
         }

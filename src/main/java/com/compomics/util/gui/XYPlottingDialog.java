@@ -3,9 +3,9 @@ package com.compomics.util.gui;
 import com.compomics.util.Util;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
-import com.compomics.util.gui.export.graphics.ExportGraphicsDialogParent;
 import com.compomics.util.gui.tablemodels.SelfUpdatingTableModel;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,7 +57,7 @@ import org.jfree.chart.annotations.XYTextAnnotation;
  *
  * @author Harald Barsnes
  */
-public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraphicsDialogParent, VisibleTableColumnsDialogParent {
+public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTableColumnsDialogParent {
 
     /**
      * The progress dialog.
@@ -152,7 +152,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     /**
      * The last selected folder.
      */
-    private String lastSelectedFolder = "user.home";
+    private LastSelectedFolder lastSelectedFolder;
     /**
      * The normal icon for the parent dialog.
      */
@@ -241,7 +241,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private void setUpGUI() {
 
         // @TODO: only show the values of the supported types for each drop down menu...
-
         colummnNames = new Vector<String>();
         Vector<String> colummnNamesExtended = new Vector<String>();
         colummnNamesExtended.add(0, "[user defined]");
@@ -1340,7 +1339,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * @param evt
      */
     private void exportPlotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPlotMenuItemActionPerformed
-        new ExportGraphicsDialog(this, this, true, chartPanel);
+        new ExportGraphicsDialog(this, getNormalIcon(), getWaitingIcon(), true, chartPanel, lastSelectedFolder);
     }//GEN-LAST:event_exportPlotMenuItemActionPerformed
 
     /**
@@ -1349,7 +1348,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
      * @param evt
      */
     private void exportSelectedValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSelectedValuesMenuItemActionPerformed
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "(tab separated text file)", "Export Selected Values", lastSelectedFolder, false);
+        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "(tab separated text file)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), false);
         final XYPlottingDialog finalRef = this;
 
         if (selectedFile != null) {
@@ -1622,7 +1621,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                     // apply the data filters
                     filterData();
 
-
                     boolean selfUpdating = true;
 
                     if (tableModel instanceof SelfUpdatingTableModel) {
@@ -1650,7 +1648,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                             if (rowsAfterDataFiltering.contains(index)) {
 
                                 // @TODO: support more data types!!
-
                                 if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
                                     values[index] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
@@ -1834,10 +1831,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                         double sx = 0, sy = 0, sxx = 0, sxy = 0, syy = 0;
                         SimpleRegression simpleRegression = new SimpleRegression();
 
-
                         // @TODO: add the option of filtering the data based on the values in one or more columns?
                         //        for example remove all non-validated proteins or show only coverage > 50%?
-
                         // split the data into the datasets
                         for (String dataset : datasetNames) {
 
@@ -1850,7 +1845,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                                 progressDialog.increasePrimaryProgressCounter();
 
                                 // @TODO: support more data types!!
-
                                 if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
                                     tempDataXYZ[0][counter] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
@@ -1949,11 +1943,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         progressDialog.setPrimaryProgressCounterIndeterminate(true);
 
-
                         // create the plot
                         JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
                         XYPlot plot = chart.getXYPlot();
-
 
                         // add the regression line
                         if (showRegressionLine) {
@@ -2068,8 +2060,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
 
                         if (cellRenderers.containsKey(Integer.valueOf(colorsComboBox.getSelectedIndex()))) {
                             if (cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
-                                JSparklinesIntegerColorTableCellRenderer integerColorRenderer =
-                                        (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex()));
+                                JSparklinesIntegerColorTableCellRenderer integerColorRenderer
+                                        = (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex()));
                                 HashMap<Integer, Color> colors = integerColorRenderer.getColors();
 
                                 for (int i = 0; i < datasetNames.size(); i++) {
@@ -2357,12 +2349,8 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
         return entitiesForPoint;
     }
 
-    public void setSelectedExportFolder(String selectedFolder) {
+    public void setSelectedExportFolder(LastSelectedFolder selectedFolder) {
         lastSelectedFolder = selectedFolder;
-    }
-
-    public String getDefaultExportFolder() {
-        return lastSelectedFolder;
     }
 
     public void setVisibleColumns(HashMap<Integer, Boolean> showColumns) {
@@ -2532,9 +2520,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
     private int getNumberOfBins(double[] values) {
 
         // @TODO: this seems to always return very low number of bins??
-
         // @TODO: when working this code should be moved out of this class!!
-
         double minValue = Double.MAX_VALUE;
         double maxValue = Double.MIN_VALUE;
 
@@ -2624,7 +2610,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements ExportGraph
                 if (filter != null) {
 
                     // @TODO: what about AND/OR filters? or support for ranges, e.g., [500-1000]?
-
                     if (filter.startsWith(">")) {
 
                         if (tableModel.getValueAt(i, j) instanceof String) {

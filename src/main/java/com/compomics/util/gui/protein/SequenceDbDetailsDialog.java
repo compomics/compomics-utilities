@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.preferences.LastSelectedFolder;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Header.DatabaseType;
@@ -42,7 +43,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * The last selected folder.
      */
-    private String lastSelectedFolder = null;
+    private LastSelectedFolder lastSelectedFolder = null;
     /**
      * boolean indicating whether the db can be changed.
      */
@@ -63,6 +64,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * The utilities user preferences.
      */
     private UtilitiesUserPreferences utilitiesUserPreferences = null;
+    /**
+     * The key to use to store fasta files paths
+     */
+    public static final String lastFolderKey = "fastaFile";
 
     /**
      * Creates a new SequenceDbDetailsDialog.
@@ -73,7 +78,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param waitingImage
      * @param normalImange
      */
-    public SequenceDbDetailsDialog(Frame parent, String lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(Frame parent, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
         super(parent, true);
         initComponents();
         this.parentFrame = parent;
@@ -203,7 +208,14 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @return the last selected folder
      */
     public String getLastSelectedFolder() {
-        return lastSelectedFolder;
+        if (lastSelectedFolder == null) {
+            return null;
+        }
+        String folder = lastSelectedFolder.getLastSelectedFolder(lastFolderKey);
+        if (folder == null) {
+            folder = lastSelectedFolder.getLastSelectedFolder();
+        }
+        return folder;
     }
 
     /**
@@ -218,9 +230,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         if (sequenceFactory.getFileName() == null || !userCanDispose) {
 
-            File startLocation = new File(lastSelectedFolder);
+            File startLocation = null;
             if (utilitiesUserPreferences.getDbFolder() != null && utilitiesUserPreferences.getDbFolder().exists()) {
                 startLocation = utilitiesUserPreferences.getDbFolder();
+            }
+            if (startLocation == null) {
+            startLocation = new File(getLastSelectedFolder());
             }
 
             JFileChooser fc = new JFileChooser(startLocation);
@@ -243,8 +258,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                lastSelectedFolder = file.getParent();
-                utilitiesUserPreferences.setDbFolder(file.getParentFile());
+                File folder = file.getParentFile();
+                utilitiesUserPreferences.setDbFolder(folder);
+                lastSelectedFolder.setLastSelectedFolder(lastFolderKey, folder.getAbsolutePath());
 
                 if (file.getName().contains(" ")) {
                     file = renameFastaFileName(file);

@@ -131,6 +131,10 @@ public class UtilitiesUserPreferences implements Serializable {
      * Indicates whether the tool should notify its start.
      */
     private Boolean notifyStart = true;
+    /**
+     * The last selected folder
+     */
+    private LastSelectedFolder lastSelectedFolder;
 
     /**
      * Constructor.
@@ -748,6 +752,25 @@ public class UtilitiesUserPreferences implements Serializable {
     public void setNotifyStart(Boolean notifyStart) {
         this.notifyStart = notifyStart;
     }
-    
-    
+
+    /**
+     * Returns the last selected folder.
+     * 
+     * @return the last selected folder
+     */
+    public LastSelectedFolder getLastSelectedFolder() {
+        if (lastSelectedFolder == null) {
+            lastSelectedFolder = new LastSelectedFolder();
+        }
+        return lastSelectedFolder;
+    }
+
+    /**
+     * Sets the last selected folder.
+     * 
+     * @param lastSelectedFolder the last selected folder
+     */
+    public void setLastSelectedFolder(LastSelectedFolder lastSelectedFolder) {
+        this.lastSelectedFolder = lastSelectedFolder;
+    }
 }

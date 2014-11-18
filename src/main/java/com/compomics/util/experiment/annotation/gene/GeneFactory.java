@@ -199,6 +199,9 @@ public class GeneFactory {
      * @throws IOException
      */
     public String getGeneEnsemblId(String geneName) throws IOException {
+        if (geneMappingFile == null) {
+            throw new IllegalArgumentException("Gene mapping not loaded.");
+        }
         Long index = geneNameIndexes.get(geneName);
         if (index != null) {
             geneMappingFile.seek(index);
@@ -208,6 +211,26 @@ public class GeneFactory {
                 throw new IllegalArgumentException("Line \"" + line + "\" at index " + index + " does not correspond to gene name " + geneName + ".");
             }
             return splittedLine[0];
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the Ensembl gene Id for a given Uniprot protein. Null if not found.
+     * 
+     * @param proteinAccession the accession of the uniprot protein
+     * 
+     * @return the Ensembl gene id for this protein
+     * 
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws ClassNotFoundException 
+     */
+    public String getGeneEnsemblIdForUniProtProtein(String proteinAccession) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+        String geneName = getGeneNameForUniProtProtein(proteinAccession);
+        if (geneName != null) {
+            return getGeneEnsemblId(geneName);
         }
         return null;
     }

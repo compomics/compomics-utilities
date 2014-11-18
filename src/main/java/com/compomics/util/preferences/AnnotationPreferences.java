@@ -126,7 +126,16 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Updates the annotation parameters based on the search parameters
+     * Constructor setting preferences from search parameters.
+     * 
+     * @param searchParameters the search parameters
+     */
+    public AnnotationPreferences(SearchParameters searchParameters) {
+        setPreferencesFromSearchParameters(searchParameters);
+    }
+
+    /**
+     * Updates the annotation parameters based on search parameters
      *
      * @param searchParameters the search parameters where to take the
      * information from

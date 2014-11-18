@@ -2,6 +2,7 @@ package com.compomics.util.gui.error_handlers;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.preferences.LastSelectedFolder;
 import java.io.*;
 import java.util.Date;
 import javax.swing.JDialog;
@@ -20,7 +21,11 @@ public class BugReport extends javax.swing.JDialog {
     /**
      * The folder to open in the file selection dialog.
      */
-    private String selectionFolder;
+    private LastSelectedFolder lastSelectedFolder;
+    /**
+     * The specific key for bug reports
+     */
+    public static final String lastSelectedFolderKey = "bug_report";
     /**
      * The name of the tool to get the bug report for, e.g., "PeptideShaker".
      */
@@ -64,9 +69,9 @@ public class BugReport extends javax.swing.JDialog {
      * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JFrame frame, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
+    public BugReport(JFrame frame, LastSelectedFolder selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(frame, true);
-        this.selectionFolder = selectionFolder;
+        this.lastSelectedFolder = selectionFolder;
         this.toolName = toolName;
         this.googleCodeToolName = googleCodeToolName;
         this.toolVersion = toolVersion;
@@ -97,9 +102,9 @@ public class BugReport extends javax.swing.JDialog {
      * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JDialog dialog, String selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
+    public BugReport(JDialog dialog, LastSelectedFolder selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(dialog, true);
-        this.selectionFolder = selectionFolder;
+        this.lastSelectedFolder = selectionFolder;
         this.toolName = toolName;
         this.googleCodeToolName = googleCodeToolName;
         this.toolVersion = toolVersion;
@@ -161,6 +166,22 @@ public class BugReport extends javax.swing.JDialog {
 
         logTxt.setText(log.toString());
         logTxt.setCaretPosition(0);
+    }
+    
+    /**
+     * Returns the last selected folder.
+     * 
+     * @return the last selected folder
+     */
+    private String getLastSelectedFolder() {
+        String result = null;
+        if (lastSelectedFolder != null) {
+            result = lastSelectedFolder.getLastSelectedFolder(lastSelectedFolderKey);
+            if (result == null) {
+                result = lastSelectedFolder.getLastSelectedFolder();
+            }
+        }
+        return result;
     }
 
     /**
@@ -378,7 +399,7 @@ public class BugReport extends javax.swing.JDialog {
      */
     private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
 
-        File finalOutputFile = Util.getUserSelectedFile(this, ".txt", "(Text File) *.txt", "Select Destination File", selectionFolder, false);
+        File finalOutputFile = Util.getUserSelectedFile(this, ".txt", "(Text File) *.txt", "Select Destination File", getLastSelectedFolder(), false);
 
         if (finalOutputFile != null) {
 

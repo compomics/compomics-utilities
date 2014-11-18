@@ -24,6 +24,8 @@ import com.compomics.util.gui.protein.SequenceDbDetailsDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.gui.ptm.PtmDialogParent;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.io.ConfigurationFile;
+import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
@@ -79,10 +81,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * The parameter file.
      */
     private File parametersFile = null;
-    /**
-     * The SearchSettingsDialogParent.
-     */
-    private SearchSettingsDialogParent searchSettingsDialogParent;
     /*
      * The search parameters.
      */
@@ -120,26 +118,67 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * The time to wait between keys typed before updating the search.
      */
     private int waitingTime = 500;
+    /**
+     * The configuration file containing the modification use.
+     */
+    private ConfigurationFile configurationFile;
+    /**
+     * The list of the default modifications.
+     */
+    private ArrayList<String> modificationUse = new ArrayList<String>();
+    /**
+     * The line to use to reference the modification use in the configuration
+     * file
+     */
+    public static final String modificationUseInConfiguration = "Modification use:";
+    /**
+     * Boolean indicating whether the cancel button was pressed
+     */
+    private boolean canceled = false;
+    /**
+     * The last selected folder to use
+     */
+    private final LastSelectedFolder lastSelectedFolder;
+    /**
+     * The horizontal padding used before and after the text in the titled
+     * borders. (Needed to make it look as good in Java 7 as it did in Java
+     * 6...)
+     */
+    public static String TITLED_BORDER_HORIZONTAL_PADDING = "";
 
     /**
      * Creates a new SearchSettingsDialog.
      *
      * @param parentFrame the parent frame
-     * @param searchSettingsDialogParent
-     * @param searchParameters
+     * @param searchParameters previous search parameters
      * @param normalIcon the normal dialog icon
      * @param setVisible the waiting dialog icon
      * @param waitingIcon
      * @param modal
+     * @param configurationFile a file containing the modification use
+     * @param lastSelectedFolder the last selected folder to use
      */
-    public SearchSettingsDialog(JFrame parentFrame, SearchSettingsDialogParent searchSettingsDialogParent, SearchParameters searchParameters,
-            Image normalIcon, Image waitingIcon, boolean setVisible, boolean modal) {
+    public SearchSettingsDialog(JFrame parentFrame, SearchParameters searchParameters,
+            Image normalIcon, Image waitingIcon, boolean setVisible, boolean modal, 
+            ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder) {
         super(parentFrame, modal);
         this.parentFrame = parentFrame;
-        this.searchSettingsDialogParent = searchSettingsDialogParent;
-        this.searchParameters = searchParameters;
+        if (searchParameters == null) {
+            this.searchParameters = new SearchParameters();
+        } else {
+            this.searchParameters = searchParameters;
+        }
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+
+        try {
+            loadModificationUse(configurationFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // ignore
+        }
+
         initComponents();
         setUpGUI();
         formComponentResized(null);
@@ -179,9 +218,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         fragmentIon2Cmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         precursorIonUnit.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        ((TitledBorder) dataBasePanelSettings.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Database" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
-        ((TitledBorder) modificationsPanel.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Modifications" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
-        ((TitledBorder) proteaseAndFragmentationPanel.getBorder()).setTitle(SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING + "Protease & Fragmentation" + SearchSettingsDialogParent.TITLED_BORDER_HORIZONTAL_PADDING);
+        ((TitledBorder) dataBasePanelSettings.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Database" + TITLED_BORDER_HORIZONTAL_PADDING);
+        ((TitledBorder) modificationsPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Modifications" + TITLED_BORDER_HORIZONTAL_PADDING);
+        ((TitledBorder) proteaseAndFragmentationPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Protease & Fragmentation" + TITLED_BORDER_HORIZONTAL_PADDING);
 
         fixedModsJScrollPane.getViewport().setOpaque(false);
         variableModsJScrollPane.getViewport().setOpaque(false);
@@ -958,7 +997,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         }
 
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, searchSettingsDialogParent.getLastSelectedFolder(), true, normalIcon, waitingIcon);
+        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, true, normalIcon, waitingIcon);
 
         boolean success = sequenceDbDetailsDialog.selectDB(true);
         if (success) {
@@ -1000,8 +1039,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             if (!found) {
                 fixedModifications[cpt] = name;
                 cpt++;
-                if (!searchSettingsDialogParent.getModificationUse().contains(name)) {
-                    searchSettingsDialogParent.getModificationUse().add(name);
+                if (!modificationUse.contains(name)) {
+                    modificationUse.add(name);
                 }
             }
         }
@@ -1085,8 +1124,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             if (!found) {
                 variableModifications[cpt] = name;
                 cpt++;
-                if (!searchSettingsDialogParent.getModificationUse().contains(name)) {
-                    searchSettingsDialogParent.getModificationUse().add(name);
+                if (!modificationUse.contains(name)) {
+                    modificationUse.add(name);
                 }
             }
         }
@@ -1185,7 +1224,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         SearchParameters tempSearchParameters = getSearchParameters();
 
-        if (!searchSettingsDialogParent.getSearchParameters().equals(tempSearchParameters)) {
+        if (!searchParameters.equals(tempSearchParameters)) {
 
             int value = JOptionPane.showConfirmDialog(this, "The search parameters have changed."
                     + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -1220,8 +1259,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                     try {
                         SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
-                        searchSettingsDialogParent.setSearchParameters(tempSearchParameters);
-                        dispose();
+                        searchParameters = tempSearchParameters;
+                        close();
                     } catch (ClassNotFoundException e) {
                         JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
                                 + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
@@ -1233,10 +1272,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                     }
                 }
             } else if (value == JOptionPane.NO_OPTION) {
-                dispose(); // reject the changes
+                close();
             }
         } else {
-            dispose(); // no changes
+            close();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -1401,16 +1440,16 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 // change if the ptm is considered as default
                 if (modificationsListCombo.getSelectedIndex() == 0) {
                     // remove from default ptm set
-                    searchSettingsDialogParent.getModificationUse().remove(ptmName);
+                    modificationUse.remove(ptmName);
                 } else {
                     if (selected) {
                         // add to default ptm set
-                        if (!searchSettingsDialogParent.getModificationUse().contains(ptmName)) {
-                            searchSettingsDialogParent.getModificationUse().add(ptmName);
+                        if (!modificationUse.contains(ptmName)) {
+                            modificationUse.add(ptmName);
                         }
                     } else {
                         // remove from default ptm set
-                        searchSettingsDialogParent.getModificationUse().remove(ptmName);
+                        modificationUse.remove(ptmName);
                     }
                 }
 
@@ -1694,7 +1733,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             try {
                 searchParameters = getSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, parametersFile);
-                searchSettingsDialogParent.setSearchParameters(searchParameters);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1707,37 +1745,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }
 
     /**
-     * Verifies that the modifications backed-up in the search parameters are
-     * loaded and alerts the user in case conflicts are found.
-     *
-     * @param searchParameters the search parameters to load
-     */
-    private void loadModifications() {
-        ArrayList<String> toCheck = ptmFactory.loadBackedUpModifications(searchParameters, false); // @TODO: have to set the searchparams???
-        if (!toCheck.isEmpty()) {
-            String message = "The definition of the following PTM(s) seems to have change and was not loaded:\n";
-            for (int i = 0; i < toCheck.size(); i++) {
-                if (i > 0) {
-                    if (i < toCheck.size() - 1) {
-                        message += ", ";
-                    } else {
-                        message += " and ";
-                    }
-                    message += toCheck.get(i);
-                }
-            }
-            message += ".\nPlease verify the definition of the PTM(s) in the modifications editor.";
-            javax.swing.JOptionPane.showMessageDialog(null,
-                    message,
-                    "PTM definition obsolete", JOptionPane.OK_OPTION);
-        }
-    }
-
-    /**
      * This method takes the specified search parameters instance and reads the
      * values for (some of) the GUI components from it.
-     *
-     * @param aSearchParameters searchParameters with the values for the GUI.
      */
     private void setScreenProps() {
 
@@ -1993,9 +2002,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         if (validateParametersInput(true)) {
 
-            // First check whether a file has already been selected.
-            // If so, start from that file's parent.
-            File startLocation = new File(searchSettingsDialogParent.getLastSelectedFolder());
+            File startLocation = null;
+            if (lastSelectedFolder != null) {
+                startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
+            }
 
             if (searchParameters.getParametersFile() != null) {
                 startLocation = searchParameters.getParametersFile();
@@ -2021,7 +2031,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selected = fc.getSelectedFile();
-                    searchSettingsDialogParent.setLastSelectedFolder(selected.getAbsolutePath());
+                    if (lastSelectedFolder != null) {
+                        lastSelectedFolder.setLastSelectedFolder(selected.getAbsolutePath());
+                    }
                     // Make sure the file is appended with '.parameters'
                     if (!selected.getName().toLowerCase().endsWith(".parameters")) {
                         selected = new File(selected.getParentFile(), selected.getName() + ".parameters");
@@ -2263,8 +2275,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private void updateModificationList() {
         ArrayList<String> allModificationsList = new ArrayList<String>();
         if (modificationsListCombo.getSelectedIndex() == 0) {
-            for (String name : searchSettingsDialogParent.getModificationUse()) {
-                if (searchSettingsDialogParent.getModificationUse().contains(name)) {
+            for (String name : modificationUse) {
+                if (modificationUse.contains(name)) {
                     allModificationsList.add(name);
                 }
             }
@@ -2352,7 +2364,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         for (String mod : allModificationsAsArray) {
-            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{ptmFactory.getColor(mod), mod, ptmFactory.getPTM(mod).getMass(), searchSettingsDialogParent.getModificationUse().contains(mod)});
+            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{ptmFactory.getColor(mod), mod, ptmFactory.getPTM(mod).getMass(), modificationUse.contains(mod)});
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();
@@ -2474,61 +2486,61 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     /**
      * Returns a string with the modifications used.
      *
-     * @param file the file to load the modifications from
-     * @return a list with the modifications used.
+     * @param configurationFile the file to load the modifications from
+     *
+     * @return a list with the modifications used
+     *
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * when loading the modifications from the file
      */
-    public static ArrayList<String> loadModificationsUse(File file) {
+    public static ArrayList<String> loadModificationsUse(ConfigurationFile configurationFile) throws IOException {
 
-        String modificationLine = "";
         ArrayList<String> modificationUse = new ArrayList<String>();
 
-        if (file.exists()) {
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    // Skip empty lines and comment ('#') lines.
-                    line = line.trim();
-                    if (line.equals("") || line.startsWith("#")) {
-                    } else if (line.equals("Modification use:")) {
-                        modificationLine = br.readLine().trim();
-                    }
-                }
-                br.close();
+        String modificationLine = configurationFile.getParameterLine(modificationUseInConfiguration);
+        if (modificationLine != null) {
+            // Split the different modifications.
+            int start;
 
                 ArrayList<String> modificationUses = new ArrayList<String>();
-
-                // Split the different modifications.
-                int start;
-
-                while ((start = modificationLine.indexOf(MODIFICATION_SEPARATOR)) >= 0) {
-                    String name = modificationLine.substring(0, start);
-                    modificationLine = modificationLine.substring(start + 2);
-                    if (!name.trim().equals("")) {
+            while ((start = modificationLine.indexOf(MODIFICATION_SEPARATOR)) >= 0) {
+                String name = modificationLine.substring(0, start);
+                modificationLine = modificationLine.substring(start + 2);
+                if (!name.trim().equals("")) {
                         modificationUses.add(name);
-                    }
                 }
+            }
 
                 for (String name : modificationUses) {
-                    start = name.indexOf("_");
-                    String modificationName = name;
+                start = name.indexOf("_");
+                String modificationName = name;
 
-                    if (start != -1) {
-                        modificationName = name.substring(0, start); // old format, remove usage statistics
-                    }
-
-                    if (PTMFactory.getInstance().containsPTM(modificationName)) {
-                        modificationUse.add(modificationName);
-                    }
+                if (start != -1) {
+                    modificationName = name.substring(0, start); // old format, remove usage statistics
                 }
-            } catch (IOException ioe) {
-                ioe.printStackTrace(); // @TODO: this exception should be thrown to the GUI!
-                JOptionPane.showMessageDialog(null, "An error occurred when trying to load the modifications preferences.",
-                        "Configuration Import Error", JOptionPane.ERROR_MESSAGE);
+
+                if (PTMFactory.getInstance().containsPTM(modificationName)) {
+                    modificationUse.add(modificationName);
+                }
             }
         }
 
         return modificationUse;
+    }
+
+    /**
+     * Saves the modification use to the given configuration file.
+     *
+     * @param configurationFile the configuration file where to save the
+     * modification use
+     * @param modificationUse the modification use
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the modification file
+     */
+    public static void saveModificationUse(ConfigurationFile configurationFile, ArrayList<String> modificationUse) throws IOException {
+        String modificationUseAsString = getModificationUseAsString(modificationUse);
+        configurationFile.setParameter(modificationUseInConfiguration, modificationUseAsString);
     }
 
     /**
@@ -2544,4 +2556,37 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
         return result;
     }
+
+    /**
+     * Saves the user preferences and closes the dialog
+     */
+    private void close() {
+        try {
+            saveModificationUse(configurationFile, modificationUse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // ignore
+        }
+        dispose();
+    }
+
+    /**
+     * Loads the modification use from a configuration file.
+     *
+     * @param configurationFile the configuration file
+     */
+    private void loadModificationUse(ConfigurationFile configurationFile) throws IOException {
+        modificationUse = loadModificationsUse(configurationFile);
+    }
+
+    /**
+     * Indicates whether the cancel button was pressed by the user.
+     *
+     * @return a boolean indicating whether the cancel button was pressed by the
+     * user
+     */
+    public boolean isCanceled() {
+        return canceled;
+    }
+
 }

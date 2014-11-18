@@ -391,7 +391,9 @@ public class SpeciesDialog extends javax.swing.JDialog {
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null) {
+            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null 
+                    || !GenePreferences.getGeneMappingFile(selectedSpecies).exists()
+                    || !GenePreferences.getGoMappingFile(selectedSpecies).exists()) {
                 updateMappingsButton.setText("Download");
                 updateMappingsButton.setEnabled(true);
             } else {

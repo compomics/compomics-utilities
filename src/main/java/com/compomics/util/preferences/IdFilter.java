@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
@@ -112,6 +113,18 @@ public class IdFilter implements Serializable {
         this.maxMassDeviation = maxMzDeviation;
         this.isPpm = isPpm;
         this.unknownPtm = unknownPTM;
+    }
+
+    /**
+     * Updates the filter based on the search parameters
+     *
+     * @param searchParameters the search parameters where to take the
+     * information from
+     */
+    public void setFilterFromSearchParameters(SearchParameters searchParameters) {
+        this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
+        this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
+        this.unknownPtm = true;
     }
 
     /**

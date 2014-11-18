@@ -1012,8 +1012,10 @@ public class SequenceFactory {
             currentRawHeader = currentRawHeader.replaceAll(escapedString, decoyAccession);
 
             // add decoy to the description
-            escapedString = java.util.regex.Pattern.quote(currentHeader.getDescription());
-            currentRawHeader = currentRawHeader.replaceAll(escapedString, getDefaultDecoyDescription(currentHeader.getDescription()));
+            if (currentHeader.getDescription() != null && !currentHeader.getDescription().isEmpty()) {
+                escapedString = java.util.regex.Pattern.quote(currentHeader.getDescription());
+                currentRawHeader = currentRawHeader.replaceAll(escapedString, getDefaultDecoyDescription(currentHeader.getDescription()));
+            }
 
             // write the target protein to the fasta file
             bufferedWriter.write(currentHeader.getRawHeader() + System.getProperty("line.separator"));

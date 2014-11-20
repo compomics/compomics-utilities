@@ -247,7 +247,7 @@ public abstract class AminoAcid implements Serializable {
             case 'o':
                 return AminoAcid.O;
             default:
-                throw new IllegalArgumentException("No amino acid found for letter " + letter + ".");
+                throw new IllegalArgumentException("No amino acid found for letter " + letter + "."); // @TODO: what about stop codons?
         }
     }
 

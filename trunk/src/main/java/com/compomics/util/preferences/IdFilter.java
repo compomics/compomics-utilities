@@ -116,7 +116,7 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Updates the filter based on the search parameters
+     * Updates the filter based on the search parameters.
      *
      * @param searchParameters the search parameters where to take the
      * information from
@@ -128,7 +128,7 @@ public class IdFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide based on the peptide length and share of Xs in the
+     * Validates the peptide based on the peptide length and share of X's in the
      * sequence.
      *
      * @param peptide the peptide to validate

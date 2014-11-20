@@ -4,50 +4,50 @@ import com.compomics.util.experiment.identification.SearchParameters;
 import java.io.Serializable;
 
 /**
- * Generic class grouping the parameters used for protein identification
+ * Generic class grouping the parameters used for protein identification.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class IdentificationParameters implements Serializable {
 
     /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -5516259326385167746L;
     /**
-     * The parameters used for the spectrum matching
+     * The parameters used for the spectrum matching.
      */
     private SearchParameters searchParameters;
     /**
-     * The peak annotation preferences
+     * The peak annotation preferences.
      */
     private AnnotationPreferences annotationPreferences;
     /**
-     * The Psm filter
+     * The PSM filter.
      */
     private IdFilter idFilter;
     /**
-     * The Psm scores to use
+     * The PSM scores to use.
      */
     private PsmScoringPreferences psmScoringPreferences;
     /**
-     * The ptm localisation scoring preferences
+     * The PTM localization scoring preferences.
      */
     private PTMScoringPreferences ptmScoringPreferences;
     /**
-     * The peptide to protein matching preferences
+     * The peptide to protein matching preferences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
     /**
-     * The gene preferences
+     * The gene preferences.
      */
     private GenePreferences genePreferences;
     /**
-     * The protein inference preferences
+     * The protein inference preferences.
      */
     private ProteinInferencePreferences proteinInferencePreferences;
     /**
-     * The identification validation preferences
+     * The identification validation preferences.
      */
     private IdMatchValidationPreferences idValidationPreferences;
 
@@ -307,5 +307,4 @@ public class IdentificationParameters implements Serializable {
             idValidationPreferences = new IdMatchValidationPreferences();
         }
     }
-
 }

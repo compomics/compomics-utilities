@@ -30,7 +30,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private IdentificationParameters identificationParameters;
     /**
-     * Boolean indicating whether the processing and identification parameters should be edited upon clicking on ok
+     * Boolean indicating whether the processing and identification parameters
+     * should be edited upon clicking on OK.
      */
     private boolean editable;
 
@@ -52,9 +53,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         setUpGui();
         setLocationRelativeTo(parent);
     }
-    
+
     /**
-     * Sets up the gui according the given data
+     * Sets up the GUI according the given data.
      */
     private void setUpGui() {
 
@@ -542,17 +543,17 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (editable && validateInput()) {
-            
+
             IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
             idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
             idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
             idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
-            
+
             PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
             ptmScoringPreferences.setProbabilitsticScoreCalculation(probabilisticScoreCmb.getSelectedIndex() == 0);
             ptmScoringPreferences.setSelectedProbabilisticScore(PtmScore.getScore(scoreCmb.getSelectedItem().toString()));
             ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
-            
+
             if (thresholdCmb.getSelectedIndex() == 0) {
                 ptmScoringPreferences.setEstimateFlr(true);
             } else {

@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Generic class for peptide spectrum match scoring
+ * Generic class for peptide spectrum match scoring.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PsmScoringPreferences implements Serializable {
 
@@ -112,5 +112,4 @@ public class PsmScoringPreferences implements Serializable {
         }
         return false;
     }
-
 }

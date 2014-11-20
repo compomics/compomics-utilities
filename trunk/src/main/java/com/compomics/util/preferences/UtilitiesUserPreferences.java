@@ -132,7 +132,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private Boolean notifyStart = true;
     /**
-     * The last selected folder
+     * The last selected folder.
      */
     private LastSelectedFolder lastSelectedFolder;
 

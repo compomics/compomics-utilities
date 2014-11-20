@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.io;
 
 import java.io.BufferedReader;
@@ -15,12 +10,12 @@ import java.io.IOException;
 /**
  * Generic configuration text file.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ConfigurationFile {
 
     /**
-     * The file where to read/write configuration from/to
+     * The file where to read/write configuration from/to.
      */
     private File configurationFile;
 
@@ -30,12 +25,14 @@ public class ConfigurationFile {
 
     /**
      * Sets the value for a given parameter.
-     * 
+     *
      * @param parameterName the name of the parameter of interest
      * @param value the value to set
-     * 
-     * @throws FileNotFoundException exception thrown whenever the connection to the file was dropped before execution is finished
-     * @throws IOException exception thrown whenever an error occurred while reading or writing to the file
+     *
+     * @throws FileNotFoundException exception thrown whenever the connection to
+     * the file was dropped before execution is finished
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading or writing to the file
      */
     public void setParameter(String parameterName, String value) throws FileNotFoundException, IOException {
 
@@ -117,5 +114,4 @@ public class ConfigurationFile {
         }
         return parameterLine;
     }
-
 }

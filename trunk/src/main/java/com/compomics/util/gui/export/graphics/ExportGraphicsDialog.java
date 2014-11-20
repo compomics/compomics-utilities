@@ -41,15 +41,15 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      */
     private JFrame frame;
     /**
-     * The normal icon
+     * The normal icon.
      */
     private Image normalIcon;
     /**
-     * The waiting icon
+     * The waiting icon.
      */
     private Image waitingIcon;
     /**
-     * The last selected folder
+     * The last selected folder.
      */
     private LastSelectedFolder lastSelectedFolder;
 

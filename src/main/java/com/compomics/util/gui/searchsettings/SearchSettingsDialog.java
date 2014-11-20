@@ -128,15 +128,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private ArrayList<String> modificationUse = new ArrayList<String>();
     /**
      * The line to use to reference the modification use in the configuration
-     * file
+     * file.
      */
     public static final String modificationUseInConfiguration = "Modification use:";
     /**
-     * Boolean indicating whether the cancel button was pressed
+     * Boolean indicating whether the cancel button was pressed.
      */
     private boolean canceled = false;
     /**
-     * The last selected folder to use
+     * The last selected folder to use.
      */
     private final LastSelectedFolder lastSelectedFolder;
     /**
@@ -2558,7 +2558,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }
 
     /**
-     * Saves the user preferences and closes the dialog
+     * Saves the user preferences and closes the dialog.
      */
     private void close() {
         try {

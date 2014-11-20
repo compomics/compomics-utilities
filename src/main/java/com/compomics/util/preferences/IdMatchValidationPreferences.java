@@ -3,9 +3,9 @@ package com.compomics.util.preferences;
 import java.io.Serializable;
 
 /**
- * Generic class grouping the identification matches validation preferences
+ * Generic class grouping the identification matches validation preferences.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class IdMatchValidationPreferences implements Serializable {
 
@@ -79,5 +79,4 @@ public class IdMatchValidationPreferences implements Serializable {
     public void setDefaultPsmFDR(double defaultPsmFDR) {
         this.defaultPsmFDR = defaultPsmFDR;
     }
-
 }

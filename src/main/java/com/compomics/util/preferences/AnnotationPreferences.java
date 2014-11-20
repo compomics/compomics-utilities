@@ -135,7 +135,7 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Updates the annotation parameters based on search parameters
+     * Updates the annotation parameters based on search parameters.
      *
      * @param searchParameters the search parameters where to take the
      * information from

@@ -8,43 +8,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Generic class gathering informatino on a shotgun proteomic protocol
+ * Generic class gathering information on a shotgun proteomics protocol.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ShotgunProtocol implements Serializable {
 
     /**
-     * The enzyme used for digestion
+     * The enzyme used for digestion.
      */
     private Enzyme enzyme;
     /**
-     * The PTMs enriched for
+     * The PTMs enriched for.
      */
     private ArrayList<String> enrichedPtms;
     /**
-     * The PTMs resulting of a labelling in a map: name of the ptm - boolean
-     * indicating whether the labelling is complete
+     * The PTMs resulting of a labeling in a map: name of the PTM - boolean
+     * indicating whether the labeling is complete.
      */
     private HashMap<String, Boolean> labellingPtms;
     /**
-     * The ms1 resolution
+     * The MS1 resolution.
      */
     private Double ms1Resolution;
     /**
-     * Boolean indicating whether the MS1 resolution is in ppm
+     * Boolean indicating whether the MS1 resolution is in ppm.
      */
     private boolean ms1ResolutionPpm;
     /**
-     * The fragmentation method used
+     * The fragmentation method used.
      */
     private FragmentationMethod fragmentationMethod;
     /**
-     * The ms2 resolution
+     * The MS2 resolution.
      */
     private Double ms2Resolution;
     /**
-     * Boolean indicating whether the MS2 resolution is in ppm
+     * Boolean indicating whether the MS2 resolution is in ppm.
      */
     private boolean ms2ResolutionPpm;
 
@@ -180,7 +180,7 @@ public class ShotgunProtocol implements Serializable {
      * Adds a label.
      *
      * @param ptmName the name of the modification used for the label
-     * @param complete boolean indicating whether the labelling is complete
+     * @param complete boolean indicating whether the labeling is complete
      * (true) or partial (false)
      */
     public void addLabel(String ptmName, boolean complete) {
@@ -191,10 +191,10 @@ public class ShotgunProtocol implements Serializable {
     }
 
     /**
-     * Returns the PTMs used for labelling in a map: name of the PTM - boolean
-     * indicating whether the labelling is complete.
+     * Returns the PTMs used for labeling in a map: name of the PTM - boolean
+     * indicating whether the labeling is complete.
      *
-     * @return the PTMs used for labelling
+     * @return the PTMs used for labeling
      */
     public HashMap<String, Boolean> getLabellingPtms() {
         return labellingPtms;
@@ -205,7 +205,7 @@ public class ShotgunProtocol implements Serializable {
      *
      * @param searchParameters the search settings where to take the information
      * from
-     * 
+     *
      * @return the inferred protocol
      */
     public static ShotgunProtocol inferProtocolFromSearchSettings(SearchParameters searchParameters) {
@@ -217,5 +217,4 @@ public class ShotgunProtocol implements Serializable {
         shotgunProtocol.setMs2ResolutionPpm(false);
         return shotgunProtocol;
     }
-
 }

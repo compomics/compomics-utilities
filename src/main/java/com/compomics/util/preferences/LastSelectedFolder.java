@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.preferences;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Convenience class keeping class of the last selected folders
+ * Convenience class keeping class of the last selected folders.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class LastSelectedFolder implements Serializable {
 
@@ -24,9 +19,18 @@ public class LastSelectedFolder implements Serializable {
      */
     private HashMap<String, String> lastSelectedFolder = null;
     /**
-     * The default use case
+     * The default use case.
      */
     private static final String defaultUseCase = "default";
+
+    /**
+     * Constructs a new last selected folder class.
+     * 
+     * @param defaultFolder the default folder
+     */
+    public LastSelectedFolder(String defaultFolder) {
+        setLastSelectedFolder(defaultFolder);
+    }
 
     /**
      * Constructs a new last selected folder class. Defaults to the user home by
@@ -90,5 +94,4 @@ public class LastSelectedFolder implements Serializable {
     public String getLastSelectedFolder() {
         return getLastSelectedFolder(null);
     }
-
 }

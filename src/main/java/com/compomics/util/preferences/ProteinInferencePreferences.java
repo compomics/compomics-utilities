@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.Serializable;
 
 /**
- * Generic class grouping the protein inference preferences
+ * Generic class grouping the protein inference preferences.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ProteinInferencePreferences implements Serializable {
 
@@ -15,7 +15,7 @@ public class ProteinInferencePreferences implements Serializable {
      */
     static final long serialVersionUID = 447785006299636157L;
     /**
-     * The database to use for protein inference
+     * The database to use for protein inference.
      */
     private File proteinSequenceDatabase;
 
@@ -36,5 +36,4 @@ public class ProteinInferencePreferences implements Serializable {
     public void setProteinSequenceDatabase(File proteinSequenceDatabase) {
         this.proteinSequenceDatabase = proteinSequenceDatabase;
     }
-
 }

@@ -23,7 +23,7 @@ public class BugReport extends javax.swing.JDialog {
      */
     private LastSelectedFolder lastSelectedFolder;
     /**
-     * The specific key for bug reports
+     * The specific key for bug reports.
      */
     public static final String lastSelectedFolderKey = "bug_report";
     /**
@@ -31,7 +31,7 @@ public class BugReport extends javax.swing.JDialog {
      */
     private String toolName;
     /**
-     * The google code name of the tool, e.g., "peptide-shaker".
+     * The Google Code name of the tool, e.g., "peptide-shaker".
      */
     private String googleCodeToolName;
     /**

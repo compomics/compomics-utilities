@@ -65,7 +65,7 @@ public class ProcessingPreferences implements Serializable {
      * Constructor with default settings.
      */
     public ProcessingPreferences() {
-        nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
+        nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1); // @TODO: make it possible for the user to control the number of threads?
 //        nThreads = Math.max(Runtime.getRuntime().availableProcessors()-1, 1);
 //        nThreads = 1;
     }

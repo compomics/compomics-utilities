@@ -65,7 +65,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private UtilitiesUserPreferences utilitiesUserPreferences = null;
     /**
-     * The key to use to store fasta files paths
+     * The key to use to store FASTA files paths.
      */
     public static final String lastFolderKey = "fastaFile";
 
@@ -235,7 +235,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 startLocation = utilitiesUserPreferences.getDbFolder();
             }
             if (startLocation == null) {
-            startLocation = new File(getLastSelectedFolder());
+                startLocation = new File(getLastSelectedFolder());
             }
 
             JFileChooser fc = new JFileChooser(startLocation);

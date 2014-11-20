@@ -159,7 +159,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param lastSelectedFolder the last selected folder to use
      */
     public SearchSettingsDialog(JFrame parentFrame, SearchParameters searchParameters,
-            Image normalIcon, Image waitingIcon, boolean setVisible, boolean modal, 
+            Image normalIcon, Image waitingIcon, boolean setVisible, boolean modal,
             ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder) {
         super(parentFrame, modal);
         this.parentFrame = parentFrame;
@@ -2502,16 +2502,16 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             // Split the different modifications.
             int start;
 
-                ArrayList<String> modificationUses = new ArrayList<String>();
+            ArrayList<String> modificationUses = new ArrayList<String>();
             while ((start = modificationLine.indexOf(MODIFICATION_SEPARATOR)) >= 0) {
                 String name = modificationLine.substring(0, start);
                 modificationLine = modificationLine.substring(start + 2);
                 if (!name.trim().equals("")) {
-                        modificationUses.add(name);
+                    modificationUses.add(name);
                 }
             }
 
-                for (String name : modificationUses) {
+            for (String name : modificationUses) {
                 start = name.indexOf("_");
                 String modificationName = name;
 

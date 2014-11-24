@@ -104,7 +104,7 @@ public class GenePreferences implements Serializable {
     /**
      * Creates new gene preferences based on a GenePreferences object.
      *
-     * @param genePreferences
+     * @param genePreferences the gene preferences
      */
     public GenePreferences(GenePreferences genePreferences) {
         if (genePreferences.getGoDomainMap() != null) {
@@ -157,7 +157,7 @@ public class GenePreferences implements Serializable {
      * plants_mart_18
      * @param selectedSpecies
      * @param waitingHandler waiting handler displaying progress and allowing
-     * cancelling the process
+     * canceling the process
      *
      * @return true if downloading went OK
      *
@@ -191,7 +191,7 @@ public class GenePreferences implements Serializable {
      * @param swissProtMapping if true, use the uniprot_swissprot_accession
      * parameter, if false use the uniprot_sptrembl parameter
      * @param waitingHandler waiting handler displaying progress and allowing
-     * cancelling the process
+     * canceling the process
      *
      * @return true if downloading went OK
      *
@@ -227,9 +227,9 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Sends an xml query to ensembl and writes the result in a text file.
+     * Sends an XML query to Ensembl and writes the result in a text file.
      *
-     * @param requestXml the xml request
+     * @param requestXml the XML request
      * @param destinationFile the file where to save the results
      * @param ensemblType the Ensembl type, e.g., default or plants
      *
@@ -243,9 +243,9 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Sends an xml query to ensembl and writes the result in a text file.
+     * Sends an XML query to Ensembl and writes the result in a text file.
      *
-     * @param requestXml the xml request
+     * @param requestXml the XML request
      * @param destinationFile the file where to save the results
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param waitingHandler waiting handler displaying progress and allowing
@@ -261,13 +261,13 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Sends an xml query to ensembl and writes the result in a text file.
+     * Sends an XML query to Ensembl and writes the result in a text file.
      *
-     * @param requestXml the xml request
+     * @param requestXml the XML request
      * @param destinationFile the file where to save the results
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param waitingHandler waiting handler displaying progress and allowing
-     * cancelling the process
+     * canceling the process
      * @param waitingText the text to write in case a progress dialog is used
      *
      * @return true if downloading went OK
@@ -301,9 +301,10 @@ public class GenePreferences implements Serializable {
 
                     if (waitingHandler != null) {
                         waitingHandler.setWaitingText(waitingText);
+                    } else {
+                        System.out.println(waitingText);
                     }
-                    System.out.println(waitingText);
-
+                    
                     int counter = 0;
 
                     boolean fileCreated = destinationFile.createNewFile();
@@ -337,11 +338,12 @@ public class GenePreferences implements Serializable {
                                                 if (waitingHandler instanceof ProgressDialogX) {
                                                     waitingHandler.setWaitingText(waitingText + " (" + counter++ + " rows downloaded)");
                                                 }
-                                            }
-                                            int thousand = ++counter / 10000;
-                                            if (thousand > lastThousand) {
-                                                System.out.println(waitingText + " (" + counter + " rows downloaded)");
-                                                lastThousand = thousand;
+                                            } else {
+                                                int thousand = ++counter / 10000;
+                                                if (thousand > lastThousand) {
+                                                    System.out.println(waitingText + " (" + counter + " rows downloaded)");
+                                                    lastThousand = thousand;
+                                                }
                                             }
                                             bw.write(rowLine + System.getProperty("line.separator"));
                                             rowLine = br.readLine();
@@ -385,7 +387,8 @@ public class GenePreferences implements Serializable {
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
+    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, 
+            WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // fix needed to support both default and custom ensembl species
         String externalReference;
@@ -1300,10 +1303,22 @@ public class GenePreferences implements Serializable {
         }
     }
 
+    /**
+     * Returns the gene mapping file.
+     * 
+     * @param speciesName the species name
+     * @return the gene mapping file
+     */
     public static File getGeneMappingFile(String speciesName) {
         return new File(getGeneMappingFolder(), speciesName + GENE_MAPPING_FILE_SUFFIX);
     }
 
+    /**
+     * Returns the GO mapping file.
+     * 
+     * @param speciesName the species name
+     * @return the GO mapping file
+     */
     public static File getGoMappingFile(String speciesName) {
         return new File(getGeneMappingFolder(), speciesName + GO_MAPPING_FILE_SUFFIX);
     }

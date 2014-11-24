@@ -127,7 +127,7 @@
                           <Component id="peptideFdrLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="psmFdrLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="32" pref="92" max="32767" attributes="0"/>
+                      <EmptySpace pref="92" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="proteinFdrTxt" max="32767" attributes="0"/>
@@ -158,13 +158,13 @@
                           <Component id="percentLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="proteinFdrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="peptideFdrTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="percentLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideFdrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="psmFdrLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="psmFdrTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -247,7 +247,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="estimateAScoreLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="10" pref="61" max="32767" attributes="0"/>
+                                      <EmptySpace pref="61" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="probabilisticScoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
                                           <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
@@ -271,7 +271,7 @@
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -285,22 +285,22 @@
                           <Component id="estimateAScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="probabilisticScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="scoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="neutralLossesLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="neutralLossesLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="thresholdCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="11" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="aScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="thresholdTxt" alignment="3" min="-2" max="-2" attributes="0"/>

@@ -9,6 +9,7 @@ import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.ProcessingPreferences;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -45,6 +46,25 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences
      */
     public ProcessingPreferencesDialog(java.awt.Frame parent, boolean editable, IdentificationParameters identificationParameters, ProcessingPreferences processingPreferences) {
+        super(parent, true);
+        initComponents();
+        this.processingPreferences = processingPreferences;
+        this.identificationParameters = identificationParameters;
+        this.editable = editable;
+        setUpGui();
+        setLocationRelativeTo(parent);
+    }
+
+    /**
+     * Creates a new parameters dialog.
+     *
+     * @param parent the parent dialog
+     * @param editable a boolean indicating whether the processing parameters
+     * are editable
+     * @param identificationParameters the identification parameters
+     * @param processingPreferences the processing preferences
+     */
+    public ProcessingPreferencesDialog(JDialog parent, boolean editable, IdentificationParameters identificationParameters, ProcessingPreferences processingPreferences) {
         super(parent, true);
         initComponents();
         this.processingPreferences = processingPreferences;

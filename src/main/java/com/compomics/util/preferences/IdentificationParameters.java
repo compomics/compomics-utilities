@@ -25,7 +25,7 @@ public class IdentificationParameters implements Serializable {
     /**
      * The PSM filter.
      */
-    private IdFilter idFilter;
+    private IdFilter idFilter = new IdFilter();
     /**
      * The PSM scores to use.
      */
@@ -33,7 +33,7 @@ public class IdentificationParameters implements Serializable {
     /**
      * The PTM localization scoring preferences.
      */
-    private PTMScoringPreferences ptmScoringPreferences;
+    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
     /**
      * The peptide to protein matching preferences.
      */
@@ -49,7 +49,7 @@ public class IdentificationParameters implements Serializable {
     /**
      * The identification validation preferences.
      */
-    private IdMatchValidationPreferences idValidationPreferences;
+    private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
 
     /**
      * Returns the parameters used for the spectrum matching.

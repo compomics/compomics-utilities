@@ -152,9 +152,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param parentFrame the parent frame
      * @param searchParameters previous search parameters
      * @param normalIcon the normal dialog icon
-     * @param setVisible the waiting dialog icon
-     * @param waitingIcon
-     * @param modal
+     * @param waitingIcon the waiting dialog icon
+     * @param setVisible if the dialog is to be visible or not
+     * @param modal if the dialog is to be modal
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
      */
@@ -171,6 +171,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         this.normalIcon = normalIcon;
         this.waitingIcon = waitingIcon;
         this.lastSelectedFolder = lastSelectedFolder;
+        this.configurationFile = configurationFile;
 
         try {
             loadModificationUse(configurationFile);
@@ -189,11 +190,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         if (setVisible) {
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    setVisible(true);
-                }
-            });
+            setVisible(true);
         }
     }
 
@@ -1222,7 +1219,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        SearchParameters tempSearchParameters = getSearchParameters();
+        SearchParameters tempSearchParameters = getCurrentSearchParameters();
 
         if (!searchParameters.equals(tempSearchParameters)) {
 
@@ -1252,7 +1249,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
                 if (userSelectFile) {
                     fileSaved = saveAsPressed();
-                    tempSearchParameters = getSearchParameters();
+                    tempSearchParameters = getCurrentSearchParameters();
                 }
 
                 if (fileSaved && tempSearchParameters.getParametersFile() != null) {
@@ -1731,7 +1728,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             return saveAsPressed();
         } else if (validateParametersInput(true)) {
             try {
-                searchParameters = getSearchParameters();
+                searchParameters = getCurrentSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, parametersFile);
                 return true;
             } catch (Exception e) {
@@ -2144,7 +2141,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      *
      * @return a SearchParameters instance based on the user input in the GUI
      */
-    public SearchParameters getSearchParameters() {
+    private SearchParameters getCurrentSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters();
         if (searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) != null) {
@@ -2589,4 +2586,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         return canceled;
     }
 
+    /**
+     * Returns the search parameters object.
+     *
+     * @return the search parameters object
+     */
+    public SearchParameters getSearchParameters() {
+        return searchParameters;
+    }
 }

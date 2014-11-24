@@ -122,7 +122,6 @@ public class IdFilter implements Serializable {
      * information from
      */
     public void setFilterFromSearchParameters(SearchParameters searchParameters) {
-        this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
         this.unknownPtm = true;
     }
@@ -133,7 +132,7 @@ public class IdFilter implements Serializable {
      *
      * @param peptide the peptide to validate
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * containing the maximal share of Xs allowed
+     * containing the maximal share of X's allowed
      *
      * @return a boolean indicating whether the peptide passed the test
      */

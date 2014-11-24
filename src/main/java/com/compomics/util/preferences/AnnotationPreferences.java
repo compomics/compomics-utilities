@@ -480,10 +480,10 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * If true, the ion table is shown as an intensity versionm, false displays
+     * If true, the ion table is shown as an intensity version, false displays
      * the standard Mascot version.
      *
-     * @return if true, the ion table is shown as an intensity versionm, false
+     * @return if true, the ion table is shown as an intensity version, false
      * displays the standard Mascot version
      */
     public boolean useIntensityIonTable() {
@@ -510,7 +510,7 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Set if the automatic y-axis zoom only considers the anotated peaks.
+     * Set if the automatic y-axis zoom only considers the annotated peaks.
      *
      * @param yAxisZoomExcludesBackgroundPeaks
      */

@@ -72,11 +72,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Creates a new SequenceDbDetailsDialog.
      *
-     * @param parent
-     * @param lastSelectedFolder
-     * @param dbEditable
-     * @param waitingImage
-     * @param normalImange
+     * @param parent the parent frame
+     * @param lastSelectedFolder the last selected folder
+     * @param dbEditable if the database is editable
+     * @param waitingImage the waiting icon
+     * @param normalImange the normal icon
      */
     public SequenceDbDetailsDialog(Frame parent, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
         super(parent, true);
@@ -499,8 +499,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 return false;
             }
         }
-        return true;
 
+        return true;
     }
 
     /**
@@ -691,7 +691,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     .addComponent(browseButton)
                     .addComponent(fileLabel)
                     .addComponent(advancedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
                     .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -762,7 +762,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(previewPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addComponent(proteinYxtScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinLabel)
@@ -840,7 +840,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Saves changes and closes the dialog
      *
-     * @param evt
+     * @param evt the action event
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (saveChanges()) {
@@ -854,16 +854,23 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Close the dialog.
      *
-     * @param evt
+     * @param evt the action event
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        try {
+            sequenceFactory.clearFactory();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
+                    "Import error", JOptionPane.WARNING_MESSAGE);
+            e.printStackTrace();
+        }
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
      * Open a file chooser to select a FASTA file.
      *
-     * @param evt
+     * @param evt the action event
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         selectDB(false);
@@ -872,7 +879,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Add decoys.
      *
-     * @param evt
+     * @param evt the action event
      */
     private void decoyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decoyButtonActionPerformed
 
@@ -905,7 +912,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Update the sequence.
      *
-     * @param evt
+     * @param evt the change event
      */
     private void accessionsSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_accessionsSpinnerStateChanged
         updateSequence();
@@ -914,7 +921,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Open the database help page.
      *
-     * @param evt
+     * @param evt the mouse event
      */
     private void databaseHelpSettingsJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseClicked
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
@@ -925,7 +932,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Change the cursor to a hand cursor.
      *
-     * @param evt
+     * @param evt the mouse event
      */
     private void databaseHelpSettingsJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -934,7 +941,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Change cursor back to the default cursor.
      *
-     * @param evt
+     * @param evt the mouse event
      */
     private void databaseHelpSettingsJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -943,7 +950,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * Show the AdvancedProteinDatabaseDialog.
      *
-     * @param evt
+     * @param evt the action event
      */
     private void advancedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedButtonActionPerformed
         new AdvancedProteinDatabaseDialog(parentFrame);

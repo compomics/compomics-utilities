@@ -7,6 +7,9 @@ import com.compomics.util.experiment.identification.IdentificationMatch.MatchTyp
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
+import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
+import com.compomics.util.experiment.identification.matches_iterators.PsmIterator;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
@@ -1709,5 +1712,77 @@ public abstract class Identification extends ExperimentObject {
      */
     public boolean isUnique(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getProteinMatches(peptide).size() == 1;
+    }
+    
+    /**
+     * Returns a PSM iterator.
+     * 
+     * @param spectrumFile the file to iterate
+     * @param spectrumKeys specific keys to iterate
+     * @param psmParameters the parameters to load along with the matches
+     * 
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters) {
+        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters);
+    }
+    
+    /**
+     * Returns a PSM iterator iterating all PSMs in a file.
+     * 
+     * @param spectrumFile the file to iterate
+     * @param psmParameters the parameters to load along with the matches
+     * 
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters) {
+        return new PsmIterator(spectrumFile, this, psmParameters);
+    }
+    
+    /**
+     * Returns a peptide matches iterator.
+     * 
+     * @param peptideKeys the keys of the peptides to iterate
+     * @param peptideParameters the peptide parameters to load along with the matches
+     * @param loadPsms if true PSMs of the peptides will be loaded as well
+     * @param psmParameters the PSM parameters to load along with the PSMs
+     * 
+     * @return a peptide matches iterator
+     */
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+        return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters);
+    }
+    
+    /**
+     * Returns a peptide matches iterator iterating all peptides.
+     * 
+     * @param peptideParameters the peptide parameters to load along with the matches
+     * @param loadPsms if true PSMs of the peptides will be loaded as well
+     * @param psmParameters the PSM parameters to load along with the PSMs
+     * 
+     * @return a peptide matches iterator
+     */
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+        return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters);
+    }
+    
+    /**
+     * Returns a protein matches iterator.
+     * 
+     * @param proteinKeys the keys of the proteins to iterate
+     * @param proteinParameters the protein parameters to load along with the
+     * matches
+     * @param loadPeptides if true the peptides corresponding to these proteins
+     * will be batch loaded along with the proteins
+     * @param peptideParameters the parameters to load along with the peptide
+     * matches
+     * @param loadPsms if true the psms of the peptides will be batch loaded
+     * along with the matches
+     * @param psmParameters the parameters to load along with the matches
+     * 
+     * @return a protein matches iterator
+     */
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+        return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
     }
 }

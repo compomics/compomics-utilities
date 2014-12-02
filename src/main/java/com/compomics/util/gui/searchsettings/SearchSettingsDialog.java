@@ -353,6 +353,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 formComponentResized(evt);
             }
         });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -1209,6 +1214,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -1291,25 +1297,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-//        // move the icons
-//        modificationsLayeredPane.getComponent(0).setBounds(
-//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(0).getWidth() - 10,
-//                -3,
-//                modificationsLayeredPane.getComponent(0).getWidth(),
-//                modificationsLayeredPane.getComponent(0).getHeight());
-//
-//        modificationsLayeredPane.getComponent(1).setBounds(
-//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(1).getWidth() - 22,
-//                0,
-//                modificationsLayeredPane.getComponent(1).getWidth(),
-//                modificationsLayeredPane.getComponent(1).getHeight());
-//
-//        modificationsLayeredPane.getComponent(2).setBounds(
-//                modificationsLayeredPane.getWidth() - modificationsLayeredPane.getComponent(2).getWidth() - 5,
-//                -3,
-//                modificationsLayeredPane.getComponent(2).getWidth(),
-//                modificationsLayeredPane.getComponent(2).getHeight());
-
         // resize the plot area
         modificationsLayeredPane.getComponent(0).setBounds(0, 0, modificationsLayeredPane.getWidth(), modificationsLayeredPane.getHeight());
         modificationsLayeredPane.revalidate();
@@ -1643,6 +1630,15 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }.start();
         }
     }//GEN-LAST:event_modificationsTableKeyReleased
+
+    /**
+     * Close the window without saving the changes.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cancelButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFixedModification;

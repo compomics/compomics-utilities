@@ -176,11 +176,21 @@ public class BasicMathFunctions {
      * @return the corresponding mean
      */
     public static double mean(ArrayList<Double> input) {
+        return sum(input) / input.size();
+    }
+
+    /**
+     * Convenience method returning the sum of a list of doubles.
+     *
+     * @param input input list
+     * @return the corresponding mean
+     */
+    public static double sum(ArrayList<Double> input) {
         double result = 0;
         for (Double x : input) {
             result += x;
         }
-        return result / input.size();
+        return result;
     }
 
     /**

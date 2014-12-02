@@ -35,6 +35,10 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * should be edited upon clicking on OK.
      */
     private boolean editable;
+    /**
+     * Boolean indicating whether the cancel button was pressed.
+     */
+    private boolean canceled = false;
 
     /**
      * Creates a new parameters dialog.
@@ -248,7 +252,6 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         neutralLossesLabel2 = new javax.swing.JLabel();
         neutralLossesCmb2 = new javax.swing.JComboBox();
         backgroundPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
         processingParamsPanel = new javax.swing.JPanel();
         proteinFdrLabel = new javax.swing.JLabel();
         peptideFdrLabel = new javax.swing.JLabel();
@@ -275,6 +278,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         proteinConfidenceMwTxt = new javax.swing.JTextField();
         percentLabel4 = new javax.swing.JLabel();
         helpJButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         neutralLossesLabel2.setText("Account Neutral Losses");
 
@@ -283,15 +288,13 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Processing");
         setResizable(false);
-
-        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
+
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         processingParamsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Processing Parameters"));
         processingParamsPanel.setOpaque(false);
@@ -509,6 +512,20 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             }
         });
 
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -520,12 +537,17 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                         .addGap(10, 10, 10)
                         .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(okButton))
+                        .addComponent(okButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
                     .addComponent(ptmScoringPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fractionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(processingParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cancelButton, okButton});
+
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
@@ -538,7 +560,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
-                    .addComponent(okButton))
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -550,7 +573,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -656,9 +679,30 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                 null, "Processing Preference Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
+
+    /**
+     * Close the dialog without saving the settings.
+     *
+     * @param evt
+     */
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        canceled = true;
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    /**
+     * Close the dialog without saving the settings.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cancelButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel aScoreLabel;
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel estimateAScoreLabel;
     private javax.swing.JPanel fractionsPanel;
     private javax.swing.JButton helpJButton;
@@ -688,4 +732,14 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox thresholdCmb;
     private javax.swing.JTextField thresholdTxt;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Indicates whether the cancel button was pressed by the user.
+     *
+     * @return a boolean indicating whether the cancel button was pressed by the
+     * user
+     */
+    public boolean isCanceled() {
+        return canceled;
+    }
 }

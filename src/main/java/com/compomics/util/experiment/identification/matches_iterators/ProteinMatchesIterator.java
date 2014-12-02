@@ -9,74 +9,74 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * An iterator of protein matches
+ * An iterator of protein matches.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class ProteinMatchesIterator {
 
     /**
-     * The identification where to get the matches from
+     * The identification where to get the matches from.
      */
     private final Identification identification;
     /**
-     * The keys of the matches to load
+     * The keys of the matches to load.
      */
     private final ArrayList<String> proteinKeys;
     /**
-     * The protein parameters to load along with the matches
+     * The protein parameters to load along with the matches.
      */
     private final ArrayList<UrParameter> proteinParameters;
     /**
      * If true the peptides corresponding to these proteins will be batch loaded
-     * along with the proteins
+     * along with the proteins.
      */
     private final boolean loadPeptides;
     /**
-     * The peptides parameters to load along with the matches
+     * The peptides parameters to load along with the matches.
      */
     private final ArrayList<UrParameter> peptidesParameters;
     /**
-     * If true the psms corresponding to these peptides will be batch loaded
-     * along with the peptides
+     * If true the PSMs corresponding to these peptides will be batch loaded
+     * along with the peptides.
      */
     private final boolean loadPsms;
     /**
-     * The psm parameters to load along with the matches
+     * The PSM parameters to load along with the matches.
      */
     private final ArrayList<UrParameter> psmParameters;
     /**
-     * The total number of matches to load
+     * The total number of matches to load.
      */
     private final int nMatches;
     /**
-     * The current index of the iterator
+     * The current index of the iterator.
      */
     private int index = -1;
     /**
-     * The default batch size
+     * The default batch size.
      */
     public final int defaultBatchSize = 1000;
     /**
-     * The current batch size
+     * The current batch size.
      */
     private int batchSize = defaultBatchSize;
     /**
-     * The current index of the batch loading
+     * The current index of the batch loading.
      */
     private int loadingIndex = -1;
     /**
-     * boolean indicating whether a thread is buffering
+     * Boolean indicating whether a thread is buffering.
      */
     private boolean buffering = false;
     /**
      * The default margin to use to start batch loading before the loading index
-     * is reached
+     * is reached.
      */
     public final double defaultMargin = 0.1;
     /**
      * The margin to use to start batch loading before the loading index is
-     * reached
+     * reached.
      */
     private double margin = defaultMargin;
 
@@ -91,11 +91,13 @@ public class ProteinMatchesIterator {
      * will be batch loaded along with the proteins
      * @param peptideParameters the parameters to load along with the peptide
      * matches
-     * @param loadPsms if true the psms of the peptides will be batch loaded
+     * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
      */
-    public ProteinMatchesIterator(ArrayList<String> proteinKeys, Identification identification, ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+    public ProteinMatchesIterator(ArrayList<String> proteinKeys, Identification identification, ArrayList<UrParameter> proteinParameters,
+            boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+
         this.identification = identification;
         if (proteinKeys == null) {
             this.proteinKeys = identification.getProteinIdentification();
@@ -236,5 +238,4 @@ public class ProteinMatchesIterator {
         int localIndex = ++index;
         return localIndex;
     }
-
 }

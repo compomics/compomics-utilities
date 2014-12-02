@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.matches_iterators;
 
 import com.compomics.util.experiment.identification.Identification;
@@ -15,54 +10,54 @@ import java.util.ArrayList;
 /**
  * An iterator for spectrum matches.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class PsmIterator {
 
     /**
-     * The identification where to get the matches from
+     * The identification where to get the matches from.
      */
     private final Identification identification;
     /**
-     * The keys of the matches to load
+     * The keys of the matches to load.
      */
     private final ArrayList<String> spectrumKeys;
     /**
-     * The psm parameters to load along with the matches
+     * The PSM parameters to load along with the matches.
      */
     private final ArrayList<UrParameter> psmParameters;
     /**
-     * The total number of matches to load
+     * The total number of matches to load.
      */
     private final int nMatches;
     /**
-     * The current index of the iterator
+     * The current index of the iterator.
      */
     private int index = -1;
     /**
-     * The default batch size
+     * The default batch size.
      */
     public final int defaultBatchSize = 1000;
     /**
-     * The current batch size
+     * The current batch size.
      */
     private int batchSize = defaultBatchSize;
     /**
-     * The current index of the batch loading
+     * The current index of the batch loading.
      */
     private int loadingIndex = -1;
     /**
-     * boolean indicating whether a thread is buffering
+     * Boolean indicating whether a thread is buffering.
      */
     private boolean buffering = false;
     /**
      * The default margin to use to start batch loading before the loading index
-     * is reached
+     * is reached.
      */
     public final double defaultMargin = 0.1;
     /**
      * The margin to use to start batch loading before the loading index is
-     * reached
+     * reached.
      */
     private double margin = defaultMargin;
 
@@ -211,5 +206,4 @@ public class PsmIterator {
         int localIndex = ++index;
         return localIndex;
     }
-
 }

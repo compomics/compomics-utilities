@@ -1776,7 +1776,7 @@ public abstract class Identification extends ExperimentObject {
      * will be batch loaded along with the proteins
      * @param peptideParameters the parameters to load along with the peptide
      * matches
-     * @param loadPsms if true the psms of the peptides will be batch loaded
+     * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
      * 

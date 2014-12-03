@@ -340,7 +340,7 @@ public class GeneFactory {
                 || ensemblType.equalsIgnoreCase("metazoa")) {
             return 24;
         } else {
-            return 77;
+            return 78;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released

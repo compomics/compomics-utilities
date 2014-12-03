@@ -392,8 +392,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
         if (selectedSpecies != null) {
             if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null 
-                    || !GenePreferences.getGeneMappingFile(selectedSpecies).exists()
-                    || !GenePreferences.getGoMappingFile(selectedSpecies).exists()) {
+                    || !GenePreferences.getGeneMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()
+                    || !GenePreferences.getGoMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()) {
                 updateMappingsButton.setText("Download");
                 updateMappingsButton.setEnabled(true);
             } else {

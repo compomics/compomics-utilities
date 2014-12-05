@@ -104,12 +104,31 @@ public class ProteinMatchesIterator {
         } else {
             this.proteinKeys = proteinKeys;
         }
-        nMatches = proteinKeys.size();
+        nMatches = this.proteinKeys.size();
         this.proteinParameters = proteinParameters;
         this.loadPeptides = loadPeptides;
         this.peptidesParameters = peptideParameters;
         this.loadPsms = loadPsms;
         this.psmParameters = psmParameters;
+    }
+
+    /**
+     * Constructor for an iterator iterating all protein keys.
+     *
+     * @param identification the identification where to get the matches from
+     * @param proteinParameters the protein parameters to load along with the
+     * matches
+     * @param loadPeptides if true the peptides corresponding to these proteins
+     * will be batch loaded along with the proteins
+     * @param peptideParameters the parameters to load along with the peptide
+     * matches
+     * @param loadPsms if true the PSMs of the peptides will be batch loaded
+     * along with the matches
+     * @param psmParameters the parameters to load along with the matches
+     */
+    public ProteinMatchesIterator(Identification identification, ArrayList<UrParameter> proteinParameters,
+            boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+        this(null, identification, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
     }
 
     /**

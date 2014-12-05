@@ -196,7 +196,7 @@ public class AnnotationPreferences implements Serializable {
      * @throws java.sql.SQLException
      */
     public void resetAutomaticAnnotation(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        selectedCharges.clear();
+        clearCharges();
         int precusorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
         if (precusorCharge == 1) {
             selectedCharges.add(precusorCharge);
@@ -244,7 +244,7 @@ public class AnnotationPreferences implements Serializable {
      * Clears the selected charges.
      */
     public void clearCharges() {
-        selectedCharges.clear();
+        selectedCharges = new ArrayList<Integer>(0);
     }
 
     /**
@@ -255,6 +255,7 @@ public class AnnotationPreferences implements Serializable {
      */
     public void addSelectedCharge(int selectedCharge) {
         if (!selectedCharges.contains(selectedCharge)) {
+            selectedCharges = new ArrayList<Integer>(selectedCharges);
             selectedCharges.add(selectedCharge);
         }
     }

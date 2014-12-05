@@ -24,10 +24,11 @@ import java.util.HashSet;
 
 /**
  * Annotates a spectrum with peptide fragments.
+ * Warning: not multi-thread safe, use different annotators for each thread.
  *
  * @author Marc Vaudel
  */
-public class PeptideSpectrumAnnotator extends SpectrumAnnotator { // should be serializable??
+public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * The theoretic peptide to match.

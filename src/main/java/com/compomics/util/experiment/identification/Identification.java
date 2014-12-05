@@ -1785,4 +1785,23 @@ public abstract class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
         return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
     }
+    
+    /**
+     * Returns a protein matches iterator iterating all protein matches.
+     * 
+     * @param proteinParameters the protein parameters to load along with the
+     * matches
+     * @param loadPeptides if true the peptides corresponding to these proteins
+     * will be batch loaded along with the proteins
+     * @param peptideParameters the parameters to load along with the peptide
+     * matches
+     * @param loadPsms if true the PSMs of the peptides will be batch loaded
+     * along with the matches
+     * @param psmParameters the parameters to load along with the matches
+     * 
+     * @return a protein matches iterator
+     */
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+        return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
+    }
 }

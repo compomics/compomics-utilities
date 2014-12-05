@@ -76,7 +76,7 @@ public class PsmIterator {
         } else {
             this.spectrumKeys = spectrumKeys;
         }
-        nMatches = spectrumKeys.size();
+        nMatches = this.spectrumKeys.size();
         this.psmParameters = psmParameters;
     }
 

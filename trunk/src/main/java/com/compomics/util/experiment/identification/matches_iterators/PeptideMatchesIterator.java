@@ -88,7 +88,7 @@ public class PeptideMatchesIterator {
         } else {
             this.peptideKeys = peptideKeys;
         }
-        nMatches = peptideKeys.size();
+        nMatches = this.peptideKeys.size();
         this.peptidesParameters = peptideParameters;
         this.loadPsms = loadPsms;
         this.psmParameters = psmParameters;

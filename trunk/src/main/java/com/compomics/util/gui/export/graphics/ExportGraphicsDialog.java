@@ -51,7 +51,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
     /**
      * The last selected folder.
      */
-    private LastSelectedFolder lastSelectedFolder;
+    private LastSelectedFolder lastSelectedFolder = new LastSelectedFolder();
 
     /**
      * Create and open a new ExportGraphicsDialog.
@@ -59,7 +59,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * @param frame the parent frame
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
-     * @param modal
+     * @param modal if the dialog is to be modal
      * @param graphicsPanel the graphics panel to export
      * @param lastSelectedFolder the last selected folder
      */
@@ -80,7 +80,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * @param frame the parent frame
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
-     * @param modal
+     * @param modal if the dialog is to be modal
      * @param chartPanel the chart panel to export
      * @param lastSelectedFolder the last selected folder
      */
@@ -101,7 +101,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * @param dialog the parent dialog (has to have a parent JFrame)
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
-     * @param modal
+     * @param modal if the dialog is to be modal
      * @param graphicsPanel the graphics panel to export
      * @param lastSelectedFolder the last selected folder
      */
@@ -122,7 +122,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * @param dialog the parent dialog (has to have a parent JFrame)
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
-     * @param modal
+     * @param modal if the dialog is to be modal
      * @param chartPanel the chart panel to export
      * @param lastSelectedFolder the last selected folder
      */

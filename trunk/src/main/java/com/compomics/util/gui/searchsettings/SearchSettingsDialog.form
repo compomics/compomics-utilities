@@ -521,6 +521,9 @@
                                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="fixedModsTableMouseMoved"/>
                               </Events>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {&#xa;        //Always toggle on single selection&#xa;        super.changeSelection(rowIndex, columnIndex, !extend, extend);&#xa;    }&#xa;};"/>
+                              </AuxValues>
                             </Component>
                           </SubComponents>
                         </Container>
@@ -626,6 +629,9 @@
                                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseExited"/>
                                 <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="variableModsTableMouseMoved"/>
                               </Events>
+                              <AuxValues>
+                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {&#xa;        //Always toggle on single selection&#xa;        super.changeSelection(rowIndex, columnIndex, !extend, extend);&#xa;    }&#xa;};"/>
+                              </AuxValues>
                             </Component>
                           </SubComponents>
                         </Container>
@@ -734,7 +740,7 @@
                             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="modificationsTableKeyReleased"/>
                           </Events>
                           <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    protected JTableHeader createDefaultTableHeader() { &#xa;        return new JTableHeader(columnModel) {        &#xa;            public String getToolTipText(MouseEvent e) {                 &#xa;                java.awt.Point p = e.getPoint();       &#xa;                int index = columnModel.getColumnIndexAtX(p.x);                 &#xa;                int realIndex = columnModel.getColumn(index).getModelIndex();                 &#xa;                String tip = (String) modificationTableToolTips.get(realIndex);                 &#xa;                return tip;             &#xa;            }         &#xa;        };     &#xa;    } &#xa;};"/>
+                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JTable() {     &#xa;    protected JTableHeader createDefaultTableHeader() { &#xa;        return new JTableHeader(columnModel) {        &#xa;            public String getToolTipText(MouseEvent e) {                 &#xa;                java.awt.Point p = e.getPoint();       &#xa;                int index = columnModel.getColumnIndexAtX(p.x);                 &#xa;                int realIndex = columnModel.getColumn(index).getModelIndex();                 &#xa;                String tip = (String) modificationTableToolTips.get(realIndex);                 &#xa;                return tip;             &#xa;            }         &#xa;        };     &#xa;    } &#xa;    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {&#xa;        //Always toggle on single selection&#xa;        super.changeSelection(rowIndex, columnIndex, !extend, extend);&#xa;    }&#xa;};"/>
                           </AuxValues>
                         </Component>
                       </SubComponents>

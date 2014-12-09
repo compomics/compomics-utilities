@@ -317,13 +317,23 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         addFixedModification = new javax.swing.JButton();
         removeFixedModification = new javax.swing.JButton();
         fixedModsJScrollPane = new javax.swing.JScrollPane();
-        fixedModsTable = new javax.swing.JTable();
+        fixedModsTable = new JTable() {
+            public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+                //Always toggle on single selection
+                super.changeSelection(rowIndex, columnIndex, !extend, extend);
+            }
+        };
         jPanel9 = new javax.swing.JPanel();
         variableModificationsLabel = new javax.swing.JLabel();
         addVariableModification = new javax.swing.JButton();
         removeVariableModification = new javax.swing.JButton();
         variableModsJScrollPane = new javax.swing.JScrollPane();
-        variableModsTable = new javax.swing.JTable();
+        variableModsTable = new JTable() {
+            public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+                //Always toggle on single selection
+                super.changeSelection(rowIndex, columnIndex, !extend, extend);
+            }
+        };
         availableModsPanel = new javax.swing.JPanel();
         modificationsListCombo = new javax.swing.JComboBox();
         modificationsJScrollPane = new javax.swing.JScrollPane();
@@ -338,6 +348,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                         return tip;
                     }
                 };
+            }
+            public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+                //Always toggle on single selection
+                super.changeSelection(rowIndex, columnIndex, !extend, extend);
             }
         };
         openModificationSettingsJButton = new javax.swing.JButton();

@@ -37,6 +37,10 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private Color spectrumAnnotatedPeakColor = Color.RED;
     /**
+     * The color to use for the annotated mirrored peaks.
+     */
+    private Color spectrumAnnotatedMirroredPeakColor = Color.BLUE;
+    /**
      * The color to use for the background peaks.
      */
     private Color spectrumBackgroundPeakColor = new Color(100, 100, 100, 50);
@@ -311,6 +315,30 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSpectrumAnnotatedPeakColor(Color spectrumAnnotatedPeakColor) {
         this.spectrumAnnotatedPeakColor = spectrumAnnotatedPeakColor;
+    }
+
+    /**
+     * Returns the color to use for the annotated mirrored peaks.
+     *
+     * @return the spectrumAnnotatedMirroredPeakColor
+     */
+    public Color getSpectrumAnnotatedMirroredPeakColor() {
+
+        if (spectrumAnnotatedMirroredPeakColor == null) {
+            spectrumAnnotatedMirroredPeakColor = Color.BLUE;
+        }
+
+        return spectrumAnnotatedMirroredPeakColor;
+    }
+
+    /**
+     * Set the color to use for the annotated mirrored peaks.
+     *
+     * @param spectrumAnnotatedMirroredPeakColor the
+     * spectrumAnnotatedMirroredPeakColor to set
+     */
+    public void setSpectrumAnnotatedMirroredPeakColor(Color spectrumAnnotatedMirroredPeakColor) {
+        this.spectrumAnnotatedMirroredPeakColor = spectrumAnnotatedMirroredPeakColor;
     }
 
     /**
@@ -713,7 +741,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Indicates whether the tools should use the auto update function.
-     * 
+     *
      * @return whether the tools should use the auto update function
      */
     public Boolean isAutoUpdate() {
@@ -725,7 +753,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets whether the tools should use the auto update function.
-     * 
+     *
      * @param autoUpdate whether the tools should use the auto update function
      */
     public void setAutoUpdate(Boolean autoUpdate) {
@@ -734,7 +762,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Indicates whether the tools should notify their start.
-     * 
+     *
      * @return whether the tools should notify their start
      */
     public Boolean isNotifyStart() {
@@ -746,7 +774,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets whether the tools should notify their start.
-     * 
+     *
      * @param notifyStart whether the tools should notify their start
      */
     public void setNotifyStart(Boolean notifyStart) {
@@ -755,7 +783,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the last selected folder.
-     * 
+     *
      * @return the last selected folder
      */
     public LastSelectedFolder getLastSelectedFolder() {
@@ -767,7 +795,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the last selected folder.
-     * 
+     *
      * @param lastSelectedFolder the last selected folder
      */
     public void setLastSelectedFolder(LastSelectedFolder lastSelectedFolder) {

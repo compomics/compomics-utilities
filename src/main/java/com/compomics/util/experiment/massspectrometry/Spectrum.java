@@ -70,6 +70,10 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double[] intensityValuesAsArray = null;
     /**
+     * The intensity values as array normalized against the most intense peak. Null until set by the getter.
+     */
+    private double[] intensityValuesNormaizedAsArray = null;
+    /**
      * The mz and intensity values as array. Null until set by the getter.
      */
     private double[][] mzAndIntensityAsArray = null;
@@ -300,7 +304,7 @@ public abstract class Spectrum extends ExperimentObject {
 
     /**
      * Returns the mz values as an array. Note: the array is not necessarily
-     * ordered
+     * ordered.
      *
      * @return the mz values as an array
      */
@@ -353,6 +357,39 @@ public abstract class Spectrum extends ExperimentObject {
         }
 
         return intensityValuesAsArray;
+    }
+
+    /**
+     * Returns the intensity values as an array normalized against the largest
+     * peak.
+     *
+     * @return the normalized intensity values as an array
+     */
+    public double[] getIntensityValuesNormalizedAsArray() {
+
+        if (intensityValuesNormaizedAsArray == null) {
+
+            intensityValuesNormaizedAsArray = new double[peakList.size()];
+
+            double highestIntensity = 0.0;
+            int counter = 0;
+
+            for (Peak currentPeak : peakList.values()) {
+                intensityValuesNormaizedAsArray[counter++] = currentPeak.intensity;
+
+                if (currentPeak.intensity > highestIntensity) {
+                    highestIntensity = currentPeak.intensity;
+                }
+            }
+
+            if (highestIntensity > 0) {
+                for (int i = 0; i < intensityValuesNormaizedAsArray.length; i++) {
+                    intensityValuesNormaizedAsArray[i] = intensityValuesNormaizedAsArray[i] / highestIntensity * 100;
+                }
+            }
+        }
+
+        return intensityValuesNormaizedAsArray;
     }
 
     /**
@@ -483,7 +520,7 @@ public abstract class Spectrum extends ExperimentObject {
 
         Collections.sort(intensities);
         int index = (int) ((intensities.size() - 1) * intensityLimit);
-        return intensities.get(index);
+        return intensities.get(index); // @TODO: could this be stored?
     }
 
     /**

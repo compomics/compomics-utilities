@@ -324,6 +324,10 @@ public class CompomicsWrapper {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() - 512);
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
+                    } else if (userPreferences.getMemoryPreference() <= 1024) {
+                        userPreferences.setMemoryPreference(800); // one last desparate try!
+                        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+                        launch(jarFile, splashName, mainClass, args, bw);
                     } else {
                         if (useStartUpLog) {
                             bw.write("Memory Limit: " + userPreferences.getMemoryPreference() + System.getProperty("line.separator"));

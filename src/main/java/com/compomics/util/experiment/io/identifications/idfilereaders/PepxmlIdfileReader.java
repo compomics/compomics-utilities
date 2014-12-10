@@ -185,29 +185,31 @@ public class PepxmlIdfileReader implements IdfileReader {
                     if (peptideSequence.length() > peptideMapKeyLength) {
                         hasMatch = true;
                         boolean found = false;
-                        for (SpectrumIdentificationAssumption tempAssumption : currentMatch.getAllAssumptions()) {
-                            PeptideAssumption tempPeptideAssumption = (PeptideAssumption) tempAssumption;
-                            Peptide tempPeptide = tempPeptideAssumption.getPeptide();
-                            if (peptide.getSequence().equals(tempPeptide.getSequence())) {
-                                boolean sameModifications = peptide.getModificationMatches().size() == tempPeptide.getModificationMatches().size();
-                                if (sameModifications) {
-                                    for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
-                                        boolean ptmFound = false;
-                                        for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
-                                            if (originalMatch.getTheoreticPtm().equals(otherMatch.getTheoreticPtm()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
-                                                ptmFound = true;
+                        if (currentMatch.getAllAssumptions() != null) {
+                            for (SpectrumIdentificationAssumption tempAssumption : currentMatch.getAllAssumptions()) {
+                                PeptideAssumption tempPeptideAssumption = (PeptideAssumption) tempAssumption;
+                                Peptide tempPeptide = tempPeptideAssumption.getPeptide();
+                                if (peptide.getSequence().equals(tempPeptide.getSequence())) {
+                                    boolean sameModifications = peptide.getModificationMatches().size() == tempPeptide.getModificationMatches().size();
+                                    if (sameModifications) {
+                                        for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
+                                            boolean ptmFound = false;
+                                            for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
+                                                if (originalMatch.getTheoreticPtm().equals(otherMatch.getTheoreticPtm()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
+                                                    ptmFound = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!ptmFound) {
+                                                sameModifications = false;
                                                 break;
                                             }
                                         }
-                                        if (!ptmFound) {
-                                            sameModifications = false;
-                                            break;
-                                        }
                                     }
-                                }
-                                if (sameModifications) {
-                                    found = true;
-                                    break;
+                                    if (sameModifications) {
+                                        found = true;
+                                        break;
+                                    }
                                 }
                             }
                         }

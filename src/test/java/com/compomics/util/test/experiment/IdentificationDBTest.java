@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationDB;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import junit.framework.TestCase;
 
 /**
@@ -61,17 +63,37 @@ public class IdentificationDBTest extends TestCase {
                 testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
                 Assert.assertTrue(testSpectrumMatch.getKey().equals(spectrumKey));
 
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 2);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
+                HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptionsMap = testSpectrumMatch.getAssumptionsMap();
+                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+                Assert.assertTrue(mascotAssumptions.size() == 1);
+                ArrayList<Double> mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
+                Assert.assertTrue(mascotScores.size() == 1);
+                double bestScore = mascotScores.get(0);
+                Assert.assertTrue(bestScore == 0.1);
+                ArrayList<SpectrumIdentificationAssumption> bestAssumptions = mascotAssumptions.get(bestScore);
+                PeptideAssumption bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
+                Peptide bestPeptide = bestAssumption.getPeptide();
+                Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 2);
+                Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(testProteins.get(0)));
+                Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(1).equals(testProteins.get(1)));
                 ArrayList<String> proteins = new ArrayList<String>();
                 proteins.add(proteinKey);
-                ((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().setParentProteins(proteins);
+                bestPeptide.setParentProteins(proteins);
                 idDB.updateMatch(testSpectrumMatch);
 
                 testSpectrumMatch = idDB.getSpectrumMatch(spectrumKey, true);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().size() == 1);
-                Assert.assertTrue(((PeptideAssumption) testSpectrumMatch.getFirstHit(Advocate.mascot.getIndex())).getPeptide().getParentProteinsNoRemapping().get(0).equals(proteinKey));
+                assumptionsMap = testSpectrumMatch.getAssumptionsMap();
+                mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+                Assert.assertTrue(mascotAssumptions.size() == 1);
+                mascotScores = new ArrayList<Double>(mascotAssumptions.keySet());
+                Assert.assertTrue(mascotScores.size() == 1);
+                bestScore = mascotScores.get(0);
+                Assert.assertTrue(bestScore == 0.1);
+                bestAssumptions = mascotAssumptions.get(bestScore);
+                bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
+                bestPeptide = bestAssumption.getPeptide();
+                Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().size() == 1);
+                Assert.assertTrue(bestPeptide.getParentProteinsNoRemapping().get(0).equals(proteinKey));
 
                 testPeptideMatch = idDB.getPeptideMatch(peptideKey, true);
                 Assert.assertTrue(testPeptideMatch.getKey().equals(peptideKey));

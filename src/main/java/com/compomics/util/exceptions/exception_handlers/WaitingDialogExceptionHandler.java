@@ -42,7 +42,7 @@ public class WaitingDialogExceptionHandler extends ExceptionHandler {
 
     @Override
     protected void notifyUser(Exception e) {
-        waitingDialog.appendReport(e.getLocalizedMessage(), true, true);
+        waitingDialog.appendReport("An error occurred: " + e.getLocalizedMessage(), true, true);
         if (getExceptionType(e).equals("Protein not found")) {
             waitingDialog.appendReport("Please see the database help page (http://code.google.com/p/peptide-shaker/#Database_Help).", true, true);
         } else {

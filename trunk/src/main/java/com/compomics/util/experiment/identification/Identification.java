@@ -32,7 +32,7 @@ public abstract class Identification extends ExperimentObject {
     /**
      * The version UID for Serialization/Deserialization compatibility.
      */
-    static final long serialVersionUID = -2551700699384242554L; // @TODO: update??
+    static final long serialVersionUID = -2551700699384242554L;
     /**
      * Extention for a serialized hit. cuh for Compomics Utilities Hit.
      *
@@ -83,8 +83,8 @@ public abstract class Identification extends ExperimentObject {
      */
     protected ArrayList<String> longKeys = new ArrayList<String>();
     /**
-     * Boolean indicating whether the matches should be stored in a database
-     * (default) or in serialized files.
+     * Boolean indicating whether the identifications are stored in a a database
+     * (default) or in serialized files (deprecated).
      */
     private Boolean isDB = true;
     /**
@@ -192,7 +192,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param matchKey the match key
      * @param urParameter example of parameter to retrieve
+     * 
      * @return the personalization parameter
+     * 
      * @throws java.lang.InterruptedException
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
@@ -211,19 +213,97 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Loads all spectrum matches of the file in the cache of the database.
+     *
+     * @param fileName the file name
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadAssumptions(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadAssumptions(fileName, waitingHandler);
+    }
+
+    /**
+     * Loads the given spectrum matches in the cache of the database.
+     *
+     * @param spectrumKeys the spectrum keys
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadAssumptions(spectrumKeys, waitingHandler);
+    }
+
+    /**
+     * Loads all assumptions of all spectrum matches of the file in the cache of the database.
+     *
+     * @param fileName the file name
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatches(fileName, waitingHandler);
+    }
+
+    /**
+     * Loads the given spectrum matches in the cache of the database.
+     *
+     * @param spectrumKeys the spectrum keys
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler);
+    }
+
+    /**
      * Loads all spectrum match parameters of the given type in the cache of the
      * database
      *
      * @param fileName the file name
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler);
@@ -236,16 +316,56 @@ public abstract class Identification extends ExperimentObject {
      * loaded
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler);
+    }
+
+    /**
+     * Loads the desired peptide matches of the given type in the cache of the
+     * database.
+     *
+     * @param peptideKeys the list of peptide keys to load
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatches(peptideKeys, waitingHandler);
+    }
+
+    /**
+     * Loads all peptide matches in the cache of the database.
+     *
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatches(waitingHandler);
     }
 
     /**
@@ -254,13 +374,15 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatchParameters(urParameter, waitingHandler);
@@ -273,34 +395,56 @@ public abstract class Identification extends ExperimentObject {
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler);
     }
 
     /**
-     * Loads the desired peptide matches of the given type in the cache of the
+     * Loads all protein matches in the cache of the database.
+     *
+     * @param waitingHandler the waiting handler
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatches(waitingHandler);
+    }
+
+    /**
+     * Loads the desired protein matches of the given type in the cache of the
      * database.
      *
-     * @param peptideKeys the list of peptide keys to load
+     * @param proteinKeys the list of protein keys to load
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatches(peptideKeys, waitingHandler);
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatches(proteinKeys, waitingHandler);
     }
 
     /**
@@ -309,13 +453,15 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
@@ -328,100 +474,18 @@ public abstract class Identification extends ExperimentObject {
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.loadProteinMatchParameters(proteinKeys, urParameter, waitingHandler);
-    }
-
-    /**
-     * Loads all protein matches in the cache of the database.
-     *
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
-     */
-    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatches(waitingHandler);
-    }
-
-    /**
-     * Loads the desired protein matches of the given type in the cache of the
-     * database.
-     *
-     * @param proteinKeys the list of protein keys to load
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
-     */
-    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatches(proteinKeys, waitingHandler);
-    }
-
-    /**
-     * Loads all peptide matches in the cache of the database.
-     *
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
-     */
-    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatches(waitingHandler);
-    }
-
-    /**
-     * Loads all spectrum matches of the file in the cache of the database.
-     *
-     * @param fileName the file name
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
-     */
-    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(fileName, waitingHandler);
-    }
-
-    /**
-     * Loads the given spectrum matches in the cache of the database.
-     *
-     * @param spectrumKeys the spectrum keys
-     * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException
-     */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler);
     }
 
     /**
@@ -429,14 +493,17 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the PSM key
      * @param urParameter the match parameter
+     * 
      * @return the spectrum match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getSpectrumMatchParameter(key, urParameter, true);
@@ -449,14 +516,17 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     * 
      * @return the spectrum match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getSpectrumMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
@@ -471,11 +541,15 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the PSM key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void addSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
@@ -490,14 +564,17 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
+     * 
      * @return the peptide match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getPeptideMatchParameter(key, urParameter, true);
@@ -510,14 +587,17 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     * 
      * @return the peptide match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getPeptideMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
@@ -532,11 +612,15 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void addPeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
@@ -551,14 +635,17 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
+     * 
      * @return the protein match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getProteinMatchParameter(key, urParameter, true);
@@ -571,14 +658,17 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     * 
      * @return the protein match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public UrParameter getProteinMatchParameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
@@ -593,11 +683,13 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
+     * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     * @throws java.lang.InterruptedException
+     * reading the object in the database
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void addProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
         if (isDB) {
@@ -608,19 +700,18 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Updates a protein match parameter in the database.
+     * Updates a spectrum match parameter in the database.
      *
-     * @param key the protein key
+     * @param key the spectrum key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void updateProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updateProteinParameter(key, urParameter);
-        }
+    public void updateSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+        identificationDB.updateSpectrumParameter(key, urParameter);
     }
 
     /**
@@ -628,31 +719,44 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
     public void updatePeptideMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updatePeptideParameter(key, urParameter);
-        }
+        identificationDB.updatePeptideParameter(key, urParameter);
     }
 
     /**
-     * Updates a spectrum match parameter in the database.
+     * Updates a protein match parameter in the database.
      *
-     * @param key the spectrum key
+     * @param key the protein key
      * @param urParameter the match parameter
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
-    public void updateSpectrumMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updateSpectrumParameter(key, urParameter);
-        }
+    public void updateProteinMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException {
+        identificationDB.updateProteinParameter(key, urParameter);
+    }
+
+    /**
+     * Updates the assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param assumptions the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void updateAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException {
+        identificationDB.updateAssumptions(spectrumKey, assumptions);
     }
 
     /**
@@ -665,9 +769,7 @@ public abstract class Identification extends ExperimentObject {
      * writing the object
      */
     public void updateSpectrumMatch(SpectrumMatch spectrumMatch) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updateSpectrumMatch(spectrumMatch);
-        }
+        identificationDB.updateSpectrumMatch(spectrumMatch);
     }
 
     /**
@@ -680,9 +782,7 @@ public abstract class Identification extends ExperimentObject {
      * writing the object
      */
     public void updatePeptideMatch(PeptideMatch peptideMatch) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updatePeptideMatch(peptideMatch);
-        }
+        identificationDB.updatePeptideMatch(peptideMatch);
     }
 
     /**
@@ -692,10 +792,14 @@ public abstract class Identification extends ExperimentObject {
      * @param newKey the new peptide key
      * @param peptideMatch the new peptide match
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws java.lang.ClassNotFoundException
+     * @throws SQLException exception thrown whenever an SQL error occurred
+     * while interacting with the database
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     * @throws java.lang.ClassNotFoundException exception thrown whenever a
+     * casting issue occurred while interacting with the database
      */
     public void updatePeptideMatch(String oldKey, String newKey, PeptideMatch peptideMatch) throws SQLException, IOException, InterruptedException, ClassNotFoundException {
         for (String paramterTable : identificationDB.getPeptideParametersTables()) {
@@ -738,15 +842,14 @@ public abstract class Identification extends ExperimentObject {
      * Updates a protein match in the database.
      *
      * @param proteinMatch the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
     public void updateProteinMatch(ProteinMatch proteinMatch) throws SQLException, IOException {
-        if (isDB) {
-            identificationDB.updateProteinMatch(proteinMatch);
-        }
+        identificationDB.updateProteinMatch(proteinMatch);
     }
 
     /**
@@ -766,7 +869,10 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param serializationDirectory the path of the directory
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @throws SQLException
+     *
+     * @throws SQLException exception thrown whenever an SQL error occurred
+     * while interacting with the database
+     *
      * @deprecated use establishConnection(String dbFolder) instead
      */
     public void setDirectory(String serializationDirectory, boolean deleteOldDatabase) throws SQLException {
@@ -779,12 +885,13 @@ public abstract class Identification extends ExperimentObject {
      * @param matchKey the key of the match to remove
      * @deprecated it is advised to use the specific psm/peptide/protein method
      * instead
-     * @throws IllegalArgumentException
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
      */
-    public void removeMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
+    public void removeMatch(String matchKey) throws SQLException, IOException {
 
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
@@ -819,15 +926,30 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Removes the assumptions of a spectrum.
+     *
+     * @param matchKey the key of the spectrum
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
+     */
+    public void removeAssumptions(String matchKey) throws SQLException, IOException {
+        identificationDB.removeAssumptions(matchKey);
+    }
+
+    /**
      * Removes a spectrum match from the model.
      *
      * @param matchKey the key of the match to remove
-     * @throws IllegalArgumentException
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
      */
-    public void removeSpectrumMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
+    public void removeSpectrumMatch(String matchKey) throws SQLException, IOException {
 
         spectrumIdentification.remove(matchKey);
         String fileName = Spectrum.getSpectrumFile(matchKey);
@@ -847,12 +969,13 @@ public abstract class Identification extends ExperimentObject {
      * Removes a peptide match from the model.
      *
      * @param matchKey the key of the match to remove
-     * @throws IllegalArgumentException
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
      */
-    public void removePeptideMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
+    public void removePeptideMatch(String matchKey) throws SQLException, IOException {
 
         peptideIdentification.remove(matchKey);
         if (isDB) {
@@ -867,12 +990,13 @@ public abstract class Identification extends ExperimentObject {
      * Removes a protein match from the model.
      *
      * @param matchKey the key of the match to remove
-     * @throws IllegalArgumentException
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
      */
-    public void removeProteinMatch(String matchKey) throws IllegalArgumentException, SQLException, IOException {
+    public void removeProteinMatch(String matchKey) throws SQLException, IOException {
         if (proteinIdentification.contains(matchKey)) {
             for (String protein : ProteinMatch.getAccessions(matchKey)) {
                 if (proteinMap.get(protein) == null) {
@@ -902,6 +1026,7 @@ public abstract class Identification extends ExperimentObject {
      * Indicates whether a match indexed by the given key exists.
      *
      * @param matchKey the key of the match looked for
+     *
      * @return a boolean indicating whether a match indexed by the given key
      * exists
      */
@@ -926,12 +1051,12 @@ public abstract class Identification extends ExperimentObject {
      * Returns a match.
      *
      * @param matchKey the key of the match
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @deprecated use the database match specific methods instead
      */
-    private Object getMatch(String matchKey) throws IllegalArgumentException {
+    private Object getMatch(String matchKey) {
         return getMatch(matchKey, 0);
     }
 
@@ -941,12 +1066,12 @@ public abstract class Identification extends ExperimentObject {
      * @param matchKey the key of the match
      * @param the number of exceptions found. If less than 100, the method will
      * retry after a tempo of 50ms to avoid network related issues.
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @deprecated use the database match specific methods instead
      */
-    private synchronized IdentificationMatch getMatch(String matchKey, int errorCounter) throws IllegalArgumentException {
+    private synchronized IdentificationMatch getMatch(String matchKey, int errorCounter) {
 
         try {
             File newMatch = new File(serializationDirectory, getFileName(matchKey));
@@ -973,21 +1098,76 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a spectrum match.
+     * Returns a the assumptions of a spectrum.
      *
-     * @param spectrumKey the key of the match
-     * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     * @param spectrumKey the key of the spectrum
+     *
+     * @return the assumptions
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getAssumptions(spectrumKey, true);
+    }
+
+    /**
+     * Returns a the assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = identificationDB.getAssumptions(spectrumKey, useDB);
+        if (assumptions == null) { // backward compatibility check
+            SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumKey, true);
+            if (spectrumMatch != null) {
+                assumptions = spectrumMatch.getAssumptionsMap();
+                if (assumptions != null) {
+                    addAssumptions(spectrumKey, assumptions);
+                    spectrumMatch.removeAssumptions();
+                    updateSpectrumMatch(spectrumMatch);
+                }
+            }
+        }
+        return assumptions;
+    }
+
+    /**
+     * Returns a spectrum match.
+     *
+     * @param spectrumKey the key of the match
+     *
+     * @return the desired match
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public SpectrumMatch getSpectrumMatch(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getSpectrumMatch(spectrumKey, true);
     }
 
@@ -997,18 +1177,19 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKey the key of the match
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getSpectrumMatch(spectrumKey, useDB);
         } else {
@@ -1020,18 +1201,19 @@ public abstract class Identification extends ExperimentObject {
      * Returns a peptide match.
      *
      * @param peptideKey the key of the match
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public PeptideMatch getPeptideMatch(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PeptideMatch getPeptideMatch(String peptideKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getPeptideMatch(peptideKey, true);
     }
 
@@ -1041,18 +1223,19 @@ public abstract class Identification extends ExperimentObject {
      * @param peptideKey the key of the match
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getPeptideMatch(peptideKey, useDB);
         } else {
@@ -1064,18 +1247,19 @@ public abstract class Identification extends ExperimentObject {
      * Returns a protein match.
      *
      * @param proteinKey the key of the match
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public ProteinMatch getProteinMatch(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ProteinMatch getProteinMatch(String proteinKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getProteinMatch(proteinKey, true);
     }
 
@@ -1085,18 +1269,19 @@ public abstract class Identification extends ExperimentObject {
      * @param proteinKey the key of the match
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
+     *
      * @return the desired match
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while retrieving the match
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while casting the database input in the desired match class
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (isDB) {
             return identificationDB.getProteinMatch(proteinKey, useDB);
         } else {
@@ -1110,14 +1295,19 @@ public abstract class Identification extends ExperimentObject {
      * and one spectrum match is tested.
      *
      * @param proteinKey the key of the protein match
+     *
      * @return true if everything is loaded in memory
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public boolean proteinDetailsInCache(String proteinKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public boolean proteinDetailsInCache(String proteinKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         ProteinMatch proteinMatch = getProteinMatch(proteinKey, false);
         if (proteinMatch != null) {
             PeptideMatch peptideMatch = getPeptideMatch(proteinMatch.getPeptideMatchesKeys().get(0), false);
@@ -1138,13 +1328,17 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptideKey the peptide key
      * @return true if everything is loaded in the cache
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public boolean peptideDetailsInCache(String peptideKey) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public boolean peptideDetailsInCache(String peptideKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         PeptideMatch peptideMatch = getPeptideMatch(peptideKey, false);
         if (peptideMatch != null) {
             SpectrumMatch spectrumMatch = getSpectrumMatch(peptideMatch.getSpectrumMatches().get(0), false);
@@ -1177,6 +1371,7 @@ public abstract class Identification extends ExperimentObject {
      * Returns a list of the keys of all encountered psms.
      *
      * @deprecated use file specific names instead
+     *
      * @return the corresponding identification results
      */
     public ArrayList<String> getSpectrumIdentification() {
@@ -1213,62 +1408,89 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds a spectrum match to the identification.
+     * Adds the assumptions corresponding to a spectrum.
      *
-     * @param newMatch the new match
-     * @param ascendingScore indicates whether the score is ascending when hits
-     * get better
+     * @param spectrumKey the key of the spectrum
+     * @param newAssumptions the assumptions to add to the mapping
      *
-     * @throws FileNotFoundException exception thrown whenever an error occurred
-     * while saving the file
-     * @throws IOException exception thrown whenever an error occurred while
-     * saving the file
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while saving the file
      * @throws SQLException exception thrown whenever an error occurred while
-     * saving the file
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while saving the file
-     * @throws java.lang.InterruptedException
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public synchronized void addSpectrumMatch(SpectrumMatch newMatch, boolean ascendingScore)
-            throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
-
-        String spectrumKey = newMatch.getKey();
-        String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
-        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
-
-        if (spectrumKeys != null && spectrumKeys.contains(spectrumKey)) {
-            SpectrumMatch oldMatch = getSpectrumMatch(spectrumKey, true);
-            if (oldMatch == null) {
-                throw new IllegalArgumentException("Spectrum match " + spectrumKey + " not found.");
-            }
-            for (int algorithmId : newMatch.getAdvocates()) {
-                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> hitMap = newMatch.getAllAssumptions(algorithmId);
-                if (hitMap != null) {
-                    for (double score : hitMap.keySet()) {
-                        for (SpectrumIdentificationAssumption assumption : hitMap.get(score)) {
-                            oldMatch.addHit(algorithmId, assumption, ascendingScore);
-                        }
+    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        boolean createAssumptions = false;
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getAssumptions(spectrumKey, true);
+        if (currentAssumptions == null) {
+            currentAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newAssumptions.size());
+            createAssumptions = true;
+        }
+        for (Integer advocateId : newAssumptions.keySet()) {
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap = newAssumptions.get(advocateId);
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
+            if (newAdvocateMap != null) {
+                if (currentAdvocateMap == null) {
+                    currentAdvocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(newAdvocateMap.size());
+                    currentAssumptions.put(advocateId, currentAdvocateMap);
+                }
+                for (double score : newAdvocateMap.keySet()) {
+                    ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
+                    ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
+                    if (currentAssumptionList == null) {
+                        currentAssumptionList = new ArrayList<SpectrumIdentificationAssumption>(newAssumptionList);
+                        currentAdvocateMap.put(score, currentAssumptionList);
+                    } else {
+                        currentAssumptionList.addAll(newAssumptionList);
                     }
                 }
             }
-            identificationDB.updateSpectrumMatch(oldMatch);
+        }
+        if (createAssumptions) {
+            identificationDB.addAssumptions(spectrumKey, newAssumptions);
         } else {
+            updateAssumptions(spectrumKey, newAssumptions);
+        }
+    }
+
+    /**
+     * Adds a spectrum match to the identification.
+     *
+     * @param newMatch the new match
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public synchronized void addSpectrumMatch(SpectrumMatch newMatch)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+
+        String spectrumKey = newMatch.getKey();
+
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = newMatch.getAssumptionsMap();
+        if (assumptions != null) {
+            addAssumptions(spectrumKey, assumptions);
+            newMatch.removeAssumptions();
+        }
+
+        String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
+        ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
+        if (spectrumKeys == null || !spectrumKeys.contains(spectrumKey)) {
             if (spectrumKeys == null) {
                 spectrumKeys = new ArrayList<String>(1000);
                 spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
             }
             spectrumKeys.add(spectrumKey);
-            try {
-                identificationDB.addSpectrumMatch(newMatch);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing spectrum match " + spectrumKey + " in the database.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing spectrum match " + spectrumKey + " in the database.");
-            }
+            identificationDB.addSpectrumMatch(newMatch);
         }
     }
 
@@ -1282,13 +1504,16 @@ public abstract class Identification extends ExperimentObject {
      * null. The progress will be displayed as secondary.
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public void buildPeptidesAndProteins(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void buildPeptidesAndProteins(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(getSpectrumIdentificationSize());
@@ -1318,13 +1543,16 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumMatchKey The key of the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public void buildPeptidesAndProteins(String spectrumMatchKey, SequenceMatchingPreferences sequenceMatchingPreferences) throws IllegalArgumentException, SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void buildPeptidesAndProteins(String spectrumMatchKey, SequenceMatchingPreferences sequenceMatchingPreferences) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumMatchKey);
         if (spectrumMatch == null) {
@@ -1402,25 +1630,20 @@ public abstract class Identification extends ExperimentObject {
      * Add a set of spectrumMatches to the model.
      *
      * @param spectrumMatches the spectrum matches
-     * @param ascendingScore indicates whether the score is ascending when hits
-     * get better
      *
-     * @throws FileNotFoundException exception thrown whenever an error occurred
-     * while saving the file
-     * @throws IOException exception thrown whenever an error occurred while
-     * saving the file
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while saving the file
      * @throws SQLException exception thrown whenever an error occurred while
-     * saving the file
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
      * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while saving the file
-     * @throws java.lang.InterruptedException
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
-    public void addSpectrumMatches(Iterable<SpectrumMatch> spectrumMatches, boolean ascendingScore)
-            throws FileNotFoundException, IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException {
+    public void addSpectrumMatches(Iterable<SpectrumMatch> spectrumMatches)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         for (SpectrumMatch spectrumMatch : spectrumMatches) {
-            addSpectrumMatch(spectrumMatch, ascendingScore);
+            addSpectrumMatch(spectrumMatch);
         }
     }
 
@@ -1448,7 +1671,9 @@ public abstract class Identification extends ExperimentObject {
      * Returns the name of the file to use for serialization/deserialization.
      *
      * @param key the key of the match
+     * 
      * @return the name of the corresponding file
+     * 
      * @deprecated use the database methods instead
      */
     public String getFileName(String key) {
@@ -1541,8 +1766,9 @@ public abstract class Identification extends ExperimentObject {
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectsCache
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection
+     * establishing the connection, typically when another software already has a connection open
      */
     public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
@@ -1557,18 +1783,18 @@ public abstract class Identification extends ExperimentObject {
      * @param newName
      * @param objectsCache
      * @param directory the directory where the data is currently stored
-     * @throws FileNotFoundException exception thrown whenever a file is not
-     * found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading/writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing a match
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
-     * interacting with the database
-     * @throws java.lang.InterruptedException
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public void convert(WaitingHandler waitingHandler, String newDirectory, String newName, ObjectsCache objectsCache, File directory)
-            throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+            throws IOException, ClassNotFoundException, SQLException, InterruptedException {
         setIsDB(true);
         reference = newName;
         establishConnection(newDirectory, true, objectsCache);
@@ -1665,6 +1891,7 @@ public abstract class Identification extends ExperimentObject {
      * @param experimentReference the experiment reference
      * @param sampleReference the sample reference
      * @param replicateNumber the replicate number
+     * 
      * @return the default reference
      */
     public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
@@ -1676,11 +1903,17 @@ public abstract class Identification extends ExperimentObject {
      * Note: proteins have to be set for the peptide.
      *
      * @param peptide the peptide of interest
+     * 
      * @return the keys of the protein matches
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws java.lang.InterruptedException
-     * @throws java.lang.ClassNotFoundException
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public ArrayList<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> proteinMatches = new ArrayList<String>();
@@ -1704,71 +1937,81 @@ public abstract class Identification extends ExperimentObject {
      * Indicates whether a peptide is found in a single protein match.
      *
      * @param peptide the peptide of interest
+     * 
      * @return true if peptide is found in a single protein match
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
      */
     public boolean isUnique(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getProteinMatches(peptide).size() == 1;
     }
-    
+
     /**
      * Returns a PSM iterator.
-     * 
+     *
      * @param spectrumFile the file to iterate
      * @param spectrumKeys specific keys to iterate
      * @param psmParameters the parameters to load along with the matches
-     * 
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters) {
-        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters);
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
+        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters, loadAssumptions);
     }
-    
+
     /**
      * Returns a PSM iterator iterating all PSMs in a file.
-     * 
+     *
      * @param spectrumFile the file to iterate
      * @param psmParameters the parameters to load along with the matches
-     * 
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters) {
-        return new PsmIterator(spectrumFile, this, psmParameters);
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
+        return new PsmIterator(spectrumFile, this, psmParameters, loadAssumptions);
     }
-    
+
     /**
      * Returns a peptide matches iterator.
-     * 
+     *
      * @param peptideKeys the keys of the peptides to iterate
-     * @param peptideParameters the peptide parameters to load along with the matches
+     * @param peptideParameters the peptide parameters to load along with the
+     * matches
      * @param loadPsms if true PSMs of the peptides will be loaded as well
      * @param psmParameters the PSM parameters to load along with the PSMs
-     * 
+     *
      * @return a peptide matches iterator
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
         return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters);
     }
-    
+
     /**
      * Returns a peptide matches iterator iterating all peptides.
-     * 
-     * @param peptideParameters the peptide parameters to load along with the matches
+     *
+     * @param peptideParameters the peptide parameters to load along with the
+     * matches
      * @param loadPsms if true PSMs of the peptides will be loaded as well
      * @param psmParameters the PSM parameters to load along with the PSMs
-     * 
+     *
      * @return a peptide matches iterator
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
         return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters);
     }
-    
+
     /**
      * Returns a protein matches iterator.
-     * 
+     *
      * @param proteinKeys the keys of the proteins to iterate
      * @param proteinParameters the protein parameters to load along with the
      * matches
@@ -1779,16 +2022,16 @@ public abstract class Identification extends ExperimentObject {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
-     * 
+     *
      * @return a protein matches iterator
      */
     public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
         return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
     }
-    
+
     /**
      * Returns a protein matches iterator iterating all protein matches.
-     * 
+     *
      * @param proteinParameters the protein parameters to load along with the
      * matches
      * @param loadPeptides if true the peptides corresponding to these proteins
@@ -1798,7 +2041,7 @@ public abstract class Identification extends ExperimentObject {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
-     * 
+     *
      * @return a protein matches iterator
      */
     public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {

@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -160,12 +161,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null, true);
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -333,13 +337,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     // get the e-value and advocate
                     HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
-                    Double eValue = null;
                     Advocate advocate = null;
 
                     //TODO: select the "best" algorithm or include all?
                     // Any way of doing that more elegantly?
                     // Scaffold
-                    eValue = scoreMap.get("MS:1001568");
+                    Double eValue = scoreMap.get("MS:1001568");
                     if (eValue != null) {
                         advocate = Advocate.scaffold;
                         String name = advocate.getName();

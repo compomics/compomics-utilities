@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -63,26 +64,26 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * Constructor for an Andromeda result file reader.
      *
-     * @param resFile
+     * @param resultsFile the Andromeda results file
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public AndromedaIdfileReader(File resFile) throws FileNotFoundException, IOException {
-        this(resFile, null);
+    public AndromedaIdfileReader(File resultsFile) throws FileNotFoundException, IOException {
+        this(resultsFile, null);
     }
 
     /**
      * Constructor for an Andromeda result file reader.
      *
-     * @param resFile
-     * @param waitingHandler
+     * @param resultsFile the Andromeda results file
+     * @param waitingHandler the waiting handler
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public AndromedaIdfileReader(File resFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(resFile, "r", 1024 * 100);
+    public AndromedaIdfileReader(File resultsFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+        bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
 
-        fileName = Util.getFileName(resFile);
+        fileName = Util.getFileName(resultsFile);
 
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter(100);
@@ -115,13 +116,15 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null, false);
+        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");

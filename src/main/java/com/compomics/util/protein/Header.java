@@ -87,7 +87,7 @@ public class Header implements Cloneable, Serializable {
         PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"), M_Tuberculosis("TBDatabase (TBDB)", "18835847"),
         H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null),
         Listeria("Listeria", null), GAFFA("GAFFA", null), UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null),
-        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), Unknown(null, null);
+        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), NextProt("neXtProt", "22139911"), Unknown(null, null);
 
         /**
          * The full name of the database.
@@ -155,7 +155,7 @@ public class Header implements Cloneable, Serializable {
     private String iDescriptionProteinName = null;
     /**
      * The name of the gene the protein comes from. Note that this is only
-     * available for UniProt-based databases.
+     * available for UniProt and NextProt based databases.
      */
     private String iGeneName = null;
     /**
@@ -654,6 +654,20 @@ public class Header implements Cloneable, Serializable {
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
 
+                } else if (aFASTAHeader.startsWith("nxp|NX_") && aFASTAHeader.split("\\|").length == 5) { // @TODO: replace by regular expression?
+                    
+                    // header should look like this:
+                    // >nxp|NX_P02768-1|ALB|Serum albumin|Iso 1
+                    
+                    result.databaseType = DatabaseType.NextProt;
+                    result.iID = "nxp";
+                    
+                    String[] headerElements = aFASTAHeader.split("\\|");
+                    
+                    result.iAccession = headerElements[1];
+                    result.iGeneName = headerElements[2];
+                    result.iDescription = headerElements[3] + "|" + headerElements[4];
+                    
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -1133,7 +1147,8 @@ public class Header implements Cloneable, Serializable {
             if (!this.iID.equals("")) {
                 if (this.databaseType == DatabaseType.UniProt
                         || this.databaseType == DatabaseType.IPI
-                        || this.databaseType == DatabaseType.Listeria) {
+                        || this.databaseType == DatabaseType.Listeria
+                        || this.databaseType == DatabaseType.NextProt) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|").append(this.iDescription);
                 } else if (this.databaseType == DatabaseType.NCBI) {
@@ -1491,6 +1506,8 @@ public class Header implements Cloneable, Serializable {
                 return "GAFFA";
             case UPS:
                 return "Universal Proteomic Standard";
+            case NextProt:
+                return "neXtProt";
             default:
                 throw new IllegalArgumentException("Database type not implemented: " + databaseType + ".");
         }

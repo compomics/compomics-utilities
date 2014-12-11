@@ -219,7 +219,7 @@ public class PNovoParameters implements IdentificationAlgorithmParameter {
     /**
      * Returns the pNovo to original amino acids residue map. Null if not set.
      *
-     * @return the pNovo to original amino acids residue ma, null if not set
+     * @return the pNovo to original amino acids residue map, null if not set
      */
     public HashMap<Character, Character> getPNovoPtmResiduesMap() {
         return pNovoResidueMap;

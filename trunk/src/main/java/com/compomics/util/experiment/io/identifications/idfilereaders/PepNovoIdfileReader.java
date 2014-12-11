@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -157,12 +158,15 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null, false);
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
         if (sequenceMatchingPreferences != null) {

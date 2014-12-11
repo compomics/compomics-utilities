@@ -27,7 +27,7 @@ public class PsmIterator {
      */
     private final ArrayList<UrParameter> psmParameters;
     /**
-     * If true the assumptions will be loaded as well
+     * If true the assumptions will be loaded as well.
      */
     private final boolean loadAssumptions;
     /**

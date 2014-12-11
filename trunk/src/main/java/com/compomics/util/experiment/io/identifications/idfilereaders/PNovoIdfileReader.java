@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.TagAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
@@ -22,10 +23,8 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -53,10 +52,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
-    /**
-     * The characters used to represent variable modifications in pNovo+.
-     */
-    private List<Character> variableModificationsCharacters = Arrays.asList('B', 'J', 'O', 'U', 'X', 'Z'); // @TODO: is it possible to add more characters..?
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -132,12 +127,15 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, null, false);
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
         if (sequenceMatchingPreferences != null) {
@@ -172,7 +170,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             }
 
             while (line != null && line.startsWith("P")) {
-                currentMatch.addHit(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, cpt), true);
+                currentMatch.addHit(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, cpt, searchParameters), true);
                 cpt++;
                 line = bufferedRandomAccessFile.getNextLine();
             }
@@ -228,48 +226,41 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     /**
      * Returns a Peptide Assumption from a pNovo result line. Note: fixed PTMs
-     * are not annotated, variable PTMs are marked with the pNovo PTM tag (see
-     * PNovoParameters to retrieve utilities names).
+     * are not annotated, variable PTMs are marked with the pNovo PTM tag.
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
+     * @param searchParameters the search parameters
      * @return the corresponding assumption
      */
-    private TagAssumption getAssumptionFromLine(String line, int rank) {
+    private TagAssumption getAssumptionFromLine(String line, int rank, SearchParameters searchParameters) {
 
         String[] lineComponents = line.trim().split("\t");
 
         Double pNovoScore = new Double(lineComponents[2]);
-        String pNovoSequence = lineComponents[1]; // @TODO: this sequence contains the variable ptm characters, which are valid amino acids...
-        String sequence = "";
+        String pNovoSequence = lineComponents[1];
+        String peptideSequence = "";
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>();
 
-        for (int i = 0; i < pNovoSequence.length(); i++) {
-            char currentChar = pNovoSequence.charAt(i);
+        PNovoParameters pNovoParameters = (PNovoParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex());
 
-            if (variableModificationsCharacters.contains(currentChar)) {
-                // @TODO: have to somehow extract/annotate variable ptms
+        if (pNovoParameters == null) {
+            // @TODO: throw exception?
+        } else {
+            for (int i = 0; i < pNovoSequence.length(); i++) {
+
+                char currentChar = pNovoSequence.charAt(i);
+
+                if (pNovoParameters.getPtmResidue(currentChar) != null) {
+                    modificationMatches.add(new ModificationMatch(pNovoParameters.getUtilitiesPtmName(currentChar), true, i + 1));
+                    peptideSequence += pNovoParameters.getPtmResidue(currentChar);
+                } else {
+                    peptideSequence += currentChar;
+                }
             }
         }
 
-        // @TODO: convert the variable PTMs
-//        if (!modificationMass.equals("")) {
-//
-//            String pNovoPtmTag = "";
-//
-//            if (nTermPtm || cTermPtm) {
-//                pNovoPtmTag += ptmTag;
-//            } else {
-//                pNovoPtmTag += currentAA;
-//            }
-//
-//            pNovoPtmTag += modificationMass;
-//
-//            ModificationMatch modMatch = new ModificationMatch(pNovoPtmTag, true, currentPtmLocation);
-//            modificationMatches.add(modMatch);
-//        }
-//
-        AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(pNovoSequence);
+        AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
         for (ModificationMatch modificationMatch : modificationMatches) {
             aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
         }
@@ -277,35 +268,6 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, new Charge(Charge.PLUS, 1), pNovoScore); // @TODO: how to get the charge?
 
         return tagAssumption;
-    }
-
-    /**
-     * Get a PTM.
-     *
-     * @param pNovoParameters the pNovo parameters
-     * @param pNovoModification the pNovo modification
-     *
-     * @return the PTM as a string
-     */
-    public static String getPTM(PNovoParameters pNovoParameters, String pNovoModification) {
-
-        return null;
-        // @TODO: implement me
-
-//        Map<String, String> invertedPtmMap = pNovoParameters.getPNovoPtmMap();
-//
-//        if (invertedPtmMap == null) {
-//            // @TODO: possible to rescue these?
-//            throw new IllegalArgumentException("Unsupported de novo search result. Please reprocess the data.");
-//        }
-//
-//        String utilitesPtmName = invertedPtmMap.get(pNovoModification);
-//
-//        if (utilitesPtmName != null) {
-//            return utilitesPtmName;
-//        } else {
-//            throw new IllegalArgumentException("An error occurred while parsing the modification " + pNovoModification + ".");
-//        }
     }
 
     @Override

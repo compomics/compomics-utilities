@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -16,6 +17,7 @@ import org.xmlpull.v1.XmlPullParserException;
  * This interface will retrieve spectrum matches from any identification file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public interface IdfileReader {
 
@@ -52,6 +54,7 @@ public interface IdfileReader {
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
+     * @param searchParameters the search parameters
      *
      * @return a list of spectrum matches
      *
@@ -63,7 +66,7 @@ public interface IdfileReader {
      * @throws JAXBException
      * @throws org.xmlpull.v1.XmlPullParserException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler)
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
 
     /**
@@ -75,7 +78,7 @@ public interface IdfileReader {
      *
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
-     *
+     * @param searchParameters the search parameters
      * @param sequenceMatchingPreferences the sequence matching preferences to
      * use for the creation of the secondary maps
      * @param expandAaCombinations if true, a peptide assumption (not
@@ -92,7 +95,7 @@ public interface IdfileReader {
      * @throws JAXBException
      * @throws org.xmlpull.v1.XmlPullParserException
      */
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
 
     /**

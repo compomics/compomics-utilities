@@ -546,8 +546,6 @@ public abstract class Identification extends ExperimentObject {
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
@@ -617,8 +615,6 @@ public abstract class Identification extends ExperimentObject {
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */

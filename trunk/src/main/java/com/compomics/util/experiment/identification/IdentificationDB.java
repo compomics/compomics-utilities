@@ -12,7 +12,9 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class uses a database to manage identification matches.
@@ -431,7 +433,6 @@ public class IdentificationDB implements Serializable {
      */
     public SpectrumMatch getSpectrumMatch(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getSpectrumMatchTable(key);
-        checkTable(psmTables, tableName);
         return (SpectrumMatch) objectsDB.retrieveObject(tableName, key, useDB);
     }
 
@@ -450,6 +451,18 @@ public class IdentificationDB implements Serializable {
         String tableName = getSpectrumMatchTable(key);
         checkTable(psmTables, tableName);
         objectsDB.insertObject(tableName, key, spectrumMatch, true);
+    }
+    
+    /**
+     * Indicates whether the table for the given spectrum match key has been created.
+     * 
+     * @param spectrumMatchKey the key of the spectrum match of interest
+     * 
+     * @return true if the table for the given spectrum match key has been created
+     */
+    public boolean spectrumMatchTableCreated(String spectrumMatchKey) {
+        String tableName = getSpectrumMatchTable(spectrumMatchKey);
+        return psmTables.contains(tableName);
     }
 
     /**
@@ -1060,7 +1073,7 @@ public class IdentificationDB implements Serializable {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public synchronized void checkTable(ArrayList<String> tableList, String tableName) throws SQLException, IOException, InterruptedException {
+    public synchronized void checkTable(Collection<String> tableList, String tableName) throws SQLException, IOException, InterruptedException {
         if (!tableList.contains(tableName)) {
             objectsDB.addTable(tableName);
             tableList.add(tableName);

@@ -77,7 +77,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * 
      * @deprecated use the assumptions map instead
      */
-    private ArrayList<Integer> advocates = new ArrayList<Integer>();
+    private ArrayList<Integer> advocates = null;
     /**
      * The spectrum number in the mgf file. Will be used in case the spectrum
      * title does not match

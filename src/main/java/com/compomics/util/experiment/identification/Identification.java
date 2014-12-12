@@ -1133,7 +1133,7 @@ public abstract class Identification extends ExperimentObject {
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = identificationDB.getAssumptions(spectrumKey, useDB);
-        if (assumptions == null) { // backward compatibility check
+        if (assumptions == null && identificationDB.spectrumMatchTableCreated(spectrumKey)) { // backward compatibility check
             SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumKey, true);
             if (spectrumMatch != null) {
                 assumptions = spectrumMatch.getAssumptionsMap();

@@ -202,7 +202,7 @@ public class AScore {
      * calculation shall account for neutral losses.
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator a spectrum annotator to annotate the spectra
-     * @param rounding decimal to which the score should be rounded, ignored if
+     * @param rounding decimal to which the score should be floored, ignored if
      * null
      *
      * @return a map containing the best or two best PTM location(s) and the
@@ -332,7 +332,7 @@ public class AScore {
                     HashMap<Integer, Double> roundedScoreMap = new HashMap<Integer, Double>(lowestScoreMap.size());
                     for (Integer site : lowestScoreMap.keySet()) {
                         double score = lowestScoreMap.get(site);
-                        score = Util.roundDouble(score, rounding);
+                        score = Util.floorDouble(score, rounding);
                         roundedScoreMap.put(site, score);
                     }
                     lowestScoreMap = roundedScoreMap;
@@ -378,7 +378,7 @@ public class AScore {
                     HashMap<Integer, Double> roundedScoreMap = new HashMap<Integer, Double>(lowestScoreMap.size());
                     for (Integer site : lowestScoreMap.keySet()) {
                         double score = lowestScoreMap.get(site);
-                        score = Util.roundDouble(score, rounding);
+                        score = Util.floorDouble(score, rounding);
                         roundedScoreMap.put(site, score);
                     }
                     lowestScoreMap = roundedScoreMap;

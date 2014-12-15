@@ -57,6 +57,11 @@ public enum PsmScores {
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
     complementarity(5, "complementarity", true);
+    /**
+     * The number of decimals to which scores should be floored. Ignored if
+     * null.
+     */
+    public static Integer scoreFlooringDecimal = 10;
 
     /**
      * The name of the score.
@@ -191,4 +196,24 @@ public enum PsmScores {
                 throw new UnsupportedOperationException("Score not implemented.");
         }
     }
+
+    /**
+     * Returns the number of decimals to use when scoring.
+     * 
+     * @return the number of decimals to use when scoring
+     */
+    public static Integer getScoreRoundingDecimal() {
+        return scoreFlooringDecimal;
+    }
+
+    /**
+     * Sets the number of decimals to use when scoring.
+     * 
+     * @param scoreRoundingDecimal the number of decimals to use when scoring
+     */
+    public static void setScoreRoundingDecimal(Integer scoreRoundingDecimal) {
+        PsmScores.scoreFlooringDecimal = scoreRoundingDecimal;
+    }
+    
+    
 }

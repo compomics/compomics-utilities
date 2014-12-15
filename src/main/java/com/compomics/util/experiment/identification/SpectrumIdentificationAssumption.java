@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -76,11 +78,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     }
     
     /**
-     * Sets the score.
+     * Sets the score. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
      * 
      * @param score the score
      */
     public void setScore(double score) {
+        if (PsmScores.scoreFlooringDecimal != null) {
+            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
+        }
         this.score = score;
     }
 

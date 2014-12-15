@@ -76,6 +76,17 @@ public class Util {
     }
 
     /**
+     * Floors a double value to the wanted number of decimal places.
+     *
+     * @param d the double to floor of
+     * @param places number of decimal places wanted
+     * @return double - the new double
+     */
+    public static double floorDouble(double d, int places) {
+        return Math.floor(d * Math.pow(10, (double) places)) / Math.pow(10, (double) places);
+    }
+
+    /**
      * Deletes all files and subdirectories under dir. Returns true if all
      * deletions were successful. If a deletion fails, the method stops
      * attempting to delete and returns false.

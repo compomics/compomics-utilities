@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
@@ -52,7 +54,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     private String file;
 
     /**
-     * Constructor for a peptide assumption.
+     * Constructor for a peptide assumption. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
      *
      * @param aPeptide the theoretic peptide
      * @param rank the identification rank
@@ -69,12 +71,16 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
+
+        if (PsmScores.scoreFlooringDecimal != null) {
+            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
+        }
         super.score = score;
         super.identificationFile = identificationFile;
     }
 
     /**
-     * Constructor for a peptide assumption.
+     * Constructor for a peptide assumption. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
      *
      * @param aPeptide the theoretic peptide
      * @param rank the identification rank
@@ -89,6 +95,10 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
+
+        if (PsmScores.scoreFlooringDecimal != null) {
+            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
+        }
         super.score = score;
     }
 
@@ -155,7 +165,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
             return super.identificationCharge;
         }
     }
-    
+
     @Override
     public double getTheoreticMass() {
         return peptide.getMass();

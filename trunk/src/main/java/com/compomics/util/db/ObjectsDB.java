@@ -139,8 +139,9 @@ public class ObjectsDB implements Serializable {
      * @param folder absolute path of the folder where to establish the database
      * @param dbName name of the database
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache
-     * @throws SQLException
+     * @param objectsCache a cache to store objects without interacting with the database
+     * 
+     * @throws SQLException exception thrown whenever a problem occurred when establishing the connection to the database
      */
     public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         this.dbName = dbName;
@@ -184,8 +185,9 @@ public class ObjectsDB implements Serializable {
      * Adds the desired table in the database.
      *
      * @param tableName the name of the table
+     * 
      * @throws SQLException exception thrown whenever a problem occurred while
-     * working with the database
+     * interacting with the database
      */
     public synchronized void addTable(String tableName) throws SQLException {
         if (debugInteractions) {
@@ -214,7 +216,7 @@ public class ObjectsDB implements Serializable {
      * table
      *
      * @throws SQLException exception thrown whenever a problem occurred while
-     * working with the database
+     * interacting with the database
      */
     public synchronized boolean hasTable(String tableName) throws SQLException {
         DatabaseMetaData dmd = dbConnection.getMetaData();
@@ -222,6 +224,30 @@ public class ObjectsDB implements Serializable {
         ResultSet rs = dmd.getTables(null, null, tableName.toUpperCase(), null); //@TODO: not sure to which extend this is Derby dependent...
         try {
             result = rs.next();
+        } finally {
+            rs.close();
+        }
+        return result;
+    }
+    
+    /**
+     * Returns a list of tables present in the database. Note: this includes system tables.
+     * 
+     * @return a list of tables present in the database
+     * 
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with the database
+     */
+    public synchronized ArrayList<String> getTables() throws SQLException {
+        
+        DatabaseMetaData dmd = dbConnection.getMetaData();
+        ArrayList<String> result = new ArrayList<String>();
+        ResultSet rs = dmd.getTables(null, null, null, null); //@TODO: not sure to which extend this is Derby dependent...
+        try {
+            while (rs.next()) {
+                String dbName = (String) rs.getObject("TABLE_NAME");
+                result.add(dbName);
+            }
         } finally {
             rs.close();
         }
@@ -1145,6 +1171,7 @@ public class ObjectsDB implements Serializable {
      * @param aDbFolder the folder where the database is located
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectsCache
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
      */

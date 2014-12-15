@@ -192,9 +192,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param matchKey the match key
      * @param urParameter example of parameter to retrieve
-     * 
+     *
      * @return the personalization parameter
-     * 
+     *
      * @throws java.lang.InterruptedException
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
@@ -217,7 +217,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -236,7 +236,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -251,11 +251,12 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads all assumptions of all spectrum matches of the file in the cache of the database.
+     * Loads all assumptions of all spectrum matches of the file in the cache of
+     * the database.
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -274,7 +275,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -295,7 +296,7 @@ public abstract class Identification extends ExperimentObject {
      * @param fileName the file name
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -316,7 +317,7 @@ public abstract class Identification extends ExperimentObject {
      * loaded
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -336,7 +337,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptideKeys the list of peptide keys to load
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -354,7 +355,7 @@ public abstract class Identification extends ExperimentObject {
      * Loads all peptide matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -374,7 +375,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -395,7 +396,7 @@ public abstract class Identification extends ExperimentObject {
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -413,7 +414,7 @@ public abstract class Identification extends ExperimentObject {
      * Loads all protein matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -433,7 +434,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param proteinKeys the list of protein keys to load
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -453,7 +454,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -474,7 +475,7 @@ public abstract class Identification extends ExperimentObject {
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -493,9 +494,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the PSM key
      * @param urParameter the match parameter
-     * 
+     *
      * @return the spectrum match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -516,9 +517,9 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
-     * 
+     *
      * @return the spectrum match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -541,7 +542,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the PSM key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -562,9 +563,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
-     * 
+     *
      * @return the peptide match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -585,9 +586,9 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
-     * 
+     *
      * @return the peptide match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -610,7 +611,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -631,9 +632,9 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
-     * 
+     *
      * @return the protein match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -654,9 +655,9 @@ public abstract class Identification extends ExperimentObject {
      * @param urParameter the match parameter
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
-     * 
+     *
      * @return the protein match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -679,7 +680,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -700,7 +701,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the spectrum key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -715,7 +716,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the peptide key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -730,7 +731,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the protein key
      * @param urParameter the match parameter
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -1138,7 +1139,7 @@ public abstract class Identification extends ExperimentObject {
             if (spectrumMatch != null) {
                 assumptions = spectrumMatch.getAssumptionsMap();
                 if (assumptions != null) {
-                    addAssumptions(spectrumKey, assumptions);
+                    addAssumptions(spectrumKey, assumptions, true);
                     spectrumMatch.removeAssumptions();
                     updateSpectrumMatch(spectrumMatch);
                 }
@@ -1420,8 +1421,33 @@ public abstract class Identification extends ExperimentObject {
      */
     public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        addAssumptions(spectrumKey, newAssumptions, false);
+    }
+
+    /**
+     * Adds the assumptions corresponding to a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param newAssumptions the assumptions to add to the mapping
+     * @param overwriteExisting if true any existing assumption will be
+     * overwritten
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean overwriteExisting)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         boolean createAssumptions = false;
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getAssumptions(spectrumKey, true);
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = null;
+        if (!overwriteExisting) {
+            currentAssumptions = getAssumptions(spectrumKey, true);
+        }
         if (currentAssumptions == null) {
             currentAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newAssumptions.size());
             createAssumptions = true;
@@ -1667,9 +1693,9 @@ public abstract class Identification extends ExperimentObject {
      * Returns the name of the file to use for serialization/deserialization.
      *
      * @param key the key of the match
-     * 
+     *
      * @return the name of the corresponding file
-     * 
+     *
      * @deprecated use the database methods instead
      */
     public String getFileName(String key) {
@@ -1762,12 +1788,36 @@ public abstract class Identification extends ExperimentObject {
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectsCache
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection, typically when another software already has a connection open
+     * establishing the connection, typically when another software already has
+     * a connection open
      */
     public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
+    }
+
+    /**
+     * Restores the connection to the database.
+     *
+     * @param dbFolder the folder where the database is located
+     * @param deleteOldDatabase if true, tries to delete the old database
+     * @param objectsCache
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * establishing the connection
+     */
+    public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+        identificationDB.restoreConnection(dbFolder, deleteOldDatabase, objectsCache);
+    }
+    
+    /**
+     * Backward compatibility fix checking whether the tables in the database are all loaded in the attribute maps of this object.
+     * 
+     * @throws SQLException exception thrown whenever an error occurred while retrieving table names from the database.
+     */
+    public void checkIdentificationDBTables() throws SQLException {
+        identificationDB.checkTables();
     }
 
     /**
@@ -1779,7 +1829,7 @@ public abstract class Identification extends ExperimentObject {
      * @param newName
      * @param objectsCache
      * @param directory the directory where the data is currently stored
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -1887,7 +1937,7 @@ public abstract class Identification extends ExperimentObject {
      * @param experimentReference the experiment reference
      * @param sampleReference the sample reference
      * @param replicateNumber the replicate number
-     * 
+     *
      * @return the default reference
      */
     public static String getDefaultReference(String experimentReference, String sampleReference, int replicateNumber) {
@@ -1899,9 +1949,9 @@ public abstract class Identification extends ExperimentObject {
      * Note: proteins have to be set for the peptide.
      *
      * @param peptide the peptide of interest
-     * 
+     *
      * @return the keys of the protein matches
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -1933,9 +1983,9 @@ public abstract class Identification extends ExperimentObject {
      * Indicates whether a peptide is found in a single protein match.
      *
      * @param peptide the peptide of interest
-     * 
+     *
      * @return true if peptide is found in a single protein match
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
      * @throws IOException exception thrown whenever an error occurred while

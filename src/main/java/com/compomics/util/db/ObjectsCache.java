@@ -38,7 +38,7 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>();
+    private HashMap<String, HashMap<String, HashMap<String, CacheEntry>>> loadedObjectsMap = new HashMap<String, HashMap<String, HashMap<String, CacheEntry>>>(1);
     /**
      * List of the loaded objects with the most used matches in the end.
      */
@@ -50,7 +50,7 @@ public class ObjectsCache {
     /**
      * The standard batch size for saving objects in databases.
      */
-    private int batchSize = 1000; // @TODO: find the optimal batch size
+    private int batchSize = 1000;
 
     /**
      * Constructor.

@@ -4,6 +4,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +84,7 @@ public class Util {
      * @return double - the new double
      */
     public static double floorDouble(double d, int places) {
-        return Math.floor(d * Math.pow(10, (double) places)) / Math.pow(10, (double) places);
+        return (new BigDecimal(String.valueOf(d)).setScale(places, BigDecimal.ROUND_FLOOR)).doubleValue();
     }
 
     /**

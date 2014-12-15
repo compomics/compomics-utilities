@@ -1233,6 +1233,7 @@ public class IdentificationDB implements Serializable {
      */
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);
+        objectsCache.addDb(objectsDB);
     }
 
     /**

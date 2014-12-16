@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Precursor extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = -2711244157697138296L;
     /**
@@ -21,11 +21,11 @@ public class Precursor extends ExperimentObject {
      */
     private double rt;
     /**
-     * In case an rt window is given, the minimum.
+     * In case an retention time window is given, the minimum.
      */
     private Double rtMin;
     /**
-     * In case an rt window is given, the maximum.
+     * In case an retention time window is given, the maximum.
      */
     private Double rtMax;
     /**
@@ -57,11 +57,11 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Constructor with rt window.
+     * Constructor with retention time window.
      *
      * @param rt the retention time
      * @param mz the m/z
-     * @param intensity
+     * @param intensity the intensity
      * @param possibleCharges the possible charges
      * @param rtMin the minimum of the RT window
      * @param rtMax the maximum of the RT window
@@ -76,13 +76,13 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Constructor with rt window and no reference rt.
+     * Constructor with retention time window and no reference retention time.
      *
      * @param mz the m/z
-     * @param intensity
+     * @param intensity the intensity
      * @param possibleCharges the possible charges
-     * @param rtMin the minimum of the RT window
-     * @param rtMax the maximum of the RT window
+     * @param rtMin the minimum of the RT window in seconds
+     * @param rtMax the maximum of the RT window in seconds
      */
     public Precursor(double mz, double intensity, ArrayList<Charge> possibleCharges, double rtMin, double rtMax) {
         this.rt = (rtMin + rtMax) / 2;
@@ -96,10 +96,10 @@ public class Precursor extends ExperimentObject {
     /**
      * Constructor for the precursor.
      *
-     * @param rt
-     * @param mz
-     * @param intensity
-     * @param possibleCharges
+     * @param rt the retention time in seconds
+     * @param mz the m/z
+     * @param intensity the intensity
+     * @param possibleCharges the possible charges
      */
     public Precursor(double rt, double mz, double intensity, ArrayList<Charge> possibleCharges) {
         this.rt = rt;
@@ -111,18 +111,29 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Getter for the retention time.
+     * Getter for the retention time in seconds.
      *
-     * @return precursor retention time
+     * @return precursor retention time in seconds
      */
     public double getRt() {
         return rt;
     }
 
     /**
-     * Returns a boolean indicating whether the rt window was implemented.
+     * Returns the retention time in minutes.
      *
-     * @return a boolean indicating whether the rt window was implemented
+     * @return the retention time in minutes
+     */
+    public double getRtInMinutes() {
+        return rt / 60;
+    }
+
+    /**
+     * Returns a boolean indicating whether the retention time window was
+     * implemented.
+     *
+     * @return a boolean indicating whether the retention time window was
+     * implemented
      */
     public boolean hasRTWindow() {
         return rtMin != null && rtMax != null && rtMin != -1 && rtMax != -1 && !rtMin.equals(rtMax);
@@ -193,18 +204,18 @@ public class Precursor extends ExperimentObject {
      * Returns a recalibrated precursor.
      *
      * @param mzCorrection the m/z correction to apply
-     * @param rtCorrection the rt correction to apply
+     * @param rtCorrection the retention time correction to apply
      * @return a new recalibrated precursor
      */
     public Precursor getRecalibratedPrecursor(double mzCorrection, double rtCorrection) {
         return new Precursor(rt - rtCorrection, mz - mzCorrection, intensity, possibleCharges);
     }
-    
+
     /**
      * Returns the mass of the compound with the given charge.
-     * 
+     *
      * @param chargeValue the value of the charge
-     * 
+     *
      * @return the mass of the compound with the given charge
      */
     public double getMass(int chargeValue) {

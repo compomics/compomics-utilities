@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**
@@ -71,10 +69,6 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
-
-        if (PsmScores.scoreFlooringDecimal != null) {
-            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
-        }
         super.score = score;
         super.identificationFile = identificationFile;
     }
@@ -95,10 +89,6 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
-
-        if (PsmScores.scoreFlooringDecimal != null) {
-            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
-        }
         super.score = score;
     }
 

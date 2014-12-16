@@ -157,14 +157,14 @@ public class SpectrumFactory {
      * Add spectra to the factory.
      *
      * @param spectrumFile The spectrum file, can be mgf or mzML
-     * 
+     *
      * @throws FileNotFoundException Exception thrown whenever the file was not
      * found
      * @throws IOException Exception thrown whenever an error occurred while
      * reading the file
      * @throws ClassNotFoundException Exception thrown whenever an error
      * occurred while deserializing the index .cui file.
-     * 
+     *
      * @deprecated use the version with the waiting handler instead
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -421,7 +421,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the maximum RT for the desired file.
+     * Returns the maximum retention time in seconds for the desired file.
      *
      * @param fileName the file of interest
      * @return the max RT
@@ -431,7 +431,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the minimum RT for the desired file.
+     * Returns the minimum retention time in seconds for the desired file.
      *
      * @param fileName the file of interest
      * @return the min RT
@@ -441,7 +441,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the maximum RT for the whole project.
+     * Returns the maximum retention time in seconds for the whole project.
      *
      * @return the max RT
      */
@@ -459,7 +459,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the minimum RT for the whole project.
+     * Returns the minimum retention time in seconds for the whole project.
      *
      * @return the min RT
      */

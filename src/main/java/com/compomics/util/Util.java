@@ -614,19 +614,19 @@ public class Util {
      */
     public static double readDoubleAsString(String doubleAsString) throws NumberFormatException {
 
-        double temp;
+        BigDecimal temp;
         try {
-            temp = Double.valueOf(doubleAsString);
+            temp = new BigDecimal(doubleAsString);
         } catch (NumberFormatException e) {
             doubleAsString = doubleAsString.replaceAll("\\.", "");
             doubleAsString = doubleAsString.replaceAll(",", "\\.");
             try {
-                temp = Double.valueOf(doubleAsString);
+                temp = new BigDecimal(doubleAsString);
             } catch (NumberFormatException ex) {
                 throw new NumberFormatException(doubleAsString + " cannot be read as a floating value!");
             }
         }
 
-        return temp;
+        return temp.doubleValue();
     }
 }

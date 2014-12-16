@@ -94,10 +94,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             if (component instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
                 for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.D)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.E)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.S)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.T)) {
+                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.D.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.E.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.S.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.T.getSingleLetterCodeAsChar())) {
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);
@@ -135,10 +135,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             if (component instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
                 for (int i = 0; i < aminoAcidPattern.length(); i++) {
-                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.K)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.N)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.Q)
-                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.R)) {
+                    if (aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.K.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.N.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.Q.getSingleLetterCodeAsChar())
+                            || aminoAcidPattern.getAminoAcidsAtTarget().contains(AminoAcid.R.getSingleLetterCodeAsChar())) {
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);

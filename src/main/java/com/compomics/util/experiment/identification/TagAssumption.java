@@ -1,9 +1,7 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
@@ -48,9 +46,6 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
         this.rank = rank;
         this.tag = tag;
         this.identificationCharge = identificationCharge;
-        if (PsmScores.scoreFlooringDecimal != null) {
-            score = Util.floorDouble(score, PsmScores.scoreFlooringDecimal);
-        }
         this.score = score;
     }
 

@@ -133,6 +133,10 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
+                            
+                            if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION && ion.getSubType() == PeptideFragmentIon.B_ION) {
+                                int debug = 1;
+                            }
 
                             if (lossesValidated(neutralLosses, ion)) {
 
@@ -266,65 +270,66 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
 
-        int aaMin = peptide.getSequence().length();
+        String sequence = peptide.getSequence();
+        int aaMin = sequence.length();
         int aaMax = 0;
 
         if (IonFactory.getInstance().getDefaultNeutralLosses().contains(NeutralLoss.H2O)) {
-            int firstIndex = peptide.getSequence().indexOf("D");
+            int firstIndex = sequence.indexOf("D");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("D"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("D"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("E");
+            firstIndex = sequence.indexOf("E");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("E"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("E"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("S");
+            firstIndex = sequence.indexOf("S");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("S"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("S"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("T");
+            firstIndex = sequence.indexOf("T");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("T"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("T"), aaMax);
             }
-            if (aaMin < peptide.getSequence().length()) {
-                neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, peptide.getSequence().length() - aaMax);
+            if (aaMin < sequence.length()) {
+                neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, sequence.length() - aaMax);
             }
         }
 
-        aaMin = peptide.getSequence().length();
+        aaMin = sequence.length();
         aaMax = 0;
 
         if (IonFactory.getInstance().getDefaultNeutralLosses().contains(NeutralLoss.NH3)) {
-            int firstIndex = peptide.getSequence().indexOf("K");
+            int firstIndex = sequence.indexOf("K");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("K"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("K"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("N");
+            firstIndex = sequence.indexOf("N");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("N"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("N"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("Q");
+            firstIndex = sequence.indexOf("Q");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("Q"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("Q"), aaMax);
             }
-            firstIndex = peptide.getSequence().indexOf("R");
+            firstIndex = sequence.indexOf("R");
             if (firstIndex != -1) {
                 aaMin = Math.min(firstIndex, aaMin);
-                aaMax = Math.max(peptide.getSequence().lastIndexOf("R"), aaMax);
+                aaMax = Math.max(sequence.lastIndexOf("R"), aaMax);
             }
-            if (aaMin < peptide.getSequence().length()) {
-                neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, peptide.getSequence().length() - aaMax);
+            if (aaMin < sequence.length()) {
+                neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, sequence.length() - aaMax);
             }
         }
 
-        int modMin = peptide.getSequence().length();
+        int modMin = sequence.length();
         int modMax = 0;
 
         for (ModificationMatch modMatch : peptide.getModificationMatches()) {
@@ -339,7 +344,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     modMin = indexes.get(0);
                     modMax = indexes.get(indexes.size() - 1);
                 }
-                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, peptide.getSequence().length() - modMax + 1);
+                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, sequence.length() - modMax + 1);
             }
         }
 

@@ -78,37 +78,45 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public synchronized void setSecondaryProgressCounter(int value) {
-        int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-        secondaryProgressCounter = value;
-        int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-        if (progress2 > progress1) {
-            int progress = 10 * progress2;
-            if (progress1 == 0) {
-                System.out.print("10%");
-            } else if (progress2 == 90) {
-                System.out.println(" " + progress + "%");
-            } else if (progress2 == 100) {
-            } else {
-                System.out.print(" " + progress + "%");
+        if (secondaryMaxProgressCounter != 0) {
+            int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+            secondaryProgressCounter = value;
+            int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+            if (progress2 > progress1) {
+                int progress = 10 * progress2;
+                if (progress1 == 0) {
+                    System.out.print("10%");
+                } else if (progress2 == 90) {
+                    System.out.println(" " + progress + "%");
+                } else if (progress2 == 100) {
+                } else {
+                    System.out.print(" " + progress + "%");
+                }
             }
+        } else {
+            secondaryProgressCounter = value;
         }
     }
 
     @Override
     public synchronized void increaseSecondaryProgressCounter(int amount) {
-        int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-        secondaryProgressCounter += amount;
-        int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-        if (progress2 > progress1) {
-            int progress = 10 * progress2;
-            if (progress1 == 0) {
-                System.out.print("10%");
-            } else if (progress2 == 90) {
-                System.out.println(" " + progress + "%");
-            } else if (progress2 == 100) {
-            } else {
-                System.out.print(" " + progress + "%");
+        if (secondaryMaxProgressCounter != 0) {
+            int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+            secondaryProgressCounter += amount;
+            int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+            if (progress2 > progress1) {
+                int progress = 10 * progress2;
+                if (progress1 == 0) {
+                    System.out.print("10%");
+                } else if (progress2 == 90) {
+                    System.out.println(" " + progress + "%");
+                } else if (progress2 == 100) {
+                } else {
+                    System.out.print(" " + progress + "%");
+                }
             }
+        } else {
+            secondaryProgressCounter += amount;
         }
     }
 

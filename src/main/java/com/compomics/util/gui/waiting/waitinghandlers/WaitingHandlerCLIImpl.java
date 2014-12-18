@@ -85,12 +85,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             if (progress2 > progress1) {
                 int progress = 10 * progress2;
                 if (progress1 == 0) {
-                    System.out.print("10%");
+                    System.out.println("10%");
                 } else if (progress2 == 90) {
-                    System.out.println(" " + progress + "%");
+                    System.out.println(progress + "%");
                 } else if (progress2 == 100) {
                 } else {
-                    System.out.print(" " + progress + "%");
+                    System.out.println(progress + "%");
                 }
             }
         } else {
@@ -107,12 +107,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             if (progress2 > progress1) {
                 int progress = 10 * progress2;
                 if (progress1 == 0) {
-                    System.out.print("10%");
+                    System.out.println("10%");
                 } else if (progress2 == 90) {
-                    System.out.println(" " + progress + "%");
+                    System.out.println(progress + "%");
                 } else if (progress2 == 100) {
                 } else {
-                    System.out.print(" " + progress + "%");
+                    System.out.println(progress + "%");
                 }
             }
         } else {

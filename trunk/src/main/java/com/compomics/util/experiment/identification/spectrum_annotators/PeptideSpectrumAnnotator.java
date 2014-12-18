@@ -133,10 +133,6 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            
-                            if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION && ion.getSubType() == PeptideFragmentIon.B_ION) {
-                                int debug = 1;
-                            }
 
                             if (lossesValidated(neutralLosses, ion)) {
 

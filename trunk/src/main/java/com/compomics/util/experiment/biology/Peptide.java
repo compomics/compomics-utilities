@@ -522,7 +522,7 @@ public class Peptide extends ExperimentObject {
                             result.add(Integer.valueOf(localizationSplit[1]));
                         } catch (Exception e) {
                             throw new IllegalArgumentException("Cannot parse modification localization "
-                                    + localizationSplit.toString() + " for modification of mass " + ptmMass + " in peptide key " + peptideKey);
+                                    + localizationSplit[1] + " for modification of mass " + ptmMass + " in peptide key " + peptideKey);
                         }
                     }
                 }

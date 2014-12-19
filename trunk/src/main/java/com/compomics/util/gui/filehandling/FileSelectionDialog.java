@@ -4,12 +4,14 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
  * A simple dialog for selecting between different files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FileSelectionDialog extends javax.swing.JDialog {
 
@@ -34,6 +36,33 @@ public class FileSelectionDialog extends javax.swing.JDialog {
     public FileSelectionDialog(JFrame parent, ArrayList<File> files, String text) {
         super(parent, true);
         initComponents();
+        setUpGui(files, text);
+        setLocationRelativeTo(parent);
+        this.setVisible(true);
+    }
+
+    /**
+     * Creates a new FileSelection dialog.
+     *
+     * @param parent the parent dialog
+     * @param files the list of files
+     * @param text the help text to display
+     */
+    public FileSelectionDialog(JDialog parent, ArrayList<File> files, String text) {
+        super(parent, true);
+        initComponents();
+        setUpGui(files, text);
+        setLocationRelativeTo(parent);
+        this.setVisible(true);
+    }
+
+    /**
+     * Set up the GUI.
+     *
+     * @param files the list of files
+     * @param text the help text to display
+     */
+    private void setUpGui(ArrayList<File> files, String text) {
         String[] fileNames = new String[files.size()];
         for (int i = 0; i < files.size(); i++) {
             fileNames[i] = files.get(i).getName();
@@ -41,9 +70,7 @@ public class FileSelectionDialog extends javax.swing.JDialog {
         }
         fileList.setListData(fileNames);
         fileList.setSelectedIndex(0);
-        setLocationRelativeTo(parent);
         helpLabel.setText(text);
-        this.setVisible(true);
     }
 
     /**

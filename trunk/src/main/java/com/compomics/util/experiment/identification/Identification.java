@@ -1115,7 +1115,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a the assumptions of a spectrum.
+     * Returns the assumptions of a spectrum.
      *
      * @param spectrumKey the key of the spectrum
      * @param useDB if useDB is false, null will be returned if the object is
@@ -1473,9 +1473,9 @@ public abstract class Identification extends ExperimentObject {
             }
         }
         if (createAssumptions) {
-            identificationDB.addAssumptions(spectrumKey, newAssumptions);
+            identificationDB.addAssumptions(spectrumKey, currentAssumptions);
         } else {
-            updateAssumptions(spectrumKey, newAssumptions);
+            updateAssumptions(spectrumKey, currentAssumptions);
         }
     }
 
@@ -1496,23 +1496,27 @@ public abstract class Identification extends ExperimentObject {
     public synchronized void addSpectrumMatch(SpectrumMatch newMatch)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions;
         String spectrumKey = newMatch.getKey();
-
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = newMatch.getAssumptionsMap();
-        if (assumptions != null) {
-            addAssumptions(spectrumKey, assumptions);
-            newMatch.removeAssumptions();
-        }
-
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
-        if (spectrumKeys == null || !spectrumKeys.contains(spectrumKey)) {
-            if (spectrumKeys == null) {
-                spectrumKeys = new ArrayList<String>(1000);
-                spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
-            }
+
+        if (spectrumKeys == null) {
+            spectrumKeys = new ArrayList<String>(1000);
+            spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
+        }
+
+        if (!spectrumKeys.contains(spectrumKey)) {
             spectrumKeys.add(spectrumKey);
+            assumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newMatch.getAssumptionsMap());
+            newMatch.removeAssumptions();
             identificationDB.addSpectrumMatch(newMatch);
+        } else {
+            assumptions = newMatch.getAssumptionsMap();
+        }
+
+        if (assumptions != null) {
+            addAssumptions(spectrumKey, assumptions);
         }
     }
 
@@ -1810,11 +1814,13 @@ public abstract class Identification extends ExperimentObject {
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
         identificationDB.restoreConnection(dbFolder, deleteOldDatabase, objectsCache);
     }
-    
+
     /**
-     * Backward compatibility fix checking whether the tables in the database are all loaded in the attribute maps of this object.
-     * 
-     * @throws SQLException exception thrown whenever an error occurred while retrieving table names from the database.
+     * Backward compatibility fix checking whether the tables in the database
+     * are all loaded in the attribute maps of this object.
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * retrieving table names from the database.
      */
     public void checkIdentificationDBTables() throws SQLException {
         identificationDB.checkTables();

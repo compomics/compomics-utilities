@@ -224,7 +224,7 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Removes all assumptions but the best ones from the spectrum map
+     * Removes all assumptions but the best ones from the spectrum map.
      */
     public void removeAssumptions() {
         assumptionsMap = null;

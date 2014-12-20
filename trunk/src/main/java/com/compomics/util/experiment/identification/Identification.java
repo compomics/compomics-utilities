@@ -1432,6 +1432,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
+     * @param newSpectrum if this is the first time this spectrum is seen
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -1442,9 +1443,9 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
+    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean newSpectrum)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        addAssumptions(spectrumKey, newAssumptions, false);
+        addAssumptions(spectrumKey, newAssumptions, false, newSpectrum);
     }
 
     /**
@@ -1454,6 +1455,7 @@ public abstract class Identification extends ExperimentObject {
      * @param newAssumptions the assumptions to add to the mapping
      * @param overwriteExisting if true any existing assumption will be
      * overwritten
+     * @param newSpectrum if this is the first time this spectrum is seen
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -1464,11 +1466,11 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean overwriteExisting)
+    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean overwriteExisting, boolean newSpectrum)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         boolean createAssumptions = false;
         HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = null;
-        if (!overwriteExisting) {
+        if (!newSpectrum && !overwriteExisting) {
             currentAssumptions = getAssumptions(spectrumKey, true, false);
         }
         if (currentAssumptions == null) {
@@ -1529,7 +1531,10 @@ public abstract class Identification extends ExperimentObject {
             spectrumIdentificationMap.put(spectrumFile, spectrumKeys);
         }
 
-        if (!spectrumKeys.contains(spectrumKey)) {
+        // check if the spectrum has been seen before
+        boolean newSpectrum = !spectrumKeys.contains(spectrumKey);
+
+        if (newSpectrum) {
             spectrumKeys.add(spectrumKey);
             assumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newMatch.getAssumptionsMap());
             newMatch.removeAssumptions();
@@ -1539,7 +1544,7 @@ public abstract class Identification extends ExperimentObject {
         }
 
         if (assumptions != null) {
-            addAssumptions(spectrumKey, assumptions);
+            addAssumptions(spectrumKey, assumptions, newSpectrum);
         }
     }
 

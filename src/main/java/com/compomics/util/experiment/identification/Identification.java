@@ -1111,7 +1111,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return getAssumptions(spectrumKey, true);
+        return getAssumptions(spectrumKey, true, true);
     }
 
     /**
@@ -1133,8 +1133,31 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getAssumptions(spectrumKey, true, true);
+    }
+
+    /**
+     * Returns the assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     * @param backwardCompatibility checks for assumptions in spectrum matches if true, can be time consuming
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB, boolean backwardCompatibility) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = identificationDB.getAssumptions(spectrumKey, useDB);
-        if (assumptions == null && identificationDB.spectrumMatchTableCreated(spectrumKey)) { // backward compatibility check
+        if (backwardCompatibility && assumptions == null && identificationDB.spectrumMatchTableCreated(spectrumKey)) { // backward compatibility check
             SpectrumMatch spectrumMatch = getSpectrumMatch(spectrumKey, true);
             if (spectrumMatch != null) {
                 assumptions = spectrumMatch.getAssumptionsMap();
@@ -1425,7 +1448,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds the assumptions corresponding to a spectrum.
+     * Adds the assumptions corresponding to a spectrum to the database.
      *
      * @param spectrumKey the key of the spectrum
      * @param newAssumptions the assumptions to add to the mapping
@@ -1446,7 +1469,7 @@ public abstract class Identification extends ExperimentObject {
         boolean createAssumptions = false;
         HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = null;
         if (!overwriteExisting) {
-            currentAssumptions = getAssumptions(spectrumKey, true);
+            currentAssumptions = getAssumptions(spectrumKey, true, false);
         }
         if (currentAssumptions == null) {
             currentAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newAssumptions.size());

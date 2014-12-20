@@ -888,7 +888,7 @@ public class PTMFactory implements Serializable {
      * searched for according to the ModificationProfile. Note: for protein
      * terminal modification the protein must be loaded in the sequence factory.
      *
-     * @param modificationProfile
+     * @param modificationProfile the modification profile
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
      *

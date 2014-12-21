@@ -1142,7 +1142,8 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKey the key of the spectrum
      * @param useDB if useDB is false, null will be returned if the object is
      * not in the cache
-     * @param backwardCompatibility checks for assumptions in spectrum matches if true, can be time consuming
+     * @param backwardCompatibility checks for assumptions in spectrum matches
+     * if true, can be time consuming
      *
      * @return the assumptions
      *
@@ -1521,7 +1522,6 @@ public abstract class Identification extends ExperimentObject {
     public synchronized void addSpectrumMatch(SpectrumMatch newMatch)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions;
         String spectrumKey = newMatch.getKey();
         String spectrumFile = Spectrum.getSpectrumFile(spectrumKey);
         ArrayList<String> spectrumKeys = spectrumIdentificationMap.get(spectrumFile);
@@ -1534,17 +1534,15 @@ public abstract class Identification extends ExperimentObject {
         // check if the spectrum has been seen before
         boolean newSpectrum = !spectrumKeys.contains(spectrumKey);
 
-        if (newSpectrum) {
-            spectrumKeys.add(spectrumKey);
-            assumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newMatch.getAssumptionsMap());
-            newMatch.removeAssumptions();
-            identificationDB.addSpectrumMatch(newMatch);
-        } else {
-            assumptions = newMatch.getAssumptionsMap();
-        }
-
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions = newMatch.getAssumptionsMap();
         if (assumptions != null) {
             addAssumptions(spectrumKey, assumptions, newSpectrum);
+            newMatch.removeAssumptions();
+        }
+
+        if (newSpectrum) {
+            spectrumKeys.add(spectrumKey);
+            identificationDB.addSpectrumMatch(newMatch);
         }
     }
 

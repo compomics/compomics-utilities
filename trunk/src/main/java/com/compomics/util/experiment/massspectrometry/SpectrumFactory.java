@@ -315,6 +315,42 @@ public class SpectrumFactory {
     }
 
     /**
+     * Returns the precursor mz of the desired spectrum. The value will be saved in
+     * cache.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @return the corresponding precursor mz
+     *
+     * @throws IOException exception thrown whenever the file was not parsed
+     * correctly
+     * @throws MzMLUnmarshallerException exception thrown whenever the file was
+     * not parsed correctly
+     * @throws IllegalArgumentException exception thrown whenever the file was
+     * not parsed correctly
+     */
+    public double getPrecursorMz(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+
+        // get the spectrum title and file name
+        String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
+        String spectrumFileName = Spectrum.getSpectrumFile(spectrumKey);
+
+        // a special fix for mgf files with strange titles...
+        spectrumTitle = fixMgfTitle(spectrumTitle, spectrumFileName);
+
+        // see if the have the precursor mz in the mgf index
+        int spectrumIndex = mgfIndexesMap.get(spectrumFileName).getSpectrumIndex(spectrumTitle);
+        Double precursorMz = mgfIndexesMap.get(spectrumFileName).getPrecursorMz(spectrumIndex);
+
+        if (precursorMz != null) {
+            return precursorMz;
+        } else {
+            Precursor precursor = getPrecursor(spectrumKey);
+            precursorMz = precursor.getMz();
+            return precursorMz;
+        }
+    }
+
+    /**
      * Returns the maximum m/z for the desired file.
      *
      * @param fileName the file of interest

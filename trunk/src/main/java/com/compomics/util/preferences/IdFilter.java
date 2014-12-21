@@ -9,7 +9,6 @@ import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
-import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import java.io.IOException;
 import java.io.Serializable;
@@ -279,8 +278,8 @@ public class IdFilter implements Serializable {
      * @throws MzMLUnmarshallerException
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory) throws IOException, MzMLUnmarshallerException {
-        Precursor precursor = spectrumFactory.getPrecursor(spectrumKey);
-        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursor.getMz(), isPpm)) <= maxMassDeviation);
+        double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
+        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursorMz, isPpm)) <= maxMassDeviation);
     }
 
     /**

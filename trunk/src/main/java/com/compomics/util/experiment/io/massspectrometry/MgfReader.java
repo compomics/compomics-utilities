@@ -30,13 +30,13 @@ public class MgfReader {
 
     /**
      * Returns the next spectrum found in the mgf file. Null if none found.
-     * 
+     *
      * @param br a buffered reader
-     * @param fileName the name of the mgf file 
-     * 
+     * @param fileName the name of the mgf file
+     *
      * @return the next spectrum found in the mgf file
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
@@ -201,10 +201,11 @@ public class MgfReader {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashMap<String, Integer> spectrumIndexes = new HashMap<String, Integer>();
+        HashMap<Integer, Double> precursorMzMap = new HashMap<Integer, Double>();
         LinkedHashSet<String> spectrumTitles = new LinkedHashSet<String>();
         HashMap<String, Integer> duplicateTitles = new HashMap<String, Integer>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
-        long beginIndex = 0, currentIndex = 0;
+        long currentIndex = 0;
         String title = null;
         int spectrumCounter = 0;
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
@@ -227,7 +228,6 @@ public class MgfReader {
 
             if (line.equals("BEGIN IONS")) {
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
-                beginIndex = currentIndex;
                 spectrumCounter++;
                 peakCount = 0;
                 if (waitingHandler != null) {
@@ -283,6 +283,8 @@ public class MgfReader {
                     }
                 }
 
+                precursorMzMap.put(spectrumCounter - 1, precursorMz);
+
             } else if (line.startsWith("RTINSECONDS")) {
 
                 String rtInput = "";
@@ -333,7 +335,7 @@ public class MgfReader {
             } else if (!line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
-                    Double mz = new Double(values[0]);
+                    //Double mz = new Double(values[0]);
                     Double intensity = new Double(values[1]);
                     if (peakPicked && intensity == 0) {
                         peakPicked = false;
@@ -361,7 +363,7 @@ public class MgfReader {
             spectrumTitlesAsArrayList.add(temp);
         }
 
-        return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, mgfFile.getName(), minRT, maxRT,
+        return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, precursorMzMap, mgfFile.getName(), minRT, maxRT,
                 maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, mgfFile.lastModified(), spectrumCounter);
     }
 
@@ -961,18 +963,7 @@ public class MgfReader {
 
             line = line.trim();
 
-            if (line.equals("BEGIN IONS")
-                    || line.startsWith("TOLU")
-                    || line.startsWith("TOL")
-                    || line.startsWith("SEQ")
-                    || line.startsWith("COMP")
-                    || line.startsWith("ETAG")
-                    || line.startsWith("TAG")
-                    || line.startsWith("SCANS")
-                    || line.startsWith("INSTRUMENT")
-                    || line.startsWith("RAWSCANS")) {
-                // not supported yet
-            } else if (line.startsWith("TITLE")) {
+            if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1);
                 try {
                     title = URLDecoder.decode(title, "utf-8");
@@ -997,8 +988,7 @@ public class MgfReader {
                     String[] rtWindow = rtInput.split("-");
                     if (rtWindow.length == 1) {
                         String tempRt = rtWindow[0];
-                        // possible fix for values like RTINSECONDS=PT121.250000S
-                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
+                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) { // possible fix for values like RTINSECONDS=PT121.250000S
                             tempRt = tempRt.substring(2, tempRt.length() - 1);
                         }
                         rt = new Double(tempRt);
@@ -1008,18 +998,18 @@ public class MgfReader {
                     }
                 } catch (Exception e) {
                     System.out.println("An exception was thrown when trying to decode the retention time: " + title);
-                    e.printStackTrace();
-                    // ignore exception, RT will not be parsed
+                    e.printStackTrace(); // ignore exception, RT will not be parsed
                 }
-            } else if (line.equals("END IONS")) {
-
-                // @TODO: would perhaps be faster to return as soon as a peak is read?
-                if (rt1 != -1 && rt2 != -1) {
-                    return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
+            } else if (!line.isEmpty()) {
+                if (line.equals("END IONS") || (!line.contains("#") && !line.contains("="))) {
+                    if (rt1 != -1 && rt2 != -1) {
+                        return new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
+                    }
+                    return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
-                return new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
             }
         }
+
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
     }
 

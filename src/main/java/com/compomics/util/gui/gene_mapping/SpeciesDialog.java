@@ -218,10 +218,20 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        speciesPanel = new javax.swing.JPanel();
         speciesJComboBox = new javax.swing.JComboBox();
         updateMappingsButton = new javax.swing.JButton();
         ensemblCategoryJComboBox = new javax.swing.JComboBox();
+        popularSpeciesLabel = new javax.swing.JLabel();
+        humanLabel = new javax.swing.JLabel();
+        comma1Label = new javax.swing.JLabel();
+        mouseLabel = new javax.swing.JLabel();
+        comma2Label = new javax.swing.JLabel();
+        ratLabel = new javax.swing.JLabel();
+        comma3Label = new javax.swing.JLabel();
+        zebrafishLabel = new javax.swing.JLabel();
+        comma4Label = new javax.swing.JLabel();
+        chickenLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         unknownSpeciesLabel = new javax.swing.JLabel();
         ensemblVersionLabel = new javax.swing.JLabel();
@@ -233,8 +243,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Species"));
-        jPanel1.setOpaque(false);
+        speciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Species"));
+        speciesPanel.setOpaque(false);
 
         speciesJComboBox.setMaximumRowCount(20);
         speciesJComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -261,32 +271,151 @@ public class SpeciesDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        popularSpeciesLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        popularSpeciesLabel.setText("Popular Species:");
+
+        humanLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        humanLabel.setText("<html><a href>Human</a></html>");
+        humanLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                humanLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                humanLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                humanLabelMouseReleased(evt);
+            }
+        });
+
+        comma1Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        comma1Label.setText(",");
+
+        mouseLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        mouseLabel.setText("<html><a href>Mouse</a></html>");
+        mouseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mouseLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mouseLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                mouseLabelMouseReleased(evt);
+            }
+        });
+
+        comma2Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        comma2Label.setText(",");
+
+        ratLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        ratLabel.setText("<html><a href>Rat</a></html>");
+        ratLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                ratLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                ratLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ratLabelMouseReleased(evt);
+            }
+        });
+
+        comma3Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        comma3Label.setText(",");
+
+        zebrafishLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        zebrafishLabel.setText("<html><a href>Zebrafish</a></html>");
+        zebrafishLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                zebrafishLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                zebrafishLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                zebrafishLabelMouseReleased(evt);
+            }
+        });
+
+        comma4Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        comma4Label.setText(",");
+
+        chickenLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        chickenLabel.setText("<html><a href>Chicken</a></html>");
+        chickenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                chickenLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                chickenLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                chickenLabelMouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout speciesPanelLayout = new javax.swing.GroupLayout(speciesPanel);
+        speciesPanel.setLayout(speciesPanelLayout);
+        speciesPanelLayout.setHorizontalGroup(
+            speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, speciesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ensemblCategoryJComboBox, 0, 416, Short.MAX_VALUE)
-                    .addComponent(speciesJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ensemblCategoryJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(speciesJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, speciesPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(popularSpeciesLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(humanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(comma1Label)
+                        .addGap(5, 5, 5)
+                        .addComponent(mouseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(comma2Label)
+                        .addGap(5, 5, 5)
+                        .addComponent(ratLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(comma3Label)
+                        .addGap(5, 5, 5)
+                        .addComponent(zebrafishLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(comma4Label)
+                        .addGap(5, 5, 5)
+                        .addComponent(chickenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        speciesPanelLayout.setVerticalGroup(
+            speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, speciesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ensemblCategoryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(speciesJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(popularSpeciesLabel)
+                    .addComponent(humanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comma1Label)
+                    .addComponent(mouseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comma2Label)
+                    .addComponent(ratLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comma3Label)
+                    .addComponent(zebrafishLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comma4Label)
+                    .addComponent(chickenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {speciesJComboBox, updateMappingsButton});
+        speciesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {speciesJComboBox, updateMappingsButton});
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -346,7 +475,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(speciesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -356,7 +485,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(speciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
@@ -391,7 +520,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         String selectedSpecies = getSelectedSpecies();
 
         if (selectedSpecies != null) {
-            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null 
+            if (genePreferences.getEnsemblSpeciesVersion(currentEnsemblSpeciesType, selectedSpecies) == null
                     || !GenePreferences.getGeneMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()
                     || !GenePreferences.getGoMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()) {
                 updateMappingsButton.setText("Download");
@@ -571,16 +700,166 @@ public class SpeciesDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void humanLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_humanLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_humanLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void humanLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_humanLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_humanLabelMouseExited
+
+    /**
+     * Select human.
+     *
+     * @param evt
+     */
+    private void humanLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_humanLabelMouseReleased
+        ensemblCategoryJComboBox.setSelectedItem("Vertebrates");
+        speciesJComboBox.setSelectedIndex(genePreferences.getAllSpecies().get("Vertebrates").indexOf("Human (Homo sapiens)") + 1);
+    }//GEN-LAST:event_humanLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void mouseLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_mouseLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void mouseLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_mouseLabelMouseExited
+
+    /**
+     * Select mouse.
+     *
+     * @param evt
+     */
+    private void mouseLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseLabelMouseReleased
+        ensemblCategoryJComboBox.setSelectedItem("Vertebrates");
+        speciesJComboBox.setSelectedIndex(genePreferences.getAllSpecies().get("Vertebrates").indexOf("Mouse (Mus musculus)") + 1);
+    }//GEN-LAST:event_mouseLabelMouseReleased
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void ratLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ratLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_ratLabelMouseExited
+
+    /**
+     * Select rat.
+     *
+     * @param evt
+     */
+    private void ratLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ratLabelMouseReleased
+        ensemblCategoryJComboBox.setSelectedItem("Vertebrates");
+        speciesJComboBox.setSelectedIndex(genePreferences.getAllSpecies().get("Vertebrates").indexOf("Rat (Rattus norvegicus)") + 1);
+    }//GEN-LAST:event_ratLabelMouseReleased
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void zebrafishLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zebrafishLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_zebrafishLabelMouseExited
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void zebrafishLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zebrafishLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_zebrafishLabelMouseEntered
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void ratLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ratLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_ratLabelMouseEntered
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void chickenLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chickenLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_chickenLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void chickenLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chickenLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_chickenLabelMouseExited
+
+    /**
+     * Select chicken.
+     *
+     * @param evt
+     */
+    private void chickenLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chickenLabelMouseReleased
+        ensemblCategoryJComboBox.setSelectedItem("Vertebrates");
+        speciesJComboBox.setSelectedIndex(genePreferences.getAllSpecies().get("Vertebrates").indexOf("Chicken (Gallus gallus)") + 1);
+    }//GEN-LAST:event_chickenLabelMouseReleased
+
+    /**
+     * Select zebrafish.
+     *
+     * @param evt
+     */
+    private void zebrafishLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zebrafishLabelMouseReleased
+        ensemblCategoryJComboBox.setSelectedItem("Vertebrates");
+        speciesJComboBox.setSelectedIndex(genePreferences.getAllSpecies().get("Vertebrates").indexOf("Zebrafish (Danio rerio)") + 1);
+    }//GEN-LAST:event_zebrafishLabelMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel chickenLabel;
+    private javax.swing.JLabel comma1Label;
+    private javax.swing.JLabel comma2Label;
+    private javax.swing.JLabel comma3Label;
+    private javax.swing.JLabel comma4Label;
     private javax.swing.JComboBox ensemblCategoryJComboBox;
     private javax.swing.JLabel ensemblVersionLabel;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel humanLabel;
+    private javax.swing.JLabel mouseLabel;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel popularSpeciesLabel;
+    private javax.swing.JLabel ratLabel;
     private javax.swing.JComboBox speciesJComboBox;
+    private javax.swing.JPanel speciesPanel;
     private javax.swing.JLabel unknownSpeciesLabel;
     private javax.swing.JButton updateMappingsButton;
+    private javax.swing.JLabel zebrafishLabel;
     // End of variables declaration//GEN-END:variables
 
     /**

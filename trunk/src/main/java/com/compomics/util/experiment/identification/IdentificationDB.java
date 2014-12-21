@@ -14,7 +14,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class uses a database to manage identification matches.

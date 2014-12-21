@@ -31,6 +31,10 @@ public class MgfIndex extends ExperimentObject {
      */
     private HashMap<String, Integer> duplicatedSpectrumTitles = null;
     /**
+     * Map of the precursor mz values.
+     */
+    private HashMap<Integer, Double> precursorMzMap = null;
+    /**
      * The name of the indexed file.
      */
     private String fileName;
@@ -68,7 +72,7 @@ public class MgfIndex extends ExperimentObject {
      */
     private Boolean peakPicked = null;
     /**
-     * Returns the number of spectra in the file as counted by the begin ions 
+     * Returns the number of spectra in the file as counted by the begin ions
      * tags. Null if not set.
      */
     private Integer spectrumCount = null;
@@ -80,6 +84,8 @@ public class MgfIndex extends ExperimentObject {
      * @param indexMap map of all indexes: spectrum title &gt; index in the file
      * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
      * &gt; spectrum index in the file
+     * @param precursorMzMap map of the precursor mz values: spectrum index &gt;
+     * precursor mz
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
@@ -91,12 +97,13 @@ public class MgfIndex extends ExperimentObject {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, String fileName, double minRT,
-            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, HashMap<Integer, Double> precursorMzMap,
+            String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
         this.spectrumNumberIndexMap = spectrumNumberIndexMap;
+        this.precursorMzMap = precursorMzMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
@@ -117,6 +124,8 @@ public class MgfIndex extends ExperimentObject {
      * @param indexMap map of all indexes: spectrum title &gt; index in the file
      * @param spectrumNumberIndexMap map of all spectrum index: spectrum title
      * &gt; spectrum index in the file
+     * @param precursorMzMap map of the precursor mz values: spectrum index &gt;
+     * precursor mz
      * @param fileName the mgf file name
      * @param maxRT the maximum retention time
      * @param minRT the minimum retention tome
@@ -127,15 +136,17 @@ public class MgfIndex extends ExperimentObject {
      * @param peakPicked indicates if the spectra seem to be peak picked or not
      * @param lastModified a long indicating the last time the indexed file was
      * modified
-     * @param spectrumCount the number of spectra in the file counted by the 
+     * @param spectrumCount the number of spectra in the file counted by the
      * number of begin ion tags
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, String fileName, double minRT,
-            double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified, int spectrumCount) {
+    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap,
+            HashMap<Integer, Double> precursorMzMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount,
+            boolean peakPicked, long lastModified, int spectrumCount) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
         this.spectrumNumberIndexMap = spectrumNumberIndexMap;
+        this.precursorMzMap = precursorMzMap;
         this.fileName = fileName;
         this.maxRT = maxRT;
         this.minRT = minRT;
@@ -178,6 +189,29 @@ public class MgfIndex extends ExperimentObject {
             return -1;
         } else {
             return index;
+        }
+    }
+
+    /**
+     * Returns the precursor mz for the spectrum at the given index. Returns
+     * null if the map is not set, or the value cannot be found.
+     *
+     * @param spectrumIndex the index of the spectrum, 0 for the first spectrum
+     * in the file, 1 for the second, etc
+     * @return the precursor mz
+     */
+    public Double getPrecursorMz(int spectrumIndex) {
+
+        if (precursorMzMap == null) {
+            return null;
+        }
+
+        Double mz = precursorMzMap.get(spectrumIndex);
+
+        if (mz == null) {
+            return null;
+        } else {
+            return mz;
         }
     }
 

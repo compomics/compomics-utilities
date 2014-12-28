@@ -16,6 +16,9 @@ import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -134,8 +137,7 @@ public class PhosphoRS {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
-     * @param rounding decimal to which the score should be rounded, ignored if
-     * null
+     * @param ptmScoreScale number of decimals to use for the score calculation
      *
      * @return a map site &gt; phosphoRS site probability
      *
@@ -152,7 +154,7 @@ public class PhosphoRS {
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
             ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
-            PeptideSpectrumAnnotator spectrumAnnotator, Integer rounding)
+            PeptideSpectrumAnnotator spectrumAnnotator, Integer ptmScoreScale)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
@@ -379,7 +381,7 @@ public class PhosphoRS {
             }
 
             for (ArrayList<Integer> profile : possibleProfiles) {
-                double phosphoRsProbability = pInvMap.get(profile) / pInvTotal * 100; //in percent
+                Double phosphoRsProbability = pInvMap.get(profile) * 100 / pInvTotal; //in percent
                 profileToScoreMap.put(profile, phosphoRsProbability);
             }
 
@@ -389,14 +391,18 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
-        HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
+        HashMap<Integer, BigDecimal> scores = new HashMap<Integer, BigDecimal>();
+        MathContext mathContext = new MathContext(ptmScoreScale, RoundingMode.HALF_DOWN);
         for (ArrayList<Integer> profile : profileToScoreMap.keySet()) {
-            double score = profileToScoreMap.get(profile);
+            Double score = profileToScoreMap.get(profile);
+            BigDecimal scoreBigDecimal = new BigDecimal(score, mathContext);
             for (Integer site : profile) {
-                if (!scores.containsKey(site)) {
-                    scores.put(site, score);
+                BigDecimal previousScore = scores.get(site);
+                if (previousScore == null) {
+                    scores.put(site, scoreBigDecimal);
                 } else {
-                    scores.put(site, scores.get(site) + score);
+                    BigDecimal newScore = scoreBigDecimal.add(previousScore, mathContext);
+                    scores.put(site, newScore);
                 }
             }
         }
@@ -407,17 +413,13 @@ public class PhosphoRS {
             }
         }
 
-        if (rounding != null) {
-            HashMap<Integer, Double> roundedScoreMap = new HashMap<Integer, Double>(scores.size());
-            for (Integer site : scores.keySet()) {
-                double score = scores.get(site);
-                score = Util.roundDouble(score, rounding);
-                roundedScoreMap.put(site, score);
-            }
-            scores = roundedScoreMap;
+        HashMap<Integer, Double> doubleScoreMap = new HashMap<Integer, Double>(scores.size());
+        for (Integer site : scores.keySet()) {
+            Double score = scores.get(site).doubleValue();
+            doubleScoreMap.put(site, score);
         }
 
-        return scores;
+        return doubleScoreMap;
     }
 
     /**

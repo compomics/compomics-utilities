@@ -30,6 +30,7 @@ public class BasicMathFunctions {
      *
      * @param k the number of k-combinations
      * @param n the number of elements
+     * 
      * @return the number of k-combinations in a set of n elements
      */
     public static double getCombination(int k, int n) {

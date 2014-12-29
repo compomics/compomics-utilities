@@ -189,9 +189,8 @@ public class SequenceFactory {
      * while reading the FASTA file
      * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException
      */
-    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
         return getProtein(accession, true);
     }
 
@@ -209,7 +208,7 @@ public class SequenceFactory {
      * while reading the FASTA file
      * @throws InterruptedException
      */
-    private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
         if (fastaIndex == null) {
             throw new IllegalArgumentException("Protein sequences not loaded in the sequence factory.");
@@ -247,11 +246,10 @@ public class SequenceFactory {
      *
      * @throws IOException
      * @throws IllegalArgumentException
-     * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException
      */
-    public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex) 
+            throws IOException, IllegalArgumentException, FileNotFoundException {
 
         // check whether another thread did the job already
         Protein currentProtein = currentProteinMap.get(accession);
@@ -273,11 +271,9 @@ public class SequenceFactory {
      *
      * @throws IOException
      * @throws IllegalArgumentException
-     * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException
      */
-    public Protein getDecoyProteinFromTarget(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public Protein getDecoyProteinFromTarget(String accession, boolean reindex) throws IOException, IllegalArgumentException, FileNotFoundException {
         Protein currentProtein = null;
         String targetAccession = getDefaultTargetAccession(accession);
         try {
@@ -314,7 +310,7 @@ public class SequenceFactory {
      * while reading the FASTA file
      * @throws InterruptedException
      */
-    private synchronized Protein getProteinSynchronized(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    private synchronized Protein getProteinSynchronized(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
         Protein currentProtein = currentProteinMap.get(accession);
 
@@ -350,7 +346,7 @@ public class SequenceFactory {
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    private synchronized Protein getProtein(String accession, long index, long waitingTime) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    private synchronized Protein getProtein(String accession, long index, long waitingTime) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -609,7 +605,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
-    private synchronized FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    private synchronized FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
 
         FastaIndex tempFastaIndex;
         if (!overwrite) {
@@ -1158,13 +1154,13 @@ public class SequenceFactory {
      *
      * @param accession the protein's accession number
      * @return the protein's molecular weight
-     * @throws IOException
+     * @throws IOException thrown whenever an error is encountered while reading
+     * the FASTA file
      * @throws IllegalArgumentException
      * @throws InterruptedException
      * @throws FileNotFoundException
-     * @throws ClassNotFoundException
      */
-    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
         if (isDefaultReversed() && isDecoyAccession(accession)) {
             // Don't really see where we would need that...

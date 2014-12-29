@@ -1090,8 +1090,8 @@ public class ProteinTree {
     }
 
     /**
-     * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence &gt; protein accession &gt; index in the protein. An empty map if
+     * Returns the protein mappings for the given peptide sequence. Peptide
+     * sequence &gt; Protein accession &gt; Index in the protein. An empty map if
      * not found.
      *
      * @param tag the tag to look for in the tree. Must contain a consecutive
@@ -1099,7 +1099,7 @@ public class ProteinTree {
      * the tree.
      * @param tagMatcher the tag matcher to use
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the ms2 m/z tolerance
+     * @param massTolerance the MS2 m/z tolerance
      *
      * @return the protein mapping for the given peptide sequence
      *
@@ -2008,11 +2008,11 @@ public class ProteinTree {
          */
         private boolean finished = false;
         /**
-         * The waiting handler
+         * The waiting handler.
          */
         private WaitingHandler waitingHandler;
         /**
-         * boolean indicating whether progress should be displayed
+         * Boolean indicating whether progress should be displayed.
          */
         private boolean displayProgress;
 
@@ -2074,18 +2074,18 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the tag of the splitted node.
+         * Returns the tag of the split node.
          *
-         * @return the tag of the splitted node
+         * @return the tag of the split node
          */
         public String getTag() {
             return tag;
         }
 
         /**
-         * Returns the splitted node.
+         * Returns the split node.
          *
-         * @return the splitted node
+         * @return the split node
          */
         public Node getNode() {
             return node;

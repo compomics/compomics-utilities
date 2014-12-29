@@ -281,7 +281,7 @@ public class SearchParameters implements Serializable {
     /**
      * Sets the fragment ion m/z tolerance.
      *
-     * @param fragmentIonMZTolerance
+     * @param fragmentIonMZTolerance the fragment ion m/z tolerance
      */
     public void setFragmentIonAccuracy(Double fragmentIonMZTolerance) {
         this.fragmentIonMZTolerance = fragmentIonMZTolerance;
@@ -896,9 +896,10 @@ public class SearchParameters implements Serializable {
      *
      * @param file the file
      * @return the modification file
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SearchParameters result = (SearchParameters) SerializationUtils.readObject(file);
@@ -1015,11 +1016,12 @@ public class SearchParameters implements Serializable {
     /**
      * Saves the identification parameters to a serialized file.
      *
-     * @param identificationParameters
+     * @param identificationParameters the identification parameters
      * @param file the file
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         SerializationUtils.writeObject(identificationParameters, file);
@@ -1029,9 +1031,10 @@ public class SearchParameters implements Serializable {
      * Saves the identification parameters as a human readable text file.
      *
      * @param file the file
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public void saveIdentificationParametersAsTextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileWriter fw = new FileWriter(file);

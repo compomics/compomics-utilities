@@ -35,12 +35,12 @@ public class AlignmentBlock {
     /**
      * Constructor.
      * 
-     * @param aPdbStart
-     * @param aPdbEnd
-     * @param aSpStart
-     * @param aSpEnd
-     * @param aPdbAccession
-     * @param aSpAccession 
+     * @param aPdbStart the PDB start index
+     * @param aPdbEnd the PDB end index
+     * @param aSpStart the UniProt start index
+     * @param aSpEnd the UniProt end index
+     * @param aPdbAccession the PDB accession
+     * @param aSpAccession the UniProt accession
      */
     public AlignmentBlock(int aPdbStart, int aPdbEnd, int aSpStart, int aSpEnd, String aPdbAccession, String aSpAccession) {
         this.iPdbStart = aPdbStart;

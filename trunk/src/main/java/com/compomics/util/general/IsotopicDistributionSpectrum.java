@@ -146,7 +146,7 @@ public class IsotopicDistributionSpectrum implements SpectrumFile {
      * Method to write to a givern stream
      * @param   aOut    OutputStream to write the file to. This Stream
      *                  will <b>NOT</b> be closed by this method.
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void writeToStream(OutputStream aOut) throws IOException {
 
@@ -155,7 +155,7 @@ public class IsotopicDistributionSpectrum implements SpectrumFile {
     /**
      * Method to write to a given file
      * @param   aParentDir  File with the parent directory to put the file in.
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void writeToFile(File aParentDir) throws IOException {
 

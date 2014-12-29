@@ -5,18 +5,16 @@ import javax.swing.filechooser.*;
 
 /**
  * File filter for sequest.params files.
- * 
- * Created February 2009
- * 
- * @author  Harald Barsnes
+ *
+ * @author Harald Barsnes
  */
 public class SequestParamsFileFilter extends FileFilter {
 
     /**
      * Accept all directories, sequest.params files.
      *
-     * @param f
-     * @return boolean
+     * @param f the file
+     * @return true if the file passes the filter
      */
     public boolean accept(File f) {
         if (f.isDirectory()) {
@@ -27,9 +25,9 @@ public class SequestParamsFileFilter extends FileFilter {
     }
 
     /**
-     * The description of this filter
+     * The description of the filter.
      *
-     * @return String
+     * @return String the description of the filter
      */
     public java.lang.String getDescription() {
         return "sequest.params";

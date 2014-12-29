@@ -127,9 +127,9 @@ public class TarUtils {
      * @param waitingHandler a waiting handler displaying progress and allowing
      * canceling the process
      *
-     * @throws FileNotFoundException
-     * @throws ArchiveException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ArchiveException if an ArchiveException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void extractFile(File tarFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
         extractFile(tarFile, null, null, waitingHandler);
@@ -144,9 +144,9 @@ public class TarUtils {
      * @param waitingHandler a waiting handler displaying progress and allowing
      * canceling the process
      *
-     * @throws FileNotFoundException
-     * @throws ArchiveException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ArchiveException if an ArchiveException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void extractFile(File tarFile, File destinationFolder, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
         extractFile(tarFile, destinationFolder, null, waitingHandler);
@@ -163,9 +163,9 @@ public class TarUtils {
      * @param waitingHandler a waiting handler displaying progress and allowing
      * canceling the process
      *
-     * @throws FileNotFoundException
-     * @throws ArchiveException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ArchiveException if an ArchiveException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void extractFile(File tarFile, File destinationFolder, String backwardCompatibilityCorrection, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
 

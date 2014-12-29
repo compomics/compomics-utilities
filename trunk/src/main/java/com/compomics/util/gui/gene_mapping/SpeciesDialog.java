@@ -70,9 +70,9 @@ public class SpeciesDialog extends javax.swing.JDialog {
      *
      * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
-     * @param modal
-     * @param waitingImage
-     * @param normalImage
+     * @param modal if the dialog is to be modal or not
+     * @param waitingImage the waiting icon
+     * @param normalImage the normal icon
      */
     public SpeciesDialog(JFrame parentFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentFrame, modal);
@@ -92,9 +92,9 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param parentDialog the parent dialog
      * @param mainFrame the parent of the parent dialog
      * @param genePreferences the gene preferences
-     * @param modal
-     * @param waitingImage
-     * @param normalImage
+     * @param modal if the dialog is to be modal or not
+     * @param waitingImage the waiting icon
+     * @param normalImage the normal icon
      */
     public SpeciesDialog(JDialog parentDialog, JFrame mainFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentDialog, modal);

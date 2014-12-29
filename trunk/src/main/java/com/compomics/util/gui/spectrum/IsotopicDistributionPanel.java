@@ -49,7 +49,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      */
     private ArrayList<Integer> peptideCharges = null;
     /**
-     * HashMap with the molecular formula for all the aminoacids
+     * HashMap with the molecular formula for all the amino acids.
      */
     private HashMap<String, MolecularFormula> iElements;
 
@@ -58,12 +58,12 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      *
      * @param peptideSequence   the peptide sequence to display the isotopic distribution for
      * @param peptideCharge     the charge of the peptide
-     * @param profileMode       if true the peaks will be showned in a profile like mode where
+     * @param profileMode       if true the peaks will be showed in a profile like mode where
      *                          support peaks are added in front of and after the real peak
      *                          (note that this is unlike the profile modes of the other graphics
      *                          panels)
      * @param labelDifference   the number of neutrons to add due to the label
-     * @throws IOException  
+     * @throws IOException if an IOException occurs
      */
     public IsotopicDistributionPanel(String peptideSequence, Integer peptideCharge, boolean profileMode, int labelDifference) throws IOException {
 
@@ -173,7 +173,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
      * @param dataPointAndLineColor the color to use for the data points and lines
      * @param areaUnderCurveColor   the color to use for the area under the curve
      * @param labelDifference       the number of neutrons to add due to the label
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void addAdditionalDataset(String peptideSequence, Integer peptideCharge, Color dataPointAndLineColor, Color areaUnderCurveColor, int labelDifference) throws IOException {
 

@@ -47,10 +47,10 @@ public class PtmtableContent {
     /**
      * Add intensity.
      *
-     * @param nMod
-     * @param peptideFragmentIonType
-     * @param aa
-     * @param intensity
+     * @param nMod the modification number
+     * @param peptideFragmentIonType the peptide fragment ion type
+     * @param aa the amino acid
+     * @param intensity the intensity
      */
     public void addIntensity(int nMod, Integer peptideFragmentIonType, int aa, double intensity) {
         if (!map.containsKey(nMod)) {
@@ -72,9 +72,9 @@ public class PtmtableContent {
     /**
      * Get intensity.
      *
-     * @param nMod
-     * @param peptideFragmentIonType
-     * @param aa
+     * @param nMod the modification number
+     * @param peptideFragmentIonType the peptide fragment ion type
+     * @param aa the amino acid
      * @return the list of intensities
      */
     public ArrayList<Double> getIntensities(int nMod, Integer peptideFragmentIonType, int aa) {
@@ -90,10 +90,10 @@ public class PtmtableContent {
     /**
      * Get the quantile.
      *
-     * @param nMod
-     * @param peptideFragmentIonType
-     * @param aa
-     * @param quantile
+     * @param nMod the modification number
+     * @param peptideFragmentIonType the peptide fragment ion type
+     * @param aa the amino acid
+     * @param quantile the quantile
      * @return the quantile
      */
     public Double getQuantile(int nMod, Integer peptideFragmentIonType, int aa, double quantile) {
@@ -109,10 +109,10 @@ public class PtmtableContent {
     /**
      * Get histogram.
      *
-     * @param nMod
-     * @param peptideFragmentIonType
-     * @param aa
-     * @param bins
+     * @param nMod the modification number
+     * @param peptideFragmentIonType the peptide fragment ion type
+     * @param aa the amino acid
+     * @param bins the bins
      * @return the histogram
      */
     public int[] getHistogram(int nMod, Integer peptideFragmentIonType, int aa, int bins) {
@@ -159,7 +159,7 @@ public class PtmtableContent {
     /**
      * Add all.
      *
-     * @param anotherContent
+     * @param anotherContent another PTM table content
      */
     public void addAll(PtmtableContent anotherContent) {
         for (int nPTM : anotherContent.getMap().keySet()) {
@@ -208,16 +208,16 @@ public class PtmtableContent {
     /**
      * Returns the PTM plot series in the JFreechart format for one PSM.
      *
-     * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The amount of times the PTM is expected
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param intensityLimit
+     * @param peptide the peptide of interest
+     * @param ptm the PTM to score
+     * @param nPTM the amount of times the PTM is expected
+     * @param spectrum the corresponding spectrum
+     * @param iontypes the fragment ions to look for
+     * @param neutralLosses the neutral losses to look for
+     * @param charges the fragment ions charges to look for
+     * @param precursorCharge the precursor charge
+     * @param mzTolerance the m/z tolerance to use
+     * @param intensityLimit the intensity limit
      * @return the PTM plot series in the JFreechart format for one PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
@@ -268,16 +268,16 @@ public class PtmtableContent {
     /**
      * Get the PTM table content.
      *
-     * @param peptide The peptide of interest
-     * @param ptm The PTM to score
-     * @param nPTM The amount of times the PTM is expected
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param intensityLimit
+     * @param peptide the peptide of interest
+     * @param ptm the PTM to score
+     * @param nPTM the amount of times the PTM is expected
+     * @param spectrum the corresponding spectrum
+     * @param iontypes the fragment ions to look for
+     * @param neutralLosses the neutral losses to look for
+     * @param charges the fragment ions charges to look for
+     * @param precursorCharge the precursor charge
+     * @param mzTolerance the m/z tolerance to use
+     * @param intensityLimit the intensity limit
      * @return the PtmtableContent object
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,

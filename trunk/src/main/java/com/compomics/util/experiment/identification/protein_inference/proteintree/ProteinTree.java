@@ -138,7 +138,7 @@ public class ProteinTree {
      * @param cacheSize the peptide queries caches size (note, there are two of
      * them)
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public ProteinTree(int memoryAllocation, int cacheSize) throws IOException {
 
@@ -188,11 +188,12 @@ public class ProteinTree {
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
      * @param displayProgress display progress
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * 
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
@@ -220,11 +221,11 @@ public class ProteinTree {
      * printed to the waiting handler
      * @param displayProgress display progress
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
@@ -919,12 +920,13 @@ public class ProteinTree {
      * @return the peptide to protein mapping: peptide sequence &gt; protein
      * accession &gt; index in the protein An empty map if not
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePrefeerences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePrefeerences) 
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         long time0 = 0;
         if (debugSpeed) {
@@ -1103,10 +1105,10 @@ public class ProteinTree {
      *
      * @return the protein mapping for the given peptide sequence
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -1450,8 +1452,8 @@ public class ProteinTree {
     /**
      * Closes all connections to files.
      *
-     * @throws IOException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void close() throws IOException, SQLException {
         if (debugSpeed) {
@@ -1541,10 +1543,11 @@ public class ProteinTree {
      *
      * @return a list of peptides matched and their indexes in the protein
      * sequence
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws SQLException
-     * @throws ClassNotFoundException
+     * 
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -1568,11 +1571,11 @@ public class ProteinTree {
      *
      * @return a PeptideIterator which iterates alphabetically all peptides
      * corresponding to the end of a branch in the tree
-     *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideIterator();
@@ -1581,7 +1584,7 @@ public class ProteinTree {
     /**
      * Notifies the tree that a runnable has finished working.
      *
-     * @throws InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     private synchronized void runnableFinished() throws InterruptedException {
         while (!listening) {
@@ -1809,10 +1812,11 @@ public class ProteinTree {
      * @param accession the accession of the protein of interest
      *
      * @return the length of this protein
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     * 
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         Integer length = proteinLengthsCache.get(accession);
@@ -1852,10 +1856,10 @@ public class ProteinTree {
      *
      * @return the initial tag size of the tree
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public Integer getInitialTagSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return componentsFactory.getInitialSize();

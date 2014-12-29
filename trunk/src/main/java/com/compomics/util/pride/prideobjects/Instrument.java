@@ -37,10 +37,10 @@ public class Instrument implements PrideObject, Serializable {
     /**
      * Create a new Instrument object.
      *
-     * @param name
-     * @param source
-     * @param detector
-     * @param cvTerms
+     * @param name the name
+     * @param source the source
+     * @param detector the detector
+     * @param cvTerms the CV terms
      */
     public Instrument(String name, CvTerm source, CvTerm detector, ArrayList<CvTerm> cvTerms) {
         this.name = name;

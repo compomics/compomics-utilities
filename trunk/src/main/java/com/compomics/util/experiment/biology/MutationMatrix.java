@@ -415,7 +415,7 @@ public class MutationMatrix implements Serializable {
     }
 
     /**
-     * Returs the maximum difference between an original amino acid and the mutated version.
+     * Returns the maximum difference between an original amino acid and the mutated version.
      * 
      * @return the maximum difference between an original amino acid and the mutated version
      */
@@ -426,7 +426,7 @@ public class MutationMatrix implements Serializable {
     /**
      * Indicates whether the two MutationMatrix are the same.
      *
-     * @param mutationMatrix
+     * @param mutationMatrix the mutation matrix
      * @return whether the two MutationMatrix are the same
      */
     public boolean isSameAs(MutationMatrix mutationMatrix) {

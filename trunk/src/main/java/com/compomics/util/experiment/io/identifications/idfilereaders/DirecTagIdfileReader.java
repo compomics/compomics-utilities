@@ -135,8 +135,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param tagFile the file to parse
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public DirecTagIdfileReader(File tagFile) throws FileNotFoundException, IOException {
         this(tagFile, false);
@@ -148,8 +148,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @param tagFile the file to parse
      * @param indexResults if true the results section will be indexed
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public DirecTagIdfileReader(File tagFile, boolean indexResults) throws FileNotFoundException, IOException {
         this.tagFile = tagFile;
@@ -182,8 +182,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param indexResults if true the results section will be indexed
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     private void parseFile(boolean indexResults) throws FileNotFoundException, IOException {
         try {
@@ -207,7 +207,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return true if the end of the file was reached
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private boolean parseParameters() throws IOException {
         String line;
@@ -263,7 +263,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return true if the end of the file was reached
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private boolean parseTagParameters() throws IOException {
         String line;
@@ -295,7 +295,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return true if the end of the file was reached
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private boolean parseHeaders() throws IOException {
         String line = bufferedRandomAccessFile.readLine();
@@ -314,7 +314,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param linea line corresponding to a header
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private void parseHeaderLine(String line) throws IOException {
         if (line.startsWith("S") || line.startsWith("T")) {
@@ -338,7 +338,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * Parses the results section.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private void parseResults() throws IOException {
         String line;
@@ -374,7 +374,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return the component
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public String getSpectrumComponent(int spectrumId, String componentName) throws IOException {
         long index = spectrumIndexes.get(spectrumId);
@@ -415,7 +415,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return the tag components associated to a spectrum in a map
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private ArrayList<HashMap<String, String>> getTags(int spectrumId) throws IOException {
         ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();

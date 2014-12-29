@@ -76,7 +76,7 @@ public class ProteinTreeComponentsFactory {
      * serialization folder should have been already set.
      *
      * @return the instance of the factory
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static ProteinTreeComponentsFactory getInstance() throws IOException {
         if (instance == null) {
@@ -123,7 +123,7 @@ public class ProteinTreeComponentsFactory {
      * Sets the currently loaded database as corrupted and tries to delete it.
      *
      * @return true if deletion was successful
-     * @throws java.io.IOException
+     * @throws IOException if an IOException occurs
      */
     public boolean delete() throws IOException {
         try {
@@ -141,7 +141,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Closes the factory, closes all connection and deletes the file.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      * @throws SQLException exception thrown if closing the db failed
      */
     public void close() throws IOException, SQLException {
@@ -166,7 +166,7 @@ public class ProteinTreeComponentsFactory {
      * Returns the folder where the db in the sequence factory is stored.
      *
      * @return the folder where the db in the sequence factory is stored
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public File getDbFolder() throws IOException {
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -189,7 +189,7 @@ public class ProteinTreeComponentsFactory {
      * loading data in the database
      * @throws IOException exception thrown whenever an error occurred while
      * loading data in the database
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public void saveNode(String tag, Node node) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(nodeTable, tag, node, false);
@@ -215,10 +215,11 @@ public class ProteinTreeComponentsFactory {
      *
      * @param tag the tag of interest
      * @return the node at this tag
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         if (tagsInTree != null && !tagsInTree.contains(tag)) {
@@ -236,10 +237,10 @@ public class ProteinTreeComponentsFactory {
      *
      * @param tags list of tags corresponding to the nodes to load
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void loadNodes(ArrayList<String> tags) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.loadObjects(nodeTable, tags, null);
@@ -249,9 +250,10 @@ public class ProteinTreeComponentsFactory {
      * Saves the initial tag size in the parameters table of the DB.
      *
      * @param size the initial tag size
-     * @throws SQLException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void saveInitialSize(int size) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "initialSize", size, false);
@@ -261,10 +263,11 @@ public class ProteinTreeComponentsFactory {
      * Retrieves the initial tag size from the db.
      *
      * @return the initial tag size
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public Integer getInitialSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (Integer) objectsDB.retrieveObject(parametersTable, "initialSize", true);
@@ -273,10 +276,10 @@ public class ProteinTreeComponentsFactory {
     /**
      * Loads all tree parameters.
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void loadParameters() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         objectsDB.loadObjects(parametersTable, null);
@@ -285,10 +288,10 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the import was completed.
      *
-     * @param completed
-     * @throws SQLException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     * @param completed whether the import was completed
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void setImportComplete(boolean completed) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "importComplete", completed, false);
@@ -299,10 +302,11 @@ public class ProteinTreeComponentsFactory {
      * not set.
      *
      * @return true if the import was complete
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public boolean importComplete() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "importComplete", true);
@@ -316,10 +320,10 @@ public class ProteinTreeComponentsFactory {
     /**
      * Sets whether the database is corrupted.
      *
-     * @param corrupted
-     * @throws SQLException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     * @param corrupted whether the database is corrupted
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void setCorrupted(boolean corrupted) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "corrupted", corrupted, false);
@@ -330,10 +334,11 @@ public class ProteinTreeComponentsFactory {
      * not set.
      *
      * @return true if the database is corrupted
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public boolean isCorrupted() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         Boolean result = (Boolean) objectsDB.retrieveObject(parametersTable, "corrupted", true);
@@ -348,9 +353,9 @@ public class ProteinTreeComponentsFactory {
      * Sets the version.
      *
      * @param version the version
-     * @throws SQLException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void setVersion(String version) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "version", version, false);
@@ -361,10 +366,11 @@ public class ProteinTreeComponentsFactory {
      *
      * @param objectsDB the objects db to look into
      * @return the version
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static String getVersion(ObjectsDB objectsDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (String) objectsDB.retrieveObject(parametersTable, "version", true);
@@ -374,10 +380,11 @@ public class ProteinTreeComponentsFactory {
      * Returns the version. Null if not set.
      *
      * @return the version
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public String getVersion() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getVersion(objectsDB);
@@ -388,9 +395,9 @@ public class ProteinTreeComponentsFactory {
      *
      * @param fastaFilePath the FASTA file path
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void setFastaFilePath(String fastaFilePath) throws SQLException, IOException, InterruptedException {
         objectsDB.insertObject(parametersTable, "fastaFile", fastaFilePath, false);
@@ -401,10 +408,10 @@ public class ProteinTreeComponentsFactory {
      *
      * @return the FASTA file path
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public String getFastaFilePath() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return getFastaFilePath(objectsDB);
@@ -417,10 +424,10 @@ public class ProteinTreeComponentsFactory {
      *
      * @return the FASTA file path
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static String getFastaFilePath(ObjectsDB objectsDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return (String) objectsDB.retrieveObject(parametersTable, "fastaFile", true);
@@ -429,7 +436,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Loads the tags implemented in the database.
      *
-     * @throws SQLException
+     * @throws SQLException if an SQLException occurs
      */
     public void loadTags() throws SQLException {
         tagsInTree = objectsDB.tableContentAsSet(nodeTable);
@@ -466,7 +473,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * Deletes the outdated trees.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void deletOutdatedTrees() throws IOException {
 

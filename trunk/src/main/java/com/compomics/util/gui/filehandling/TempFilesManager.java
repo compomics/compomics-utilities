@@ -29,7 +29,7 @@ public class TempFilesManager {
     /**
      * Deletes the temp folders created.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void deleteTempFolders() throws IOException {
         boolean exception = false;

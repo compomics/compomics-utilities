@@ -20,7 +20,7 @@ public class ExportFormatSelectionDialog extends javax.swing.JDialog {
      * Create and open a new ExportFormatSelectionDialog.
      *
      * @param frame the parent frame
-     * @param modal
+     * @param modal if the dialog is modal or not
      */
     public ExportFormatSelectionDialog(JFrame frame, boolean modal) {
         super(frame, modal);
@@ -33,7 +33,7 @@ public class ExportFormatSelectionDialog extends javax.swing.JDialog {
      * Create and open a new ExportFormatSelectionDialog.
      *
      * @param dialog the parent dialog (has to have a parent JFrame)
-     * @param modal
+     * @param modal if the dialog is modal or not
      */
     public ExportFormatSelectionDialog(JDialog dialog, boolean modal) {
         super(dialog, modal);

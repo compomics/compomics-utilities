@@ -30,9 +30,9 @@ public class Reference implements PrideObject, Serializable {
     /**
      * Create a new Reference object.
      *
-     * @param reference
-     * @param pmid
-     * @param doi
+     * @param reference the reference 
+     * @param pmid the PubMed ID
+     * @param doi the DOI
      */
     public Reference(String reference, String pmid, String doi) {
         this.reference = reference;

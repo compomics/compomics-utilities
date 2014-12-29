@@ -5,8 +5,8 @@ import javax.swing.ImageIcon;
 
 /**
  * Organizes the file filters.
- * 
- * @author  Harald Barsnes
+ *
+ * @author Harald Barsnes
  */
 public class FileFilterUtils {
 
@@ -76,7 +76,7 @@ public class FileFilterUtils {
     /**
      * Get the extension of a file.
      *
-     * @param f
+     * @param f the file
      * @return String - the extension of the file f
      */
     public static String getExtension(File f) {
@@ -93,8 +93,8 @@ public class FileFilterUtils {
     /**
      * Returns an ImageIcon, or null if the path was invalid.
      *
-     * @param path
-     * @return ImageIcon
+     * @param path the path
+     * @return ImageIcon the image icon
      */
     protected static ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = FileFilterUtils.class.getResource(path);

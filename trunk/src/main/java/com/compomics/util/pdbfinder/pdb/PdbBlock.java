@@ -52,11 +52,11 @@ public class PdbBlock {
     /**
      * Constructor.
      * 
-     * @param aBlock
-     * @param aStart_protein
-     * @param aEnd_protein
-     * @param aStart_block
-     * @param aEnd_block 
+     * @param aBlock the block
+     * @param aStart_protein the protein start position
+     * @param aEnd_protein the protein end position
+     * @param aStart_block the block start position
+     * @param aEnd_block the block end position
      */
     public PdbBlock(String aBlock, int aStart_protein, int aEnd_protein, int aStart_block, int aEnd_block) {
         this.iBlock = aBlock;
@@ -78,7 +78,7 @@ public class PdbBlock {
     /**
      * Sets the block.
      * 
-     * @param aBlock 
+     * @param aBlock the block
      */
     public void setBlock(String aBlock) {
         this.iBlock = aBlock;
@@ -96,7 +96,7 @@ public class PdbBlock {
     /**
      * Set the protein start.
      * 
-     * @param aStartProtein 
+     * @param aStartProtein the protein start
      */
     public void setStartProtein(int aStartProtein) {
         this.iStartProtein = aStartProtein;
@@ -114,7 +114,7 @@ public class PdbBlock {
     /**
      * Set the protein end.
      * 
-     * @param aEndProtein 
+     * @param aEndProtein the protein end
      */
     public void setEndProtein(int aEndProtein) {
         this.iEndProtein = aEndProtein;
@@ -132,7 +132,7 @@ public class PdbBlock {
     /**
      * Set the block start.
      * 
-     * @param aStartBlock 
+     * @param aStartBlock the start block
      */
     public void setStartBlock(int aStartBlock) {
         this.iStartBlock = aStartBlock;
@@ -150,7 +150,7 @@ public class PdbBlock {
     /**
      * Set the block end.
      * 
-     * @param aEndBlock 
+     * @param aEndBlock the end block
      */
     public void setEndBlock(int aEndBlock) {
         this.iEndBlock = aEndBlock;
@@ -187,7 +187,7 @@ public class PdbBlock {
     /**
      * Set the selected positions.
      * 
-     * @param aSelectedPositions 
+     * @param aSelectedPositions the selected positions
      */
     public void setSelectedPositions(Integer[] aSelectedPositions) {
         this.iSelectedPositions = aSelectedPositions;
@@ -197,7 +197,7 @@ public class PdbBlock {
     /**
      * Get the blocked sequence.
      * 
-     * @param aPdbAccession
+     * @param aPdbAccession the PDB accession
      * @return the blocked sequence
      */
     public String getBlockSequence(String aPdbAccession) {
@@ -208,8 +208,8 @@ public class PdbBlock {
     /**
      * Read a URL.
      * 
-     * @param aUrl
-     * @param aPdbAccession
+     * @param aUrl the URL
+     * @param aPdbAccession the PDB accession
      * @return the sequence
      */
     public String readUrl(String aUrl, String aPdbAccession) {
@@ -249,8 +249,8 @@ public class PdbBlock {
     /**
      * Read a FASTA.
      * 
-     * @param lFasta
-     * @param aPdbAccession
+     * @param lFasta the FASTA entry
+     * @param aPdbAccession the PDB accession
      * @return the sequence
      */
     public String readFasta(String lFasta, String aPdbAccession) {
@@ -261,7 +261,7 @@ public class PdbBlock {
         for (String lLine : lLines) {
             if (lLine.startsWith(">")) {
                 //check if we need to read this
-                if (lLine.indexOf(aPdbAccession + ":" + iBlock + "|") >= 0) {
+                if (lLine.contains(aPdbAccession + ":" + iBlock + "|")) {
                     //we need this
                     lSequenceNeeded = true;
                 } else {

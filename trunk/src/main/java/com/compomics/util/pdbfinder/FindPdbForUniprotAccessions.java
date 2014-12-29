@@ -61,7 +61,7 @@ public class FindPdbForUniprotAccessions {
     /**
      * Constructor.
      *
-     * @param aProteinAccession
+     * @param aProteinAccession the protein accession
      * @param aWaitingHandler a waiting handler
      */
     public FindPdbForUniprotAccessions(String aProteinAccession, WaitingHandler aWaitingHandler) {
@@ -198,7 +198,7 @@ public class FindPdbForUniprotAccessions {
     /**
      * Main method. Used for testing purposes.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String[] args) {
         String lAccession = "O75369";

@@ -25,8 +25,8 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     /**
      * Creates a new PrivacySettingsDialog.
      * 
-     * @param parent
-     * @param normalIcon 
+     * @param parent the parent frame
+     * @param normalIcon the normal icon
      */
     public PrivacySettingsDialog(java.awt.Frame parent, Image normalIcon) {
         super(parent, true);

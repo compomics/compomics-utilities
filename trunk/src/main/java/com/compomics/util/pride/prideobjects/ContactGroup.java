@@ -47,7 +47,7 @@ public class ContactGroup implements PrideObject, Serializable {
     /**
      * Set the contacts.
      *
-     * @param contacts
+     * @param contacts the contacts
      */
     public void setContacts(ArrayList<Contact> contacts) {
         this.contacts = contacts;

@@ -43,7 +43,7 @@ public interface IdfileReader {
     /**
      * Closes the file reader.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void close() throws IOException;
 
@@ -58,13 +58,13 @@ public interface IdfileReader {
      *
      * @return a list of spectrum matches
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws JAXBException
-     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if an\ ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws JAXBException if a JAXBException occurs
+     * @throws XmlPullParserException if an XmlPullParserException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException;
@@ -87,13 +87,13 @@ public interface IdfileReader {
      *
      * @return a list of spectrum matches
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws JAXBException
-     * @throws org.xmlpull.v1.XmlPullParserException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if an\ ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws JAXBException if a JAXBException occurs
+     * @throws XmlPullParserException if an XmlPullParserException occurs
      */
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;

@@ -29,8 +29,8 @@ public class Sample implements PrideObject, Serializable {
     /**
      * Create a new Sample object.
      *
-     * @param name
-     * @param cvTerms
+     * @param name the name
+     * @param cvTerms the CV terms
      */
     public Sample(String name, ArrayList<CvTerm> cvTerms) {
         this.name = name;

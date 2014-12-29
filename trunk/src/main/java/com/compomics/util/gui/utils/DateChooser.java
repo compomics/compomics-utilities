@@ -58,8 +58,8 @@ public class DateChooser extends JDialog {
      * This constructor takes the parent JFRame for this dialog,
      * as well as a reference parameter for the selected date.
      *
-     * @param aParent
-     * @param aSelectedCalendar
+     * @param aParent the parent frame
+     * @param aSelectedCalendar the calendar
      */
     public DateChooser(JFrame aParent, Calendar aSelectedCalendar) {
         super(aParent, iCoreTitle);
@@ -321,7 +321,7 @@ public class DateChooser extends JDialog {
     /**
      * Creates and opens a new DateChooser dialog.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String[] args) {
         JFrame temp = new JFrame();

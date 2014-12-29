@@ -24,7 +24,7 @@ public interface Distribution extends Serializable {
      *
      * @param x the position of interest
      * @return the value of the density function at the give position
-     * @throws org.apache.commons.math.MathException
+     * @throws MathException if a MathException occurs
      */
     public Double getCumulativeProbabilityAt(double x) throws MathException;
 
@@ -34,7 +34,7 @@ public interface Distribution extends Serializable {
      *
      * @param x the position of interest
      * @return the value of the density function at the give position
-     * @throws org.apache.commons.math.MathException
+     * @throws MathException if a MathException occurs
      */
     public Double getDescendingCumulativeProbabilityAt(double x) throws MathException;
 
@@ -62,7 +62,7 @@ public interface Distribution extends Serializable {
      * @param p the probability of interest
      * @return the value after which the cumulative density function will be
      * smaller than p
-     * @throws org.apache.commons.math.MathException
+     * @throws MathException if a MathException occurs
      */
     public Double getValueAtCumulativeProbability(double p) throws MathException;
 
@@ -73,7 +73,7 @@ public interface Distribution extends Serializable {
      * @param p the probability of interest
      * @return the value after which the cumulative density function will be
      * smaller than p
-     * @throws org.apache.commons.math.MathException
+     * @throws MathException if a MathException occurs
      */
     public Double getValueAtDescendingCumulativeProbability(double p) throws MathException;
 }

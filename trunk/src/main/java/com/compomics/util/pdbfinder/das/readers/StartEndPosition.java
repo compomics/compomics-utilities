@@ -19,8 +19,8 @@ public class StartEndPosition {
     /**
      * Constructor.
      * 
-     * @param aStart
-     * @param aEnd 
+     * @param aStart the start position
+     * @param aEnd the end position
      */
     public StartEndPosition(int aStart, int aEnd) {
         this.iStart = aStart;

@@ -53,7 +53,7 @@ public class ProteinMatch extends IdentificationMatch {
      * Constructor for the protein match.
      *
      * @param proteinAccession the matching protein
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
     public ProteinMatch(String proteinAccession) throws IllegalArgumentException {
         if (proteinAccession.contains(PROTEIN_KEY_SPLITTER)) {
@@ -70,10 +70,10 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptide the corresponding peptide match
      * @param peptideMatchKey the key of the peptide match
      *
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public ProteinMatch(Peptide peptide, String peptideMatchKey) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> parentProteins = peptide.getParentProteinsNoRemapping();
@@ -171,7 +171,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Sets the peptide keys for this protein match.
      *
-     * @param peptideMatchKeys
+     * @param peptideMatchKeys the peptide match keys
      */
     public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
         peptideMatches = peptideMatchKeys;
@@ -239,10 +239,11 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptide the considered peptide
      * @return the protein match key
-     * @throws java.io.IOException
-     * @throws java.sql.SQLException
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static String getProteinMatchKey(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         ArrayList<String> accessions = new ArrayList<String>(),
@@ -399,11 +400,11 @@ public class ProteinMatch extends IdentificationMatch {
      * @param enzyme the enzyme used
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      *
      * @return true if the main accession generates an enzymatic peptide
      */

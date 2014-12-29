@@ -64,9 +64,9 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * Constructor for an MS Amanda csv result file reader.
      *
-     * @param msAmandaCsvFile
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param msAmandaCsvFile the MS Amanda csv file
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public MsAmandaIdfileReader(File msAmandaCsvFile) throws FileNotFoundException, IOException {
         this(msAmandaCsvFile, null);
@@ -75,10 +75,10 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * Constructor for an MS Amanda csv result file reader.
      *
-     * @param msAmandaCsvFile
-     * @param waitingHandler
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param msAmandaCsvFile the MS Amanda csv file
+     * @param waitingHandler the waiting handler
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public MsAmandaIdfileReader(File msAmandaCsvFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
         this.msAmandaCsvFile = msAmandaCsvFile;

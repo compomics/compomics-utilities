@@ -59,10 +59,10 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
      *
-     * @param waitingHandlerParent
+     * @param waitingHandlerParent the waiting handler parent
      * @param waitingIcon the frame icon to use when waiting
      * @param normalIcon the frame icon to use when done
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public ProgressDialogX(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
         super(waitingHandlerParent, modal);
@@ -82,12 +82,12 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     /**
      * Opens a new ProgressDialog with a JDialog as a parent.
      *
-     * @param waitingHandlerParent
+     * @param waitingHandlerParent the waiting handler parent
      * @param waitingHandlerParentFrame the dialog's parent frame (needed to set
      * the frame icons)
      * @param waitingIcon the frame icon to use when waiting
      * @param normalIcon the frame icon to use when done
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public ProgressDialogX(JDialog waitingHandlerParent, Frame waitingHandlerParentFrame, Image normalIcon, Image waitingIcon, boolean modal) {
         super(waitingHandlerParent, modal);
@@ -109,7 +109,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     /**
      * Opens a new ProgressDialog.
      *
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public ProgressDialogX(boolean modal) {
         this.setModal(true);
@@ -147,7 +147,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Sets the string to display in the progress bar. For example to show the
      * name of the file currently being converted.
      *
-     * @param currentFileName
+     * @param currentFileName the current file name
      */
     public void setString(final String currentFileName) {
         // invoke later to give time for components to update
@@ -165,7 +165,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * to close the progress bar the a warning message is first shown were the
      * user has to confirm that he/she still wants to close the progress bar.
      *
-     * @param unstoppable
+     * @param unstoppable if the current process is unstoppable
      */
     public void setUnstoppable(boolean unstoppable) {
         this.unstoppable = unstoppable;
@@ -334,7 +334,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * Makes the dialog indeterminate or not indeterminate. Also turns the paint
      * progress string on or off.
      *
-     * @param indeterminate
+     * @param indeterminate if the progress is indeterminate
      */
     public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
         setPrimaryProgressCounterIndeterminate(indeterminate);
@@ -427,7 +427,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     /**
      * Adds a waiting action listener.
      *
-     * @param waitingActionListener
+     * @param waitingActionListener the waiting action listener
      */
     public void addWaitingActionListener(WaitingActionListener waitingActionListener) {
         this.waitingActionListener = waitingActionListener;

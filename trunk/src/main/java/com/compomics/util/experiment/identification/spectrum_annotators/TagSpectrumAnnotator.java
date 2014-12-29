@@ -73,11 +73,11 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {

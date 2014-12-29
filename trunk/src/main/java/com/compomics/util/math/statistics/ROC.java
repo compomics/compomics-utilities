@@ -18,7 +18,7 @@ public interface ROC {
      *
      * @return the sensitivity at the given specificity (0.1 is 10%)
      *
-     * @throws org.apache.commons.math.MathException
+     * @throws org.apache.commons.math.MathException if a MathException occurs
      */
     public double getValueAt(double specificity) throws MathException;
 
@@ -29,7 +29,7 @@ public interface ROC {
      *
      * @return the corresponding 1-specificity (0.1 is 10%)
      *
-     * @throws MathException
+     * @throws MathException if a MathException occurs
      */
     public double getSpecificityAt(double sensitivity) throws MathException;
 
@@ -38,7 +38,7 @@ public interface ROC {
      *
      * @return xy values to draw the curve
      *
-     * @throws MathException
+     * @throws MathException if a MathException occurs
      */
     public double[][] getxYValues() throws MathException;
 
@@ -46,6 +46,8 @@ public interface ROC {
      * Returns an estimation of the area under the curve.
      *
      * @return an estimation of the area under the curve
+     *
+     * @throws MathException if a MathException occurs
      */
-    public double getAuc()throws MathException;
+    public double getAuc() throws MathException;
 }

@@ -21,8 +21,8 @@ public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
     /**
      * Creates a new VennDiagramLegendLocationDialog.
      *
-     * @param vennDiagramDialog
-     * @param modal
+     * @param vennDiagramDialog the VennDiagramDialog parent
+     * @param modal if the dialog is to be modal or not
      */
     public VennDiagramLegendLocationDialog(VennDiagramDialog vennDiagramDialog, boolean modal) {
         super(vennDiagramDialog, modal);

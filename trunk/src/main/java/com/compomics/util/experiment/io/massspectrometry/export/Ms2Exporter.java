@@ -31,7 +31,7 @@ public class Ms2Exporter {
      * indicate the spectrum indexes, first spectrum is scan 1, second is scan
      * 2, etc. Required in order to map back to the mgf.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void mgfToMs2(File mgfFile, File destinationFile, boolean resetScanNumbers) throws IOException {
 
@@ -66,7 +66,7 @@ public class Ms2Exporter {
      *
      * @param bw a buffered writer where to write
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void writeHeader(BufferedWriter bw) throws IOException {
         bw.write("H\tCreationDate\t" + new Date());
@@ -89,7 +89,7 @@ public class Ms2Exporter {
      * @param defaultScanNumber if not null, overrides the scan number given in
      * the file (needed when converting mgf to ms2)
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, Integer defaultScanNumber) throws IOException {
 

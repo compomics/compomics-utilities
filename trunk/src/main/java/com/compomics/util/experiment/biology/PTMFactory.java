@@ -310,9 +310,9 @@ public class PTMFactory implements Serializable {
      *
      * @param modificationsFile the modification file
      * @return a map of all indexes: modification name &gt; OMSSA index
-     * @throws XmlPullParserException
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws XmlPullParserException if an XmlPullParserException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static HashMap<String, Integer> getOMSSAIndexes(File modificationsFile) throws XmlPullParserException, FileNotFoundException, IOException {
 
@@ -759,7 +759,7 @@ public class PTMFactory implements Serializable {
      * Convenience method returning a boolean indicating whether a PTM is user
      * defined or default.
      *
-     * @param ptmName
+     * @param ptmName the name of the PTM
      * @return boolean indicating whether a PTM is user defined
      */
     public boolean isUserDefined(String ptmName) {
@@ -825,9 +825,9 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
             double modificationMass, double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
@@ -873,9 +873,9 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName,
             Double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -898,9 +898,9 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -967,7 +967,7 @@ public class PTMFactory implements Serializable {
      * searched for according to the ModificationProfile. Note: for protein
      * terminal modification the protein must be loaded in the sequence factory.
      *
-     * @param modificationProfile
+     * @param modificationProfile the modification profile
      * @param tag the tag
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
@@ -977,9 +977,9 @@ public class PTMFactory implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void checkFixedModifications(ModificationProfile modificationProfile, Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {

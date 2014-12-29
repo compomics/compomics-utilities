@@ -76,7 +76,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * Default constructor for the purpose of instantiation.
      */
     public PepNovoIdfileReader() {
-
     }
 
     /**

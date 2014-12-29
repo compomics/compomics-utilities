@@ -136,8 +136,8 @@ public class DoubleMatrix {
     /**
      * Returns the value of the matrix at given indexes. 0 is the first index.
      *
-     * @param lineIndex
-     * @param columnIndex
+     * @param lineIndex the line index
+     * @param columnIndex the column index
      * @return the value of the matrix at given indexes,  0 is the first index
      */
     public Double getValueAt(int lineIndex, int columnIndex) {

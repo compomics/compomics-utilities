@@ -590,12 +590,13 @@ public abstract class SpectrumAnnotator {
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the expected possible neutral losses
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     *
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {

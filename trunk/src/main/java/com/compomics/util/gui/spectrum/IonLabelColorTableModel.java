@@ -28,8 +28,8 @@ public class IonLabelColorTableModel extends DefaultTableModel {
     /**
      * Constructor which sets a new table.
      *
-     * @param iontypes
-     * @param neutralLosses
+     * @param iontypes the ion types
+     * @param neutralLosses the neutral losses
      */
     public IonLabelColorTableModel(HashMap<IonType, HashSet<Integer>> iontypes, ArrayList<NeutralLoss> neutralLosses) {
 

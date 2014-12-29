@@ -30,9 +30,9 @@ public class Contact implements PrideObject, Serializable {
     /**
      * Create a new Contact object.
      *
-     * @param name
-     * @param eMail
-     * @param institution
+     * @param name the contact name
+     * @param eMail the contact e-mail
+     * @param institution the contact institution
      */
     public Contact(String name, String eMail, String institution) {
         this.name = name;

@@ -296,7 +296,7 @@ public class Protein extends ExperimentObject {
      *
      * @return true of the peptide is non-enzymatic
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public boolean isEnzymaticPeptide(String peptideSequence, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException {
 

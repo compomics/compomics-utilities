@@ -25,14 +25,15 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
     /**
      * Constructor.
      *
-     * @param mzIdentMLFile
+     * @param mzIdentMLFile the mzIdentML file
      * @param searchParameters the search parameters object to save to
      * @param species the current species
-     * @param waitingHandler
+     * @param waitingHandler the waiting handler
      * @return the extracted search parameters
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws java.lang.ClassNotFoundException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if a IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static String getSearchParameters(File mzIdentMLFile, SearchParameters searchParameters, String species, WaitingHandler waitingHandler)
             throws FileNotFoundException, IOException, ClassNotFoundException {

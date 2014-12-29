@@ -109,7 +109,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * 'Import Data' or 'Search'
      * @param toolName the name of the tool, need for the report
      * @param toolVersion the version number of the tool, needed for the report
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName,
             String toolName, String toolVersion, boolean modal) {
@@ -125,7 +125,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param shakeWhenFinished shake when completed, mainly a PeptideShaker
      * feature
      * @param processName the name of the process we are waiting for
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      * @param toolName the name of the tool, need for the report
      * @param toolVersion the version number of the tool, needed for the report
      * @param tips the list of Tip of the day
@@ -175,7 +175,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Set if the dialog is to be closed when the process is complete.
      *
-     * @param close
+     * @param close if the dialog is to be closed when the process is complete
      */
     public void closeWhenComplete(boolean close) {
         closeDialogWhenImportCompletesCheckBox.setSelected(close);
@@ -1176,7 +1176,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Adds a waiting action listener.
      *
-     * @param waitingActionListener
+     * @param waitingActionListener the waiting action listener
      */
     public void addWaitingActionListener(WaitingActionListener waitingActionListener) {
         this.waitingActionListener = waitingActionListener;

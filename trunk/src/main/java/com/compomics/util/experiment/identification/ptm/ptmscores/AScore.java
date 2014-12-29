@@ -56,9 +56,9 @@ public class AScore {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
             HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
@@ -92,9 +92,9 @@ public class AScore {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
@@ -131,9 +131,9 @@ public class AScore {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences)
@@ -171,9 +171,9 @@ public class AScore {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses,
@@ -214,9 +214,9 @@ public class AScore {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
             NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses,

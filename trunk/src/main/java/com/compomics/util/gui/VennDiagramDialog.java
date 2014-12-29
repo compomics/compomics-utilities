@@ -39,7 +39,7 @@ public class VennDiagramDialog extends javax.swing.JDialog {
      * Creates a new XYPlottingDialog.
      *
      * @param dialogParent the dialog parent
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      * @param normalIcon the normal icon for the parent dialog
      * @param waitingIcon the icon to use when busy
      */
@@ -67,7 +67,7 @@ public class VennDiagramDialog extends javax.swing.JDialog {
     /**
      * Main method. For testing purposes only.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String args[]) {
 

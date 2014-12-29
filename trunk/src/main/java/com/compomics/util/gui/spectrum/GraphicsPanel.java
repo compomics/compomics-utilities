@@ -567,7 +567,8 @@ public abstract class GraphicsPanel extends JPanel {
     /**
      * Set if the automatic y-axis zoom only considers the annotated peaks.
      *
-     * @param yAxisZoomExcludesBackgroundPeaks
+     * @param yAxisZoomExcludesBackgroundPeaks if the automatic y-axis zoom only
+     * considers the annotated peaks
      */
     public void setYAxisZoomExcludesBackgroundPeaks(boolean yAxisZoomExcludesBackgroundPeaks) {
         this.yAxisZoomExcludesBackgroundPeaks = yAxisZoomExcludesBackgroundPeaks;
@@ -577,7 +578,8 @@ public abstract class GraphicsPanel extends JPanel {
      * If true, pairs of delta mass annotations are used when doing de novo
      * sequencing. If false, only single delta masses are annotated.
      *
-     * @return the useMassDeltaCombinations
+     * @return the useMassDeltaCombinations if pairs of delta mass annotations
+     * are used when doing de novo sequencing
      */
     public boolean useMassDeltaCombinations() {
         return useMassDeltaCombinations;

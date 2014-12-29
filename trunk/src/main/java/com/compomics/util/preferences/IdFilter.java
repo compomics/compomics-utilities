@@ -162,10 +162,10 @@ public class IdFilter implements Serializable {
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @return a boolean indicating whether the peptide passed the test
      *
-     * @throws IOException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs 
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultProteinTree());
@@ -181,10 +181,10 @@ public class IdFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      *
-     * @throws IOException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs 
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
@@ -274,8 +274,8 @@ public class IdFilter implements Serializable {
      * @param spectrumFactory the spectrum factory
      * @return a boolean indicating whether the given assumption passes the
      * filter
-     * @throws IOException
-     * @throws MzMLUnmarshallerException
+     * @throws IOException if an IOException occurs
+     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory) throws IOException, MzMLUnmarshallerException {
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);

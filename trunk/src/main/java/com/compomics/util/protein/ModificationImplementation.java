@@ -234,8 +234,7 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      * class <tt>Object</tt> does return distinct integers for distinct
      * objects. (This is typically implemented by converting the internal
      * address of the object into an integer, but this implementation
-     * technique is not required by the
-     * Java<font size="-2"><sup>TM</sup></font> programming language.)
+     * technique is not required by the Java programming language.)
      *
      * @return  a hash code value for this object.
      * @see     Object#equals(Object)

@@ -15,19 +15,40 @@ import java.util.TreeSet;
  */
 public class PklFile {
 
+    /**
+     * The precursor charge.
+     */
     private int precurorCharge;
+    /**
+     * The precursor m/z.
+     */
     private double precursorMz;
+    /**
+     * The precursor intensity.
+     */
     private double precursorIntensity;
+    /**
+     * The m/z values.
+     */
     private double[] mzValues;
+    /**
+     * The intensity values.
+     */
     private double[] intensityValues;
+    /**
+     * The file name.
+     */
     private String fileName;
+    /**
+     * The spectrum file ID.
+     */
     private String spectrumFileId;
 
     /**
      * Parse a PKL file and store the details in the PKLFile object.
      *
      * @param pklFile the file to parse
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public PklFile(File pklFile) throws IOException {
 

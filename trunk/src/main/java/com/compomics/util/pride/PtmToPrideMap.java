@@ -358,9 +358,9 @@ public class PtmToPrideMap implements Serializable {
      *
      * @param searchParameters the search parameters
      * @return the PRIDE to PTM map
-     * @throws java.io.FileNotFoundException
-     * @throws java.io.IOException
-     * @throws java.lang.ClassNotFoundException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static PtmToPrideMap loadPtmToPrideMap(SearchParameters searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException {
         PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();

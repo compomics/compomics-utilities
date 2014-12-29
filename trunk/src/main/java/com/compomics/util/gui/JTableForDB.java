@@ -147,12 +147,12 @@ public class JTableForDB extends AlternateRowColoursJTable {
      * should contain the values for that row. In other words,
      * the value of the cell at row 1, column 5 can be obtained
      * with the following code:
-     * <p>
+     * <br><br>
      * <pre>((Vector)rowData.elementAt(1)).elementAt(5);</pre>
-     * <p>
+     * <br><br>
      * Each row must contain a value for each column or an exception
      * will be raised.
-     * <p>
+     * 
      * @param rowData           the data for the new table
      * @param columnNames       names of each column
      */
@@ -166,11 +166,11 @@ public class JTableForDB extends AlternateRowColoursJTable {
      * <code>rowData</code>, with column names, <code>columnNames</code>.
      * <code>rowData</code> is an array of rows, so the value of the cell at row 1,
      * column 5 can be obtained with the following code:
-     * <p>
+     * <br><br>
      * <pre> rowData[1][5]; </pre>
-     * <p>
+     * <br><br>
      * All rows must be of the same length as <code>columnNames</code>.
-     * <p>
+     * 
      * @param rowData           the data for the new table
      * @param columnNames       names of each column
      */
@@ -327,7 +327,7 @@ public class JTableForDB extends AlternateRowColoursJTable {
      * system resources or to perform other cleanup.
      * <p>
      * The general contract of <tt>finalize</tt> is that it is invoked
-     * if and when the Java<font size="-2"><sup>TM</sup></font> virtual
+     * if and when the Java virtual
      * machine has determined that there is no longer any
      * means by which this object can be accessed by any thread that has
      * not yet died, except as a result of an action taken by the

@@ -36,7 +36,7 @@ public class MgfReader {
      *
      * @return the next spectrum found in the mgf file
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs 
      */
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 

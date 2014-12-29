@@ -402,7 +402,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Sets if the UseSmartPlusThreeModel is to be used.
      *
-     * @param useSmartPlusThreeModel
+     * @param useSmartPlusThreeModel if the UseSmartPlusThreeModel is to be used
      */
     public void setUseSmartPlusThreeModel(boolean useSmartPlusThreeModel) {
         this.useSmartPlusThreeModel = useSmartPlusThreeModel;
@@ -423,7 +423,8 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * Sets if a Sequest-like cross correlation score will be calculated for the
      * top ranking hits in each spectrum’s result set.
      *
-     * @param computeXCorr
+     * @param computeXCorr if the Sequest-like cross correlation score is to be
+     * calculated
      */
     public void setComputeXCorr(boolean computeXCorr) {
         this.computeXCorr = computeXCorr;
@@ -441,7 +442,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the number of intensity classes.
      *
-     * @param numIntensityClasses
+     * @param numIntensityClasses he number of intensity classes
      */
     public void setNumIntensityClasses(Integer numIntensityClasses) {
         this.numIntensityClasses = numIntensityClasses;
@@ -459,7 +460,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the intensity class size multiplier.
      *
-     * @param classSizeMultiplier
+     * @param classSizeMultiplier the intensity class size multiplier
      */
     public void setClassSizeMultiplier(Integer classSizeMultiplier) {
         this.classSizeMultiplier = classSizeMultiplier;
@@ -479,7 +480,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * Set the number of batches per node to strive for when using the MPI-based
      * parallelization features.
      *
-     * @param numberOfBatches
+     * @param numberOfBatches the number of batches per node 
      */
     public void setNumberOfBatches(Integer numberOfBatches) {
         this.numberOfBatches = numberOfBatches;
@@ -497,7 +498,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the lower isotope correction range.
      *
-     * @param lowerIsotopeCorrection
+     * @param lowerIsotopeCorrection the lower isotope correction range
      */
     public void setLowerIsotopeCorrectionRange(Integer lowerIsotopeCorrection) {
         this.lowerIsotopeCorrection = lowerIsotopeCorrection;
@@ -515,7 +516,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the upper isotope correction range.
      *
-     * @param upperIsotopeCorrection
+     * @param upperIsotopeCorrection the upper isotope correction range
      */
     public void setUpperIsotopeCorrectionRange(Integer upperIsotopeCorrection) {
         this.upperIsotopeCorrection = upperIsotopeCorrection;
@@ -533,7 +534,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the fragmentation rule.
      *
-     * @param fragmentationRule
+     * @param fragmentationRule the fragmentation rule
      */
     public void setFragmentationRule(String fragmentationRule) {
         this.fragmentationRule = fragmentationRule;
@@ -554,7 +555,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * Set the max peak count.
      *
-     * @param maxPeakCount
+     * @param maxPeakCount the max peak count
      */
     public void setMaxPeakCount(Integer maxPeakCount) {
         this.maxPeakCount = maxPeakCount;

@@ -125,7 +125,7 @@ public class FileLoggerImplementation implements com.compomics.util.interfaces.L
      * system resources or to perform other cleanup.
      * <p>
      * The general contract of <tt>finalize</tt> is that it is invoked
-     * if and when the Java<font size="-2"><sup>TM</sup></font> virtual
+     * if and when the Java virtual
      * machine has determined that there is no longer any
      * means by which this object can be accessed by any thread that has
      * not yet died, except as a result of an action taken by the

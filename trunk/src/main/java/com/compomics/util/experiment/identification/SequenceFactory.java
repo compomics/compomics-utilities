@@ -131,8 +131,8 @@ public class SequenceFactory {
     /**
      * Clears the factory getInstance() needs to be called afterwards.
      *
-     * @throws IOException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void clearFactory() throws IOException, SQLException {
         closeFile();
@@ -187,8 +187,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
-     * @throws InterruptedException
-     * @throws FileNotFoundException
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public Protein getProtein(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
         return getProtein(accession, true);
@@ -206,7 +206,7 @@ public class SequenceFactory {
      * the FASTA file
      * @throws IllegalArgumentException thrown whenever an error is encountered
      * while reading the FASTA file
-     * @throws InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     private Protein getProtein(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
@@ -244,9 +244,9 @@ public class SequenceFactory {
      *
      * @return the protein of interest, null if not found
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws FileNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex) 
             throws IOException, IllegalArgumentException, FileNotFoundException {
@@ -269,9 +269,9 @@ public class SequenceFactory {
      *
      * @return the protein of interest, null if not found
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws FileNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public Protein getDecoyProteinFromTarget(String accession, boolean reindex) throws IOException, IllegalArgumentException, FileNotFoundException {
         Protein currentProtein = null;
@@ -428,9 +428,9 @@ public class SequenceFactory {
      * reading the FASTA file
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         return getHeader(accession, true);
@@ -445,7 +445,7 @@ public class SequenceFactory {
      * reading the FASTA file
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
-     * @throws InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     private Header getHeader(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -561,7 +561,7 @@ public class SequenceFactory {
     /**
      * Resets the connection to the random access file.
      *
-     * @throws java.io.IOException
+     * @throws IOException if an IOException occurs
      */
     public void resetConnection() throws IOException {
         currentRandomAccessFile.close();
@@ -818,7 +818,7 @@ public class SequenceFactory {
     /**
      * Saves the index.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void saveIndex() throws IOException {
         writeIndex(fastaIndex, currentFastaFile.getParentFile());
@@ -829,7 +829,7 @@ public class SequenceFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * closing the file
-     * @throws SQLException
+     * @throws SQLException if an SQLException occurs
      */
     public void closeFile() throws IOException, SQLException {
         if (currentRandomAccessFile != null) {
@@ -954,10 +954,10 @@ public class SequenceFactory {
      * @param destinationFile the destination file
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
     public void appendDecoySequences(File destinationFile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         appendDecoySequences(destinationFile, null);
@@ -972,9 +972,9 @@ public class SequenceFactory {
      * reading or writing a file
      * @throws IllegalArgumentException exception thrown whenever a protein is
      * not found
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
     public void appendDecoySequences(File destinationFile, WaitingHandler waitingHandler)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
@@ -1109,10 +1109,10 @@ public class SequenceFactory {
      * @return a map containing all amino acid occurrence in the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
     public HashMap<String, Integer> getAAOccurrences(JProgressBar progressBar) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
@@ -1156,9 +1156,9 @@ public class SequenceFactory {
      * @return the protein's molecular weight
      * @throws IOException thrown whenever an error is encountered while reading
      * the FASTA file
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
 
@@ -1277,11 +1277,11 @@ public class SequenceFactory {
      * factory.
      *
      * @return the default protein tree
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws IllegalArgumentException
-     * @throws SQLException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
@@ -1296,11 +1296,11 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws IllegalArgumentException
-     * @throws SQLException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ProteinTree getDefaultProteinTree(int nThreads) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         return getDefaultProteinTree(nThreads, null, false);
@@ -1315,11 +1315,11 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws IllegalArgumentException
-     * @throws SQLException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
@@ -1336,11 +1336,11 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws IllegalArgumentException
-     * @throws SQLException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         return getDefaultProteinTree(nThreads, waitingHandler, true);
@@ -1355,11 +1355,12 @@ public class SequenceFactory {
      * during the initiation of the tree
      * @param displayProgress display progress
      * @return the default protein tree
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws IllegalArgumentException
-     * @throws SQLException
+     * 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {
@@ -1423,8 +1424,8 @@ public class SequenceFactory {
      *
      * @param targetOnly boolean indicating whether only target accessions shall
      * be iterated
-     * @return a header iterator.
-     * @throws FileNotFoundException
+     * @return a header iterator
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public HeaderIterator getHeaderIterator(boolean targetOnly) throws FileNotFoundException {
         return new HeaderIterator(currentFastaFile, targetOnly);
@@ -1437,8 +1438,8 @@ public class SequenceFactory {
      *
      * @param targetOnly boolean indicating whether only target accessions shall
      * be iterated
-     * @return a protein iterator.
-     * @throws FileNotFoundException
+     * @return a protein iterator
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ProteinIterator getProteinIterator(boolean targetOnly) throws FileNotFoundException {
         return new ProteinIterator(currentFastaFile, targetOnly);
@@ -1486,7 +1487,7 @@ public class SequenceFactory {
          *
          * @param targetOnly if true only target proteins will be iterated
          * @param file the FASTA file to iterate
-         * @throws java.io.FileNotFoundException
+         * @throws FileNotFoundException if a FileNotFoundException occurs
          */
         public HeaderIterator(File file, boolean targetOnly) throws FileNotFoundException {
             this.targetOnly = targetOnly;
@@ -1497,7 +1498,7 @@ public class SequenceFactory {
          * Returns true if there is a next header.
          *
          * @return true if there is a next header
-         * @throws IOException
+         * @throws IOException if a IOException occurs
          */
         public boolean hasNext() throws IOException {
             nextHeader = null;
@@ -1535,7 +1536,7 @@ public class SequenceFactory {
         /**
          * Closes the connection to the file.
          *
-         * @throws java.io.IOException
+         * @throws IOException if a IOException occurs
          */
         public void close() throws IOException {
             br.close();
@@ -1573,7 +1574,7 @@ public class SequenceFactory {
          * @param targetOnly if true only target proteins will be iterated
          * @param file the FASTA file.
          *
-         * @throws FileNotFoundException
+         * @throws FileNotFoundException if a FileNotFoundException occurs
          */
         public ProteinIterator(File file, boolean targetOnly) throws FileNotFoundException {
             this.targetOnly = targetOnly;
@@ -1585,7 +1586,7 @@ public class SequenceFactory {
          *
          * @return true if there is another protein
          *
-         * @throws IOException
+         * @throws IOException if an IOException occurs
          */
         public boolean hasNext() throws IOException {
 
@@ -1651,7 +1652,7 @@ public class SequenceFactory {
         /**
          * Closes the connection to the file.
          *
-         * @throws java.io.IOException
+         * @throws IOException if an IOException occurs
          */
         public void close() throws IOException {
             br.close();

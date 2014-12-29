@@ -675,7 +675,7 @@ public class DualEnzyme extends Enzyme {
     /**
      * Tests the DualEnzyme by digesting a hardcoded protein.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String[] args) {
         Enzyme dual = new DualEnzyme("TestDualEnzyme", "D", "R", "P", "Cterm", 0);

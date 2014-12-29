@@ -107,9 +107,10 @@ public class IdfileReaderFactory {
      *
      * @param aFile the file to parse
      * @return an adapted file reader
-     * @throws SAXException
-     * @throws FileNotFoundException
-     * @throws IOException
+     * 
+     * @throws SAXException if a SAXException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      * @throws OutOfMemoryError thrown if the parser runs out of memory
      */
     public IdfileReader getFileReader(File aFile) throws SAXException, FileNotFoundException, IOException, OutOfMemoryError {

@@ -21,7 +21,7 @@ public class DasAnnotationServerResultReader {
     /**
      * Creates a new reader for an XML string.
      *
-     * @param aXml
+     * @param aXml the XML string
      */
     public DasAnnotationServerResultReader(String aXml) {
         this.iXml = aXml;

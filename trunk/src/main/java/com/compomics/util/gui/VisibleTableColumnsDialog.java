@@ -26,8 +26,9 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
      * Creates a new VisibleTableColumnsDialog.
      *
      * @param dialog the parent dialog
-     * @param visibleTableColumnsDialogParent
-     * @param modal
+     * @param visibleTableColumnsDialogParent the
+     * VisibleTableColumnsDialogParent parent
+     * @param modal if the dialog is to be modal or not
      */
     public VisibleTableColumnsDialog(JDialog dialog, VisibleTableColumnsDialogParent visibleTableColumnsDialogParent, boolean modal) {
         super(dialog, modal);
@@ -42,8 +43,9 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
      * Creates a new VisibleTableColumnsDialog.
      *
      * @param frame the parent frame
-     * @param visibleTableColumnsDialogParent
-     * @param modal
+     * @param visibleTableColumnsDialogParent the
+     * VisibleTableColumnsDialogParent parent
+     * @param modal if the dialog is to be modal or not
      */
     public VisibleTableColumnsDialog(JFrame frame, VisibleTableColumnsDialogParent visibleTableColumnsDialogParent, boolean modal) {
         super(frame, modal);
@@ -62,10 +64,10 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
         for (int i = 0; i < tableModel.getColumnCount(); i++) {
             ((DefaultTableModel) selectedColumnsTable.getModel()).addRow(new Object[]{
-                        (i + 1),
-                        tableModel.getColumnName(i),
-                        visibleTableColumnsDialogParent.getVisibleColumns().get(i)
-                    });
+                (i + 1),
+                tableModel.getColumnName(i),
+                visibleTableColumnsDialogParent.getVisibleColumns().get(i)
+            });
         }
 
         selectedValuesTableScrollPane.getViewport().setOpaque(false);
@@ -211,8 +213,8 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
         ArrayList<TableColumn> allTableColumns = visibleTableColumnsDialogParent.getAllTableColumns();
 
         // remove all columns
-        for (int i = 0; i < allTableColumns.size(); i++) {
-            visibleTableColumnsDialogParent.getTable().removeColumn(allTableColumns.get(i));
+        for (TableColumn allTableColumn : allTableColumns) {
+            visibleTableColumnsDialogParent.getTable().removeColumn(allTableColumn);
         }
 
         // add the ones that are selected
@@ -228,7 +230,7 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
     /**
      * Open the select popup menu.
-     * 
+     *
      * @param evt
      */
     private void selectedColumnsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectedColumnsTableMouseClicked
@@ -239,8 +241,8 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
     /**
      * Show all columns.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void selectAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllMenuItemActionPerformed
         for (int i = 0; i < selectedColumnsTable.getRowCount(); i++) {
@@ -250,8 +252,8 @@ public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
     /**
      * Hide all columns.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void deselectAllMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deselectAllMenuItemActionPerformed
         for (int i = 0; i < selectedColumnsTable.getRowCount(); i++) {

@@ -49,7 +49,7 @@ public class DBAccessorGenerator {
      * @param   aUrl    String with the URL for the database.
      * @param   aTable  String with the tablename to generate the accessor object for.
      * @param   aPackageName    String with the packagename for the generated class. Can be empty String.
-     * @throws GeneratorException  
+     * @throws GeneratorException whenever something goes wrong. 
      */
     public void startGenerator(String aDriver, String aUrl, String aTable, String aPackageName) throws GeneratorException {
         this.startGenerator(aDriver, aUrl, aTable, null, null, aPackageName, false);
@@ -91,7 +91,7 @@ public class DBAccessorGenerator {
     /**
      * The main method allows to run this tool from the command-line.
      * 
-     * @param args 
+     * @param args the arguments
      */
     public static void main(String[] args) {
         DBAccessorGenerator dba = new DBAccessorGenerator();

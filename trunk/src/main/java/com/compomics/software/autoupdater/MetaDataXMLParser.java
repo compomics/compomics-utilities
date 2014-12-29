@@ -24,7 +24,7 @@ public class MetaDataXMLParser {
      * Create a new MetaDataXMLParser.
      *
      * @param xmlReader the XML reader
-     * @throws XMLStreamException
+     * @throws XMLStreamException if an XMLStreamException occurs
      */
     public MetaDataXMLParser(XMLEventReader xmlReader) throws XMLStreamException {
         while (xmlReader.hasNext()) {
@@ -48,8 +48,8 @@ public class MetaDataXMLParser {
     }
 
     /**
-     * Parses the version numbers of a maven repository website (or just about
-     * any proper xml containing the tag version).
+     * Parses the version numbers of a Maven repository web site (or just about
+     * any proper XML containing the tag version).
      *
      * @param xmlReader
      * @throws XMLStreamException

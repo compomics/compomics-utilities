@@ -40,7 +40,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
      * @param javaMemoryDialogParent reference to the JavaMemoryDialogParent
      * @param toolName the name of the tool, e.g., PeptideShaker
      * @param welcomeDialog reference to the Welcome Dialog, can be null
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public JavaSettingsDialog(JFrame parent, JavaMemoryDialogParent javaMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
         super(parent, modal);

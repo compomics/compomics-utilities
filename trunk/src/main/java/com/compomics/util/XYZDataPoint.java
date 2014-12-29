@@ -7,16 +7,25 @@ package com.compomics.util;
  */
 public class XYZDataPoint {
 
+    /**
+     * The x value.
+     */
     private double x;
+    /**
+     * The y value.
+     */
     private double y;
+    /**
+     * The z value.
+     */
     private double z;
 
     /**
      * Create a new XYZDataPoint.
      *
-     * @param x
-     * @param y
-     * @param z
+     * @param x the x value
+     * @param y the y value
+     * @param z the z value
      */
     public XYZDataPoint(double x, double y, double z) {
         this.x = x;
@@ -25,6 +34,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Returns the x value.
+     * 
      * @return the x
      */
     public double getX() {
@@ -32,6 +43,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Sets the x value.
+     * 
      * @param x the x to set
      */
     public void setX(double x) {
@@ -39,6 +52,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Returns the y value.
+     * 
      * @return the y
      */
     public double getY() {
@@ -46,6 +61,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Sets the y value.
+     * 
      * @param y the y to set
      */
     public void setY(double y) {
@@ -53,6 +70,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Returns the z value.
+     * 
      * @return the z
      */
     public double getZ() {
@@ -60,6 +79,8 @@ public class XYZDataPoint {
     }
 
     /**
+     * Sets the z value.
+     * 
      * @param z the z to set
      */
     public void setZ(double z) {

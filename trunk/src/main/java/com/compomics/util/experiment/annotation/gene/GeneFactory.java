@@ -76,7 +76,7 @@ public class GeneFactory {
      * @param file the file containing the mapping
      * @param waitingHandler a waiting handler allowing display of the progress
      * and canceling of the process.
-     * @throws IOException
+     * @throws IOException if a problem occurs when reading the gene mappings
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
 
@@ -175,7 +175,7 @@ public class GeneFactory {
      *
      * @param geneID the Ensembl ID of the gene of interest
      * @return the name of the gene
-     * @throws IOException
+     * @throws IOException if a problem occurs when reading the gene mappings
      */
     public String getGeneName(String geneID) throws IOException {
         Long index = geneIdIndexes.get(geneID);
@@ -196,7 +196,7 @@ public class GeneFactory {
      *
      * @param geneName the gene name of the gene of interest
      * @return the Ensembl ID of the gene
-     * @throws IOException
+     * @throws IOException if a problem occurs when reading the gene mappings
      */
     public String getGeneEnsemblId(String geneName) throws IOException {
         if (geneMappingFile == null) {
@@ -216,16 +216,16 @@ public class GeneFactory {
     }
     
     /**
-     * Returns the Ensembl gene Id for a given Uniprot protein. Null if not found.
+     * Returns the Ensembl gene Id for a given UniProt protein. Null if not found.
      * 
-     * @param proteinAccession the accession of the uniprot protein
+     * @param proteinAccession the accession of the UniProt protein
      * 
      * @return the Ensembl gene id for this protein
      * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException 
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException  if a ClassNotFoundException occurs
      */
     public String getGeneEnsemblIdForUniProtProtein(String proteinAccession) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         String geneName = getGeneNameForUniProtProtein(proteinAccession);
@@ -240,7 +240,7 @@ public class GeneFactory {
      *
      * @param geneID the Ensembl ID of the gene of interest
      * @return the chromosome where the gene can be located
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public String getChromosomeFromGeneId(String geneID) throws IOException {
         Long index = geneIdIndexes.get(geneID);
@@ -261,7 +261,7 @@ public class GeneFactory {
      *
      * @param geneName the gene name of the gene of interest
      * @return the chromosome where the gene can be located
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public String getChromosomeFromGeneName(String geneName) throws IOException {
         Long index = geneNameIndexes.get(geneName);
@@ -284,11 +284,11 @@ public class GeneFactory {
      *
      * @param proteinAccession the accession of the protein of interest
      * @return the name of the gene, null if not found
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException RE
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public String getGeneNameForUniProtProtein(String proteinAccession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         Header header = SequenceFactory.getInstance().getHeader(proteinAccession);
@@ -298,7 +298,7 @@ public class GeneFactory {
     /**
      * Closes files.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void closeFiles() throws IOException {
         if (geneMappingFile != null) {

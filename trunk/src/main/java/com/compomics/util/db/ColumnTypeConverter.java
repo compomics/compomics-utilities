@@ -39,6 +39,7 @@ public class ColumnTypeConverter {
      * int the String[] elements).
      *
      * @param   aTypes  int[] with the coded SQL column types.
+     * @param   aSizes  int[] with the char/String type.
      * @return  String[]    with the names of the Java types.
      */
     public static String[] convertTypes(int[] aTypes, int[] aSizes) {

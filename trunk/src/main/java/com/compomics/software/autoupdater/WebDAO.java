@@ -23,12 +23,12 @@ public class WebDAO {
     private static final Locale LOCALE = new Locale("en");
 
     /**
-     * Fetches the latest maven deployed version from a maven built repository.
+     * Fetches the latest Maven deployed version from a Maven built repository.
      *
-     * @param remoteVersionXMLFileLocation
-     * @return the latest maven deployed version
-     * @throws XMLStreamException
-     * @throws IOException
+     * @param remoteVersionXMLFileLocation the version of the remote XML file
+     * @return the latest Maven deployed version
+     * @throws XMLStreamException if an XMLStreamException occurs
+     * @throws IOException if an IOException occurs
      */
     public static String getLatestVersionNumberFromRemoteRepo(URL remoteVersionXMLFileLocation) throws XMLStreamException, IOException {
         BufferedReader remoteVersionsReader = new BufferedReader(new InputStreamReader(remoteVersionXMLFileLocation.openStream()));
@@ -40,7 +40,7 @@ public class WebDAO {
     }
 
     /**
-     * Gets the first zip file from an url, in case of a maven repo deploy this
+     * Gets the first zip file from a URL, in case of a Maven repo deploy this
      * should be the only zip in the folder.
      *
      * @param repoURL the URL to get the zip from
@@ -48,8 +48,8 @@ public class WebDAO {
      * @param returnAlternateArchives if the requested file extension isn't
      * found, return the first .zip/tar.gz found
      * @return URL to the archive file
-     * @throws MalformedURLException if the url of the zip could not be found
-     * @throws IOException if the stream to the webpage could not be read
+     * @throws MalformedURLException if the URL of the zip could not be found
+     * @throws IOException if the stream to the web page could not be read
      */
     public static URL getUrlOfZippedVersion(URL repoURL, String suffix, boolean returnAlternateArchives) throws MalformedURLException, IOException {
         BufferedReader reader = null;
@@ -84,11 +84,11 @@ public class WebDAO {
     /**
      * Returns true if a new version is available.
      *
-     * @param jarFile the maven jar file
+     * @param jarFile the Maven jar file
      * @param jarRepository the repository
      * @return true if a new version is available
-     * @throws IOException
-     * @throws XMLStreamException
+     * @throws IOException if an IOException occurs
+     * @throws XMLStreamException if an XMLStreamException occurs
      */
     public static boolean newVersionReleased(MavenJarFile jarFile, URL jarRepository) throws IOException, XMLStreamException {
 

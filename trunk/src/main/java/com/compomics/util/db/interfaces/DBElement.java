@@ -59,6 +59,7 @@ public interface DBElement {
      * @param   aConn   The Connection on which to execute SQL statements.
      *                  It should be an open connection and the implementation
      *                  should refrain from closing it, so the caller can reuse it.
+     * @return the result
      * @exception   SQLException    When the save fails (e.g.: Connection gone stale).
      */
     public int save(Connection aConn) throws SQLException;
@@ -72,6 +73,7 @@ public interface DBElement {
      * @param   aConn   The Connection on which to execute SQL statements.
      *                  It should be an open connection and the implementation
      *                  should refrain from closing it, so the caller can reuse it.
+     * @return the result
      * @exception   SQLException    When the save fails (e.g.: PK not found).
      */
     public int remove(Connection aConn) throws SQLException;

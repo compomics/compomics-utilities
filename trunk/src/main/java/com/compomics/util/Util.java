@@ -92,7 +92,7 @@ public class Util {
      * deletions were successful. If a deletion fails, the method stops
      * attempting to delete and returns false.
      *
-     * @param dir
+     * @param dir the directory to delete
      * @return rue if all deletions were successful
      */
     public static boolean deleteDir(File dir) {
@@ -418,7 +418,7 @@ public class Util {
      * @param progressDialog the progress dialog
      * @param removeHtml if true, HTML is converted to text
      * @param writer the writer where the file is to be written
-     * @throws IOException
+     * @throws IOException if a problem occurs when writing to the file
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
 
@@ -473,7 +473,7 @@ public class Util {
      *
      * @param in the file to copy from
      * @param out the file to copy to
-     * @throws IOException
+     * @throws IOException if a problem occurs when writing to the file
      */
     public static void copyFile(File in, File out) throws IOException {
         FileChannel inChannel = new FileInputStream(in).getChannel();
@@ -495,7 +495,7 @@ public class Util {
      *
      * @param file the file to find the number of lines in
      * @return the number of lines in the given file
-     * @throws IOException
+     * @throws IOException if a problem occurs when writing to the file
      */
     public static int getNumberOfLines(File file) throws IOException {
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));

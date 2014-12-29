@@ -32,7 +32,7 @@ public class MavenJarFile extends JarFile {
      * Create a new MavenJarFile object.
      *
      * @param jarPath the path to the jar file
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public MavenJarFile(URI jarPath) throws IOException {
         super(new File(jarPath));
@@ -53,7 +53,7 @@ public class MavenJarFile extends JarFile {
      * Create a new MavenJarFile object.
      *
      * @param aJarFile the jar file
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public MavenJarFile(File aJarFile) throws IOException {
         this(aJarFile.toURI());

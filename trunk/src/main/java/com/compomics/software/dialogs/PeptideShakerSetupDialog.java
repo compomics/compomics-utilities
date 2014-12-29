@@ -52,11 +52,11 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     /**
      * Creates a new PeptideShakerSetupDialog.
      *
-     * @param parent
-     * @param modal
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param parent the parent dialog
+     * @param modal if the dialog is to be modal or not
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public PeptideShakerSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
@@ -69,11 +69,11 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     /**
      * Creates a new PeptideShakerSetupDialog.
      *
-     * @param parent
-     * @param modal
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @param parent the parent dialog
+     * @param modal if the dialog is to be modal or not
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public PeptideShakerSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);

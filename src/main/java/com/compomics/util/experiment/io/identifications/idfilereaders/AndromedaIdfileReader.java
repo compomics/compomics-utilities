@@ -65,8 +65,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * Constructor for an Andromeda result file reader.
      *
      * @param resultsFile the Andromeda results file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if a IOException occurs
      */
     public AndromedaIdfileReader(File resultsFile) throws FileNotFoundException, IOException {
         this(resultsFile, null);
@@ -77,8 +77,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param resultsFile the Andromeda results file
      * @param waitingHandler the waiting handler
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if a IOException occurs
      */
     public AndromedaIdfileReader(File resultsFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
         bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);

@@ -177,9 +177,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     /**
      * Swap two rows in the pattern. The first amino acid is 0.
      *
-     * @param fromRow
-     * @param toRow
-     * @throws IllegalArgumentException
+     * @param fromRow from row
+     * @param toRow to row
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
     public void swapRows(int fromRow, int toRow) throws IllegalArgumentException {
 
@@ -191,9 +191,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         }
 
         ArrayList<Character> toRowDataTarget = residueTargeted.get(toRow);
-
         residueTargeted.put(toRow, residueTargeted.get(fromRow));
-
         residueTargeted.put(fromRow, toRowDataTarget);
 
         if (target == fromRow) {

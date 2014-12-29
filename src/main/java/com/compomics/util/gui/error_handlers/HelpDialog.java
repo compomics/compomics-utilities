@@ -30,7 +30,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
-     * @param parent
+     * @param parent the parent frame
      * @param fileName the name of the help file
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
@@ -43,7 +43,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
-     * @param parent
+     * @param parent the parent frame
      * @param fileName the name of the help file
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
@@ -58,7 +58,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
-     * @param parent
+     * @param parent the parent frame
      * @param fileName the name of the help file
      * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages
@@ -72,7 +72,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JFrame as a parent.
      *
-     * @param parent
+     * @param parent the parent frame
      * @param fileName the name of the help file
      * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages
@@ -157,7 +157,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog object with a JDialog as a parent.
      *
-     * @param parent
+     * @param parent the parent dialog
      * @param fileName the name of the help file
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
@@ -170,7 +170,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog object with a JDialog as a parent.
      *
-     * @param parent
+     * @param parent the parent dialog
      * @param fileName the name of the help file
      * @param helpIcon the icon to use for the help pages
      * @param aboutIcon the icon to use for the about pages
@@ -185,7 +185,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JDialog as a parent.
      *
-     * @param parent
+     * @param parent the parent dialog
      * @param fileName the name of the help file
      * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages
@@ -199,7 +199,7 @@ public class HelpDialog extends javax.swing.JDialog {
     /**
      * Creates a new HelpDialog with a JDialog as a parent.
      *
-     * @param parent
+     * @param parent the parent dialog
      * @param fileName the name of the help file
      * @param reference a reference in the HTML file to scroll to, can be null
      * @param helpIcon the icon to use for the help pages

@@ -126,18 +126,18 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Creates a new VennDiagramPanel.
      *
-     * @param a
-     * @param b
-     * @param c
-     * @param d
-     * @param groupA
-     * @param groupB
-     * @param groupC
-     * @param groupD
-     * @param datasetAColor
-     * @param datasetBColor
-     * @param datasetCColor
-     * @param datasetDColor
+     * @param a dataset A
+     * @param b dataset B
+     * @param c dataset C
+     * @param d dataset D
+     * @param groupA the name for dataset A
+     * @param groupB the name for dataset B
+     * @param groupC the name for dataset C
+     * @param groupD the name for dataset D
+     * @param datasetAColor the color for dataset A
+     * @param datasetBColor the color for dataset B
+     * @param datasetCColor the color for dataset C
+     * @param datasetDColor the color for dataset D
      */
     public VennDiagramPanel(ArrayList<String> a, ArrayList<String> b, ArrayList<String> c, ArrayList<String> d,
             String groupA, String groupB, String groupC, String groupD,
@@ -539,9 +539,9 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Handles mouse clicks in the chart panel.
      *
-     * @param event
+     * @param event the chart mouse event
      */
-    public void mouseClickedInChart(ChartMouseEvent event) {
+    private void mouseClickedInChart(ChartMouseEvent event) {
 
         ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
 
@@ -570,9 +570,9 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Handles mouse movements in the chart panel.
      *
-     * @param event
+     * @param event the chart mouse event
      */
-    public void mouseMovedInChart(ChartMouseEvent event) {
+    private void mouseMovedInChart(ChartMouseEvent event) {
 
         ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
 
@@ -807,7 +807,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Set if the legend is to be shown.
      * 
-     * @param showLegend 
+     * @param showLegend if the legend is to be shown
      */
     public void setShowLegend(boolean showLegend) {
         this.showLegend = showLegend;
@@ -825,7 +825,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Set the font size.
      * 
-     * @param fontSizeValues 
+     * @param fontSizeValues the font size
      */
     public void setFontSize(int fontSizeValues) {
         this.fontSizeValues = fontSizeValues;
@@ -843,7 +843,7 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     /**
      * Set the font size of the legend.
      * 
-     * @param fontSizeLegend 
+     * @param fontSizeLegend the font size of the legend
      */
     public void setFontSizeLegend(int fontSizeLegend) {
         this.fontSizeLegend = fontSizeLegend;

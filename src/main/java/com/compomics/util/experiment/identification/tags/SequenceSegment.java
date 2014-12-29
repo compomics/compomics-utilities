@@ -340,7 +340,7 @@ public class SequenceSegment {
     /**
      * Adds a modification to the terminus of sequencing.
      *
-     * @param modification
+     * @param modification the modification
      */
     public void addModificationTerminus(String modification) {
         PTM ptm = PTMFactory.getInstance().getPTM(modification);

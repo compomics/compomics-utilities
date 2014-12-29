@@ -36,8 +36,8 @@ public class MgfFileIterator {
      *
      * @param mgfFile the file to go through
      *
-     * @throws java.io.FileNotFoundException
-     * @throws java.io.IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public MgfFileIterator(File mgfFile) throws FileNotFoundException, IOException {
         mgfFileName = mgfFile.getName();
@@ -65,7 +65,7 @@ public class MgfFileIterator {
      *
      * @return the next spectrum in the file
      *
-     * @throws java.io.IOException
+     * @throws IOException if an IOException occurs
      */
     public MSnSpectrum next() throws IOException {
 

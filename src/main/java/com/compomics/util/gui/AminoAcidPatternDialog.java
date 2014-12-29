@@ -47,9 +47,9 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
     /**
      * Creates a new AminoAcidPatternDialog.
      *
-     * @param parent
-     * @param pattern
-     * @param editable
+     * @param parent the parent frame
+     * @param pattern the amino acid pattern object
+     * @param editable if the pattern is editable or not
      */
     public AminoAcidPatternDialog(java.awt.Frame parent, AminoAcidPattern pattern, boolean editable) {
         super(parent, true);
@@ -619,7 +619,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
         int caretPosition = patternTestEditorPane.getCaretPosition();
 
         // remove html tags
-        if (tempSequence.indexOf("<html>") != -1) {
+        if (tempSequence.contains("<html>")) {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 

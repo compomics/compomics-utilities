@@ -127,7 +127,7 @@ public class AnnotationPreferences implements Serializable {
 
     /**
      * Constructor setting preferences from search parameters.
-     * 
+     *
      * @param searchParameters the search parameters
      */
     public AnnotationPreferences(SearchParameters searchParameters) {
@@ -167,9 +167,9 @@ public class AnnotationPreferences implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
@@ -191,9 +191,9 @@ public class AnnotationPreferences implements Serializable {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public void resetAutomaticAnnotation(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         clearCharges();
@@ -223,8 +223,8 @@ public class AnnotationPreferences implements Serializable {
      * Set whether neutral losses are considered only for amino acids of
      * interest or not.
      *
-     *
-     * @param neutralLossesSequenceDependant
+     * @param neutralLossesSequenceDependant if the neutral losses are to be
+     * sequence dependant
      */
     public void setNeutralLossesSequenceDependant(boolean neutralLossesSequenceDependant) {
         this.neutralLossesSequenceDependant = neutralLossesSequenceDependant;
@@ -456,7 +456,7 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Set if all peaks or just the annotated ones are to be shown.
      *
-     * @param showAllPeaks
+     * @param showAllPeaks if all peaks are to be shown
      */
     public void setShowAllPeaks(boolean showAllPeaks) {
         this.showAllPeaks = showAllPeaks;
@@ -474,7 +474,7 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Set if the bars in the bubble plot are to be shown or not.
      *
-     * @param showBars
+     * @param showBars if the bars in the bubble plot are to be shown
      */
     public void setShowBars(boolean showBars) {
         this.showBars = showBars;
@@ -494,7 +494,8 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Set if the intensity or m/z ion table should be shown.
      *
-     * @param intensityIonTable
+     * @param intensityIonTable if the intensity or m/z ion table should be
+     * shown
      */
     public void setIntensityIonTable(boolean intensityIonTable) {
         this.intensityIonTable = intensityIonTable;
@@ -513,7 +514,8 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Set if the automatic y-axis zoom only considers the annotated peaks.
      *
-     * @param yAxisZoomExcludesBackgroundPeaks
+     * @param yAxisZoomExcludesBackgroundPeaks if the automatic y-axis zoom only
+     * considers the annotated peaks
      */
     public void setYAxisZoomExcludesBackgroundPeaks(boolean yAxisZoomExcludesBackgroundPeaks) {
         this.yAxisZoomExcludesBackgroundPeaks = yAxisZoomExcludesBackgroundPeaks;

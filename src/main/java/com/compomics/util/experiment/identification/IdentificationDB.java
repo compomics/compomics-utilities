@@ -97,9 +97,9 @@ public class IdentificationDB implements Serializable {
      * tables.
      *
      * @param folder the folder where to put the database
-     * @param name
+     * @param name the database name
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectCache
+     * @param objectCache the objects cache
      * @throws SQLException an exception thrown whenever an error occurred while
      * creating the database
      */
@@ -355,11 +355,11 @@ public class IdentificationDB implements Serializable {
      * Deletes a match from the database.
      *
      * @param key the key of the match
-     * @deprecated it is advised to use the specific psm/peptide/protein method
+     * @deprecated it is advised to use the specific PSM/peptide/protein method
      * instead
      * @throws SQLException exception thrown whenever an error occurred while
      * deleting the match
-     * @throws IOException
+     * @throws IOException if an IOException is thrown
      */
     public void removeMatch(String key) throws SQLException, IOException {
         removeProteinMatch(key);
@@ -733,7 +733,7 @@ public class IdentificationDB implements Serializable {
      * reading the database
      * @throws ClassNotFoundException exception thrown whenever the class of the
      * object is not found when deserializing it.
-     * @throws InterruptedException
+     * @throws InterruptedException if an InterruptedException is thrown
      */
     public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (waitingHandler != null) {
@@ -1114,9 +1114,9 @@ public class IdentificationDB implements Serializable {
      * @param tableList the list containing the created tables
      * @param tableName the name of the table
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws SQLException if an SQLException occurs
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void checkTable(Collection<String> tableList, String tableName) throws SQLException, IOException, InterruptedException {
         if (!tableList.contains(tableName)) {
@@ -1135,10 +1135,10 @@ public class IdentificationDB implements Serializable {
      *
      * @return an object from the database
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws SQLException if an SQLException occurs
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws ClassNotFoundException if an ClassNotFoundException occurs
      */
     public Object getObject(String table, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return objectsDB.retrieveObject(table, objectKey, true);
@@ -1225,7 +1225,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param dbFolder the folder where the database is located
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache
+     * @param objectsCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection

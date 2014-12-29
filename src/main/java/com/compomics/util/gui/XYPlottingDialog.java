@@ -196,7 +196,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param dialogParent the dialog parent
      * @param table the table to display the xy plot for
      * @param tableToolTips the table tooltips
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      * @param normalIcon the normal icon for the parent dialog
      * @param waitingIcon the icon to use when busy
      */
@@ -2231,7 +2231,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      *
      * @param event
      */
-    public void mouseClickedInChart(ChartMouseEvent event) {
+    private void mouseClickedInChart(ChartMouseEvent event) {
 
         ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
 
@@ -2299,7 +2299,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      *
      * @param event
      */
-    public void mouseMovedInChart(ChartMouseEvent event) {
+    private void mouseMovedInChart(ChartMouseEvent event) {
         // @TODO: should we do something here?
     }
 
@@ -2493,7 +2493,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         /**
          * Exclude null values from an array of Double.
          *
-         * @param data
+         * @param data the data
          * @return another double array with no longer null values
          */
         public double[] excludeNullValues(Double[] data) {

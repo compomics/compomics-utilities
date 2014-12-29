@@ -91,9 +91,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * Constructor for an mzIdentML result file reader.
      *
-     * @param mzIdentMLFile
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param mzIdentMLFile the mzIdentML file
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public MzIdentMLIdfileReader(File mzIdentMLFile) throws FileNotFoundException, IOException {
         this(mzIdentMLFile, null);
@@ -102,10 +102,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     /**
      * Constructor for an mzIdentML result file reader.
      *
-     * @param mzIdentMLFile
-     * @param waitingHandler
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param mzIdentMLFile the mzIdentML file
+     * @param waitingHandler the waiting handler
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public MzIdentMLIdfileReader(File mzIdentMLFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 

@@ -45,12 +45,12 @@ public class ReferenceGroup implements PrideObject, Serializable {
     }
 
     /**
-     * Set the reference.
+     * Set the references.
      *
-     * @param reference
+     * @param references the references
      */
-    public void setReferences(ArrayList<Reference> reference) {
-        this.references = reference;
+    public void setReferences(ArrayList<Reference> references) {
+        this.references = references;
     }
 
     /**

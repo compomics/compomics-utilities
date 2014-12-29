@@ -23,10 +23,10 @@ public class RegExEnzyme extends Enzyme {
     /**
      * Create a new RegExEnzyme.
      *
-     * @param aTitle
-     * @param aCleavage
-     * @param aRestrict
-     * @param aPosition
+     * @param aTitle the title
+     * @param aCleavage the cleavage site
+     * @param aRestrict the restricting amino acids
+     * @param aPosition the position
      */
     public RegExEnzyme(String aTitle, String aCleavage, String aRestrict, String aPosition) {
         this(aTitle, aCleavage, aRestrict, aPosition, 1);
@@ -35,11 +35,11 @@ public class RegExEnzyme extends Enzyme {
     /**
      * Create a new RegExEnzyme.
      *
-     * @param aTitle
-     * @param aCleavage
-     * @param aRestrict
-     * @param aPosition
-     * @param aMiscleavages
+     * @param aTitle the title
+     * @param aCleavage the cleavage site
+     * @param aRestrict the restricting amino acids
+     * @param aPosition the position
+     * @param aMiscleavages max number of miscleavages
      */
     public RegExEnzyme(String aTitle, String aCleavage, String aRestrict, String aPosition, int aMiscleavages) {
         // since the cleavage/restriction pattern for this class are expected to be a

@@ -528,7 +528,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzCorrections the m/z corrections to apply
      * @return the recalibrated list of peaks indexed by m/z
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
 
@@ -589,8 +589,8 @@ public abstract class Spectrum extends ExperimentObject {
      * Returns the part of the spectrum contained between mzMin (inclusive) and
      * mzMax (exclusive) as a peak list
      *
-     * @param mzMin
-     * @param mzMax
+     * @param mzMin the minimum m/z value
+     * @param mzMax the maximum m/z value
      * @return the part of the spectrum contained between mzMin (inclusive) and
      * mzMax (exclusive)
      */

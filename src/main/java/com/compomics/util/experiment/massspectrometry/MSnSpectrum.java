@@ -175,7 +175,7 @@ public class MSnSpectrum extends Spectrum {
      * Writes the spectrum in the mgf format using the given writer.
      *
      * @param writer1 a buffered writer where the spectrum will be written
-     * @throws IOException
+     * @throws IOException if an IOException occurs 
      */
     public void writeMgf(BufferedWriter writer1) throws IOException {
         writeMgf(writer1, null);
@@ -187,7 +187,7 @@ public class MSnSpectrum extends Spectrum {
      * @param mgfWriter a buffered writer where the spectrum will be written
      * @param additionalTags additional tags which will be added after the BEGIN
      * IONS tag in alphabetic order
-     * @throws IOException
+     * @throws IOException if an IOException occurs 
      */
     public void writeMgf(BufferedWriter mgfWriter, HashMap<String, String> additionalTags) throws IOException {
         String spectrumAsMgf = asMgf(additionalTags);

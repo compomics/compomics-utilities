@@ -21,7 +21,7 @@ public class NotificationDialog extends javax.swing.JDialog {
      *
      * @param parent the parent dialog
      * @param notificationDialogParent the notification dialog parent
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      * @param notificationCount the number of notifications
      * @param notificationType the notification type as a string
      */

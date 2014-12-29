@@ -403,14 +403,14 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Add a mirrored spectrum (or chromatogram).
      *
-     * @param aXAxisData
-     * @param aYAxisData
-     * @param aPrecursorMZ
-     * @param aPrecursorCharge
-     * @param aFileName
-     * @param aProfileMode
-     * @param aSpectrumPeakColor
-     * @param aSpectrumProfileModeLineColor
+     * @param aXAxisData the x axis data
+     * @param aYAxisData the y axis data
+     * @param aPrecursorMZ the precursor m/z
+     * @param aPrecursorCharge the precursor charge
+     * @param aFileName the file name
+     * @param aProfileMode if the spectrum is to be drawn in profile mode
+     * @param aSpectrumPeakColor the spectrum peak color
+     * @param aSpectrumProfileModeLineColor the spectrum profile mode line color
      */
     public void addMirroredSpectrum(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName, boolean aProfileMode,
             Color aSpectrumPeakColor, Color aSpectrumProfileModeLineColor) {
@@ -605,7 +605,7 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @deprecated it is advised to use methods based on the ion type rather
      * than on the peak label
-     * @param peakLabel
+     * @param peakLabel the peak label
      * @return the peak color
      */
     public static Color determineColorOfPeak(String peakLabel) {

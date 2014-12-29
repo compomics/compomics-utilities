@@ -49,7 +49,7 @@ public class DasAlignment {
     /**
      * Constructor.
      * 
-     * @param aDasAlignment 
+     * @param aDasAlignment the DAS alignment
      */
     public DasAlignment(String aDasAlignment) {
         try {

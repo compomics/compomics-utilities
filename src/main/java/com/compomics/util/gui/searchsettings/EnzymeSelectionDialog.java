@@ -27,8 +27,8 @@ public class EnzymeSelectionDialog extends javax.swing.JDialog {
     /**
      * Creates a new EnzymeSelectionDialog.
      *
-     * @param parent
-     * @param modal
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
      * @param enzymeName the PRIDE enzyme name
      */
     public EnzymeSelectionDialog(java.awt.Frame parent, boolean modal, String enzymeName) {
@@ -43,8 +43,8 @@ public class EnzymeSelectionDialog extends javax.swing.JDialog {
     /**
      * Creates a new EnzymeSelectionDialog.
      *
-     * @param parent
-     * @param modal
+     * @param parent the parent dialog
+     * @param modal if the dialog is to be modal or not
      * @param enzymeName the PRIDE enzyme name
      */
     public EnzymeSelectionDialog(JDialog parent, boolean modal, String enzymeName) {

@@ -5,18 +5,16 @@ import javax.swing.filechooser.*;
 
 /**
  * File filter for *.xml files.
- * 
- * Created March 2008
- * 
- * @author  Harald Barsnes
+ *
+ * @author Harald Barsnes
  */
 public class XmlFileFilter extends FileFilter {
 
     /**
      * Accept all directories, *.xml files.
      *
-     * @param f
-     * @return boolean
+     * @param f the file
+     * @return true if the file passes the filter
      */
     public boolean accept(File f) {
         if (f.isDirectory()) {
@@ -25,8 +23,8 @@ public class XmlFileFilter extends FileFilter {
 
         String extension = FileFilterUtils.getExtension(f);
         if (extension != null) {
-            if (extension.equals(FileFilterUtils.xml) ||
-                    extension.equals(FileFilterUtils.XML)) {
+            if (extension.equals(FileFilterUtils.xml)
+                    || extension.equals(FileFilterUtils.XML)) {
                 return true;
             } else {
                 return false;
@@ -36,9 +34,9 @@ public class XmlFileFilter extends FileFilter {
     }
 
     /**
-     * The description of this filter
+     * The description of the filter.
      *
-     * @return String
+     * @return String the description of the filter
      */
     public java.lang.String getDescription() {
         return "*.xml";

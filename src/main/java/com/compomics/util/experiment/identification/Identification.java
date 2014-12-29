@@ -169,7 +169,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param key the key of the parameter
      * @param urParameter the additional parameter
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
@@ -195,7 +195,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @return the personalization parameter
      *
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      * @deprecated use the database match specific methods instead
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -1817,7 +1817,7 @@ public abstract class Identification extends ExperimentObject {
      * @param dbFolder the absolute path to the folder where the database is
      * located
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache
+     * @param objectsCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection, typically when another software already has
@@ -1832,7 +1832,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param dbFolder the folder where the database is located
      * @param deleteOldDatabase if true, tries to delete the old database
-     * @param objectsCache
+     * @param objectsCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection
@@ -1858,8 +1858,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param waitingHandler the waiting handler
      * @param newDirectory the new directory where to store the data
-     * @param newName
-     * @param objectsCache
+     * @param newName the new name
+     * @param objectsCache the objects cache
      * @param directory the directory where the data is currently stored
      *
      * @throws SQLException exception thrown whenever an error occurred while

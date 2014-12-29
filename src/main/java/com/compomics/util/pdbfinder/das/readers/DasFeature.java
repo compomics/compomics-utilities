@@ -93,7 +93,7 @@ public class DasFeature {
     /**
      * Constructor.
      * 
-     * @param aFeature 
+     * @param aFeature the feature
      */
     public DasFeature(String aFeature) {
         this.iFeature = aFeature;
@@ -104,16 +104,16 @@ public class DasFeature {
             return;
         }
         this.typeId = iFeature.substring(iFeature.indexOf("id=", iFeature.indexOf("<TYPE")) + 4, iFeature.indexOf("\"", iFeature.indexOf("\"", iFeature.indexOf("<TYPE")) + 1));
-        if (iFeature.indexOf("category") != -1) {
+        if (iFeature.contains("category")) {
             this.typeCategory = iFeature.substring(iFeature.indexOf("category=") + 10, (iFeature.indexOf("\"", iFeature.indexOf("category=") + 10)));
         }
-        if (iFeature.indexOf("reference") != -1) {
+        if (iFeature.contains("reference")) {
             this.typeReference = iFeature.substring(iFeature.indexOf("reference=") + 11, (iFeature.indexOf("\"", iFeature.indexOf("reference=") + 11)));
         }
-        if (iFeature.indexOf("subparts") != -1) {
+        if (iFeature.contains("subparts")) {
             this.typeSubparts = iFeature.substring(iFeature.indexOf("subparts=") + 10, (iFeature.indexOf("\"", iFeature.indexOf("subparts=") + 10)));
         }
-        if (iFeature.indexOf("superparts") != -1) {
+        if (iFeature.contains("superparts")) {
             this.typeSuperparts = iFeature.substring(iFeature.indexOf("superparts=") + 12, (iFeature.indexOf("\"", iFeature.indexOf("superparts=") + 12)));
         }
         this.type = iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<TYPE")) + 1, iFeature.indexOf("</TYPE"));
@@ -123,18 +123,18 @@ public class DasFeature {
         this.start = strt;
         Integer nd = new Integer(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<END")) + 1, iFeature.indexOf("</END")));
         this.end = nd;
-        if (iFeature.indexOf("score") != -1) {
+        if (iFeature.contains("score")) {
             Double scr = new Double(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<SCORE")) + 1, iFeature.indexOf("</SCORE")));
             this.score = scr;
         }
 
-        if (iFeature.indexOf("<ORIENTATION") != -1) {
+        if (iFeature.contains("<ORIENTATION")) {
             this.orientation = iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<ORIENTATION")) + 1, iFeature.indexOf("</ORIENTATION"));
         }
-        if (iFeature.indexOf("<PHASE") != -1) {
+        if (iFeature.contains("<PHASE")) {
             this.phase = iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<PHASE")) + 1, iFeature.indexOf("</PHASE"));
         }
-        if (iFeature.indexOf("<NOTE") != -1) {
+        if (iFeature.contains("<NOTE")) {
             int lastNoteFound = 0;
             Vector notes = new Vector();
             while (iFeature.indexOf("<NOTE", lastNoteFound) != -1) {
@@ -144,7 +144,7 @@ public class DasFeature {
             note = new String[notes.size()];
             notes.toArray(note);
         }
-        if (iFeature.indexOf("<LINK") != -1) {
+        if (iFeature.contains("<LINK")) {
             int lastLinkFound = 0;
             Vector links = new Vector();
             Vector linksRef = new Vector();

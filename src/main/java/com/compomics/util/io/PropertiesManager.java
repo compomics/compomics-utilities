@@ -73,7 +73,7 @@ public class PropertiesManager {
     /**
      * DO NOT RUN. For testing purpose.
      * 
-     * @param args 
+     * @param args the arguments
      */
     public static void main(String[] args) {
         new PropertiesManager();
@@ -82,7 +82,7 @@ public class PropertiesManager {
     /**
      * Get a Properties instance for the parameter properties filename.
      *
-     * @param aTool 
+     * @param aTool the name of the tool
      * @param aPropertiesFileName - e.g.: "mascotdaemon.properties"
      * @return Properties instance of the given properties file. Null if the filename was not found.
      */
@@ -202,7 +202,7 @@ public class PropertiesManager {
     /**
      * Update the content of a user properties instance to the ms_lims properties directory.
      *
-     * @param aTool 
+     * @param aTool               The name of the tool. 
      * @param aNewProperties      The Properties instance.
      * @param aPropertiesFileName The properties filename (e.g., dbconnection.properties)
      */
@@ -259,7 +259,7 @@ public class PropertiesManager {
      * This method will delete the log4j log file in the folder of the package and will create a log file in the
      * CompomicsTools specific .compomics folder
      *
-     * @param aLogger 
+     * @param aLogger The logger
      * @param aCompomicsTools The tool
      */
     public void updateLog4jConfiguration(final org.apache.log4j.Logger aLogger, CompomicsTools aCompomicsTools) {

@@ -213,9 +213,10 @@ public class IdentificationParametersReader {
      * @param userModsFile if there are user modifications, provide the user
      * modification file (usermods.xml)
      * @return the corresponding SearchParameters object
-     * @throws XmlPullParserException
-     * @throws FileNotFoundException 
-     * @throws IOException  
+
+     * @throws IOException if an IOException occurs
+     * @throws XmlPullParserException if an XmlPullParserException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public static SearchParameters getSearchParameters(Properties aProps, File userModsFile) throws XmlPullParserException, FileNotFoundException, IOException {
 

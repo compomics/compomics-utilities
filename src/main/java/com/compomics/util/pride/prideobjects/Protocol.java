@@ -18,7 +18,7 @@ public class Protocol implements PrideObject, Serializable {
      */
     static final long serialVersionUID = -9045298216154032632L;
     /**
-     * The protcol name.
+     * The protocol name.
      */
     private String name;
     /**
@@ -29,8 +29,8 @@ public class Protocol implements PrideObject, Serializable {
     /**
      * Create a new Protocol object.
      *
-     * @param name
-     * @param cvTerms
+     * @param name the name
+     * @param cvTerms the CV terms
      */
     public Protocol(String name, ArrayList<CvTerm> cvTerms) {
         this.name = name;

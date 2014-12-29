@@ -121,8 +121,8 @@ public class UtilitiesPathPreferences {
      *
      * @param inputFile the file to load the path preferences from
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void loadPathPreferencesFromFile(File inputFile) throws FileNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
@@ -143,7 +143,7 @@ public class UtilitiesPathPreferences {
      *
      * @param line the line where to read the path from
      *
-     * @throws java.io.FileNotFoundException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public static void loadPathPreferenceFromLine(String line) throws FileNotFoundException {
         String id = getPathID(line);
@@ -230,7 +230,7 @@ public class UtilitiesPathPreferences {
      *
      * @param path the path of the folder where to redirect all paths.
      *
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public static void setAllPathsIn(String path) throws FileNotFoundException {
         for (UtilitiesPathKey utilitiesPathKey : UtilitiesPathKey.values()) {
@@ -251,7 +251,7 @@ public class UtilitiesPathPreferences {
      *
      * @param file the destination file
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void writeConfigurationToFile(File file) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -267,7 +267,7 @@ public class UtilitiesPathPreferences {
      *
      * @param bw the writer to use for writing
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void writeConfigurationToFile(BufferedWriter bw) throws IOException {
         for (UtilitiesPathKey pathKey : UtilitiesPathKey.values()) {
@@ -281,7 +281,7 @@ public class UtilitiesPathPreferences {
      * @param bw the writer to use for writing
      * @param pathKey the key of the path of interest
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void writePathToFile(BufferedWriter bw, UtilitiesPathKey pathKey) throws IOException {
 

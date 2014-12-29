@@ -61,10 +61,10 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      *
      * @param parent the parent frame
      * @param proteinMatchKey the protein match key
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         super(parent, true);
@@ -479,7 +479,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * Returns the GO accession number as a web link to the given GO term at
      * QuickGO.
      *
-     * @param goAccession
+     * @param goAccession the GO accession
      * @return the GO accession number as a web link to the given GO term at
      * QuickGO
      */

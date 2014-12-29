@@ -485,7 +485,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Convenience method saving the user preferences.
      *
-     * @param userPreferences
+     * @param userPreferences the user preferences
      */
     public static void saveUserPreferences(UtilitiesUserPreferences userPreferences) {
 

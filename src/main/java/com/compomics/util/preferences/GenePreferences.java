@@ -155,14 +155,14 @@ public class GenePreferences implements Serializable {
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
-     * @param selectedSpecies
+     * @param selectedSpecies the selected species
      * @param waitingHandler waiting handler displaying progress and allowing
      * canceling the process
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public boolean downloadGeneSequences(File destinationFile, String ensemblType, String ensemblSchemaName, String selectedSpecies, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
@@ -187,7 +187,7 @@ public class GenePreferences implements Serializable {
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
-     * @param selectedSpecies
+     * @param selectedSpecies the selected species
      * @param swissProtMapping if true, use the uniprot_swissprot_accession
      * parameter, if false use the uniprot_sptrembl parameter
      * @param waitingHandler waiting handler displaying progress and allowing
@@ -195,8 +195,8 @@ public class GenePreferences implements Serializable {
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, boolean swissProtMapping, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
@@ -235,8 +235,8 @@ public class GenePreferences implements Serializable {
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType) throws MalformedURLException, IOException {
         return queryEnsembl(requestXml, destinationFile, ensemblType, null);
@@ -249,12 +249,12 @@ public class GenePreferences implements Serializable {
      * @param destinationFile the file where to save the results
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param waitingHandler waiting handler displaying progress and allowing
-     * cancelling the process
+     * canceling the process
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
         return queryEnsembl(requestXml, null, destinationFile, ensemblType, waitingHandler);
@@ -272,8 +272,8 @@ public class GenePreferences implements Serializable {
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public boolean queryEnsembl(String requestXml, String waitingText, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
@@ -304,7 +304,7 @@ public class GenePreferences implements Serializable {
                     } else {
                         System.out.println(waitingText);
                     }
-                    
+
                     int counter = 0;
 
                     boolean fileCreated = destinationFile.createNewFile();
@@ -379,15 +379,15 @@ public class GenePreferences implements Serializable {
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
-     * @param selectedSpecies
-     * @param ensemblVersion
-     * @param waitingHandler
+     * @param selectedSpecies the selected species
+     * @param ensemblVersion the Ensembl version
+     * @param waitingHandler the waiting handler
      *
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws IllegalArgumentException
+     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion, 
+    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String selectedSpecies, String ensemblVersion,
             WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // fix needed to support both default and custom ensembl species
@@ -538,11 +538,12 @@ public class GenePreferences implements Serializable {
      * Insert the default gene mappings files. If newer versions of the mapping
      * exists they will not be overwritten.
      *
-     * @param aEnsemblVersionsFile
-     * @param aGoDomainsFile
-     * @param aSpeciesFile
-     * @param aDefaultSpeciesGoMappingsFile
-     * @param aDefaultSpeciesGeneMappingFile
+     * @param aEnsemblVersionsFile the Ensembl versions file
+     * @param aGoDomainsFile the GO domains file
+     * @param aSpeciesFile the species file
+     * @param aDefaultSpeciesGoMappingsFile the default species GO mappings file
+     * @param aDefaultSpeciesGeneMappingFile the default species gene mappings
+     * file
      */
     public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile, File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile) {
 
@@ -699,8 +700,8 @@ public class GenePreferences implements Serializable {
     /**
      * Load the mapping files.
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
+     * @throws IOException if an IOException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
     public void loadSpeciesAndGoDomains() throws IOException, IllegalArgumentException {
 
@@ -968,7 +969,7 @@ public class GenePreferences implements Serializable {
      * @param selectedSpecies the database name of the species to update, e.g.,
      * hsapiens_gene_ensembl
      * @param ensemblVersion the new Ensembl version
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void updateEnsemblVersion(String selectedSpecies, String ensemblVersion) throws IOException {
 
@@ -1002,8 +1003,8 @@ public class GenePreferences implements Serializable {
      * Loads the given Ensembl species file.
      *
      * @param ensemblVersionsFile the Ensembl species file to load
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if an FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws FileNotFoundException, IOException {
 
@@ -1305,7 +1306,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Returns the gene mapping file.
-     * 
+     *
      * @param speciesName the species name
      * @return the gene mapping file
      */
@@ -1315,7 +1316,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Returns the GO mapping file.
-     * 
+     *
      * @param speciesName the species name
      * @return the GO mapping file
      */

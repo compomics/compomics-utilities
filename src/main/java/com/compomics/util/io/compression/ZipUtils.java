@@ -37,7 +37,7 @@ public class ZipUtils {
      * @param totalUncompressedFileSize the total uncompressed size, a value
      * less than 0 will result in an indeterminate progress bar
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void zip(File originFile, File destinationFile, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
 
@@ -70,8 +70,8 @@ public class ZipUtils {
      * @param totalUncompressedFileSize the total uncompressed size, a value
      * less than 0 will result in an indeterminate progress bar
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void addToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
         addToZip(file, "", out, waitingHandler, totalUncompressedFileSize);
@@ -90,8 +90,8 @@ public class ZipUtils {
      * @param totalUncompressedFileSize the total uncompressed size, a value
      * less than 0 will result in an indeterminate progress bar
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void addToZip(File file, String subDirectory, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
         if (file.isDirectory()) {
@@ -119,8 +119,8 @@ public class ZipUtils {
      * @param totalUncompressedFileSize the total uncompressed size, a value
      * less than 0 will result in an indeterminate progress bar
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void addFileToZip(File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
         addFileToZip("", file, out, waitingHandler, totalUncompressedFileSize);
@@ -138,8 +138,8 @@ public class ZipUtils {
      * @param totalUncompressedFileSize the total uncompressed size, a value
      * less than 0 will result in an indeterminate progress bar
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public static void addFileToZip(String subDirectory, File file, ZipOutputStream out, WaitingHandler waitingHandler, long totalUncompressedFileSize) throws IOException {
 
@@ -204,7 +204,7 @@ public class ZipUtils {
      * "data", note that there is no tailing "/")
      * @param out the zip stream
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void addFolderToZip(String folderPath, ZipOutputStream out) throws IOException {
         out.putNextEntry(new ZipEntry(folderPath + "/"));
@@ -219,7 +219,7 @@ public class ZipUtils {
      * @param waitingHandler a waiting handler displaying progress and allowing
      * canceling the process (can be null)
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static void unzip(File zipFile, File destinationFolder, WaitingHandler waitingHandler) throws IOException {
 

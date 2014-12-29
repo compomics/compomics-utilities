@@ -31,10 +31,10 @@ public class PdbParameter {
     /**
      * Constructor.
      *
-     * @param aPdbaccession
-     * @param aTitle
-     * @param aExperiment_type
-     * @param aResolution
+     * @param aPdbaccession the PDB accession
+     * @param aTitle the title
+     * @param aExperiment_type the experiment type
+     * @param aResolution the resolution
      */
     public PdbParameter(String aPdbaccession, String aTitle, String aExperiment_type, String aResolution) {
         this.iPdbaccession = aPdbaccession;
@@ -55,7 +55,7 @@ public class PdbParameter {
     /**
      * Set the blocks.
      *
-     * @param blocks
+     * @param blocks the blocks
      */
     public void setBlocks(PdbBlock[] blocks) {
         this.blocks = blocks;
@@ -64,7 +64,7 @@ public class PdbParameter {
     /**
      * Add a block.
      *
-     * @param block
+     * @param block the block
      */
     public void addBlock(PdbBlock block) {
         PdbBlock[] blocksAdded = new PdbBlock[blocks.length + 1];
@@ -83,9 +83,9 @@ public class PdbParameter {
     }
 
     /**
-     * Set the PDB accessions.
+     * Set the PDB accession.
      *
-     * @param aPdbaccession
+     * @param aPdbaccession the PDB accession
      */
     public void setPdbaccession(String aPdbaccession) {
         this.iPdbaccession = aPdbaccession;
@@ -103,7 +103,7 @@ public class PdbParameter {
     /**
      * Set the title.
      *
-     * @param aTitle
+     * @param aTitle the title
      */
     public void setTitle(String aTitle) {
         this.iTitle = aTitle;
@@ -121,7 +121,7 @@ public class PdbParameter {
     /**
      * Set the experiment type.
      *
-     * @param aExperiment_type
+     * @param aExperiment_type the experiment type
      */
     public void setExperiment_type(String aExperiment_type) {
         this.iExperiment_type = aExperiment_type;
@@ -139,7 +139,7 @@ public class PdbParameter {
     /**
      * Set the resolution.
      *
-     * @param aResolution
+     * @param aResolution the resolution
      */
     public void setResolution(String aResolution) {
         this.iResolution = aResolution;

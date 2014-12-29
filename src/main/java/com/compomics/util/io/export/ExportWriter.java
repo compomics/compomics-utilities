@@ -36,7 +36,7 @@ public abstract class ExportWriter {
      *
      * @param text the text to write
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void write(String text) throws IOException {
         write(text, null);
@@ -48,7 +48,7 @@ public abstract class ExportWriter {
      * @param text the text to write
      * @param textStyle the style to use, overwrites any previous/default
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void write(String text, WorkbookStyle textStyle) throws IOException;
 
@@ -57,7 +57,7 @@ public abstract class ExportWriter {
      *
      * @param text the text to write
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void writeMainTitle(String text) throws IOException {
         writeMainTitle(text, null);
@@ -69,14 +69,14 @@ public abstract class ExportWriter {
      * @param text the text to write
      * @param textStyle the style to use, overwrites any previous/default
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void writeMainTitle(String text, WorkbookStyle textStyle) throws IOException;
 
     /**
      * Starts a new section.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void startNewSection() throws IOException {
         startNewSection(null, null);
@@ -87,7 +87,7 @@ public abstract class ExportWriter {
      *
      * @param sectionTitle the text to write
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void startNewSection(String sectionTitle) throws IOException {
         startNewSection(sectionTitle, null);
@@ -99,7 +99,7 @@ public abstract class ExportWriter {
      * @param sectionTitle the text to write
      * @param textStyle the style to use, overwrites any previous/default
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void startNewSection(String sectionTitle, WorkbookStyle textStyle) throws IOException;
 
@@ -108,7 +108,7 @@ public abstract class ExportWriter {
      *
      * @param text the text to write
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void writeHeaderText(String text) throws IOException {
         writeHeaderText(text, null);
@@ -120,14 +120,14 @@ public abstract class ExportWriter {
      * @param text the text to write
      * @param textStyle the style to use, overwrites any previous/default
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void writeHeaderText(String text, WorkbookStyle textStyle) throws IOException;
 
     /**
      * Adds a separator.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void addSeparator() throws IOException {
         addSeparator(null);
@@ -138,22 +138,22 @@ public abstract class ExportWriter {
      * 
      * @param textStyle the style to use, overwrites any previous/default
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void addSeparator(WorkbookStyle textStyle) throws IOException;
 
     /**
      * Adds a separator.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract void newLine() throws IOException;
 
     /**
      * Writes the content in cache and closes the connection to the file.
      *
-     * @throws java.io.IOException
-     * @throws java.io.FileNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public abstract void close() throws IOException, FileNotFoundException;
 
@@ -180,7 +180,7 @@ public abstract class ExportWriter {
      *
      * @return an export writer for the desired format
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static ExportWriter getExportWriter(ExportFormat exportFormat, File destinationFile, String separator, int nSeparationLines) throws IOException {
         switch (exportFormat) {

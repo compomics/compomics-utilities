@@ -52,9 +52,9 @@ public class PrideXmlValidator {
     /**
      * Set up a PrideXmlValidator using the default schema.
      *
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     public PrideXmlValidator() throws IOException, VerifierConfigurationException, SAXException {
         SCHEMA = VERIFIER_FACTORY.compileSchema(PrideXmlValidator.class.getClassLoader().getResourceAsStream(SCHEMA_NAME));
@@ -64,9 +64,9 @@ public class PrideXmlValidator {
      * Set up a PrideXmlValidator using the provided schema.
      *
      * @param schemaUrl the URL to the schema
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     public PrideXmlValidator(URL schemaUrl) throws IOException, VerifierConfigurationException, SAXException {
         SCHEMA = VERIFIER_FACTORY.compileSchema(schemaUrl.openStream());
@@ -76,9 +76,9 @@ public class PrideXmlValidator {
      * Set the schema.
      *
      * @param schemaUrl the schema to set
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     public void setSchema(URL schemaUrl) throws IOException, VerifierConfigurationException, SAXException {
         SCHEMA = VERIFIER_FACTORY.compileSchema(schemaUrl.openStream());
@@ -91,9 +91,9 @@ public class PrideXmlValidator {
      * @param schema the schema to validate against
      * @return an XMLValidationErrorHandler object with the error details, if
      * any
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     private XMLValidationErrorHandler validate(Reader reader, Schema schema) throws IOException, VerifierConfigurationException, SAXException {
 
@@ -116,9 +116,9 @@ public class PrideXmlValidator {
      * @param reader the reader containing the file to validate
      * @return an XMLValidationErrorHandler object with the error details, if
      * any
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     private XMLValidationErrorHandler validate(Reader reader) throws IOException, VerifierConfigurationException, SAXException {
         if (SCHEMA == null) {
@@ -132,10 +132,10 @@ public class PrideXmlValidator {
      *
      * @param prideXmlFile the PRIDE XML file to test
      * @return true of the given PRIDE XML file is valid
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws VerifierConfigurationException
-     * @throws SAXException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws SAXException if a SAXException occurs
      */
     public boolean validate(File prideXmlFile) throws FileNotFoundException, IOException, VerifierConfigurationException, SAXException {
 
@@ -145,11 +145,7 @@ public class PrideXmlValidator {
         xveh = validator.validate(br);
         br.close();
 
-        if (xveh.noErrors()) {
-            return true;
-        } else {
-            return false;
-        }
+        return xveh.noErrors();
     }
 
     /**

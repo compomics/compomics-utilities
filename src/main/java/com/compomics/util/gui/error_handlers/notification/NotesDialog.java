@@ -13,8 +13,8 @@ public class NotesDialog extends javax.swing.JDialog {
     /**
      * Creates a new NotesDialog.
      *
-     * @param parent
-     * @param modal
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
      * @param notes list of the notes 
      */
     public NotesDialog(java.awt.Frame parent, boolean modal, ArrayList<String> notes) {

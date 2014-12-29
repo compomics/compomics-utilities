@@ -41,7 +41,7 @@ public class TextWriter extends ExportWriter {
      * @param nSeparationLines the number of lines to include between two
      * sections
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public TextWriter(File destinationFile, String separator, int nSeparationLines) throws IOException {
         this.separator = separator;

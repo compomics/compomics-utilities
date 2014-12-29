@@ -382,8 +382,8 @@ public class PrideObjectsFactory {
      * Sets a new PTM to PRIDE map.
      *
      * @param ptmToPrideMap a new PTM to pride map
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public void setPtmToPrideMap(PtmToPrideMap ptmToPrideMap) throws FileNotFoundException, IOException {
         if (ptmToPrideMap == null) {

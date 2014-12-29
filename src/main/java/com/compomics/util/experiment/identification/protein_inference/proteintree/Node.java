@@ -80,9 +80,9 @@ public class Node implements Serializable {
      *
      * @return the protein mapping for the given peptide sequence
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(AminoAcidSequence query, String currentSequence,
             SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException {
@@ -187,10 +187,10 @@ public class Node implements Serializable {
      * @return returns true if the node was actually split and thus needs to be
      * saved in indexed mode
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
     public boolean splitNode(int maxNodeSize, int maxDepth) throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException {
 
@@ -309,7 +309,7 @@ public class Node implements Serializable {
      * Returns all the protein mapping of the node.
      *
      * @return all the protein mappings of the node
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public HashMap<String, ArrayList<Integer>> getAllMappings() throws IOException {
 

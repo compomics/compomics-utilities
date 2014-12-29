@@ -21,7 +21,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     /**
      * Creates a new AdvancedProteinDatabaseDialog.
      *
-     * @param parent
+     * @param parent the parent frame
      */
     public AdvancedProteinDatabaseDialog(java.awt.Frame parent) {
         super(parent, true);

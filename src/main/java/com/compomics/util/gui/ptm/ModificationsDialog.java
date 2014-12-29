@@ -1,7 +1,6 @@
 package com.compomics.util.gui.ptm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -83,9 +82,9 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     /**
      * Creates a new ModificationsDialog.
      *
-     * @param parentFrame
-     * @param parent
-     * @param modal
+     * @param parentFrame the parent frame
+     * @param parent the PtmDialogParent parent
+     * @param modal if the dialog is to be modal or not
      */
     public ModificationsDialog(Frame parentFrame, PtmDialogParent parent, boolean modal) {
         super(parentFrame, modal);

@@ -49,7 +49,7 @@ public class ReportEditor extends javax.swing.JDialog {
      * @param exportFactory the export factory containing the implemented
      * exports for the running software
      * @param exportSchemeName the name of the export scheme to edit
-     * @param editable
+     * @param editable if the report is editable
      */
     public ReportEditor(java.awt.Frame parent, ExportFactory exportFactory, String exportSchemeName, boolean editable) {
         super(parent, true);

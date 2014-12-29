@@ -116,7 +116,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      * data will be loaded in a separate thread and the table updated later on.
      *
      * @param row the row number (not the view index)
-     * @throws InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     protected void dataMissingAtRow(int row) throws InterruptedException {
 

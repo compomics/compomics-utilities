@@ -162,7 +162,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * Returns the precursor isotope number according to the number of protons.
      *
-     * @param measuredMZ
+     * @param measuredMZ the measured m/z value
      * @return the precursor isotope number according to the number of protons
      */
     public int getIsotopeNumber(double measuredMZ) {
@@ -172,7 +172,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * Returns the ion match.
      *
-     * @param precursorPeak
+     * @param precursorPeak the precursor peak
      * @return the ion match
      */
     public IonMatch getPrecursorMatch(Peak precursorPeak) {

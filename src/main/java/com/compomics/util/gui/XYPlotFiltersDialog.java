@@ -23,7 +23,7 @@ public class XYPlotFiltersDialog extends javax.swing.JDialog {
      * Creates a new XYPlotFiltersDialog.
      *
      * @param xyPlottingDialog the XYPlottingDialog parent
-     * @param modal
+     * @param modal if the dialog is to be modal or not
      */
     public XYPlotFiltersDialog(XYPlottingDialog xyPlottingDialog, boolean modal) {
         super(xyPlottingDialog, modal);

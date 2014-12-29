@@ -58,9 +58,9 @@ public class IdentificationParametersInputBean {
      * Takes all the arguments from a command line.
      *
      * @param aLine the command line
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if aClassNotFoundException ClassNotFoundException occurs
      */
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
 
@@ -958,7 +958,7 @@ public class IdentificationParametersInputBean {
      *
      * @param aLine the command line to validate
      * @return true if the startup was valid
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static boolean isValidModifications(CommandLine aLine) throws IOException {
         boolean error = false;
@@ -1008,7 +1008,7 @@ public class IdentificationParametersInputBean {
      *
      * @param aLine the command line to validate
      * @return true if the startup was valid
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public static boolean isValidStartup(CommandLine aLine) throws IOException {
 

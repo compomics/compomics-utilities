@@ -100,7 +100,7 @@ public class SpectrumFactory {
      * Static method returning the instance of the factory with a new cache
      * size.
      *
-     * @param nCache
+     * @param nCache the cache size
      * @return the instance of the factory with a new cache size
      */
     public static SpectrumFactory getInstance(int nCache) {

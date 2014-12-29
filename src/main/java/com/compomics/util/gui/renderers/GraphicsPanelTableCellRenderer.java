@@ -38,24 +38,14 @@ public class GraphicsPanelTableCellRenderer extends JLabel implements TableCellR
      * to ensure that all spectra in the column have the same range.
      *
      * @param minXAxisValue the minimum x-axis value
-     * @param maxXAxisValue the maxium x-axis value
+     * @param maxXAxisValue the maximum x-axis value
      */
     public GraphicsPanelTableCellRenderer(double minXAxisValue, double maxXAxisValue) {
         this.minXAxisValue = minXAxisValue;
         this.maxXAxisValue = maxXAxisValue;
     }
 
-    /**
-     * Sets up the cell renderer for the given cell.
-     *
-     * @param table
-     * @param value
-     * @param isSelected
-     * @param hasFocus
-     * @param row
-     * @param column
-     * @return the rendered cell
-     */
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
         JComponent c = (JComponent) delegate.getTableCellRendererComponent(table, value,

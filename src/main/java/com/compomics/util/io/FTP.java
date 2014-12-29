@@ -211,7 +211,7 @@ public class FTP {
     }
 
     /**
-     * Set Passive mode Trasfers. This is particularly useful
+     * Set Passive mode Transfers. This is particularly useful
      * when attempting to FTP via passive mode.
      *
      * @param   mode    boolean to indicate whether passive mode
@@ -222,9 +222,10 @@ public class FTP {
     }
 
     /**
-     * This method allows the caller to capture the serverresponse.
+     * This method allows the caller to capture the server response.
      *
      * @return  int with the server's response.
+     * @throws IOException if an IOException occurs
      */
     public int readServerResponse() throws IOException {
         StringBuffer replyBuf = new StringBuffer(32);
@@ -319,6 +320,7 @@ public class FTP {
 
     /**
      * Issue the QUIT command to the FTP server and close the connection.
+     * @throws IOException if an IOException occurs
      */
     public void closeServer() throws IOException {
         if(serverIsOpen()) {
@@ -585,6 +587,7 @@ public class FTP {
      *
      * @param   user    String with the username to use.
      * @param   password    String with the password to use (passwords are sent in plain text in FTP!)
+     * @throws IOException if an IOException occurs
      */
     public void login(String user, String password) throws IOException {
         // See if we are connected first.
@@ -606,6 +609,7 @@ public class FTP {
      * such as HP server which uses the form "&lt;username&gt;/&lt;password&gt;,user.&lt;group&gt;.
      *
      * @param   user    String with the username (and possibly coded information such as password).
+     * @throws IOException if an IOException occurs
      */
     public void login(String user) throws IOException {
         // See if we are connected first.

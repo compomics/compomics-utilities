@@ -375,7 +375,7 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @param proteinTree the protein tree to use to map tags to peptides
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param massTolerance the ms2 mass tolerance to use
+     * @param massTolerance the MS2 mass tolerance to use
      * @param scoreInAscendingOrder boolean indicating whether the tag score is
      * in the ascending order; ie the higher the score, the better the match.
      * @param tagMatcher the tag matcher to use
@@ -385,10 +385,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return a new spectrum match containing the peptide assumptions made from
      * the tag assumptions.
      *
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public SpectrumMatch getPeptidesFromTags(ProteinTree proteinTree, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance,
             boolean scoreInAscendingOrder, boolean ascendingScore)

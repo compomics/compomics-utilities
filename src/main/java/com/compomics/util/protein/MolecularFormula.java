@@ -36,7 +36,7 @@ public class MolecularFormula {
     /**
      * Constructor.
      *
-     * @param lSequence
+     * @param lSequence the amino acid sequence
      */
     public MolecularFormula(Sequence lSequence){
         HashMap<String, MolecularFormula> iElements = new HashMap<String, MolecularFormula>();

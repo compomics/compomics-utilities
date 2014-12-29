@@ -74,10 +74,10 @@ public class FTPDownloader {
     /**
      * Download the given file from the FTP server.
      *
-     * @param remoteFilePath
-     * @param localFilePath
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @param remoteFilePath the remote file path
+     * @param localFilePath the local file path
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public void downloadFile(String remoteFilePath, File localFilePath) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(localFilePath);
@@ -87,7 +87,7 @@ public class FTPDownloader {
     /**
      * Disconnect from the FTP server.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void disconnect() throws IOException {
         if (ftp.isConnected()) {

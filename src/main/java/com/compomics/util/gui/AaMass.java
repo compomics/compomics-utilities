@@ -14,8 +14,8 @@ public class AaMass extends javax.swing.JDialog {
     /**
      * Creates a form AaMass.
      *
-     * @param parent
-     * @param modal
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
      */
     public AaMass(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

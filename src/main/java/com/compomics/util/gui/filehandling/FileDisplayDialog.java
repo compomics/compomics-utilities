@@ -25,9 +25,9 @@ public class FileDisplayDialog extends javax.swing.JDialog {
     /**
      * Creates a new FileSelectionDialog.
      *
-     * @param parent
-     * @param files
-     * @param modal
+     * @param parent the parent frame
+     * @param files the files
+     * @param modal if the dialog is to be modal or not
      */
     public FileDisplayDialog(JFrame parent, ArrayList<File> files, boolean modal) {
         super(parent, modal);
@@ -41,9 +41,9 @@ public class FileDisplayDialog extends javax.swing.JDialog {
     /**
      * Creates a new FileSelectionDialog.
      *
-     * @param parent
-     * @param files
-     * @param modal
+     * @param parent the parent frame
+     * @param files the files
+     * @param modal if the dialog is to be modal or not
      */
     public FileDisplayDialog(JDialog parent, ArrayList<File> files, boolean modal) {
         super(parent, modal);

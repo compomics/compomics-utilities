@@ -269,10 +269,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
         if (!remap || parentProteins != null) { // avoid building the tree if not necessary
@@ -290,10 +290,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, sequenceMatchingPreferences, proteinTree);
@@ -308,10 +308,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, sequenceMatchingPreferences);
@@ -329,10 +329,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences,
             ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
@@ -584,9 +584,9 @@ public class Peptide extends ExperimentObject {
      * occurred while reading the protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading the protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ArrayList<String> isNterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -626,9 +626,9 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ArrayList<String> isCterm(SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -668,9 +668,9 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public boolean isModifiable(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -780,9 +780,9 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, ModificationProfile modificationProfile)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -819,9 +819,9 @@ public class Peptide extends ExperimentObject {
      * occurred while reading a protein sequence
      * @throws InterruptedException exception thrown whenever an error occurred
      * while reading a protein sequence
-     * @throws FileNotFoundException
-     * @throws ClassNotFoundException
-     * @throws java.sql.SQLException
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
@@ -1428,10 +1428,12 @@ public class Peptide extends ExperimentObject {
      *
      * @return whether a peptide can be derived from a decoy protein
      *
-     * @throws java.io.IOException
-     * @throws java.lang.InterruptedException
-     * @throws java.sql.SQLException
-     * @throws java.lang.ClassNotFoundException
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public boolean isDecoy(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
@@ -1455,10 +1457,12 @@ public class Peptide extends ExperimentObject {
      *
      * @return a not modified version of the peptide
      *
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
-     * @throws SQLException
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static Peptide getNoModPeptide(Peptide peptide, ArrayList<PTM> ptms) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 

@@ -143,6 +143,8 @@ public class NucleotideSequence {
 
     /**
      * This method sets the header.
+     * 
+     * @param aHeader the header
      */
     public void setHeader(Header aHeader) {
         iHeader = aHeader;

@@ -28,22 +28,22 @@ import org.apache.commons.io.IOUtils;
 public abstract class FileDAO {
 
     /**
-     * Creates a new Desktop Shortcut to the maven jar file, atm windows only.
+     * Creates a new Desktop Shortcut to the Maven jar file, atm windows only.
      *
-     * @param file the maven jarfile to make a shortcut to
+     * @param file the Maven jarfile to make a shortcut to
      * @param iconName the name of the icon file in the resources folder
      * @param toolName the name of the tool, e.g., PeptideShaker
-     * @param deleteOldShortcut if previous shortcuts containing the maven jar
+     * @param deleteOldShortcut if previous shortcuts containing the Maven jar
      * file artifact id should be removed
      * @return true id the shortcut was created (?)
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract boolean createDesktopShortcut(MavenJarFile file, String iconName, String toolName, boolean deleteOldShortcut) throws IOException;
 
     /**
      * Add desktop shortcut.
      *
-     * @param mavenJarFile the maven jar file
+     * @param mavenJarFile the Maven jar file
      * @return true id the shortcut was created (?)
      */
     public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile) {
@@ -57,8 +57,8 @@ public abstract class FileDAO {
      * @param iconName the name of the icon in the resource folder of the
      * {@code MavenJarFile} to link to
      * @return true if the shortcut was created otherwise false
-     * @throws NullPointerException
-     * @throws RuntimeException
+     * @throws NullPointerException if a NullPointerException occurs
+     * @throws RuntimeException if a RuntimeException occurs
      */
     public boolean addShortcutAtDeskTop(MavenJarFile mavenJarFile, String iconName) throws NullPointerException, RuntimeException {
 
@@ -80,7 +80,7 @@ public abstract class FileDAO {
      * download location
      * @return the folder to download in (in best case scenario this is the
      * passed parameter targetDownloadFolder)
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public abstract File getLocationToDownloadOnDisk(String targetDownloadFolder) throws IOException;
 
@@ -91,7 +91,7 @@ public abstract class FileDAO {
      * @param zip the zipfile to unzip
      * @param fileLocationOnDiskToDownloadTo the folder to unzip in
      * @return true if successful
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public boolean unzipFile(ZipFile zip, File fileLocationOnDiskToDownloadTo) throws IOException {
         FileOutputStream dest = null;
@@ -138,7 +138,7 @@ public abstract class FileDAO {
      * @param fileLocationOnDiskToDownloadTo the file to ungzip and untar to
      * @param waitingHandler the waiting handler
      * @return true if successful
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public boolean unGzipAndUntarFile(GZIPInputStream in, File fileLocationOnDiskToDownloadTo, WaitingHandler waitingHandler) throws IOException {
 
@@ -173,8 +173,8 @@ public abstract class FileDAO {
      *
      * @param fileToUntar
      * @return true if successful
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if an FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     private boolean untar(File fileToUntar) throws FileNotFoundException, IOException {
         boolean fileUntarred = false;
@@ -220,7 +220,7 @@ public abstract class FileDAO {
     }
 
     /**
-     * Fetches a maven built jar file from a folder for the given artifact id
+     * Fetches a Maven built jar file from a folder for the given artifact id
      * (e.g peptideshaker or ms-lims).
      *
      * @param folder the folder to look in
@@ -228,7 +228,7 @@ public abstract class FileDAO {
      * MavenJarFile) in the folder
      * @return the last found {@code MavenJarFile} with the given artifactid,
      * can be null
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public MavenJarFile getMavenJarFileFromFolderWithArtifactId(File folder, String artifactId) throws IOException {
         MavenJarFile mainJarFile = null;
@@ -259,8 +259,8 @@ public abstract class FileDAO {
      * @param name the name the file that will be created
      * @param outputLocationFolder the location to write to
      * @return the written file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
      */
     public File writeStreamToDisk(InputStream in, String name, File outputLocationFolder) throws FileNotFoundException, IOException {
         if (!outputLocationFolder.exists()) {

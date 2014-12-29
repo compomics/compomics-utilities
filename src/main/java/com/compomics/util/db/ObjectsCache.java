@@ -213,7 +213,7 @@ public class ObjectsCache {
      * @param dbName the name of the database
      * @param tableName the name of the table
      * @param objectKey the key of the object
-     * @param object
+     * @param object the object
      * @return returns a boolean indicating that the entry was in cache and has
      * been updated. False otherwise.
      */
@@ -250,9 +250,9 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      * @param modifiedOrNew true if the object is modified or new
-     * @throws IOException
-     * @throws SQLException
-     * @throws java.lang.InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws SQLException if an SQLException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
         if (dbName.contains(cacheSeparator)) {
@@ -416,7 +416,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void saveObject(String entryKey) throws IOException, SQLException, InterruptedException {
         saveObject(entryKey, true);
@@ -434,7 +434,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
         String[] splittedKey = getKeyComponents(entryKey);
@@ -480,7 +480,7 @@ public class ObjectsCache {
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
-     * @throws java.lang.InterruptedException
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void updateCache() throws IOException, SQLException, InterruptedException {
 

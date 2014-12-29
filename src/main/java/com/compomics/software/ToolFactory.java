@@ -45,10 +45,11 @@ public class ToolFactory {
      * Starts PeptideShaker from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog (can be null)
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startPeptideShaker(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
         startPeptideShaker(parent, null);
@@ -61,10 +62,11 @@ public class ToolFactory {
      *
      * @param parent a frame to display the path setting dialog (can be null)
      * @param cpsFile the file to open (cps format) (can be null)
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startPeptideShaker(JFrame parent, File cpsFile) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -97,10 +99,11 @@ public class ToolFactory {
      * Starts Reporter from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog.
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startReporter(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -126,10 +129,11 @@ public class ToolFactory {
      * Starts SearchGUI from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog.
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * 
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
         startSearchGUI(parent, null, null, null, null, null);
@@ -144,10 +148,11 @@ public class ToolFactory {
      * @param outputFolder outputFolder the output folder (can be null)
      * @param species the species (can be null)
      * @param speciesType the species type (can be null)
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder, String species, String speciesType)
             throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
@@ -256,7 +261,7 @@ public class ToolFactory {
             line = br.readLine();
             error = true;
         }
-        
+
         br.close();
         isr.close();
         stderr.close();

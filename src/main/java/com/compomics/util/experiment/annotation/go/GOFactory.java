@@ -72,7 +72,7 @@ public class GOFactory {
      * @param file the file containing the GO mapping
      * @param waitingHandler a waiting handler allowing display of the progress
      * and canceling of the process.
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void initialize(File file, WaitingHandler waitingHandler) throws IOException {
 
@@ -146,7 +146,7 @@ public class GOFactory {
      * @param proteinAccession the accession number of the protein of interest
      * @return a list of GO accession numbers, an empty list if no mapping is
      * found
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public ArrayList<String> getGoAccessions(String proteinAccession) throws IOException {
         ArrayList<String> result = new ArrayList<String>();
@@ -172,7 +172,7 @@ public class GOFactory {
      * @param matchKey the key of the protein match
      * @return a list of non redundant GO accession numbers corresponding to a
      * protein match
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public ArrayList<String> getProteinGoAccessions(String matchKey) throws IOException {
         String[] accessions = ProteinMatch.getAccessions(matchKey);
@@ -194,7 +194,7 @@ public class GOFactory {
      * @param matchKey the key of the protein match
      * @return a list of non redundant GO term descriptions corresponding to a
      * protein match
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public ArrayList<String> getProteinGoDescriptions(String matchKey) throws IOException {
         String[] accessions = ProteinMatch.getAccessions(matchKey);
@@ -215,7 +215,7 @@ public class GOFactory {
      *
      * @param goAccession the GO accession number
      * @return a list of GO accessions numbers, an empty list if none found
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public ArrayList<String> getAccessions(String goAccession) throws IOException {
         ArrayList<String> result = new ArrayList<String>();
@@ -239,7 +239,7 @@ public class GOFactory {
      *
      * @param goAccession the accession number of the GO term of interest
      * @return the first description found, null if not found
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public String getTermDescription(String goAccession) throws IOException {
         ArrayList<Long> indexes = termIndexes.get(goAccession);
@@ -261,7 +261,7 @@ public class GOFactory {
      *
      * @param goTerm the description of the GO term of interest
      * @return the first GO accession number found, null if not found
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public String getTermAccession(String goTerm) throws IOException {
         goTerm = goTerm.toLowerCase();
@@ -357,7 +357,7 @@ public class GOFactory {
     /**
      * Closes connections.
      *
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     public void closeFiles() throws IOException {
         if (bufferedRandomAccessFile != null) {

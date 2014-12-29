@@ -38,7 +38,7 @@ public class DownloadLatestZipFromRepo {
     private static File downloadedFile;
 
     /**
-     * Downloads the latest deploy from the genesis maven repository of the
+     * Downloads the latest deploy from the genesis Maven repository of the
      * artifact of the jarPath, starts it without arguments and removes the old
      * jar if there was an update.
      *
@@ -47,15 +47,15 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(URL jarPath, String toolName) throws IOException, XMLStreamException, URISyntaxException {
         downloadLatestZipFromRepo(jarPath, toolName, true, true, true, null);
     }
 
     /**
-     * Downloads the latest deploy from the genesis maven repository of the
+     * Downloads the latest deploy from the genesis Maven repository of the
      * artifact and starts it without arguments.
      *
      * @param jarPath the path to the jarfile
@@ -68,21 +68,21 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
         downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, new String[0], startDownloadedVersion, addDesktopIcon, waitingHandler);
     }
 
     /**
-     * Downloads the latest zip archive of the jar in the url from the genesis
-     * maven repo.
+     * Downloads the latest zip archive of the jar in the URL from the genesis
+     * Maven repository.
      *
      * @param jarPath the path to the jarfile to update
      * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param deleteOldFiles if the original jar file should be deleted
-     * @param args the args for the newly downloaded jar when it starts
+     * @param args the arguments for the newly downloaded jar when it starts
      * @param startDownloadedVersion if true, the downloaded version will be
      * started when the download completes
      * @param addDesktopIcon if true, a desktop icon will be created
@@ -90,8 +90,8 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, String[] args,
             boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
@@ -100,7 +100,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * Downloads the latest zip archive of the jar in the url from a given
+     * Downloads the latest zip archive of the jar in the URL from a given
      * jarRepository.
      *
      * @param jarPath the path to the jarfile to update, cannot be {@code null}
@@ -108,22 +108,22 @@ public class DownloadLatestZipFromRepo {
      * @param deleteOldFiles if the original jar folder should be deleted,
      * cannot be {@code null}
      * @param addDesktopIcon if true, a desktop icon will be created
-     * @param args the args for the newly downloaded jar when it starts
+     * @param args the arguments for the newly downloaded jar when it starts
      * @param jarRepository the repository to look for the latest deploy of the
      * jar file, cannot be {@code null}
      * @param waitingHandler the waiting handler
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(URL jarPath, String toolName, boolean deleteOldFiles, boolean addDesktopIcon, String[] args, URL jarRepository, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
         downloadLatestZipFromRepo(jarPath, toolName, deleteOldFiles, null, args, jarRepository, true, addDesktopIcon, waitingHandler);
     }
 
     /**
-     * Retrieves the latest version of a maven jar file from a maven repository,
+     * Retrieves the latest version of a Maven jar file from a Maven repository,
      * also checks if the environment is headless or not.
      *
      * @param jarPath the URL of the location of the jar that needs to be
@@ -132,9 +132,9 @@ public class DownloadLatestZipFromRepo {
      * @param deleteOldFiles should the old installation be removed or not
      * cannot be {@code null}
      * @param iconName name of the shortcut image should one be created
-     * @param args the args that will be passed to the newly downloaded program
-     * when started, cannot be {@code null}
-     * @param jarRepository the maven repository to go look in, cannot be
+     * @param args the arguments that will be passed to the newly downloaded
+     * program when started, cannot be {@code null}
+     * @param jarRepository the Maven repository to go look in, cannot be
      * {@code null}
      * @param startDownloadedVersion if the newly downloaded version should be
      * started automatically or not
@@ -143,8 +143,8 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(final URL jarPath, String toolName, boolean deleteOldFiles, String iconName, String[] args,
             URL jarRepository, boolean startDownloadedVersion, boolean addDesktopIcon, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
@@ -156,7 +156,7 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * Retrieves the latest version of a maven jar file from a maven repository.
+     * Retrieves the latest version of a Maven jar file from a Maven repository.
      *
      * @param jarPath the URL of the location of the jar that needs to be
      * updated on the file system. cannot be {@code null}
@@ -164,9 +164,9 @@ public class DownloadLatestZipFromRepo {
      * @param deleteOldFiles should the old installation be removed or not
      * cannot be {@code null}
      * @param iconName name of the shortcut image should one be created
-     * @param args the args that will be passed to the newly downloaded program
-     * when started, cannot be {@code null}
-     * @param jarRepository the maven repository to go look in, cannot be
+     * @param args the arguments that will be passed to the newly downloaded
+     * program when started, cannot be {@code null}
+     * @param jarRepository the Maven repository to go look in, cannot be
      * {@code null}
      * @param startDownloadedVersion if the newly downloaded version should be
      * started automatically or not
@@ -177,8 +177,8 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(final URL jarPath, String toolName, boolean deleteOldFiles, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion,
             boolean addDesktopIcon, FileDAO fileDAO, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
@@ -276,16 +276,16 @@ public class DownloadLatestZipFromRepo {
     }
 
     /**
-     * Retrieves the latest version of a maven jar file from a maven repository.
+     * Retrieves the latest version of a Maven jar file from a Maven repository.
      *
      * @param downloadFolder the folder to download to
      * @param groupId the group id
      * @param toolName the name of the tool being updated, e.g., PeptideShaker
      * @param artifactId the artifact id
      * @param iconName name of the shortcut image should one be created
-     * @param args the args that will be passed to the newly downloaded program
-     * when started, cannot be {@code null}
-     * @param jarRepository the maven repository to go look in, cannot be
+     * @param args the arguments that will be passed to the newly downloaded
+     * program when started, cannot be {@code null}
+     * @param jarRepository the Maven repository to go look in, cannot be
      * {@code null}
      * @param startDownloadedVersion if the newly downloaded version should be
      * started automatically or not
@@ -296,12 +296,12 @@ public class DownloadLatestZipFromRepo {
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
-     * from the remote maven repository
-     * @throws URISyntaxException
+     * from the remote Maven repository
+     * @throws URISyntaxException if there is a problem with the URI syntax
      */
     public static void downloadLatestZipFromRepo(final File downloadFolder, String toolName, String groupId, String artifactId, String iconName, String[] args, URL jarRepository, boolean startDownloadedVersion,
             boolean addDesktopIcon, FileDAO fileDAO, WaitingHandler waitingHandler) throws IOException, XMLStreamException, URISyntaxException {
-        
+
         //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
         String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(groupId.replaceAll("\\.", "/")).append("/").append(artifactId).toString();
         String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
@@ -332,7 +332,7 @@ public class DownloadLatestZipFromRepo {
             }
         }
 
-            // set the new version has the default version
+        // set the new version has the default version
         // @TODO: should be done using enums
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         if (toolName.equalsIgnoreCase("PeptideShaker")) {
@@ -353,7 +353,7 @@ public class DownloadLatestZipFromRepo {
      * Simple jar launch through a {@code ProcessBuilder}.
      *
      * @param downloadedJarFile the downloaded jar file to start
-     * @param args the args to give to the jar file
+     * @param args the arguments to give to the jar file
      * @return true if the launch succeeded
      * @throws IOException if the process could not start
      */
@@ -380,15 +380,15 @@ public class DownloadLatestZipFromRepo {
     /**
      * Aggregation method for downloading and unzipping.
      *
-     * @param mavenJarFile the maven jar file to download update for
+     * @param mavenJarFile the Maven jar file to download update for
      * @param toolName the name of the tool being updated, e.g., PeptideShaker
-     * @param jarRepository the url of the version specific location
+     * @param jarRepository the URL of the version specific location
      * @param fileDAO which fileDAO implementation that should be used
      * @param isWindows if true, the OS will assumed to be windows
      * @return the downloaded {@code MavenJarFile}
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws XMLStreamException
+     * @throws MalformedURLException if the URL is malformed
+     * @throws IOException if there is an IOException
+     * @throws XMLStreamException if there is an XMLStreamException
      */
     private static MavenJarFile downloadAndUnzipJar(MavenJarFile mavenJarFile, final String toolName, URL jarRepository,
             FileDAO fileDAO, boolean cleanupZipFile, final WaitingHandler waitingHandler, boolean isWindows) throws MalformedURLException, IOException, XMLStreamException {
@@ -523,20 +523,21 @@ public class DownloadLatestZipFromRepo {
 
         return newMavenJar;
     }
-    
+
     /**
      * Aggregation method for downloading and unzipping.
      *
-     * @param mavenJarFile the maven jar file to download update for
+     * @param mavenJarFile the Maven jar file to download update for
      * @param toolName the name of the tool being updated, e.g., PeptideShaker
-     * @param jarRepository the url of the version specific location
+     * @param jarRepository the URL of the version specific location
      * @param fileDAO which fileDAO implementation that should be used
      * @param isWindows if true, the OS will assumed to be windows
-     * @param update if true, the waiting handler shows update, false shows download
+     * @param update if true, the waiting handler shows update, false shows
+     * download
      * @return the downloaded {@code MavenJarFile}
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws XMLStreamException
+     * @throws MalformedURLException if the URL is malformed
+     * @throws IOException if there is an IOException
+     * @throws XMLStreamException if there is an XMLStreamException
      */
     private static MavenJarFile downloadAndUnzipJar(final File aDownloadFolder, final String artifactId, final String toolName, URL jarRepository,
             FileDAO fileDAO, boolean cleanupZipFile, final WaitingHandler waitingHandler, boolean isWindows, final boolean update) throws MalformedURLException, IOException, XMLStreamException {

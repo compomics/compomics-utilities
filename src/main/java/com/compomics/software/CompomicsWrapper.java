@@ -73,7 +73,7 @@ public class CompomicsWrapper {
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
      *
-     * @param toolName
+     * @param toolName the name of the tool
      * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png
      * @param mainClass the main class to execute, for example
@@ -87,7 +87,7 @@ public class CompomicsWrapper {
      * Starts the launcher by calling the launch method. Use this as the main
      * class in the jar file.
      *
-     * @param toolName
+     * @param toolName the name of the tool
      * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png,
      * can be null
@@ -1015,9 +1015,9 @@ public class CompomicsWrapper {
      * @param toolPath the path to the jar file of the tool
      * @return an array list containing the Java home plus any parameters to the
      * JVM
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public ArrayList<String> getJavaHomeAndOptions(String toolPath) throws FileNotFoundException, IOException, ClassNotFoundException {
 
@@ -1046,7 +1046,7 @@ public class CompomicsWrapper {
      * Copy the default JavaOptions file to the given location.
      *
      * @param folder the folder to copy the file to
-     * @throws IOException
+     * @throws IOException if an IOException occurs
      */
     private void copyDefaultJavaOptionsFile(File folder) throws IOException {
 

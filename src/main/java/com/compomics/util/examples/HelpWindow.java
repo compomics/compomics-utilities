@@ -10,15 +10,13 @@ import java.net.URL;
  * A window used to display help text in HTML format.
  * 
  * @author Harald Barsnes
- * 
- * Created November 2005
  */
 public class HelpWindow extends javax.swing.JFrame {
 
     /**
      * Creates a new HelpWindow object with a Frame as a parent.
      *
-     * @param parent
+     * @param parent the parent frame
      * @param fileName the name of the help file
      */
     public HelpWindow(javax.swing.JFrame parent, URL fileName) {
@@ -63,7 +61,7 @@ public class HelpWindow extends javax.swing.JFrame {
     /**
      * Creates a new HelpWindow-object with a JDialog as a parent.
      *
-     * @param parent
+     * @param parent the parent dialog
      * @param fileName the name of the help file
      */
     public HelpWindow(javax.swing.JDialog parent, URL fileName) {

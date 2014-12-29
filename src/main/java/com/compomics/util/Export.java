@@ -33,8 +33,8 @@ public class Export {
      * @param bounds the dimensions of the viewport
      * @param exportFile the output file
      * @param imageType the image type
-     * @throws IOException
-     * @throws TranscoderException
+     * @throws IOException if an IOException occurs
+     * @throws TranscoderException if a TranscoderException occurs
      */
     public static void exportChart(JFreeChart chart, Rectangle bounds, File exportFile, ImageType imageType)
             throws IOException, TranscoderException {
@@ -53,8 +53,8 @@ public class Export {
      * @param bounds the dimensions of the viewport
      * @param exportFile the output file
      * @param imageType the image type
-     * @throws IOException
-     * @throws TranscoderException
+     * @throws IOException if an IOException occurs
+     * @throws TranscoderException if a TranscoderException occurs
      */
     public static void exportComponent(Component component, Rectangle bounds, File exportFile, ImageType imageType)
             throws IOException, TranscoderException {

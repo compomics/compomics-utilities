@@ -277,9 +277,9 @@ public class CompomicsWrapper {
             System.out.println(System.getProperty("line.separator") + System.getProperty("line.separator") + "Command line: ");
             bw.write(System.getProperty("line.separator") + "Command line: " + System.getProperty("line.separator"));
 
-            for (int i = 0; i < process_name_array.size(); i++) {
-                System.out.print(process_name_array.get(i) + " ");
-                bw.write(process_name_array.get(i) + " ");
+            for (Object processEntry : process_name_array) {
+                System.out.print(processEntry + " ");
+                bw.write(processEntry + " ");
             }
 
             bw.write(System.getProperty("line.separator"));
@@ -623,7 +623,7 @@ public class CompomicsWrapper {
             @Override
             public void run() {
                 try {
-                    downloadLatestZipFromRepo(downloadFolder, toolName, groupId, artifactId, iconName, 
+                    downloadLatestZipFromRepo(downloadFolder, toolName, groupId, artifactId, iconName,
                             null, jarRepository, startDownloadedVersion, addDesktopIcon, new GUIFileDAO(), progressDialog);
                     if (!progressDialog.isRunFinished()) {
                         progressDialog.setRunFinished();
@@ -915,6 +915,12 @@ public class CompomicsWrapper {
                     JOptionPane.showMessageDialog(null, "Error when reading non-standard Java home location.\n"
                             + "Using default Java home.", "Java Home Error", JOptionPane.WARNING_MESSAGE);
                 }
+            }
+        } else {
+            // see if the user has set the java home via the gui
+            if (userPreferences.getJavaHome() != null) {
+                javaHome = userPreferences.getJavaHome();
+                usingStandardJavaHome = false;
             }
         }
 

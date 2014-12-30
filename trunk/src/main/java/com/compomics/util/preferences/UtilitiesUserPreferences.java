@@ -77,6 +77,12 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private int memoryPreference = 4 * 1024;
     /**
+     * The Java Home, for example, C:\Program Files\Java\jdk1.8.0_25\bin. Null
+     * if not set. Note that this setting will be ignored of a JavaHome.txt file
+     * is found.
+     */
+    private String javaHome = null;
+    /**
      * The folder where to store the protein trees. Note: for backward
      * compatibility not initialized here.
      */
@@ -295,16 +301,32 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
+     * Returns the Java Home folder.
+     *
+     * @return the Java Home folder
+     */
+    public String getJavaHome() {
+        return javaHome;
+    }
+
+    /**
+     * Set the Java Home folder.
+     *
+     * @param javaHome
+     */
+    public void setJavaHome(String javaHome) {
+        this.javaHome = javaHome;
+    }
+
+    /**
      * Returns the color to use for the annotated peaks.
      *
      * @return the spectrumAnnotatedPeakColor
      */
     public Color getSpectrumAnnotatedPeakColor() {
-
         if (spectrumAnnotatedPeakColor == null) {
             spectrumAnnotatedPeakColor = Color.RED;
         }
-
         return spectrumAnnotatedPeakColor;
     }
 
@@ -323,11 +345,9 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the spectrumAnnotatedMirroredPeakColor
      */
     public Color getSpectrumAnnotatedMirroredPeakColor() {
-
         if (spectrumAnnotatedMirroredPeakColor == null) {
             spectrumAnnotatedMirroredPeakColor = Color.BLUE;
         }
-
         return spectrumAnnotatedMirroredPeakColor;
     }
 
@@ -347,11 +367,9 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the spectrumBackgroundPeakColor
      */
     public Color getSpectrumBackgroundPeakColor() {
-
         if (spectrumBackgroundPeakColor == null) {
             spectrumBackgroundPeakColor = new Color(100, 100, 100, 50);
         }
-
         return spectrumBackgroundPeakColor;
     }
 
@@ -370,11 +388,9 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the spectrumAnnotatedPeakWidth
      */
     public Float getSpectrumAnnotatedPeakWidth() {
-
         if (spectrumAnnotatedPeakWidth == null) {
             spectrumAnnotatedPeakWidth = 1.0f;
         }
-
         return spectrumAnnotatedPeakWidth;
     }
 
@@ -393,11 +409,9 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the spectrumBackgroundPeakWidth
      */
     public Float getSpectrumBackgroundPeakWidth() {
-
         if (spectrumBackgroundPeakWidth == null) {
             spectrumBackgroundPeakWidth = 1.0f;
         }
-
         return spectrumBackgroundPeakWidth;
     }
 

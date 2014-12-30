@@ -100,8 +100,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="javaHomeLabel" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="javaHomeLabel" min="-2" pref="355" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="versionRecommendationLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -109,7 +111,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="javaHomeLabel" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="javaHomeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="versionRecommendationLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -118,7 +123,76 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="javaHomeLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Java Home..."/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Java Home...&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a href&gt;Edit&lt;/a&gt;&lt;/u&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Edit Java Home"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="javaHomeLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="javaHomeLabelMouseExited"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="javaHomeLabelMouseReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="versionRecommendationLabel1">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font component="versionRecommendationLabel1" italic="true" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Recommended: Java 1.7 or newer"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="versionPanel">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Java Version"/>
+              </Border>
+            </Property>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="versionLabel" min="-2" pref="355" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="versionRecommendationLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="versionRecommendationLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="versionLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="1.7"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="versionRecommendationLabel2">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                  <FontInfo relative="true">
+                    <Font component="versionRecommendationLabel2" italic="true" property="font" relativeSize="true" size="0"/>
+                  </FontInfo>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Recommended: Java 1.7 or newer"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -138,10 +212,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="bitLabel" max="32767" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="bitLabel" min="-2" pref="390" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="bitRecommendationLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -190,13 +264,11 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="memoryLabel" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="memoryLabel" min="-2" pref="382" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="editMemoryJLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="363" max="32767" attributes="0"/>
                       <Component id="memoryRecommendationLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -207,7 +279,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="memoryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="memoryRecommendationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="editMemoryJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -217,8 +288,14 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="memoryLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="60 GB"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;60 GB&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a href&gt;Edit&lt;/a&gt;&lt;/u&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Edit memory settings"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="memoryLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="memoryLabelMouseExited"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="memoryLabelMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="memoryRecommendationLabel">
               <Properties>
@@ -230,30 +307,8 @@
                 <Property name="text" type="java.lang.String" value="Recommended: at least 4 GB"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="editMemoryJLabel">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="0" red="0" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;Edit&lt;/u&gt;&lt;/html&gt;"/>
-                <Property name="toolTipText" type="java.lang.String" value="Open Java Help"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editMemoryJLabelMouseEntered"/>
-                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editMemoryJLabelMouseExited"/>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="editMemoryJLabelMouseReleased"/>
-              </Events>
-            </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="okButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="OK"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="javaHelpJLabel">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -268,59 +323,14 @@
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="javaHelpJLabelMouseReleased"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JPanel" name="versionPanel">
+        <Component class="javax.swing.JButton" name="okButton">
           <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Java Version"/>
-              </Border>
-            </Property>
-            <Property name="opaque" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" value="OK"/>
           </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="versionLabel" max="32767" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="versionRecommendationLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="versionRecommendationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="versionLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="1.7"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="versionRecommendationLabel">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
-                  <FontInfo relative="true">
-                    <Font component="versionRecommendationLabel" italic="true" property="font" relativeSize="true" size="0"/>
-                  </FontInfo>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Recommended: Java 1.7 or newer"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

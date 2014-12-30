@@ -4,17 +4,22 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * A dialog for changing the Java memory setting.
+ * A dialog for changing the Java Home.
  *
- * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class JavaMemoryDialog extends javax.swing.JDialog {
+public class JavaHomeDialog extends javax.swing.JDialog {
 
     /**
      * Reference to the JavaHomeOrMemoryDialogParent.
@@ -30,7 +35,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
     private String toolName;
 
     /**
-     * Creates a new JavaMemoryDialog.
+     * Creates a new JavaHomeDialog.
      *
      * @param parent the parent of the dialog
      * @param javaHomeOrMemoryDialogParent reference to the
@@ -38,18 +43,15 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param toolName the name of the tool, e.g., PeptideShaker
      */
-    public JavaMemoryDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName) {
+    public JavaHomeDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName) {
         super(parent, true);
         this.javaHomeOrMemoryDialogParent = javaHomeOrMemoryDialogParent;
         this.welcomeDialog = welcomeDialog;
         this.toolName = toolName;
         initComponents();
 
-        if (javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences() != null) {
-            memoryTxt.setText(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference() + "");
-        } else {
-            memoryTxt.setText("(error)");
-        }
+        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
+        javaHomeTxt.setText(javaHome);
 
         if (parent.isVisible()) {
             setLocationRelativeTo(parent);
@@ -66,34 +68,53 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
      * @return a boolean indicating whether the input of the user is correct
      */
     private boolean validateInput() {
+
+        boolean error = false;
+
         try {
-            Integer value = new Integer(memoryTxt.getText().trim());
+            ArrayList process_name_array = new ArrayList();
+            String tempJavaHome = javaHomeTxt.getText();
+            if (!tempJavaHome.endsWith(File.separator)) {
+                tempJavaHome += File.separator;
+            }
+            process_name_array.add(tempJavaHome + "java");
+            process_name_array.add("-version");
+            ProcessBuilder pb = new ProcessBuilder(process_name_array);
+            pb.directory(new File(tempJavaHome));
 
-            if (value <= 0) {
-                JOptionPane.showMessageDialog(this,
-                        "Please verify the input for the memory limit. It should "
-                        + "be a positive integer, e.g., 2048 for max 2GB of memory.",
-                        "Input Error", JOptionPane.WARNING_MESSAGE);
-                return false;
+            Process p = pb.start();
+            InputStream stderr = p.getErrorStream();
+            InputStreamReader isr = new InputStreamReader(stderr);
+            BufferedReader br = new BufferedReader(isr);
+            String errorMessage = "";
+
+            if (br.ready()) {
+                String line = br.readLine();
+                while (line != null) {
+                    errorMessage += line + "\n";
+                    line = br.readLine();
+                    error = true;
+                }
             }
 
-            if (value < 800) {
-                JOptionPane.showMessageDialog(this,
-                        "The memory limit has to be bigger than 800 MB.",
-                        "Input Error", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
+            br.close();
+            isr.close();
+            stderr.close();
 
+            if (error) {
+                System.out.println("Java startup error: " + errorMessage);
+                JOptionPane.showMessageDialog(null, "Error starting Java. Please check the Java Home folder.",
+                        "Java Error", JOptionPane.WARNING_MESSAGE);
+            } else {
+                p.destroy();
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Please verify the input for the memory limit. It should be an integer.",
-                    "Input Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error starting Java. Please check the Java Home folder.",
+                    "Java Error", JOptionPane.WARNING_MESSAGE);
+            e.printStackTrace();
             return false;
         }
-        if (javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences() == null) {
-            JOptionPane.showMessageDialog(this, "User preferences where not read correctly. Please solve this first.",
-                    "File Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+
         return true;
     }
 
@@ -109,11 +130,11 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        javaOptionsHelpJButton = new javax.swing.JButton();
-        memoryLimitLabel = new javax.swing.JLabel();
-        memoryTxt = new javax.swing.JTextField();
-        mbLabel = new javax.swing.JLabel();
+        javaHomeHelpJButton = new javax.swing.JButton();
+        javaHomeLabel = new javax.swing.JLabel();
+        javaHomeTxt = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
+        browseButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Java Memory Settings");
@@ -135,35 +156,40 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
             }
         });
 
-        javaOptionsHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        javaOptionsHelpJButton.setToolTipText("Help");
-        javaOptionsHelpJButton.setBorder(null);
-        javaOptionsHelpJButton.setBorderPainted(false);
-        javaOptionsHelpJButton.setContentAreaFilled(false);
-        javaOptionsHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        javaHomeHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        javaHomeHelpJButton.setToolTipText("Help");
+        javaHomeHelpJButton.setBorder(null);
+        javaHomeHelpJButton.setBorderPainted(false);
+        javaHomeHelpJButton.setContentAreaFilled(false);
+        javaHomeHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                javaOptionsHelpJButtonMouseEntered(evt);
+                javaHomeHelpJButtonMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                javaOptionsHelpJButtonMouseExited(evt);
+                javaHomeHelpJButtonMouseExited(evt);
             }
         });
-        javaOptionsHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+        javaHomeHelpJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                javaOptionsHelpJButtonActionPerformed(evt);
+                javaHomeHelpJButtonActionPerformed(evt);
             }
         });
 
-        memoryLimitLabel.setText("Memory Limit");
+        javaHomeLabel.setText("Java Home");
 
-        memoryTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        memoryTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        javaHomeTxt.setEditable(false);
+        javaHomeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                memoryTxtKeyReleased(evt);
+                javaHomeTxtKeyReleased(evt);
             }
         });
 
-        mbLabel.setText("MB");
+        browseButton.setText("Browse");
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -175,17 +201,17 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
                     .addComponent(jSeparator1)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(javaOptionsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(javaHomeHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addComponent(memoryLimitLabel)
+                        .addComponent(javaHomeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(memoryTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(mbLabel)))
+                        .addComponent(javaHomeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseButton)))
                 .addContainerGap())
         );
 
@@ -196,9 +222,9 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(memoryLimitLabel)
-                    .addComponent(memoryTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mbLabel))
+                    .addComponent(javaHomeLabel)
+                    .addComponent(javaHomeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -206,7 +232,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
                     .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cancelButton)
                         .addComponent(okButton))
-                    .addComponent(javaOptionsHelpJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(javaHomeHelpJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -241,15 +267,17 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
 
-            int newValue = new Integer(memoryTxt.getText().trim());
+            String newJavaHome = javaHomeTxt.getText().trim();
+            String currentJavaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
 
-            if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().getMemoryPreference()) {
+            if (!newJavaHome.equalsIgnoreCase(currentJavaHome)) {
 
                 int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
                         "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
 
                 if (outcome == JOptionPane.OK_OPTION) {
-                    javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setMemoryPreference(newValue);
+
+                    javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences().setJavaHome(newJavaHome);
 
                     try {
                         UtilitiesUserPreferences.saveUserPreferences(javaHomeOrMemoryDialogParent.getUtilitiesUserPreferences());
@@ -273,53 +301,76 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void javaOptionsHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaOptionsHelpJButtonMouseEntered
+    private void javaHomeHelpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHomeHelpJButtonMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_javaOptionsHelpJButtonMouseEntered
+    }//GEN-LAST:event_javaHomeHelpJButtonMouseEntered
 
     /**
      * Change the cursor back to the default cursor.
      *
      * @param evt
      */
-    private void javaOptionsHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaOptionsHelpJButtonMouseExited
+    private void javaHomeHelpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHomeHelpJButtonMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_javaOptionsHelpJButtonMouseExited
+    }//GEN-LAST:event_javaHomeHelpJButtonMouseExited
 
     /**
      * Open the help dialog.
      *
      * @param evt
      */
-    private void javaOptionsHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_javaOptionsHelpJButtonActionPerformed
+    private void javaHomeHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_javaHomeHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/JavaOptionsDialog.html"),
+        new HelpDialog(this, getClass().getResource("/helpFiles/JavaHomeDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Java Options - Help");
+                "Java Home - Help");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_javaOptionsHelpJButtonActionPerformed
+    }//GEN-LAST:event_javaHomeHelpJButtonActionPerformed
 
     /**
      * Execute the OK button if the user clicks the Enter key.
      *
      * @param evt
      */
-    private void memoryTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_memoryTxtKeyReleased
+    private void javaHomeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_javaHomeTxtKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER
-                && memoryTxt.getText().length() > 0) {
+                && javaHomeTxt.getText().length() > 0) {
             okButtonActionPerformed(null);
         }
-    }//GEN-LAST:event_memoryTxtKeyReleased
+    }//GEN-LAST:event_javaHomeTxtKeyReleased
+
+    /**
+     * Open a file browser for selecting the Java Home.
+     *
+     * @param evt
+     */
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        JFileChooser fileChooser = new JFileChooser(javaHomeTxt.getText());
+        fileChooser.setDialogTitle("Select Java Home");
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setMultiSelectionEnabled(true);
+
+        int returnVal = fileChooser.showDialog(this, "Select");
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String selectedDir = fileChooser.getSelectedFile().getAbsolutePath();
+            if (!selectedDir.endsWith(File.separator)) {
+                selectedDir += File.separator;
+            }
+            javaHomeTxt.setText(selectedDir);
+            validateInput();
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton javaOptionsHelpJButton;
-    private javax.swing.JLabel mbLabel;
-    private javax.swing.JLabel memoryLimitLabel;
-    private javax.swing.JTextField memoryTxt;
+    private javax.swing.JButton javaHomeHelpJButton;
+    private javax.swing.JLabel javaHomeLabel;
+    private javax.swing.JTextField javaHomeTxt;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 }

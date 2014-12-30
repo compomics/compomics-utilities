@@ -17,9 +17,9 @@ import no.uib.jsparklines.renderers.util.Util;
 public class JavaSettingsDialog extends javax.swing.JDialog {
 
     /**
-     * The main instance of the GUI.
+     * Reference to the JavaHomeOrMemoryDialogParent.
      */
-    private JavaMemoryDialogParent javaMemoryDialogParent;
+    private JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent;
     /**
      * The frame parent.
      */
@@ -37,15 +37,16 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
      * Creates a new JavaSettingsDialog.
      *
      * @param parent the parent frame
-     * @param javaMemoryDialogParent reference to the JavaMemoryDialogParent
+     * @param javaHomeOrMemoryDialogParent reference to the
+     * JavaHomeOrMemoryDialogParent
      * @param toolName the name of the tool, e.g., PeptideShaker
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param modal if the dialog is to be modal or not
      */
-    public JavaSettingsDialog(JFrame parent, JavaMemoryDialogParent javaMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
+    public JavaSettingsDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
         super(parent, modal);
         this.frameParent = parent;
-        this.javaMemoryDialogParent = javaMemoryDialogParent;
+        this.javaHomeOrMemoryDialogParent = javaHomeOrMemoryDialogParent;
         this.welcomeDialog = welcomeDialog;
         this.toolName = toolName;
         initComponents();
@@ -58,14 +59,15 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
-        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator; // @TODO: does this show the actual version used..?
-        javaHomeLabel.setText(javaHome);
+        String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
+        javaHomeLabel.setText("<html>" + javaHome + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
 
         String javaVersion = System.getProperty("java.version");
         versionLabel.setText(javaVersion);
 
         if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
             versionLabel.setForeground(Color.red);
+            javaHomeLabel.setForeground(Color.red);
         }
 
         if (CompomicsWrapper.is64BitJava()) {
@@ -78,7 +80,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         try {
             UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
             int maxMemory = utilitiesUserPreferences.getMemoryPreference();
-            memoryLabel.setText(Util.roundDouble(maxMemory * 0.000976563, 1) + " GB");
+            memoryLabel.setText("<html>" + Util.roundDouble(maxMemory * 0.000976563, 1) + " GB " + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
 
             if (maxMemory < 4000) {
                 memoryLabel.setForeground(Color.red);
@@ -101,18 +103,18 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         backgroundsPanel = new javax.swing.JPanel();
         javaHomePanel = new javax.swing.JPanel();
         javaHomeLabel = new javax.swing.JLabel();
+        versionRecommendationLabel1 = new javax.swing.JLabel();
+        versionPanel = new javax.swing.JPanel();
+        versionLabel = new javax.swing.JLabel();
+        versionRecommendationLabel2 = new javax.swing.JLabel();
         bitPanel = new javax.swing.JPanel();
         bitLabel = new javax.swing.JLabel();
         bitRecommendationLabel = new javax.swing.JLabel();
         memoryPanel = new javax.swing.JPanel();
         memoryLabel = new javax.swing.JLabel();
         memoryRecommendationLabel = new javax.swing.JLabel();
-        editMemoryJLabel = new javax.swing.JLabel();
-        okButton = new javax.swing.JButton();
         javaHelpJLabel = new javax.swing.JLabel();
-        versionPanel = new javax.swing.JPanel();
-        versionLabel = new javax.swing.JLabel();
-        versionRecommendationLabel = new javax.swing.JLabel();
+        okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Java Settings");
@@ -123,7 +125,22 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         javaHomePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Java Home"));
         javaHomePanel.setOpaque(false);
 
-        javaHomeLabel.setText("Java Home...");
+        javaHomeLabel.setText("<html>Java Home...&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
+        javaHomeLabel.setToolTipText("Edit Java Home");
+        javaHomeLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                javaHomeLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                javaHomeLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                javaHomeLabelMouseReleased(evt);
+            }
+        });
+
+        versionRecommendationLabel1.setFont(versionRecommendationLabel1.getFont().deriveFont((versionRecommendationLabel1.getFont().getStyle() | java.awt.Font.ITALIC)));
+        versionRecommendationLabel1.setText("Recommended: Java 1.7 or newer");
 
         javax.swing.GroupLayout javaHomePanelLayout = new javax.swing.GroupLayout(javaHomePanel);
         javaHomePanel.setLayout(javaHomePanelLayout);
@@ -131,14 +148,47 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
             javaHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javaHomePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(javaHomeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(javaHomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(versionRecommendationLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         javaHomePanelLayout.setVerticalGroup(
             javaHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javaHomePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(javaHomeLabel)
+                .addGroup(javaHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(javaHomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(versionRecommendationLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        versionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Java Version"));
+        versionPanel.setOpaque(false);
+
+        versionLabel.setText("1.7");
+
+        versionRecommendationLabel2.setFont(versionRecommendationLabel2.getFont().deriveFont((versionRecommendationLabel2.getFont().getStyle() | java.awt.Font.ITALIC)));
+        versionRecommendationLabel2.setText("Recommended: Java 1.7 or newer");
+
+        javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
+        versionPanel.setLayout(versionPanelLayout);
+        versionPanelLayout.setHorizontalGroup(
+            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(versionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(versionRecommendationLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        versionPanelLayout.setVerticalGroup(
+            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(versionPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versionRecommendationLabel2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -156,10 +206,10 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
             bitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bitPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bitLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bitLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(bitRecommendationLabel)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         bitPanelLayout.setVerticalGroup(
             bitPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,25 +224,22 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
         memoryPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Memory"));
         memoryPanel.setOpaque(false);
 
-        memoryLabel.setText("60 GB");
+        memoryLabel.setText("<html>60 GB&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
+        memoryLabel.setToolTipText("Edit memory settings");
+        memoryLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                memoryLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                memoryLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                memoryLabelMouseReleased(evt);
+            }
+        });
 
         memoryRecommendationLabel.setFont(memoryRecommendationLabel.getFont().deriveFont((memoryRecommendationLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         memoryRecommendationLabel.setText("Recommended: at least 4 GB");
-
-        editMemoryJLabel.setForeground(new java.awt.Color(0, 0, 255));
-        editMemoryJLabel.setText("<html><u>Edit</u></html>");
-        editMemoryJLabel.setToolTipText("Open Java Help");
-        editMemoryJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                editMemoryJLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                editMemoryJLabelMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                editMemoryJLabelMouseReleased(evt);
-            }
-        });
 
         javax.swing.GroupLayout memoryPanelLayout = new javax.swing.GroupLayout(memoryPanel);
         memoryPanel.setLayout(memoryPanelLayout);
@@ -200,30 +247,20 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
             memoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(memoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(memoryLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(memoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(editMemoryJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 363, Short.MAX_VALUE)
                 .addComponent(memoryRecommendationLabel)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         memoryPanelLayout.setVerticalGroup(
             memoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(memoryPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(memoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(memoryLabel)
-                    .addComponent(memoryRecommendationLabel)
-                    .addComponent(editMemoryJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(memoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(memoryRecommendationLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
 
         javaHelpJLabel.setForeground(new java.awt.Color(0, 0, 255));
         javaHelpJLabel.setText("<html><u><i>Java setup help</i></u></html>");
@@ -240,34 +277,12 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        versionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Java Version"));
-        versionPanel.setOpaque(false);
-
-        versionLabel.setText("1.7");
-
-        versionRecommendationLabel.setFont(versionRecommendationLabel.getFont().deriveFont((versionRecommendationLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        versionRecommendationLabel.setText("Recommended: Java 1.7 or newer");
-
-        javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
-        versionPanel.setLayout(versionPanelLayout);
-        versionPanelLayout.setHorizontalGroup(
-            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(versionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(versionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(versionRecommendationLabel)
-                .addContainerGap())
-        );
-        versionPanelLayout.setVerticalGroup(
-            versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(versionPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(versionLabel)
-                    .addComponent(versionRecommendationLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundsPanelLayout = new javax.swing.GroupLayout(backgroundsPanel);
         backgroundsPanel.setLayout(backgroundsPanelLayout);
@@ -358,38 +373,64 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
-     * Open the JavaMemoryDialog.
-     *
-     * @param evt
-     */
-    private void editMemoryJLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMemoryJLabelMouseReleased
-        new JavaMemoryDialog(frameParent, javaMemoryDialogParent, welcomeDialog, toolName);
-    }//GEN-LAST:event_editMemoryJLabelMouseReleased
-
-    /**
      * Change the cursor to a hand cursor.
      *
      * @param evt
      */
-    private void editMemoryJLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMemoryJLabelMouseEntered
+    private void javaHomeLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHomeLabelMouseEntered
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_editMemoryJLabelMouseEntered
+    }//GEN-LAST:event_javaHomeLabelMouseEntered
 
     /**
      * Change the cursor back to the default cursor.
      *
      * @param evt
      */
-    private void editMemoryJLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editMemoryJLabelMouseExited
+    private void javaHomeLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHomeLabelMouseExited
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_editMemoryJLabelMouseExited
+    }//GEN-LAST:event_javaHomeLabelMouseExited
+
+    /**
+     * Open the JavaHomeDialog.
+     *
+     * @param evt
+     */
+    private void javaHomeLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_javaHomeLabelMouseReleased
+        new JavaHomeDialog(frameParent, javaHomeOrMemoryDialogParent, welcomeDialog, toolName);
+    }//GEN-LAST:event_javaHomeLabelMouseReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void memoryLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memoryLabelMouseEntered
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_memoryLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void memoryLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memoryLabelMouseExited
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_memoryLabelMouseExited
+
+    /**
+     * Open the JavaMemoryDialog.
+     *
+     * @param evt
+     */
+    private void memoryLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memoryLabelMouseReleased
+        new JavaMemoryDialog(frameParent, javaHomeOrMemoryDialogParent, welcomeDialog, toolName);
+    }//GEN-LAST:event_memoryLabelMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundsPanel;
     private javax.swing.JLabel bitLabel;
     private javax.swing.JPanel bitPanel;
     private javax.swing.JLabel bitRecommendationLabel;
-    private javax.swing.JLabel editMemoryJLabel;
     private javax.swing.JLabel javaHelpJLabel;
     private javax.swing.JLabel javaHomeLabel;
     private javax.swing.JPanel javaHomePanel;
@@ -399,6 +440,7 @@ public class JavaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel versionLabel;
     private javax.swing.JPanel versionPanel;
-    private javax.swing.JLabel versionRecommendationLabel;
+    private javax.swing.JLabel versionRecommendationLabel1;
+    private javax.swing.JLabel versionRecommendationLabel2;
     // End of variables declaration//GEN-END:variables
 }

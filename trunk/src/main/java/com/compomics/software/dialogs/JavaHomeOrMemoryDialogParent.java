@@ -3,11 +3,11 @@ package com.compomics.software.dialogs;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 
 /**
- * Interface for parents of JavaMemoryDialog.
+ * Interface for parents of JavaMemoryDialog and JavaHomeDialog.
  *
  * @author Harald Barsnes
  */
-public interface JavaMemoryDialogParent {
+public interface JavaHomeOrMemoryDialogParent {
 
     /**
      * Restart the given tool with the new Java options.

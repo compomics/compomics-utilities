@@ -28,7 +28,7 @@ public class NotesDialog extends javax.swing.JDialog {
                 allNotes += note + "<br><br>";
             }
         } else {
-            allNotes = "(no current notes)";
+            allNotes = "(empty)";
         }
 
         notesEditorPane.setText("<html>" + allNotes + "</html>");

@@ -65,16 +65,16 @@ public class NotificationDialog extends javax.swing.JDialog {
         notificationPanelLayout.setHorizontalGroup(
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notificationPanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(8, 8, 8)
                 .addComponent(notificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                .addGap(10, 10, 10))
+                .addGap(8, 8, 8))
         );
         notificationPanelLayout.setVerticalGroup(
             notificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, notificationPanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(8, 8, 8)
                 .addComponent(notificationLabel)
-                .addGap(10, 10, 10))
+                .addGap(8, 8, 8))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -103,6 +103,7 @@ public class NotificationDialog extends javax.swing.JDialog {
      */
     private void notificationPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notificationPanelMouseReleased
         notificationDialogParent.notificationClicked(notificationType);
+        this.setVisible(false);
     }//GEN-LAST:event_notificationPanelMouseReleased
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel notificationLabel;

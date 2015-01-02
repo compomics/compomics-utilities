@@ -312,7 +312,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Set the Java Home folder.
      *
-     * @param javaHome
+     * @param javaHome the new Java Home
      */
     public void setJavaHome(String javaHome) {
         this.javaHome = javaHome;

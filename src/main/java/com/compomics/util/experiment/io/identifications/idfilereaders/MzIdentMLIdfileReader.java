@@ -161,14 +161,14 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (sequenceMatchingPreferences != null) {
@@ -688,6 +688,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                 softwareVersions.put(name, versions);
                                                                                                                             }
                                                                                                                         } else {
+
+                                                                                                                            // OMSSA
                                                                                                                             eValue = scoreMap.get("MS:1001329");
                                                                                                                             if (eValue != null) {
                                                                                                                                 advocate = Advocate.omssa;

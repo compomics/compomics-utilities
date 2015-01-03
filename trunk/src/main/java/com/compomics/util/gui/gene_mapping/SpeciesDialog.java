@@ -271,10 +271,8 @@ public class SpeciesDialog extends javax.swing.JDialog {
             }
         });
 
-        popularSpeciesLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         popularSpeciesLabel.setText("Popular Species:");
 
-        humanLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         humanLabel.setText("<html><a href>Human</a></html>");
         humanLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -291,7 +289,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
         comma1Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         comma1Label.setText(",");
 
-        mouseLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         mouseLabel.setText("<html><a href>Mouse</a></html>");
         mouseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -308,7 +305,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
         comma2Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         comma2Label.setText(",");
 
-        ratLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         ratLabel.setText("<html><a href>Rat</a></html>");
         ratLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -325,7 +321,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
         comma3Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         comma3Label.setText(",");
 
-        zebrafishLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         zebrafishLabel.setText("<html><a href>Zebrafish</a></html>");
         zebrafishLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -342,7 +337,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
         comma4Label.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         comma4Label.setText(",");
 
-        chickenLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         chickenLabel.setText("<html><a href>Chicken</a></html>");
         chickenLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -360,13 +354,16 @@ public class SpeciesDialog extends javax.swing.JDialog {
         speciesPanel.setLayout(speciesPanelLayout);
         speciesPanelLayout.setHorizontalGroup(
             speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, speciesPanelLayout.createSequentialGroup()
+            .addGroup(speciesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ensemblCategoryJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(speciesJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, speciesPanelLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, speciesPanelLayout.createSequentialGroup()
+                        .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(ensemblCategoryJComboBox, 0, 416, Short.MAX_VALUE)
+                            .addComponent(speciesJComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(speciesPanelLayout.createSequentialGroup()
                         .addComponent(popularSpeciesLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(humanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -386,21 +383,13 @@ public class SpeciesDialog extends javax.swing.JDialog {
                         .addComponent(comma4Label)
                         .addGap(5, 5, 5)
                         .addComponent(chickenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         speciesPanelLayout.setVerticalGroup(
             speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, speciesPanelLayout.createSequentialGroup()
+            .addGroup(speciesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ensemblCategoryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(speciesJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(popularSpeciesLabel)
                     .addComponent(humanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -412,6 +401,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     .addComponent(zebrafishLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comma4Label)
                     .addComponent(chickenLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ensemblCategoryJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(speciesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(speciesJComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(updateMappingsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -424,7 +419,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
             }
         });
 
-        unknownSpeciesLabel.setFont(unknownSpeciesLabel.getFont().deriveFont((unknownSpeciesLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         unknownSpeciesLabel.setText("<html><a href>Species not in list?</a></html>");
         unknownSpeciesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -438,7 +432,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
             }
         });
 
-        ensemblVersionLabel.setFont(ensemblVersionLabel.getFont().deriveFont((ensemblVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         ensemblVersionLabel.setText("<html><a href>Ensembl version?</a></html>");
         ensemblVersionLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

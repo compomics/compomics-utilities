@@ -195,7 +195,7 @@ public class Protein extends ExperimentObject {
      * computeMolecularWeight method instead, as that method stored the computed
      * molecular weights instead of recalculating them every time.)
      *
-     * @return the protein's molecular weight
+     * @return the protein's molecular weight in Da
      */
     public double computeMolecularWeight() {
 

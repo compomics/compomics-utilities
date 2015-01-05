@@ -248,7 +248,7 @@ public class SequenceFactory {
      * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex) 
+    public synchronized Protein getDecoyProteinFromTargetSynchronized(String accession, boolean reindex)
             throws IOException, IllegalArgumentException, FileNotFoundException {
 
         // check whether another thread did the job already
@@ -1109,7 +1109,7 @@ public class SequenceFactory {
      * @return a map containing all amino acid occurrence in the database
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws ClassNotFoundException if an ClassNotFoundException occurs
@@ -1150,17 +1150,22 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the protein's molecular weight.
+     * Returns the protein's molecular weight in kDa.
      *
      * @param accession the protein's accession number
+     *
      * @return the protein's molecular weight
-     * @throws IOException thrown whenever an error is encountered while reading
-     * the FASTA file
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading the protein sequence
+     * @throws FileNotFoundException exception thrown whenever an error occurred
+     * while reading the protein sequence
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while reading the protein sequence
      */
-    public double computeMolecularWeight(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException {
+    public double computeMolecularWeight(String accession) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         if (isDefaultReversed() && isDecoyAccession(accession)) {
             // Don't really see where we would need that...
@@ -1172,15 +1177,13 @@ public class SequenceFactory {
         }
 
         // see if we've already calculated the weight of this protein
-        if (molecularWeights.containsKey(accession)) {
-            return molecularWeights.get(accession);
+        Double molecularWeight = molecularWeights.get(accession);
+        if (molecularWeight == null) {
+            Protein protein = getProtein(accession);
+            molecularWeight = protein.computeMolecularWeight() / 1000;
+            molecularWeights.put(accession, molecularWeight);
         }
-
-        // weight unknown, we need to calculate the weight
-        Protein protein = getProtein(accession);
-        double weight = protein.computeMolecularWeight() / 1000;
-        molecularWeights.put(accession, weight);
-        return weight;
+        return molecularWeight;
     }
 
     /**
@@ -1277,7 +1280,7 @@ public class SequenceFactory {
      * factory.
      *
      * @return the default protein tree
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
@@ -1296,7 +1299,7 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
@@ -1315,7 +1318,7 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
@@ -1336,7 +1339,7 @@ public class SequenceFactory {
      *
      * @return the default protein tree
      *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
@@ -1355,8 +1358,8 @@ public class SequenceFactory {
      * during the initiation of the tree
      * @param displayProgress display progress
      * @return the default protein tree
-     * 
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     *
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs

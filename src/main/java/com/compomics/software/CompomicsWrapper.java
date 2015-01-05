@@ -917,6 +917,12 @@ public class CompomicsWrapper {
                 }
             }
         } else {
+            try {
+                userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             // see if the user has set the java home via the gui
             if (userPreferences.getJavaHome() != null) {
                 javaHome = userPreferences.getJavaHome();

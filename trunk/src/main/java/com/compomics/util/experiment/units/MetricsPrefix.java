@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.units;
 
 import java.io.Serializable;
@@ -36,29 +31,28 @@ public enum MetricsPrefix implements Serializable {
     yocto("yocto", "y", -24);
 
     /**
-     * The power of 10 to use
+     * The power of 10 to use.
      */
-    public final int power;
+    public final int POWER;
     /**
-     * The prefix in full letters
+     * The prefix in full letters.
      */
-    public final String prefix;
+    public final String PREFIX;
     /**
-     * The prefix symbol
+     * The prefix symbol.
      */
-    public final String symbol;
+    public final String SYMBOL;
 
     /**
      * Constructor.
      *
-     * @param prefix The prefix in full letters
-     * @param symbol The prefix symbol
-     * @param power The power of 10 to use
+     * @param prefix the prefix in full letters
+     * @param symbol the prefix symbol
+     * @param power the power of 10 to use
      */
     private MetricsPrefix(String prefix, String symbol, int power) {
-        this.prefix = prefix;
-        this.symbol = symbol;
-        this.power = power;
+        this.PREFIX = prefix;
+        this.SYMBOL = symbol;
+        this.POWER = power;
     }
-
 }

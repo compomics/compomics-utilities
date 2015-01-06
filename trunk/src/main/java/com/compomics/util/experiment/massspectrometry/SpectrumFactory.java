@@ -44,17 +44,9 @@ public class SpectrumFactory {
      */
     private static int nSpectraCache = 10000;
     /**
-     * Maximal number of precursors in cache.
-     */
-    private static int nPrecursorsCache = 1000000;
-    /**
      * List of the loaded spectra.
      */
     private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<String>();
-    /**
-     * List of the loaded precursors.
-     */
-    private LinkedBlockingDeque<String> loadedPrecursors = new LinkedBlockingDeque<String>();
     /**
      * Map of the random access files of the loaded mgf files (filename &gt;
      * random access file).
@@ -118,7 +110,6 @@ public class SpectrumFactory {
         currentSpectrumMap.clear();
         loadedPrecursorsMap.clear();
         loadedSpectra.clear();
-        loadedPrecursors.clear();
         mgfFilesMap.clear();
         mgfIndexesMap.clear();
         mzMLUnmarshallers.clear();
@@ -132,7 +123,6 @@ public class SpectrumFactory {
         currentSpectrumMap.clear();
         loadedPrecursorsMap.clear();
         loadedSpectra.clear();
-        loadedPrecursors.clear();
     }
 
     /**
@@ -710,16 +700,6 @@ public class SpectrumFactory {
             }
             fileMap.put(spectrumTitle, currentPrecursor);
             String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
-            loadedPrecursors.add(spectrumKey);
-            while (loadedPrecursors.size() > nPrecursorsCache) {
-                String tempKey = loadedPrecursors.pollFirst();
-                String tempFileName = Spectrum.getSpectrumFile(tempKey);
-                fileMap = loadedPrecursorsMap.get(tempFileName);
-                if (fileMap != null) {
-                    String tempTitle = Spectrum.getSpectrumTitle(tempKey);
-                    fileMap.remove(tempTitle);
-                }
-            }
         }
 
         return currentPrecursor;

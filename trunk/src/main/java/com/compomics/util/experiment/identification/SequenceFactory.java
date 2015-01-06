@@ -458,11 +458,14 @@ public class SequenceFactory {
             if (index == null) {
                 if (reindex) {
                     fastaIndex = getFastaIndex(true, null);
-                    return getHeader(accession, false);
+                    result = getHeader(accession, false);
                 }
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
-            return getHeader(index, 0);
+            
+            result = getHeader(index, 0);
+            
+            currentHeaderMap.put(accession, result);
         }
 
         return result;

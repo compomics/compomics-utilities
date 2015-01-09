@@ -991,7 +991,6 @@ public class SequenceFactory {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile));
 
         try {
-
             ProteinIterator proteinIterator = getProteinIterator(true);
 
             while (proteinIterator.hasNext()) {

@@ -11,44 +11,43 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Dialog used to set paths
+ * Dialog used to set paths.
  *
  * @author Marc Vaudel
  */
 public class PathSettingsDialog extends javax.swing.JDialog {
 
     /**
-     * Boolean indicating whether the process was cancelled by the user
+     * Boolean indicating whether the process was canceled by the user.
      */
     private boolean canceled = false;
-
     /**
-     * Original map of the paths to set
+     * Original map of the paths to set.
      */
     private HashMap<PathKey, String> originalKeyToPathMap = null;
     /**
-     * Map of the paths to set
+     * Map of the paths to set.
      */
     private HashMap<PathKey, String> keyToPathMap = null;
     /**
-     * List of paths
+     * List of paths.
      */
     private ArrayList<PathKey> keyList = null;
     /**
-     * Name to key map
+     * Name to key map.
      */
     private HashMap<String, PathKey> nameToKey = null;
     /**
-     * The tool name
+     * The tool name.
      */
     private String toolName;
     /**
-     * Tooltips for the paths
+     * Tooltips for the paths.
      */
     private ArrayList<String> pathsToolTips;
 
     /**
-     * Creates new form PathSettingsDialog
+     * Creates a new PathSettingsDialog.
      *
      * @param parent the parent frame
      * @param toolName the tool name
@@ -82,7 +81,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets up the gui components
+     * Sets up the GUI components.
      */
     public void setUpGUI() {
         pathTable.getTableHeader().setReorderingAllowed(false);
@@ -176,12 +175,12 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel1.setText("Right-click to edit paths.");
+        jLabel1.setText("Right-click to edit the paths");
 
         javax.swing.GroupLayout pathSettingsJPanelLayout = new javax.swing.GroupLayout(pathSettingsJPanel);
         pathSettingsJPanel.setLayout(pathSettingsJPanelLayout);
@@ -205,7 +204,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pathSettingsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton)
@@ -227,29 +226,46 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Edit the selected path.
+     *
+     * @param evt
+     */
     private void editPathMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPathMenuItemActionPerformed
         editSelectedPath();
     }//GEN-LAST:event_editPathMenuItemActionPerformed
 
+    /**
+     * Set the default path.
+     *
+     * @param evt
+     */
     private void setDefaultPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setDefaultPathActionPerformed
         setDefaultPath();
     }//GEN-LAST:event_setDefaultPathActionPerformed
 
+    /**
+     * Edit the selected path.
+     *
+     * @param evt
+     */
     private void pathTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pathTableMouseReleased
-
         if (evt != null && pathTable.rowAtPoint(evt.getPoint()) != -1) {
             pathTable.setRowSelectionInterval(pathTable.rowAtPoint(evt.getPoint()), pathTable.rowAtPoint(evt.getPoint()));
         }
-
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3 && pathTable.getSelectedRow() != -1) {
             reportDocumentationPopupMenu.show(pathTable, evt.getX(), evt.getY());
         }
-
         if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
             editSelectedPath();
         }
     }//GEN-LAST:event_pathTableMouseReleased
 
+    /**
+     * Save the paths and restart the tool if a change was detected.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
         boolean changed = false;
@@ -263,25 +279,27 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         }
 
         if (changed) {
-
             int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
                     "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
-
             if (outcome != JOptionPane.OK_OPTION) {
                 canceled = true;
             }
-
+        } else {
+            canceled = true;
         }
 
         dispose();
-
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the dialog without saving the changes.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
@@ -297,7 +315,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Edits the selected path
+     * Edits the selected path.
      */
     private void editSelectedPath() {
         int selectedRow = pathTable.getSelectedRow();
@@ -309,7 +327,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets a default path
+     * Sets a default path.
      */
     private void setDefaultPath() {
         File selectedFile = Util.getUserSelectedFolder(this, "Select Default Folder", null, "Default Folder", "Select", false);
@@ -320,9 +338,10 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Indicates whether the action was cancelled by the used.
+     * Indicates whether the action was canceled by the user. (Or if no changes
+     * where made to the settings.)
      *
-     * @return true if the action was cancelled by the used
+     * @return true if the action was canceled by the user
      */
     public boolean isCanceled() {
         return canceled;
@@ -343,7 +362,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     private class PathsTableModel extends DefaultTableModel {
 
         /**
-         * Creates a new table model
+         * Creates a new table model.
          */
         public PathsTableModel() {
         }
@@ -406,5 +425,4 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             return false;
         }
     }
-
 }

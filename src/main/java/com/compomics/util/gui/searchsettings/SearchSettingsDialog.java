@@ -2399,7 +2399,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         ((JSparklinesBarChartTableCellRenderer) variableModsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 50);
 
         if (modificationsTable.getRowCount() > 0) {
-            modificationsTable.setRowSelectionInterval(0, 0);
+            //modificationsTable.setRowSelectionInterval(0, 0);
             modificationsTable.scrollRectToVisible(modificationsTable.getCellRect(0, 0, false));
             modificationsTable.requestFocus();
         }

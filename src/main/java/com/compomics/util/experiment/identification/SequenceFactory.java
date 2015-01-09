@@ -462,9 +462,9 @@ public class SequenceFactory {
                 }
                 throw new IllegalArgumentException("Protein not found: " + accession + ".");
             }
-            
+
             result = getHeader(index, 0);
-            
+
             currentHeaderMap.put(accession, result);
         }
 
@@ -990,41 +990,46 @@ public class SequenceFactory {
         // first create the new target-decoy file
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile));
 
-        for (String accession : fastaIndex.getIndexes().keySet()) {
+        try {
 
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                break;
-            }
+            ProteinIterator proteinIterator = getProteinIterator(true);
 
-            if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
-            }
+            while (proteinIterator.hasNext()) {
 
-            Protein currentProtein = getProtein(accession);
-            Header currentHeader = getHeader(accession);
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
 
-            String decoyAccession = getDefaultDecoyAccession(currentProtein.getAccession());
-            String currentRawHeader = currentHeader.getRawHeader();
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
 
-            // replace the accession number
-            String escapedString = java.util.regex.Pattern.quote(accession);
-            currentRawHeader = currentRawHeader.replaceAll(escapedString, decoyAccession);
+                Protein currentProtein = proteinIterator.getNextProtein();
+                String accession = currentProtein.getAccession();
+                Header currentHeader = getHeader(accession);
 
-            // add decoy to the description
-            if (currentHeader.getDescription() != null && !currentHeader.getDescription().isEmpty()) {
-                escapedString = java.util.regex.Pattern.quote(currentHeader.getDescription());
-                currentRawHeader = currentRawHeader.replaceAll(escapedString, getDefaultDecoyDescription(currentHeader.getDescription()));
-            }
+                String decoyAccession = getDefaultDecoyAccession(currentProtein.getAccession());
+                String currentRawHeader = currentHeader.getRawHeader();
 
-            // write the target protein to the fasta file
-            bufferedWriter.write(currentHeader.getRawHeader() + System.getProperty("line.separator"));
-            bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
+                // replace the accession number
+                String escapedString = java.util.regex.Pattern.quote(accession);
+                currentRawHeader = currentRawHeader.replaceAll(escapedString, decoyAccession);
 
-            // write the decoy protein to the fasta file
-            bufferedWriter.write(currentRawHeader + System.getProperty("line.separator"));
-            bufferedWriter.write(reverseSequence(currentProtein.getSequence()) + System.getProperty("line.separator"));
+                // add decoy to the description
+                if (currentHeader.getDescription() != null && !currentHeader.getDescription().isEmpty()) {
+                    escapedString = java.util.regex.Pattern.quote(currentHeader.getDescription());
+                    currentRawHeader = currentRawHeader.replaceAll(escapedString, getDefaultDecoyDescription(currentHeader.getDescription()));
+                }
 
-            // possible fix for the dbtoolkit uniprot format
+                // write the target protein to the fasta file
+                bufferedWriter.write(currentHeader.getRawHeader() + System.getProperty("line.separator"));
+                bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
+
+                // write the decoy protein to the fasta file
+                bufferedWriter.write(currentRawHeader + System.getProperty("line.separator"));
+                bufferedWriter.write(reverseSequence(currentProtein.getSequence()) + System.getProperty("line.separator"));
+
+                // possible fix for the dbtoolkit uniprot format
 //            Protein currentProtein = getProtein(accession);
 //            Header currentHeader = getHeader(accession);
 //            String reversedSequence = reverseSequence(currentProtein.getSequence());
@@ -1039,9 +1044,11 @@ public class SequenceFactory {
 //
 //            bufferedWriter.write(currentHeader.toString("_" + decoyFlags[0]) + System.getProperty("line.separator"));
 //            bufferedWriter.write(reversedSequence + System.getProperty("line.separator"));
-        }
+            }
 
-        bufferedWriter.close();
+        } finally {
+            bufferedWriter.close();
+        }
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
@@ -1611,7 +1618,8 @@ public class SequenceFactory {
             while (line != null) {
                 if (line.startsWith(">")) {
                     Header tempHeader = Header.parseFromFASTA(line);
-                    if (targetOnly && isDecoyAccession(tempHeader.getAccessionOrRest())) {
+                    String accession = tempHeader.getAccessionOrRest();
+                    if (targetOnly && isDecoyAccession(accession)) {
                         while ((line = br.readLine()) != null) {
                             if (line.startsWith(">")) {
                                 tempHeader = Header.parseFromFASTA(line);
@@ -1638,7 +1646,9 @@ public class SequenceFactory {
                 line = br.readLine();
             }
             if (newHeaderFound || line == null) { // line == null means that we read the last protein
-                nextProtein = new Protein(header.getAccessionOrRest(), header.getDatabaseType(), sequence, isDecoyAccession(header.getAccessionOrRest()));
+                String accession = header.getAccessionOrRest();
+                nextProtein = new Protein(accession, header.getDatabaseType(), sequence, isDecoyAccession(accession));
+                currentHeaderMap.put(accession, header);
                 return true;
             } else {
                 close();

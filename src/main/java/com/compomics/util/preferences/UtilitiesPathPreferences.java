@@ -26,7 +26,7 @@ public class UtilitiesPathPreferences {
     /**
      * Enum of the paths which can be set in utilities.
      */
-    public enum UtilitiesPathKey {
+    public enum UtilitiesPathKey implements PathKey {
 
         /**
          * Folder containing the compomics utilities user preferences file.
@@ -80,20 +80,12 @@ public class UtilitiesPathPreferences {
             this.isDirectory = isDirectory;
         }
 
-        /**
-         * Returns the id of the path.
-         *
-         * @return the id of the path
-         */
+        @Override
         public String getId() {
             return id;
         }
 
-        /**
-         * Returns the description of the path.
-         *
-         * @return the description of the path
-         */
+        @Override
         public String getDescription() {
             return description;
         }
@@ -189,6 +181,30 @@ public class UtilitiesPathPreferences {
             case utilitiesPreferencesKey:
                 UtilitiesUserPreferences.setUserPreferencesFolder(path);
                 return;
+            default:
+                throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
+        }
+    }
+
+    /**
+     * Returns the path according to the given key and path.
+     *
+     * @param utilitiesPathKey the key of the path
+     * 
+     * @return the path to be set
+     */
+    public static String getPathPreference(UtilitiesPathKey utilitiesPathKey) {
+        switch (utilitiesPathKey) {
+            case fastaIndexesKey:
+                return ProteinTreeComponentsFactory.getDefaultDbFolderPath();
+            case geneMappingKey:
+                return GenePreferences.getGeneMappingFolder().getAbsolutePath();
+            case prideAnnotationKey:
+                return PrideObjectsFactory.getPrideFolder();
+            case ptmFactoryKey:
+                return PTMFactory.getSerializationFolder();
+            case utilitiesPreferencesKey:
+                return UtilitiesUserPreferences.getUserPreferencesFolder();
             default:
                 throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
         }

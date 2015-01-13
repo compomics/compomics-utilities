@@ -404,6 +404,8 @@ public class Advocate {
             return "17269722";
         } else if (this == comet) {
             return "23148064";
+        } else if (this == peptideShaker) {
+            return "25574629";
         } else {
             return null;
         }

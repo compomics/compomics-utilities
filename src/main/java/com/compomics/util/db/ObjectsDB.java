@@ -547,6 +547,14 @@ public class ObjectsDB implements Serializable {
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
+        if (contentTableQueue == null) { // backward compatibility check
+            busy = false;
+            tableQueueUpdating = "";
+            tableQueue = new ArrayList<String>();
+            contentQueue = new HashMap<String, ArrayList<String>>();
+            contentTableQueue = new ArrayList<String>();
+        }
+
         if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
 
             if (debugInteractions) {

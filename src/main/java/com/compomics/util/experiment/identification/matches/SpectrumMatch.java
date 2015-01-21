@@ -220,6 +220,9 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the assumptions map
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
+        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
+            update();
+        }
         return assumptionsMap;
     }
 

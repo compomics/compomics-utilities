@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.identification_parameters.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
@@ -12,6 +13,7 @@ import com.compomics.util.experiment.identification.identification_parameters.My
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.TideParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
@@ -989,6 +991,18 @@ public class SearchParameters implements Serializable {
         if (result.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) == null) {
             CometParameters cometParameters = new CometParameters();
             result.setIdentificationAlgorithmParameter(cometParameters.getAlgorithm().getIndex(), cometParameters);
+        }
+        
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.tide.getIndex()) == null) {
+            TideParameters tideParameters = new TideParameters();
+            result.setIdentificationAlgorithmParameter(tideParameters.getAlgorithm().getIndex(), tideParameters);
+        }
+        
+        // compatibility check
+        if (result.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()) == null) {
+            AndromedaParameters andromedaParameters = new AndromedaParameters();
+            result.setIdentificationAlgorithmParameter(andromedaParameters.getAlgorithm().getIndex(), andromedaParameters);
         }
 
         // compatibility check

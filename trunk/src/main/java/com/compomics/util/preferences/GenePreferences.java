@@ -832,7 +832,7 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Returns the species map. Key: latin name, element: Ensembl database name,
+     * Returns the species map. Key: Latin name, element: Ensembl database name,
      * e.g., key: Homo sapiens, element: hsapiens.
      *
      * @return the speciesMap
@@ -844,7 +844,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Returns the species map. Main key: Ensembl type, e.g., Vertebrates or
-     * Plants. Next level: key: latin name, element: ensembl database name,
+     * Plants. Next level: key: Latin name, element: ensembl database name,
      * e.g., key: Homo sapiens, element: hsapiens_gene_ensembl.
      *
      * @return the speciesMap

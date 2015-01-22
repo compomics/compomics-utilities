@@ -243,7 +243,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        speciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Species"));
+        speciesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Species (for gene and gene ontology mapping)"));
         speciesPanel.setOpaque(false);
 
         speciesJComboBox.setMaximumRowCount(20);
@@ -492,7 +492,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

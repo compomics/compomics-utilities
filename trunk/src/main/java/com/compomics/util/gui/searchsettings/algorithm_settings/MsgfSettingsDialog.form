@@ -232,6 +232,7 @@
                     <StringItem index="3" value="Q-Exactive"/>
                   </StringArray>
                 </Property>
+                <Property name="selectedIndex" type="int" value="3"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="decoyDatabaseCmb">
@@ -270,6 +271,7 @@
                     <StringItem index="3" value="HCD"/>
                   </StringArray>
                 </Property>
+                <Property name="selectedIndex" type="int" value="3"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="protocolLabel">

@@ -102,7 +102,7 @@ public abstract class FileDAO {
             File destFile = new File(String.format("%s/%s", fileLocationOnDiskToDownloadTo, entry.getName()));
             if (!destFile.getParentFile().exists()) {
                 if (!destFile.getParentFile().mkdirs()) {
-                    throw new IOException("could not create the folders to unzip in");
+                    throw new IOException("Could not create the folder \'" + destFile.getParentFile().getAbsolutePath() + "\' to unzip to.");
                 }
             }
             if (!entry.isDirectory()) {
@@ -121,7 +121,7 @@ public abstract class FileDAO {
             } else {
                 if (!destFile.exists()) {
                     if (!destFile.mkdirs()) {
-                        throw new IOException("could not create folders to unzip file");
+                        throw new IOException("Could not create folder \'" + destFile.getAbsolutePath() + "\' to unzip to.");
                     }
                 }
             }
@@ -246,7 +246,7 @@ public abstract class FileDAO {
             }
         }
         /**
-         * if (mainJarFile == null) { throw new IOException("could not find jar
+         * if (mainJarFile == null) { throw new IOException("Could not find jar
          * file in folder and child folders"); }
          */
         return mainJarFile;
@@ -265,7 +265,7 @@ public abstract class FileDAO {
     public File writeStreamToDisk(InputStream in, String name, File outputLocationFolder) throws FileNotFoundException, IOException {
         if (!outputLocationFolder.exists()) {
             if (!outputLocationFolder.mkdirs()) {
-                throw new IOException("could not create the folders to write stream to disk");
+                throw new IOException("Could not create the folder \'" + outputLocationFolder.getAbsolutePath() + "\' to write stream to disk.");
             }
         }
         File outputFile = new File(outputLocationFolder, name);

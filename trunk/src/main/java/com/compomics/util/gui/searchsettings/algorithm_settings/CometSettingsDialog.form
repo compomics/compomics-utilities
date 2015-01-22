@@ -647,12 +647,12 @@
                               <Component id="fragmentBinOffsetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentBinOffsetTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="useSparseMatrixLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="useSparseMatrixCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="206" max="32767" attributes="0"/>
+                          <EmptySpace pref="211" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

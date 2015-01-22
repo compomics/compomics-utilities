@@ -296,7 +296,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                             aaAtLocation = peptideSequence.charAt(location - 1) + "";
                                         }
                                         for (String residue : residues) {
-                                            if (residue.equals(aaAtLocation)) {
+                                            if (residue.equals(aaAtLocation) || residue.equals(".")) {
                                                 fixed = true;
                                                 break;
                                             }

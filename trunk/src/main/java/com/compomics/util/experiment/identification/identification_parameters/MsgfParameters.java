@@ -23,12 +23,12 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      * The MS-GF+ instrument ID: 0: Low-res LCQ/LTQ (Default), 1: High-res LTQ,
      * 2: TOF, 3: Q-Exactive.
      */
-    private int instrumentID = 0;
+    private int instrumentID = 3;
     /**
      * The MS-GF+ fragmentation type ID: 0: As written in the spectrum or CID if
      * no info (Default), 1: CID, 2: ETD, 3: HCD.
      */
-    private int fragmentationType = 0;
+    private int fragmentationType = 3;
     /**
      * The MS-GF+ protocol ID: 0: Automatic (Default), 1: Phosphorylation, 2:
      * iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.

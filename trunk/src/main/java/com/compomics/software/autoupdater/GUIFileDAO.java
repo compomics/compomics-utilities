@@ -77,9 +77,9 @@ public class GUIFileDAO extends FileDAO {
                     }
                 }
             } catch (NullPointerException npe) {
-                throw new IOException("could not create the shortcut");
+                throw new IOException("Could not create the desktop shortcut.");
             } catch (NumberFormatException nfe) {
-                throw new IOException("could not create the shortcut");
+                throw new IOException("Could not create the desktop shortcut.");
             }
         } else {
             // @TODO: do something here??
@@ -113,7 +113,7 @@ public class GUIFileDAO extends FileDAO {
                 fileChooser.setVisible(true);
                 file = fileChooser.getSelectedFile();
             } else if (choice == JOptionPane.CANCEL_OPTION || choice == JOptionPane.CLOSED_OPTION) {
-                throw new IOException("no download location");
+                throw new IOException("No download location.");
             }
         }
         return file;

@@ -42,22 +42,18 @@ public class PepxmlIdfileReader implements IdfileReader {
      * List of the spectrum matches in the file.
      */
     private LinkedList<SpectrumMatch> spectrumMatches = null;
-
     /**
      * The name of the search engine which was used to create the file.
      */
     private String searchEngine = null;
-
     /**
      * The version of the search engine which was used to create the file.
      */
     private String searchEngineVersion = null;
-
     /**
      * The file to parse.
      */
     private File idFile;
-
     /**
      * The name of the spectrum file.
      */
@@ -66,7 +62,6 @@ public class PepxmlIdfileReader implements IdfileReader {
      * The spectrum factory used to retrieve spectrum titles.
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-
     /**
      * The sequence matching preferences.
      */
@@ -414,7 +409,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     /**
-     * Parses a spectrum query
+     * Parses a spectrum query.
      *
      * @param parser the XML parser
      *
@@ -534,7 +529,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
             SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         if (spectrumMatches == null) {

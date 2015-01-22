@@ -39,7 +39,7 @@ public class Advocate {
     /**
      * The Andromeda search engine.
      */
-    public static final Advocate andromeda = new Advocate(4, "Andromeda", AdvocateType.search_engine);
+    public static final Advocate andromeda = new Advocate(4, "Andromeda", AdvocateType.search_engine, new Color(85, 107, 47));
     /**
      * The MS Amanda search engine.
      */
@@ -133,6 +133,10 @@ public class Advocate {
      * The pNovo+ de novo sequencing algorithm.
      */
     public static final Advocate pNovo = new Advocate(27, "pNovo+", AdvocateType.sequencing_algorithm, new Color(253, 192, 134));
+    /**
+     * The Tide search engine.
+     */
+    public static final Advocate tide = new Advocate(28, "Tide", AdvocateType.search_engine, new Color(210, 105, 30));
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -246,13 +250,17 @@ public class Advocate {
         return color;
     }
 
+    public String toString() {
+        return name;
+    }
+
     /**
      * Returns the implemented advocates in an array.
      *
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[29 + userAdvocates.size()];
+        Advocate[] result = new Advocate[30 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -265,6 +273,7 @@ public class Advocate {
         result[++i] = direcTag;
         result[++i] = byonic;
         result[++i] = comet;
+        result[++i] = tide;
         result[++i] = proteinLynx;
         result[++i] = msFit;
         result[++i] = myriMatch;
@@ -406,6 +415,8 @@ public class Advocate {
             return "23148064";
         } else if (this == peptideShaker) {
             return "25574629";
+        } else if (this == tide) {
+            return "21761931";
         } else {
             return null;
         }
@@ -467,13 +478,15 @@ public class Advocate {
             return Advocate.omssa;
         } else if (idFileName.toLowerCase().endsWith("xml")) {
             return Advocate.xtandem;
-        } else if (idFileName.toLowerCase().endsWith("mzid")) {
+        } else if (idFileName.toLowerCase().endsWith("mzid")) { // @TODO: what about myrimatch?
             return Advocate.msgf;
         } else if (idFileName.toLowerCase().endsWith("csv")) {
             return Advocate.msAmanda;
         } else if (idFileName.toLowerCase().endsWith("txt")) {
             return Advocate.comet;
+        } else if (idFileName.toLowerCase().endsWith("txt")) { // @TODO: how to separate comet and tide?
+            return Advocate.tide;
         }
-        return null;
+        return null; // @TODO: add andromeda?
     }
 }

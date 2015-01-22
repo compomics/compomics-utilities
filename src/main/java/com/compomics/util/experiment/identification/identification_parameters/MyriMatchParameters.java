@@ -22,7 +22,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal peptide length.
      */
-    private Integer maxPeptideLength = 30; // note that for MS-GF+ default is 40
+    private Integer maxPeptideLength = 30; // note that for MyriMath default is 40
     /**
      * The maximum number of spectrum matches.
      */

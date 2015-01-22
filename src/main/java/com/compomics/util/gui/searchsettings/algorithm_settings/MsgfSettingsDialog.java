@@ -203,6 +203,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         advancedSearchSettingsPanel.setOpaque(false);
 
         instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Low-res LCQ/LTQ", "Orbitrap/FTICR", "TOF", "Q-Exactive" }));
+        instrumentCmb.setSelectedIndex(3);
 
         decoyDatabaseCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         decoyDatabaseCmb.setSelectedIndex(1);
@@ -214,6 +215,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog {
         fragmentationMethodLabel.setText("Fragmentation Method");
 
         fragmentationMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Automatic", "CID", "ETD", "HCD" }));
+        fragmentationMethodCmb.setSelectedIndex(3);
 
         protocolLabel.setText("Protocol");
 

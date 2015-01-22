@@ -59,7 +59,8 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Returns the default cvTerm of a modification when it exists.
      *
-     * @param ptmName the PTM Name according to the XML file
+     * @param ptmName the PTM name according to the XML file, null if no mapping
+     * is found
      * @return a default CV term
      */
     public static CvTerm getDefaultCVTerm(String ptmName) {
@@ -334,8 +335,14 @@ public class PtmToPrideMap implements Serializable {
                 || ptmName.equalsIgnoreCase("TMT 6-plex on K (old)")
                 || ptmName.equalsIgnoreCase("TMT 6-plex on n-term peptide")
                 || ptmName.equalsIgnoreCase("TMT 6-plex on n-term peptide (old)")) {
-            return new CvTerm("UNIMOD", "UNIMOD:737", "TMT6 plex", "225.155833");
-        } else if (ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on nterm")
+            return new CvTerm("UNIMOD", "UNIMOD:737", "TMT6 plex", "229.162932");
+        } 
+//        else if (ptmName.equalsIgnoreCase("TMT 10-plex on K")
+//                || ptmName.equalsIgnoreCase("TMT 10-plex n-term")
+//                || ptmName.equalsIgnoreCase("TMT 10-plex n-term peptide")) {
+//            return new CvTerm("UNIMOD", "UNIMOD:???", "TMT10 plex", "229.162932"); // @TODO: 10-plex TMT is missing!!
+//        }  
+        else if (ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on nterm")
                 || ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on K")
                 || ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on Y")) {
             return new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", "304.205360");

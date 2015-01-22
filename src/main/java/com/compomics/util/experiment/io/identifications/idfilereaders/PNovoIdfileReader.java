@@ -206,17 +206,17 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     /**
      * Returns the spectrum file name. This method assumes that the pNovo output
-     * file is the mgf file name + ".txt"
+     * file is the mgf file name + ".pnovo.txt"
      *
      * @return the spectrum file name
      */
     public String getMgfFileName() {
-        return fileName.substring(0, fileName.length() - 4) + ".mgf";
+        return fileName.substring(0, fileName.length() - ".pnovo.txt".length()) + ".mgf";
     }
 
     @Override
     public String getExtension() {
-        return ".txt";
+        return ".pnovo.txt";
     }
 
     @Override

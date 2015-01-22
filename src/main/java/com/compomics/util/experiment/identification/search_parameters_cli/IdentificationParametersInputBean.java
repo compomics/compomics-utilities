@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
@@ -15,6 +16,7 @@ import com.compomics.util.experiment.identification.identification_parameters.My
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.TideParameters;
 import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.preferences.ModificationProfile;
@@ -60,7 +62,8 @@ public class IdentificationParametersInputBean {
      * @param aLine the command line
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if aClassNotFoundException ClassNotFoundException occurs
+     * @throws ClassNotFoundException if aClassNotFoundException
+     * ClassNotFoundException occurs
      */
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
 
@@ -752,6 +755,195 @@ public class IdentificationParametersInputBean {
         }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
+
+        ///////////////////////////////////
+        // Tide parameters
+        ///////////////////////////////////
+        TideParameters tideParameters = new TideParameters();
+
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMaxVariablePtmsPerPeptide(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMaxVariablePtmsPerTypePerPeptide(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMinPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMaxPeptideLength(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id);
+            Double option = new Double(arg);
+            tideParameters.setMinPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id);
+            Double option = new Double(arg);
+            tideParameters.setMaxPrecursorMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id);
+            tideParameters.setDecoyFormat(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id);
+            tideParameters.setKeepTerminalAminoAcids(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id);
+            Integer option = new Integer(arg);
+            tideParameters.setDecoySeed(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id);
+            tideParameters.setOutputFolderName(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id);
+            Integer option = new Integer(arg);
+            tideParameters.setPrintPeptides(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_VERBOSITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_VERBOSITY.id);
+            Integer option = new Integer(arg);
+            tideParameters.setVerbosity(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMonoisotopicPrecursor(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id);
+            Integer option = new Integer(arg);
+            tideParameters.setClipNtermMethionine(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id);
+            tideParameters.setDigestionType(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id);
+            Integer option = new Integer(arg);
+            tideParameters.setComputeSpScore(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id);
+            Integer option = new Integer(arg);
+            tideParameters.setNumberOfSpectrumMatches(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id);
+            Integer option = new Integer(arg);
+            tideParameters.setComputeExactPValues(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id);
+            Double option = new Double(arg);
+            tideParameters.setMinSpectrumMz(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id);
+            Double option = new Double(arg);
+            tideParameters.setMaxSpectrumMz(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMinSpectrumPeaks(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id);
+            tideParameters.setSpectrumCharges(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id);
+            Integer option = new Integer(arg);
+            tideParameters.setRemovePrecursor(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id);
+            Double option = new Double(arg);
+            tideParameters.setRemovePrecursorTolerance(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id);
+            Integer option = new Integer(arg);
+            tideParameters.setPrintProgressIndicatorSize(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id);
+            Integer option = new Integer(arg);
+            tideParameters.setUseFlankingPeaks(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id);
+            Integer option = new Integer(arg);
+            tideParameters.setUseNeutralLossPeaks(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id);
+            Double option = new Double(arg);
+            tideParameters.setMzBinWidth(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id);
+            Double option = new Double(arg);
+            tideParameters.setMzBinOffset(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_CONCAT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CONCAT.id);
+            Integer option = new Integer(arg);
+            tideParameters.setConcatenatTargetDecoy(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id);
+            tideParameters.setStoreSpectraFileName(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id);
+            Integer option = new Integer(arg);
+            tideParameters.setTextOutput(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id);
+            Integer option = new Integer(arg);
+            tideParameters.setSqtOutput(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id);
+            Integer option = new Integer(arg);
+            tideParameters.setPepXmlOutput(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id);
+            Integer option = new Integer(arg);
+            tideParameters.setMzidOutput(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id);
+            Integer option = new Integer(arg);
+            tideParameters.setPinOutput(option == 1);
+        }
+
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), tideParameters);
+
+        ///////////////////////////////////
+        // Andromeda parameters
+        ///////////////////////////////////
+        AndromedaParameters andromedaParameters = new AndromedaParameters();
+        // @TODO: implement me!!
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), andromedaParameters);
 
         ///////////////////////////////////
         // PepNovo+ parameters
@@ -2059,7 +2251,7 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        // @TODO: add MS-GF+, MS Amanda, DirecTag, MyriMatch and Comet parameters!!!
+        // @TODO: add MS-GF+, MS Amanda, DirecTag, MyriMatch, Comet, Tide, etc...!!!
         return true;
     }
 }

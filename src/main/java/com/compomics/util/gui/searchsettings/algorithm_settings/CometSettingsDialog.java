@@ -24,7 +24,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
     private boolean cancelled = false;
 
     /**
-     * Creates new form CometSettingsDialog.
+     * Creates a new CometSettingsDialog.
      *
      * @param parent the parent frame
      * @param cometParameters the Comet parameters
@@ -708,11 +708,11 @@ public class CometSettingsDialog extends javax.swing.JDialog {
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentBinOffsetLabel)
                     .addComponent(fragmentBinOffsetTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(useSparseMatrixLabel)
                     .addComponent(useSparseMatrixCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(206, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Fragment Ions", fragmentIonsPanel);

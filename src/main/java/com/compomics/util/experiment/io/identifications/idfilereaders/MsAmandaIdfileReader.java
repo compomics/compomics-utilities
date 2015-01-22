@@ -110,14 +110,14 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (sequenceMatchingPreferences != null) {
@@ -151,7 +151,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
         // parse the header line
         String[] headers = headerString.split("\t");
         int scanNumberIndex = -1, titleIndex = -1, sequenceIndex = -1, modificationsIndex = -1, proteinAccessionsIndex = -1,
-                amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, filenameIndex = -1;
+                amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, filenameIndex = -1,
+                amandaWeightedProbabilityIndex = -1;
 
         // get the column index of the headers
         for (int i = 0; i < headers.length; i++) {
@@ -169,6 +170,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 proteinAccessionsIndex = i;
             } else if (header.equalsIgnoreCase("Amanda Score")) {
                 amandaScoreIndex = i;
+            } else if (header.equalsIgnoreCase("Weighted Probability")) {
+                amandaWeightedProbabilityIndex = i;
             } else if (header.equalsIgnoreCase("Rank")) {
                 rankIndex = i;
             } else if (header.equalsIgnoreCase("m/z")) {
@@ -204,9 +207,20 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 String peptideSequence = elements[sequenceIndex].toUpperCase();
                 String modifications = elements[modificationsIndex].trim();
                 //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used
+
+                // get the ms amanda score
                 String scoreAsText = elements[amandaScoreIndex];
                 double msAmandaScore = Util.readDoubleAsString(scoreAsText);
-                double msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
+                double msAmandaEValue;
+
+                // get the ms amanda e-value
+                if (amandaWeightedProbabilityIndex != -1) {
+                    String eVaulueAsText = elements[amandaWeightedProbabilityIndex];
+                    msAmandaEValue = Util.readDoubleAsString(eVaulueAsText);
+                } else {
+                    msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
+                }
+
                 int rank = Integer.valueOf(elements[rankIndex]);
                 //String mzAsText = elements[mzIndex]; // not currently used
                 //double mz = Util.readDoubleAsString(mzAsText);

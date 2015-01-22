@@ -550,19 +550,23 @@ public class CompomicsWrapper {
                     public void run() {
                         try {
                             downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles,
-                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog);
+                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog); // move files from resources/conf/? like paths.txt?
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
                             if (exitJavaOnCancel) {
                                 System.exit(0);
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        } catch (XMLStreamException e) {
-                            e.printStackTrace();
+                            if (!progressDialog.isRunFinished()) {
+                                progressDialog.setRunFinished();
+                            }
+                            JOptionPane.showMessageDialog(null,
+                                    "An error occured when trying to update " + toolName + ":\n"
+                                    + e.getMessage(),
+                                    "Update Failed", JOptionPane.WARNING_MESSAGE);
+                            System.exit(0);
                         }
                     }
                 }.start();

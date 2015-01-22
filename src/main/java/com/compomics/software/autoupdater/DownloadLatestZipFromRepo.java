@@ -270,7 +270,7 @@ public class DownloadLatestZipFromRepo {
                     }
                 }
             } catch (InterruptedException ie) {
-                throw new InterruptedIOException("jvm ended unexpectedly, old files have not been deleted");
+                throw new InterruptedIOException("JVM ended unexpectedly. Old files have not been deleted.");
             }
         }
     }
@@ -372,7 +372,7 @@ public class DownloadLatestZipFromRepo {
             p.directory(new File(downloadedFile.getAbsoluteFilePath()).getParentFile());
             jar = p.start();
         } catch (NullPointerException npe) {
-            throw new IOException("could not start the jar");
+            throw new IOException("Could not start the jar file.");
         }
         return jar;
     }
@@ -427,7 +427,7 @@ public class DownloadLatestZipFromRepo {
         }
         if (!downloadFolder.exists()) {
             if (!downloadFolder.mkdirs()) {
-                throw new IOException("could not make the directories needed to download the file in");
+                throw new IOException("Could not create the folder \'" + downloadFolder.getAbsolutePath() + "\' to download the file to.");
             }
         }
 
@@ -517,7 +517,7 @@ public class DownloadLatestZipFromRepo {
         // delete the downloaded zip file
         if (cleanupZipFile) {
             if (!downloadedFile.delete()) {
-                throw new IOException("could not delete the zip file");
+                throw new IOException("Could not delete the zip file \'" + downloadedFile.getAbsolutePath() + "\'");
             }
         }
 
@@ -576,7 +576,7 @@ public class DownloadLatestZipFromRepo {
         }
         if (!downloadFolder.exists()) {
             if (!downloadFolder.mkdirs()) {
-                throw new IOException("could not make the directories needed to download the file in");
+                throw new IOException("Could not create the folder \'" + downloadFolder.getAbsolutePath() + "\' to download the file to.");
             }
         }
 
@@ -674,7 +674,7 @@ public class DownloadLatestZipFromRepo {
         // delete the downloaded zip file
         if (cleanupZipFile) {
             if (!downloadedFile.delete()) {
-                throw new IOException("could not delete the zip file");
+                throw new IOException("Could not delete the zip file \'" + downloadedFile.getAbsolutePath() + "\'.");
             }
         }
 

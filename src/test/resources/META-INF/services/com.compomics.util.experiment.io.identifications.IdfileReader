@@ -5,3 +5,4 @@ com.compomics.util.experiment.io.identifications.idfilereaders.DirecTagIdfileRea
 com.compomics.util.experiment.io.identifications.idfilereaders.MsAmandaIdfileReader
 com.compomics.util.experiment.io.identifications.idfilereaders.PepxmlIdfileReader
 com.compomics.util.experiment.io.identifications.idfilereaders.PNovoIdfileReader
+com.compomics.util.experiment.io.identifications.idfilereaders.TideIdfileReader

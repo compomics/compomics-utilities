@@ -533,6 +533,35 @@ public abstract class GraphicsPanel extends JPanel {
      * includes all peaks in the zoom.
      */
     protected boolean yAxisZoomExcludesBackgroundPeaks = false;
+    /**
+     * If more than one peak is within the accuracy range of an annotation
+     * setting this to true will always select the most intense of possible
+     * peaks. Setting this variable to false will instead select the most
+     * accurate peak.
+     */
+    protected boolean annotateHighestPeak = true;
+
+    /**
+     * Returns true if the most intense of possible peaks to annotate is to be
+     * selected, false if the most accurate is to be selected.
+     *
+     * @return true if the most intense of possible peaks to annotate is to be
+     * selected, false if the most accurate is to be selected
+     */
+    public boolean isAnnotateHighestPeak() {
+        return annotateHighestPeak;
+    }
+
+    /**
+     * Set if the most intense of possible peaks to annotate is to be selected,
+     * false if the most accurate is to be selected.
+     *
+     * @param annotateHighestPeak if the most intense of possible peaks to
+     * annotate is to be selected, false if the most accurate is to be selected
+     */
+    public void setAnnotateHighestPeak(boolean annotateHighestPeak) {
+        this.annotateHighestPeak = annotateHighestPeak;
+    }
 
     /**
      * Returns true if the numbers in the peak annotations are to be
@@ -850,6 +879,23 @@ public abstract class GraphicsPanel extends JPanel {
      * label and annotation x-axis value has been seen before!
      *
      * @param aAnnotations Vector with SpectrumAnnotation instances.
+     * @param annotateHighestPeak boolean indicating if the most intense peak
+     * within the accuracy range (true) or the most accurate peak (false) is to
+     * be annotated
+     */
+    public void setAnnotations(List<SpectrumAnnotation> aAnnotations, boolean annotateHighestPeak) {
+        this.annotateHighestPeak = annotateHighestPeak;
+        setAnnotations(aAnnotations);
+    }
+
+    /**
+     * This method sets all the annotations on this instance. Passing a 'null'
+     * value for the Vector will result in simply removing all annotations. Do
+     * note that this method will attempt to remove duplicate annotations on a
+     * point by deleting any annotation for which the combination of annotation
+     * label and annotation x-axis value has been seen before!
+     *
+     * @param aAnnotations Vector with SpectrumAnnotation instances.
      */
     public void setAnnotations(List<SpectrumAnnotation> aAnnotations) {
         this.iAnnotations = new Vector(50, 25);
@@ -876,7 +922,25 @@ public abstract class GraphicsPanel extends JPanel {
      * combination of annotation label and annotation x-axis value has been seen
      * before!
      *
-     * @param aAnnotations Vector with SpectrumAnnotation instances.
+     * @param aAnnotations Vector with SpectrumAnnotation instances
+     * @param annotateHighestPeak boolean indicating if the most intense peak
+     * within the accuracy range (true) or the most accurate peak (false) is to
+     * be annotated
+     */
+    public void setAnnotationsMirrored(List<SpectrumAnnotation> aAnnotations, boolean annotateHighestPeak) {
+        this.annotateHighestPeak = annotateHighestPeak;
+        setAnnotationsMirrored(aAnnotations);
+    }
+
+    /**
+     * This method sets all the annotations for the mirrored spectra. Passing a
+     * 'null' value for the Vector will result in simply removing all
+     * annotations. Do note that this method will attempt to remove duplicate
+     * annotations on a point by deleting any annotation for which the
+     * combination of annotation label and annotation x-axis value has been seen
+     * before!
+     *
+     * @param aAnnotations Vector with SpectrumAnnotation instances
      */
     public void setAnnotationsMirrored(List<SpectrumAnnotation> aAnnotations) {
         this.iAnnotationsMirroredSpectra = new Vector(50, 25);
@@ -896,14 +960,13 @@ public abstract class GraphicsPanel extends JPanel {
     }
 
     /**
-     * This method allows the caller to set the procentual minimal,
-     * non-inclusive y-axis value threshold (compared to the highest point in
-     * the spectrum or chromatogram) a point must pass before being eligible for
-     * annotation.
+     * This method allows the caller to set the minimal non-inclusive y-axis
+     * value threshold in percent (compared to the highest point in the spectrum
+     * or chromatogram) a point must pass before being eligible for annotation.
      *
-     * @param aThreshold double with the procentual y-axis value (as compared to
-     * the highest point in the spectrum or chromatogram) cutoff threshold for
-     * annotation.
+     * @param aThreshold double with the minimal y-axis value in percent (as
+     * compared to the highest point in the spectrum or chromatogram) cutoff
+     * threshold for annotation.
      */
     public void setAnnotationYAxisThreshold(double aThreshold) {
         this.iAnnotationYAxisThreshold = (aThreshold / 100) * iYAxisMax;
@@ -2976,6 +3039,7 @@ public abstract class GraphicsPanel extends JPanel {
             boolean foundMatch = false;
             int peakIndex = -1;
             int dataSetIndex = -1;
+            double smallestAbsError = Double.MAX_VALUE;
 
             for (int j = 0; j < xAxisData.size(); j++) {
                 for (int i = 0; i < xAxisData.get(j).length; i++) {
@@ -2985,12 +3049,19 @@ public abstract class GraphicsPanel extends JPanel {
                             foundMatch = true;
                             peakIndex = i;
                             dataSetIndex = j;
+                            smallestAbsError = Math.abs(delta);
                         } else {
-                            // Oops, we already had one...
-                            // Take the one with the largest intensity.
-                            if (xAxisData.get(j)[i] > xAxisData.get(dataSetIndex)[peakIndex]) {
-                                peakIndex = i;
-                                dataSetIndex = j;
+                            // we already had one. take the one with the largest intensity or the most accurate
+                            if (annotateHighestPeak) {
+                                if (yAxisData.get(j)[i] > yAxisData.get(dataSetIndex)[peakIndex]) {
+                                    peakIndex = i;
+                                    dataSetIndex = j;
+                                }
+                            } else {
+                                if (Math.abs(delta) < smallestAbsError) {
+                                    peakIndex = i;
+                                    dataSetIndex = j;
+                                }
                             }
                         }
                     } else if (delta > error) {
@@ -3470,7 +3541,7 @@ public abstract class GraphicsPanel extends JPanel {
                 SpectrumAnnotation sa = (SpectrumAnnotation) o;
 
                 double xValue = sa.getMZ();
-                double error = Math.abs(sa.getErrorMargin());
+                double error = Math.abs(sa.getErrorMargin()); // @TODO: make sure that there is only one annotated peak per annotation!
                 double delta = xAxisValue - xValue;
 
                 if (Math.abs(delta) <= error) {

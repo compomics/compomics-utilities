@@ -106,7 +106,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
             int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();

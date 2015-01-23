@@ -2059,6 +2059,55 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Returns a PSM iterator iterating all PSMs in a file.
+     *
+     * @param spectrumFile the file to iterate
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(String spectrumFile, boolean loadAssumptions) {
+        return new PsmIterator(spectrumFile, this, loadAssumptions);
+    }
+
+    /**
+     * Returns a PSM iterator.
+     *
+     * @param spectrumKeys specific keys to iterate
+     * @param psmParameters the parameters to load along with the matches
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
+        return new PsmIterator(spectrumKeys, this, psmParameters, loadAssumptions);
+    }
+
+    /**
+     * Returns a PSM iterator.
+     *
+     * @param spectrumKeys specific keys to iterate
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean loadAssumptions) {
+        return new PsmIterator(spectrumKeys, this, loadAssumptions);
+    }
+
+    /**
+     * Returns a PSM iterator iterating all PSMs in a file.
+     *
+     * @param psmParameters the parameters to load along with the matches
+     * @param loadAssumptions if true the assumptions will be loaded as well
+     *
+     * @return a PSM iterator
+     */
+    public PsmIterator getPsmIterator(boolean loadAssumptions, ArrayList<UrParameter> psmParameters) {
+        return new PsmIterator(this, psmParameters, loadAssumptions);
+    }
+
+    /**
      * Returns a peptide matches iterator.
      *
      * @param peptideKeys the keys of the peptides to iterate

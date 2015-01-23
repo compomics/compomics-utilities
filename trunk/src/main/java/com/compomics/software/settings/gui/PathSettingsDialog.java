@@ -1,7 +1,7 @@
-package com.compomics.util.preferences.gui;
+package com.compomics.software.settings.gui;
 
 import com.compomics.util.Util;
-import com.compomics.util.preferences.PathKey;
+import com.compomics.software.settings.PathKey;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        reportDocumentationPopupMenu = new javax.swing.JPopupMenu();
+        pathSettingsPopupMenu = new javax.swing.JPopupMenu();
         editPathMenuItem = new javax.swing.JMenuItem();
         setDefaultPath = new javax.swing.JMenuItem();
         pathSettingsJPanel = new javax.swing.JPanel();
@@ -120,7 +120,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 editPathMenuItemActionPerformed(evt);
             }
         });
-        reportDocumentationPopupMenu.add(editPathMenuItem);
+        pathSettingsPopupMenu.add(editPathMenuItem);
 
         setDefaultPath.setText("Set Default Path");
         setDefaultPath.setToolTipText("Set a path for all files");
@@ -129,7 +129,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 setDefaultPathActionPerformed(evt);
             }
         });
-        reportDocumentationPopupMenu.add(setDefaultPath);
+        pathSettingsPopupMenu.add(setDefaultPath);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -254,7 +254,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             pathTable.setRowSelectionInterval(pathTable.rowAtPoint(evt.getPoint()), pathTable.rowAtPoint(evt.getPoint()));
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3 && pathTable.getSelectedRow() != -1) {
-            reportDocumentationPopupMenu.show(pathTable, evt.getX(), evt.getY());
+            pathSettingsPopupMenu.show(pathTable, evt.getX(), evt.getY());
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
             editSelectedPath();
@@ -307,9 +307,9 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel pathSettingsJPanel;
+    private javax.swing.JPopupMenu pathSettingsPopupMenu;
     private javax.swing.JTable pathTable;
     private javax.swing.JScrollPane pathTableScrollPane;
-    private javax.swing.JPopupMenu reportDocumentationPopupMenu;
     private javax.swing.JMenuItem setDefaultPath;
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables

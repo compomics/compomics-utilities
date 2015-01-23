@@ -1,7 +1,9 @@
-package com.compomics.util.preferences;
+package com.compomics.software.settings;
 
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
+import com.compomics.util.preferences.GenePreferences;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.pride.PrideObjectsFactory;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

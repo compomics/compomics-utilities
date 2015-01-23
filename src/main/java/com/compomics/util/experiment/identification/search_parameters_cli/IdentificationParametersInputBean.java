@@ -1455,8 +1455,8 @@ public class IdentificationParametersInputBean {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORMAT.id);
             try {
                 int value = new Integer(arg);
-                if (value != 0 && value != 1) {
-                    throw new IllegalArgumentException("Found " + value + " where 0 or 1 was expected.");
+                if (value != 0 && value != 1 && value != 2) {
+                    throw new IllegalArgumentException("Found " + value + " where 0, 1 or 2 was expected.");
                 }
             } catch (Exception e) {
                 System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the " + IdentificationParametersCLIParams.OMSSA_FORMAT.id + " option."

@@ -55,7 +55,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * The available types of output.
      */
-    private static String[] omssaOutputTypes = {"OMX", "CSV"};
+    private static String[] omssaOutputTypes = {"OMX", "CSV", "pepXML"};
     /**
      * Map sequence in libraries in memory
      */
@@ -343,7 +343,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the selected output type, omx or csv.
+     * Returns the selected output type, omx, csv or pepXML.
      *
      * @return the selected output type
      */
@@ -352,7 +352,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Sets the output type, omx or csv.
+     * Sets the output type, omx, csv or pepXML.
      *
      * @param selectedOutput the output type
      */

@@ -1328,12 +1328,13 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
      */
     private void omssaOutputFormatComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_omssaOutputFormatComboBoxActionPerformed
 
-        if (((String) omssaOutputFormatComboBox.getSelectedItem()).equalsIgnoreCase("CSV") && this.isVisible()) {
+        if (!((String) omssaOutputFormatComboBox.getSelectedItem()).equalsIgnoreCase("OMX") && this.isVisible()) {
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     JOptionPane.showMessageDialog(OmssaSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "Note that the OMSSA CSV format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            "Note that the OMSSA " + (String) omssaOutputFormatComboBox.getSelectedItem()
+                            + " format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

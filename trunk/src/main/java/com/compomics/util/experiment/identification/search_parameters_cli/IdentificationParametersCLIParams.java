@@ -71,7 +71,7 @@ public enum IdentificationParametersCLIParams {
     OMSSA_HITLIST_LENGTH_CHARGE("omssa_hitlist_charge", "OMSSA number of hits per spectrum per charge, default is '30'.", false),
     OMSSA_MIN_PEP_LENGTH("omssa_min_pep_length", "OMSSA minumum peptide length (semi-tryptic or no enzyme searches only).", false),
     OMSSA_MAX_PEP_LENGTH("omssa_max_pep_length", "OMSSA maximum peptide length (OMSSA semi-tryptic or no enzyme searches only).", false),
-    OMSSA_FORMAT("omssa_format", "OMSSA output format. 0: omx, 1: csv, default is 'omx'.", false),
+    OMSSA_FORMAT("omssa_format", "OMSSA output format. 0: omx, 1: csv, 2: pepXML, default is 'omx'.", false),
     //////////////////////////////////
     // X!Tandem specific parameters
     //////////////////////////////////

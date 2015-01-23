@@ -630,7 +630,9 @@ public class IdentificationDB implements Serializable {
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
+            if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
+                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
+            }
         }
     }
 

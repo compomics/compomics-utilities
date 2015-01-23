@@ -25,6 +25,10 @@ public class IdMatchValidationPreferences implements Serializable {
      * The default PSM FDR.
      */
     private double defaultPsmFDR = 1.0;
+    /**
+     * The validation quality control preferences
+     */
+    private ValidationQCPreferences validationQCPreferences = new ValidationQCPreferences();
 
     /**
      * Returns the default protein FDR.
@@ -79,4 +83,27 @@ public class IdMatchValidationPreferences implements Serializable {
     public void setDefaultPsmFDR(double defaultPsmFDR) {
         this.defaultPsmFDR = defaultPsmFDR;
     }
+
+    /**
+     * Returns the validation QC preferences.
+     * 
+     * @return the validation QC preferences
+     */
+    public ValidationQCPreferences getValidationQCPreferences() {
+        if (validationQCPreferences == null) { // Backward compatibility
+            validationQCPreferences = new ValidationQCPreferences();
+        }
+        return validationQCPreferences;
+    }
+
+    /**
+     * Sets the validation QC preferences.
+     * 
+     * @param validationQCPreferences the validation QC preferences
+     */
+    public void setValidationQCPreferences(ValidationQCPreferences validationQCPreferences) {
+        this.validationQCPreferences = validationQCPreferences;
+    }
+    
+    
 }

@@ -222,6 +222,10 @@ public class PhosphoRS {
 
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             double p = getp(spectrum, mzTolerance);
+            
+            if (spectrum.getSpectrumKey().contains("Locus:1.1.1.9165.10")) {
+                int debug = 1;
+            }
 
             HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(
                     noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge);
@@ -237,15 +241,14 @@ public class PhosphoRS {
                 MSnSpectrum tempSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle()
                         + "_PhosphoRS_minMZ_" + minMz, spectrum.getSubSpectrum(minMz, tempMax), spectrum.getFileName());
                 ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
-                HashMap<ArrayList<Integer>, ArrayList<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, ArrayList<Double>>();
-
+                HashMap<ArrayList<Integer>, HashSet<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, HashSet<Double>>();
                 for (double ionMz : siteDeterminingIons) {
                     if (ionMz > minMz && ionMz <= maxMz) {
                         ArrayList<ArrayList<Integer>> profiles = siteDeterminingIonsMap.get(ionMz);
                         for (ArrayList<Integer> profile : profiles) {
-                            ArrayList<Double> mzs = subMapGoofy.get(profile);
+                            HashSet<Double> mzs = subMapGoofy.get(profile);
                             if (mzs == null) {
-                                mzs = new ArrayList<Double>();
+                                mzs = new HashSet<Double>();
                                 subMapGoofy.put(profile, mzs);
                             }
                             mzs.add(ionMz);
@@ -261,7 +264,7 @@ public class PhosphoRS {
                     for (MSnSpectrum currentSpectrum : spectra) {
                         ArrayList<Double> scores = new ArrayList<Double>();
                         ArrayList<Double> currentDeltas = new ArrayList<Double>();
-                        ArrayList<ArrayList<Double>> scored = new ArrayList<ArrayList<Double>>();
+                        ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>();
                         boolean noIons = false;
                         for (ArrayList<Integer> profile : possibleProfiles) {
                             if (!subMapGoofy.containsKey(profile)) {
@@ -281,10 +284,10 @@ public class PhosphoRS {
                                     scores.add(score);
                                 }
                             } else {
-                                ArrayList<Double> tempSiteDeterminingIons = subMapGoofy.get(profile);
+                                HashSet<Double> tempSiteDeterminingIons = subMapGoofy.get(profile);
                                 boolean alreadyScored = false;
-                                for (ArrayList<Double> scoredIons : scored) {
-                                    if (Util.sameLists(tempSiteDeterminingIons, scoredIons)) {
+                                for (HashSet<Double> scoredIons : scored) {
+                                    if (Util.sameSets(tempSiteDeterminingIons, scoredIons)) {
                                         alreadyScored = true;
                                         break;
                                     }
@@ -562,15 +565,13 @@ public class PhosphoRS {
                 peptide.addModificationMatch(new ModificationMatch(referencePtmName, true, position));
             }
 
-            ArrayList<Double> mzs = new ArrayList<Double>();
+            HashSet<Double> mzs = new HashSet<Double>();
 
             for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
                 for (Ion ion : ions) {
                     for (int charge : charges) {
                         double mz = ion.getTheoreticMz(charge);
-                        if (!mzs.contains(mz)) {
-                            mzs.add(mz);
-                        }
+                        mzs.add(mz);
                     }
                 }
             }

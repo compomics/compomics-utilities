@@ -1,4 +1,4 @@
-package com.compomics.util.preferences;
+package com.compomics.software.settings;
 
 /**
  * Interface for a path key.

@@ -935,6 +935,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             tideParameters.setPinOutput(option == 1);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id);
+            Integer option = new Integer(arg);
+            tideParameters.setRemoveTempFolders(option == 1);
+        }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), tideParameters);
 

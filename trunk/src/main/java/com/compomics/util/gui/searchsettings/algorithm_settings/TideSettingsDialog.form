@@ -120,11 +120,6 @@
                                   <Component id="maxVariablePtmsPerTypeTxt" min="-2" pref="200" max="-2" attributes="2"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="decoySeedLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="decoySeedTxt" min="-2" pref="200" max="-2" attributes="2"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="peptideLengthLabel" min="-2" pref="200" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="minPepLengthTxt" linkSize="15" min="-2" pref="71" max="-2" attributes="0"/>
@@ -183,6 +178,18 @@
                                   <Component id="maxPtmsTxt" linkSize="13" pref="200" max="32767" attributes="2"/>
                               </Group>
                               <Component id="removeMethionineLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="removeTempFoldersLabel" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="removeTempFoldersCmb" min="-2" pref="200" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="decoySeedLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="decoySeedTxt" min="-2" pref="200" max="-2" attributes="2"/>
+                                  </Group>
+                              </Group>
                           </Group>
                           <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
                       </Group>
@@ -250,7 +257,12 @@
                               <Component id="decoySeedLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="decoySeedTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="140" max="32767" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="removeTempFoldersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="removeTempFoldersCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="102" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -451,6 +463,21 @@
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxVariablePtmsPerTypeTxtKeyReleased"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="removeTempFoldersLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Remove Temp Folders"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="removeTempFoldersCmb">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="2">
+                        <StringItem index="0" value="Yes"/>
+                        <StringItem index="1" value="No"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

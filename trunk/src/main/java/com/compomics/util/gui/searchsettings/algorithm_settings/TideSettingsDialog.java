@@ -62,6 +62,7 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         chargesCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useNeutralLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputFormatCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        removeTempFoldersCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -120,6 +121,13 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         }
         if (tideParameters.getDecoySeed() != null) {
             decoySeedTxt.setText(tideParameters.getDecoySeed() + "");
+        }
+        if (tideParameters.getRemoveTempFolders() != null) {
+            if (tideParameters.getRemoveTempFolders()) {
+                removeTempFoldersCmb.setSelectedIndex(0);
+            } else {
+                removeTempFoldersCmb.setSelectedIndex(1);
+            }
         }
         if (tideParameters.getComputeExactPValues() != null) {
             if (tideParameters.getComputeExactPValues()) {
@@ -243,11 +251,9 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         }
 
         result.setDigestionType((String) enzymeTypeCmb.getSelectedItem());
-
         result.setPrintPeptides(peptideListCmb.getSelectedIndex() == 0);
-
         result.setDecoyFormat((String) decoyFormatCombo.getSelectedItem());
-
+        result.setRemoveTempFolders(removeTempFoldersCmb.getSelectedIndex() == 0);
         result.setKeepTerminalAminoAcids((String) keepTerminalAaCombo.getSelectedItem());
 
         input = decoySeedTxt.getText().trim();
@@ -256,7 +262,6 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         }
 
         result.setComputeExactPValues(exactPvalueCombo.getSelectedIndex() == 0);
-
         result.setComputeSpScore(spScoreCombo.getSelectedIndex() == 0);
 
         input = minSpectrumMzTxt.getText().trim();
@@ -274,7 +279,6 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         }
 
         result.setSpectrumCharges((String) chargesCombo.getSelectedItem());
-
         result.setRemovePrecursor(removePrecursorPeakCombo.getSelectedIndex() == 0);
 
         input = removePrecursorPeakToleranceTxt.getText().trim();
@@ -283,7 +287,6 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         }
 
         result.setUseFlankingPeaks(useFlankingCmb.getSelectedIndex() == 0);
-
         result.setUseNeutralLossPeaks(useNeutralLossCmb.getSelectedIndex() == 0);
 
         input = mzBinWidthTxt.getText().trim();
@@ -349,6 +352,8 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         peptideListCmb = new javax.swing.JComboBox();
         maxVariablePtmsPerTypeLabel = new javax.swing.JLabel();
         maxVariablePtmsPerTypeTxt = new javax.swing.JTextField();
+        removeTempFoldersLabel = new javax.swing.JLabel();
+        removeTempFoldersCmb = new javax.swing.JComboBox();
         searchPanel = new javax.swing.JPanel();
         useFlankingLabel = new javax.swing.JLabel();
         useFlankingCmb = new javax.swing.JComboBox();
@@ -493,6 +498,10 @@ public class TideSettingsDialog extends javax.swing.JDialog {
             }
         });
 
+        removeTempFoldersLabel.setText("Remove Temp Folders");
+
+        removeTempFoldersCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
         javax.swing.GroupLayout indexPanelLayout = new javax.swing.GroupLayout(indexPanel);
         indexPanel.setLayout(indexPanelLayout);
         indexPanelLayout.setHorizontalGroup(
@@ -504,10 +513,6 @@ public class TideSettingsDialog extends javax.swing.JDialog {
                         .addComponent(maxVariablePtmsPerTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(maxVariablePtmsPerTypeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(indexPanelLayout.createSequentialGroup()
-                        .addComponent(decoySeedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(decoySeedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(indexPanelLayout.createSequentialGroup()
                         .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -553,7 +558,16 @@ public class TideSettingsDialog extends javax.swing.JDialog {
                         .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(maxPtmsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
-                    .addComponent(removeMethionineLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(removeMethionineLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(indexPanelLayout.createSequentialGroup()
+                            .addComponent(removeTempFoldersLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
+                            .addComponent(removeTempFoldersCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, indexPanelLayout.createSequentialGroup()
+                            .addComponent(decoySeedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(decoySeedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 25, Short.MAX_VALUE))
         );
 
@@ -614,7 +628,11 @@ public class TideSettingsDialog extends javax.swing.JDialog {
                 .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(decoySeedLabel)
                     .addComponent(decoySeedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removeTempFoldersLabel)
+                    .addComponent(removeTempFoldersCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Index", indexPanel);
@@ -1285,6 +1303,8 @@ public class TideSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel removePrecursorPeakLabel;
     private javax.swing.JLabel removePrecursorPeakToleranceLbl;
     private javax.swing.JTextField removePrecursorPeakToleranceTxt;
+    private javax.swing.JComboBox removeTempFoldersCmb;
+    private javax.swing.JLabel removeTempFoldersLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JComboBox spScoreCombo;
     private javax.swing.JLabel spScoreLabel;

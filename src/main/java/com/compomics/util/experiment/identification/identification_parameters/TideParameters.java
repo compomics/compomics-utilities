@@ -197,6 +197,11 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * If true, Percolator input file is generated.
      */
     private Boolean pinOutput = false;
+    /**
+     * If true, the tide output and index folders are removed when the search
+     * has completed.
+     */
+    private Boolean removeTempFolders = true;
 
     /**
      * Constructor.
@@ -1140,7 +1145,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the name of the FASTA index folder.
-     * 
+     *
      * @return the fastIndexFolderName
      */
     public String getFastIndexFolderName() {
@@ -1149,10 +1154,33 @@ public class TideParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Set the name of the FASTA index folder.
-     * 
+     *
      * @param fastIndexFolderName the fastIndexFolderName to set
      */
     public void setFastIndexFolderName(String fastIndexFolderName) {
         this.fastIndexFolderName = fastIndexFolderName;
+    }
+
+    /**
+     * Returns true if the output and index folders are to be removed when the
+     * search has completed.
+     *
+     * @return the removeTempFolders
+     */
+    public Boolean getRemoveTempFolders() {
+        if (removeTempFolders == null) {
+            removeTempFolders = true;
+        }
+        return removeTempFolders;
+    }
+
+    /**
+     * Set if the output and index folders are to be removed when the search has
+     * completed.
+     *
+     * @param removeTempFolders the removeTempFolders to set
+     */
+    public void setRemoveTempFolders(Boolean removeTempFolders) {
+        this.removeTempFolders = removeTempFolders;
     }
 }

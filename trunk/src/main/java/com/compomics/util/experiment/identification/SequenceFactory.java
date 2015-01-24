@@ -84,6 +84,11 @@ public class SequenceFactory {
      * Indicates whether the decoy hits should be kept in memory.
      */
     private boolean decoyInMemory = true;
+    /**
+     * The minimal protein count required for reliable target/decoy based
+     * statistics.
+     */
+    public static int minProteinCount = 1000; // @TODO: use a better metric
 
     /**
      * Constructor.
@@ -125,7 +130,7 @@ public class SequenceFactory {
      * protein sequences for reliability of the target/decoy based statistics
      */
     public boolean hasEnoughSequences() {
-        return getNTargetSequences() > 1000; // @TODO: use a better metric
+        return getNTargetSequences() > minProteinCount;
     }
 
     /**

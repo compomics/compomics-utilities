@@ -5,44 +5,50 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * This class lists the criteria used for quality control of the validated matches
+ * This class lists the criteria used for quality control of the validated
+ * matches.
  *
  * @author Marc Vaudel
  */
 public class ValidationQCPreferences implements Serializable {
 
     /**
-     * Indicates whether the database size should be checked
+     * Indicates whether the database size should be checked.
      */
     private boolean dbSize = true;
     /**
-     * Indicates whether the number of hits before the first decoy should be checked
+     * Indicates whether the number of hits before the first decoy should be
+     * checked.
      */
     private boolean firstDecoy = true;
     /**
-     * the margin in number of resolution over the confidence threshold
+     * The margin in number of resolution over the confidence threshold.
      */
     private Double confidenceMargin = 1.0;
     /**
-     * List of QC filters for PSMs
+     * List of QC filters for PSMs.
      */
     private ArrayList<Filter> psmFilters;
     /**
-     * List of QC filters for peptides
+     * List of QC filters for peptides.
      */
     private ArrayList<Filter> peptideFilters;
     /**
-     * List of QC filters for proteins
+     * List of QC filters for proteins.
      */
     private ArrayList<Filter> proteinFilters;
+
     /**
-     * Creates a validation quality control preferences object with default settings
+     * Creates a validation quality control preferences object with default
+     * settings.
      */
     public ValidationQCPreferences() {
     }
+
     /**
-     * Creates a validation quality control preferences object based on an other ValidationQCPreferences.
-     * 
+     * Creates a validation quality control preferences object based on an other
+     * ValidationQCPreferences.
+     *
      * @param validationQCPreferences an other ValidationQCPreferences
      */
     public ValidationQCPreferences(ValidationQCPreferences validationQCPreferences) {
@@ -65,7 +71,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Indicates whether the database size should be checked.
-     * 
+     *
      * @return true if the database size should be checked
      */
     public boolean isDbSize() {
@@ -74,17 +80,20 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Sets whether the database size should be checked.
-     * 
-     * @param dbSize a boolean indicating whether the database size should be checked
+     *
+     * @param dbSize a boolean indicating whether the database size should be
+     * checked
      */
     public void setDbSize(boolean dbSize) {
         this.dbSize = dbSize;
     }
 
     /**
-     * Indicates whether the number of hits before the first decoy should be checked.
-     * 
-     * @return true if the number of hits before the first decoy should be checked
+     * Indicates whether the number of hits before the first decoy should be
+     * checked.
+     *
+     * @return true if the number of hits before the first decoy should be
+     * checked
      */
     public boolean isFirstDecoy() {
         return firstDecoy;
@@ -92,16 +101,20 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Sets whether the number of hits before the first decoy should be checked.
-     * 
-     * @param firstDecoy a boolean indicating whether the number of hits before the first decoy should be checked.
+     *
+     * @param firstDecoy a boolean indicating whether the number of hits before
+     * the first decoy should be checked.
      */
     public void setFirstDecoy(boolean firstDecoy) {
         this.firstDecoy = firstDecoy;
     }
 
     /**
-     * Returns the margin to the threshold to use as factor of the resolution. e.g. for a threshold of 10% and a resolution of 1%, with a factor of 1 the threshold will be 11%, with a factor of 2.5 the threshold will be 12.5%.
-     * 
+     * Returns the margin to the threshold to use as factor of the resolution.
+     * e.g. for a threshold of 10% and a resolution of 1%, with a factor of 1
+     * the threshold will be 11%, with a factor of 2.5 the threshold will be
+     * 12.5%.
+     *
      * @return the margin to the threshold to use as factor of the resolution
      */
     public Double getConfidenceMargin() {
@@ -109,17 +122,20 @@ public class ValidationQCPreferences implements Serializable {
     }
 
     /**
-     * Sets the margin to the threshold to use as factor of the resolution. e.g. for a threshold of 10% and a resolution of 1%, with a factor of 1 the threshold will be 11%, with a factor of 2.5 the threshold will be 12.5%.
-     * 
-     * @param confidenceMargin the margin to the threshold to use as factor of the resolution
+     * Sets the margin to the threshold to use as factor of the resolution. e.g.
+     * for a threshold of 10% and a resolution of 1%, with a factor of 1 the
+     * threshold will be 11%, with a factor of 2.5 the threshold will be 12.5%.
+     *
+     * @param confidenceMargin the margin to the threshold to use as factor of
+     * the resolution
      */
     public void setConfidenceMargin(Double confidenceMargin) {
         this.confidenceMargin = confidenceMargin;
     }
-    
+
     /**
      * Returns the list of PSM quality filters.
-     * 
+     *
      * @return the list of PSM quality filters
      */
     public ArrayList<Filter> getPsmFilters() {
@@ -128,7 +144,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Sets the list of PSM quality filters.
-     * 
+     *
      * @param psmFilters the list of PSM quality filters
      */
     public void setPsmFilters(ArrayList<Filter> psmFilters) {
@@ -137,7 +153,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Returns the list of peptide quality filters.
-     * 
+     *
      * @return the list of peptide quality filters
      */
     public ArrayList<Filter> getPeptideFilters() {
@@ -146,7 +162,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Sets the list of peptide quality filters.
-     * 
+     *
      * @param peptideFilters the list of peptide quality filters
      */
     public void setPeptideFilters(ArrayList<Filter> peptideFilters) {
@@ -155,7 +171,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Returns the list of protein quality filters.
-     * 
+     *
      * @return the list of peptide quality filters
      */
     public ArrayList<Filter> getProteinFilters() {
@@ -164,13 +180,19 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Sets the list of protein quality filters.
-     * 
+     *
      * @param proteinFilters the list of protein quality filters
      */
     public void setProteinFilters(ArrayList<Filter> proteinFilters) {
         this.proteinFilters = proteinFilters;
     }
-    
+
+    /**
+     * Returns true if the two ValidationQCPreferences are the same.
+     * 
+     * @param validationQCPreferences the ValidationQCPreferences to compare to
+     * @return true if the two ValidationQCPreferences are the same
+     */
     public boolean isSameAs(ValidationQCPreferences validationQCPreferences) {
         if (dbSize != validationQCPreferences.isDbSize()) {
             return false;
@@ -226,8 +248,7 @@ public class ValidationQCPreferences implements Serializable {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
 }

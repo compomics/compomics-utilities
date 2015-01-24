@@ -222,10 +222,6 @@ public class PhosphoRS {
 
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             double p = getp(spectrum, mzTolerance);
-            
-            if (spectrum.getSpectrumKey().contains("Locus:1.1.1.9165.10")) {
-                int debug = 1;
-            }
 
             HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(
                     noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge);

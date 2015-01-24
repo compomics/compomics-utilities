@@ -26,7 +26,7 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     private double defaultPsmFDR = 1.0;
     /**
-     * The validation quality control preferences
+     * The validation quality control preferences.
      */
     private ValidationQCPreferences validationQCPreferences = new ValidationQCPreferences();
 
@@ -86,7 +86,7 @@ public class IdMatchValidationPreferences implements Serializable {
 
     /**
      * Returns the validation QC preferences.
-     * 
+     *
      * @return the validation QC preferences
      */
     public ValidationQCPreferences getValidationQCPreferences() {
@@ -98,12 +98,10 @@ public class IdMatchValidationPreferences implements Serializable {
 
     /**
      * Sets the validation QC preferences.
-     * 
+     *
      * @param validationQCPreferences the validation QC preferences
      */
     public void setValidationQCPreferences(ValidationQCPreferences validationQCPreferences) {
         this.validationQCPreferences = validationQCPreferences;
     }
-    
-    
 }

@@ -107,7 +107,6 @@ public class UtilitiesPathPreferences {
             }
             return null;
         }
-
     }
 
     /**
@@ -192,7 +191,7 @@ public class UtilitiesPathPreferences {
      * Returns the path according to the given key and path.
      *
      * @param utilitiesPathKey the key of the path
-     * 
+     *
      * @return the path to be set
      */
     public static String getPathPreference(UtilitiesPathKey utilitiesPathKey) {

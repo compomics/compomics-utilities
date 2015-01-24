@@ -352,14 +352,14 @@ public class IonMatch extends ExperimentObject {
     public CvTerm getChargePrideCvTerm() {
         return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge.value + "");
     }
-    
+
     /**
-     * Enum of the supported error types
+     * Enum of the supported error types.
      */
     public enum MzErrorType {
-        
-        Absolute("Absolute", "Absolute error", "m/z"), 
-        RelativePpm("Relative (ppm)", "Relative error in ppm", "ppm"), 
+
+        Absolute("Absolute", "Absolute error", "m/z"),
+        RelativePpm("Relative (ppm)", "Relative error in ppm", "ppm"),
         Statistical("Statistical", "Probability to reach this error according to the error distribution", "%p");
         /**
          * The name of the error type.
@@ -373,10 +373,10 @@ public class IonMatch extends ExperimentObject {
          * The unit to use
          */
         public final String unit;
-        
+
         /**
          * Constructor.
-         * 
+         *
          * @param name the name of the error type
          * @param description the description of the error type
          * @param unit the unit to use
@@ -386,21 +386,21 @@ public class IonMatch extends ExperimentObject {
             this.description = description;
             this.unit = unit;
         }
-        
+
         /**
-         * Returns the error type corresponding to the given index. Error types are indexed according to the values() method. Null if not found.
-         * 
+         * Returns the error type corresponding to the given index. Error types
+         * are indexed according to the values() method. Null if not found.
+         *
          * @param index the index of the error type in the values() method
-         * 
+         *
          * @return the corresponding error type
          */
         public static MzErrorType getMzErrorType(int index) {
             MzErrorType[] values = MzErrorType.values();
-            if (index>= 0 && index < values.length) {
+            if (index >= 0 && index < values.length) {
                 return values[index];
             }
             return null;
         }
-        
     }
 }

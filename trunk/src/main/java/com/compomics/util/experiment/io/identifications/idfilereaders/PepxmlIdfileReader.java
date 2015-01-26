@@ -320,7 +320,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                         } else if (character == ']') {
                             modification = false;
                         }
-                        if (!modification) {
+                        if (!modification && character != ']') {
                             aa++;
                         }
                     }
@@ -445,6 +445,14 @@ public class PepxmlIdfileReader implements IdfileReader {
         if (spectrumFactory.fileLoaded(inputFileName)) {
             spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
         }
+//        String spectrumTitle = scanNumber + "";
+//        if (spectrumFactory.fileLoaded(inputFileName)) {
+//            if (spectrumFactory.spectrumLoaded(inputFileName, spectrumId)) {
+//                spectrumTitle = spectrumId;
+//            } else {
+//                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
+//            }
+//        }
 
         String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);

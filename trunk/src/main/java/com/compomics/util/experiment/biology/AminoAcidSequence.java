@@ -660,14 +660,14 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param modificationProfile the modification profile of the search
      * @param sequence the amino acid sequence to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number &gt; list of modifications (1 is the
-     * first AA) (can be null)
+     * modification sites in a map: aa number &gt; list of modifications (1 is
+     * the first AA) (can be null)
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
      * &gt; list of modifications (1 is the first AA) (can be null)
      * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number &gt; list
-     * of modifications (1 is the first AA) (can be null)
+     * ambiguously localized variable modifications in a map: aa number &gt;
+     * list of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -703,27 +703,57 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             char aminoAcid = sequence.charAt(aaIndex);
 
             if (confidentModificationSites.containsKey(aa) && !confidentModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : confidentModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
-                }
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, confidentModificationSites, useHtmlColorCoding, useShortName);
             } else if (representativeAmbiguousModificationSites.containsKey(aa) && !representativeAmbiguousModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : representativeAmbiguousModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 2, useHtmlColorCoding, useShortName));
-                }
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, representativeAmbiguousModificationSites, useHtmlColorCoding, useShortName);
             } else if (secondaryAmbiguousModificationSites.containsKey(aa) && !secondaryAmbiguousModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : secondaryAmbiguousModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 3, useHtmlColorCoding, useShortName));
-                }
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, secondaryAmbiguousModificationSites, useHtmlColorCoding, useShortName);
             } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-                for (String ptmName : fixedModificationSites.get(aa)) { //There should be only one
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
-                }
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, fixedModificationSites, useHtmlColorCoding, useShortName);
             } else {
                 modifiedSequence.append(aminoAcid);
             }
         }
 
         return modifiedSequence.toString();
+    }
+
+    /**
+     * Helper method for annotating the modified sequence as an tagged string
+     * with potential modification sites.
+     *
+     * @param modifiedSequence the modified sequence to add the new annotations
+     * to
+     * @param aaIndex the current sequence index
+     * @param aminoAcid the current amino acid
+     * @param modificationProfile the modification profile of the search
+     * @param modificationSites the current modification sites
+     * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
+     * PTM tags, e.g, &lt;mox&gt;, are used
+     * @param useShortName if true the short names are used in the tags
+     * @return the tagged modified sequence as a string
+     */
+    private static void addTaggedResidue(StringBuilder modifiedSequence, int aaIndex, char aminoAcid, ModificationProfile modificationProfile,
+            HashMap<Integer, ArrayList<String>> modificationSites, boolean useHtmlColorCoding, boolean useShortName) {
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+
+        if (modificationSites.get(aaIndex).size() == 1) {
+            modifiedSequence.append(getTaggedResidue(aminoAcid, modificationSites.get(aaIndex).get(0), modificationProfile, 1, useHtmlColorCoding, useShortName));
+        } else {
+            boolean modificationAdded = false;
+            for (String ptmName : modificationSites.get(aaIndex)) {
+                PTM ptm = ptmFactory.getPTM(ptmName);
+                if (ptm.getType() == PTM.MODAA && !modificationAdded) { // there should only be one...
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
+                    modificationAdded = true;
+                }
+            }
+
+            if (!modificationAdded) {
+                modifiedSequence.append(aminoAcid);
+            }
+        }
     }
 
     /**

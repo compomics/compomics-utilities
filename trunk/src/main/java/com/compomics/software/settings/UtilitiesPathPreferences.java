@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class sets the path preferences for the files to read/write.
@@ -329,5 +330,55 @@ public class UtilitiesPathPreferences {
         }
 
         bw.newLine();
+    }
+
+    /**
+     * Tests whether it is possible to write in a destination folder.
+     * 
+     * @param destinationFolder the folder to test
+     * 
+     * @return a boolean indicating whether it is possible to write in the destination folder
+     */
+    public static boolean testPath(String destinationFolder) {
+        try {
+
+            File testFile = new File(destinationFolder, "test_path_configuration.tmp");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(testFile));
+            try {
+                bw.write("test");
+            } finally {
+                try {
+                    bw.close();
+                } finally {
+                    if (testFile.exists()) {
+                        testFile.delete();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns a list containing the keys of the paths where the tool is not
+     * able to write.
+     *
+     * @return a list containing the keys of the paths where the tool is not
+     * able to write
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading the path configuration
+     */
+    public static ArrayList<PathKey> getErrorKeys() throws IOException {
+        ArrayList<PathKey> result = new ArrayList<PathKey>();
+        for (UtilitiesPathPreferences.UtilitiesPathKey utilitiesPathKey : UtilitiesPathPreferences.UtilitiesPathKey.values()) {
+            String folder = UtilitiesPathPreferences.getPathPreference(utilitiesPathKey);
+            if (!testPath(folder)) {
+                result.add(utilitiesPathKey);
+            }
+        }
+        return result;
     }
 }

@@ -10,9 +10,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
-import no.uib.jsparklines.renderers.JSparklinesIntegerIconTableCellRenderer;
 
 /**
  * Dialog used to set paths.
@@ -49,6 +50,10 @@ public class PathSettingsDialog extends javax.swing.JDialog {
      * Tooltips for the paths.
      */
     private ArrayList<String> pathsToolTips;
+    /**
+     * The path table column header tooltips.
+     */
+    private ArrayList<String> pathTableToolTips;
 
     /**
      * Creates a new PathSettingsDialog.
@@ -92,7 +97,8 @@ public class PathSettingsDialog extends javax.swing.JDialog {
      */
     public void setUpGUI(java.awt.Frame parent, String toolName) {
         
-        informationTxt.setText(toolName + "uses the following directories to store setting files. A warning sign indicates folders where " + toolName + " cannot write. Failing to save setting files can impair the tool functionality.");
+        informationTxt.setText(toolName + " uses the following directories to store setting files.\n\nA warning sign indicates folders where " + toolName 
+                + " cannot write. Failing to save setting files can impair the tool functionality.");
         
         pathTable.getTableHeader().setReorderingAllowed(false);
 
@@ -101,13 +107,19 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         
         pathTable.getColumn("  ").setMaxWidth(30);
         pathTable.getColumn("  ").setMinWidth(30);
-        pathTable.getColumn(" ").setCellRenderer(new TrueFalseIconRenderer(
+        pathTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
                 new ImageIcon(parent.getClass().getResource("/icons/accept.png")),
                 new ImageIcon(parent.getClass().getResource("/icons/warning.png")),
-                "Yes", "No"));
+                "OK", "Warning"));
 
         // make sure that the scroll panes are see-through
         pathTableScrollPane.getViewport().setOpaque(false);
+        
+        pathTableToolTips = new ArrayList<String>();
+        pathTableToolTips.add(null);
+        pathTableToolTips.add("Path Name");
+        pathTableToolTips.add("Path");
+        pathTableToolTips.add("Path Check");
     }
 
     /**
@@ -127,9 +139,22 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         tablePanel = new javax.swing.JPanel();
         pathTableScrollPane = new javax.swing.JScrollPane();
-        pathTable = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        pathTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        String tip = (String) pathTableToolTips.get(realIndex);
+                        return tip;
+                    }
+                };
+            }
+        };
+        helpLabel = new javax.swing.JLabel();
+        informationPanel = new javax.swing.JPanel();
+        informationScrollPane = new javax.swing.JScrollPane();
         informationTxt = new javax.swing.JTextArea();
 
         editPathMenuItem.setText("Edit Path");
@@ -151,6 +176,11 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         pathSettingsPopupMenu.add(setDefaultPath);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pathSettingsJPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -194,12 +224,15 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        jLabel1.setText("Right-click to edit the paths");
+        helpLabel.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        helpLabel.setText("Right-click to edit the paths");
+
+        informationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Information"));
+        informationPanel.setOpaque(false);
 
         informationTxt.setEditable(false);
         informationTxt.setColumns(20);
@@ -207,7 +240,24 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         informationTxt.setRows(5);
         informationTxt.setWrapStyleWord(true);
         informationTxt.setOpaque(false);
-        jScrollPane1.setViewportView(informationTxt);
+        informationScrollPane.setViewportView(informationTxt);
+
+        javax.swing.GroupLayout informationPanelLayout = new javax.swing.GroupLayout(informationPanel);
+        informationPanel.setLayout(informationPanelLayout);
+        informationPanelLayout.setHorizontalGroup(
+            informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(informationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(informationScrollPane)
+                .addContainerGap())
+        );
+        informationPanelLayout.setVerticalGroup(
+            informationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(informationPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(informationScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout pathSettingsJPanelLayout = new javax.swing.GroupLayout(pathSettingsJPanel);
         pathSettingsJPanel.setLayout(pathSettingsJPanelLayout);
@@ -218,27 +268,27 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 .addGroup(pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pathSettingsJPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel1)
+                        .addComponent(helpLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(informationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pathSettingsJPanelLayout.setVerticalGroup(
             pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pathSettingsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(informationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton)
-                    .addComponent(jLabel1))
+                    .addComponent(helpLabel))
                 .addContainerGap())
         );
 
@@ -331,12 +381,22 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Close the dialog without saving the changes.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JMenuItem editPathMenuItem;
+    private javax.swing.JLabel helpLabel;
+    private javax.swing.JPanel informationPanel;
+    private javax.swing.JScrollPane informationScrollPane;
     private javax.swing.JTextArea informationTxt;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel pathSettingsJPanel;
     private javax.swing.JPopupMenu pathSettingsPopupMenu;

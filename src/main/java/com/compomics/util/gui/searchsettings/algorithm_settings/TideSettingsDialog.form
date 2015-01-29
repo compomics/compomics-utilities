@@ -113,7 +113,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="maxVariablePtmsPerTypeLabel" min="-2" pref="200" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -178,16 +178,15 @@
                                   <Component id="maxPtmsTxt" linkSize="13" pref="200" max="32767" attributes="2"/>
                               </Group>
                               <Component id="removeMethionineLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="removeTempFoldersLabel" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Component id="removeTempFoldersCmb" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <Component id="decoySeedLabel" pref="200" max="32767" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="decoySeedLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="decoySeedTxt" min="-2" pref="200" max="-2" attributes="2"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="decoySeedTxt" pref="200" max="32767" attributes="2"/>
+                                      <Component id="removeTempFoldersCmb" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>

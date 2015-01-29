@@ -65,7 +65,7 @@ public class PrideObjectsFactory {
      */
     private static HashMap<String, Sample> samples = new HashMap<String, Sample>();
     /**
-     * utilities to PSI ptm mapping for the default PTMs.
+     * Utilities to PSI PTM mapping for the default PTMs.
      */
     private static PtmToPrideMap ptmToPrideMap;
 

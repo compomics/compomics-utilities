@@ -89,7 +89,6 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
-        HashMap<String, ArrayList<Integer>> ptmToPositionsMap = new HashMap<String, ArrayList<Integer>>();
         for (ModificationMatch mod : modifications) {
             if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
@@ -97,12 +96,6 @@ public class Peptide extends ExperimentObject {
             if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
                 throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
             }
-            String modName = mod.getTheoreticPtm();
-            int position = mod.getModificationSite();
-            if (!ptmToPositionsMap.containsKey(modName)) {
-                ptmToPositionsMap.put(modName, new ArrayList<Integer>());
-            }
-            ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
     }
@@ -121,14 +114,7 @@ public class Peptide extends ExperimentObject {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
         this.mass = mass;
-        HashMap<String, ArrayList<Integer>> ptmToPositionsMap = new HashMap<String, ArrayList<Integer>>();
         for (ModificationMatch mod : modifications) {
-            String modName = mod.getTheoreticPtm();
-            int position = mod.getModificationSite();
-            if (!ptmToPositionsMap.containsKey(modName)) {
-                ptmToPositionsMap.put(modName, new ArrayList<Integer>());
-            }
-            ptmToPositionsMap.get(modName).add(position);
             this.modifications.add(mod);
         }
         setParentProteins(parentProteins);
@@ -162,6 +148,7 @@ public class Peptide extends ExperimentObject {
      */
     public void setModificationMatches(ArrayList<ModificationMatch> modificationMatches) {
         this.modifications = modificationMatches;
+        mass = null;
     }
 
     /**
@@ -169,6 +156,7 @@ public class Peptide extends ExperimentObject {
      */
     public void clearModificationMatches() {
         modifications.clear();
+        mass = null;
     }
 
     /**
@@ -178,6 +166,7 @@ public class Peptide extends ExperimentObject {
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
         modifications.add(modificationMatch);
+        mass = null;
     }
 
     /**

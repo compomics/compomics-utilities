@@ -473,6 +473,21 @@ public class PTMFactory implements Serializable {
 
         if (!name.startsWith("user modification ") && !name.equals(unknownPTM.getName())) {
             if (!name.endsWith(SEARCH_SUFFIX)) {
+
+                // add any saved neutral losses or reporter ions for user mods
+                if (userMod && ptmMap.get(name) != null) {
+                    if (!ptmMap.get(name).getNeutralLosses().isEmpty()) {
+                        for (NeutralLoss neutralLoss : ptmMap.get(name).getNeutralLosses()) {
+                            currentPTM.addNeutralLoss(neutralLoss);
+                        }
+                    }
+                    if (!ptmMap.get(name).getReporterIons().isEmpty()) {
+                        for (ReporterIon reporterIon : ptmMap.get(name).getReporterIons()) {
+                            currentPTM.addReporterIon(reporterIon);
+                        }
+                    }
+                }
+
                 ptmMap.put(name, currentPTM);
             } else {
                 name = name.substring(0, name.lastIndexOf(SEARCH_SUFFIX));
@@ -924,7 +939,7 @@ public class PTMFactory implements Serializable {
                         taken.put(pos, ptm.getMass());
                         peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
                     } else if (taken.get(pos) != ptm.getMass()) {
-                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" 
+                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
                                 + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
                     }
                 }
@@ -1013,8 +1028,8 @@ public class PTMFactory implements Serializable {
                                     modification = ptm.getMass();
                                     aminoAcidPattern.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
                                 } else if (modification != ptm.getMass()) {
-                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses (" 
-                                            + modification + ", " + ptm.getMass() + ") at position " + aa + " in pattern " 
+                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
+                                            + modification + ", " + ptm.getMass() + ") at position " + aa + " in pattern "
                                             + aminoAcidPattern.asSequence() + " of tag " + tag.asSequence() + ".");
                                 }
                             }
@@ -1739,7 +1754,6 @@ public class PTMFactory implements Serializable {
     private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
 
         // @TODO: check for more unmapped ptms! everything used in getDefaultCVTerm in PtmToPrideMap should be mapped back as well!!
-        
         if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")
                 || pridePtmName.equalsIgnoreCase("S-carboxamidomethyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("iodoacetamide - site C")
@@ -1809,7 +1823,7 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
             return "heavy lysine - 2h4";
         } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")
-                || pridePtmName.equalsIgnoreCase("Ammonia-loss")) { 
+                || pridePtmName.equalsIgnoreCase("Ammonia-loss")) {
             return "pyro-glu from n-term q";
         } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")
                 || pridePtmName.equalsIgnoreCase("Glu->pyro-Glu")) {

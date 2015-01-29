@@ -21,6 +21,10 @@ import java.io.IOException;
 public class UtilitiesPathPreferences {
 
     /**
+     * Default name for the path configuration file.
+     */
+    public static final String configurationFileName = "resources/conf/paths.txt";
+    /**
      * The separator between a path ID and a path.
      */
     public final static String separator = "=";

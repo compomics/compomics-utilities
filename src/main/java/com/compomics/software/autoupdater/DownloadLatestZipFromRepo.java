@@ -1,5 +1,7 @@
 package com.compomics.software.autoupdater;
 
+import com.compomics.software.settings.UtilitiesPathPreferences;
+import com.compomics.util.Util;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
@@ -174,6 +176,7 @@ public class DownloadLatestZipFromRepo {
      * @param fileDAO what implementation of FileDAO should be used in the
      * updating
      * @param waitingHandler the waiting handler
+     *
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
@@ -187,6 +190,7 @@ public class DownloadLatestZipFromRepo {
 
         if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
 
+            //@TODO: reduce code duplication with following method and transfer path update there
             //TL;DR of the next three lines: make the url for the latest version location of a maven jar file
             String artifactInRepoLocation = new StringBuilder(jarRepository.toExternalForm()).append(oldMavenJarFile.getGroupId().replaceAll("\\.", "/")).append("/").append(oldMavenJarFile.getArtifactId()).toString();
             String latestRemoteRelease = WebDAO.getLatestVersionNumberFromRemoteRepo(new URL(new StringBuilder(artifactInRepoLocation).append("/maven-metadata.xml").toString()));
@@ -239,6 +243,15 @@ public class DownloadLatestZipFromRepo {
                 utilitiesUserPreferences.setReporterPath(downloadedJarFile.getAbsoluteFilePath());
             }
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
+
+            // copy path preferences to the new version
+            String oldFolder = oldMavenJarFile.getAbsoluteFilePath();
+            File pathFile = new File(oldFolder, UtilitiesPathPreferences.configurationFileName);
+            if (pathFile.exists()) {
+                String downloadFolderPath = new File(downloadedJarFile.getAbsoluteFilePath()).getParent();
+                File newPathFile = new File(downloadFolderPath, UtilitiesPathPreferences.configurationFileName);
+                Util.copyFile(pathFile, newPathFile);
+            }
 
             try {
                 // close the access to the old zip file so that it can be deleted
@@ -293,6 +306,7 @@ public class DownloadLatestZipFromRepo {
      * @param fileDAO what implementation of FileDAO should be used in the
      * updating
      * @param waitingHandler the waiting handler
+     *
      * @throws IOException should there be problems with reading or writing
      * files during the updating
      * @throws XMLStreamException if there was a problem reading the meta data
@@ -318,8 +332,6 @@ public class DownloadLatestZipFromRepo {
                 waitingHandler.setRunFinished();
             }
         }
-
-        final File jarParent = downloadFolder;
 
         // add desktop icon
         if (addDesktopIcon) {

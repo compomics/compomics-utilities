@@ -88,7 +88,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      */
     private void setUpGUI() {
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-
+        
         if (utilitiesUserPreferences.getPeptideShakerPath() == null) {
             boolean downloaded = downloadPeptideShaker();
             if (downloaded) {
@@ -483,7 +483,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
 
             String installPath = "user.home";
 
-            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null) { // @TODO: if not null, update the path
                 if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
                         && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
                     installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();

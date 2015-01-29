@@ -2,13 +2,17 @@ package com.compomics.software.settings.gui;
 
 import com.compomics.util.Util;
 import com.compomics.software.settings.PathKey;
+import com.compomics.software.settings.UtilitiesPathPreferences;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import no.uib.jsparklines.extra.TrueFalseIconRenderer;
+import no.uib.jsparklines.renderers.JSparklinesIntegerIconTableCellRenderer;
 
 /**
  * Dialog used to set paths.
@@ -74,7 +78,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         }
 
         initComponents();
-        setUpGUI();
+        setUpGUI(parent, toolName);
         setLocationRelativeTo(parent);
         setTitle("Resource Folders");
         setVisible(true);
@@ -82,12 +86,25 @@ public class PathSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Sets up the GUI components.
+     * 
+     * @param toolName the tool name
+     * @param parent the parent frame
      */
-    public void setUpGUI() {
+    public void setUpGUI(java.awt.Frame parent, String toolName) {
+        
+        informationTxt.setText(toolName + "uses the following directories to store setting files. A warning sign indicates folders where " + toolName + " cannot write. Failing to save setting files can impair the tool functionality.");
+        
         pathTable.getTableHeader().setReorderingAllowed(false);
 
         pathTable.getColumn(" ").setMaxWidth(30);
         pathTable.getColumn(" ").setMinWidth(30);
+        
+        pathTable.getColumn("  ").setMaxWidth(30);
+        pathTable.getColumn("  ").setMinWidth(30);
+        pathTable.getColumn(" ").setCellRenderer(new TrueFalseIconRenderer(
+                new ImageIcon(parent.getClass().getResource("/icons/accept.png")),
+                new ImageIcon(parent.getClass().getResource("/icons/warning.png")),
+                "Yes", "No"));
 
         // make sure that the scroll panes are see-through
         pathTableScrollPane.getViewport().setOpaque(false);
@@ -112,6 +129,8 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         pathTableScrollPane = new javax.swing.JScrollPane();
         pathTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        informationTxt = new javax.swing.JTextArea();
 
         editPathMenuItem.setText("Edit Path");
         editPathMenuItem.setToolTipText("Edit Selected Path");
@@ -168,19 +187,27 @@ public class PathSettingsDialog extends javax.swing.JDialog {
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
+                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
                 .addContainerGap())
         );
         tablePanelLayout.setVerticalGroup(
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(pathTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel1.setText("Right-click to edit the paths");
+
+        informationTxt.setEditable(false);
+        informationTxt.setColumns(20);
+        informationTxt.setLineWrap(true);
+        informationTxt.setRows(5);
+        informationTxt.setWrapStyleWord(true);
+        informationTxt.setOpaque(false);
+        jScrollPane1.setViewportView(informationTxt);
 
         javax.swing.GroupLayout pathSettingsJPanelLayout = new javax.swing.GroupLayout(pathSettingsJPanel);
         pathSettingsJPanel.setLayout(pathSettingsJPanelLayout);
@@ -196,13 +223,16 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         pathSettingsJPanelLayout.setVerticalGroup(
             pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pathSettingsJPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pathSettingsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -304,7 +334,9 @@ public class PathSettingsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JMenuItem editPathMenuItem;
+    private javax.swing.JTextArea informationTxt;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel pathSettingsJPanel;
     private javax.swing.JPopupMenu pathSettingsPopupMenu;
@@ -377,7 +409,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -389,6 +421,8 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                     return "Name";
                 case 2:
                     return "Path";
+                case 3:
+                    return "  ";
                 default:
                     return "";
             }
@@ -405,6 +439,9 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 case 2:
                     File file = new File(keyToPathMap.get(pathKey));
                     return file.getAbsolutePath();
+                case 3:
+                    String folderPath = keyToPathMap.get(pathKey);
+                    return UtilitiesPathPreferences.testPath(folderPath);
                 default:
                     return "";
             }

@@ -91,20 +91,20 @@ public class PathSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Sets up the GUI components.
-     * 
+     *
      * @param toolName the tool name
      * @param parent the parent frame
      */
     public void setUpGUI(java.awt.Frame parent, String toolName) {
-        
-        informationTxt.setText(toolName + " uses the following directories to store setting files.\n\nA warning sign indicates folders where " + toolName 
+
+        informationTxt.setText(toolName + " uses the following directories to store setting files.\n\nA warning sign indicates folders where " + toolName
                 + " cannot write. Failing to save setting files can impair the tool functionality.");
-        
+
         pathTable.getTableHeader().setReorderingAllowed(false);
 
         pathTable.getColumn(" ").setMaxWidth(30);
         pathTable.getColumn(" ").setMinWidth(30);
-        
+
         pathTable.getColumn("  ").setMaxWidth(30);
         pathTable.getColumn("  ").setMinWidth(30);
         pathTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
@@ -114,7 +114,7 @@ public class PathSettingsDialog extends javax.swing.JDialog {
 
         // make sure that the scroll panes are see-through
         pathTableScrollPane.getViewport().setOpaque(false);
-        
+
         pathTableToolTips = new ArrayList<String>();
         pathTableToolTips.add(null);
         pathTableToolTips.add("Path Name");
@@ -359,16 +359,21 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         }
 
         if (changed) {
-            int outcome = JOptionPane.showConfirmDialog(this, toolName + " needs to restart in order to take the new settings into account. Restart now?",
-                    "Restart Requested", JOptionPane.OK_CANCEL_OPTION);
-            if (outcome != JOptionPane.OK_OPTION) {
+            int outcome = JOptionPane.showConfirmDialog(this, 
+                    toolName + " needs to restart in order to take the new settings into account. Restart now?",
+                    "Restart Requested", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (outcome == JOptionPane.YES_OPTION) {
+                dispose();
+            } else if (outcome == JOptionPane.NO_OPTION) {
                 canceled = true;
+                dispose();
+            } else { // cancel
+                // do nothing
             }
         } else {
             canceled = true;
+            dispose();
         }
-
-        dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**

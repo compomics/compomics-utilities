@@ -554,7 +554,7 @@ public class CompomicsWrapper {
                     public void run() {
                         try {
                             downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles,
-                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog); // move files from resources/conf/? like paths.txt?
+                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog);
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }

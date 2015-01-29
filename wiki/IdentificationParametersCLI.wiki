@@ -427,6 +427,8 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -tide_export_mzid         Tide export mzid, 1: true, 0: false, default is '0'.
 
 -tide_export_pin          Tide export Percolator input file, 1: true, 0: false, default is '0'.
+
+-tide_remove_temp         Tide remove temp folders when the search is done, 1: true, 0: false, default is '1'.
 }}}
 
 ==`PepNovo+` advanced parameters==

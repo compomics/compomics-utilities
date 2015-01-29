@@ -481,7 +481,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
             String installPath = "user.home";
             
-            if (utilitiesUserPreferences.getPeptideShakerPath() != null) { // @TODO: if not null, update the path
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null) {
                 if (new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile() != null
                         && new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParentFile() != null) {
                     installPath = new File(utilitiesUserPreferences.getPeptideShakerPath()).getParentFile().getParent();

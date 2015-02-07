@@ -243,7 +243,7 @@ public class PsmIterator {
                 if (psmParameters != null) {
                     for (UrParameter urParameter : psmParameters) {
                         if (urParameter == null) {
-                            throw new IllegalArgumentException("Parameter to for batch load is null.");
+                            throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
                         identification.loadSpectrumMatchParameters(keysInBatch, urParameter, null);
                     }

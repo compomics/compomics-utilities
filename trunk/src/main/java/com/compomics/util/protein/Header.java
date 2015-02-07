@@ -87,7 +87,7 @@ public class Header implements Cloneable, Serializable {
         PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"), M_Tuberculosis("TBDatabase (TBDB)", "18835847"),
         H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null),
         Listeria("Listeria", null), GAFFA("GAFFA", null), UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null),
-        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), NextProt("neXtProt", "22139911"), Unknown(null, null);
+        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), NextProt("neXtProt", "22139911"), Unknown(null, null); // @TODO: add support for Ensembl headers?
 
         /**
          * The full name of the database.

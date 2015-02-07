@@ -88,7 +88,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private File proteinTreeFolder = null;
     /**
-     * Maps saving the protein trees import time in a map: fasta file size &gt;
+     * Maps saving the protein trees import time in a map: FASTA file size &gt;
      * import times. Note: for backward compatibility not initialized here.
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
@@ -145,6 +145,10 @@ public class UtilitiesUserPreferences implements Serializable {
      * The last selected folder.
      */
     private LastSelectedFolder lastSelectedFolder;
+    /**
+     * If true, the PSMs are sorted on retention time, false sorts on PSM score.
+     */
+    private Boolean sortPsmsOnRt = false;
 
     /**
      * Constructor.
@@ -814,5 +818,27 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setLastSelectedFolder(LastSelectedFolder lastSelectedFolder) {
         this.lastSelectedFolder = lastSelectedFolder;
+    }
+
+    /**
+     * Returns true if the PSMs are sorted on retention time, false sorts on PSM
+     * score.
+     *
+     * @return the sortPsmsOnRt
+     */
+    public Boolean getSortPsmsOnRt() {
+        if (sortPsmsOnRt == null) {
+            sortPsmsOnRt = false;
+        }
+        return sortPsmsOnRt;
+    }
+
+    /**
+     * Set if the PSMs are sorted on retention time, false sorts on PSM score.
+     *
+     * @param sortPsmsOnRt the sortPsmsOnRt to set
+     */
+    public void setSortPsmsOnRt(Boolean sortPsmsOnRt) {
+        this.sortPsmsOnRt = sortPsmsOnRt;
     }
 }

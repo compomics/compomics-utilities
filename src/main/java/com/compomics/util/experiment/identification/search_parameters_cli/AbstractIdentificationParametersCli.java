@@ -42,7 +42,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public void initiate(String[] args) {
 
         try {
-            // Load modifications
+            // load modifications
             try {
                 ptmFactory.importModifications(getModificationsFile(), false);
             } catch (Exception e) {
@@ -113,7 +113,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      */
     public void printModifications() {
 
-        System.out.println(System.getProperty("line.separator") 
+        System.out.println(System.getProperty("line.separator")
                 + "========================" + System.getProperty("line.separator")
                 + "Available Modifications:" + System.getProperty("line.separator")
                 + "========================"
@@ -220,7 +220,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
     /**
      * IdentificationParametersCLI header message when printing the usage.
-     * 
+     *
      * @return the header message as a string
      */
     public static String getHeader() {

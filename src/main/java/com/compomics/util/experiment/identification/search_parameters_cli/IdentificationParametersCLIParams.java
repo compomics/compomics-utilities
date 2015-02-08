@@ -32,6 +32,9 @@ public enum IdentificationParametersCLIParams {
     FI("fi", "Type of forward ion searched, default is 'b'.", false),
     RI("ri", "Type of rewind ion searched, default is 'y'.", false),
     MODS("mods", "Lists the available modifications.", false),
+    USAGE("usage", "Lists the available options.", false),
+    USAGE_2("h", "Lists the available options.", false),
+    USAGE_3("help", "Lists the available options.", false),
     //////////////////////////////////
     // OMSSA specific parameters
     //////////////////////////////////

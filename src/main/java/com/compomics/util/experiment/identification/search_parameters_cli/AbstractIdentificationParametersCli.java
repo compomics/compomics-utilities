@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.UnrecognizedOptionException;
 
 /**
  * This class serves as a base for the implementation of
@@ -61,26 +62,44 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 System.out.println("An error occurred while loading the enzymes.");
                 e.printStackTrace();
             }
+
             Options lOptions = new Options();
             createOptionsCLI(lOptions);
             BasicParser parser = new BasicParser();
-            CommandLine line = parser.parse(lOptions, args);
+            CommandLine line;
 
-            if (!IdentificationParametersInputBean.isValidStartup(line)) {
-                PrintWriter lPrintWriter = new PrintWriter(System.out);
-                lPrintWriter.print(System.getProperty("line.separator") + "============================" + System.getProperty("line.separator"));
-                lPrintWriter.print("IdentificationParametersCLI" + System.getProperty("line.separator"));
-                lPrintWriter.print("============================" + System.getProperty("line.separator"));
-                lPrintWriter.print(AbstractIdentificationParametersCli.getHeader());
-                lPrintWriter.print(getOptionsAsString());
-                lPrintWriter.flush();
-                lPrintWriter.close();
+            try {
+                line = parser.parse(lOptions, args);
+
+                // see if the usage option was run
+                if (line.hasOption("h") || line.hasOption("help") || line.hasOption("usage")) {
+                    PrintWriter lPrintWriter = new PrintWriter(System.out);
+                    lPrintWriter.print(System.getProperty("line.separator") + "============================" + System.getProperty("line.separator"));
+                    lPrintWriter.print("IdentificationParametersCLI" + System.getProperty("line.separator"));
+                    lPrintWriter.print("============================" + System.getProperty("line.separator"));
+                    lPrintWriter.print(AbstractIdentificationParametersCli.getHeader());
+                    lPrintWriter.print(getOptionsAsString());
+                    lPrintWriter.flush();
+                    lPrintWriter.close();
+                    System.exit(0);
+                }
+
+                // check if the parameters are valid
+                if (!IdentificationParametersInputBean.isValidStartup(line)) {
+                    System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
+                    System.exit(0);
+                }
+                if (!IdentificationParametersInputBean.isValidModifications(line)) {
+                    printModifications();
+                    System.exit(0);
+                } else {
+                    input = new IdentificationParametersInputBean(line);
+                    call();
+                }
+            } catch (UnrecognizedOptionException e) {
+                System.out.println(System.getProperty("line.separator") + "Unrecognized option " + e.getOption() + ".");
+                System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
                 System.exit(0);
-            } else if (!IdentificationParametersInputBean.isValidModifications(line)) {
-                printModifications();
-            } else {
-                input = new IdentificationParametersInputBean(line);
-                call();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +118,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 File outputFile = input.getDestinationFile();
                 SearchParameters searchParameters = input.getSearchParameters();
                 SearchParameters.saveIdentificationParameters(searchParameters, outputFile);
-                System.out.println(System.getProperty("line.separator") + "Identification Parameters file created: " + outputFile.getAbsolutePath() + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "Identification parameters file created: " + outputFile.getAbsolutePath() + System.getProperty("line.separator"));
             }
         } catch (Exception e) {
             e.printStackTrace();

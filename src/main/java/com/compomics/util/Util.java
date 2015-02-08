@@ -276,7 +276,7 @@ public class Util {
                         "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             } else if (openDialog && !newFile.exists()) {
-                JOptionPane.showMessageDialog(parent, "The file\'" + newFile.getAbsolutePath() + "\' " + "does not exist!",
+                JOptionPane.showMessageDialog(parent, "The file \'" + newFile.getAbsolutePath() + "\' does not exist!",
                         "File Not Found.", JOptionPane.ERROR_MESSAGE);
                 return null;
             }

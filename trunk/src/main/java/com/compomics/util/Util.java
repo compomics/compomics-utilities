@@ -264,9 +264,135 @@ public class Util {
 
             String selectedFile = fileChooser.getSelectedFile().getPath();
 
-            if (!selectedFile.endsWith(fileEnding)) {
+            if (!openDialog && !selectedFile.endsWith(fileEnding)) {
                 selectedFile += fileEnding;
             }
+
+            File newFile = new File(selectedFile);
+            int outcome = JOptionPane.YES_OPTION;
+
+            if (!openDialog && newFile.exists()) {
+                outcome = JOptionPane.showConfirmDialog(parent,
+                        "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            } else if (openDialog && !newFile.exists()) {
+                JOptionPane.showMessageDialog(parent, "The file\'" + newFile.getAbsolutePath() + "\' " + "does not exist!",
+                        "File Not Found.", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            if (outcome != JOptionPane.YES_OPTION) {
+                return null;
+            } else {
+                return newFile;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the file selected by the user, or null if no file was selected.
+     * Note that the last selected folder value is not updated during this
+     * method, and the code calling this method therefore has to take care of
+     * this if wanted.
+     *
+     * @param parent the parent dialog or frame
+     * @param fileEndings the file types, e.g., .txt
+     * @param fileFormatDescriptions the file format description, e.g., (Mascot
+     * Generic Format) *.mgf
+     * @param aDialogTitle the title for the dialog
+     * @param lastSelectedFolder the last selected folder
+     * @param openDialog if true an open dialog is shown, false results in a
+     * save dialog
+     * @param formatSelectedByUser if true the user will have to select the
+     * format by himself, otherwise all formats will be available
+     *
+     * @return the file selected, null if the selection was canceled.
+     */
+    public static File getUserSelectedFile(Component parent, String[] fileEndings, String[] fileFormatDescriptions, String aDialogTitle, String lastSelectedFolder, boolean openDialog, boolean formatSelectedByUser) {
+
+        JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
+
+        fileChooser.setDialogTitle(aDialogTitle);
+        fileChooser.setMultiSelectionEnabled(false);
+
+        if (formatSelectedByUser) {
+            for (int i = 0; i < fileEndings.length; i++) {
+                final String fileEnding = fileEndings[i];
+                String description = "";
+                if (i < fileFormatDescriptions.length && fileFormatDescriptions[i] != null) {
+                    description = fileFormatDescriptions[i];
+                }
+                final String filterDescription = description;
+                javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
+                    @Override
+                    public boolean accept(File myFile) {
+                        return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return filterDescription;
+                    }
+                };
+                fileChooser.addChoosableFileFilter(filter);
+            }
+        } else {
+            final String[] filterExtensionList = fileEndings.clone();
+            String description = "";
+            for (int i = 0; i < fileEndings.length; i++) {
+                if (i < fileFormatDescriptions.length && fileFormatDescriptions[i] != null) {
+                    if (!description.equals("")) {
+                        description += ", ";
+                    }
+                    description += fileFormatDescriptions[i];
+                } else {
+                    if (!description.equals("")) {
+                        description += ", ";
+                    }
+                    description += "Unkown";
+                }
+            }
+            final String filterDescription = description;
+            javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
+                @Override
+                public boolean accept(File myFile) {
+                    if (myFile.isDirectory()) {
+                        return true;
+                    }
+                    for (String fileEnding : filterExtensionList) {
+                        if (myFile.getName().toLowerCase().endsWith(fileEnding)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                @Override
+                public String getDescription() {
+                    return filterDescription;
+                }
+            };
+            fileChooser.setFileFilter(filter);
+        }
+
+        int returnVal;
+
+        if (openDialog) {
+            returnVal = fileChooser.showOpenDialog(parent);
+        } else {
+            returnVal = fileChooser.showSaveDialog(parent);
+        }
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            String selectedFile = fileChooser.getSelectedFile().getPath();
+            
+            //@TODO: get the file type selected by the user and correct format
+//            if (!openDialog && !selectedFile.endsWith(fileEnding)) {
+//                selectedFile += fileEnding;
+//            }
 
             File newFile = new File(selectedFile);
             int outcome = JOptionPane.YES_OPTION;
@@ -540,7 +666,7 @@ public class Util {
      *
      * @param set1 the first set
      * @param set2 the second set
-     * 
+     *
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameSets(HashSet set1, HashSet set2) {

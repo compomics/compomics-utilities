@@ -352,14 +352,14 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         for (PathKey pathKey : originalKeyToPathMap.keySet()) {
             String newPath = keyToPathMap.get(pathKey);
             String originalPath = originalKeyToPathMap.get(pathKey);
-            if (!originalPath.equals(newPath)) {
+            if (originalPath == null || !originalPath.equals(newPath)) {
                 changed = true;
                 break;
             }
         }
 
         if (changed) {
-            int outcome = JOptionPane.showConfirmDialog(this, 
+            int outcome = JOptionPane.showConfirmDialog(this,
                     toolName + " needs to restart in order to take the new settings into account. Restart now?",
                     "Restart Requested", JOptionPane.YES_NO_CANCEL_OPTION);
             if (outcome == JOptionPane.YES_OPTION) {
@@ -502,11 +502,19 @@ public class PathSettingsDialog extends javax.swing.JDialog {
                 case 1:
                     return pathKey.getId();
                 case 2:
-                    File file = new File(keyToPathMap.get(pathKey));
-                    return file.getAbsolutePath();
+                    String path = keyToPathMap.get(pathKey);
+                    if (path != null) {
+                        File file = new File(path);
+                        return file.getAbsolutePath();
+                    } else {
+                        return "Default";
+                    }
                 case 3:
                     String folderPath = keyToPathMap.get(pathKey);
-                    return UtilitiesPathPreferences.testPath(folderPath);
+                    if (folderPath != null) {
+                        return UtilitiesPathPreferences.testPath(folderPath);
+                    }
+                    return true;
                 default:
                     return "";
             }

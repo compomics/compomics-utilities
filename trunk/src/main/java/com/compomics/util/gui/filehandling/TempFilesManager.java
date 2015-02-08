@@ -32,7 +32,7 @@ public class TempFilesManager {
      * @throws IOException if an IOException occurs
      */
     public static void deleteTempFolders() throws IOException {
-        boolean exception = false;
+        ArrayList<String> exceptions = new ArrayList<String>();
         for (File tempFolder : tempFolders) {
             try {
                 if (tempFolder.exists()) {
@@ -40,11 +40,15 @@ public class TempFilesManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                exception = true;
+                exceptions.add(tempFolder.getAbsolutePath());
             }
         }
-        if (exception) {
-            throw new IOException("An error occurred while attempting to delete PeptideShaker temporary folders.");
+        if (!exceptions.isEmpty()) {
+            String error = "An error occurred while attempting to delete the following temporary folder(s):\n";
+            for (String filePath : exceptions) {
+                error += filePath + "\n";
+            }
+            throw new IOException(error);
         }
     }
 }

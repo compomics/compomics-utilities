@@ -388,12 +388,11 @@ public class Util {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             String selectedFile = fileChooser.getSelectedFile().getPath();
-            
+
             //@TODO: get the file type selected by the user and correct format
 //            if (!openDialog && !selectedFile.endsWith(fileEnding)) {
 //                selectedFile += fileEnding;
 //            }
-
             File newFile = new File(selectedFile);
             int outcome = JOptionPane.YES_OPTION;
 

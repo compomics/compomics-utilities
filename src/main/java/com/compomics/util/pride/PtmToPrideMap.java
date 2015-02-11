@@ -335,12 +335,12 @@ public class PtmToPrideMap implements Serializable {
                 || ptmName.equalsIgnoreCase("TMT 6-plex on K (old)")
                 || ptmName.equalsIgnoreCase("TMT 6-plex on n-term peptide")
                 || ptmName.equalsIgnoreCase("TMT 6-plex on n-term peptide (old)")) {
-            return new CvTerm("UNIMOD", "UNIMOD:737", "TMT6 plex", "229.162932");
+            return new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", "229.162932");
         } 
 //        else if (ptmName.equalsIgnoreCase("TMT 10-plex on K")
 //                || ptmName.equalsIgnoreCase("TMT 10-plex n-term")
 //                || ptmName.equalsIgnoreCase("TMT 10-plex n-term peptide")) {
-//            return new CvTerm("UNIMOD", "UNIMOD:???", "TMT10 plex", "229.162932"); // @TODO: 10-plex TMT is missing!!
+//            return new CvTerm("UNIMOD", "UNIMOD:???", "TMT10plex", "229.162932"); // @TODO: 10-plex TMT is missing!!
 //        }  
         else if (ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on nterm")
                 || ptmName.equalsIgnoreCase("iTRAQ8plex:13C(7)15N(1) on K")

@@ -71,11 +71,11 @@ public class Ms2Exporter {
     public static void writeHeader(BufferedWriter bw) throws IOException {
         bw.write("H\tCreationDate\t" + new Date());
         bw.newLine();
-        bw.write("H\tExtractor\tUnknnown");
+        bw.write("H\tExtractor\tUnknown");
         bw.newLine();
-        bw.write("H\tExtractorVersion\tUnknnown");
+        bw.write("H\tExtractorVersion\tUnknown");
         bw.newLine();
-        bw.write("H\tExtractorOptions\tUnknnown");
+        bw.write("H\tExtractorOptions\tUnknown");
         bw.newLine();
         bw.write("H\tComment\tCreated by compomics utilities based on http://cruxtoolkit.sourceforge.net/ms2-format.html");
         bw.newLine();
@@ -106,7 +106,7 @@ public class Ms2Exporter {
 
         ArrayList<Charge> charges = precursor.getPossibleCharges();
         for (Charge charge : charges) {
-            bw.write("Z\t" + charge.value + "\t" + precursor.getMass(charge.value));
+            bw.write("Z\t" + charge.value + "\t" + precursor.getMassPlusProton(charge.value));
             bw.newLine();
         }
 

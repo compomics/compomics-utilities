@@ -212,11 +212,24 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Returns the mass of the compound with the given charge.
+     * Returns the mass of the precursor with the given charge plus a single
+     * proton.
+     *
+     * @param chargeValue the value of the charge plus a single proton
+     *
+     * @return the mass of the precursor with the given charge plus a single
+     * proton
+     */
+    public double getMassPlusProton(int chargeValue) {
+        return getMass(chargeValue) + ElementaryIon.proton.getTheoreticMass();
+    }
+
+    /**
+     * Returns the mass of the precursor with the given charge.
      *
      * @param chargeValue the value of the charge
      *
-     * @return the mass of the compound with the given charge
+     * @return the mass of the precursor with the given charge
      */
     public double getMass(int chargeValue) {
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();

@@ -40,6 +40,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * The report to append.
      */
     protected String iReport = "";
+    /**
+     * Boolean indicating whether a new line should be printed before writing
+     * feedback to the user
+     */
+    private boolean needNewLine = false;
 
     @Override
     public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
@@ -109,20 +114,26 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     /**
      * Print the progress to the command line
-     * 
-     * @param progress1 first progress value 
-     * @param progress2 second progress value
+     *
+     * @param progress1 previous progress value
+     * @param progress2 current progress value
      */
     private synchronized void printProgress(int progress1, int progress2) {
         if (progress2 > progress1) {
             int progress = 10 * progress2;
             if (progress1 == 0) {
-                System.out.println("10%");
-            } else if (progress2 == 90) {
-                System.out.println(progress + "%");
-            } else if (progress2 == 100) {
+                if (needNewLine) {
+                    System.out.append(System.getProperty("line.separator"));
+                }
+                System.out.print("10%");
+                needNewLine = true;
+            } else if (progress2 > 99) {
+                System.out.print(" " + progress + "%");
+                System.out.append(System.getProperty("line.separator"));
+                needNewLine = false;
             } else {
-                System.out.println(progress + "%");
+                System.out.print(" " + progress + "%");
+                needNewLine = true;
             }
         }
     }
@@ -157,17 +168,29 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
         }
 
         iReport = iReport + tempReport;
+        if (needNewLine) {
+            System.out.append(System.getProperty("line.separator"));
+            needNewLine = false;
+        }
         System.out.append(tempReport);
     }
 
     @Override
     public synchronized void appendReportNewLineNoDate() {
+        if (needNewLine) {
+            System.out.append(System.getProperty("line.separator"));
+            needNewLine = false;
+        }
         iReport = iReport + System.getProperty("line.separator");
         System.out.append(System.getProperty("line.separator"));
     }
 
     @Override
     public synchronized void appendReportEndLine() {
+        if (needNewLine) {
+            System.out.append(System.getProperty("line.separator"));
+            needNewLine = false;
+        }
         iReport = iReport + System.getProperty("line.separator");
         System.out.append(System.getProperty("line.separator"));
     }

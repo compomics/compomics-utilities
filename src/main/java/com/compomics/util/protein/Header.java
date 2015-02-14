@@ -1108,8 +1108,10 @@ public class Header implements Cloneable, Serializable {
             }
 
             return temp;
-        } else {
+        } else if (iDescription != null) {
             return iDescription;
+        } else {
+            return "";
         }
     }
 

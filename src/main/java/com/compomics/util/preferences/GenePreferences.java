@@ -706,24 +706,26 @@ public class GenePreferences implements Serializable {
     public void loadSpeciesAndGoDomains() throws IOException, IllegalArgumentException {
 
         try {
-            if (!getGeneMappingFolder().exists()) {
+
+            File geneMappingFolder = getGeneMappingFolder();
+
+            if (!geneMappingFolder.exists()) {
                 throw new IllegalArgumentException("Could not create the gene mapping folder!");
             }
 
-            File speciesFile = new File(getGeneMappingFolder(), "species");
-            File ensemblVersionsFile = new File(getGeneMappingFolder(), "ensembl_versions");
-            File goDomainsFile = new File(getGeneMappingFolder(), "go_domains");
-
+            File speciesFile = new File(geneMappingFolder, "species");
             if (!speciesFile.exists()) {
-                throw new IllegalArgumentException("Could not create the species file!");
+                throw new IllegalArgumentException("Species file " + speciesFile.getAbsolutePath() + " not found.");
             }
 
+            File ensemblVersionsFile = new File(geneMappingFolder, "ensembl_versions");
             if (!ensemblVersionsFile.exists()) {
-                throw new IllegalArgumentException("Could not create the Ensembl versions file!");
+                throw new IllegalArgumentException("Ensembl versions file " + ensemblVersionsFile.getAbsolutePath() + " not found.");
             }
 
+            File goDomainsFile = new File(geneMappingFolder, "go_domains");
             if (!goDomainsFile.exists()) {
-                throw new IllegalArgumentException("Could not create the GO domains file!");
+                throw new IllegalArgumentException("GO domains file " + goDomainsFile.getAbsolutePath() + " not found.");
             }
 
             goDomainMap = new HashMap<String, String>();

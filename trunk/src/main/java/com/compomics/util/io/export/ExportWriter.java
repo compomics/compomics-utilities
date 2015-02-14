@@ -39,6 +39,9 @@ public abstract class ExportWriter {
      * @throws IOException if an IOException occurs
      */
     public void write(String text) throws IOException {
+        if (text == null) {
+            text = "";
+        }
         write(text, null);
     }
 

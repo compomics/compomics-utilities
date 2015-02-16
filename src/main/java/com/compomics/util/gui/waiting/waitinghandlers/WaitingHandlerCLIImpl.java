@@ -42,7 +42,7 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     protected String iReport = "";
     /**
      * Boolean indicating whether a new line should be printed before writing
-     * feedback to the user
+     * feedback to the user.
      */
     private boolean needNewLine = false;
 

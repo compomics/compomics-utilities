@@ -221,15 +221,16 @@ public class ObjectsDB implements Serializable {
      * interacting with the database
      */
     public synchronized boolean hasTable(String tableName) throws SQLException {
-        DatabaseMetaData dmd = dbConnection.getMetaData();
-        boolean result = false;
-        ResultSet rs = dmd.getTables(null, null, tableName.toUpperCase(), null); //@TODO: not sure to which extend this is Derby dependent...
-        try {
-            result = rs.next();
-        } finally {
-            rs.close();
+        if (tableName.startsWith("\"") && tableName.endsWith("\"")) {
+            tableName = tableName.substring(1, tableName.length()-1);
         }
-        return result;
+        ArrayList<String> tables = getTables();
+        for (String tempTable : tables) {
+            if (tempTable.equalsIgnoreCase(tableName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

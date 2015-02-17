@@ -399,7 +399,7 @@ public class BugReport extends javax.swing.JDialog {
      */
     private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
 
-        File finalOutputFile = Util.getUserSelectedFile(this, ".txt", "(Text File) *.txt", "Select Destination File", getLastSelectedFolder(), false);
+        File finalOutputFile = Util.getUserSelectedFile(this, ".txt", "Text File (*.txt)", "Select Destination File", getLastSelectedFolder(), false);
 
         if (finalOutputFile != null) {
 

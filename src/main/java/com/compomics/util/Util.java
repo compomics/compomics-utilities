@@ -307,15 +307,23 @@ public class Util {
      * save dialog
      * @param formatSelectedByUser if true the user will have to select the
      * format by himself, otherwise all formats will be available
+     * @param showAllFilesOption if true, the 'All files' filter option will be
+     * included
+     * @param defaultFilterIndex the index of the filter selected by default
      *
-     * @return the file selected, null if the selection was canceled.
+     * @return the file selected and the file filter used, null if the selection
+     * was canceled.
      */
-    public static File getUserSelectedFile(Component parent, String[] fileEndings, String[] fileFormatDescriptions, String aDialogTitle, String lastSelectedFolder, boolean openDialog, boolean formatSelectedByUser) {
+    public static FileAndFileFilter getUserSelectedFile(Component parent, String[] fileEndings, String[] fileFormatDescriptions,
+            String aDialogTitle, String lastSelectedFolder, boolean openDialog, boolean formatSelectedByUser, boolean showAllFilesOption, int defaultFilterIndex) {
 
         JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
 
         fileChooser.setDialogTitle(aDialogTitle);
         fileChooser.setMultiSelectionEnabled(false);
+
+        // see if we should hide the All option
+        fileChooser.setAcceptAllFileFilterUsed(showAllFilesOption);
 
         if (formatSelectedByUser) {
             for (int i = 0; i < fileEndings.length; i++) {
@@ -337,6 +345,10 @@ public class Util {
                     }
                 };
                 fileChooser.addChoosableFileFilter(filter);
+
+                if (i == defaultFilterIndex) {
+                    fileChooser.setFileFilter(filter);
+                }
             }
         } else {
             final String[] filterExtensionList = fileEndings.clone();
@@ -388,11 +400,20 @@ public class Util {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             String selectedFile = fileChooser.getSelectedFile().getPath();
+            String fileFormatDescription = fileChooser.getFileFilter().getDescription();
+            String wantedFileEnding = null;
 
-            //@TODO: get the file type selected by the user and correct format
-//            if (!openDialog && !selectedFile.endsWith(fileEnding)) {
-//                selectedFile += fileEnding;
-//            }
+            for (int i = 0; i < fileFormatDescriptions.length && wantedFileEnding == null; i++) {
+                if (fileFormatDescriptions[i].equalsIgnoreCase(fileFormatDescription)) {
+                    wantedFileEnding = fileEndings[i];
+                }
+            }
+
+            // make sure the file has the correct file ending
+            if (!openDialog && !selectedFile.endsWith(wantedFileEnding)) {
+                selectedFile += wantedFileEnding;
+            }
+
             File newFile = new File(selectedFile);
             int outcome = JOptionPane.YES_OPTION;
 
@@ -409,7 +430,7 @@ public class Util {
             if (outcome != JOptionPane.YES_OPTION) {
                 return null;
             } else {
-                return newFile;
+                return new FileAndFileFilter(newFile, fileChooser.getFileFilter());
             }
         }
 

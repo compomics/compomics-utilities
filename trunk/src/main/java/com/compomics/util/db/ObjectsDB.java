@@ -221,15 +221,18 @@ public class ObjectsDB implements Serializable {
      * interacting with the database
      */
     public synchronized boolean hasTable(String tableName) throws SQLException {
+
         if (tableName.startsWith("\"") && tableName.endsWith("\"")) {
-            tableName = tableName.substring(1, tableName.length()-1);
+            tableName = tableName.substring(1, tableName.length() - 1);
         }
+
         ArrayList<String> tables = getTables();
         for (String tempTable : tables) {
             if (tempTable.equalsIgnoreCase(tableName)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -247,14 +250,16 @@ public class ObjectsDB implements Serializable {
         DatabaseMetaData dmd = dbConnection.getMetaData();
         ArrayList<String> result = new ArrayList<String>();
         ResultSet rs = dmd.getTables(null, null, null, null); //@TODO: not sure to which extend this is Derby dependent...
+
         try {
             while (rs.next()) {
-                String dbName = (String) rs.getObject("TABLE_NAME");
-                result.add(dbName);
+                String tempDbName = (String) rs.getObject("TABLE_NAME");
+                result.add(tempDbName);
             }
         } finally {
             rs.close();
         }
+
         return result;
     }
 
@@ -444,7 +449,7 @@ public class ObjectsDB implements Serializable {
             contentQueue = new HashMap<String, ArrayList<String>>();
             contentTableQueue = new ArrayList<String>();
         }
-        
+
         if (!busy && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
 
             if (debugInteractions) {

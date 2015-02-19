@@ -50,6 +50,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     private boolean runCanceled = false;
     /**
+     * Set if the waiting handler is to show the progress for the current
+     * process or not. Useful when running subprocesses that one wants to be
+     * able to cancel but do not want to show the progress for.
+     */
+    private boolean displayProgress = true;
+    /**
      * An array list of the tip of the day.
      */
     private ArrayList<String> tips = new ArrayList<String>();
@@ -200,7 +206,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param value the progress value
      */
     public void setPrimaryProgressCounter(int value) {
-        secondaryJProgressBar.setValue(value);
+        if (displayProgress) {
+            secondaryJProgressBar.setValue(value);
+        }
     }
 
     /**
@@ -209,14 +217,18 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param maxProgressValue the max value
      */
     public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
-        progressBar.setMaximum(maxProgressValue);
+        if (displayProgress) {
+            progressBar.setMaximum(maxProgressValue);
+        }
     }
 
     /**
      * Increase the progress bar value by one "counter".
      */
     public synchronized void increasePrimaryProgressCounter() {
-        progressBar.setValue(progressBar.getValue() + 1);
+        if (displayProgress) {
+            progressBar.setValue(progressBar.getValue() + 1);
+        }
     }
 
     /**
@@ -225,7 +237,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param amount the amount to increase the value by
      */
     public synchronized void increasePrimaryProgressCounter(int amount) {
-        progressBar.setValue(progressBar.getValue() + amount);
+        if (displayProgress) {
+            progressBar.setValue(progressBar.getValue() + amount);
+        }
     }
 
     /**
@@ -235,35 +249,42 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param maxProgressValue the max value
      */
     public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
-        secondaryJProgressBar.setValue(0); //@TODO: can we remove this?
-        secondaryJProgressBar.setMaximum(maxProgressValue);
+        if (displayProgress) {
+            secondaryJProgressBar.setValue(0); //@TODO: can we remove this?
+            secondaryJProgressBar.setMaximum(maxProgressValue);
+        }
     }
 
     /**
      * Reset the secondary progress bar value to 0.
      */
     public synchronized void resetSecondaryProgressCounter() {
-        secondaryJProgressBar.setIndeterminate(false);
-        secondaryJProgressBar.setStringPainted(true);
-        secondaryJProgressBar.setValue(0);
+        if (displayProgress) {
+            secondaryJProgressBar.setIndeterminate(false);
+            secondaryJProgressBar.setStringPainted(true);
+            secondaryJProgressBar.setValue(0);
+        }
     }
 
     /**
      * Reset the primary progress bar value to 0.
      */
     public synchronized void resetPrimaryProgressCounter() {
-
-        // @TODO: perhaps this should be added to the waiting handler interface?
-        progressBar.setIndeterminate(false);
-        progressBar.setStringPainted(true);
-        progressBar.setValue(0);
+        if (displayProgress) {
+            // @TODO: perhaps this should be added to the waiting handler interface?
+            progressBar.setIndeterminate(false);
+            progressBar.setStringPainted(true);
+            progressBar.setValue(0);
+        }
     }
 
     /**
      * Increase the secondary progress bar value by one "counter".
      */
     public synchronized void increaseSecondaryProgressCounter() {
-        secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + 1);
+        if (displayProgress) {
+            secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + 1);
+        }
     }
 
     /**
@@ -272,7 +293,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param value the progress value
      */
     public synchronized void setSecondaryProgressCounter(int value) {
-        secondaryJProgressBar.setValue(value);
+        if (displayProgress) {
+            secondaryJProgressBar.setValue(value);
+        }
     }
 
     /**
@@ -281,7 +304,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param amount the amount to increase the value by
      */
     public synchronized void increaseSecondaryProgressCounter(int amount) {
-        secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + amount);
+        if (displayProgress) {
+            secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + amount);
+        }
     }
 
     /**
@@ -290,13 +315,14 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param indeterminate if true, set to indeterminate
      */
     public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
-
-        // this split pane trick should not be needed, but if not used the look and feel of the
-        // indeterminate progress bar changes when moving back and forth between the two...
-        if (indeterminate) {
-            secondaryProgressBarSplitPane.setDividerLocation(secondaryProgressBarSplitPane.getWidth());
-        } else {
-            secondaryProgressBarSplitPane.setDividerLocation(0);
+        if (displayProgress) {
+            // this split pane trick should not be needed, but if not used the look and feel of the
+            // indeterminate progress bar changes when moving back and forth between the two...
+            if (indeterminate) {
+                secondaryProgressBarSplitPane.setDividerLocation(secondaryProgressBarSplitPane.getWidth());
+            } else {
+                secondaryProgressBarSplitPane.setDividerLocation(0);
+            }
         }
     }
 
@@ -892,19 +918,20 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
-
-        if (includeDate) {
-            Date date = new Date();
-            if (addNewLine) {
-                reportTextArea.append(date + tabNonHtml + report + System.getProperty("line.separator"));
+        if (displayProgress) {
+            if (includeDate) {
+                Date date = new Date();
+                if (addNewLine) {
+                    reportTextArea.append(date + tabNonHtml + report + System.getProperty("line.separator"));
+                } else {
+                    reportTextArea.append(date + tabNonHtml + report);
+                }
             } else {
-                reportTextArea.append(date + tabNonHtml + report);
-            }
-        } else {
-            if (addNewLine) {
-                reportTextArea.append(report + System.getProperty("line.separator"));
-            } else {
-                reportTextArea.append(report);
+                if (addNewLine) {
+                    reportTextArea.append(report + System.getProperty("line.separator"));
+                } else {
+                    reportTextArea.append(report);
+                }
             }
         }
     }
@@ -913,14 +940,18 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * Append tabs to the report. No new line.
      */
     public synchronized void appendReportNewLineNoDate() {
-        reportTextArea.append(tabNonHtml);
+        if (displayProgress) {
+            reportTextArea.append(tabNonHtml);
+        }
     }
 
     /**
      * Append a new line to the report.
      */
     public synchronized void appendReportEndLine() {
-        reportTextArea.append(System.getProperty("line.separator"));
+        if (displayProgress) {
+            reportTextArea.append(System.getProperty("line.separator"));
+        }
     }
 
     /**
@@ -1089,7 +1120,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public void setWaitingText(String text) {
-        setTitle(text);
+        if (displayProgress) {
+            setTitle(text);
+        }
     }
 
     @Override
@@ -1134,8 +1167,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
     @Override
     public void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
-        progressBar.setIndeterminate(indeterminate);
-        progressBar.setStringPainted(!indeterminate);
+        if (displayProgress) {
+            progressBar.setIndeterminate(indeterminate);
+            progressBar.setStringPainted(!indeterminate);
+        }
     }
 
     /**
@@ -1183,7 +1218,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     public void setSecondaryProgressText(String text) {
-        secondaryJProgressBar.setString(text);
+        if (displayProgress) {
+            secondaryJProgressBar.setString(text);
+        }
     }
 
     @Override
@@ -1210,5 +1247,15 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     public void setVisible(boolean b) {
         super.setVisible(b);
         resizeLayeredPanes(); // update the layout in the layered pane
+    }
+
+    @Override
+    public void setDisplayProgress(boolean displayProgress) {
+        this.displayProgress = displayProgress;
+    }
+
+    @Override
+    public boolean getDisplayProgress() {
+        return displayProgress;
     }
 }

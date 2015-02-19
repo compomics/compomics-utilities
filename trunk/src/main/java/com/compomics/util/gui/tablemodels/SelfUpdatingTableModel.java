@@ -4,6 +4,7 @@ import com.compomics.util.gui.TableMouseWheelListener;
 import com.compomics.util.gui.TableScrollBarListener;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerDummy;
 import java.awt.Component;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
@@ -87,11 +88,10 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
      *
      * @param indexes the view indexes to load as a list. Shall not be empty or
      * null.
-     * @param interrupted a boolean indicating whether the loading shall be
-     * stopped
+     * @param waitingHandler the waiting handler
      * @return the last updated row
      */
-    protected abstract int loadDataForRows(ArrayList<Integer> indexes, boolean interrupted);
+    protected abstract int loadDataForRows(ArrayList<Integer> indexes, WaitingHandler waitingHandler);
 
     /**
      * Loads the data for a column. Use this method to cache data before working
@@ -336,7 +336,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
                 try {
                     setSelfUpdating(false);
-                    loadDataForColumn(finalColumn, progressDialog);
+                    progressDialog.setDisplayProgress(false);
+                    loadDataForColumn(finalColumn, progressDialog); // @TODO: update the progress bar here as well?
+                    progressDialog.setDisplayProgress(true);
 
                     initiateSorter();
                     lastColumnSorted = 0;
@@ -466,13 +468,9 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
     private class LoadingRunnable implements Runnable {
 
         /**
-         * Boolean indicating whether the thread shall be interrupted.
+         * The waiting handler.
          */
-        private boolean interrupted = false;
-        /**
-         * Boolean indicating whether the thread shall be interrupted.
-         */
-        private boolean finished = false;
+        private WaitingHandlerDummy waitingHandler = new WaitingHandlerDummy();
 
         @Override
         public synchronized void run() {
@@ -481,20 +479,20 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
                 for (int row = rowStartLoading; row <= rowEndLoading; row++) {
                     viewIndexes.add(getViewIndex(row));
                 }
-                if (!viewIndexes.isEmpty() && !interrupted) {
-                    rowEndLoading = getRowNumber(loadDataForRows(viewIndexes, interrupted));
+                if (!viewIndexes.isEmpty() && !waitingHandler.isRunCanceled()) {
+                    rowEndLoading = getRowNumber(loadDataForRows(viewIndexes, waitingHandler));
                 }
             } catch (Exception e) {
                 catchException(e);
             }
-            finished = true;
+            waitingHandler.setRunFinished();
         }
 
         /**
          * Cancels the thread.
          */
         public void cancel() {
-            interrupted = true;
+            waitingHandler.setRunCanceled();
         }
 
         /**
@@ -503,7 +501,7 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
          * @return true if the thread is finished.
          */
         public boolean isFinished() {
-            return finished;
+            return waitingHandler.isRunFinished();
         }
     }
 

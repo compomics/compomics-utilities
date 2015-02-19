@@ -49,6 +49,7 @@ public interface WaitingHandler {
      * @param increment the increment to increase the value by
      */
     public void increasePrimaryProgressCounter(int increment);
+
     /**
      * Sets the primary progress counter to the given value.
      *
@@ -164,32 +165,52 @@ public interface WaitingHandler {
      * @param text a text describing what is currently waited for
      */
     public void setWaitingText(String text);
-    
+
     /**
      * Returns the primary progress counter.
-     * 
+     *
      * @return primary progress counter
      */
     public int getPrimaryProgressCounter();
-    
+
     /**
      * Returns the max primary progress counter.
-     * 
+     *
      * @return max primary progress counter
      */
     public int getMaxPrimaryProgressCounter();
-    
+
     /**
      * Returns the secondary progress counter.
-     * 
+     *
      * @return secondary progress counter
      */
     public int getSecondaryProgressCounter();
-    
+
     /**
      * Returns the max secondary progress counter.
-     * 
+     *
      * @return max secondary progress counter
      */
     public int getMaxSecondaryProgressCounter();
+
+    /**
+     * Set if the waiting handler is to show the progress for the current
+     * process or not. Useful when running subprocesses that one wants to be
+     * able to cancel but do not want to show the progress for.
+     *
+     * @param displayProgress if the waiting handler is to show the progress for
+     * the current process or not
+     */
+    public void setDisplayProgress(boolean displayProgress);
+
+    /**
+     * Returns if the waiting handler is to show the progress for the current
+     * process or not. Useful when running subprocesses that one wants to be
+     * able to cancel but do not want to show the progress for.
+     *
+     * @return if the waiting handler is to show the progress for the current
+     * process or not
+     */
+    public boolean getDisplayProgress();
 }

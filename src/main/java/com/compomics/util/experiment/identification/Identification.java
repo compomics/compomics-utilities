@@ -2038,11 +2038,12 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKeys specific keys to iterate
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters, loadAssumptions);
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumFile, spectrumKeys, this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2051,11 +2052,12 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumFile the file to iterate
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        return new PsmIterator(spectrumFile, this, psmParameters, loadAssumptions);
+    public PsmIterator getPsmIterator(String spectrumFile, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumFile, this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2063,11 +2065,12 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumFile the file to iterate
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(String spectrumFile, boolean loadAssumptions) {
-        return new PsmIterator(spectrumFile, this, loadAssumptions);
+    public PsmIterator getPsmIterator(String spectrumFile, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumFile, this, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2076,11 +2079,12 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKeys specific keys to iterate
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        return new PsmIterator(spectrumKeys, this, psmParameters, loadAssumptions);
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumKeys, this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2088,11 +2092,12 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKeys specific keys to iterate
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean loadAssumptions) {
-        return new PsmIterator(spectrumKeys, this, loadAssumptions);
+    public PsmIterator getPsmIterator(ArrayList<String> spectrumKeys, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        return new PsmIterator(spectrumKeys, this, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2100,11 +2105,12 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      *
      * @return a PSM iterator
      */
-    public PsmIterator getPsmIterator(boolean loadAssumptions, ArrayList<UrParameter> psmParameters) {
-        return new PsmIterator(this, psmParameters, loadAssumptions);
+    public PsmIterator getPsmIterator(boolean loadAssumptions, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        return new PsmIterator(this, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -2115,11 +2121,13 @@ public abstract class Identification extends ExperimentObject {
      * matches
      * @param loadPsms if true PSMs of the peptides will be loaded as well
      * @param psmParameters the PSM parameters to load along with the PSMs
+     * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
-        return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters);
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters, 
+            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
 
     /**
@@ -2129,11 +2137,13 @@ public abstract class Identification extends ExperimentObject {
      * matches
      * @param loadPsms if true PSMs of the peptides will be loaded as well
      * @param psmParameters the PSM parameters to load along with the PSMs
+     * @param waitingHandler the waiting handler
      *
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
-        return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters);
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters, 
+            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
 
     /**
@@ -2149,11 +2159,13 @@ public abstract class Identification extends ExperimentObject {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
+     * @param waitingHandler the waiting handler
      *
      * @return a protein matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
-        return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<String> proteinKeys, ArrayList<UrParameter> proteinParameters, boolean loadPeptides,
+            ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        return new ProteinMatchesIterator(proteinKeys, this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
 
     /**
@@ -2168,10 +2180,12 @@ public abstract class Identification extends ExperimentObject {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
+     * @param waitingHandler the waiting handler
      *
      * @return a protein matches iterator
      */
-    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
-        return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters);
+    public ProteinMatchesIterator getProteinMatchesIterator(ArrayList<UrParameter> proteinParameters, boolean loadPeptides,
+            ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
 }

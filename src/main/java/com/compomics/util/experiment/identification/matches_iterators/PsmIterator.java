@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches_iterators;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  * An iterator for spectrum matches.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PsmIterator {
 
@@ -64,6 +66,10 @@ public class PsmIterator {
      * reached.
      */
     private double margin = defaultMargin;
+    /**
+     * The waiting handler.
+     */
+    private WaitingHandler waitingHandler;
 
     /**
      * Constructor.
@@ -73,8 +79,9 @@ public class PsmIterator {
      * @param identification the identification where to get the matches from
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
+    public PsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
         this.identification = identification;
         if (spectrumKeys == null) {
             if (spectrumFile != null) {
@@ -91,6 +98,7 @@ public class PsmIterator {
         nMatches = this.spectrumKeys.size();
         this.psmParameters = psmParameters;
         this.loadAssumptions = loadAssumptions;
+        this.waitingHandler = waitingHandler;
     }
 
     /**
@@ -100,9 +108,10 @@ public class PsmIterator {
      * @param identification the identification where to get the matches from
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(ArrayList<String> spectrumKeys, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        this(null, spectrumKeys, identification, psmParameters, loadAssumptions);
+    public PsmIterator(ArrayList<String> spectrumKeys, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(null, spectrumKeys, identification, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -111,9 +120,10 @@ public class PsmIterator {
      * @param spectrumKeys the keys to iterate
      * @param identification the identification where to get the matches from
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(ArrayList<String> spectrumKeys, Identification identification, boolean loadAssumptions) {
-        this(null, spectrumKeys, identification, null, loadAssumptions);
+    public PsmIterator(ArrayList<String> spectrumKeys, Identification identification, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(null, spectrumKeys, identification, null, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -123,9 +133,10 @@ public class PsmIterator {
      * @param spectrumKeys the keys to iterate
      * @param identification the identification where to get the matches from
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, Identification identification, boolean loadAssumptions) {
-        this(spectrumFile, spectrumKeys, identification, null, loadAssumptions);
+    public PsmIterator(String spectrumFile, ArrayList<String> spectrumKeys, Identification identification, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(spectrumFile, spectrumKeys, identification, null, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -135,9 +146,10 @@ public class PsmIterator {
      * @param identification the identification where to get the matches from
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(String spectrumFile, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        this(spectrumFile, null, identification, psmParameters, loadAssumptions);
+    public PsmIterator(String spectrumFile, Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(spectrumFile, null, identification, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -146,9 +158,10 @@ public class PsmIterator {
      * @param spectrumFile the spectrum file to iterate
      * @param identification the identification where to get the matches from
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(String spectrumFile, Identification identification, boolean loadAssumptions) {
-        this(spectrumFile, identification, null, loadAssumptions);
+    public PsmIterator(String spectrumFile, Identification identification, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(spectrumFile, identification, null, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -158,9 +171,10 @@ public class PsmIterator {
      * @param identification the identification where to get the matches from
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(String spectrumFile, Identification identification, boolean loadAssumptions, ArrayList<UrParameter> psmParameters) {
-        this(spectrumFile, identification, null, loadAssumptions);
+    public PsmIterator(String spectrumFile, Identification identification, boolean loadAssumptions, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        this(spectrumFile, identification, null, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -168,9 +182,10 @@ public class PsmIterator {
      *
      * @param identification the identification where to get the matches from
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(Identification identification, boolean loadAssumptions) {
-        this(null, null, identification, null, loadAssumptions);
+    public PsmIterator(Identification identification, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(null, null, identification, null, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -179,9 +194,10 @@ public class PsmIterator {
      * @param identification the identification where to get the matches from
      * @param psmParameters the parameters to load along with the matches
      * @param loadAssumptions if true the assumptions will be loaded as well
+     * @param waitingHandler the waiting handler
      */
-    public PsmIterator(Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions) {
-        this(null, null, identification, psmParameters, loadAssumptions);
+    public PsmIterator(Identification identification, ArrayList<UrParameter> psmParameters, boolean loadAssumptions, WaitingHandler waitingHandler) {
+        this(null, null, identification, psmParameters, loadAssumptions, waitingHandler);
     }
 
     /**
@@ -234,26 +250,43 @@ public class PsmIterator {
      * occurred while retrieving the match
      */
     private void checkBuffer() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
         if (!buffering) {
+
             int trigger = loadingIndex - ((int) (margin * batchSize));
+
             if (index >= trigger) {
+
                 int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
                 ArrayList<String> keysInBatch = new ArrayList<String>(spectrumKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                identification.loadSpectrumMatches(keysInBatch, null);
+                identification.loadSpectrumMatches(keysInBatch, waitingHandler);
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    return;
+                }
+
                 if (psmParameters != null) {
                     for (UrParameter urParameter : psmParameters) {
                         if (urParameter == null) {
                             throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
-                        identification.loadSpectrumMatchParameters(keysInBatch, urParameter, null);
+                        identification.loadSpectrumMatchParameters(keysInBatch, urParameter, waitingHandler);
+                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                            return;
+                        }
                     }
                 }
                 if (loadAssumptions) {
-                    identification.loadAssumptions(keysInBatch, null);
+                    identification.loadAssumptions(keysInBatch, waitingHandler);
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
+                    }
                 }
+
                 loadingIndex = newLoadingIndex;
                 trigger += (int) (margin * batchSize / 2);
                 trigger = Math.max(0, trigger);
+
                 if (index < trigger) {
                     if (batchSize > defaultBatchSize) {
                         batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
@@ -261,6 +294,7 @@ public class PsmIterator {
                         margin = Math.max(defaultMargin, 0.9 * margin);
                     }
                 }
+
                 buffering = false;
             }
         } else if (index == loadingIndex) {
@@ -280,5 +314,14 @@ public class PsmIterator {
     private synchronized int incrementIndex() {
         int localIndex = ++index;
         return localIndex;
+    }
+
+    /**
+     * Set the batch size.
+     *
+     * @param batchSize the batch size
+     */
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 }

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches_iterators;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  * An iterator for peptide matches.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PeptideMatchesIterator {
 
@@ -69,6 +71,10 @@ public class PeptideMatchesIterator {
      * reached.
      */
     private double margin = defaultMargin;
+    /**
+     * The waiting handler.
+     */
+    private WaitingHandler waitingHandler;
 
     /**
      * Constructor.
@@ -80,8 +86,10 @@ public class PeptideMatchesIterator {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
+     * @param waitingHandler the waiting handler
      */
-    public PeptideMatchesIterator(ArrayList<String> peptideKeys, Identification identification, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
+    public PeptideMatchesIterator(ArrayList<String> peptideKeys, Identification identification, ArrayList<UrParameter> peptideParameters,
+            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
         this.identification = identification;
         if (peptideKeys == null) {
             this.peptideKeys = identification.getPeptideIdentification();
@@ -92,6 +100,7 @@ public class PeptideMatchesIterator {
         this.peptidesParameters = peptideParameters;
         this.loadPsms = loadPsms;
         this.psmParameters = psmParameters;
+        this.waitingHandler = waitingHandler;
     }
 
     /**
@@ -103,9 +112,11 @@ public class PeptideMatchesIterator {
      * @param loadPsms if true the PSMs of the peptides will be batch loaded
      * along with the matches
      * @param psmParameters the parameters to load along with the matches
+     * @param waitingHandler the waiting handler
      */
-    public PeptideMatchesIterator(Identification identification, ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters) {
-        this(null, identification, peptideParameters, loadPsms, psmParameters);
+    public PeptideMatchesIterator(Identification identification, ArrayList<UrParameter> peptideParameters,
+            boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
+        this(null, identification, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
 
     /**
@@ -115,9 +126,10 @@ public class PeptideMatchesIterator {
      * @param identification the identification where to get the matches from
      * @param peptideParameters the parameters to load along with the peptide
      * matches
+     * @param waitingHandler the waiting handler
      */
-    public PeptideMatchesIterator(ArrayList<String> peptideKeys, Identification identification, ArrayList<UrParameter> peptideParameters) {
-        this(peptideKeys, identification, peptideParameters, false, null);
+    public PeptideMatchesIterator(ArrayList<String> peptideKeys, Identification identification, ArrayList<UrParameter> peptideParameters, WaitingHandler waitingHandler) {
+        this(peptideKeys, identification, peptideParameters, false, null, waitingHandler);
     }
 
     /**
@@ -170,20 +182,34 @@ public class PeptideMatchesIterator {
      * occurred while retrieving the match
      */
     private void checkBuffer() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+
         if (!buffering) {
+
             int trigger = loadingIndex - ((int) (margin * batchSize));
+
             if (index >= trigger) {
+
                 int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
                 ArrayList<String> keysInBatch = new ArrayList<String>(peptideKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                identification.loadPeptideMatches(keysInBatch, null);
+                identification.loadPeptideMatches(keysInBatch, waitingHandler);
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    return;
+                }
+
                 if (peptidesParameters != null) {
                     for (UrParameter urParameter : peptidesParameters) {
                         if (urParameter == null) {
-                            throw new IllegalArgumentException("Parameter to for batch load is null.");
+                            throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
-                        identification.loadPeptideMatchParameters(keysInBatch, urParameter, null);
+                        identification.loadPeptideMatchParameters(keysInBatch, urParameter, waitingHandler);
+
+                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                            return;
+                        }
                     }
                 }
+
                 if (loadPsms) {
                     ArrayList<String> psmKeys = new ArrayList<String>(batchSize);
                     for (String peptideKey : keysInBatch) {
@@ -194,15 +220,21 @@ public class PeptideMatchesIterator {
                     if (psmParameters != null) {
                         for (UrParameter urParameter : psmParameters) {
                             if (urParameter == null) {
-                                throw new IllegalArgumentException("Parameter to for batch load is null.");
+                                throw new IllegalArgumentException("Parameter to batch load is null.");
                             }
-                            identification.loadSpectrumMatchParameters(psmKeys, urParameter, null);
+                            identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler);
+
+                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                return;
+                            }
                         }
                     }
                 }
+
                 loadingIndex = newLoadingIndex;
                 trigger += (int) (margin * batchSize / 2);
                 trigger = Math.max(0, trigger);
+
                 if (index < trigger) {
                     if (batchSize > defaultBatchSize) {
                         batchSize = Math.max(defaultBatchSize, (int) 0.9 * batchSize);
@@ -210,6 +242,7 @@ public class PeptideMatchesIterator {
                         margin = Math.max(defaultMargin, 0.9 * margin);
                     }
                 }
+
                 buffering = false;
             }
         } else if (index == loadingIndex) {
@@ -229,5 +262,14 @@ public class PeptideMatchesIterator {
     private synchronized int incrementIndex() {
         int localIndex = ++index;
         return localIndex;
+    }
+
+    /**
+     * Set the batch size.
+     *
+     * @param batchSize the batch size
+     */
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 }

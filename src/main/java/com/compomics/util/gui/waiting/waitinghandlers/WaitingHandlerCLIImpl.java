@@ -21,6 +21,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      */
     private boolean runCanceled = false;
     /**
+     * Set if the waiting handler is to show the progress for the current
+     * process or not. Useful when running subprocesses that one wants to be
+     * able to cancel but do not want to show the progress for.
+     */
+    private boolean displayProgress = true;
+    /**
      * The primary progress counter. -1 if indeterminate.
      */
     private int primaryProgressCounter = 0;
@@ -48,67 +54,85 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
-        primaryMaxProgressCounter = maxProgressValue;
+        if (displayProgress) {
+            primaryMaxProgressCounter = maxProgressValue;
+        }
     }
 
     @Override
     public synchronized void increasePrimaryProgressCounter() {
-        primaryProgressCounter++;
+        if (displayProgress) {
+            primaryProgressCounter++;
+        }
     }
 
     @Override
     public synchronized void increasePrimaryProgressCounter(int amount) {
-        primaryProgressCounter += amount;
+        if (displayProgress) {
+            primaryProgressCounter += amount;
+        }
     }
 
     @Override
     public void setPrimaryProgressCounter(int value) {
-        primaryProgressCounter = value;
+        if (displayProgress) {
+            primaryProgressCounter = value;
+        }
     }
 
     @Override
     public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
-        secondaryMaxProgressCounter = maxProgressValue;
+        if (displayProgress) {
+            secondaryMaxProgressCounter = maxProgressValue;
+        }
     }
 
     @Override
     public synchronized void resetSecondaryProgressCounter() {
-        secondaryProgressCounter = 0;
+        if (displayProgress) {
+            secondaryProgressCounter = 0;
+        }
     }
 
     @Override
     public synchronized void increaseSecondaryProgressCounter() {
-        if (secondaryMaxProgressCounter != 0) {
-            int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            secondaryProgressCounter++;
-            int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            printProgress(progress1, progress2);
-        } else {
-            secondaryProgressCounter++;
+        if (displayProgress) {
+            if (secondaryMaxProgressCounter != 0) {
+                int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                secondaryProgressCounter++;
+                int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                printProgress(progress1, progress2);
+            } else {
+                secondaryProgressCounter++;
+            }
         }
     }
 
     @Override
     public synchronized void setSecondaryProgressCounter(int value) {
-        if (secondaryMaxProgressCounter != 0) {
-            int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            secondaryProgressCounter = value;
-            int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            printProgress(progress1, progress2);
-        } else {
-            secondaryProgressCounter = value;
+        if (displayProgress) {
+            if (secondaryMaxProgressCounter != 0) {
+                int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                secondaryProgressCounter = value;
+                int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                printProgress(progress1, progress2);
+            } else {
+                secondaryProgressCounter = value;
+            }
         }
     }
 
     @Override
     public synchronized void increaseSecondaryProgressCounter(int amount) {
-        if (secondaryMaxProgressCounter != 0) {
-            int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            secondaryProgressCounter += amount;
-            int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-            printProgress(progress1, progress2);
-        } else {
-            secondaryProgressCounter += amount;
+        if (displayProgress) {
+            if (secondaryMaxProgressCounter != 0) {
+                int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                secondaryProgressCounter += amount;
+                int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                printProgress(progress1, progress2);
+            } else {
+                secondaryProgressCounter += amount;
+            }
         }
     }
 
@@ -140,7 +164,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public synchronized void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
-        secondaryProgressCounter = -1;
+        if (displayProgress) {
+            secondaryProgressCounter = -1;
+        }
     }
 
     @Override
@@ -155,44 +181,49 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
+        if (displayProgress) {
+            String tempReport = report;
 
-        String tempReport = report;
+            if (includeDate) {
+                Date date = new Date();
+                tempReport = date + " " + report;
+            }
 
-        if (includeDate) {
-            Date date = new Date();
-            tempReport = date + " " + report;
+            if (addNewLine) {
+                tempReport = tempReport + System.getProperty("line.separator");
+            }
+
+            iReport = iReport + tempReport;
+            if (needNewLine) {
+                System.out.append(System.getProperty("line.separator"));
+                needNewLine = false;
+            }
+            System.out.append(tempReport);
         }
-
-        if (addNewLine) {
-            tempReport = tempReport + System.getProperty("line.separator");
-        }
-
-        iReport = iReport + tempReport;
-        if (needNewLine) {
-            System.out.append(System.getProperty("line.separator"));
-            needNewLine = false;
-        }
-        System.out.append(tempReport);
     }
 
     @Override
     public synchronized void appendReportNewLineNoDate() {
-        if (needNewLine) {
+        if (displayProgress) {
+            if (needNewLine) {
+                System.out.append(System.getProperty("line.separator"));
+                needNewLine = false;
+            }
+            iReport = iReport + System.getProperty("line.separator");
             System.out.append(System.getProperty("line.separator"));
-            needNewLine = false;
         }
-        iReport = iReport + System.getProperty("line.separator");
-        System.out.append(System.getProperty("line.separator"));
     }
 
     @Override
     public synchronized void appendReportEndLine() {
-        if (needNewLine) {
+        if (displayProgress) {
+            if (needNewLine) {
+                System.out.append(System.getProperty("line.separator"));
+                needNewLine = false;
+            }
+            iReport = iReport + System.getProperty("line.separator");
             System.out.append(System.getProperty("line.separator"));
-            needNewLine = false;
         }
-        iReport = iReport + System.getProperty("line.separator");
-        System.out.append(System.getProperty("line.separator"));
     }
 
     @Override
@@ -207,13 +238,17 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void setWaitingText(String text) {
-        appendReport(text, true, true);
+        if (displayProgress) {
+            appendReport(text, true, true);
+        }
     }
 
     @Override
     public synchronized void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
-        if (indeterminate) {
-            primaryProgressCounter = -1;
+        if (displayProgress) {
+            if (indeterminate) {
+                primaryProgressCounter = -1;
+            }
         }
     }
 
@@ -224,12 +259,16 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void setSecondaryProgressText(String text) {
-        appendReport(text, true, true);
+        if (displayProgress) {
+            appendReport(text, true, true);
+        }
     }
 
     @Override
     public synchronized void resetPrimaryProgressCounter() {
-        primaryProgressCounter = 0;
+        if (displayProgress) {
+            primaryProgressCounter = 0;
+        }
     }
 
     @Override
@@ -250,5 +289,15 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     @Override
     public synchronized int getMaxSecondaryProgressCounter() {
         return secondaryMaxProgressCounter;
+    }
+
+    @Override
+    public void setDisplayProgress(boolean displayProgress) {
+        this.displayProgress = displayProgress;
+    }
+
+    @Override
+    public boolean getDisplayProgress() {
+        return displayProgress;
     }
 }

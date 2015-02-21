@@ -245,7 +245,7 @@ public class ImmoniumIon extends Ion {
     }
 
     @Override
-    public CvTerm getPrideCvTerm() {
+    public CvTerm getPrideCvTerm() { // @TODO: replace by MS:1001239? will result in issues for the PRIDE XML export..
         switch (subType) {
             case ALANINE:
                 return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");

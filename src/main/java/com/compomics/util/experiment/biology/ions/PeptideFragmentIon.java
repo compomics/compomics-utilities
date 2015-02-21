@@ -132,61 +132,61 @@ public class PeptideFragmentIon extends Ion {
         switch (subType) {
             case A_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000233", "a ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000234", "a ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001234", "frag: a ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000235", "a ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001235", "frag: a ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }
             case B_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000194", "b ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001221", "frag: b ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000196", "b ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000195", "b ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001232", "frag: b ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }
             case C_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000236", "c ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000237", "c ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001515", "frag: c ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000238", "c ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001516", "frag: c ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }
             case X_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000227", "x ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000228", "x ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001519", "frag: x ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000229", "x ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001520", "frag: x ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }
             case Y_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000193", "y ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000197", "y ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001223", "frag: y ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000198", "y ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001233", "frag: y ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }
             case Z_ION:
                 if (neutralLosses.isEmpty()) {
-                    return new CvTerm("PRIDE", "PRIDE:0000230", "z ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000231", "z ion -H2O", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001517", "frag: z ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
-                    return new CvTerm("PRIDE", "PRIDE:0000232", "z ion -NH3", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001518", "frag: z ion - NH3", "" + getNumber());
                 } else {
                     return null;
                 }

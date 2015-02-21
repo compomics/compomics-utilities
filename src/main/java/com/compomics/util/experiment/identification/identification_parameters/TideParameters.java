@@ -266,7 +266,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
             if (decoySeed != tideParameters.getDecoySeed().intValue()) {
                 return false;
             }
-            if (outputFolderName.equalsIgnoreCase(tideParameters.getOutputFolderName())) {
+            if (!outputFolderName.equalsIgnoreCase(tideParameters.getOutputFolderName())) {
                 return false;
             }
             if (printPeptides != tideParameters.getPrintPeptides().booleanValue()) {
@@ -281,7 +281,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
             if (clipNtermMethionine != tideParameters.getClipNtermMethionine().booleanValue()) {
                 return false;
             }
-            if (digestionType.equalsIgnoreCase(tideParameters.getDigestionType())) {
+            if (!digestionType.equalsIgnoreCase(tideParameters.getDigestionType())) {
                 return false;
             }
             if (computeSpScore != tideParameters.getComputeSpScore().booleanValue()) {
@@ -296,13 +296,18 @@ public class TideParameters implements IdentificationAlgorithmParameter {
             if (minSpectrumMz != tideParameters.getMinSpectrumMz().doubleValue()) {
                 return false;
             }
-            if (maxSpectrumMz != tideParameters.getMaxSpectrumMz().doubleValue()) {
+            if ((maxSpectrumMz == null && tideParameters.getMaxSpectrumMz() != null)
+                    || (maxSpectrumMz != null && tideParameters.getMaxSpectrumMz() == null)) {
+                return false;
+            }
+            if ((maxSpectrumMz != null && tideParameters.getMaxSpectrumMz() != null) 
+                    && (maxSpectrumMz != tideParameters.getMaxSpectrumMz().doubleValue())) {
                 return false;
             }
             if (minSpectrumPeaks != tideParameters.getMinSpectrumPeaks().intValue()) {
                 return false;
             }
-            if (spectrumCharges.equalsIgnoreCase(tideParameters.getSpectrumCharges())) {
+            if (!spectrumCharges.equalsIgnoreCase(tideParameters.getSpectrumCharges())) {
                 return false;
             }
             if (removePrecursor != tideParameters.getRemovePrecursor().booleanValue()) {
@@ -329,7 +334,11 @@ public class TideParameters implements IdentificationAlgorithmParameter {
             if (concatenateTargetDecoy != tideParameters.getConcatenatTargetDecoy().booleanValue()) {
                 return false;
             }
-            if (storeSpectraFileName.equalsIgnoreCase(tideParameters.getStoreSpectraFileName())) {
+            if ((storeSpectraFileName == null && tideParameters.getStoreSpectraFileName() != null)
+                    || (storeSpectraFileName != null && tideParameters.getStoreSpectraFileName() == null)) {
+                return false;
+            }
+            if (!storeSpectraFileName.equalsIgnoreCase(tideParameters.getStoreSpectraFileName())) {
                 return false;
             }
             if (textOutput != tideParameters.getTextOutput().booleanValue()) {

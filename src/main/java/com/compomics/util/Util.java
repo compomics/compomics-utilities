@@ -321,7 +321,7 @@ public class Util {
 
         fileChooser.setDialogTitle(aDialogTitle);
         fileChooser.setMultiSelectionEnabled(false);
-
+        
         // see if we should hide the All option
         fileChooser.setAcceptAllFileFilterUsed(showAllFilesOption);
 

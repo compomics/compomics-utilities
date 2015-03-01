@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
@@ -1288,98 +1289,88 @@ public class SequenceFactory {
     public FastaIndex getCurrentFastaIndex() {
         return fastaIndex;
     }
+    
+    /**
+     * Returns the default protein tree. Null if none created.
+     * 
+     * @return the default protein tree
+     */
+    public ProteinTree getDefaultProteinTree() {
+        return defaultProteinTree;
+    }
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
-     * factory.
+     * factory, creates a new one if none found.
+     *
+     * @param waitingHandler waiting handler displaying progress to the user
+     * during the initiation of the tree
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      *
      * @return the default protein tree
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    public ProteinTree getDefaultProteinTree() throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
-        return getDefaultProteinTree(nThreads, null, false);
+        return getDefaultProteinTree(nThreads, waitingHandler, exceptionHandler, true);
     }
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
-     * factory.
-     *
-     * @param nThreads the number of threads to use
-     *
-     * @return the default protein tree
-     *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public ProteinTree getDefaultProteinTree(int nThreads) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        return getDefaultProteinTree(nThreads, null, false);
-    }
-
-    /**
-     * Returns the default protein tree corresponding to the database loaded in
-     * factory.
-     *
-     * @param waitingHandler waiting handler displaying progress to the user
-     * during the initiation of the tree
-     *
-     * @return the default protein tree
-     *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
-        return getDefaultProteinTree(nThreads, waitingHandler, true);
-    }
-
-    /**
-     * Returns the default protein tree corresponding to the database loaded in
-     * factory.
+     * factory, creates a new one if none found.
      *
      * @param nThreads the number of threads to use
      * @param waitingHandler waiting handler displaying progress to the user
      * during the initiation of the tree
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      *
      * @return the default protein tree
      *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        return getDefaultProteinTree(nThreads, waitingHandler, true);
+    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+        return getDefaultProteinTree(nThreads, waitingHandler, exceptionHandler, true);
     }
 
     /**
      * Returns the default protein tree corresponding to the database loaded in
-     * factory.
+     * factory, creates a new one if none found.
      *
      * @param nThreads the number of threads to use
      * @param waitingHandler waiting handler displaying progress to the user
      * during the initiation of the tree
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param displayProgress display progress
      * @return the default protein tree
      *
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
+    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
         if (defaultProteinTree == null) {
 
             UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -1395,7 +1386,7 @@ public class SequenceFactory {
             defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
 
             int tagLength = 3;
-            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, true, displayProgress, nThreads);
+            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, exceptionHandler, true, displayProgress, nThreads);
             emptyCache();
 
             int treeSize = memoryPreference / 4;
@@ -1413,18 +1404,22 @@ public class SequenceFactory {
 
     /**
      * Try to delete the default protein tree.
+     * 
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      *
      * @return true of the deletion was a success
      */
-    public synchronized boolean deleteProteinTree() {
+    public synchronized boolean deleteProteinTree(ExceptionHandler exceptionHandler) {
         if (defaultProteinTree != null) {
             try {
                 defaultProteinTree.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.catchException(e);
+                } else {
+                    e.printStackTrace();
+                }
                 return false;
             }
             if (defaultProteinTree != null) {

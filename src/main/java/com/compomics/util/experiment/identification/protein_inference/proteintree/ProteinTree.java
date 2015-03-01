@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
 import com.compomics.util.Util;
+import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
@@ -184,20 +185,22 @@ public class ProteinTree {
      * query time &lt;20ms.
      * @param maxPeptideSize the maximum peptide size
      * @param waitingHandler the waiting handler used to display progress to the
-     * user. Can be null but strongly recommended :)
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
      * @param displayProgress display progress
-     * 
+     *
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
-        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, printExpectedImportTime, displayProgress, nThreads);
+        initiateTree(initialTagSize, maxNodeSize, maxPeptideSize, null, waitingHandler, exceptionHandler, printExpectedImportTime, displayProgress, nThreads);
     }
 
     /**
@@ -216,19 +219,24 @@ public class ProteinTree {
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
-     * user. Can be null.
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
      * @param displayProgress display progress
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
-            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+    public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
+            throws IOException, InterruptedException, IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         // delete outdated trees
         try {
@@ -270,7 +278,7 @@ public class ProteinTree {
             }
 
             if (needImport) {
-                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, printExpectedImportTime, displayProgress, nThreads);
+                importDb(initialTagSize, maxNodeSize, maxPeptideSize, enzyme, waitingHandler, exceptionHandler, printExpectedImportTime, displayProgress, nThreads);
             }
         } catch (IOException e) {
             componentsFactory.delete();
@@ -330,18 +338,24 @@ public class ProteinTree {
      * @param enzyme the enzyme used to select peptides. If null all possible
      * peptides will be indexed
      * @param waitingHandler the waiting handler used to display progress to the
-     * user. Can be null.
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param printExpectedImportTime if true the expected import time will be
      * printed to the waiting handler
      * @param nThreads the number of threads to use
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
-            throws IOException, IllegalArgumentException, InterruptedException, IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+    private void importDb(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
+            throws IOException, InterruptedException, IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (printExpectedImportTime) {
             int nSeconds = getExpectedImportTime();
@@ -407,7 +421,7 @@ public class ProteinTree {
         }
 
         if (nPassages > 1) {
-//            Collections.shuffle(tags);
+            Collections.shuffle(tags);
         }
 
         if (debugPassages) {
@@ -444,7 +458,7 @@ public class ProteinTree {
 
         for (String tag : tags) {
             if (tempTags.size() == nTags) {
-                loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, displayProgress);
+                loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, exceptionHandler, displayProgress);
                 if (first) {
                     first = false;
                 }
@@ -465,7 +479,7 @@ public class ProteinTree {
         }
 
         if (!tempTags.isEmpty()) {
-            loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, displayProgress);
+            loadTags(tempTags, initialTagSize, maxNodeSize, maxPeptideSize, enzyme, nThreads, waitingHandler, exceptionHandler, displayProgress);
 
             if (debugSpeed) {
                 debugSpeedWriter.write(new Date() + " " + tagsLoaded + " tags of " + tags.size() + " loaded.");
@@ -540,35 +554,41 @@ public class ProteinTree {
      * nodes in the NodeFactory if not null.
      *
      * @param tags the tags of interest
-     * @param waitingHandler waiting handler displaying progress to the user -
-     * can be null
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param enzyme the enzyme restriction
      * @param loadLengths boolean indicating whether protein lengths should be
      * loaded in the db
      * @param loadedLengths the accessions of the proteins from which the length
      * is already saved
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private synchronized void loadTags(ArrayList<String> tags,
-            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, int nThreads, WaitingHandler waitingHandler, boolean displayProgress)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+            int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, int nThreads, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress)
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         // find the tags in the proteins and create a node per tag found
         if (nThreads == 1) {
             indexProteinsSingleThread(tags, initialTagSize, enzyme, waitingHandler, displayProgress);
         } else {
-            indexProteins(tags, initialTagSize, enzyme, waitingHandler, displayProgress, nThreads);
+            indexProteins(tags, initialTagSize, enzyme, waitingHandler, exceptionHandler, displayProgress, nThreads);
         }
 
         // split the nodes and save them in the db
         if (nThreads == 1) {
             processRawNodesSingleThread(tags, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
         } else {
-            processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, displayProgress, nThreads);
+            processRawNodes(maxNodeSize, maxPeptideSize, waitingHandler, exceptionHandler, displayProgress, nThreads);
         }
 
         // clear memory before further processing
@@ -592,15 +612,18 @@ public class ProteinTree {
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private void indexProteinsSingleThread(ArrayList<String> tags,
             int initialTagSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         ProteinIterator proteinIterator = sequenceFactory.getProteinIterator(sequenceFactory.isDefaultReversed());
 
@@ -649,6 +672,8 @@ public class ProteinTree {
      * @param tags the tags to index
      * @param waitingHandler waiting handler providing feedback on the process
      * and allowing canceling the process
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param initialTagSize the initial tag size
      * @param enzyme enzyme to use. Can be null
      * @param loadLengths boolean indicating whether protein lengths should be
@@ -656,15 +681,18 @@ public class ProteinTree {
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private void indexProteins(ArrayList<String> tags,
-            int initialTagSize, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress, int nThreads)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+            int initialTagSize, Enzyme enzyme, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads)
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         ArrayList<Protein> sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
         ArrayList<SequenceIndexer> sequenceIndexers = new ArrayList<SequenceIndexer>(nThreads);
@@ -679,7 +707,7 @@ public class ProteinTree {
                 while (sequenceIndexers.size() == nThreads) {
                     processFinishedIndexers(sequenceIndexers, initialTagSize);
                 }
-                SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, displayProgress);
+                SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, exceptionHandler, displayProgress);
                 pool.submit(new Thread(sequenceIndexer, "sequence indexing"));
                 sequenceBuffer = new ArrayList<Protein>(proteinBatchSize);
                 sequenceIndexers.add(sequenceIndexer);
@@ -694,7 +722,7 @@ public class ProteinTree {
         }
 
         if (!sequenceBuffer.isEmpty()) {
-            SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, displayProgress);
+            SequenceIndexer sequenceIndexer = new SequenceIndexer(sequenceBuffer, tags, enzyme, waitingHandler, exceptionHandler, displayProgress);
             pool.submit(new Thread(sequenceIndexer, "sequence indexing"));
             sequenceIndexers.add(sequenceIndexer);
         }
@@ -716,14 +744,17 @@ public class ProteinTree {
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private void processRawNodesSingleThread(ArrayList<String> tags, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         int batchSize = (int) Math.ceil(tree.size() / 3);
         batchSize = Math.min(10000, batchSize);
@@ -773,17 +804,22 @@ public class ProteinTree {
      * @param maxPeptideSize the maximal peptide length allowed
      * @param waitingHandler waiting handler providing feedback on the process
      * and allowing canceling the process
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      * @param displayProgress boolean indicating whether progress shall be
      * displayed using the waiting handler
      *
-     * @throws IOException
-     * @throws IllegalArgumentException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while creating the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress, int nThreads)
-            throws IOException, IllegalArgumentException, InterruptedException, ClassNotFoundException, SQLException {
+    private void processRawNodes(int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads)
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         ArrayList<NodeSplitter> nodeSplitters = new ArrayList<NodeSplitter>(nThreads);
         ExecutorService pool = Executors.newFixedThreadPool(nThreads);
@@ -796,7 +832,7 @@ public class ProteinTree {
                 processFinishedNodeSplitters(nodeSplitters, null); // @TODO: add waiting handler
             }
 
-            NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, displayProgress);
+            NodeSplitter nodeSplitter = new NodeSplitter(tag, node, maxNodeSize, maxPeptideSize, waitingHandler, exceptionHandler, displayProgress);
             pool.submit(new Thread(nodeSplitter, "Node splitting of tag " + tag));
             nodeSplitters.add(nodeSplitter);
 
@@ -822,7 +858,8 @@ public class ProteinTree {
      * @param nodeProcessors the node processors of interest
      * @param waitingHandler the waiting handler
      *
-     * @throws InterruptedException
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while splitting nodes.
      */
     private synchronized void processFinishedNodeSplitters(ArrayList<NodeSplitter> nodeSplitters, WaitingHandler waitingHandler) throws InterruptedException, SQLException, IOException {
 
@@ -864,7 +901,8 @@ public class ProteinTree {
      * @param sequenceIndexers the sequence indexers
      * @param initialTagSize the initial tag size
      *
-     * @throws InterruptedException
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while processing finished indexers.
      */
     private synchronized void processFinishedIndexers(ArrayList<SequenceIndexer> sequenceIndexers, int initialTagSize) throws InterruptedException {
 
@@ -920,12 +958,16 @@ public class ProteinTree {
      * @return the peptide to protein mapping: peptide sequence &gt; protein
      * accession &gt; index in the protein An empty map if not
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePrefeerences) 
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePrefeerences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         long time0 = 0;
@@ -948,8 +990,8 @@ public class ProteinTree {
 
     /**
      * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence. peptide sequence &gt; protein accession &gt; index in the protein.
-     * An empty map if not.
+     * sequence. peptide sequence &gt; protein accession &gt; index in the
+     * protein. An empty map if not.
      *
      * @param peptideSequence the peptide sequence
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -958,9 +1000,15 @@ public class ProteinTree {
      *
      * @return the peptide to protein mapping: Accession &gt; list of indexes
      * where the peptide can be found on the sequence
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences, boolean reversed) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -1093,8 +1141,8 @@ public class ProteinTree {
 
     /**
      * Returns the protein mappings for the given peptide sequence. Peptide
-     * sequence &gt; Protein accession &gt; Index in the protein. An empty map if
-     * not found.
+     * sequence &gt; Protein accession &gt; Index in the protein. An empty map
+     * if not found.
      *
      * @param tag the tag to look for in the tree. Must contain a consecutive
      * amino acid sequence of longer or equal size than the initialTagSize of
@@ -1105,10 +1153,14 @@ public class ProteinTree {
      *
      * @return the protein mapping for the given peptide sequence
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -1188,9 +1240,14 @@ public class ProteinTree {
      *
      * @return a list of possible initial tags.
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private HashSet<String> getInitialTags(AminoAcidSequence aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences, Double limitX)
             throws SQLException, IOException, ClassNotFoundException, InterruptedException {
@@ -1338,10 +1395,17 @@ public class ProteinTree {
      *
      * @param forwardResults the given mapping
      * @param peptideSequence the sequence of interest
+     *
      * @return the reversed indexes
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private HashMap<String, HashMap<String, ArrayList<Integer>>> getReversedResults(HashMap<String, HashMap<String, ArrayList<Integer>>> forwardResults) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
@@ -1396,10 +1460,17 @@ public class ProteinTree {
      * Returns a node related to a tag and updates the cache. Null if not found.
      *
      * @param tag the tag of interest
+     *
      * @return the corresponding node
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private Node getNode(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
@@ -1416,10 +1487,17 @@ public class ProteinTree {
      * Returns a node related to a tag and updates the cache. Null if not found.
      *
      * @param tag the tag of interest
+     *
      * @return the corresponding node
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private synchronized Node getNodeSynchronized(String tag) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
 
@@ -1452,8 +1530,10 @@ public class ProteinTree {
     /**
      * Closes all connections to files.
      *
-     * @throws IOException if an IOException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public void close() throws IOException, SQLException {
         if (debugSpeed) {
@@ -1543,11 +1623,15 @@ public class ProteinTree {
      *
      * @return a list of peptides matched and their indexes in the protein
      * sequence
-     * 
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public HashMap<String, ArrayList<Integer>> getMatchedPeptideSequences(String peptideSequence, String proteinAccession, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -1571,11 +1655,15 @@ public class ProteinTree {
      *
      * @return a PeptideIterator which iterates alphabetically all peptides
      * corresponding to the end of a branch in the tree
-     * 
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public PeptideIterator getPeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return new PeptideIterator();
@@ -1584,7 +1672,8 @@ public class ProteinTree {
     /**
      * Notifies the tree that a runnable has finished working.
      *
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while waiting.
      */
     private synchronized void runnableFinished() throws InterruptedException {
         while (!listening) {
@@ -1634,9 +1723,14 @@ public class ProteinTree {
         /**
          * Constructor.
          *
-         * @throws SQLException
-         * @throws IOException
-         * @throws ClassNotFoundException
+         * @throws IOException exception thrown whenever an error occurs while
+         * reading or writing a file.
+         * @throws ClassNotFoundException exception thrown whenever an error
+         * occurs while deserializing an object.
+         * @throws InterruptedException exception thrown whenever a threading
+         * issue occurred while interacting with the tree.
+         * @throws SQLException if an SQLException exception thrown whenever a
+         * problem occurred while interacting with the tree database.
          */
         private PeptideIterator() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
             initialTagSize = componentsFactory.getInitialSize();
@@ -1767,7 +1861,17 @@ public class ProteinTree {
      * @param tags the tags of interest
      * @param enzyme the enzyme restriction
      * @param waitingHandler waiting handler
+     *
      * @return all the positions of the given tags
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.F
      */
     private HashMap<String, ArrayList<Integer>> getTagToIndexesMap(String sequence, ArrayList<String> tags, Enzyme enzyme,
             WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
@@ -1812,11 +1916,15 @@ public class ProteinTree {
      * @param accession the accession of the protein of interest
      *
      * @return the length of this protein
-     * 
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public Integer getProteinLength(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         Integer length = proteinLengthsCache.get(accession);
@@ -1832,10 +1940,15 @@ public class ProteinTree {
      * @param accession the accession of the protein of interest
      *
      * @return the length of this protein
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     private synchronized Integer getProteinLengthSynchronized(String accession) throws SQLException, ClassNotFoundException, IOException, InterruptedException {
         Integer length = proteinLengthsCache.get(accession);
@@ -1856,10 +1969,14 @@ public class ProteinTree {
      *
      * @return the initial tag size of the tree
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public Integer getInitialTagSize() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return componentsFactory.getInitialSize();
@@ -1898,6 +2015,10 @@ public class ProteinTree {
          * Boolean indicating whether progress should be displayed.
          */
         private boolean displayProgress;
+        /**
+         * Handler for the exceptions.
+         */
+        private ExceptionHandler exceptionHandler;
 
         /**
          * Constructor.
@@ -1905,16 +2026,19 @@ public class ProteinTree {
          * @param proteins the proteins to process
          * @param tags the tags to process
          * @param enzyme enzyme to use (can be null)
-         * @param waitingHandler waiting handler displaying progress to the user
-         * (can be null)
+         * @param waitingHandler waiting handler providing feedback on the
+         * process and allowing canceling the process
+         * @param exceptionHandler handler for the exceptions encountered while
+         * creating the tree
          * @param displayProgress boolean indicating whether progress shall be
          * displayed on the progress bar of the waiting handler
          */
-        public SequenceIndexer(ArrayList<Protein> proteins, ArrayList<String> tags, Enzyme enzyme, WaitingHandler waitingHandler, boolean displayProgress) {
+        public SequenceIndexer(ArrayList<Protein> proteins, ArrayList<String> tags, Enzyme enzyme, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress) {
             this.proteins = proteins;
             this.tags = tags;
             this.enzyme = enzyme;
             this.waitingHandler = waitingHandler;
+            this.exceptionHandler = exceptionHandler;
             this.displayProgress = displayProgress;
         }
 
@@ -1938,14 +2062,12 @@ public class ProteinTree {
                         return;
                     }
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.catchException(ex);
+                } else {
+                    ex.printStackTrace();
+                }
             }
 
             finished = true;
@@ -1967,8 +2089,8 @@ public class ProteinTree {
         }
 
         /**
-         * Returns the indexes: protein accession &gt; tag &gt; indexes of the tag
-         * on the protein sequence
+         * Returns the indexes: protein accession &gt; tag &gt; indexes of the
+         * tag on the protein sequence
          *
          * @return the indexes
          */
@@ -2019,17 +2141,29 @@ public class ProteinTree {
          * Boolean indicating whether progress should be displayed.
          */
         private boolean displayProgress;
+        /**
+         * Handler for the exceptions.
+         */
+        private ExceptionHandler exceptionHandler;
 
         /**
          * Constructor.
          *
-         * @param tag the tag of interest
-         * @param node the node to process
+         *
+         * @param maxNodeSize the maximal size allowed for a node
+         * @param maxPeptideSize the maximal peptide length allowed
+         * @param waitingHandler waiting handler providing feedback on the
+         * process and allowing canceling the process
+         * @param exceptionHandler handler for the exceptions encountered while
+         * creating the tree
+         * @param displayProgress boolean indicating whether progress shall be
+         * displayed using the waiting handler
          */
-        public NodeSplitter(String tag, Node node, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, boolean displayProgress) {
+        public NodeSplitter(String tag, Node node, int maxNodeSize, int maxPeptideSize, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress) {
             this.tag = tag;
             this.node = node;
             this.waitingHandler = waitingHandler;
+            this.exceptionHandler = exceptionHandler;
             this.displayProgress = displayProgress;
         }
 
@@ -2038,14 +2172,12 @@ public class ProteinTree {
 
             try {
                 node.splitNode(maxNodeSize, maxPeptideSize);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.catchException(ex);
+                } else {
+                    ex.printStackTrace();
+                }
             }
 
             finished = true;
@@ -2056,8 +2188,12 @@ public class ProteinTree {
 
             try {
                 runnableFinished();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+            } catch (Exception ex) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.catchException(ex);
+                } else {
+                    ex.printStackTrace();
+                }
             }
         }
 

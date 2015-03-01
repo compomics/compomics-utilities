@@ -1,12 +1,14 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
+import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -255,19 +257,31 @@ public class Peptide extends ExperimentObject {
      * @param remap boolean indicating whether the peptide sequence should be
      * remapped to the proteins if no protein is found
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
         if (!remap || parentProteins != null) { // avoid building the tree if not necessary
             return parentProteins;
         }
-        return getParentProteins(remap, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultProteinTree());
+        ProteinTree proteinTree = SequenceFactory.getInstance().getDefaultProteinTree();
+        if (proteinTree == null) {
+            throw new IllegalArgumentException("Protein tree not created for peptide to protein mapping.");
+        }
+        return getParentProteins(remap, sequenceMatchingPreferences, proteinTree);
     }
 
     /**
@@ -279,10 +293,14 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, sequenceMatchingPreferences, proteinTree);
@@ -291,19 +309,51 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
      * protein mapping was set using the default protein tree of the sequence
-     * factory.
+     * factory. Th
      *
      * @param sequenceMatchingPreferences the sequence matching preferences
-     *
+     * 
      * @return the proteins mapping this peptide
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, sequenceMatchingPreferences);
+    }
+            
+
+    /**
+     * Returns the parent proteins and remaps the peptide to the protein if no
+     * protein mapping was set using the default protein tree of the sequence
+     * factory. The tree will be created if not done previously
+     *
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param waitingHandler the waiting handler used to display progress to the
+     * user and cancel the process. Can be null but strongly recommended.
+     * @param exceptionHandler handler for the exceptions encountered while
+     * creating the tree
+     *
+     * @return the proteins mapping this peptide
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
+     */
+    public ArrayList<String> getParentProteinsCreateTree(SequenceMatchingPreferences sequenceMatchingPreferences, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        ProteinTree proteinTree = SequenceFactory.getInstance().getDefaultProteinTree(waitingHandler, exceptionHandler);
+        return getParentProteins(true, sequenceMatchingPreferences, proteinTree);
     }
 
     /**
@@ -318,10 +368,14 @@ public class Peptide extends ExperimentObject {
      *
      * @return the proteins mapping this peptide
      *
-     * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences,
             ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {

@@ -3,6 +3,7 @@ package com.compomics.util.math;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * Class used to perform basic mathematical functions.
@@ -11,6 +12,15 @@ import java.util.Collections;
  */
 public class BasicMathFunctions {
 
+    /**
+     * Cache for the base used for the log
+     */
+    private static double logBase = 0;
+    /**
+     * Cache for the logarithm value of the base used for the log
+     */
+    private static double logBaseValue;
+    
     /**
      * Returns n!
      *
@@ -147,6 +157,39 @@ public class BasicMathFunctions {
             deviations[i] = Math.abs(ratios[i] - med);
         }
         return median(deviations);
+    }
+
+    /**
+     * Method estimating the median absolute deviation.
+     *
+     * @param ratios array of doubles
+     * @return the mad of the input
+     */
+    public static double mad(ArrayList<Double> ratios) {
+        double[] deviations = new double[ratios.size()];
+        double med = median(ratios);
+        for (int i = 0; i < ratios.size(); i++) {
+            deviations[i] = Math.abs(ratios.get(i) - med);
+        }
+        return median(deviations);
+    }
+    
+    /**
+     * Returns the log of the input in the desired base.
+     * 
+     * @param input the input
+     * @param base the log base
+     * 
+     * @return the log value of the input in the derired base.
+     */
+    public static double log(double input, double base) {
+        if (base <= 0) {
+            throw new IllegalArgumentException("Attempting to comupute logarithm of base " + base + ".");
+        } else if (base != logBase) {
+            logBase = base;
+            logBaseValue = FastMath.log(base);
+        }
+        return FastMath.log(input) / logBaseValue;
     }
 
     /**

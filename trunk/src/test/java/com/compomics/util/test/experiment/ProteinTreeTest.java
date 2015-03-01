@@ -1,5 +1,7 @@
 package com.compomics.util.test.experiment;
 
+import com.compomics.util.exceptions.ExceptionHandler;
+import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.MutationMatrix;
@@ -34,21 +36,26 @@ public class ProteinTreeTest extends TestCase {
     /**
      * Tests the import and the mapping of a few peptide sequences.
      *
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws SQLException
-     * @throws InterruptedException
+     * @throws java.io.FileNotFoundException exception thrown whenever a file is not found.
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
      */
     public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        proteinTree.initiateTree(3, 50, 50, null, true, false, 1);
+        proteinTree.initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
 
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = proteinTree.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
         Assert.assertTrue(testIndexes.size() == 1);
@@ -79,6 +86,19 @@ public class ProteinTreeTest extends TestCase {
         proteinTree.deleteDb();
     }
 
+    /**
+     * Tests the mapping of de novo sequence tags to the database
+     * 
+     * @throws java.io.FileNotFoundException exception thrown whenever a file is not found.
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException if an SQLException exception thrown whenever a
+     * problem occurred while interacting with the tree database.
+     */
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -88,12 +108,13 @@ public class ProteinTreeTest extends TestCase {
         ptmFactory.importModifications(ptmFile, false);
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        proteinTree.initiateTree(3, 50, 50, null, true, false, 1);
+        proteinTree.initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
 
         // TESTMRITESTCKTESTK
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("LTEST");

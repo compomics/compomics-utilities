@@ -257,10 +257,6 @@ public class Peptide extends ExperimentObject {
      * @param remap boolean indicating whether the peptide sequence should be
      * remapped to the proteins if no protein is found
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param waitingHandler the waiting handler used to display progress to the
-     * user and cancel the process. Can be null but strongly recommended.
-     * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
      *
      * @return the proteins mapping this peptide
      *

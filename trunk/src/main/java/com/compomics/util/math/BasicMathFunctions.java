@@ -13,14 +13,14 @@ import org.apache.commons.math.util.FastMath;
 public class BasicMathFunctions {
 
     /**
-     * Cache for the base used for the log
+     * Cache for the base used for the log.
      */
     private static double logBase = 0;
     /**
-     * Cache for the logarithm value of the base used for the log
+     * Cache for the logarithm value of the base used for the log.
      */
     private static double logBaseValue;
-    
+
     /**
      * Returns n!
      *
@@ -40,7 +40,7 @@ public class BasicMathFunctions {
      *
      * @param k the number of k-combinations
      * @param n the number of elements
-     * 
+     *
      * @return the number of k-combinations in a set of n elements
      */
     public static double getCombination(int k, int n) {
@@ -102,7 +102,7 @@ public class BasicMathFunctions {
         if (length == 1) {
             return input[0];
         }
-        double indexDouble = percentile * (length-1);
+        double indexDouble = percentile * (length - 1);
         int index = (int) (indexDouble);
         double valueAtIndex = input[index];
         double rest = indexDouble - index;
@@ -134,7 +134,7 @@ public class BasicMathFunctions {
         if (length == 1) {
             return input.get(0);
         }
-        double indexDouble = percentile * (length-1);
+        double indexDouble = percentile * (length - 1);
         int index = (int) (indexDouble);
         double valueAtIndex = input.get(index);
         double rest = indexDouble - index;
@@ -173,13 +173,13 @@ public class BasicMathFunctions {
         }
         return median(deviations);
     }
-    
+
     /**
      * Returns the log of the input in the desired base.
-     * 
+     *
      * @param input the input
      * @param base the log base
-     * 
+     *
      * @return the log value of the input in the derired base.
      */
     public static double log(double input, double base) {

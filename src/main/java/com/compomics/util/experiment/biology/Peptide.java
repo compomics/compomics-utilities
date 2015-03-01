@@ -305,7 +305,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
      * protein mapping was set using the default protein tree of the sequence
-     * factory. Th
+     * factory.
      *
      * @param sequenceMatchingPreferences the sequence matching preferences
      * 
@@ -328,7 +328,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
      * protein mapping was set using the default protein tree of the sequence
-     * factory. The tree will be created if not done previously
+     * factory. The tree will be created if not done previously.
      *
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param waitingHandler the waiting handler used to display progress to the

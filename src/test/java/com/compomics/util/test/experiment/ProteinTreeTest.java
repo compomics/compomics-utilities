@@ -4,7 +4,6 @@ import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
-import com.compomics.util.experiment.biology.MutationMatrix;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -36,15 +35,15 @@ public class ProteinTreeTest extends TestCase {
     /**
      * Tests the import and the mapping of a few peptide sequences.
      *
-     * @throws java.io.FileNotFoundException exception thrown whenever a file is not found.
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * @throws FileNotFoundException thrown whenever a file is not found
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     * @throws ClassNotFoundException thrown whenever an error occurs while
+     * deserializing an object
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the tree
+     * @throws SQLException if an SQLException thrown whenever a problem
+     * occurred while interacting with the tree database
      */
     public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
 
@@ -81,26 +80,28 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-        
+
         proteinTree.close();
         proteinTree.deleteDb();
     }
 
     /**
-     * Tests the mapping of de novo sequence tags to the database
-     * 
-     * @throws java.io.FileNotFoundException exception thrown whenever a file is not found.
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * Tests the mapping of de novo sequence tags to the database.
+     *
+     * @throws FileNotFoundException thrown whenever a file is not found
+     * @throws IOException thrown whenever an error occurs while reading or
+     * writing a file
+     * @throws ClassNotFoundException thrown whenever an error occurs while
+     * deserializing an object
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the tree
+     * @throws SQLException if an SQLException thrown whenever a problem
+     * occurred while interacting with the tree database
+     * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
+     * occurred while interacting with the tree database
      */
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        
+
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = PTMFactory.getInstance();
@@ -130,7 +131,7 @@ public class ProteinTreeTest extends TestCase {
                 throw new IllegalArgumentException("PTM " + ptmName + " not in the PTM factory.");
             }
         }
-        
+
         ArrayList<String> variableModifications = new ArrayList<String>();
         variableModifications.add("oxidation of m");
         variableModifications.add("pyro-cmc");
@@ -140,11 +141,11 @@ public class ProteinTreeTest extends TestCase {
                 throw new IllegalArgumentException("PTM " + ptmName + " not in the PTM factory.");
             }
         }
-        
+
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setMs2MzTolerance(0.5);
-        
+
         TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.5);
         Assert.assertTrue(proteinMapping.isEmpty());
@@ -178,9 +179,9 @@ public class ProteinTreeTest extends TestCase {
         indexes = proteinMapping.get(peptides.get(0)).get("test");
         Assert.assertTrue(indexes.size() == 1);
         Assert.assertTrue(indexes.get(0) == 11);
-        
+
         tagMatcher.clearCache();
-        
+
         proteinTree.close();
         proteinTree.deleteDb();
     }

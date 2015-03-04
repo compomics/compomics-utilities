@@ -352,7 +352,9 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         for (PathKey pathKey : originalKeyToPathMap.keySet()) {
             String newPath = keyToPathMap.get(pathKey);
             String originalPath = originalKeyToPathMap.get(pathKey);
-            if (originalPath == null || !originalPath.equals(newPath)) {
+            if ((newPath != null && originalPath == null)
+                    || (newPath == null && originalPath != null)
+                    || (newPath != null && originalPath != null && !originalPath.equals(newPath))) {
                 changed = true;
                 break;
             }
@@ -419,8 +421,10 @@ public class PathSettingsDialog extends javax.swing.JDialog {
         String name = (String) pathTable.getValueAt(selectedRow, 1);
         PathKey pathKey = nameToKey.get(name);
         File selectedFile = Util.getUserSelectedFolder(this, "Select " + pathKey.getId() + " Folder", keyToPathMap.get(pathKey), pathKey.getId() + " Folder", "Select", false);
-        keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());
-        ((DefaultTableModel) pathTable.getModel()).fireTableDataChanged();
+        if (selectedFile != null) {
+            keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());
+            ((DefaultTableModel) pathTable.getModel()).fireTableDataChanged();
+        }
     }
 
     /**
@@ -428,10 +432,12 @@ public class PathSettingsDialog extends javax.swing.JDialog {
      */
     private void setDefaultPath() {
         File selectedFile = Util.getUserSelectedFolder(this, "Select Default Folder", null, "Default Folder", "Select", false);
-        for (PathKey pathKey : keyToPathMap.keySet()) {
-            keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());
+        if (selectedFile != null) {
+            for (PathKey pathKey : keyToPathMap.keySet()) {
+                keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());
+            }
+            ((DefaultTableModel) pathTable.getModel()).fireTableDataChanged();
         }
-        ((DefaultTableModel) pathTable.getModel()).fireTableDataChanged();
     }
 
     /**

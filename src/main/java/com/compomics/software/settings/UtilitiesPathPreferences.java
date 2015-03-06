@@ -29,6 +29,10 @@ public class UtilitiesPathPreferences {
      * The separator between a path ID and a path.
      */
     public final static String separator = "=";
+    /**
+     * Replacement for the path when not available
+     */
+    public static final String defaultPath = "default";
 
     /**
      * Enum of the paths which can be set in utilities.
@@ -153,6 +157,7 @@ public class UtilitiesPathPreferences {
             throw new IllegalArgumentException("Path " + id + " not recognized");
         } else {
             String path = getPath(line);
+            if (!path.equals(UtilitiesPathPreferences.defaultPath)) {
             File file = new File(path);
             if (!file.exists()) {
                 throw new FileNotFoundException("File " + path + " not found.");
@@ -161,6 +166,7 @@ public class UtilitiesPathPreferences {
                 throw new FileNotFoundException("Found a file when expecting a directory for " + utilitiesPathKey.id + ".");
             }
             setPathPreference(utilitiesPathKey, path);
+            }
         }
     }
 
@@ -311,19 +317,39 @@ public class UtilitiesPathPreferences {
 
         switch (pathKey) {
             case fastaIndexesKey:
-                bw.write(ProteinTreeComponentsFactory.getDefaultDbFolderPath());
+                String toWrite = ProteinTreeComponentsFactory.getDefaultDbFolderPath();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
                 break;
             case geneMappingKey:
-                bw.write(GenePreferences.getGeneMappingFolder().getAbsolutePath());
+                toWrite = GenePreferences.getGeneMappingFolder().getAbsolutePath();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
                 break;
             case prideAnnotationKey:
-                bw.write(PrideObjectsFactory.getPrideFolder());
+                toWrite = PrideObjectsFactory.getPrideFolder();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
                 break;
             case ptmFactoryKey:
-                bw.write(PTMFactory.getSerializationFolder());
+                toWrite = PTMFactory.getSerializationFolder();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
                 break;
             case utilitiesPreferencesKey:
-                bw.write(UtilitiesUserPreferences.getUserPreferencesFolder());
+                toWrite = UtilitiesUserPreferences.getUserPreferencesFolder();
+                if (toWrite == null) {
+                    toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
                 break;
             default:
                 throw new UnsupportedOperationException("Path " + pathKey.id + " not implemented.");
@@ -375,7 +401,7 @@ public class UtilitiesPathPreferences {
         ArrayList<PathKey> result = new ArrayList<PathKey>();
         for (UtilitiesPathPreferences.UtilitiesPathKey utilitiesPathKey : UtilitiesPathPreferences.UtilitiesPathKey.values()) {
             String folder = UtilitiesPathPreferences.getPathPreference(utilitiesPathKey);
-            if (!testPath(folder)) {
+            if (folder != null && !testPath(folder)) {
                 result.add(utilitiesPathKey);
             }
         }

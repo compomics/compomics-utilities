@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>3.45.40</version>
+    <version>3.45.41</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
     <description>Open-source java library for computational proteomics</description>

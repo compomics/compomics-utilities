@@ -92,9 +92,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
 
         if (cometParameters.getEnzymeType() != null) {
             if (cometParameters.getEnzymeType() == 1) {
-                enzymeTypeCmb.setSelectedIndex(0);
-            } else if (cometParameters.getEnzymeType() == 2) {
                 enzymeTypeCmb.setSelectedIndex(1);
+            } else if (cometParameters.getEnzymeType() == 2) {
+                enzymeTypeCmb.setSelectedIndex(0);
             } else if (cometParameters.getEnzymeType() == 8) {
                 enzymeTypeCmb.setSelectedIndex(2);
             } else if (cometParameters.getEnzymeType() == 9) {
@@ -194,9 +194,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
 
         int selectedIndex = enzymeTypeCmb.getSelectedIndex();
         if (selectedIndex == 0) {
-            result.setEnzymeType(1);
-        } else if (selectedIndex == 1) {
             result.setEnzymeType(2);
+        } else if (selectedIndex == 1) {
+            result.setEnzymeType(1);
         } else if (selectedIndex == 2) {
             result.setEnzymeType(8);
         } else if (selectedIndex == 3) {

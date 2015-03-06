@@ -167,7 +167,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             if (maxPeakCount != myriMatchParameters.getMaxPeakCount()) {
                 return false;
             }
-            if (outputFormat.equalsIgnoreCase(myriMatchParameters.getOutputFormat())) {
+            if (!outputFormat.equalsIgnoreCase(myriMatchParameters.getOutputFormat())) {
                 return false;
             }
 

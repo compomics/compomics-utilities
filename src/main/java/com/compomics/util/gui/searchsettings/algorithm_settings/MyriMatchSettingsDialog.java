@@ -3,9 +3,11 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.JOptionEditorPane;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the MyriMatch specific settings.
@@ -48,6 +50,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         computeXCorrCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         terminiCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -257,6 +260,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         fragmentationMethodCmb = new javax.swing.JComboBox();
         maxPeakCountLabel = new javax.swing.JLabel();
         maxPeakCountTxt = new javax.swing.JTextField();
+        outputFormatLabel = new javax.swing.JLabel();
+        outputFormatCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -422,6 +427,15 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
             }
         });
 
+        outputFormatLabel.setText("Output Format");
+
+        outputFormatCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mzIdentML", "pepXML" }));
+        outputFormatCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputFormatCmbActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -499,7 +513,11 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxPeakCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxPeakCountTxt)))
+                        .addComponent(maxPeakCountTxt))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(outputFormatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(outputFormatCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -570,6 +588,10 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPeakCountLabel)
                     .addComponent(maxPeakCountTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputFormatLabel)
+                    .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -823,6 +845,24 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_maxPeakCountTxtKeyReleased
 
     /**
+     * Show warning if pepXML is selected.
+     * 
+     * @param evt 
+     */
+    private void outputFormatCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatCmbActionPerformed
+        if (outputFormatCmb.getSelectedIndex() != 0 && this.isVisible()) {
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(MyriMatchSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "Note that the MyriMatch pepXML format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            "Format Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
+    }//GEN-LAST:event_outputFormatCmbActionPerformed
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -919,6 +959,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel numberTerminiLabel;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
+    private javax.swing.JComboBox outputFormatCmb;
+    private javax.swing.JLabel outputFormatLabel;
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthLabel;
     private javax.swing.JLabel precursorMassDividerLabel;

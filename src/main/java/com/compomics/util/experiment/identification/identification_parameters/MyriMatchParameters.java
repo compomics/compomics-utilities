@@ -92,6 +92,10 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * The max number of peaks to use.
      */
     private Integer maxPeakCount = 100;
+    /**
+     * The output format.
+     */
+    private String outputFormat = "mzIdentML";
 
     /**
      * Constructor.
@@ -108,59 +112,62 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
 
         if (identificationAlgorithmParameter instanceof MyriMatchParameters) {
-            MyriMatchParameters msgfParameters = (MyriMatchParameters) identificationAlgorithmParameter;
-            if (minPeptideLength != msgfParameters.getMinPeptideLength()) {
+            MyriMatchParameters myriMatchParameters = (MyriMatchParameters) identificationAlgorithmParameter;
+            if (minPeptideLength != myriMatchParameters.getMinPeptideLength()) {
                 return false;
             }
-            if (maxPeptideLength != msgfParameters.getMaxPeptideLength()) {
+            if (maxPeptideLength != myriMatchParameters.getMaxPeptideLength()) {
                 return false;
             }
-            if (numberOfSpectrumMatches != msgfParameters.getNumberOfSpectrumMatches()) {
+            if (numberOfSpectrumMatches != myriMatchParameters.getNumberOfSpectrumMatches()) {
                 return false;
             }
-            double diff = Math.abs(ticCutoffPercentage - msgfParameters.getTicCutoffPercentage());
+            double diff = Math.abs(ticCutoffPercentage - myriMatchParameters.getTicCutoffPercentage());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (maxDynamicMods != msgfParameters.getMaxDynamicMods()) {
+            if (maxDynamicMods != myriMatchParameters.getMaxDynamicMods()) {
                 return false;
             }
-            if (minTerminiCleavages != msgfParameters.getMinTerminiCleavages()) {
+            if (minTerminiCleavages != myriMatchParameters.getMinTerminiCleavages()) {
                 return false;
             }
-            diff = Math.abs(minPrecursorMass - msgfParameters.getMinPrecursorMass());
+            diff = Math.abs(minPrecursorMass - myriMatchParameters.getMinPrecursorMass());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            diff = Math.abs(maxPrecursorMass - msgfParameters.getMaxPrecursorMass());
+            diff = Math.abs(maxPrecursorMass - myriMatchParameters.getMaxPrecursorMass());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (useSmartPlusThreeModel != msgfParameters.getUseSmartPlusThreeModel()) {
+            if (useSmartPlusThreeModel != myriMatchParameters.getUseSmartPlusThreeModel()) {
                 return false;
             }
-            if (computeXCorr != msgfParameters.getComputeXCorr()) {
+            if (computeXCorr != myriMatchParameters.getComputeXCorr()) {
                 return false;
             }
-            if (numIntensityClasses != msgfParameters.getNumIntensityClasses()) {
+            if (numIntensityClasses != myriMatchParameters.getNumIntensityClasses()) {
                 return false;
             }
-            if (classSizeMultiplier != msgfParameters.getClassSizeMultiplier()) {
+            if (classSizeMultiplier != myriMatchParameters.getClassSizeMultiplier()) {
                 return false;
             }
-            if (numberOfBatches != msgfParameters.getNumberOfBatches()) {
+            if (numberOfBatches != myriMatchParameters.getNumberOfBatches()) {
                 return false;
             }
-            if (lowerIsotopeCorrection != msgfParameters.getLowerIsotopeCorrectionRange()) {
+            if (lowerIsotopeCorrection != myriMatchParameters.getLowerIsotopeCorrectionRange()) {
                 return false;
             }
-            if (upperIsotopeCorrection != msgfParameters.getUpperIsotopeCorrectionRange()) {
+            if (upperIsotopeCorrection != myriMatchParameters.getUpperIsotopeCorrectionRange()) {
                 return false;
             }
-            if (!fragmentationRule.equalsIgnoreCase(msgfParameters.getFragmentationRule())) {
+            if (!fragmentationRule.equalsIgnoreCase(myriMatchParameters.getFragmentationRule())) {
                 return false;
             }
-            if (maxPeakCount != msgfParameters.getMaxPeakCount()) {
+            if (maxPeakCount != myriMatchParameters.getMaxPeakCount()) {
+                return false;
+            }
+            if (outputFormat.equalsIgnoreCase(myriMatchParameters.getOutputFormat())) {
                 return false;
             }
 
@@ -238,6 +245,9 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_PEAK_COUNT=");
         output.append(maxPeakCount);
+        output.append(newLine);
+        output.append("OUTPUT_FORMAT=");
+        output.append(outputFormat);
         output.append(newLine);
 
         return output.toString();
@@ -480,7 +490,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      * Set the number of batches per node to strive for when using the MPI-based
      * parallelization features.
      *
-     * @param numberOfBatches the number of batches per node 
+     * @param numberOfBatches the number of batches per node
      */
     public void setNumberOfBatches(Integer numberOfBatches) {
         this.numberOfBatches = numberOfBatches;
@@ -559,6 +569,27 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      */
     public void setMaxPeakCount(Integer maxPeakCount) {
         this.maxPeakCount = maxPeakCount;
+    }
+
+    /**
+     * Returns the output format.
+     *
+     * @return the outputFormat
+     */
+    public String getOutputFormat() {
+        if (outputFormat == null) {
+            outputFormat = "mzIdentML";
+        }
+        return outputFormat;
+    }
+
+    /**
+     * Set the output format.
+     *
+     * @param outputFormat the outputFormat to set
+     */
+    public void setOutputFormat(String outputFormat) {
+        this.outputFormat = outputFormat;
     }
 
     /**

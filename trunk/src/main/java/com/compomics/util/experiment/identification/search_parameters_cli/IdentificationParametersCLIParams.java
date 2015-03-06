@@ -142,6 +142,7 @@ public enum IdentificationParametersCLIParams {
     MYRIMATCH_CLASS_MULTIPLIER("myrimatch_class_multiplier", "MyriMatch class multiplier option, default is '2'.", false),
     MYRIMATCH_NUM_BATCHES("myrimatch_num_batches", "MyriMatch number of batches option, default is '50'.", false),
     MYRIMATCH_MAX_PEAK_COUNT("myrimatch_max_peak", "MyriMatch max number of peaks option, default is '100'.", false),
+    MYRIMATCH_OUTPUT_FORMAT("myrimatch_output", "MyriMatch output format option, mzIdentML or pepXML, default is 'mzIdentML'.", false),
     //////////////////////////////////
     // Comet specific parameters
     //////////////////////////////////

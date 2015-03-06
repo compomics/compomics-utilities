@@ -632,6 +632,10 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             myriMatchParameters.setMaxPeakCount(option);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id);
+            myriMatchParameters.setOutputFormat(arg);
+        }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
 
@@ -2016,6 +2020,13 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id);
+            List<String> supportedInput = Arrays.asList("mzIdentML", "pepXML");
+            if (!isInList(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id, arg, supportedInput)) {
                 return false;
             }
         }

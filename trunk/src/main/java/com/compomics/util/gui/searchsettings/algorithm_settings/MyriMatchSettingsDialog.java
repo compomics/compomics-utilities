@@ -125,6 +125,12 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         if (myriMatchParameters.getMaxPeakCount() != null) {
             maxPeakCountTxt.setText(myriMatchParameters.getMaxPeakCount() + "");
         }
+
+        if (myriMatchParameters.getOutputFormat().equalsIgnoreCase("mzIdentML")) {
+            outputFormatCmb.setSelectedIndex(0);
+        } else {
+            outputFormatCmb.setSelectedIndex(1);
+        }
     }
 
     /**
@@ -211,6 +217,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
         if (!input.equals("")) {
             result.setMaxPeakCount(new Integer(input));
         }
+
+        result.setOutputFormat((String) outputFormatCmb.getSelectedItem());
 
         return result;
     }
@@ -846,8 +854,8 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Show warning if pepXML is selected.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void outputFormatCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatCmbActionPerformed
         if (outputFormatCmb.getSelectedIndex() != 0 && this.isVisible()) {

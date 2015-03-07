@@ -30,7 +30,7 @@ public class UtilitiesPathPreferences {
      */
     public final static String separator = "=";
     /**
-     * Replacement for the path when not available
+     * Replacement for the path when not available.
      */
     public static final String defaultPath = "default";
 
@@ -158,14 +158,14 @@ public class UtilitiesPathPreferences {
         } else {
             String path = getPath(line);
             if (!path.equals(UtilitiesPathPreferences.defaultPath)) {
-            File file = new File(path);
-            if (!file.exists()) {
-                throw new FileNotFoundException("File " + path + " not found.");
-            }
-            if (utilitiesPathKey.isDirectory && !file.isDirectory()) {
-                throw new FileNotFoundException("Found a file when expecting a directory for " + utilitiesPathKey.id + ".");
-            }
-            setPathPreference(utilitiesPathKey, path);
+                File file = new File(path);
+                if (!file.exists()) {
+                    throw new FileNotFoundException("File " + path + " not found.");
+                }
+                if (utilitiesPathKey.isDirectory && !file.isDirectory()) {
+                    throw new FileNotFoundException("Found a file when expecting a directory for " + utilitiesPathKey.id + ".");
+                }
+                setPathPreference(utilitiesPathKey, path);
             }
         }
     }
@@ -360,10 +360,11 @@ public class UtilitiesPathPreferences {
 
     /**
      * Tests whether it is possible to write in a destination folder.
-     * 
+     *
      * @param destinationFolder the folder to test
-     * 
-     * @return a boolean indicating whether it is possible to write in the destination folder
+     *
+     * @return a boolean indicating whether it is possible to write in the
+     * destination folder
      */
     public static boolean testPath(String destinationFolder) {
         try {

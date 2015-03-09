@@ -302,6 +302,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                 // create the peptide assumption
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaEValue, Util.getFileName(msAmandaCsvFile));
+                peptideAssumption.setRawScore(msAmandaScore);
 
                 MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore);
 
@@ -313,6 +314,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                        newAssumption.setRawScore(msAmandaScore);
                         peptideAssumption.addUrParam(scoreParam);
                         currentMatch.addHit(Advocate.msAmanda.getIndex(), newAssumption, false);
                     }

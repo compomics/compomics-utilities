@@ -74,7 +74,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     }
 
     /**
-     * Constructor for a peptide assumption. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
+     * Constructor for a peptide assumption.
      *
      * @param aPeptide the theoretic peptide
      * @param rank the identification rank

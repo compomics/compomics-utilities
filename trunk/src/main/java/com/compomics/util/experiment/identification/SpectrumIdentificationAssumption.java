@@ -38,6 +38,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * The identification file.
      */
     protected String identificationFile;
+    /**
+     * The raw score as provided by the identification algorithm.
+     */
+    protected Double rawScore;
 
     /**
      * Get the identification rank.
@@ -178,4 +182,24 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public IonMatch getPrecursorMatch(Peak precursorPeak) {
         return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge());
     }
+
+    /**
+     * Returns the raw score as provided by the identification algorithm.
+     * 
+     * @return the raw score as provided by the identification algorithm
+     */
+    public Double getRawScore() {
+        return rawScore;
+    }
+
+    /**
+     * Sets the raw score as provided by the identification algorithm.
+     * 
+     * @param rawScore the raw score as provided by the identification algorithm
+     */
+    public void setRawScore(Double rawScore) {
+        this.rawScore = rawScore;
+    }
+    
+    
 }

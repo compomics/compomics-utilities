@@ -342,7 +342,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     //TODO: select the "best" algorithm or include all?
                     // Any way of doing that more elegantly?
                     // Scaffold
-                    Double eValue = scoreMap.get("MS:1001568");
+                    Double eValue = scoreMap.get("MS:1001568"), rawScore = null;
                     if (eValue != null) {
                         advocate = Advocate.scaffold;
                         String name = advocate.getName();
@@ -358,6 +358,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         // PeptideShaker
                         eValue = scoreMap.get("MS:1002466");
                         if (eValue != null) {
+                            rawScore = eValue;
                             eValue = Math.pow(10, -eValue);
                             advocate = Advocate.peptideShaker;
                             String name = advocate.getName();
@@ -371,6 +372,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         } else {
                             eValue = scoreMap.get("MS:1002467");
                             if (eValue != null) {
+                                rawScore = eValue;
                                 eValue = Math.pow(10, -eValue);
                                 advocate = Advocate.peptideShaker;
                                 String name = advocate.getName();
@@ -398,6 +400,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                 } else {
                                     eValue = scoreMap.get("MS:1001331");
                                     if (eValue != null) {
+                                        rawScore = eValue;
                                         eValue = Math.pow(10, -eValue);
                                         advocate = Advocate.xtandem;
                                         String name = advocate.getName();
@@ -441,6 +444,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                 // MS Amanda
                                                 eValue = scoreMap.get("MS:1002319");
                                                 if (eValue != null) {
+                                                    rawScore = eValue;
                                                     eValue = Math.pow(10, eValue);
                                                     advocate = Advocate.msAmanda;
                                                     String name = advocate.getName();
@@ -469,6 +473,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                         // Byonic
                                                         eValue = scoreMap.get("MS:1002262");
                                                         if (eValue != null) {
+                                                            rawScore = eValue;
                                                             eValue = Math.pow(10, -eValue);
                                                             advocate = Advocate.byonic;
                                                             String name = advocate.getName();
@@ -482,6 +487,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                         } else {
                                                             eValue = scoreMap.get("MS:1002311");
                                                             if (eValue != null) {
+                                                                rawScore = eValue;
                                                                 eValue = Math.pow(10, -eValue);
                                                                 advocate = Advocate.byonic;
                                                                 String name = advocate.getName();
@@ -507,6 +513,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                 } else {
                                                                     eValue = scoreMap.get("MS:1002309");
                                                                     if (eValue != null) {
+                                                                        rawScore = eValue;
                                                                         eValue = Math.pow(10, -eValue);
                                                                         advocate = Advocate.byonic;
                                                                         String name = advocate.getName();
@@ -520,6 +527,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                     } else {
                                                                         eValue = scoreMap.get("MS:1002266");
                                                                         if (eValue != null) {
+                                                                            rawScore = eValue;
                                                                             eValue = Math.pow(10, eValue);
                                                                             advocate = Advocate.byonic;
                                                                             String name = advocate.getName();
@@ -548,6 +556,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             } else {
                                                                                 eValue = scoreMap.get("MS:1002252");
                                                                                 if (eValue != null) {
+                                                                                    rawScore = eValue;
                                                                                     eValue = Math.pow(10, -eValue);
                                                                                     advocate = Advocate.comet;
                                                                                     String name = advocate.getName();
@@ -649,6 +658,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                             } else {
                                                                                                                 eValue = scoreMap.get("MS:1001171");
                                                                                                                 if (eValue != null) {
+                                                                                                                    rawScore = eValue;
                                                                                                                     eValue = Math.pow(10, -eValue);
                                                                                                                     advocate = Advocate.mascot;
                                                                                                                     String name = advocate.getName();
@@ -664,6 +674,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                     // MyriMatch
                                                                                                                     eValue = scoreMap.get("MS:1001589");
                                                                                                                     if (eValue != null) {
+                                                                                                                        rawScore = eValue;
                                                                                                                         eValue = Math.pow(Math.E, -eValue);
                                                                                                                         advocate = Advocate.myriMatch;
                                                                                                                         String name = advocate.getName();
@@ -677,6 +688,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                     } else {
                                                                                                                         eValue = scoreMap.get("MS:1001590");
                                                                                                                         if (eValue != null) {
+                                                                                                                            rawScore = eValue;
                                                                                                                             eValue = Math.pow(Math.E, -eValue);
                                                                                                                             advocate = Advocate.myriMatch;
                                                                                                                             String name = advocate.getName();
@@ -718,6 +730,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                 } else {
                                                                                                                                     eValue = scoreMap.get("MS:1001950");
                                                                                                                                     if (eValue != null) {
+                                                                                                                                        rawScore = eValue;
                                                                                                                                         eValue = Math.pow(10, -eValue);
                                                                                                                                         advocate = Advocate.peaks;
                                                                                                                                         String name = advocate.getName();
@@ -745,6 +758,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                         } else {
                                                                                                                                             eValue = scoreMap.get("MS:1001395");
                                                                                                                                             if (eValue != null) {
+                                                                                                                                                rawScore = eValue;
                                                                                                                                                 eValue = Math.pow(2, -eValue);
                                                                                                                                                 advocate = Advocate.phenyx;
                                                                                                                                                 String name = advocate.getName();
@@ -760,6 +774,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                 // Profound
                                                                                                                                                 eValue = scoreMap.get("MS:1001499");
                                                                                                                                                 if (eValue != null) {
+                                                                                                                                                    rawScore = eValue;
                                                                                                                                                     eValue = Math.pow(10, -eValue);
                                                                                                                                                     advocate = Advocate.proFound;
                                                                                                                                                     String name = advocate.getName();
@@ -773,6 +788,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                 } else {
                                                                                                                                                     eValue = scoreMap.get("MS:1001498");
                                                                                                                                                     if (eValue != null) {
+                                                                                                                                                        rawScore = eValue;
                                                                                                                                                         eValue = Math.pow(2, -eValue);
                                                                                                                                                         advocate = Advocate.proFound;
                                                                                                                                                         String name = advocate.getName();
@@ -788,6 +804,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                         // ProteinLynx
                                                                                                                                                         eValue = scoreMap.get("MS:1001570");
                                                                                                                                                         if (eValue != null) {
+                                                                                                                                                            rawScore = eValue;
                                                                                                                                                             eValue = Math.pow(10, eValue);
                                                                                                                                                             advocate = Advocate.proteinLynx;
                                                                                                                                                             String name = advocate.getName();
@@ -801,6 +818,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                         } else {
                                                                                                                                                             eValue = scoreMap.get("MS:1001569");
                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                 eValue = Math.pow(10, -eValue);
                                                                                                                                                                 advocate = Advocate.proteinLynx;
                                                                                                                                                                 String name = advocate.getName();
@@ -828,6 +846,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                 } else {
                                                                                                                                                                     eValue = scoreMap.get("MS:1002044");
                                                                                                                                                                     if (eValue != null) {
+                                                                                                                                                                        rawScore = eValue;
                                                                                                                                                                         eValue = Math.pow(10, -eValue);
                                                                                                                                                                         advocate = Advocate.proteinProspector;
                                                                                                                                                                         String name = advocate.getName();
@@ -855,6 +874,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                         } else {
                                                                                                                                                                             eValue = scoreMap.get("MS:1001504");
                                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                                 eValue = Math.pow(10, -eValue);
                                                                                                                                                                                 advocate = Advocate.proteinScape;
                                                                                                                                                                                 String name = advocate.getName();
@@ -881,6 +901,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                 } else {
                                                                                                                                                                                     eValue = scoreMap.get("MS:1001155");
                                                                                                                                                                                     if (eValue != null) {
+                                                                                                                                                                                        rawScore = eValue;
                                                                                                                                                                                         eValue = Math.pow(10, -eValue);
                                                                                                                                                                                         advocate = Advocate.sequest;
                                                                                                                                                                                         String name = advocate.getName();
@@ -906,6 +927,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                         } else {
                                                                                                                                                                                             eValue = scoreMap.get("MS:1002248");
                                                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                                                 eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                 advocate = Advocate.sequest;
                                                                                                                                                                                                 String name = advocate.getName();
@@ -921,6 +943,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                 // SQID
                                                                                                                                                                                                 eValue = scoreMap.get("MS:1001887");
                                                                                                                                                                                                 if (eValue != null) {
+                                                                                                                                                                                                    rawScore = eValue;
                                                                                                                                                                                                     eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                     advocate = Advocate.sqid;
                                                                                                                                                                                                     String name = advocate.getName();
@@ -936,6 +959,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                     // Sonar
                                                                                                                                                                                                     eValue = scoreMap.get("MS:1001502");
                                                                                                                                                                                                     if (eValue != null) {
+                                                                                                                                                                                                        rawScore = eValue;
                                                                                                                                                                                                         eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                         advocate = Advocate.sonar;
                                                                                                                                                                                                         String name = advocate.getName();
@@ -951,6 +975,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                         // SpectraST
                                                                                                                                                                                                         eValue = scoreMap.get("MS:1001417");
                                                                                                                                                                                                         if (eValue != null) {
+                                                                                                                                                                                                            rawScore = eValue;
                                                                                                                                                                                                             eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                             advocate = Advocate.spectraST;
                                                                                                                                                                                                             String name = advocate.getName();
@@ -966,6 +991,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                             // SpectrumMill
                                                                                                                                                                                                             eValue = scoreMap.get("MS:1001572");
                                                                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                                                                 eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                                 advocate = Advocate.spectrumMill;
                                                                                                                                                                                                                 String name = advocate.getName();
@@ -1019,6 +1045,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                         } else {
                                                                                                                                                                                                                             eValue = scoreMap.get("MS:1001492");
                                                                                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                                                                                 eValue = Math.pow(10, -eValue);
                                                                                                                                                                                                                                 advocate = Advocate.percolator;
                                                                                                                                                                                                                                 String name = advocate.getName();
@@ -1062,6 +1089,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                         // Generic probability/confidence
                                                                                                                                                                                                                                         eValue = scoreMap.get("MS:1002357");
                                                                                                                                                                                                                                         if (eValue != null) {
+                                                                                                                                                                                                                                            rawScore = eValue;
                                                                                                                                                                                                                                             eValue = 1 - eValue;
                                                                                                                                                                                                                                             advocate = getAdvocate();
                                                                                                                                                                                                                                             String name = advocate.getName();
@@ -1077,6 +1105,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                                                                                                                                                                             // Generic probability/confidence
                                                                                                                                                                                                                                             eValue = scoreMap.get("MS:1002352");
                                                                                                                                                                                                                                             if (eValue != null) {
+                                                                                                                                                                                                                                                rawScore = eValue;
                                                                                                                                                                                                                                                 eValue = 1 - eValue;
                                                                                                                                                                                                                                                 advocate = getAdvocate();
                                                                                                                                                                                                                                                 String name = advocate.getName();
@@ -1152,6 +1181,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), peptideCharge, eValue, mzIdentMLFileName);
+                    
+                    if (rawScore != null) {
+                        peptideAssumption.setRawScore(rawScore);
+                    }
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
                         ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
@@ -1161,6 +1194,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                 newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                             }
                             PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                    if (rawScore != null) {
+                        newAssumption.setRawScore(rawScore);
+                    }
                             currentMatch.addHit(advocate.getIndex(), newAssumption, false);
                         }
                     } else {

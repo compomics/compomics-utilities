@@ -424,6 +424,7 @@ public class SpectrumMatch extends IdentificationMatch {
                         for (Peptide peptide : proteinMapping.keySet()) {
                             PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
                                     assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
+                            peptideAssumption.setRawScore(score);
                             peptideAssumption.addUrParam(tagAssumption);
                             spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
                         }

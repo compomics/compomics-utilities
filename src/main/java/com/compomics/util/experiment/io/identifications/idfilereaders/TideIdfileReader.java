@@ -201,7 +201,10 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
         }
 
         // check if all the required header are found
-        if (scanNumberIndex == -1 || chargeIndex == -1 /**|| exactPValueIndex == -1**/ || xcorrRank == -1 || sequenceIndex == -1) {
+        if (scanNumberIndex == -1 || chargeIndex == -1 /**
+                 * || exactPValueIndex == -1*
+                 */
+                || xcorrRank == -1 || sequenceIndex == -1) {
             throw new IllegalArgumentException("Mandatory columns are missing in the Tide tsv file. Please check the file!");
         }
 
@@ -223,7 +226,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 int scanNumber = Integer.valueOf(elements[scanNumberIndex]);
                 String modifiedPeptideSequence = elements[sequenceIndex].toUpperCase();
                 int charge = Integer.valueOf(elements[chargeIndex]);
-                
+
                 int rank;
                 if (exactPValueIndex != -1) {
                     rank = Integer.valueOf(elements[xcorrRank]);
@@ -231,17 +234,18 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                     rank = Integer.valueOf(elements[xcorrRank]);
                 }
 
-                double tideEValue;
+                double tideEValue, rawScore;
                 if (exactPValueIndex != -1) {
                     String scoreAsText = elements[exactPValueIndex];
                     tideEValue = Util.readDoubleAsString(scoreAsText);
+                    rawScore = tideEValue;
                 } else {
                     String scoreAsText = elements[xcorrScoreIndex];
-                    double xcorrScore = Util.readDoubleAsString(scoreAsText);
-                    if (xcorrScore < 0) {
+                    rawScore = Util.readDoubleAsString(scoreAsText);
+                    if (rawScore < 0) {
                         tideEValue = 100;
                     } else {
-                        tideEValue = Math.pow(10, -xcorrScore); // convert xcorr score to e-value
+                        tideEValue = Math.pow(10, -rawScore); // convert xcorr score to a kind of e-value
                     }
                 }
 
@@ -305,9 +309,8 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
                 // create the peptide assumption
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.tide.getIndex(), peptideCharge, tideEValue, Util.getFileName(tideTsvFile));
+                peptideAssumption.setRawScore(rawScore);
 
-//                MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore); // @TODO: add Tide scores!
-//
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
                     ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
@@ -316,7 +319,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                        //peptideAssumption.addUrParam(scoreParam);
+                        newAssumption.setRawScore(rawScore);
                         currentMatch.addHit(Advocate.tide.getIndex(), newAssumption, false);
                     }
                 } else {

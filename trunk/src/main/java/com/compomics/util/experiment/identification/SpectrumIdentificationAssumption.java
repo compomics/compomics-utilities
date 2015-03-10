@@ -78,10 +78,11 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public double getScore() {
         return score;
     }
-    
+
     /**
-     * Sets the score. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
-     * 
+     * Sets the score. Note: if PsmScores.scoreRoundingDecimal is not null the
+     * scored will be floored accordingly.
+     *
      * @param score the score
      */
     public void setScore(double score) {
@@ -185,7 +186,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
 
     /**
      * Returns the raw score as provided by the identification algorithm.
-     * 
+     *
      * @return the raw score as provided by the identification algorithm
      */
     public Double getRawScore() {
@@ -194,12 +195,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
 
     /**
      * Sets the raw score as provided by the identification algorithm.
-     * 
+     *
      * @param rawScore the raw score as provided by the identification algorithm
      */
     public void setRawScore(Double rawScore) {
         this.rawScore = rawScore;
     }
-    
-    
 }

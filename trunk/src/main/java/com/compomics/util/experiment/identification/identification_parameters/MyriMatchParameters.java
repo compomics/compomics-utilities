@@ -607,13 +607,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             myriMatchEnzymeAsString = "unspecific cleavage";
         } else if (enzymeName.equalsIgnoreCase("Trypsin")
                 || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
-            myriMatchEnzymeAsString = "Trypsin/P";
+            myriMatchEnzymeAsString = "Trypsin";
         } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")
                 || enzymeName.equalsIgnoreCase("Chymotrypsin, no P rule (FYWL)") // not strictly correct, but better than no support...
                 || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
             myriMatchEnzymeAsString = "Chymotrypsin";
         } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
-            myriMatchEnzymeAsString = "Lys-C";
+            myriMatchEnzymeAsString = "Lys-C/P";
         } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
                 || enzymeName.equalsIgnoreCase("Glu-C") // again, bit really the same enzyme...
                 || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
@@ -630,13 +630,13 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         } else if (enzymeName.equalsIgnoreCase("Formic Acid")) {
             myriMatchEnzymeAsString = "Formic_acid";
         } else if (enzymeName.equalsIgnoreCase("Lys-C, no P rule")) {
-            myriMatchEnzymeAsString = "Lys-C/P";
+            myriMatchEnzymeAsString = "Lys-C";
         } else if (enzymeName.equalsIgnoreCase("Pepsin A")) {
             myriMatchEnzymeAsString = "Pepsin A";
         } else if (enzymeName.equalsIgnoreCase("Trypsin + Chymotrypsin (FYWLKR)")) {
             myriMatchEnzymeAsString = "TrypChymo";
         } else if (enzymeName.equalsIgnoreCase("Trypsin, no P rule")) {
-            myriMatchEnzymeAsString = "Trypsin";
+            myriMatchEnzymeAsString = "Trypsin/P";
         } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
             myriMatchEnzymeAsString = "Asp-N";
         }

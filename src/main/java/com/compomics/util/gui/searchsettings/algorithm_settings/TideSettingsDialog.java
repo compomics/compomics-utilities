@@ -3,9 +3,11 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.TideParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.JOptionEditorPane;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the Tide specific settings.
@@ -749,6 +751,11 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         outputFormatLabel.setText("Output Format");
 
         outputFormatCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Text", "SQT", "pepxml", "mzIdentML", "Percolator input file" }));
+        outputFormatCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputFormatComboActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
@@ -1159,6 +1166,25 @@ public class TideSettingsDialog extends javax.swing.JDialog {
     private void useFlankingCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useFlankingCmbActionPerformed
         validateInput(false);
     }//GEN-LAST:event_useFlankingCmbActionPerformed
+
+    /**
+     * Check if the output format is compatible with PeptideShaker.
+     * 
+     * @param evt 
+     */
+    private void outputFormatComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatComboActionPerformed
+        if (outputFormatCombo.getSelectedIndex() != 0 && this.isVisible()) {
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(TideSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "Note that the Tide " + (String) outputFormatCombo.getSelectedItem()
+                            + " format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            "Format Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
+    }//GEN-LAST:event_outputFormatComboActionPerformed
 
     /**
      * Inspects the parameter validity.

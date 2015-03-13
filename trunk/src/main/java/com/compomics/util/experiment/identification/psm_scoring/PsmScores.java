@@ -1,9 +1,7 @@
 package com.compomics.util.experiment.identification.psm_scoring;
 
 import com.compomics.util.experiment.ShotgunProtocol;
-import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAIntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.AAMS2MzFidelityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.ComplementarityScore;
@@ -12,9 +10,8 @@ import com.compomics.util.experiment.identification.psm_scoring.psm_scores.MS2Mz
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.PrecursorAccuracy;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 
 /**
  * Enum listing the PSM scores implemented in compomics utilities.
@@ -105,26 +102,22 @@ public enum PsmScores {
     private static PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
 
     /**
-     * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. The mass interquartile distance of the fragment ion mass
-     * error is used as m/z fidelity score. The score is forced to decrease the
+     * Scores the match between the given peptide and spectrum using the given score. The score is forced to decrease with the
      * quality of the match by taking the opposite value when relevant.
      *
      * @param peptide the peptide of interest
+     * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param iontypes the fragment ions to annotate
-     * @param neutralLosses the neutral losses to annotate
-     * @param charges the fragment charges to look for
-     * @param identificationCharge the precursor charge
      * @param shotgunProtocol information on the protocol used
+     * @param identificationParameters the identification parameters
+     * @param specificAnnotationPreferences the annotation preferences specific to this psm
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getDecreasingScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, int scoreIndex) {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
-        double score = getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol, psmScore);
+        double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
         if (psmScore.increasing) {
             return -score;
         }
@@ -132,60 +125,52 @@ public enum PsmScores {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. The mass interquartile distance of the fragment ion mass
-     * error is used as m/z fidelity score.
+     * Scores the match between the given peptide and spectrum using the given score.
      *
      * @param peptide the peptide of interest
+     * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param iontypes the fragment ions to annotate
-     * @param neutralLosses the neutral losses to annotate
-     * @param charges the fragment charges to look for
-     * @param identificationCharge the precursor charge
      * @param shotgunProtocol information on the protocol used
+     * @param identificationParameters the identification parameters
+     * @param specificAnnotationPreferences the annotation preferences specific to this psm
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, int scoreIndex) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol, psmScore);
+        return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using an m/z
-     * fidelity score. The mass interquartile distance of the fragment ion mass
-     * error is used as m/z fidelity score.
+     * Scores the match between the given peptide and spectrum using the given score.
      *
      * @param peptide the peptide of interest
+     * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
-     * @param iontypes the fragment ions to annotate
-     * @param neutralLosses the neutral losses to annotate
-     * @param charges the fragment charges to look for
-     * @param identificationCharge the precursor charge
      * @param shotgunProtocol information on the protocol used
+     * @param identificationParameters the identification parameters
+     * @param specificAnnotationPreferences the annotation preferences specific to this psm
      * @param psmScore the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, ShotgunProtocol shotgunProtocol, PsmScores psmScore) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, PsmScores psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return PrecursorAccuracy.getScore(peptide, identificationCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm());
+                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm());
             case ms2_mz_fidelity:
-                return MS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
+                return MS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:
-                return AAMS2MzFidelityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
+                return AAMS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case intensity:
-                return IntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
+                return IntensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_intensity:
-                return AAIntensityRankScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
+                return AAIntensityRankScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case complementarity:
-                return ComplementarityScore.getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, shotgunProtocol.getMs2Resolution(), peptideSpectrumAnnotator);
+                return ComplementarityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             default:
                 throw new UnsupportedOperationException("Score not implemented.");
         }

@@ -320,6 +320,7 @@ public class ObjectsCache {
      * Can be null. Progress will be displayed as secondary.
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while

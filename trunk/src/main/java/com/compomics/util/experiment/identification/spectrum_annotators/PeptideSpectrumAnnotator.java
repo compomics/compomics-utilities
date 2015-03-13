@@ -13,8 +13,9 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
+import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -66,19 +67,13 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given peak.
      *
      * @param peptide The peptide
-     * @param iontypes The fragment ions selected
-     * @param charges The charges of the fragment to search for
-     * @param precursorCharge The precursor charge as deduced by the search
-     * engine
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * maximal position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak) {
-        setPeptide(peptide, precursorCharge);
-        return matchPeak(iontypes, charges, precursorCharge, neutralLosses, peak);
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationPreferences specificAnnotationPreferences, Peak peak) {
+        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
+        return matchPeak(specificAnnotationPreferences, peak);
     }
 
     /**
@@ -87,65 +82,53 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
-     * @param precursorCharge the precursor charge
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param spectrum The spectrum to match
      * @param peptide The peptide of interest
-     * @param intensityLimit The intensity limit to use
-     * @param mzTolerance The m/z tolerance to use
-     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
-     * in Da
-     * @param pickMostAccuratePeak if there are more than one matching peak for
-     * a given annotation setting this value to true results in the most
-     * accurate peak being annotated, while setting this to false annotates the
-     * most intense peak
+     * 
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
-            int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, intensityLimit);
+            setSpectrum(spectrum, annotationPreferences.getAnnotationIntensityLimit());
         }
 
-        setPeptide(peptide, precursorCharge);
-        setMassTolerance(mzTolerance, isPpm, pickMostAccuratePeak);
+        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
+        setMassTolerance(specificAnnotationPreferences.getFragmentIonAccuracy(), specificAnnotationPreferences.isFragmentIonPpm(), annotationPreferences.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
-        // we have to keep the precursor charges separate from the fragment ion charges
+        // possible charges for the precursor
         for (int i = 1; i <= precursorCharge; i++) {
             precursorCharges.add(i);
         }
 
-        for (Ion.IonType ionType : iontypes.keySet()) {
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
-                HashSet<Integer> subtypes = iontypes.get(ionType);
+                HashSet<Integer> subtypes = ionTypes.get(ionType);
                 for (int subType : subtypes) {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
 
-                            if (lossesValidated(neutralLosses, ion)) {
+                            if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
 
-                                ArrayList<Integer> tempCharges;
+                                ArrayList<Integer> ionPossibleCharges;
 
-                                // have to treat precursor charges separately, as to not increase the max charge for the other ion types
                                 if (ionType == Ion.IonType.PRECURSOR_ION) {
-                                    tempCharges = precursorCharges;
+                                    ionPossibleCharges = precursorCharges;
                                 } else {
-                                    tempCharges = charges;
+                                    ionPossibleCharges = specificAnnotationPreferences.getSelectedCharges();
                                 }
 
-                                for (int charge : tempCharges) {
+                                for (int charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         String key = IonMatch.getMatchKey(ion, charge);
                                         boolean matchFound = false;
@@ -164,7 +147,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 }
             }
         }
-
+        
         return result;
     }
 
@@ -172,30 +155,21 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Returns the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence. 1 is first amino acid.
      *
-     * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
-     * @param precursorCharge the precursor charge
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param spectrum The spectrum to match
      * @param peptide The peptide of interest
-     * @param intensityLimit The intensity limit to use
-     * @param mzTolerance The m/z tolerance to use
-     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
-     * in Da
-     * @param pickMostAccuratePeak if there are more than one matching peak for
-     * a given annotation setting this value to true results in the most
-     * accurate peak being annotated, while setting this to false annotates the
-     * most intense peak
+     * 
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
      */
-    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, MSnSpectrum spectrum, Peptide peptide, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
+    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
 
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
-        ArrayList<IonMatch> matches = getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
+        ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
+        if (!matches.isEmpty()) {
+            int debug = 1;
+        }
 
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
@@ -223,25 +197,20 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param peptide The peptide of interest
-     * @param precursorCharge The precursor charge
+     * 
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, Peptide peptide) {
-        setPeptide(peptide, precursorCharge);
-        return getExpectedIons(iontypes, neutralLosses, charges, precursorCharge);
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationPreferences specificAnnotationPreferences, Peptide peptide) {
+        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
+        return getExpectedIons(specificAnnotationPreferences);
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
-        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, peptide, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
+        return getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
     }
 
     /**
@@ -254,14 +223,13 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      *
-     * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with a file while mapping potential modification sites
+     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();

@@ -1320,7 +1320,7 @@ public class SequenceFactory {
      * problem occurred while interacting with the tree database.
      */
     public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, IllegalArgumentException, SQLException {
-        int nThreads = Math.max(Runtime.getRuntime().availableProcessors() - 1, 1);
+        int nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
         return getDefaultProteinTree(nThreads, waitingHandler, exceptionHandler, true);
     }
 

@@ -283,14 +283,15 @@ public class GeneFactory {
      * the SequenceFactory.
      *
      * @param proteinAccession the accession of the protein of interest
+     * 
      * @return the name of the gene, null if not found
+     * 
      * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public String getGeneNameForUniProtProtein(String proteinAccession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public String getGeneNameForUniProtProtein(String proteinAccession) throws IOException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         Header header = SequenceFactory.getInstance().getHeader(proteinAccession);
         return header.getGeneName();
     }

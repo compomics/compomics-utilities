@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -38,11 +37,11 @@ public class AnnotationPreferences implements Serializable {
      * If true, the ion table is shown as an intensity version, false displays
      * the standard Mascot version.
      */
-    private boolean intensityIonTable = true;
+    private boolean intensityIonTable = true; //@TODO: move to another class
     /**
      * If true, bars are shown in the bubble plot highlighting the ions.
      */
-    private boolean showBars = false;
+    private boolean showBars = false; //@TODO: move to another class
     /**
      * If true, all peaks are shown, false displays the annotated peaks, and the
      * non-annotated in the background.
@@ -54,7 +53,7 @@ public class AnnotationPreferences implements Serializable {
      */
     private double intensityLimit = 0.75;
     /**
-     * Shall PeptideShaker use automatic annotation.
+     * Shall automatic annotation be used.
      */
     private boolean automaticAnnotation = true;
     /**
@@ -69,35 +68,56 @@ public class AnnotationPreferences implements Serializable {
     private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
     /**
      * The neutral losses searched for.
+     *
+     * @deprecated use the SpecificAnnotationPreferencesClass
      */
-    private NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
+    private NeutralLossesMap neutralLossesMap;
+    /**
+     * List of neutral losses to annotate.
+     */
+    private ArrayList<NeutralLoss> neutralLossesList;
     /**
      * Shall neutral losses be only considered for ions containing amino acids
      * of interest?
+     *
+     * @deprecated use neutralLossesAuto instead
      */
-    private boolean neutralLossesSequenceDependant = true;
+    private boolean neutralLossesSequenceDependant;
     /**
-     * The maximum fragment charge to be searched for.
+     * If true neutral losses will be automatically deduced from the spectrum
+     * identification assumption.
      */
-    private ArrayList<Integer> selectedCharges = new ArrayList<Integer>();
+    private Boolean neutralLossesAuto = true;
+    /**
+     * The fragment charge to be searched for.
+     *
+     * @deprecated use the SpecificAnnotationPreferencesClass
+     */
+    private ArrayList<Integer> selectedCharges;
     /**
      * Fragment ion accuracy used for peak matching.
      */
     private double fragmentIonAccuracy;
     /**
+     * Indicates whether the fragment ion accuracy is in ppm
+     */
+    private Boolean fragmentIonPpm = false;
+    /**
      * The currently inspected peptide.
      *
-     * @deprecated use the spectrumIdentificationAssumption
+     * @deprecated use the specific annotation preferences instead
      */
     private Peptide currentPeptide;
     /**
      * The currently annotated spectrumIdentificationAssumption.
+     *
+     * @deprecated use the specific annotation preferences instead
      */
     private SpectrumIdentificationAssumption spectrumIdentificationAssumption;
     /**
      * The charge of the currently inspected precursor.
      *
-     * @deprecated use the value in spectrumIdentificationAssumption.
+     * @deprecated use the specific annotation preferences instead
      */
     private int currentPrecursorCharge = 0;
     /**
@@ -123,6 +143,63 @@ public class AnnotationPreferences implements Serializable {
      * Constructor.
      */
     public AnnotationPreferences() {
+    }
+
+    /**
+     * Returns the annotation preferences specific to a spectrum and an
+     * identification assumption.
+     *
+     * @param spectrumKey the key of the spectrum to annotate
+     * @param spectrumIdentificationAssumption the spectrum identification
+     * assumption to annotate with
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     *
+     * @return the annotation preferences specific to a spectrum and an
+     * identification assumption
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with a file while mapping potential modification sites
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the ProteinTree
+     */
+    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        
+        if (neutralLossesAuto == null) { // Backward compatibility
+            neutralLossesAuto = true;
+        }
+        if (fragmentIonPpm == null) { // Backward compatibility
+            fragmentIonPpm = false;
+        }
+        
+        SpecificAnnotationPreferences specificAnnotationPreferences = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
+        specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
+        if (neutralLossesAuto) {
+            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences));
+        } else {
+            NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
+            for (NeutralLoss neutralLoss : getNeutralLosses()) {
+                neutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
+            }
+            specificAnnotationPreferences.setNeutralLossesMap(neutralLossesMap);
+        }
+        ArrayList<Integer> charges = new ArrayList<Integer>(4);
+        int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
+        if (precursorCharge == 1) {
+            charges.add(precursorCharge);
+        } else {
+            for (int charge = 1; charge < precursorCharge; charge++) {
+                charges.add(charge);
+            }
+        }
+        specificAnnotationPreferences.setSelectedCharges(charges);
+        specificAnnotationPreferences.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
+        specificAnnotationPreferences.setFragmentIonAccuracy(fragmentIonAccuracy);
+        specificAnnotationPreferences.setFragmentIonPpm(fragmentIonPpm);
+        return specificAnnotationPreferences;
     }
 
     /**
@@ -153,118 +230,28 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Sets the annotation settings for the current peptide and precursor
-     * charge.
-     *
-     * @param spectrumIdentificationAssumption the spectrum identification
-     * assumption
-     * @param newSpectrum boolean indicating whether this is a new spectrum
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public void setCurrentSettings(SpectrumIdentificationAssumption spectrumIdentificationAssumption, boolean newSpectrum, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
-        if (newSpectrum && automaticAnnotation) {
-            resetAutomaticAnnotation(sequenceMatchingPreferences);
-        } else if (neutralLossesSequenceDependant) {
-            neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences);
-        }
-    }
-
-    /**
-     * Updates the neutral losses and charge annotation settings.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public void resetAutomaticAnnotation(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        clearCharges();
-        int precusorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;
-        if (precusorCharge == 1) {
-            selectedCharges.add(precusorCharge);
-        } else {
-            for (int charge = 1; charge < precusorCharge; charge++) {
-                selectedCharges.add(charge);
-            }
-        }
-        neutralLossesMap = SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences);
-    }
-
-    /**
      * Returns whether neutral losses are considered only for amino acids of
      * interest or not.
      *
      * @return a boolean indicating whether neutral losses are considered only
      * for amino acids of interest or not.
      */
-    public boolean areNeutralLossesSequenceDependant() {
-        return neutralLossesSequenceDependant;
-    }
-
-    /**
-     * Set whether neutral losses are considered only for amino acids of
-     * interest or not.
-     *
-     * @param neutralLossesSequenceDependant if the neutral losses are to be
-     * sequence dependant
-     */
-    public void setNeutralLossesSequenceDependant(boolean neutralLossesSequenceDependant) {
-        this.neutralLossesSequenceDependant = neutralLossesSequenceDependant;
-    }
-
-    /**
-     * Returns the fragment ion charges considered for the desired precursor
-     * charge.
-     *
-     * @return the fragment ion charges considered
-     */
-    public ArrayList<Integer> getValidatedCharges() {
-        return selectedCharges;
-    }
-
-    /**
-     * Clears the selected charges.
-     */
-    public void clearCharges() {
-        selectedCharges = new ArrayList<Integer>(0);
-    }
-
-    /**
-     * Add a charge to take into account when annotating the spectrum.
-     *
-     * @param selectedCharge a charge to take into account when annotating the
-     * spectrum
-     */
-    public void addSelectedCharge(int selectedCharge) {
-        if (!selectedCharges.contains(selectedCharge)) {
-            selectedCharges = new ArrayList<Integer>(selectedCharges);
-            selectedCharges.add(selectedCharge);
+    public boolean areNeutralLossesSequenceAuto() {
+        if (neutralLossesAuto == null) { // Backward compatibility
+            neutralLossesAuto = true;
         }
+        return neutralLossesAuto;
     }
 
     /**
      * Clears the considered neutral losses.
      */
     public void clearNeutralLosses() {
-        neutralLossesMap.clearNeutralLosses();
+        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility        
+            neutralLossesMap.clearNeutralLosses();
+            neutralLossesList = new ArrayList<NeutralLoss>();
+        }
+        neutralLossesList.clear();
     }
 
     /**
@@ -272,8 +259,11 @@ public class AnnotationPreferences implements Serializable {
      *
      * @return the considered neutral losses
      */
-    public NeutralLossesMap getNeutralLosses() {
-        return neutralLossesMap;
+    public ArrayList<NeutralLoss> getNeutralLosses() {
+        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
+            neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
+        }
+        return neutralLossesList;
     }
 
     /**
@@ -282,7 +272,19 @@ public class AnnotationPreferences implements Serializable {
      * @param neutralLoss a new neutral loss
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
-        neutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
+        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
+            neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
+        }
+        boolean alreadyInList = false;
+        for (NeutralLoss tempNeutralLoss : neutralLossesList) {
+            if (neutralLoss.isSameAs(tempNeutralLoss)) {
+                alreadyInList = true;
+                break;
+            }
+        }
+        if (!alreadyInList) {
+            neutralLossesList.add(neutralLoss);
+        }
     }
 
     /**
@@ -331,13 +333,6 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Clears the ion types annotated.
-     */
-    public void clearIonTypes() {
-        selectedIonsMap.clear();
-    }
-
-    /**
      * Adds a new ion type and subtype to annotate.
      *
      * @param ionType a new ion type to annotate
@@ -371,6 +366,13 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
+     * Clears the ion types annotated.
+     */
+    public void clearIonTypes() {
+        selectedIonsMap.clear();
+    }
+
+    /**
      * Sets whether the default PeptideShaker annotation should be used.
      *
      * @param automaticAnnotation a boolean indicating whether the default
@@ -380,7 +382,7 @@ public class AnnotationPreferences implements Serializable {
         this.automaticAnnotation = automaticAnnotation;
 
         if (automaticAnnotation) {
-            neutralLossesSequenceDependant = true;
+            neutralLossesAuto = true;
         }
     }
 
@@ -413,12 +415,25 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Returns the current precursor charge.
+     * Indicates whether the fragment ion accuracy is in ppm.
      *
-     * @return the current precursor charge
+     * @return a boolean indicating whether the fragment ion accuracy is in ppm
      */
-    public int getCurrentPrecursorCharge() {
-        return spectrumIdentificationAssumption.getIdentificationCharge().value;
+    public boolean isFragmentIonPpm() {
+        if (fragmentIonPpm == null) { // Backward compatibility
+            fragmentIonPpm = false;
+        }
+        return fragmentIonPpm;
+    }
+
+    /**
+     * Sets whether the fragment ion accuracy is in ppm.
+     *
+     * @param fragmentIonPpm a boolean indicating whether the fragment ion
+     * accuracy is in ppm
+     */
+    public void setFragmentIonPpm(boolean fragmentIonPpm) {
+        this.fragmentIonPpm = fragmentIonPpm;
     }
 
     /**

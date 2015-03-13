@@ -13,14 +13,14 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class estimates the A-score as described in
@@ -32,174 +32,30 @@ import java.util.HashSet;
 public class AScore {
 
     /**
-     * Returns the A-score for the best PTM location without accounting for
-     * neutral losses. In case the two best locations score the same they are
-     * both given with the score of 0. Note that PTMs found on peptides must be
-     * loaded in the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a map containing the best or two best PTM location(s) and the
-     * corresponding A-score
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, null, charges, precursorCharge, mzTolerance, false, sequenceMatchingPreferences);
-    }
-
-    /**
-     * Returns the A-score for the best PTM location accounting for neutral
-     * losses. In case the two best locations score the same they are both given
-     * with the score of 0. Note that PTMs found on peptides must be loaded in
-     * the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a map containing the best or two best PTM location(s) and the
-     * corresponding A-score
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, true, sequenceMatchingPreferences);
-    }
-
-    /**
      * Returns the A-score for the best PTM location. In case the two best
      * locations score the same they are both given with the score of 0. 1 is
      * the first amino acid. The N-terminus is indexed 0 and the C-terminus with
      * the peptide length+1. Note that PTMs found on peptides must be loaded in
-     * the PTM factory.
+     * the PTM factory (com.compomics.util.experiment.biology.PTMFactory), and
+     * if the scoring involves protein terminal PTMs, the protein sequences must
+     * be loaded in the sequence factory
+     * (com.compomics.util.experiment.identification.SequenceFactory) and
+     * indexed using the protein tree (see getDefaultProteinTree in
+     * SequenceFactory). PTMs of same mass should be scored together and given
+     * in the ptms list. Neutral losses of mass equal to the mass of the PTM
+     * will be ignored. Neutral losses to be accounted for should be given in
+     * the SpecificAnnotationPreferences and will be ignored if
+     * accountNeutralLosses is false.
      *
      * @param peptide The peptide of interest
      * @param ptms The PTMs to score, for instance different phosphorylations.
      * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The MS2 m/z tolerance to use
-     * @param accountNeutralLosses a boolean indicating whether or not the
-     * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a map containing the best or two best PTM location(s) and the
-     * corresponding A-score
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, accountNeutralLosses, sequenceMatchingPreferences, null);
-    }
-
-    /**
-     * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 0. 1 is
-     * the first amino acid. The N-terminus is indexed 0 and the C-terminus with
-     * the peptide length+1. Note that PTMs found on peptides must be loaded in
-     * the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The MS2 m/z tolerance to use
-     * @param accountNeutralLosses a boolean indicating whether or not the
-     * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param spectrumAnnotator a spectrum annotator to annotate the spectra
-     *
-     * @return a map containing the best or two best PTM location(s) and the
-     * corresponding A-score
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses,
-            SequenceMatchingPreferences sequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getAScore(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, accountNeutralLosses, sequenceMatchingPreferences, spectrumAnnotator, null);
-    }
-
-    /**
-     * Returns the A-score for the best PTM location. In case the two best
-     * locations score the same they are both given with the score of 0. 1 is
-     * the first amino acid. The N-terminus is indexed 0 and the C-terminus with
-     * the peptide length+1. Note that PTMs found on peptides must be loaded in
-     * the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The MS2 m/z tolerance to use
-     * @param accountNeutralLosses a boolean indicating whether or not the
-     * calculation shall account for neutral losses.
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
+     * @param accountNeutralLosses if false, neutral losses available in the
+     * specific annotation preferences will be ignored
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param spectrumAnnotator a spectrum annotator to annotate the spectra
      * @param rounding decimal to which the score should be floored, ignored if
@@ -208,20 +64,19 @@ public class AScore {
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
      *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred while scoring the PTM
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing an object from the protein tree (the
+     * protein sequence index)
+     * @throws java.sql.SQLException exception thrown whenever an error occurred
+     * while interacting with the protein tree
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses,
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses,
             SequenceMatchingPreferences sequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, Integer rounding)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for A-score calculation.");
@@ -244,11 +99,12 @@ public class AScore {
         PTM refPTM = ptms.get(0);
         double ptmMass = refPTM.getMass();
 
-        NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
+        NeutralLossesMap annotationNeutralLosses = specificAnnotationPreferences.getNeutralLossesMap(),
+                scoringLossesMap = new NeutralLossesMap();
         if (accountNeutralLosses) {
             // here annotation should be sequence and modification independant
-            for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-                if (Math.abs(neutralLoss.mass - ptmMass) > mzTolerance) {
+            for (NeutralLoss neutralLoss : annotationNeutralLosses.getAccountedNeutralLosses()) {
+                if (Math.abs(neutralLoss.mass - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -278,10 +134,10 @@ public class AScore {
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
-            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, mzTolerance, 10);
+            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, specificAnnotationPreferences.getFragmentIonAccuracy(), 10);
 
             HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
-                    spectrum, spectrumMap, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance, spectrumAnnotator, refPTM);
+                    spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM);
 
             HashMap<Double, ArrayList<Integer>> peptideScoreToPostitionMap = getPeptideScoreToPositionMap(positionToScoreMap);
             ArrayList<Double> scores = new ArrayList<Double>(peptideScoreToPostitionMap.keySet());
@@ -301,8 +157,7 @@ public class AScore {
                 Double lowestScore = null;
                 for (int secondPosition : secondScoringSites) {
                     int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap,
-                            charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                     Double tempMapLowestScore = null;
                     for (int tempPos : tempMap.keySet()) {
                         double tempScore = tempMap.get(tempPos);
@@ -345,8 +200,7 @@ public class AScore {
                     for (int secondPosition : bestScoringSites) {
                         if (bestPosition != secondPosition) {
                             int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, iontypes, scoringLossesMap,
-                                    charges, precursorCharge, mzTolerance, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                             Double tempMapLowestScore = null;
                             for (int tempPos : tempMap.keySet()) {
                                 double tempScore = tempMap.get(tempPos);
@@ -432,11 +286,9 @@ public class AScore {
      * @param refPTM the PTM of interest
      * @param bestPosition the best scoring position
      * @param secondPosition the second best scoring position
-     * @param iontypes the ion types to look for in the spectrum
-     * @param scoringLossesMap the neutral losses to look for in the spectrum
-     * @param charges the fragment ion charges to look for in the spectrum
-     * @param precursorCharge the precursor charge to look for in the spectrum
-     * @param mzTolerance the fragment ion m/z tolerance for spectrum annotation
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
      * @param spectrumAnnotator the spectrum annotator which should be used to
      * annotate the spectrum
      * @param bestDepth the depth maximizing the score difference between the
@@ -446,9 +298,8 @@ public class AScore {
      *
      * @return the candidate A-score in a map
      */
-    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap, ArrayList<Integer> charges, int precursorCharge,
-            double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
+    private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationPreferences annotationPreferences,
+            SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
 
@@ -456,7 +307,7 @@ public class AScore {
         int posMin = Math.min(bestPosition, secondPosition);
         int posMax = Math.max(bestPosition, secondPosition);
 
-        for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
+        for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, peptide).values()) {
             for (Ion ion : ions) {
                 if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                     PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
@@ -482,8 +333,8 @@ public class AScore {
         double p = ((double) bestDepth + 1) / 100;
         Peptide tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMin));
-        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge,
-                spectrumAtBestDepth, tempPeptide, 0, mzTolerance, false, false);
+        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
+                spectrumAtBestDepth, tempPeptide);
         int n = 0;
 
         for (IonMatch match : matches) {
@@ -516,8 +367,8 @@ public class AScore {
 
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
-        matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge,
-                spectrumAtBestDepth, tempPeptide, 0, mzTolerance, false, false);
+        matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
+                spectrumAtBestDepth, tempPeptide);
         n = 0;
 
         for (IonMatch match : matches) {
@@ -551,15 +402,11 @@ public class AScore {
             result.put(posMin, 0.0);
             result.put(posMax, 0.0);
         } else if (p1 < p2) {
-            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-            modificationProfile.add(posMin);
             double score1 = -10 * Math.log10(p1);
             double score2 = -10 * Math.log10(p2);
             double score = score1 - score2;
             result.put(posMin, score);
         } else {
-            ArrayList<Integer> modificationProfile = new ArrayList<Integer>();
-            modificationProfile.add(posMax);
             double score1 = -10 * Math.log10(p1);
             double score2 = -10 * Math.log10(p2);
             double score = score2 - score1;
@@ -627,11 +474,9 @@ public class AScore {
      * @param noModPeptide the peptide without the variable modification of
      * interest
      * @param refPTM the PTM of interest
-     * @param iontypes the ion types to look for in the spectrum
-     * @param scoringLossesMap the neutral losses to look for in the spectrum
-     * @param charges the fragment ion charges to look for in the spectrum
-     * @param precursorCharge the precursor charge to look for in the spectrum
-     * @param mzTolerance the fragment ion m/z tolerance for spectrum annotation
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
      * @param spectrumAnnotator the spectrum annotator which should be used to
      * annotate the spectrum
      * @param spectrum the spectrum of interest
@@ -642,14 +487,13 @@ public class AScore {
      * @return a map PTM localization &gt; score
      */
     public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) {
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) {
 
         HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
 
         int N = 0;
 
-        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
+        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, peptide).values()) {
             N += fragmentIons.size();
         }
 
@@ -672,8 +516,8 @@ public class AScore {
                 }
                 tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, position));
 
-                ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges, precursorCharge,
-                        spectrumMap.get(i), tempPeptide, 0, mzTolerance, false, false);
+                ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
+                        spectrumMap.get(i), tempPeptide);
                 int n = matches.size();
                 double P = 0;
                 for (int k = n; k <= N; k++) {
@@ -699,6 +543,7 @@ public class AScore {
      *
      * @param baseSpectrum the base spectrum
      * @param mzTolerance the m/z tolerance
+     *
      * @return a map containing the spectra filtered indexed by peak depth.
      */
     public static HashMap<Integer, MSnSpectrum> getReducedSpectra(MSnSpectrum baseSpectrum, double mzTolerance) {
@@ -707,13 +552,13 @@ public class AScore {
 
     /**
      * Generates a map containing the spectra filtered on intensity with a basis
-     * of 20*m/z tolerance indexed by the depth used. (see A-score paper for
-     * more details).
+     * of 20*m/z tolerance indexed by the depth used.
      *
      * @param baseSpectrum the base spectrum
      * @param mzTolerance the m/z tolerance
      * @param depthMax the depth to look into (10 for A-score). If -1 the
      * maximal depth will be used
+     *
      * @return a map containing the spectra filtered indexed by peak depth.
      */
     public static HashMap<Integer, MSnSpectrum> getReducedSpectra(MSnSpectrum baseSpectrum, double mzTolerance, int depthMax) {

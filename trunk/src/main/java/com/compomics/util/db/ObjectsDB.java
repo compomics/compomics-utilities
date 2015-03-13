@@ -272,6 +272,7 @@ public class ObjectsDB implements Serializable {
      * @param object the object to store
      * @param inCache boolean indicating whether the method shall try to put the
      * object in cache or not
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while

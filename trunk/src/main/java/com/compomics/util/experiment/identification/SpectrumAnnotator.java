@@ -17,8 +17,9 @@ import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -306,6 +307,7 @@ public abstract class SpectrumAnnotator {
      * @param neutralLosses Map of expected neutral losses
      * @param neutralLoss the neutral loss of interest
      * @param ion the fragment ion of interest
+     * 
      * @return boolean indicating whether the neutral loss should be considered
      */
     public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, Ion ion) {
@@ -357,6 +359,7 @@ public abstract class SpectrumAnnotator {
      *
      * @param neutralLosses map of expected neutral losses: neutral loss.
      * @param theoreticIon the ion of interest
+     * 
      * @return a boolean indicating whether the neutral losses of the given
      * fragment ion are fit the requirement of the given neutral losses map
      */
@@ -376,6 +379,7 @@ public abstract class SpectrumAnnotator {
      * @param theoreticIon the ion of interest
      * @param charge the candidate charge
      * @param precursorCharge the precursor charge
+     * 
      * @return a boolean indicating whether the given charge can be found on the
      * given fragment ion
      */
@@ -405,18 +409,12 @@ public abstract class SpectrumAnnotator {
      * Returns the currently matched ions with the given settings.
      *
      * @param spectrum the spectrum of interest
-     * @param iontypes The expected fragment ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
-     * @param pickMostAccuratePeak if there are more than one matching peak for
-     * a given annotation setting this value to true results in the most
-     * accurate peak being annotated, while setting this to false annotates the
-     * most intense peak
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
+     * 
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences);
 
     /**
      * Returns the spectrum currently inspected.
@@ -591,14 +589,13 @@ public abstract class SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      *
-     * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with a file while mapping potential modification sites
+     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
             return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences);
@@ -615,38 +612,28 @@ public abstract class SpectrumAnnotator {
      * given peak. Note: fragment ions need to be initiated by the
      * SpectrumAnnotator extending class.
      *
-     * @param iontypes The fragment ions selected
-     * @param charges The charges of the fragment to search for
-     * @param precursorCharge The precursor charge as deduced by the search
-     * engine
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * maximal position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    protected ArrayList<IonMatch> matchPeak(HashMap<Ion.IonType, HashSet<Integer>> iontypes, ArrayList<Integer> charges, int precursorCharge, NeutralLossesMap neutralLosses, Peak peak) {
+    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationPreferences specificAnnotationPreferences, Peak peak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
-        if (iontypes.containsKey(Ion.IonType.PRECURSOR_ION)) {
-            charges.add(precursorCharge);
-            charges.add(precursorCharge + 1);
-        }
-
-        for (Ion.IonType ionType : iontypes.keySet()) {
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
-                HashSet<Integer> subtypes = iontypes.get(ionType);
+                HashSet<Integer> subtypes = ionTypes.get(ionType);
                 for (int subType : subtypes) {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            for (int charge : charges) {
-                                if (chargeValidated(ion, charge, precursorCharge)
-                                        && lossesValidated(neutralLosses, ion)) {
+                            for (int charge : specificAnnotationPreferences.getSelectedCharges()) {
+                                if (chargeValidated(ion, charge, specificAnnotationPreferences.getPrecursorCharge())
+                                        && lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
                                     IonMatch ionMatch = new IonMatch(peak, ion, new Charge(Charge.PLUS, charge));
-                                    if (Math.abs(ionMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
+                                    if (Math.abs(ionMatch.getError(specificAnnotationPreferences.isFragmentIonPpm(), subtractIsotope)) <= specificAnnotationPreferences.getFragmentIonAccuracy()) {
                                         result.add(ionMatch);
                                     }
                                 }
@@ -669,30 +656,26 @@ public abstract class SpectrumAnnotator {
      * Note: fragment ions need to be initiated by the SpectrumAnnotator
      * extending class.
      *
-     * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
-     * @param precursorCharge The precursor charge
+     * @param specificAnnotationPreferences the specific annotation preferences
+     * 
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int precursorCharge) {
+    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationPreferences specificAnnotationPreferences) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
 
-        for (Ion.IonType ionType : iontypes.keySet()) {
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
-                HashSet<Integer> subtypes = iontypes.get(ionType);
+                HashSet<Integer> subtypes = ionTypes.get(ionType);
                 for (int subType : subtypes) {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            if (lossesValidated(neutralLosses, ion)) {
-                                for (int charge : charges) {
+                            if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
+                                for (int charge : specificAnnotationPreferences.getSelectedCharges()) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         ArrayList<Ion> resultsAtCharge = result.get(charge);
                                         if (resultsAtCharge == null) {

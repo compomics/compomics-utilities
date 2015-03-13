@@ -10,6 +10,8 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.preferences.AnnotationPreferences;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -212,17 +214,13 @@ public class PtmtableContent {
      * @param ptm the PTM to score
      * @param nPTM the amount of times the PTM is expected
      * @param spectrum the corresponding spectrum
-     * @param iontypes the fragment ions to look for
-     * @param neutralLosses the neutral losses to look for
-     * @param charges the fragment ions charges to look for
-     * @param precursorCharge the precursor charge
-     * @param mzTolerance the m/z tolerance to use
-     * @param intensityLimit the intensity limit
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
+     * 
      * @return the PTM plot series in the JFreechart format for one PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
 
         //@TODO: use Peptide.getNoModPeptide instead
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
@@ -235,14 +233,14 @@ public class PtmtableContent {
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons =
-                spectrumAnnotator.getExpectedIons(iontypes, neutralLosses, charges, precursorCharge, noModPeptide);
+                spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
 
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, neutralLosses, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false, false); // @TODO: is the last false ok here???
+                                        
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -272,17 +270,13 @@ public class PtmtableContent {
      * @param ptm the PTM to score
      * @param nPTM the amount of times the PTM is expected
      * @param spectrum the corresponding spectrum
-     * @param iontypes the fragment ions to look for
-     * @param neutralLosses the neutral losses to look for
-     * @param charges the fragment ions charges to look for
-     * @param precursorCharge the precursor charge
-     * @param mzTolerance the m/z tolerance to use
-     * @param intensityLimit the intensity limit
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
+     * 
      * @return the PtmtableContent object
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, double intensityLimit) {
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 
@@ -296,22 +290,22 @@ public class PtmtableContent {
         }
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
-        for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-            if (Math.abs(neutralLoss.mass - ptm.getMass()) > mzTolerance) {
+        for (NeutralLoss neutralLoss : specificAnnotationPreferences.getNeutralLossesMap().getAccountedNeutralLosses()) {
+            if (Math.abs(neutralLoss.mass - ptm.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
                 lossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
         }
 
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
-        spectrumAnnotator.setPeptide(noModPeptide, precursorCharge);
+        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge());
         PeptideFragmentIon peptideFragmentIon;
 
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(
-                    iontypes, lossesMap, charges, precursorCharge, spectrum, noModPeptide, intensityLimit, mzTolerance, false, false); // @TODO: is the last false ok here???
+                                        
+            ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
 
             for (IonMatch ionMatch : matches) {
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {

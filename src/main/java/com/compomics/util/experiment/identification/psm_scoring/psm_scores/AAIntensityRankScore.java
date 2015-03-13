@@ -9,6 +9,8 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.preferences.AnnotationPreferences;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,17 +38,13 @@ public class AAIntensityRankScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param iontypes the fragment ions to annotate
-     * @param neutralLosses the neutral losses to annotate
-     * @param charges the fragment charges to look for
-     * @param identificationCharge the precursor charge
-     * @param mzTolerance the ms2 m/z tolerance
+     * @param annotationPreferences the general spectrum annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific to this psm
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance) {
-        return getScore(peptide, spectrum, iontypes, neutralLosses, charges, identificationCharge, mzTolerance, null);
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
+        return getScore(peptide, spectrum, annotationPreferences, specificAnnotationPreferences, null);
     }
 
     /**
@@ -57,18 +55,14 @@ public class AAIntensityRankScore {
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
-     * @param iontypes the fragment ions to annotate
-     * @param neutralLosses the neutral losses to annotate
-     * @param charges the fragment charges to look for
-     * @param identificationCharge the precursor charge
-     * @param mzTolerance the ms2 m/z tolerance
+     * @param annotationPreferences the general spectrum annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific to this psm
      * @param peptideSpectrumAnnotator an external annotator (if null an
      * internal will be used)
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes,
-            NeutralLossesMap neutralLosses, ArrayList<Integer> charges, int identificationCharge, double mzTolerance, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
+    public static double getScore(Peptide peptide, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator) {
 
         if (peptideSpectrumAnnotator == null) {
             peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
@@ -80,8 +74,8 @@ public class AAIntensityRankScore {
             aaIntensities.put(i, 0.0);
         }
 
-        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(iontypes, neutralLosses, charges, identificationCharge,
-                spectrum, peptide, 0, mzTolerance, false, true);
+        ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
+                spectrum, peptide);
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
             if (ion instanceof PeptideFragmentIon) {

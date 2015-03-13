@@ -15,8 +15,9 @@ import com.compomics.util.experiment.identification.tags.Tag;
 import com.compomics.util.experiment.identification.tags.TagComponent;
 import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
+import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,14 +74,13 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      *
-     * @throws IOException if an IOException occurs
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs
-     * @throws InterruptedException if an InterruptedException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws IOException exception thrown whenever an error occurred while
+     * interacting with a file while mapping potential modification sites
+     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
      */
     public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+            throws IOException, InterruptedException, ClassNotFoundException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -207,36 +207,24 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param iontypes The expected ions to look for
-     * @param neutralLosses Map of expected neutral losses: neutral loss &gt;
-     * first position in the sequence (first aa is 1). let null if neutral
-     * losses should not be considered.
-     * @param charges List of expected charges
-     * @param precursorCharge the precursor charge
+     * @param annotationPreferences the annotation preferences
+     * @param specificAnnotationPreferences the specific annotation preferences
      * @param spectrum The spectrum to match
      * @param tag The tag of interest
-     * @param intensityLimit The intensity limit to use
-     * @param mzTolerance The m/z tolerance to use
-     * @param isPpm a boolean indicating whether the mass tolerance is in ppm or
-     * in Da
-     * @param pickMostAccuratePeak if there are more than one matching peak for
-     * a given annotation setting this value to true results in the most
-     * accurate peak being annotated, while setting this to false annotates the
-     * most intense peak
+     *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges,
-            int precursorCharge, MSnSpectrum spectrum, Tag tag, double intensityLimit, double mzTolerance, boolean isPpm, boolean pickMostAccuratePeak) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, MSnSpectrum spectrum, Tag tag) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, intensityLimit);
+            setSpectrum(spectrum, annotationPreferences.getAnnotationIntensityLimit());
         }
 
-        setTag(tag, precursorCharge);
-        setMassTolerance(mzTolerance, isPpm, pickMostAccuratePeak);
+        setTag(tag, specificAnnotationPreferences.getPrecursorCharge());
+        setMassTolerance(specificAnnotationPreferences.getFragmentIonAccuracy(), specificAnnotationPreferences.isFragmentIonPpm(), annotationPreferences.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -245,24 +233,25 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             precursorCharges.add(i);
         }
 
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
         if (theoreticalFragmentIons != null) {
-            for (Ion.IonType ionType : iontypes.keySet()) {
+            for (Ion.IonType ionType : ionTypes.keySet()) {
                 HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
                 if (ionMap != null) {
-                    HashSet<Integer> subtypes = iontypes.get(ionType);
+                    HashSet<Integer> subtypes = ionTypes.get(ionType);
                     for (int subType : subtypes) {
                         ArrayList<Ion> ions = ionMap.get(subType);
                         if (ions != null) {
                             for (Ion ion : ions) {
 
-                                if (lossesValidated(neutralLosses, ion)) {
+                                if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
 
                                     ArrayList<Integer> tempCharges;
                                     // have to treat precursor charges separately, as to not increase the max charge for the other ions
                                     if (ionType == Ion.IonType.PRECURSOR_ION) {
                                         tempCharges = precursorCharges;
                                     } else {
-                                        tempCharges = charges;
+                                        tempCharges = specificAnnotationPreferences.getSelectedCharges();
                                     }
 
                                     for (int charge : tempCharges) {
@@ -290,7 +279,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses, ArrayList<Integer> charges, boolean pickMostAccuratePeak) {
-        return getSpectrumAnnotation(iontypes, neutralLosses, charges, precursorCharge, spectrum, tag, intensityLimit, mzTolerance, isPpm, pickMostAccuratePeak);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
+        return getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, tag);
     }
 }

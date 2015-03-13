@@ -853,17 +853,13 @@ public class Peptide extends ExperimentObject {
      * @return a list of potential modification sites
      *
      * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * interacting with a file while mapping potential modification sites
+     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         AminoAcidPattern pattern = ptm.getPattern();

@@ -13,8 +13,9 @@ import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.FileNotFoundException;
+import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -27,7 +28,10 @@ import java.util.HashSet;
 
 /**
  * This class estimates the PhosphoRS score as described in
- * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: still under testing
+ * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: the calculation in its
+ * present form is very slow for multiply modified peptides, peptides with many
+ * modification sites, and noisy spectra. Typically, avoid scoring deamindation
+ * sites.
  *
  * @author Marc Vaudel
  */
@@ -42,96 +46,25 @@ public class PhosphoRS {
      * Returns the PhosphoRS sequence probabilities for the PTM possible
      * locations. 1 is the first amino acid. The N-terminus is indexed 0 and the
      * C-terminus with the peptide length+1. Note that PTMs found on peptides
-     * must be loaded in the PTM factory.
+     * must be loaded in the PTM factory
+     * (com.compomics.util.experiment.biology.PTMFactory), and if the scoring
+     * involves protein terminal PTMs, the protein sequences must be loaded in
+     * the sequence factory
+     * (com.compomics.util.experiment.identification.SequenceFactory) and
+     * indexed using the protein tree (see getDefaultProteinTree in
+     * SequenceFactory). PTMs of same mass should be scored together and given
+     * in the ptms list. Neutral losses of mass equal to the mass of the PTM
+     * will be ignored. Neutral losses to be accounted for should be given in
+     * the SpecificAnnotationPreferences and will be ignored if
+     * accountNeutralLosses is false.
      *
      * @param peptide The peptide of interest
      * @param ptms The PTMs to score, for instance different phosphorylations.
      * These PTMs are considered as indistinguishable, i.e. of same mass.
      * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param accountNeutralLosses a boolean indicating whether or not the
-     * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return a map site &gt; phosphoRS site probability
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getSequenceProbabilities(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, accountNeutralLosses, sequenceMatchingPreferences, null);
-    }
-
-    /**
-     * Returns the PhosphoRS sequence probabilities for the PTM possible
-     * locations. 1 is the first amino acid. The N-terminus is indexed 0 and the
-     * C-terminus with the peptide length+1. Note that PTMs found on peptides
-     * must be loaded in the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
-     * @param accountNeutralLosses a boolean indicating whether or not the
-     * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param spectrumAnnotator the peptide spectrum annotator to use for
-     * spectrum annotation, can be null
-     *
-     * @return a map site &gt; phosphoRS site probability
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
-     */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
-            PeptideSpectrumAnnotator spectrumAnnotator)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
-        return getSequenceProbabilities(peptide, ptms, spectrum, iontypes, neutralLosses, charges, precursorCharge, mzTolerance, accountNeutralLosses, sequenceMatchingPreferences, spectrumAnnotator, null);
-    }
-
-    /**
-     * Returns the PhosphoRS sequence probabilities for the PTM possible
-     * locations. 1 is the first amino acid. The N-terminus is indexed 0 and the
-     * C-terminus with the peptide length+1. Note that PTMs found on peptides
-     * must be loaded in the PTM factory.
-     *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
-     * @param iontypes The fragment ions to look for
-     * @param neutralLosses The neutral losses to look for
-     * @param charges The fragment ions charges to look for
-     * @param precursorCharge The precursor charge
-     * @param mzTolerance The m/z tolerance to use
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -141,21 +74,20 @@ public class PhosphoRS {
      *
      * @return a map site &gt; phosphoRS site probability
      *
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading a protein sequence
-     * @throws IllegalArgumentException exception thrown whenever an error
-     * occurred while reading a protein sequence
-     * @throws InterruptedException exception thrown whenever an error occurred
-     * while reading a protein sequence
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws SQLException if an SQLException occurs
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred while scoring the PTM
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing an object from the protein tree (the
+     * protein sequence index)
+     * @throws java.sql.SQLException exception thrown whenever an error occurred
+     * while interacting with the protein tree
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap neutralLosses,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
             PeptideSpectrumAnnotator spectrumAnnotator, Integer ptmScoreScale)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for PhosphoRS calculation.");
@@ -182,11 +114,12 @@ public class PhosphoRS {
         PTM refPTM = ptms.get(0);
         double ptmMass = refPTM.getMass();
 
-        NeutralLossesMap scoringLossesMap = new NeutralLossesMap();
+        NeutralLossesMap annotationNeutralLosses = specificAnnotationPreferences.getNeutralLossesMap(),
+                scoringLossesMap = new NeutralLossesMap();
         if (accountNeutralLosses) {
             // here annotation should be sequence and modification independant
-            for (NeutralLoss neutralLoss : neutralLosses.getAccountedNeutralLosses()) {
-                if (Math.abs(neutralLoss.mass - ptmMass) > mzTolerance) {
+            for (NeutralLoss neutralLoss : annotationNeutralLosses.getAccountedNeutralLosses()) {
+                if (Math.abs(neutralLoss.mass - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -221,10 +154,10 @@ public class PhosphoRS {
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
 
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
-            double p = getp(spectrum, mzTolerance);
+            double p = getp(spectrum, specificAnnotationPreferences.getFragmentIonAccuracy());
 
             HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(
-                    noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge);
+                    noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, annotationPreferences, specificAnnotationPreferences);
             ArrayList<Double> siteDeterminingIons = new ArrayList<Double>(siteDeterminingIonsMap.keySet());
             Collections.sort(siteDeterminingIons);
 
@@ -276,7 +209,7 @@ public class PhosphoRS {
                                         }
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
-                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, specificAnnotationPreferences);
                                     scores.add(score);
                                 }
                             } else {
@@ -299,7 +232,7 @@ public class PhosphoRS {
                                         }
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
-                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                                    double score = getPhosphoRsScore(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, specificAnnotationPreferences);
                                     scores.add(score);
                                     scored.add(tempSiteDeterminingIons);
                                 }
@@ -342,7 +275,7 @@ public class PhosphoRS {
                     int bestI = 0;
 
                     for (int i = 0; i < spectra.size(); i++) {
-                        double score = getPhosphoRsScore(peptide, spectra.get(i), p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                        double score = getPhosphoRsScore(peptide, spectra.get(i), p, spectrumAnnotator, annotationPreferences, specificAnnotationPreferences);
                         if (score >= bestScore) {
                             bestScore = score;
                             bestI = i;
@@ -373,7 +306,7 @@ public class PhosphoRS {
                     tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                 }
 
-                double score = getPhosphoRsScore(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, iontypes, scoringLossesMap, charges, precursorCharge, mzTolerance);
+                double score = getPhosphoRsScore(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, annotationPreferences, specificAnnotationPreferences);
                 double pInv = Math.pow(10, score / 10);
                 pInvMap.put(profile, pInv);
                 pInvTotal += pInv;
@@ -429,26 +362,22 @@ public class PhosphoRS {
      * @param p the probability for a calculated fragment matching one of the
      * experimental masses by chance as estimated by PhosphoRS
      * @param spectrumAnnotator spectrum annotator
-     * @param iontypes the ion types to use for spectrum annotation
-     * @param scoringLossesMap the neutral losses to use
-     * @param charges the fragment charges to look for
-     * @param precursorCharge the charge of the precursor
-     * @param mzTolerance the ms2 mz tolerance
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
      *
      * @return the phosphoRS score
      */
     private static double getPhosphoRsScore(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
-            HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
-            ArrayList<Integer> charges, int precursorCharge, double mzTolerance) {
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
 
         int N = 0;
 
-        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
+        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, peptide).values()) {
             N += fragmentIons.size();
         }
 
-        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(iontypes, scoringLossesMap, charges,
-                precursorCharge, spectrum, peptide, 0, mzTolerance, false, false); // @TODO: is the last false ok here???
+        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
         int n = matches.size();
         double P = 0;
 
@@ -529,16 +458,14 @@ public class PhosphoRS {
      * @param referencePtmName the name of the reference ptm
      * @param spectrumAnnotator the spectrum annotator used throughout the
      * scoring
-     * @param iontypes the ion types to use
-     * @param scoringLossesMap the neutral losses to be used for scoring
-     * @param charges the charges to be used for scoring
-     * @param precursorCharge the precursor charge
+     * @param annotationPreferences the global annotation preferences
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this peptide and spectrum
      *
      * @return a list of mz where we can possibly find a site determining ion
      */
     private static HashMap<Double, ArrayList<ArrayList<Integer>>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles,
-            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, HashMap<Ion.IonType, HashSet<Integer>> iontypes, NeutralLossesMap scoringLossesMap,
-            ArrayList<Integer> charges, int precursorCharge) {
+            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences) {
 
         HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();
         HashMap<Double, ArrayList<ArrayList<Integer>>> commonIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();
@@ -563,9 +490,9 @@ public class PhosphoRS {
 
             HashSet<Double> mzs = new HashSet<Double>();
 
-            for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(iontypes, scoringLossesMap, charges, precursorCharge, peptide).values()) {
+            for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, peptide).values()) {
                 for (Ion ion : ions) {
-                    for (int charge : charges) {
+                    for (int charge : specificAnnotationPreferences.getSelectedCharges()) {
                         double mz = ion.getTheoreticMz(charge);
                         mzs.add(mz);
                     }

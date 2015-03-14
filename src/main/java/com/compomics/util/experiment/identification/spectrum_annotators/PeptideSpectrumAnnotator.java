@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Annotates a spectrum with peptide fragments.
- * Warning: not multi-thread safe, use different annotators for each thread.
+ * Annotates a spectrum with peptide fragments. Warning: not multi-thread safe,
+ * use different annotators for each thread.
  *
  * @author Marc Vaudel
  */
@@ -86,7 +86,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param specificAnnotationPreferences the specific annotation preferences
      * @param spectrum The spectrum to match
      * @param peptide The peptide of interest
-     * 
+     *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
@@ -147,7 +147,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 }
             }
         }
-        
+
         return result;
     }
 
@@ -159,17 +159,15 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @param specificAnnotationPreferences the specific annotation preferences
      * @param spectrum The spectrum to match
      * @param peptide The peptide of interest
-     * 
+     *
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
      */
-    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
+    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationPreferences annotationPreferences,
+            SpecificAnnotationPreferences specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
 
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
         ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
-        if (!matches.isEmpty()) {
-            int debug = 1;
-        }
 
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
@@ -188,6 +186,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 matchesMap.get(number).add(ionMatch);
             }
         }
+
         return matchesMap;
     }
 
@@ -199,7 +198,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @param specificAnnotationPreferences the specific annotation preferences
      * @param peptide The peptide of interest
-     * 
+     *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
@@ -225,9 +224,12 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the ProteinTree
      */
     public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 

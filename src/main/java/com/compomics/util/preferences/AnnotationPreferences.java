@@ -99,7 +99,7 @@ public class AnnotationPreferences implements Serializable {
      */
     private double fragmentIonAccuracy;
     /**
-     * Indicates whether the fragment ion accuracy is in ppm
+     * Indicates whether the fragment ion accuracy is in ppm.
      */
     private Boolean fragmentIonPpm = false;
     /**

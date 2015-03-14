@@ -46,7 +46,7 @@ public class SpecificAnnotationPreferences {
      */
     private double fragmentIonAccuracy;
     /**
-     * Indicates whether the fragment ion accuracy is in ppm
+     * Indicates whether the fragment ion accuracy is in ppm.
      */
     private boolean fragmentIonPpm = false;
 
@@ -282,5 +282,4 @@ public class SpecificAnnotationPreferences {
     public void setNeutralLossesAuto(boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
     }
-
 }

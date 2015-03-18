@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.massspectrometry.export;
 
 import com.compomics.util.experiment.io.massspectrometry.MgfFileIterator;
-import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
@@ -98,5 +97,4 @@ public class AplExporter {
         bw.newLine();
         bw.newLine();
     }
-
 }

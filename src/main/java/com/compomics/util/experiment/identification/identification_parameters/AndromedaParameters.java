@@ -7,6 +7,7 @@ import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 /**
  * The Andromeda specific parameters.
  *
+ * @author Marc Vaudel
  * @author Harald Barsnes
  */
 public class AndromedaParameters implements IdentificationAlgorithmParameter {
@@ -15,21 +16,20 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * Version number for deserialization.
      */
     static final long serialVersionUID = -2996752557726296967L;
-    
     /**
-     * The maximal peptide mass
+     * The maximal peptide mass.
      */
     private Double maxPeptideMass = 4600.0;
     /**
-     * The maximum number of combinations
+     * The maximum number of combinations.
      */
     private int maxCombinations = 250;
     /**
-     * The top peaks number
+     * The top peaks number.
      */
     private int topPeaks = 8;
     /**
-     * The top peaks window size
+     * The top peaks window size.
      */
     private int topPeaksWindow = 100;
     /**
@@ -73,14 +73,15 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      */
     private int maxPeptideLengthNoEnzyme = 25;
     /**
-     * Boolean indicating whether I and L should be considered indistinguishable.
+     * Boolean indicating whether I and L should be considered
+     * indistinguishable.
      */
     private boolean equalIL = false;
     /**
      * The number of candidates to report.
      */
     private int numberOfCandidates = 15;
-    
+
     /**
      * Constructor.
      */
@@ -89,7 +90,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal peptide mass.
-     * 
+     *
      * @return the maximal peptide mass
      */
     public Double getMaxPeptideMass() {
@@ -98,7 +99,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal peptide mass.
-     * 
+     *
      * @param maxPeptideMass the maximal peptide mass
      */
     public void setMaxPeptideMass(Double maxPeptideMass) {
@@ -107,7 +108,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal number of combinations.
-     * 
+     *
      * @return the maximal number of combinations
      */
     public int getMaxCombinations() {
@@ -116,7 +117,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal number of combinations.
-     * 
+     *
      * @param maxCombinations the maximal number of combinations
      */
     public void setMaxCombinations(int maxCombinations) {
@@ -125,7 +126,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the top peaks number.
-     * 
+     *
      * @return the top peaks number
      */
     public int getTopPeaks() {
@@ -134,7 +135,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the top peaks number.
-     * 
+     *
      * @param topPeaks the top peaks number
      */
     public void setTopPeaks(int topPeaks) {
@@ -143,7 +144,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the top peaks window size.
-     * 
+     *
      * @return the top peaks window size
      */
     public int getTopPeaksWindow() {
@@ -152,7 +153,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the top peaks window size.
-     * 
+     *
      * @param topPeaksWindow the top peaks window size
      */
     public void setTopPeaksWindow(int topPeaksWindow) {
@@ -160,8 +161,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns a boolean indicating whether water losses should be accounted for.
-     * 
+     * Returns a boolean indicating whether water losses should be accounted
+     * for.
+     *
      * @return a boolean indicating whether water losses should be accounted for
      */
     public boolean isIncludeWater() {
@@ -170,17 +172,20 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether water losses should be accounted for.
-     * 
-     * @param includeWater a boolean indicating whether water losses should be accounted for
+     *
+     * @param includeWater a boolean indicating whether water losses should be
+     * accounted for
      */
     public void setIncludeWater(boolean includeWater) {
         this.includeWater = includeWater;
     }
 
     /**
-     * Returns a boolean indicating whether ammonia losses should be accounted for.
-     * 
-     * @return a boolean indicating whether ammonia losses should be accounted for
+     * Returns a boolean indicating whether ammonia losses should be accounted
+     * for.
+     *
+     * @return a boolean indicating whether ammonia losses should be accounted
+     * for
      */
     public boolean isIncludeAmmonia() {
         return includeAmmonia;
@@ -188,8 +193,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether ammonia losses should be accounted for.
-     * 
-     * @param includeAmmonia a boolean indicating whether ammonia losses should be accounted for
+     *
+     * @param includeAmmonia a boolean indicating whether ammonia losses should
+     * be accounted for
      */
     public void setIncludeAmmonia(boolean includeAmmonia) {
         this.includeAmmonia = includeAmmonia;
@@ -197,8 +203,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns whether neutral losses should be sequence dependent.
-     * 
-     * @return a boolean indicating whether neutral losses should be sequence dependent
+     *
+     * @return a boolean indicating whether neutral losses should be sequence
+     * dependent
      */
     public boolean isDependentLosses() {
         return dependentLosses;
@@ -206,8 +213,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether neutral losses should be sequence dependent.
-     * 
-     * @param dependentLosses a boolean indicating whether neutral losses should be sequence dependent
+     *
+     * @param dependentLosses a boolean indicating whether neutral losses should
+     * be sequence dependent
      */
     public void setDependentLosses(boolean dependentLosses) {
         this.dependentLosses = dependentLosses;
@@ -215,8 +223,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether the fragment all option should be used.
-     * 
-     * @return a boolean indicating whether the fragment all option should be used
+     *
+     * @return a boolean indicating whether the fragment all option should be
+     * used
      */
     public boolean isFragmentAll() {
         return fragmentAll;
@@ -224,8 +233,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether the fragment all option should be used.
-     * 
-     * @param fragmentAll a boolean indicating whether the fragment all option should be used
+     *
+     * @param fragmentAll a boolean indicating whether the fragment all option
+     * should be used
      */
     public void setFragmentAll(boolean fragmentAll) {
         this.fragmentAll = fragmentAll;
@@ -233,7 +243,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether empirical correction should be used.
-     * 
+     *
      * @return a boolean indicating whether empirical correction should be used
      */
     public boolean isEmpiricalCorrection() {
@@ -242,8 +252,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether empirical correction should be used.
-     * 
-     * @param empiricalCorrection a boolean indicating whether empirical correction should be used
+     *
+     * @param empiricalCorrection a boolean indicating whether empirical
+     * correction should be used
      */
     public void setEmpiricalCorrection(boolean empiricalCorrection) {
         this.empiricalCorrection = empiricalCorrection;
@@ -251,7 +262,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether higher charge should be considered.
-     * 
+     *
      * @return a boolean indicating whether higher charge should be considered
      */
     public boolean isHigherCharge() {
@@ -260,8 +271,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether higher charge should be considered.
-     * 
-     * @param higherCharge a boolean indicating whether higher charge should be considered
+     *
+     * @param higherCharge a boolean indicating whether higher charge should be
+     * considered
      */
     public void setHigherCharge(boolean higherCharge) {
         this.higherCharge = higherCharge;
@@ -269,7 +281,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the fragmentation method used.
-     * 
+     *
      * @return the fragmentation method used
      */
     public FragmentationMethod getFragmentationMethod() {
@@ -278,7 +290,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the fragmentation method used.
-     * 
+     *
      * @param fragmentationMethod the fragmentation method used
      */
     public void setFragmentationMethod(FragmentationMethod fragmentationMethod) {
@@ -287,7 +299,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal number of modifications.
-     * 
+     *
      * @return the maximal number of modifications
      */
     public int getMaxNumberOfModifications() {
@@ -296,7 +308,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal number of modifications.
-     * 
+     *
      * @param maxNumberOfModifications the maximal number of modifications
      */
     public void setMaxNumberOfModifications(int maxNumberOfModifications) {
@@ -305,7 +317,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the minimal peptide length to use when searching with no enzyme.
-     * 
+     *
      * @return the minimal peptide length to use when searching with no enzyme
      */
     public int getMinPeptideLengthNoEnzyme() {
@@ -314,8 +326,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the minimal peptide length to use when searching with no enzyme.
-     * 
-     * @param minPeptideLengthNoEnzyme the minimal peptide length to use when searching with no enzyme
+     *
+     * @param minPeptideLengthNoEnzyme the minimal peptide length to use when
+     * searching with no enzyme
      */
     public void setMinPeptideLengthNoEnzyme(int minPeptideLengthNoEnzyme) {
         this.minPeptideLengthNoEnzyme = minPeptideLengthNoEnzyme;
@@ -323,7 +336,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the maximal peptide length to use when searching with no enzyme.
-     * 
+     *
      * @return the maximal peptide length to use when searching with no enzyme
      */
     public int getMaxPeptideLengthNoEnzyme() {
@@ -332,8 +345,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the maximal peptide length to use when searching with no enzyme.
-     * 
-     * @param maxPeptideLengthNoEnzyme the maximal peptide length to use when searching with no enzyme
+     *
+     * @param maxPeptideLengthNoEnzyme the maximal peptide length to use when
+     * searching with no enzyme
      */
     public void setMaxPeptideLengthNoEnzyme(int maxPeptideLengthNoEnzyme) {
         this.maxPeptideLengthNoEnzyme = maxPeptideLengthNoEnzyme;
@@ -341,8 +355,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether I and L should be considered indistinguishable.
-     * 
-     * @return a boolean indicating whether I and L should be considered indistinguishable
+     *
+     * @return a boolean indicating whether I and L should be considered
+     * indistinguishable
      */
     public boolean isEqualIL() {
         return equalIL;
@@ -350,8 +365,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether I and L should be considered indistinguishable.
-     * 
-     * @param equalIL a boolean indicating whether I and L should be considered indistinguishable
+     *
+     * @param equalIL a boolean indicating whether I and L should be considered
+     * indistinguishable
      */
     public void setEqualIL(boolean equalIL) {
         this.equalIL = equalIL;
@@ -359,7 +375,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Returns the number of candidates.
-     * 
+     *
      * @return the number of candidates
      */
     public int getNumberOfCandidates() {
@@ -368,7 +384,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets the number of candidates.
-     * 
+     *
      * @param numberOfCandidates the number of candidates
      */
     public void setNumberOfCandidates(int numberOfCandidates) {
@@ -414,7 +430,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
 //        output.append("NUMBER_SPECTRUM_MATCHES="); // @TODO: implement me!
 //        output.append(numberOfSpectrumMatches);
 //        output.append(newLine);
-
         return output.toString();
     }
 }

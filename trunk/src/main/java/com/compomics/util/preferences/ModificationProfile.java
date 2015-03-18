@@ -587,26 +587,26 @@ public class ModificationProfile implements Serializable {
      */
     public void repair() {
         if (fixedModifications == null) {
-            fixedModifications = new ArrayList<String>();
+            fixedModifications = new ArrayList<String>(0);
         }
         if (variableModifications == null) {
-            variableModifications = new ArrayList<String>();
+            variableModifications = new ArrayList<String>(0);
         }
         if (refinementVariableModifications == null) {
-            refinementVariableModifications = new ArrayList<String>();
+            refinementVariableModifications = new ArrayList<String>(0);
         }
         if (refinementFixedModifications == null) {
-            refinementFixedModifications = new ArrayList<String>();
+            refinementFixedModifications = new ArrayList<String>(0);
             refinementFixedModifications.addAll(fixedModifications);
         }
         if (omssaIndexes == null) {
-            omssaIndexes = new HashMap<Integer, String>();
+            omssaIndexes = new HashMap<Integer, String>(0);
         }
         if (colors == null) {
-            colors = new HashMap<String, Color>();
+            colors = new HashMap<String, Color>(0);
         }
         if (backUp == null) {
-            backUp = new HashMap<String, PTM>();
+            backUp = new HashMap<String, PTM>(0);
         }
     }
 }

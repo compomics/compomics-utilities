@@ -312,8 +312,9 @@ public class ProteinTree {
     }
 
     /**
-     * Try to delete the current database. 
-     * Note: The delete method will attempt to close the connection. It is thus not needed (and not advised) to close the connection before deleting.
+     * Try to delete the current database. Note: The delete method will attempt
+     * to close the connection. It is thus not needed (and not advised) to close
+     * the connection before deleting.
      *
      * @return true of the deletion was a success
      */

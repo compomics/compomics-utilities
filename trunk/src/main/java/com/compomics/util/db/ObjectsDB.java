@@ -73,7 +73,7 @@ public class ObjectsDB implements Serializable {
      */
     public static final String LONG_KEY_TABLE = "long_key_table";
     /**
-     * The name of the table to use to log connections
+     * The name of the table to use to log connections.
      */
     public static final String CONNECTION_LOG_TABLE = "connection_log_table";
     /**
@@ -1354,7 +1354,7 @@ public class ObjectsDB implements Serializable {
             }
         }
 
-        // Test the connection by logging the connection in the database
+        // test the connection by logging the connection in the database
         logConnection();
 
         // try to load the long keys indexes

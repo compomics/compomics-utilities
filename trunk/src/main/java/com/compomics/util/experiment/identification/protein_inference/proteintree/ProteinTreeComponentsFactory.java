@@ -532,7 +532,6 @@ public class ProteinTreeComponentsFactory {
                             Util.deleteDir(folder); //TODO: Restore connections?
                         }
                     } catch (Exception e) {
-                        int debug = 1;
                         e.printStackTrace();
                         // Possibly not a tree, skip
                     }

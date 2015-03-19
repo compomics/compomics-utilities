@@ -147,7 +147,7 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion TMT 130 obtained by hcd fragmentation.
      */
-    public final static ReporterIon TMT130_hcd = new ReporterIon("TMT130", 130.134825);
+    public final static ReporterIon TMT130_hcd = new ReporterIon("TMT130", 130.141141);
     /**
      * Standard reporter ion TMT 130 obtained by etd fragmentation.
      */

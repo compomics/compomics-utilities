@@ -35,37 +35,46 @@ public class AplExporter {
      * @param destinationFile the destination file where to write the spectra
      * @param fragmentationMethod the fragmentation method used //@TODO: this
      * should be spectrum dependent
+     * @param minCharge the minimal charge to look for in case no charge is
+     * present in the file
+     * @param maxCharge the maximal charge to look for in case no charge is
+     * present in the file
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      * @throws uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException exception thrown
      * whenever an error occurred while reading an mzML file
      */
-    public static void mgfToApl(File mgfFile, File destinationFile, FragmentationMethod fragmentationMethod) throws IOException, MzMLUnmarshallerException {
+    public static void mgfToApl(File mgfFile, File destinationFile, FragmentationMethod fragmentationMethod, int minCharge, int maxCharge) throws IOException, MzMLUnmarshallerException {
 
         String fileName = mgfFile.getName();
         SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-        HashMap<Double, ArrayList<String>> precursorMassToTitleMap = new HashMap<Double, ArrayList<String>>(spectrumFactory.getNSpectra(fileName));
+        HashMap<Double, HashMap<String, Integer>> precursorMassToTitleMap = new HashMap<Double, HashMap<String, Integer>>(spectrumFactory.getNSpectra(fileName));
         for (String title : spectrumFactory.getSpectrumTitles(fileName)) {
             Precursor precursor = spectrumFactory.getPrecursor(Spectrum.getSpectrumKey(fileName, title));
             Double mz = precursor.getMz();
-            Integer charge = null;
             if (!precursor.getPossibleCharges().isEmpty()) {
                 for (Charge possibleCharge : precursor.getPossibleCharges()) {
-                    if (charge == null || possibleCharge.value < charge) {
-                        charge = possibleCharge.value;
+                    int charge = possibleCharge.value;
+                    double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
+                    HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
+                    if (titlesAtMass == null) {
+                        titlesAtMass = new HashMap<String, Integer>(1);
+                        precursorMassToTitleMap.put(mass, titlesAtMass);
                     }
+                    titlesAtMass.put(title, charge);
                 }
             } else {
-                charge = 2;
+                for (int charge = minCharge; charge <= maxCharge; charge++) {
+                    double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
+                    HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
+                    if (titlesAtMass == null) {
+                        titlesAtMass = new HashMap<String, Integer>(1);
+                        precursorMassToTitleMap.put(mass, titlesAtMass);
+                    }
+                    titlesAtMass.put(title, charge);
+                }
             }
-            double mass = mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
-            ArrayList<String> titlesAtMass = precursorMassToTitleMap.get(mass);
-            if (titlesAtMass == null) {
-                titlesAtMass = new ArrayList<String>(1);
-                precursorMassToTitleMap.put(mass, titlesAtMass);
-            }
-            titlesAtMass.add(title);
         }
         ArrayList<Double> masses = new ArrayList<Double>(precursorMassToTitleMap.keySet());
         Collections.sort(masses);
@@ -77,10 +86,10 @@ public class AplExporter {
 
             try {
                 for (Double mass : masses) {
-                    ArrayList<String> titles = precursorMassToTitleMap.get(mass);
-                    for (String title : titles) {
+                    HashMap<String, Integer> titles = precursorMassToTitleMap.get(mass);
+                    for (String title : titles.keySet()) {
                         MSnSpectrum spectrum = (MSnSpectrum) spectrumFactory.getSpectrum(fileName, title);
-                        writeSpectrum(bw, spectrum, fragmentationMethod);
+                        writeSpectrum(bw, spectrum, fragmentationMethod, titles.get(title));
                     }
                 }
             } finally {
@@ -97,11 +106,12 @@ public class AplExporter {
      * @param bw a buffered writer where to write the spectrum
      * @param spectrum the spectrum of interest
      * @param fragmentationMethod the fragmentation method used
+     * @param charge the charge to consider for this spectrum
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      */
-    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, FragmentationMethod fragmentationMethod) throws IOException {
+    public static void writeSpectrum(BufferedWriter bw, MSnSpectrum spectrum, FragmentationMethod fragmentationMethod, int charge) throws IOException {
 
         bw.write("peaklist start");
         bw.newLine();
@@ -111,36 +121,7 @@ public class AplExporter {
         bw.newLine();
         bw.write("fragmentation=" + fragmentationMethod.name);
         bw.newLine();
-//        StringBuilder chargeLine = new StringBuilder();
-//        for (Charge charge : precursor.getPossibleCharges()) {
-//                chargeLine.append("charge=");
-//            if (chargeLine.length() == 0) {
-//                chargeLine.append("charge=");
-//            } else {
-//                chargeLine.append(", ");
-//            }
-//            chargeLine.append(charge.value);
-//        }
-//        if (chargeLine.length() > 0) {
-//            bw.write(chargeLine.toString());
-//            bw.newLine();
-//        }
-        
-        if (!precursor.getPossibleCharges().isEmpty()) {
-            Integer charge = null;
-            if (!precursor.getPossibleCharges().isEmpty()) {
-                for (Charge possibleCharge : precursor.getPossibleCharges()) {
-                    if (charge == null || possibleCharge.value < charge) {
-                        charge = possibleCharge.value;
-                    }
-                }
-            } else {
-                charge = 2;
-            }
-            bw.write("charge=" + charge);
-        } else {
-            bw.write("charge=2");
-        }
+        bw.write("charge=" + charge);
         bw.newLine();
         bw.write("header=" + spectrum.getSpectrumTitle());
         bw.newLine();

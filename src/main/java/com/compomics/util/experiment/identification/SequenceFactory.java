@@ -1394,7 +1394,6 @@ public class SequenceFactory {
 
             // close and delete the database if the process was canceled
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                defaultProteinTree.close();
                 defaultProteinTree.deleteDb();
             }
         }

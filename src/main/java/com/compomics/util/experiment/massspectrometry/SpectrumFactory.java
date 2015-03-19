@@ -297,10 +297,8 @@ public class SpectrumFactory {
      * correctly
      * @throws MzMLUnmarshallerException exception thrown whenever the file was
      * not parsed correctly
-     * @throws IllegalArgumentException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    public Precursor getPrecursor(String spectrumKey) throws IOException, MzMLUnmarshallerException {
         return getPrecursor(spectrumKey, true);
     }
 
@@ -315,10 +313,8 @@ public class SpectrumFactory {
      * correctly
      * @throws MzMLUnmarshallerException exception thrown whenever the file was
      * not parsed correctly
-     * @throws IllegalArgumentException exception thrown whenever the file was
-     * not parsed correctly
      */
-    public double getPrecursorMz(String spectrumKey) throws IOException, MzMLUnmarshallerException, IllegalArgumentException {
+    public double getPrecursorMz(String spectrumKey) throws IOException, MzMLUnmarshallerException {
 
         // get the spectrum title and file name
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);

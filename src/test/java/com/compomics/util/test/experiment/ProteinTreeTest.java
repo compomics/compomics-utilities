@@ -81,7 +81,6 @@ public class ProteinTreeTest extends TestCase {
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
 
-        proteinTree.close();
         proteinTree.deleteDb();
     }
 
@@ -182,7 +181,6 @@ public class ProteinTreeTest extends TestCase {
 
         tagMatcher.clearCache();
 
-        proteinTree.close();
         proteinTree.deleteDb();
     }
 }

@@ -73,6 +73,10 @@ public class ObjectsDB implements Serializable {
      */
     public static final String LONG_KEY_TABLE = "long_key_table";
     /**
+     * The name of the table to use to log connections
+     */
+    public static final String CONNECTION_LOG_TABLE = "connection_log_table";
+    /**
      * The cache to be used for the objects.
      */
     private ObjectsCache objectsCache;
@@ -144,8 +148,14 @@ public class ObjectsDB implements Serializable {
      *
      * @throws SQLException exception thrown whenever a problem occurred when
      * establishing the connection to the database
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading error occurred while establishing the connection
      */
-    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+    public ObjectsDB(String folder, String dbName, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = dbName;
         objectsCache.addDb(this);
         establishConnection(folder, deleteOldDatabase, objectsCache);
@@ -272,12 +282,13 @@ public class ObjectsDB implements Serializable {
      * @param object the object to store
      * @param inCache boolean indicating whether the method shall try to put the
      * object in cache or not
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
      * writing in the database
-     * @throws InterruptedException if an InterruptedException occurs
+     * @throws InterruptedException exception thrown whenever a threading error
+     * occurred while interacting with the database
      */
     public synchronized void insertObject(String tableName, String objectKey, Object object, boolean inCache) throws SQLException, IOException, InterruptedException {
 
@@ -312,8 +323,10 @@ public class ObjectsDB implements Serializable {
      * @param waitingHandler a waiting handler displaying the progress (can be
      * null). The progress will be displayed on the secondary progress bar.
      *
-     * @throws SQLException if an SQLException occurs
-     * @throws IOException if an IOException occurs
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
      */
     public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
         insertObjects(tableName, objects, waitingHandler, false);
@@ -328,8 +341,10 @@ public class ObjectsDB implements Serializable {
      * null). The progress will be displayed on the secondary progress bar.
      * @param allNewObjects boolean indicating whether all objects are new
      *
-     * @throws SQLException if an SQLException occurs
-     * @throws IOException if an IOException occurs
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
      */
     public synchronized void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler, boolean allNewObjects) throws SQLException, IOException {
         if (debugInteractions) {
@@ -433,13 +448,15 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param waitingHandler the waiting handler
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException if an InterruptedException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -544,13 +561,15 @@ public class ObjectsDB implements Serializable {
      * @param tableName the table name
      * @param keys the keys of the objects to load
      * @param waitingHandler the waiting handler, will only be increased
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException if an InterruptedException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -679,15 +698,15 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the object key
      * @param useDB if useDB is false, null will be returned if the object is
-     * not in the cache
-     * @return the object stored in the table.
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException if an InterruptedException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         return retrieveObject(tableName, objectKey, useDB, true);
@@ -705,13 +724,15 @@ public class ObjectsDB implements Serializable {
      * @param useCache if true the retrieved object will be saved in cache
      *
      * @return the object stored in the table.
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws InterruptedException if an InterruptedException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public Object retrieveObject(String tableName, String objectKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -743,13 +764,15 @@ public class ObjectsDB implements Serializable {
      * @param useCache if true the retrieved object will be saved in cache
      *
      * @return the object stored in the table.
-     * @throws SQLException exception thrown whenever an error occurred while
-     * interrogating the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the database
-     * @throws ClassNotFoundException exception thrown whenever the class of the
-     * object is not found when deserializing it.
-     * @throws java.lang.InterruptedException
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     private synchronized Object retrieveObjectSynchronized(String tableName, String objectKey, String correctedKey, boolean useDB, boolean useCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
@@ -856,8 +879,10 @@ public class ObjectsDB implements Serializable {
      * @param objectKey the object key
      * @param cache a boolean indicating whether the cache should be searched as
      * well
+     *
      * @return a boolean indicating whether an object is loaded in the given
      * table
+     *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
@@ -881,8 +906,10 @@ public class ObjectsDB implements Serializable {
      * @param objectKey the object key
      * @param cache a boolean indicating whether the cache should be searched as
      * well
+     *
      * @return a boolean indicating whether an object is loaded in the given
      * table
+     *
      * @throws SQLException exception thrown whenever an exception occurred
      * while interrogating the database
      */
@@ -916,8 +943,11 @@ public class ObjectsDB implements Serializable {
      * Returns an arraylist with the content in the given table.
      *
      * @param tableName the table to get the content for
+     *
      * @return an arraylist with the content in the given table
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
      */
     public synchronized ArrayList<String> tableContent(String tableName) throws SQLException {
 
@@ -952,8 +982,11 @@ public class ObjectsDB implements Serializable {
      * Returns a hashset with the content in the given table.
      *
      * @param tableName the table to get the content for
+     *
      * @return a hashset with the content in the given table
-     * @throws SQLException if an SQLException occurs
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
      */
     public synchronized HashSet<String> tableContentAsSet(String tableName) throws SQLException {
 
@@ -989,6 +1022,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the name of the table
      * @param objectKey the object key
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
      * @throws IOException exception thrown whenever an error occurred while
@@ -1019,6 +1053,7 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object to store
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
@@ -1037,6 +1072,7 @@ public class ObjectsDB implements Serializable {
      * @param object the object to store
      * @param cache a boolean indicating whether the method should look in the
      * cache
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
@@ -1066,6 +1102,7 @@ public class ObjectsDB implements Serializable {
      * @param object the object to store
      * @param cache a boolean indicating whether the method should look in the
      * cache
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * storing the object
      * @throws IOException exception thrown whenever an error occurred while
@@ -1101,12 +1138,35 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
+     * Saves the current date to the CONNECTION_LOG_TABLE.
+     *
+     * @throws SQLException exception thrown if an error occurs while
+     * interacting with the database.
+     * @throws IOException exception thrown if an error occurs while reading or
+     * writing a file.
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database.
+     */
+    private void logConnection() throws SQLException, IOException, InterruptedException {
+        if (!hasTable(CONNECTION_LOG_TABLE)) {
+            addTable(CONNECTION_LOG_TABLE);
+        }
+        java.util.Date date = new java.util.Date();
+        String key = date.toString();
+        insertObject(CONNECTION_LOG_TABLE, key, date, false);
+    }
+
+    /**
      * Loads the long key names from the database in the cache.
      *
-     * @throws SQLException
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database.
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database.
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database.
      */
     private void loadLongKeys() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         if (hasTable(LONG_KEY_TABLE)) {
@@ -1165,9 +1225,14 @@ public class ObjectsDB implements Serializable {
 
         boolean connectionActive = path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
 
-        if (dbConnection != null && connectionActive) {
-            dbConnection.close();
-            DerbyUtil.removeActiveConnection(derbyConnectionID, path);
+        try {
+            if (dbConnection != null && connectionActive) {
+                dbConnection.close();
+                DerbyUtil.removeActiveConnection(derbyConnectionID, path);
+            }
+            DerbyUtil.closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (debugSpeed && debugSpeedWriter != null) {
@@ -1199,9 +1264,15 @@ public class ObjectsDB implements Serializable {
      * @param objectsCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection
+     * establishing the connection to the database
+     * @throws java.io.IOException exception thrown whenever an error occurred
+     * while reading or writing a file
+     * @throws java.lang.ClassNotFoundException exception thrown whenever an
+     * error occurred while deserializing a file
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading error occurred while establishing the connection
      */
-    public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+    public void establishConnection(String aDbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         File parentFolder = new File(aDbFolder);
         if (!parentFolder.exists()) {
@@ -1283,12 +1354,11 @@ public class ObjectsDB implements Serializable {
             }
         }
 
+        // Test the connection by logging the connection in the database
+        logConnection();
+
         // try to load the long keys indexes
-        try {
-            loadLongKeys();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        loadLongKeys();
     }
 
     /**
@@ -1307,6 +1377,7 @@ public class ObjectsDB implements Serializable {
      * allowed.
      *
      * @param tableName the table name
+     *
      * @return the corrected table name
      */
     public String correctTableName(String tableName) {
@@ -1330,6 +1401,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param key the key of the object to be stored
+     *
      * @return the corrected table name
      */
     public String correctKey(String tableName, String key) {
@@ -1361,6 +1433,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table
      * @param correctedKey the corrected key, should be prefix + number
+     *
      * @return the original long key
      */
     public String getOriginalKey(String tableName, String correctedKey) {

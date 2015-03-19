@@ -99,6 +99,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param spectrumFile The spectrum file
      * @param spectrumTitle The spectrum title
+     * 
      * @return the corresponding spectrum key
      */
     public static String getSpectrumKey(String spectrumFile, String spectrumTitle) {

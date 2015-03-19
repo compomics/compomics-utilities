@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.io.massspectrometry.export;
 
-import com.compomics.util.experiment.biology.ElementaryElement;
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
-import com.compomics.util.experiment.io.massspectrometry.MgfFileIterator;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
@@ -10,7 +8,6 @@ import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
-import it.unimi.dsi.fastutil.Hash;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

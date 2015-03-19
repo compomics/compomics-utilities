@@ -407,13 +407,23 @@ public class PrideObjectsFactory {
      * occurred while deserializing the file
      */
     private Object loadObject(File aFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        Object object = null;
         FileInputStream fis = new FileInputStream(aFile);
-        BufferedInputStream bis = new BufferedInputStream(fis);
-        ObjectInputStream in = new ObjectInputStream(bis);
-        Object object = in.readObject();
-        fis.close();
-        bis.close();
-        in.close();
+        try {
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            try {
+                ObjectInputStream in = new ObjectInputStream(bis);
+                try {
+                    object = in.readObject();
+                } finally {
+                    in.close();
+                }
+            } finally {
+                bis.close();
+            }
+        } finally {
+            fis.close();
+        }
         return object;
     }
 
@@ -515,8 +525,8 @@ public class PrideObjectsFactory {
 
     /**
      * Returns the folder where pride annotation information should be saved.
-     * 
-     * @return the folder where pride annotation information should be saved 
+     *
+     * @return the folder where pride annotation information should be saved
      */
     public static String getPrideFolder() {
         return prideFolder;
@@ -524,8 +534,9 @@ public class PrideObjectsFactory {
 
     /**
      * Sets the folder where pride annotation information should be saved.
-     * 
-     * @param prideFolder the folder where pride annotation information should be saved
+     *
+     * @param prideFolder the folder where pride annotation information should
+     * be saved
      */
     public static void setPrideFolder(String prideFolder) {
         PrideObjectsFactory.prideFolder = prideFolder;

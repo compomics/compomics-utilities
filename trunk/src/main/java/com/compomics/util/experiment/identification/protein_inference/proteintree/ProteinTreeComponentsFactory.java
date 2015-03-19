@@ -92,12 +92,16 @@ public class ProteinTreeComponentsFactory {
      * @return a boolean indicating whether the database folder is already
      * created
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * attempting to connect to the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * attempting to connect to the database
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
-    public boolean initiate() throws SQLException, IOException {
+    public boolean initiate() throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         File dbFolder = getDbFolder();
         boolean exists = true;
@@ -123,19 +127,31 @@ public class ProteinTreeComponentsFactory {
      * Sets the currently loaded database as corrupted and tries to delete it.
      *
      * @return true if deletion was successful
-     * @throws IOException if an IOException occurs
+     *
+     * @throws java.io.IOException exception thrown whenever an error occurs
+     * while interacting with a file
+     * @throws java.sql.SQLException exception thrown whenever an error occurs
+     * while interacting with the database
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading error occurs while attempting to delete the database file
      */
-    public boolean delete() throws IOException {
+    public boolean delete() throws IOException, SQLException, InterruptedException {
+        boolean success;
         try {
-            setCorrupted(true);
-        } finally {
-            try {
-                close();
-            } finally {
-                File dbFolder = getDbFolder();
-                return Util.deleteDir(dbFolder);
+            if (!isCorrupted()) {
+                setCorrupted(true);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        try {
+            close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        File dbFolder = getDbFolder();
+        success = Util.deleteDir(dbFolder);
+        return success;
     }
 
     /**
@@ -516,6 +532,8 @@ public class ProteinTreeComponentsFactory {
                             Util.deleteDir(folder); //TODO: Restore connections?
                         }
                     } catch (Exception e) {
+                        int debug = 1;
+                        e.printStackTrace();
                         // Possibly not a tree, skip
                     }
                 }

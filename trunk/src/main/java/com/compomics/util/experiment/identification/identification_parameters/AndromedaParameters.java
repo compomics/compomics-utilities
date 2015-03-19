@@ -15,7 +15,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * Version number for deserialization.
      */
-    static final long serialVersionUID = -2996752557726296967L;
+    static final long serialVersionUID = 9056661756332085205L;
     /**
      * The maximal peptide mass.
      */
@@ -47,7 +47,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * Boolean indicating whether the fragment all option should be used.
      */
-    private boolean fragmentAll = true;
+    private boolean fragmentAll = false;
     /**
      * Boolean indicating whether the empirical correction should be used.
      */

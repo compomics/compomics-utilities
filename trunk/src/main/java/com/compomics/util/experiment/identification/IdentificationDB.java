@@ -100,10 +100,13 @@ public class IdentificationDB implements Serializable {
      * @param name the database name
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectCache the objects cache
-     * @throws SQLException an exception thrown whenever an error occurred while
-     * creating the database
+     * 
+     * @throws SQLException exception thrown whenever an error occurs while interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
      */
-    public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException {
+    public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = name;
         objectsDB = new ObjectsDB(folder, dbName, deleteOldDatabase, objectCache);
         if (deleteOldDatabase) {
@@ -1229,10 +1232,13 @@ public class IdentificationDB implements Serializable {
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectsCache the objects cache
      *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection
+     * 
+     * @throws SQLException exception thrown whenever an error occurs while interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
      */
-    public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+    public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);
         objectsCache.addDb(objectsDB);
     }

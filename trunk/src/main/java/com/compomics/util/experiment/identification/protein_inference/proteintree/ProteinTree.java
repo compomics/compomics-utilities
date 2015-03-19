@@ -257,7 +257,7 @@ public class ProteinTree {
                 if (!needImport) {
                     componentsFactory.loadParameters();
                     if (componentsFactory.isCorrupted()) {
-                        throw new IllegalArgumentException("Database is corrupted. Tree will be reindexed.");
+                        throw new IllegalArgumentException("Index is corrupted. Database will be reindexed.");
                     }
                     if (!componentsFactory.importComplete()) {
                         throw new IllegalArgumentException("Database import was not successfully completed. Tree will be reindexed.");
@@ -312,14 +312,15 @@ public class ProteinTree {
     }
 
     /**
-     * Try to delete the current database.
+     * Try to delete the current database. 
+     * Note: The delete method will attempt to close the connection. It is thus not needed (and not advised) to close the connection before deleting.
      *
      * @return true of the deletion was a success
      */
     public boolean deleteDb() {
         try {
             return componentsFactory.delete();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }

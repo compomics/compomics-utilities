@@ -1822,8 +1822,11 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection, typically when another software already has
      * a connection open
+     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
      */
-    public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+    public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
     }
 
@@ -1835,9 +1838,13 @@ public abstract class Identification extends ExperimentObject {
      * @param objectsCache the objects cache
      *
      * @throws SQLException exception thrown whenever an error occurred while
-     * establishing the connection
+     * establishing the connection, typically when another software already has
+     * a connection open
+     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
      */
-    public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException {
+    public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.restoreConnection(dbFolder, deleteOldDatabase, objectsCache);
     }
 

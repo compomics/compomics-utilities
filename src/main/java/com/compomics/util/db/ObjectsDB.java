@@ -1204,7 +1204,7 @@ public class ObjectsDB implements Serializable {
 
     /**
      * Closes the db connection.
-     *
+     * 
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
      */
@@ -1230,7 +1230,6 @@ public class ObjectsDB implements Serializable {
                 dbConnection.close();
                 DerbyUtil.removeActiveConnection(derbyConnectionID, path);
             }
-            DerbyUtil.closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

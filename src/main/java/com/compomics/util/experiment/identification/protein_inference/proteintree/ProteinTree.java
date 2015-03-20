@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.proteintree;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.DerbyUtil;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
@@ -273,6 +274,7 @@ public class ProteinTree {
             } catch (Exception e) {
                 e.printStackTrace();
                 needImport = true;
+                DerbyUtil.closeConnection();
                 componentsFactory.delete();
                 componentsFactory.initiate();
             }

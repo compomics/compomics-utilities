@@ -23,39 +23,39 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximum number of combinations.
      */
-    private int maxCombinations = 250;
+    private Integer maxCombinations = 250;
     /**
      * The top peaks number.
      */
-    private int topPeaks = 8;
+    private Integer topPeaks = 8;
     /**
      * The top peaks window size.
      */
-    private int topPeaksWindow = 100;
+    private Integer topPeaksWindow = 100;
     /**
      * Boolean indicating whether water losses should be accounted for.
      */
-    private boolean includeWater = true;
+    private Boolean includeWater = true;
     /**
      * Boolean indicating whether ammonia losses should be accounted for.
      */
-    private boolean includeAmmonia = true;
+    private Boolean includeAmmonia = true;
     /**
      * Boolean indicating whether neutral losses should be sequence dependent.
      */
-    private boolean dependentLosses = true;
+    private Boolean dependentLosses = true;
     /**
      * Boolean indicating whether the fragment all option should be used.
      */
-    private boolean fragmentAll = false;
+    private Boolean fragmentAll = false;
     /**
      * Boolean indicating whether the empirical correction should be used.
      */
-    private boolean empiricalCorrection = true;
+    private Boolean empiricalCorrection = true;
     /**
      * Boolean indicating whether the empirical correction should be used.
      */
-    private boolean higherCharge = true;
+    private Boolean higherCharge = true;
     /**
      * The fragmentation method used.
      */
@@ -63,24 +63,24 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal number of modifications.
      */
-    private int maxNumberOfModifications = 5;
+    private Integer maxNumberOfModifications = 5;
     /**
      * The minimal peptide length when no enzyme is used.
      */
-    private int minPeptideLengthNoEnzyme = 8;
+    private Integer minPeptideLengthNoEnzyme = 8;
     /**
      * The maximal peptide length when no enzyme is used.
      */
-    private int maxPeptideLengthNoEnzyme = 25;
+    private Integer maxPeptideLengthNoEnzyme = 25;
     /**
      * Boolean indicating whether I and L should be considered
      * indistinguishable.
      */
-    private boolean equalIL = false;
+    private Boolean equalIL = false;
     /**
      * The number of candidates to report.
      */
-    private int numberOfCandidates = 15;
+    private Integer numberOfCandidates = 15;
 
     /**
      * Constructor.
@@ -94,6 +94,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal peptide mass
      */
     public Double getMaxPeptideMass() {
+        if (maxPeptideMass == null) { // backward compatibility
+            maxPeptideMass = 4600.0;
+        }
         return maxPeptideMass;
     }
 
@@ -112,6 +115,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal number of combinations
      */
     public int getMaxCombinations() {
+        if (maxCombinations == null) { // backward compatibility
+            maxCombinations = 250;
+        }
         return maxCombinations;
     }
 
@@ -130,6 +136,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the top peaks number
      */
     public int getTopPeaks() {
+        if (topPeaks == null) { // backward compatibility
+            topPeaks = 8;
+        }
         return topPeaks;
     }
 
@@ -148,6 +157,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the top peaks window size
      */
     public int getTopPeaksWindow() {
+        if (topPeaksWindow == null) { // backward compatibility
+            topPeaksWindow = 100;
+        }
         return topPeaksWindow;
     }
 
@@ -167,6 +179,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether water losses should be accounted for
      */
     public boolean isIncludeWater() {
+        if (includeWater == null) { // backward compatibility
+            includeWater = true;
+        }
         return includeWater;
     }
 
@@ -188,6 +203,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * for
      */
     public boolean isIncludeAmmonia() {
+        if (includeAmmonia == null) { // backward compatibility
+            includeAmmonia = true;
+        }
         return includeAmmonia;
     }
 
@@ -208,6 +226,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * dependent
      */
     public boolean isDependentLosses() {
+        if (dependentLosses == null) { // backward compatibility
+            dependentLosses = true;
+        }
         return dependentLosses;
     }
 
@@ -228,6 +249,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * used
      */
     public boolean isFragmentAll() {
+        if (fragmentAll == null) { // backward compatibility
+            fragmentAll = false;
+        }
         return fragmentAll;
     }
 
@@ -247,6 +271,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether empirical correction should be used
      */
     public boolean isEmpiricalCorrection() {
+        if (empiricalCorrection == null) { // backward compatibility
+            empiricalCorrection = true;
+        }
         return empiricalCorrection;
     }
 
@@ -266,6 +293,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether higher charge should be considered
      */
     public boolean isHigherCharge() {
+        if (higherCharge == null) { // backward compatibility
+            higherCharge = true;
+        }
         return higherCharge;
     }
 
@@ -303,6 +333,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal number of modifications
      */
     public int getMaxNumberOfModifications() {
+        if (maxNumberOfModifications == null) { // backward compatibility
+            maxNumberOfModifications = 5;
+        }
         return maxNumberOfModifications;
     }
 
@@ -321,6 +354,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the minimal peptide length to use when searching with no enzyme
      */
     public int getMinPeptideLengthNoEnzyme() {
+        if (minPeptideLengthNoEnzyme == null) { // backward compatibility
+            minPeptideLengthNoEnzyme = 8;
+        }
         return minPeptideLengthNoEnzyme;
     }
 
@@ -340,6 +376,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal peptide length to use when searching with no enzyme
      */
     public int getMaxPeptideLengthNoEnzyme() {
+        if (maxPeptideLengthNoEnzyme == null) { // backward compatibility
+            maxPeptideLengthNoEnzyme = 25;
+        }
         return maxPeptideLengthNoEnzyme;
     }
 
@@ -360,6 +399,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * indistinguishable
      */
     public boolean isEqualIL() {
+        if (equalIL == null) { // backward compatibility
+            equalIL = false;
+        }
         return equalIL;
     }
 
@@ -379,6 +421,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the number of candidates
      */
     public int getNumberOfCandidates() {
+        if (numberOfCandidates == null) { // backward compatibility
+            numberOfCandidates = 15;
+        }
         return numberOfCandidates;
     }
 

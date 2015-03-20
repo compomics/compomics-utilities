@@ -149,6 +149,11 @@ public class ProteinTreeComponentsFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            DerbyUtil.closeConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         File dbFolder = getDbFolder();
         success = Util.deleteDir(dbFolder);
         return success;
@@ -526,13 +531,13 @@ public class ProteinTreeComponentsFactory {
                         }
 
                         objectsDB.close();
+                        //@TODO: is it sufficient to unlock it?
 
                         if (!upToDate) {
-                            DerbyUtil.closeConnection();
-                            Util.deleteDir(folder); //TODO: Restore connections?
+                            DerbyUtil.closeConnection(); //TODO: Restore connections?
+                            Util.deleteDir(folder);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
                         // Possibly not a tree, skip
                     }
                 }

@@ -698,6 +698,8 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the object key
      * @param useDB if useDB is false, null will be returned if the object is
+     * 
+     * @return the object stored in the table
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -723,7 +725,7 @@ public class ObjectsDB implements Serializable {
      * not in the cache
      * @param useCache if true the retrieved object will be saved in cache
      *
-     * @return the object stored in the table.
+     * @return the object stored in the table
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database

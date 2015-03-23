@@ -300,7 +300,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
                     || (maxSpectrumMz != null && tideParameters.getMaxSpectrumMz() == null)) {
                 return false;
             }
-            if ((maxSpectrumMz != null && tideParameters.getMaxSpectrumMz() != null) 
+            if ((maxSpectrumMz != null && tideParameters.getMaxSpectrumMz() != null)
                     && (maxSpectrumMz != tideParameters.getMaxSpectrumMz().doubleValue())) {
                 return false;
             }
@@ -338,7 +338,8 @@ public class TideParameters implements IdentificationAlgorithmParameter {
                     || (storeSpectraFileName != null && tideParameters.getStoreSpectraFileName() == null)) {
                 return false;
             }
-            if (!storeSpectraFileName.equalsIgnoreCase(tideParameters.getStoreSpectraFileName())) {
+            if ((storeSpectraFileName != null && tideParameters.getStoreSpectraFileName() != null)
+                    && (!storeSpectraFileName.equalsIgnoreCase(tideParameters.getStoreSpectraFileName()))) {
                 return false;
             }
             if (textOutput != tideParameters.getTextOutput().booleanValue()) {
@@ -780,6 +781,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the computeSpScore
      */
     public Boolean getComputeSpScore() {
+        if (computeSpScore == null) {
+            computeSpScore = false;
+        }
         return computeSpScore;
     }
 
@@ -1068,6 +1072,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the textOutput
      */
     public Boolean getTextOutput() {
+        if (textOutput == null) {
+            textOutput = true;
+        }
         return textOutput;
     }
 
@@ -1086,6 +1093,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the sqtOutput
      */
     public Boolean getSqtOutput() {
+        if (sqtOutput == null) {
+            sqtOutput = false;
+        }
         return sqtOutput;
     }
 
@@ -1104,6 +1114,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the pepXmlOutput
      */
     public Boolean getPepXmlOutput() {
+        if (pepXmlOutput == null) {
+            pepXmlOutput = false;
+        }
         return pepXmlOutput;
     }
 
@@ -1122,6 +1135,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the mzidOutput
      */
     public Boolean getMzidOutput() {
+        if (mzidOutput == null) {
+            mzidOutput = false;
+        }
         return mzidOutput;
     }
 
@@ -1140,6 +1156,9 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * @return the pinOutput
      */
     public Boolean getPinOutput() {
+        if (pinOutput == null) {
+            pinOutput = false;
+        }
         return pinOutput;
     }
 

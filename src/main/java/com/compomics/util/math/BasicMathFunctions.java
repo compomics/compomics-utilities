@@ -81,6 +81,16 @@ public class BasicMathFunctions {
     }
 
     /**
+     * Method to estimate the median of a sorted list.
+     *
+     * @param input ArrayList of double
+     * @return median of the input
+     */
+    public static double medianSorted(ArrayList<Double> input) {
+        return percentileSorted(input, 0.5);
+    }
+
+    /**
      * Returns the desired percentile in a given array of double. If the
      * percentile is between two values a linear interpolation is done.
      *
@@ -115,6 +125,7 @@ public class BasicMathFunctions {
     /**
      * Returns the desired percentile in a given list of double. If the
      * percentile is between two values a linear interpolation is done.
+     * Note: When calculating multiple percentiles on the same list, it is advised to sort it and use percentileSorted.
      *
      * @param input the input list
      * @param percentile the desired percentile. 0.01 returns the first
@@ -123,10 +134,35 @@ public class BasicMathFunctions {
      * @return the desired percentile
      */
     public static double percentile(ArrayList<Double> input, double percentile) {
+        if (input == null) {
+            throw new IllegalArgumentException("Attempting to estimate the percentile of a null object.");
+        }
+        int length = input.size();
+        if (length == 0) {
+            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
+        }
+        ArrayList<Double> sortedInput = new ArrayList<Double>(input);
+        Collections.sort(sortedInput);
+        return percentileSorted(sortedInput, percentile);
+    }
+
+    /**
+     * Returns the desired percentile in a given list of double. If the
+     * percentile is between two values a linear interpolation is done. The list must be sorted prior to submission.
+     *
+     * @param input the input list
+     * @param percentile the desired percentile. 0.01 returns the first
+     * percentile. 0.5 returns the median.
+     *
+     * @return the desired percentile
+     */
+    public static double percentileSorted(ArrayList<Double> input, double percentile) {
         if (percentile < 0 || percentile > 1) {
             throw new IllegalArgumentException("Incorrect input for percentile: " + percentile + ". Input must be between 0 and 1.");
         }
-        Collections.sort(input);
+        if (input == null) {
+            throw new IllegalArgumentException("Attempting to estimate the percentile of a null object.");
+        }
         int length = input.size();
         if (length == 0) {
             throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");

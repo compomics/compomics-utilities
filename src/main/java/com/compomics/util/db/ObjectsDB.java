@@ -1149,13 +1149,14 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database.
      */
-    private void logConnection() throws SQLException, IOException, InterruptedException {
+    private synchronized void logConnection() throws SQLException, IOException, InterruptedException {
         if (!hasTable(CONNECTION_LOG_TABLE)) {
             addTable(CONNECTION_LOG_TABLE);
         }
         java.util.Date date = new java.util.Date();
-        String key = date.toString();
+        String key = date + "_" + System.currentTimeMillis();
         insertObject(CONNECTION_LOG_TABLE, key, date, false);
+        wait(1);
     }
 
     /**
@@ -1206,7 +1207,7 @@ public class ObjectsDB implements Serializable {
 
     /**
      * Closes the db connection.
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * closing the database connection
      */

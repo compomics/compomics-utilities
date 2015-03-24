@@ -124,8 +124,9 @@ public class BasicMathFunctions {
 
     /**
      * Returns the desired percentile in a given list of double. If the
-     * percentile is between two values a linear interpolation is done.
-     * Note: When calculating multiple percentiles on the same list, it is advised to sort it and use percentileSorted.
+     * percentile is between two values a linear interpolation is done. Note:
+     * When calculating multiple percentiles on the same list, it is advised to
+     * sort it and use percentileSorted.
      *
      * @param input the input list
      * @param percentile the desired percentile. 0.01 returns the first
@@ -148,7 +149,8 @@ public class BasicMathFunctions {
 
     /**
      * Returns the desired percentile in a given list of double. If the
-     * percentile is between two values a linear interpolation is done. The list must be sorted prior to submission.
+     * percentile is between two values a linear interpolation is done. The list
+     * must be sorted prior to submission.
      *
      * @param input the input list
      * @param percentile the desired percentile. 0.01 returns the first

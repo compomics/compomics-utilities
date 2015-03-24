@@ -311,6 +311,10 @@ public class PhosphoRS {
                 pInvMap.put(profile, pInv);
                 pInvTotal += pInv;
             }
+            
+            if (pInvTotal == 0.0) {
+                throw new IllegalArgumentException("PhosphoRS pInvTotal is null.");
+            }
 
             for (ArrayList<Integer> profile : possibleProfiles) {
                 Double phosphoRsProbability = pInvMap.get(profile) * 100 / pInvTotal; //in percent

@@ -3,6 +3,7 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
+import java.util.Collections;
 import org.apache.commons.math.MathException;
 
 /**
@@ -88,9 +89,23 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * and 84.1% percentiles.
      */
     public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistribution(ArrayList<Double> input) {
-        double median = BasicMathFunctions.median(input);
-        double percentileDown = BasicMathFunctions.percentile(input, 0.159);
-        double percentileUp = BasicMathFunctions.percentile(input, 0.841);
+        ArrayList<Double> sortedInput = new ArrayList<Double>(input);
+        Collections.sort(sortedInput);
+        return getRobustNonSymmetricalNormalDistributionFromSortedList(sortedInput);
+    }
+
+    /**
+     * Returns the non-symmetrical distribution of the input list of double
+     * calibrated on the median, 15.9% and 84.1% percentiles.
+     *
+     * @param input the input list
+     * @return the non symmetrical distribution calibrated on the median, 15.9%
+     * and 84.1% percentiles.
+     */
+    public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistributionFromSortedList(ArrayList<Double> input) {
+        double median = BasicMathFunctions.medianSorted(input);
+        double percentileDown = BasicMathFunctions.percentileSorted(input, 0.159);
+        double percentileUp = BasicMathFunctions.percentileSorted(input, 0.841);
         return new NonSymmetricalNormalDistribution(median, median - percentileDown, percentileUp - median);
     }
 

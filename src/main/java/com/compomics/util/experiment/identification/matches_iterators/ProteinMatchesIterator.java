@@ -198,7 +198,13 @@ public class ProteinMatchesIterator {
             if (index >= trigger) {
                 int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
                 ArrayList<String> keysInBatch = new ArrayList<String>(proteinKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
+                if (waitingHandler != null) {
+                    waitingHandler.setDisplayProgress(false);
+                }
                 identification.loadProteinMatches(keysInBatch, waitingHandler);
+                if (waitingHandler != null) {
+                    waitingHandler.setDisplayProgress(true);
+                }
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
@@ -209,7 +215,13 @@ public class ProteinMatchesIterator {
                         if (urParameter == null) {
                             throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
+                        if (waitingHandler != null) {
+                            waitingHandler.setDisplayProgress(false);
+                        }
                         identification.loadProteinMatchParameters(keysInBatch, urParameter, waitingHandler);
+                        if (waitingHandler != null) {
+                            waitingHandler.setDisplayProgress(true);
+                        }
 
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             return;
@@ -223,13 +235,27 @@ public class ProteinMatchesIterator {
                         ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
                         peptideKeys.addAll(proteinMatch.getPeptideMatchesKeys());
                     }
+                    if (waitingHandler != null) {
+                        waitingHandler.setDisplayProgress(false);
+                    }
                     identification.loadPeptideMatches(peptideKeys, waitingHandler);
+                    if (waitingHandler != null) {
+                        waitingHandler.setDisplayProgress(true);
+                    }
+
                     if (peptidesParameters != null) {
                         for (UrParameter urParameter : peptidesParameters) {
                             if (urParameter == null) {
                                 throw new IllegalArgumentException("Parameter to batch load is null.");
                             }
+
+                            if (waitingHandler != null) {
+                                waitingHandler.setDisplayProgress(false);
+                            }
                             identification.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler);
+                            if (waitingHandler != null) {
+                                waitingHandler.setDisplayProgress(true);
+                            }
 
                             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                                 return;
@@ -243,13 +269,26 @@ public class ProteinMatchesIterator {
                             PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
                             psmKeys.addAll(peptideMatch.getSpectrumMatches());
                         }
+                        if (waitingHandler != null) {
+                            waitingHandler.setDisplayProgress(false);
+                        }
                         identification.loadSpectrumMatches(psmKeys, waitingHandler);
+                        if (waitingHandler != null) {
+                            waitingHandler.setDisplayProgress(true);
+                        }
                         if (psmParameters != null) {
                             for (UrParameter urParameter : psmParameters) {
                                 if (urParameter == null) {
                                     throw new IllegalArgumentException("Parameter to batch load is null.");
                                 }
+
+                                if (waitingHandler != null) {
+                                    waitingHandler.setDisplayProgress(false);
+                                }
                                 identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler);
+                                if (waitingHandler != null) {
+                                    waitingHandler.setDisplayProgress(true);
+                                }
 
                                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                                     return;

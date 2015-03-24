@@ -703,13 +703,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             char aminoAcid = sequence.charAt(aaIndex);
 
             if (confidentModificationSites.containsKey(aa) && !confidentModificationSites.get(aa).isEmpty()) {
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, confidentModificationSites, useHtmlColorCoding, useShortName);
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, 1, modificationProfile, confidentModificationSites, useHtmlColorCoding, useShortName);
             } else if (representativeAmbiguousModificationSites.containsKey(aa) && !representativeAmbiguousModificationSites.get(aa).isEmpty()) {
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, representativeAmbiguousModificationSites, useHtmlColorCoding, useShortName);
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, 2, modificationProfile, representativeAmbiguousModificationSites, useHtmlColorCoding, useShortName);
             } else if (secondaryAmbiguousModificationSites.containsKey(aa) && !secondaryAmbiguousModificationSites.get(aa).isEmpty()) {
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, secondaryAmbiguousModificationSites, useHtmlColorCoding, useShortName);
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, 3, modificationProfile, secondaryAmbiguousModificationSites, useHtmlColorCoding, useShortName);
             } else if (fixedModificationSites.containsKey(aa) && !fixedModificationSites.get(aa).isEmpty()) {
-                addTaggedResidue(modifiedSequence, aa, aminoAcid, modificationProfile, fixedModificationSites, useHtmlColorCoding, useShortName);
+                addTaggedResidue(modifiedSequence, aa, aminoAcid, 1, modificationProfile, fixedModificationSites, useHtmlColorCoding, useShortName);
             } else {
                 modifiedSequence.append(aminoAcid);
             }
@@ -726,6 +726,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * to
      * @param aaIndex the current sequence index
      * @param aminoAcid the current amino acid
+     * @param localizationConfidenceLevel the localization confidence level
      * @param modificationProfile the modification profile of the search
      * @param modificationSites the current modification sites
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
@@ -733,19 +734,19 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
-    private static void addTaggedResidue(StringBuilder modifiedSequence, int aaIndex, char aminoAcid, ModificationProfile modificationProfile,
+    private static void addTaggedResidue(StringBuilder modifiedSequence, int aaIndex, char aminoAcid, int localizationConfidenceLevel, ModificationProfile modificationProfile,
             HashMap<Integer, ArrayList<String>> modificationSites, boolean useHtmlColorCoding, boolean useShortName) {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         if (modificationSites.get(aaIndex).size() == 1) {
-            modifiedSequence.append(getTaggedResidue(aminoAcid, modificationSites.get(aaIndex).get(0), modificationProfile, 1, useHtmlColorCoding, useShortName));
+            modifiedSequence.append(getTaggedResidue(aminoAcid, modificationSites.get(aaIndex).get(0), modificationProfile, localizationConfidenceLevel, useHtmlColorCoding, useShortName));
         } else {
             boolean modificationAdded = false;
             for (String ptmName : modificationSites.get(aaIndex)) {
                 PTM ptm = ptmFactory.getPTM(ptmName);
                 if (ptm.getType() == PTM.MODAA && !modificationAdded) { // there should only be one...
-                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, 1, useHtmlColorCoding, useShortName));
+                    modifiedSequence.append(getTaggedResidue(aminoAcid, ptmName, modificationProfile, localizationConfidenceLevel, useHtmlColorCoding, useShortName));
                     modificationAdded = true;
                 }
             }
@@ -784,6 +785,8 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     } else {
                         taggedResidue.append(residue).append("<").append(ptmName).append(">");
                     }
+                } else if (localizationConfidenceLevel == 3) {
+                    taggedResidue.append(residue);
                 }
             } else {
                 Color ptmColor = modificationProfile.getColor(ptmName);
@@ -802,6 +805,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         } else {
             taggedResidue.append(residue);
         }
+
         return taggedResidue.toString();
     }
 

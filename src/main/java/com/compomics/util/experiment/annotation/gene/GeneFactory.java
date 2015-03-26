@@ -339,7 +339,7 @@ public class GeneFactory {
                 || ensemblType.equalsIgnoreCase("plants")
                 || ensemblType.equalsIgnoreCase("protists")
                 || ensemblType.equalsIgnoreCase("metazoa")) {
-            return 25;
+            return 26;
         } else {
             return 79;
         }

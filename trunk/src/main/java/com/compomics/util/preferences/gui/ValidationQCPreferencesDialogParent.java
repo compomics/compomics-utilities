@@ -17,25 +17,11 @@ public interface ValidationQCPreferencesDialogParent {
     public Filter createPsmFilter();
 
     /**
-     * Allows the edition of a PSM filter.
-     *
-     * @param filter the PSM filter to edit
-     */
-    public void editPsmFilter(Filter filter);
-
-    /**
      * Allows the creation of a peptide filter.
      *
      * @return the new filter, null if none created
      */
     public Filter createPeptideFilter();
-
-    /**
-     * Allows the edition of a peptide filter.
-     *
-     * @param filter the peptide filter to edit
-     */
-    public void editPeptideFilter(Filter filter);
 
     /**
      * Allows the creation of a protein filter.
@@ -45,9 +31,9 @@ public interface ValidationQCPreferencesDialogParent {
     public Filter createProteinFilter();
 
     /**
-     * Allows the edition of a protein filter.
+     * Allows the edition of a filter.
      *
-     * @param filter the protein filter to edit
+     * @param filter the filter to edit
      */
-    public void editProteinFilter(Filter filter);
+    public void editFilter(Filter filter);
 }

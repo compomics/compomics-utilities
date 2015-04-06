@@ -450,6 +450,7 @@ public class Util {
      * @param approveButtonText the text on the approve button
      * @param openDialog if true the folder has to exist, if false the user will
      * be asked if he/she wants to create the folder is missing
+     * 
      * @return the file selected by the user, or null if no file was selected
      */
     public static File getUserSelectedFolder(Component parent, String aDialogTitle, String lastSelectedFolder, String aFolderDescription, String approveButtonText, boolean openDialog) {
@@ -516,6 +517,7 @@ public class Util {
      * @param separator the text separator
      * @param progressDialog the progress dialog
      * @param removeHtml if true, HTML is converted to text
+     * 
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
@@ -565,6 +567,7 @@ public class Util {
      * @param progressDialog the progress dialog
      * @param removeHtml if true, HTML is converted to text
      * @param writer the writer where the file is to be written
+     * 
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
@@ -620,6 +623,7 @@ public class Util {
      *
      * @param in the file to copy from
      * @param out the file to copy to
+     * 
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void copyFile(File in, File out) throws IOException {
@@ -641,7 +645,9 @@ public class Util {
      * Returns the number of lines in the given file.
      *
      * @param file the file to find the number of lines in
+     * 
      * @return the number of lines in the given file
+     * 
      * @throws IOException if a problem occurs when writing to the file
      */
     public static int getNumberOfLines(File file) throws IOException {
@@ -669,6 +675,7 @@ public class Util {
      *
      * @param list1 the first list
      * @param list2 the second list
+     * 
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameLists(ArrayList list1, ArrayList list2) {

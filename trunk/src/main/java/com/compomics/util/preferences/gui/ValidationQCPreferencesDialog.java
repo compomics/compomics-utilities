@@ -445,7 +445,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editPsmFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPsmFilterMenuItemActionPerformed
         int row = psmTable.getSelectedRow();
         Filter selectedFilter = psmFilters.get(row);
-        validationQCPreferencesDialogParent.editPsmFilter(selectedFilter);
+        validationQCPreferencesDialogParent.editFilter(selectedFilter);
     }//GEN-LAST:event_editPsmFilterMenuItemActionPerformed
 
     /**
@@ -487,7 +487,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editPeptideFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPeptideFilterMenuItemActionPerformed
         int row = peptideTable.getSelectedRow();
         Filter selectedFilter = peptideFilters.get(row);
-        validationQCPreferencesDialogParent.editPeptideFilter(selectedFilter);
+        validationQCPreferencesDialogParent.editFilter(selectedFilter);
     }//GEN-LAST:event_editPeptideFilterMenuItemActionPerformed
 
     /**
@@ -511,7 +511,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editProteinFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProteinFilterMenuItemActionPerformed
         int row = proteinTable.getSelectedRow();
         Filter selectedFilter = proteinFilters.get(row);
-        validationQCPreferencesDialogParent.editProteinFilter(selectedFilter);
+        validationQCPreferencesDialogParent.editFilter(selectedFilter);
     }//GEN-LAST:event_editProteinFilterMenuItemActionPerformed
 
     /**

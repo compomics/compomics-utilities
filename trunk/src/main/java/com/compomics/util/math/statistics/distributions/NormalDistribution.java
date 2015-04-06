@@ -157,7 +157,7 @@ public class NormalDistribution implements Distribution {
                 return 1.0;
             }
         }
-        return getCumulativeProbabilityAt(x);
+        return 1-getCumulativeProbabilityAt(x);
     }
 
     @Override
@@ -172,6 +172,6 @@ public class NormalDistribution implements Distribution {
                 return -Double.MAX_VALUE;
             }
         }
-        return getValueAtCumulativeProbability(p);
+        return getValueAtCumulativeProbability(1-p);
     }
 }

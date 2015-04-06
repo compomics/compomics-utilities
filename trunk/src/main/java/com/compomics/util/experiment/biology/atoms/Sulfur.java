@@ -40,7 +40,10 @@ public class Sulfur extends Atom {
         isotopeMap.put(15, 48.01417);
         isotopeMap.put(16, 49.02362);
         representativeComposition = new HashMap<Integer, Double>();
-        representativeComposition.put(0, 1.0);
+        representativeComposition.put(0, 0.9493);
+        representativeComposition.put(1, 0.0076);
+        representativeComposition.put(2, 0.0429);
+        representativeComposition.put(4, 0.0002);
         this.name = "Sulfur";
         this.letter = "S";
     }

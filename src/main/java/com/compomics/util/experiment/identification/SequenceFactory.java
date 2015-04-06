@@ -1014,6 +1014,7 @@ public class SequenceFactory {
                 Header currentHeader = getHeader(accession);
 
                 String decoyAccession = getDefaultDecoyAccession(currentProtein.getAccession());
+//                String decoyAccession ="rev_" + currentProtein.getAccession(); Header for the TPP
                 String currentRawHeader = currentHeader.getRawHeader();
 
                 // replace the accession number

@@ -33,6 +33,10 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      * average mass values).
      */
     private boolean monoisotopic = true;
+    /**
+     * Defines whether the low memory mode is used.
+     */
+    private Boolean lowMemoryMode = true;
 
     /**
      * Constructor.
@@ -60,6 +64,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (maxRank != msAmandaParameters.getMaxRank()) {
+                return false;
+            }
+            if (isLowMemoryMode() != msAmandaParameters.isLowMemoryMode()) {
                 return false;
             }
             return true;
@@ -97,6 +104,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_RANK=");
         output.append(maxRank);
+        output.append(newLine);
+        output.append("LOW_MEMORY_MODE=");
+        output.append(lowMemoryMode);
         output.append(newLine);
 
         return output.toString();
@@ -175,5 +185,26 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      */
     public void setMaxRank(Integer maxRank) {
         this.maxRank = maxRank;
+    }
+
+    /**
+     * Returns whether the low memory mode is used.
+     * 
+     * @return the lowMemoryMode
+     */
+    public boolean isLowMemoryMode() {
+        if (lowMemoryMode == null) {
+            lowMemoryMode = true;
+        }
+        return lowMemoryMode;
+    }
+
+    /**
+     * Set whether the low memory mode is used.
+     * 
+     * @param lowMemoryMode the lowMemoryMode to set
+     */
+    public void setLowMemoryMode(boolean lowMemoryMode) {
+        this.lowMemoryMode = lowMemoryMode;
     }
 }

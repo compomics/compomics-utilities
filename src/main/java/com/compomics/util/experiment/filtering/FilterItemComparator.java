@@ -1,11 +1,10 @@
 package com.compomics.util.experiment.filtering;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Comparators for filter items
+ * Comparators for filter items.
  *
  * @author Marc Vaudel
  */
@@ -20,11 +19,11 @@ public enum FilterItemComparator {
     excludes("excludes", "Does not contain"),
     matches("matches", "Matches the given regular expression");
     /**
-     * The symbol to use
+     * The symbol to use.
      */
     public final String name;
     /**
-     * The description to use
+     * The description to use.
      */
     public final String description;
     /**
@@ -177,5 +176,4 @@ public enum FilterItemComparator {
     public boolean passes(String threshold, String[] values) {
         return passes(threshold, Arrays.asList(values));
     }
-
 }

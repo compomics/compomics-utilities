@@ -122,6 +122,7 @@ public enum IdentificationParametersCLIParams {
     MS_AMANDA_INSTRUMENT("ms_amanda_instrument", "MS Amanda instrument id option. Available enzymes are listed in the GUI. (Note: case sensitive.).", false),
     MS_AMANDA_MAX_RANK("ms_amanda_max_rank", "MS Amanda maximum rank, default is '10'.", false),
     MS_AMANDA_MONOISOTOPIC("ms_amanda_mono", "MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.", false),
+    MS_AMANDA_LOW_MEM_MODE("ms_low_mem_mode", "MS Amanda use low memory mode option, 0: false, 1: true, default is '1'.", false),
     //////////////////////////////////
     // MyriMatch specific parameters
     //////////////////////////////////

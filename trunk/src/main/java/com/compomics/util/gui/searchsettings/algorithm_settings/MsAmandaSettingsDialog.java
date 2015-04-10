@@ -45,6 +45,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         decoyDatabaseCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         instrumentCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         monoIsotopicCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        lowMemoryModeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -66,6 +67,12 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
             monoIsotopicCmb.setSelectedIndex(0);
         } else {
             monoIsotopicCmb.setSelectedIndex(1);
+        }
+        
+        if (msAmandaParameters.isLowMemoryMode()) {
+            lowMemoryModeCmb.setSelectedIndex(0);
+        } else {
+            lowMemoryModeCmb.setSelectedIndex(1);
         }
     }
 
@@ -96,6 +103,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         }
 
         result.setMonoIsotopic(monoIsotopicCmb.getSelectedIndex() == 0);
+        result.setLowMemoryMode(lowMemoryModeCmb.getSelectedIndex() == 0);
 
         return result;
     }
@@ -119,6 +127,8 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         maxRankTxt = new javax.swing.JTextField();
         monoIsotopicLabel = new javax.swing.JLabel();
         monoIsotopicCmb = new javax.swing.JComboBox();
+        lowMemoryModeLabel = new javax.swing.JLabel();
+        lowMemoryModeCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -156,6 +166,10 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
 
         monoIsotopicCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
+        lowMemoryModeLabel.setText("Low Memory Mode");
+
+        lowMemoryModeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -178,7 +192,11 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(monoIsotopicLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(monoIsotopicCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(monoIsotopicCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(lowMemoryModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lowMemoryModeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         advancedSearchSettingsPanelLayout.setVerticalGroup(
@@ -200,6 +218,10 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxRankLabel)
                     .addComponent(maxRankTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lowMemoryModeLabel)
+                    .addComponent(lowMemoryModeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -261,7 +283,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -279,7 +301,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -366,6 +388,8 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel decoyDatabaseLabel;
     private javax.swing.JComboBox instrumentCmb;
     private javax.swing.JLabel instrumentLabel;
+    private javax.swing.JComboBox lowMemoryModeCmb;
+    private javax.swing.JLabel lowMemoryModeLabel;
     private javax.swing.JLabel maxRankLabel;
     private javax.swing.JTextField maxRankTxt;
     private javax.swing.JComboBox monoIsotopicCmb;

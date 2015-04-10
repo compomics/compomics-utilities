@@ -662,6 +662,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msAmandaParameters.setMonoIsotopic(option == 1);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setLowMemoryMode(option == 1);
+        }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), msAmandaParameters);
 
@@ -1800,6 +1805,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id, arg)) {
                 return false;
             }
         }

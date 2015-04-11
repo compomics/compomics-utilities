@@ -23,6 +23,12 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     private Integer maxVariableMods = 10;
     /**
+     * Controls whether the peptides must contain at least one variable
+     * modification i.e. force all reported peptides to have a variable
+     * modification.
+     */
+    private Boolean requireVariableMods = false;
+    /**
      * The minimum allowed number of peaks in a spectrum.
      */
     private Integer minPeaks = 10;
@@ -126,6 +132,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
             if (maxVariableMods != cometParameters.getMaxVariableMods()) {
                 return false;
             }
+            if (getRequireVariableMods() != cometParameters.getRequireVariableMods()) {
+                return false;
+            }
             if (minPeaks != cometParameters.getMinPeaks()) {
                 return false;
             }
@@ -211,6 +220,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_VARIABLE_MODS=");
         output.append(maxVariableMods);
+        output.append(newLine);
+        output.append("REQUIRE_VARIABLE_MODS=");
+        output.append(requireVariableMods);
         output.append(newLine);
         output.append("MIN_PEAKS=");
         output.append(minPeaks);
@@ -593,5 +605,27 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public void setUseSparseMatrix(Boolean useSparseMatrix) {
         this.useSparseMatrix = useSparseMatrix;
+    }
+
+    /**
+     * Returns true if at least one variable modification is required per
+     * peptide.
+     *
+     * @return the requireVariableMods
+     */
+    public boolean getRequireVariableMods() {
+        if (requireVariableMods == null) {
+            requireVariableMods = false; 
+        }
+        return requireVariableMods;
+    }
+
+    /**
+     * Set if at least one variable modification is required per peptide.
+     *
+     * @param requireVariableMods the requireVariableMods to set
+     */
+    public void setRequireVariableMods(Boolean requireVariableMods) {
+        this.requireVariableMods = requireVariableMods;
     }
 }

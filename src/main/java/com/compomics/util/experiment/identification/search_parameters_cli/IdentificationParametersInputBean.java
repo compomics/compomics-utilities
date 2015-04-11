@@ -684,6 +684,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             cometParameters.setMaxVariableMods(option);
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REQ_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REQ_PTMS.id);
+            Integer option = new Integer(arg);
+            cometParameters.setRequireVariableMods(option == 1);
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
             Integer option = new Integer(arg);
@@ -2054,6 +2059,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_PTMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_PTMS.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.COMET_PTMS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REQ_PTMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REQ_PTMS.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.COMET_REQ_PTMS.id, arg)) {
                 return false;
             }
         }

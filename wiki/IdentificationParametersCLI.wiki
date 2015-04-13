@@ -172,6 +172,8 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -ms_amanda_max_rank       MS Amanda maximum rank, default is '5'.
 
 -ms_amanda_mono           MS Amanda use monoisotopic mass values, 0: false, 1: true, default is '1'.
+
+-ms_low_mem_mode          MS Amanda use low memory mode option, 0: false, 1: true, default is '1'.
 }}}
 
 ==OMSSA advanced parameters==
@@ -312,6 +314,9 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 -comet_num_matches        Comet maximum number of spectrum matches, default is '10'.
 
 -comet_num_ptms           Comet max number of PTMs per peptide, default is '10'.
+
+-comet_req_ptms           Comet require at least one variable PTM per peptide, 
+                          1: true, 0: false, default is '0'.
 
 -comet_min_peaks          Comet min number of peaks for a spectrum, default is '10'.
 

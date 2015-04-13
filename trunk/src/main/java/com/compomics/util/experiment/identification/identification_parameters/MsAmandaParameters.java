@@ -37,6 +37,10 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      * Defines whether the low memory mode is used.
      */
     private Boolean lowMemoryMode = true;
+    /**
+     * The maximum allowed length of the FASTA file name.
+     */
+    public static final int MAX_MS_AMANDA_FASTA_FILE_NAME_LENGTH = 80;
 
     /**
      * Constructor.

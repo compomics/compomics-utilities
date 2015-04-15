@@ -282,4 +282,21 @@ public class SpecificAnnotationPreferences {
     public void setNeutralLossesAuto(boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
     }
+    
+    @Override
+    public SpecificAnnotationPreferences clone() {
+        SpecificAnnotationPreferences clone = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
+        clone.setFragmentIonAccuracy(getFragmentIonAccuracy());
+        clone.setFragmentIonPpm(isFragmentIonPpm());
+        clone.setNeutralLossesAuto(isNeutralLossesAuto());
+        clone.setNeutralLossesMap(getNeutralLossesMap().clone());
+        clone.setSelectedCharges(new ArrayList<Integer>(getSelectedCharges()));
+        HashMap<Ion.IonType, HashSet<Integer>> currentIonsMap = getIonTypes(),
+                newMap = new HashMap<Ion.IonType, HashSet<Integer>>(currentIonsMap.size());
+        for (Ion.IonType ionType : currentIonsMap.keySet()) {
+            newMap.put(ionType, new HashSet<Integer>(currentIonsMap.get(ionType)));
+        }
+        clone.setSelectedIonsMap(newMap);
+        return clone;
+    }
 }

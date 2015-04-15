@@ -1,5 +1,8 @@
 package com.compomics.util.math;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,27 +28,58 @@ public class BasicMathFunctions {
      * Returns n!
      *
      * @param n a given integer
+     * 
      * @return the corresponding factorial
      */
-    public static int factorial(int n) {
+    public static long factorial(int n) {
+        if (n < 1) {
+            throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
+        }
         if (n <= 1) {
             return 1;
         } else {
-            return n * (n - 1);
+            long nMinusOne = factorial(n - 1);
+            if (nMinusOne > Long.MAX_VALUE/n) {
+                throw new ArithmeticException("Long overflow when estimating factorial " + n + ".");
+            }
+            return nMinusOne * n;
         }
     }
 
     /**
-     * Returns the number of k-combinations in a set of n elements.
+     * Returns n!/k!
+     *
+     * @param n a given integer
+     * @param k a given integer
+     * 
+     * @return the corresponding factorial
+     */
+    public static long factorial(int n, int k) {
+        if (n < k) {
+            throw new ArithmeticException("n < k in n!/k!.");
+        }
+        if (n == k) {
+            return 1;
+        } else {
+            return factorial(n - 1, k) * n;
+        }
+    }
+
+    /**
+     * Returns the number of k-combinations in a set of n elements. Note: it is advised to use BigDecimal instead (see getCombination(int k, int n, int scale)).
      *
      * @param k the number of k-combinations
      * @param n the number of elements
      *
      * @return the number of k-combinations in a set of n elements
      */
-    public static double getCombination(int k, int n) {
-        if (k <= n) {
-            return ((double) factorial(n)) / (factorial(k) * factorial(n - k));
+    public static long getCombination(int k, int n) {
+        if (k == 0) {
+            return 0;
+        } else if (k < n) {
+            return factorial(n, k) / factorial(n-k);
+        } else if (k==n) {
+            return 1;
         } else {
             return 0;
         }
@@ -218,7 +252,7 @@ public class BasicMathFunctions {
      * @param input the input
      * @param base the log base
      *
-     * @return the log value of the input in the derired base.
+     * @return the log value of the input in the desired base.
      */
     public static double log(double input, double base) {
         if (base <= 0) {

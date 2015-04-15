@@ -136,4 +136,13 @@ public class NeutralLossesMap implements Serializable {
     public boolean containsLoss(NeutralLoss neutralLoss) {
         return bBoundaries.containsKey(neutralLoss);
     }
+    
+    @Override
+    public NeutralLossesMap clone() {
+        NeutralLossesMap result = new NeutralLossesMap();
+        for (NeutralLoss neutralLoss : getAccountedNeutralLosses()) {
+            result.addNeutralLoss(neutralLoss, getBStart(neutralLoss), getYStart(neutralLoss));
+        }
+        return result;
+    }
 }

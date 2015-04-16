@@ -19,6 +19,10 @@ public class BigMathUtils {
      */
     public static final BigDecimal two = new BigDecimal(2);
     /**
+     * Big decimal value of 1000.
+     */
+    public static final BigDecimal thousand = new BigDecimal(1000);
+    /**
      * Big decimal value of the minimal normal value of a double
      */
     public static final BigDecimal minNormalDouble = new BigDecimal(Double.MIN_NORMAL);

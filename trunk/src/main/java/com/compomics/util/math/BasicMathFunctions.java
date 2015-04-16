@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -23,65 +24,104 @@ public class BasicMathFunctions {
      * Cache for the logarithm value of the base used for the log.
      */
     private static double logBaseValue;
+    /**
+     * Cache for factorials.
+     */
+    private static HashMap<Integer, Long> factorialsCache = new HashMap<Integer, Long>();
 
     /**
-     * Returns n!
+     * Returns n! as a long. Returns null if the capacity of a long is not
+     * sufficient (ie n higher than 20).
      *
      * @param n a given integer
-     * 
+     *
      * @return the corresponding factorial
      */
-    public static long factorial(int n) {
+    public static Long factorial(Integer n) {
         if (n < 1) {
             throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
-        }
-        if (n <= 1) {
-            return 1;
+        } else if (n > 20) {
+            return null;
+        } else if (n <= 1) {
+            return (long) 1;
         } else {
-            long nMinusOne = factorial(n - 1);
-            if (nMinusOne > Long.MAX_VALUE/n) {
-                throw new ArithmeticException("Long overflow when estimating factorial " + n + ".");
+            Long result = factorialsCache.get(n);
+            if (result == null) {
+                result = estimateFactorial(n);
             }
-            return nMinusOne * n;
+            return result;
         }
     }
 
     /**
-     * Returns n!/k!
+     * Estimates factorial in a synchronous method as part of the factorial
+     * method.
+     *
+     * @param n a given integer
+     *
+     * @return the corresponding factorial
+     */
+    private static synchronized Long estimateFactorial(Integer n) {
+        Long result = factorialsCache.get(n);
+        if (result == null) {
+            result = factorial(n - 1) * n;
+            factorialsCache.put(n, result);
+        }
+        return result;
+    }
+
+    /**
+     * Returns n!/k!, null if it cannot fit in a long.
      *
      * @param n a given integer
      * @param k a given integer
-     * 
+     *
      * @return the corresponding factorial
      */
-    public static long factorial(int n, int k) {
+    public static Long factorial(Integer n, Integer k) {
         if (n < k) {
             throw new ArithmeticException("n < k in n!/k!.");
         }
-        if (n == k) {
-            return 1;
+        if (n.equals(k)) {
+            return (long) 1;
         } else {
-            return factorial(n - 1, k) * n;
+            if (n < 20) {
+                return factorial(n) / factorial(k);
+            }
+            Long nMinusOne = factorial(n - 1, k);
+            if (nMinusOne == null || nMinusOne > Long.MAX_VALUE / n) {
+                return null;
+            } else {
+                return nMinusOne * n;
+            }
         }
     }
 
     /**
-     * Returns the number of k-combinations in a set of n elements. Note: it is advised to use BigDecimal instead (see getCombination(int k, int n, int scale)).
+     * Returns the number of k-combinations in a set of n elements. If n!/k!
+     * cannot fit in a long, null is returned, use BigDecimal instead (see
+     * BigFunctions).
      *
      * @param k the number of k-combinations
      * @param n the number of elements
      *
      * @return the number of k-combinations in a set of n elements
      */
-    public static long getCombination(int k, int n) {
+    public static Long getCombination(int k, int n) {
         if (k == 0) {
-            return 0;
+            return (long) 1;
         } else if (k < n) {
-            return factorial(n, k) / factorial(n-k);
-        } else if (k==n) {
-            return 1;
+            Long kInN = factorial(n, k);
+            Long nMinK = factorial(n - k);
+            if (kInN == null || nMinK == null) {
+                return null;
+            } else {
+                return kInN / kInN;
+            }
+        } else if (k == n) {
+            return (long) 1;
         } else {
-            return 0;
+            throw new IllegalArgumentException("n>k in combination.");
         }
     }
 

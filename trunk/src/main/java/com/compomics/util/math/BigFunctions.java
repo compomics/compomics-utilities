@@ -3,6 +3,7 @@ package com.compomics.util.math;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -20,14 +21,16 @@ public class BigFunctions {
      * Cache for the logarithm value of the base used for the log.
      */
     private static BigDecimal logBaseValue;
-    
-
+    /**
+     * Cache for factorials.
+     */
+    private static HashMap<BigInteger, BigInteger> factorialsCache = new HashMap<BigInteger, BigInteger>(1000);
 
     /**
      * Returns n! as BigInteger.
      *
      * @param n a given BigInteger
-     * 
+     *
      * @return the corresponding factorial
      */
     public static BigInteger factorial(BigInteger n) {
@@ -37,9 +40,36 @@ public class BigFunctions {
         if (n.compareTo(BigInteger.ONE) != 1) {
             return BigInteger.ONE;
         } else {
+            if (n.compareTo(new BigInteger("21")) == -1) {
+                return new BigInteger(BasicMathFunctions.factorial(n.intValue()) + "");
+            }
+            if (n.compareTo(BigMathUtils.thousand.toBigInteger()) == -1) {
+                BigInteger result = factorialsCache.get(n);
+                if (result == null) {
+                    result = estimateFactorial(n);
+                }
+                return result;
+            }
             BigInteger nMinusOne = factorial(n.subtract(BigInteger.ONE));
             return nMinusOne.multiply(n);
         }
+    }
+
+    /**
+     * Estimates the factorial in a synchronous method as part of the factorial
+     * method.
+     *
+     * @param n a given BigInteger
+     *
+     * @return the corresponding factorial
+     */
+    private static synchronized BigInteger estimateFactorial(BigInteger n) {
+        BigInteger result = factorialsCache.get(n);
+        if (result == null) {
+            result = factorial(n.subtract(BigInteger.ONE)).multiply(n);
+            factorialsCache.put(n, result);
+        }
+        return result;
     }
 
     /**
@@ -47,7 +77,7 @@ public class BigFunctions {
      *
      * @param n a given BigInteger
      * @param k a given BigInteger
-     * 
+     *
      * @return the corresponding factorial
      */
     public static BigInteger factorial(BigInteger n, BigInteger k) {
@@ -60,7 +90,7 @@ public class BigFunctions {
             return factorial(n.subtract(BigInteger.ONE), k).multiply(n);
         }
     }
-    
+
     /**
      * Returns the number of k-combinations in a set of n elements as a big
      * decimal.
@@ -72,7 +102,7 @@ public class BigFunctions {
      */
     public static BigInteger getCombination(BigInteger k, BigInteger n) {
         if (k.compareTo(BigInteger.ZERO) == 0) {
-            return BigInteger.ZERO;
+            return BigInteger.ONE;
         } else if (k.compareTo(n) == -1) {
             BigInteger numerator = factorial(n, k);
             BigInteger denominator = factorial(n.subtract(k));
@@ -81,7 +111,7 @@ public class BigFunctions {
         } else if (k.compareTo(n) == 0) {
             return BigInteger.ONE;
         } else {
-            return BigInteger.ZERO;
+            throw new IllegalArgumentException("n>k in combination.");
         }
     }
 
@@ -135,7 +165,8 @@ public class BigFunctions {
     }
 
     /**
-     * Returns the log of a big decimal. No FastMath method is used, see ln(). Results are not rounded.
+     * Returns the log of a big decimal. No FastMath method is used, see ln().
+     * Results are not rounded.
      *
      * @param bigDecimal the big decimal to estimate the log on
      * @param mathContext the math context to use for the calculation
@@ -155,15 +186,15 @@ public class BigFunctions {
                 reducedDecimal = reducedDecimal.movePointLeft(1);
                 k++;
             }
-            MathContext lnMathContext = new MathContext(mathContext.getPrecision()+1, mathContext.getRoundingMode());
+            MathContext lnMathContext = new MathContext(mathContext.getPrecision() + 1, mathContext.getRoundingMode());
             BigDecimal reducedLog = lnBD(reducedDecimal, lnMathContext);
-            int precisionIncrease = ((int) FastMath.log10((double) k)) +1;
+            int precisionIncrease = ((int) FastMath.log10((double) k)) + 1;
             int lnTenPrecisionNeeded = mathContext.getPrecision() + precisionIncrease;
             MathContext tenMathContext = new MathContext(lnTenPrecisionNeeded, mathContext.getRoundingMode());
             return BigMathUtils.getLn10(tenMathContext).multiply(new BigDecimal(k)).add(reducedLog);
         } else if (bigDecimal.compareTo(BigMathUtils.E) == 1) {
             //ln(x) = 1 + ln(x/e)
-            MathContext lnMathContext = new MathContext(mathContext.getPrecision()+1, mathContext.getRoundingMode());
+            MathContext lnMathContext = new MathContext(mathContext.getPrecision() + 1, mathContext.getRoundingMode());
             BigDecimal logByE = lnBD(bigDecimal.divide(BigMathUtils.E, lnMathContext), lnMathContext);
             return BigDecimal.ONE.add(logByE);
         }
@@ -193,7 +224,8 @@ public class BigFunctions {
     }
 
     /**
-     * Returns the log of the input in the desired base. See ln method. Results are not rounded.
+     * Returns the log of the input in the desired base. See ln method. Results
+     * are not rounded.
      *
      * @param input the input
      * @param base the log base
@@ -261,22 +293,27 @@ public class BigFunctions {
         }
         return expBD(bigDecimal, mathContext);
     }
-    
+
     /**
-     * Returns the estimated maximal value exp can be calculated on according to the mathContext. Attempting to calculate exp on higher values (or lower than -value) will most likely overflow the capacity of a BigDecimal. Results are not rounded.
-     * 
+     * Returns the estimated maximal value exp can be calculated on according to
+     * the mathContext. Attempting to calculate exp on higher values (or lower
+     * than -value) will most likely overflow the capacity of a BigDecimal.
+     * Results are not rounded.
+     *
      * @param mathContext the math context to use for the calculation
-     * 
+     *
      * @return the maximal value exp can be calculated on
      */
     public static BigDecimal getMaxExp(MathContext mathContext) {
-       return BigMathUtils.getLn10(mathContext).multiply(new BigDecimal(Integer.MAX_VALUE));
+        return BigMathUtils.getLn10(mathContext).multiply(new BigDecimal(Integer.MAX_VALUE));
     }
 
     /**
      * Returns the value of the exponential of the given BigDecimal using the
-     * given MathContext. FastMath method is not used, see exp(). Results are not rounded.
-     * The result is of precision p=p0-x.log(e) where p0 is the precision of the math context and log is the log 10. First order, no guarantee.
+     * given MathContext. FastMath method is not used, see exp(). Results are
+     * not rounded. The result is of precision p=p0-x.log(e) where p0 is the
+     * precision of the math context and log is the log 10. First order, no
+     * guarantee.
      *
      * @param x the big decimal
      * @param mathContext the math context
@@ -293,10 +330,10 @@ public class BigFunctions {
             // exp(-x)=exp(x/(2^n))^(2^n)
             BigDecimal powerTwo = BigDecimal.ONE;
             int k;
-            for (k = 1 ; k <30 && powerTwo.compareTo(x) == -1 ; k *= 2) {
+            for (k = 1; k < 30 && powerTwo.compareTo(x) == -1; k *= 2) {
                 powerTwo = powerTwo.multiply(BigMathUtils.two);
             }
-            MathContext subExpMathContext = new MathContext(precision+1, mathContext.getRoundingMode());
+            MathContext subExpMathContext = new MathContext(precision + 1, mathContext.getRoundingMode());
             BigDecimal reduced = x.divide(powerTwo, subExpMathContext);
             BigDecimal subExp = expBD(reduced, subExpMathContext);
             BigDecimal result = subExp.pow(k);
@@ -326,8 +363,12 @@ public class BigFunctions {
 
     /**
      * Returns the first big decimal power the second using the given math
-     * context. Results are not rounded.
-     * The precision of the result is p=p0-x2.ln(x1).ln(10)-log(ln(x1)+x2) where p0 is the precision of the math context and log is the log 10. First order, no guarantee.
+     * context. Results are not rounded. The precision of the result is
+     * p=p0-x2.ln(x1).log(e)-log(ln(x1)+x2) where p0 is the precision of the
+     * math context and log is the log 10. First order, no guarantee. If x1 is
+     * exact, e.g. in 10^x2, p=p0-x2.ln(x1).log(e)-log(ln(x1)) where p0 is the
+     * precision of the math context and log is the log 10. First order, no
+     * guarantee.
      *
      * @param x1 the first big decimal
      * @param x2 the second big decimal

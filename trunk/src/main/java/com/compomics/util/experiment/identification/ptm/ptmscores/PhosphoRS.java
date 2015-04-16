@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
+import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.BigFunctions;
 import com.compomics.util.math.BigMathUtils;
 import com.compomics.util.preferences.AnnotationPreferences;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * This class estimates the PhosphoRS score as described in
@@ -114,6 +116,7 @@ public class PhosphoRS {
 
         PTM refPTM = ptms.get(0);
         double ptmMass = refPTM.getMass();
+        BigDecimal resolutionLimit = BigDecimal.ONE.divide(BigDecimal.TEN.pow(mathContext.getPrecision()), mathContext);
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationPreferences.getNeutralLossesMap(),
                 scoringLossesMap = new NeutralLossesMap();
@@ -221,6 +224,11 @@ public class PhosphoRS {
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
                                     BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                                    if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                        throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                    } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                                        throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                    }
                                     bigPs.add(bigP);
                                 }
                             } else {
@@ -244,6 +252,18 @@ public class PhosphoRS {
                                         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                     }
                                     BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                                    // Check calculation error
+                                    if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                                        throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                    } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                        throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                    }
+                                    // compensate rounding effects
+                                    if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                        bigP = BigDecimal.ZERO;
+                                    } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                        bigP = BigDecimal.ONE;
+                                    }
                                     bigPs.add(bigP);
                                     scored.add(tempSiteDeterminingIons);
                                 }
@@ -251,9 +271,9 @@ public class PhosphoRS {
                         }
                         Collections.sort(bigPs, Collections.reverseOrder());
                         for (int j = 0; j < bigPs.size() - 1; j++) {
-                            BigDecimal scoreJ = BigDecimal.ONE.negate().multiply(BigFunctions.ln(bigPs.get(j), mathContext));
-                            BigDecimal scoreJPlusOne = BigDecimal.ONE.negate().multiply(BigFunctions.ln(bigPs.get(j + 1), mathContext));
-                            BigDecimal delta = scoreJ.subtract(scoreJPlusOne);
+                            BigDecimal pJ = bigPs.get(j);
+                            BigDecimal pJPlusOne = bigPs.get(j + 1);
+                            BigDecimal delta = pJPlusOne.subtract(pJ);
                             currentDeltas.add(delta);
                         }
                         if (currentDeltas.size() > nDeltas) {
@@ -287,6 +307,18 @@ public class PhosphoRS {
 
                     for (int i = 0; i < spectra.size(); i++) {
                         BigDecimal bigP = getPhosphoRsScoreP(peptide, spectra.get(i), p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                        // Check calculation error
+                        if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                        }
+                        // compensate rounding effects
+                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                            bigP = BigDecimal.ZERO;
+                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                            bigP = BigDecimal.ONE;
+                        }
                         if (bigP.compareTo(bestP) == -1) {
                             bestP = bigP;
                             bestI = i;
@@ -318,13 +350,24 @@ public class PhosphoRS {
                 }
 
                 BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                // Check calculation error
+                if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                    throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                    throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                }
+                // compensate rounding effects
+                if (bigP.compareTo(resolutionLimit) == -1) {
+                    bigP = resolutionLimit;
+                } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                    bigP = BigDecimal.ONE;
+                }
                 BigDecimal pInv = BigDecimal.ONE.divide(bigP, mathContext);
                 pInvMap.put(profile, pInv);
                 pInvTotal = pInvTotal.add(pInv, mathContext);
             }
-
-            if (pInvTotal.compareTo(BigDecimal.ZERO) == 0) {
-                throw new IllegalArgumentException("PhosphoRS pInvTotal is null.");
+            if (pInvTotal.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                throw new IllegalArgumentException("PhosphoRS probability < 0.");
             }
 
             for (ArrayList<Integer> profile : possibleProfiles) {
@@ -396,28 +439,101 @@ public class PhosphoRS {
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
             AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences scoringAnnotationPreferences, MathContext mathContext) {
 
-        int n = 0;
+        int logP = (int) BasicMathFunctions.log(p, 10);
+        int precisionLimit = -300 + mathContext.getPrecision();
+        double minProduct = FastMath.pow(10, -mathContext.getPrecision());
 
+        int n = 0;
         for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationPreferences, peptide).values()) {
             n += fragmentIons.size();
         }
 
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, scoringAnnotationPreferences, spectrum, peptide);
         int k = matches.size();
+        if (k == 0) {
+            return BigDecimal.ONE;
+        }
 
         BigDecimal P = new BigDecimal(0.0, mathContext),
                 pBigDecimal = new BigDecimal(p, mathContext),
                 oneMinusSmallPBigDecimal = new BigDecimal(1 - p, mathContext);
 
         BigInteger nBI = new BigInteger(n + "");
+
+        if (k < n / 2) {
+            // estimate 1-P to be faster
+            for (int i = 0; i < k; i++) {
+                // check whether the calculation needs to be done with big objects
+                boolean needBigObjects = false;
+                Long combinations = BasicMathFunctions.getCombination(i, n);
+                BigInteger conbinationsBI = null;
+                if (combinations == null) {
+                    BigInteger iBI = new BigInteger(i + "");
+                    conbinationsBI = BigFunctions.getCombination(iBI, nBI);
+                    if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
+                        combinations = conbinationsBI.longValueExact();
+                    } else {
+                        needBigObjects = true;
+                    }
+                }
+                if (!needBigObjects && (i > 0 && i * logP <= precisionLimit || n - i > 0 && (n - i) * logP <= precisionLimit)) {
+                    needBigObjects = true;
+                }
+                if (needBigObjects) {
+                    BigDecimal product = pBigDecimal.pow(i);
+                    if (combinations != null) {
+                        product.multiply(new BigDecimal(combinations));
+                    } else {
+                        product.multiply(new BigDecimal(conbinationsBI));
+                    }
+                    product = product.multiply(oneMinusSmallPBigDecimal.pow(n - i));
+                    P = P.add(product);
+                } else {
+                    double product = FastMath.pow(p, i);
+                    product *= combinations;
+                    product *= FastMath.pow(1 - p, n - i);
+                    if (product > minProduct) { // avoid rounding effects making P<0
+                        P = P.add(new BigDecimal(product));
+                    }
+                }
+            }
+            return BigDecimal.ONE.subtract(P);
+        }
+
         for (int i = k; i <= n; i++) {
-            BigInteger iBI = new BigInteger(i + "");
-            BigInteger conbimations = BigFunctions.getCombination(iBI, nBI);
-            BigDecimal factor2 = pBigDecimal.pow(i);
-            BigDecimal factor3 = oneMinusSmallPBigDecimal.pow(n - i);
-            BigDecimal product = factor2.multiply(new BigDecimal(conbimations));
-            product = product.multiply(factor3);
-            P = P.add(product);
+            // check whether the calculation needs to be done with big objects
+            boolean needBigObjects = false;
+            Long combinations = BasicMathFunctions.getCombination(i, n);
+            BigInteger conbinationsBI = null;
+            if (combinations == null) {
+                BigInteger iBI = new BigInteger(i + "");
+                conbinationsBI = BigFunctions.getCombination(iBI, nBI);
+                if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
+                    combinations = conbinationsBI.longValueExact();
+                } else {
+                    needBigObjects = true;
+                }
+            }
+            if (!needBigObjects && (i > 0 && i * logP <= precisionLimit || n - i > 0 && (n - i) * logP <= precisionLimit)) {
+                needBigObjects = true;
+            }
+            if (needBigObjects) {
+                BigDecimal product = pBigDecimal.pow(i);
+                if (combinations != null) {
+                    product.multiply(new BigDecimal(combinations));
+                } else {
+                    product.multiply(new BigDecimal(conbinationsBI));
+                }
+                product = product.multiply(oneMinusSmallPBigDecimal.pow(n - i));
+                P = P.add(product);
+            } else {
+                double product = FastMath.pow(p, i);
+                product *= combinations;
+                product *= FastMath.pow(1 - p, n - i);
+                if (product > minProduct) { // avoid rounding effects making P>1
+                    P = P.add(new BigDecimal(product));
+                }
+            }
         }
         return P;
     }

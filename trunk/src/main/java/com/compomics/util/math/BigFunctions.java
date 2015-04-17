@@ -382,5 +382,4 @@ public class BigFunctions {
         BigDecimal x = lnBigDecimal1.multiply(x2);
         return exp(x, mathContext);
     }
-
 }

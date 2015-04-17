@@ -23,11 +23,11 @@ public class BigMathUtils {
      */
     public static final BigDecimal thousand = new BigDecimal(1000);
     /**
-     * Big decimal value of the minimal normal value of a double
+     * Big decimal value of the minimal normal value of a double.
      */
     public static final BigDecimal minNormalDouble = new BigDecimal(Double.MIN_NORMAL);
     /**
-     * Big decimal value of the maximal value of a double
+     * Big decimal value of the maximal value of a double.
      */
     public static final BigDecimal maxDouble = new BigDecimal(Double.MAX_VALUE);
     /**
@@ -53,5 +53,4 @@ public class BigMathUtils {
        }
        return lnTen.round(mathContext);
     }
-    
 }

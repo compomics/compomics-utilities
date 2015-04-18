@@ -250,7 +250,7 @@ public abstract class SpectrumAnnotator {
     /**
      * Sets a new spectrum to annotate.
      *
-     * @param spectrum The spectrum to inspect
+     * @param spectrum the spectrum to inspect
      * @param intensityLimit the minimal intensity to account for
      */
     protected void setSpectrum(MSnSpectrum spectrum, double intensityLimit) {

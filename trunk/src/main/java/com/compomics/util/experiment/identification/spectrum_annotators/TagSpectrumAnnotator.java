@@ -209,8 +209,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
-     * @param spectrum The spectrum to match
-     * @param tag The tag of interest
+     * @param spectrum the spectrum to match
+     * @param tag the tag of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
@@ -220,7 +220,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, annotationPreferences.getAnnotationIntensityLimit());
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationPreferences.getAnnotationIntensityLimit()));
         }
 
         setTag(tag, specificAnnotationPreferences.getPrecursorCharge());

@@ -66,10 +66,10 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * This method matches the potential fragment ions of a given peptide with a
      * given peak.
      *
-     * @param peptide The peptide
+     * @param peptide the peptide
      * @param specificAnnotationPreferences the specific annotation preferences
-     * @param peak The peak to match
-     * @return A list of potential ion matches
+     * @param peak the peak to match
+     * @return a list of potential ion matches
      */
     public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationPreferences specificAnnotationPreferences, Peak peak) {
         setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
@@ -84,8 +84,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
-     * @param spectrum The spectrum to match
-     * @param peptide The peptide of interest
+     * @param spectrum the spectrum to match
+     * @param peptide the peptide of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
@@ -95,7 +95,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, annotationPreferences.getAnnotationIntensityLimit());
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationPreferences.getAnnotationIntensityLimit()));
         }
 
         setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());

@@ -51,6 +51,10 @@ public class ObjectsCache {
      * The standard batch size for saving objects in databases.
      */
     private int batchSize = 1000;
+    /**
+     * Indicates whether the cache is read only
+     */
+    private boolean readOnly = false;
 
     /**
      * Constructor.
@@ -144,11 +148,13 @@ public class ObjectsCache {
      * @param objectsDB the objects database
      */
     public void addDb(ObjectsDB objectsDB) {
-        String dbName = objectsDB.getName();
-        if (dbName.contains(cacheSeparator)) {
-            throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
+        if (!readOnly) {
+            String dbName = objectsDB.getName();
+            if (dbName.contains(cacheSeparator)) {
+                throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
+            }
+            databases.put(dbName, objectsDB);
         }
-        databases.put(dbName, objectsDB);
     }
 
     /**
@@ -159,13 +165,15 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      */
     public synchronized void removeObject(String dbName, String tableName, String objectKey) {
-        String cacheKey = getCacheKey(dbName, tableName, objectKey);
-        loadedObjectsKeys.remove(cacheKey);
-        HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
-        if (dbObjects != null) {
-            HashMap<String, CacheEntry> tableObjects = dbObjects.get(tableName);
-            if (tableObjects != null) {
-                tableObjects.remove(objectKey);
+        if (!readOnly) {
+            String cacheKey = getCacheKey(dbName, tableName, objectKey);
+            loadedObjectsKeys.remove(cacheKey);
+            HashMap<String, HashMap<String, CacheEntry>> dbObjects = loadedObjectsMap.get(dbName);
+            if (dbObjects != null) {
+                HashMap<String, CacheEntry> tableObjects = dbObjects.get(tableName);
+                if (tableObjects != null) {
+                    tableObjects.remove(objectKey);
+                }
             }
         }
     }
@@ -214,13 +222,17 @@ public class ObjectsCache {
      * @param tableName the name of the table
      * @param objectKey the key of the object
      * @param object the object
+     *
      * @return returns a boolean indicating that the entry was in cache and has
      * been updated. False otherwise.
      */
     public boolean updateObject(String dbName, String tableName, String objectKey, Object object) {
-        CacheEntry entry = getEntry(dbName, tableName, objectKey);
-        if (entry != null) {
-            return updateObjectSynchronized(entry, object);
+        if (!readOnly) {
+            CacheEntry entry = getEntry(dbName, tableName, objectKey);
+            if (entry != null) {
+                return updateObjectSynchronized(entry, object);
+            }
+            return false;
         }
         return false;
     }
@@ -235,9 +247,12 @@ public class ObjectsCache {
      * been updated. False otherwise.
      */
     private synchronized boolean updateObjectSynchronized(CacheEntry entry, Object object) {
-        entry.setModified(true);
-        entry.setObject(object);
-        return true;
+        if (!readOnly) {
+            entry.setModified(true);
+            entry.setObject(object);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -255,22 +270,24 @@ public class ObjectsCache {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void addObject(String dbName, String tableName, String objectKey, Object object, boolean modifiedOrNew) throws IOException, SQLException, InterruptedException {
-        if (dbName.contains(cacheSeparator)) {
-            throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
-        } else if (tableName.contains(cacheSeparator)) {
-            throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator);
-        } else if (objectKey.contains(cacheSeparator)) {
-            throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator);
+        if (!readOnly) {
+            if (dbName.contains(cacheSeparator)) {
+                throw new IllegalArgumentException("Database name (" + dbName + ") should not contain " + cacheSeparator);
+            } else if (tableName.contains(cacheSeparator)) {
+                throw new IllegalArgumentException("Table name (" + tableName + ") should not contain " + cacheSeparator);
+            } else if (objectKey.contains(cacheSeparator)) {
+                throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator);
+            }
+            loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
+            if (!loadedObjectsMap.containsKey(dbName)) {
+                loadedObjectsMap.put(dbName, new HashMap<String, HashMap<String, CacheEntry>>());
+            }
+            if (!loadedObjectsMap.get(dbName).containsKey(tableName)) {
+                loadedObjectsMap.get(dbName).put(tableName, new HashMap<String, CacheEntry>());
+            }
+            loadedObjectsMap.get(dbName).get(tableName).put(objectKey, new CacheEntry(object, modifiedOrNew));
+            updateCache();
         }
-        loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
-        if (!loadedObjectsMap.containsKey(dbName)) {
-            loadedObjectsMap.put(dbName, new HashMap<String, HashMap<String, CacheEntry>>());
-        }
-        if (!loadedObjectsMap.get(dbName).containsKey(tableName)) {
-            loadedObjectsMap.get(dbName).put(tableName, new HashMap<String, CacheEntry>());
-        }
-        loadedObjectsMap.get(dbName).get(tableName).put(objectKey, new CacheEntry(object, modifiedOrNew));
-        updateCache();
     }
 
     /**
@@ -320,86 +337,88 @@ public class ObjectsCache {
      * Can be null. Progress will be displayed as secondary.
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
-     * 
+     *
      * @throws SQLException exception thrown whenever an error occurred while
      * adding the object in the database
      * @throws IOException exception thrown whenever an error occurred while
      * writing the object
      */
     public synchronized void saveObjects(ArrayList<String> entryKeys, WaitingHandler waitingHandler, boolean clearEntries) throws IOException, SQLException {
-        if (waitingHandler != null) {
-            waitingHandler.resetSecondaryProgressCounter();
-            if (clearEntries) {
-                waitingHandler.setMaxSecondaryProgressCounter(3 * entryKeys.size());
-            } else {
-                waitingHandler.setMaxSecondaryProgressCounter(2 * entryKeys.size());
-            }
-        }
-        // temporary map for batch saving
-        HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
-        for (String entryKey : entryKeys) {
-            String[] splittedKey = getKeyComponents(entryKey);
-            String dbName = splittedKey[0];
-            String tableName = splittedKey[1];
-            String objectKey = splittedKey[2];
-            CacheEntry entry = getEntry(dbName, tableName, objectKey);
-
-            if (entry == null) {
-                System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
-            } else {
-                if (entry.isModified()) {
-                    HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
-                    if (dbMap == null) {
-                        dbMap = new HashMap<String, HashMap<String, Object>>();
-                        toSave.put(dbName, dbMap);
-                    }
-                    HashMap<String, Object> tableMap = dbMap.get(tableName);
-                    if (tableMap == null) {
-                        tableMap = new HashMap<String, Object>();
-                        dbMap.put(tableName, tableMap);
-                    }
-                    tableMap.put(objectKey, entry.getObject());
-                }
-            }
-
+        if (!readOnly) {
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
-                if (waitingHandler.isRunCanceled()) {
-                    return;
+                waitingHandler.resetSecondaryProgressCounter();
+                if (clearEntries) {
+                    waitingHandler.setMaxSecondaryProgressCounter(3 * entryKeys.size());
+                } else {
+                    waitingHandler.setMaxSecondaryProgressCounter(2 * entryKeys.size());
                 }
             }
-        }
-        for (String dbName : toSave.keySet()) {
-            ObjectsDB objectsDB = databases.get(dbName);
-            for (String tableName : toSave.get(dbName).keySet()) {
-                objectsDB.insertObjects(tableName, toSave.get(dbName).get(tableName), waitingHandler);
+            // temporary map for batch saving
+            HashMap<String, HashMap<String, HashMap<String, Object>>> toSave = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+            for (String entryKey : entryKeys) {
+                String[] splittedKey = getKeyComponents(entryKey);
+                String dbName = splittedKey[0];
+                String tableName = splittedKey[1];
+                String objectKey = splittedKey[2];
+                CacheEntry entry = getEntry(dbName, tableName, objectKey);
+
+                if (entry == null) {
+                    System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
+                } else {
+                    if (entry.isModified()) {
+                        HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);
+                        if (dbMap == null) {
+                            dbMap = new HashMap<String, HashMap<String, Object>>();
+                            toSave.put(dbName, dbMap);
+                        }
+                        HashMap<String, Object> tableMap = dbMap.get(tableName);
+                        if (tableMap == null) {
+                            tableMap = new HashMap<String, Object>();
+                            dbMap.put(tableName, tableMap);
+                        }
+                        tableMap.put(objectKey, entry.getObject());
+                    }
+                }
+
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                    if (waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+                }
             }
-        }
-        if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
-            if (clearEntries) {
-                for (String entryKey : entryKeys) {
-                    String[] splittedKey = getKeyComponents(entryKey);
-                    String dbName = splittedKey[0];
-                    String tableName = splittedKey[1];
-                    String objectKey = splittedKey[2];
-                    HashMap<String, HashMap<String, CacheEntry>> dbMap = loadedObjectsMap.get(dbName);
-                    if (dbMap != null) {
-                        HashMap<String, CacheEntry> tableMap = dbMap.get(tableName);
-                        if (tableMap != null) {
-                            tableMap.remove(objectKey);
-                            if (tableMap.isEmpty()) {
-                                dbMap.remove(tableName);
+            for (String dbName : toSave.keySet()) {
+                ObjectsDB objectsDB = databases.get(dbName);
+                for (String tableName : toSave.get(dbName).keySet()) {
+                    objectsDB.insertObjects(tableName, toSave.get(dbName).get(tableName), waitingHandler);
+                }
+            }
+            if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
+                if (clearEntries) {
+                    for (String entryKey : entryKeys) {
+                        String[] splittedKey = getKeyComponents(entryKey);
+                        String dbName = splittedKey[0];
+                        String tableName = splittedKey[1];
+                        String objectKey = splittedKey[2];
+                        HashMap<String, HashMap<String, CacheEntry>> dbMap = loadedObjectsMap.get(dbName);
+                        if (dbMap != null) {
+                            HashMap<String, CacheEntry> tableMap = dbMap.get(tableName);
+                            if (tableMap != null) {
+                                tableMap.remove(objectKey);
+                                if (tableMap.isEmpty()) {
+                                    dbMap.remove(tableName);
+                                }
+                            }
+                            if (dbMap.isEmpty()) {
+                                loadedObjectsMap.remove(dbName);
                             }
                         }
-                        if (dbMap.isEmpty()) {
-                            loadedObjectsMap.remove(dbName);
-                        }
-                    }
 
-                    if (waitingHandler != null) {
-                        waitingHandler.increaseSecondaryProgressCounter();
-                        if (waitingHandler.isRunCanceled()) {
-                            return;
+                        if (waitingHandler != null) {
+                            waitingHandler.increaseSecondaryProgressCounter();
+                            if (waitingHandler.isRunCanceled()) {
+                                return;
+                            }
                         }
                     }
                 }
@@ -438,38 +457,40 @@ public class ObjectsCache {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void saveObject(String entryKey, boolean clearEntry) throws IOException, SQLException, InterruptedException {
-        String[] splittedKey = getKeyComponents(entryKey);
-        String dbName = splittedKey[0];
-        String tableName = splittedKey[1];
-        String objectKey = splittedKey[2];
-        CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
-        if (entry.isModified()) {
-            try {
-                ObjectsDB objectsDB = databases.get(dbName);
-                if (objectsDB == null) {
-                    throw new IllegalStateException("Database " + dbName + " not loaded in cache");
+        if (!readOnly) {
+            String[] splittedKey = getKeyComponents(entryKey);
+            String dbName = splittedKey[0];
+            String tableName = splittedKey[1];
+            String objectKey = splittedKey[2];
+            CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+            if (entry.isModified()) {
+                try {
+                    ObjectsDB objectsDB = databases.get(dbName);
+                    if (objectsDB == null) {
+                        throw new IllegalStateException("Database " + dbName + " not loaded in cache");
+                    }
+                    if (objectsDB.inDB(tableName, objectKey, false)) {
+                        objectsDB.updateObject(tableName, objectKey, entry.getObject(), false);
+                    } else {
+                        objectsDB.insertObject(tableName, objectKey, entry.getObject(), false);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IOException("Error while writing match " + objectKey + " in table " + tableName + " in database" + dbName + ".");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new SQLException("Error while writing match " + objectKey + " in table " + tableName + " in database" + dbName + ".");
                 }
-                if (objectsDB.inDB(tableName, objectKey, false)) {
-                    objectsDB.updateObject(tableName, objectKey, entry.getObject(), false);
-                } else {
-                    objectsDB.insertObject(tableName, objectKey, entry.getObject(), false);
+            }
+            if (clearEntry) {
+                loadedObjectsKeys.remove(entryKey);
+                loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
+                if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
+                    loadedObjectsMap.get(dbName).remove(tableName);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IOException("Error while writing match " + objectKey + " in table " + tableName + " in database" + dbName + ".");
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Error while writing match " + objectKey + " in table " + tableName + " in database" + dbName + ".");
-            }
-        }
-        if (clearEntry) {
-            loadedObjectsKeys.remove(entryKey);
-            loadedObjectsMap.get(dbName).get(tableName).remove(objectKey);
-            if (loadedObjectsMap.get(dbName).get(tableName).isEmpty()) {
-                loadedObjectsMap.get(dbName).remove(tableName);
-            }
-            if (loadedObjectsMap.get(dbName).isEmpty()) {
-                loadedObjectsMap.remove(dbName);
+                if (loadedObjectsMap.get(dbName).isEmpty()) {
+                    loadedObjectsMap.remove(dbName);
+                }
             }
         }
     }
@@ -484,19 +505,21 @@ public class ObjectsCache {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public synchronized void updateCache() throws IOException, SQLException, InterruptedException {
+        if (!readOnly) {
 
-        while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
-                || (automatedMemoryManagement && !memoryCheck())) {
-            int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
-            if (toRemove <= 1) {
-                saveObject(loadedObjectsKeys.take());
-            } else {
-                ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
-                loadedObjectsKeys.drainTo(keysToRemove, toRemove);
-                saveObjects(keysToRemove);
-            }
-            if (loadedObjectsKeys.isEmpty()) {
-                break;
+            while ((!automatedMemoryManagement && loadedObjectsKeys.size() > cacheSize)
+                    || (automatedMemoryManagement && !memoryCheck())) {
+                int toRemove = (int) (((double) loadedObjectsKeys.size()) * 0.25); // remove 25% of the objects from the cache
+                if (toRemove <= 1) {
+                    saveObject(loadedObjectsKeys.take());
+                } else {
+                    ArrayList<String> keysToRemove = new ArrayList<String>(toRemove);
+                    loadedObjectsKeys.drainTo(keysToRemove, toRemove);
+                    saveObjects(keysToRemove);
+                }
+                if (loadedObjectsKeys.isEmpty()) {
+                    break;
+                }
             }
         }
     }
@@ -582,10 +605,11 @@ public class ObjectsCache {
             }
         }
 
-        if (emptyCache) {
+        if (emptyCache && !readOnly) {
             loadedObjectsMap.clear();
             loadedObjectsKeys.clear();
         }
+
     }
 
     /**
@@ -620,6 +644,16 @@ public class ObjectsCache {
      */
     public synchronized boolean isEmpty() {
         return loadedObjectsKeys.isEmpty();
+    }
+
+    /**
+     * Sets the cache in read only.
+     *
+     * @param readOnly boolean indicating whether the cache should be in read
+     * only
+     */
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     /**

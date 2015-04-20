@@ -3,6 +3,8 @@ package com.compomics.util.preferences;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SearchParameters;
@@ -227,6 +229,13 @@ public class AnnotationPreferences implements Serializable {
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        for (String modName : searchParameters.getModificationProfile().getAllModifications()) {
+            PTM ptm = ptmFactory.getPTM(modName);
+            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                addNeutralLoss(neutralLoss);
+            }
+        }
     }
 
     /**
@@ -263,6 +272,9 @@ public class AnnotationPreferences implements Serializable {
         if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
             neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
         }
+        if (neutralLossesList == null) {
+            neutralLossesList = new ArrayList<NeutralLoss>(2);
+        }
         return neutralLossesList;
     }
 
@@ -274,6 +286,9 @@ public class AnnotationPreferences implements Serializable {
     public void addNeutralLoss(NeutralLoss neutralLoss) {
         if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
             neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
+        }
+        if (neutralLossesList == null) {
+            neutralLossesList = new ArrayList<NeutralLoss>(2);
         }
         boolean alreadyInList = false;
         for (NeutralLoss tempNeutralLoss : neutralLossesList) {

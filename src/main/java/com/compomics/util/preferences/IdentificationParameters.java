@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.SearchParameters;
 import java.io.Serializable;
 
@@ -237,6 +238,8 @@ public class IdentificationParameters implements Serializable {
         IdentificationParameters identificationParameters = new IdentificationParameters();
         identificationParameters.setSearchParameters(searchParameters);
         AnnotationPreferences annotationPreferences = new AnnotationPreferences();
+        annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
+        annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {
             annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
         }
@@ -276,6 +279,8 @@ public class IdentificationParameters implements Serializable {
     public void setParametersFromSearch(SearchParameters searchParameters) {
         setSearchParameters(searchParameters);
         annotationPreferences = new AnnotationPreferences();
+        annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
+        annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {
             annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
         }

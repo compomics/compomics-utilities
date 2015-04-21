@@ -18,7 +18,7 @@ public class PtmToPrideMap implements Serializable {
     /**
      * Serialization number for backward compatibility.
      */
-    static final long serialVersionUID = -458283230195566801L;
+        static final long serialVersionUID = 6140067846035857282L;
     /**
      * The name of the file to save.
      */

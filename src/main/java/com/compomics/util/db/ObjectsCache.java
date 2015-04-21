@@ -52,7 +52,7 @@ public class ObjectsCache {
      */
     private int batchSize = 1000;
     /**
-     * Indicates whether the cache is read only
+     * Indicates whether the cache is read only.
      */
     private boolean readOnly = false;
 
@@ -609,7 +609,6 @@ public class ObjectsCache {
             loadedObjectsMap.clear();
             loadedObjectsKeys.clear();
         }
-
     }
 
     /**

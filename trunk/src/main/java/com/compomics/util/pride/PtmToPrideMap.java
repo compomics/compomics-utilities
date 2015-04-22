@@ -246,9 +246,10 @@ public class PtmToPrideMap implements Serializable {
         } else if (ptmName.equalsIgnoreCase("pyridyl K")
                 || ptmName.equalsIgnoreCase("pyridyl peptide n-term")) {
             return new CvTerm("UNIMOD", "UNIMOD:25", "Pyridylacetyl", "119.037114");
-        } else if (ptmName.equalsIgnoreCase("pyro-cmC")
-                || ptmName.equalsIgnoreCase("pyro-glu from n-term Q")) {
+        } else if (ptmName.equalsIgnoreCase("pyro-glu from n-term Q")) {
             return new CvTerm("UNIMOD", "UNIMOD:28", "Gln->pyro-Glu", "-17.026549");
+        } else if (ptmName.equalsIgnoreCase("pyro-cmc")) {
+            return new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss ", "-17.026549");
         } else if (ptmName.equalsIgnoreCase("pyro-glu from n-term E")) {
             return new CvTerm("UNIMOD", "UNIMOD:27", "Glu->pyro-Glu", "-18.010565");
         } else if (ptmName.equalsIgnoreCase("oxidation of P to pyroglutamic acid")) {

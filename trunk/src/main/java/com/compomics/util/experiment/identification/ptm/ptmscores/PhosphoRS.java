@@ -462,6 +462,7 @@ public class PhosphoRS {
 
         if (k < n / 2) {
             // estimate 1-P to be faster
+            int extraPrecision = (int) FastMath.log10((double) k);
             for (int i = 0; i < k; i++) {
                 // check whether the calculation needs to be done with big objects
                 boolean needBigObjects = false;
@@ -476,7 +477,7 @@ public class PhosphoRS {
                         needBigObjects = true;
                     }
                 }
-                if (!needBigObjects && (i > 0 && i * logP <= precisionLimit || n - i > 0 && (n - i) * logP <= precisionLimit)) {
+                if (!needBigObjects && (i > 0 && i * logP <= precisionLimit + extraPrecision || n - i > 0 && (n - i) * logP <= precisionLimit + extraPrecision)) {
                     needBigObjects = true;
                 }
                 if (needBigObjects) {
@@ -500,6 +501,7 @@ public class PhosphoRS {
             return BigDecimal.ONE.subtract(P);
         }
 
+        int extraPrecision = (int) FastMath.log10((double) n - k);
         for (int i = k; i <= n; i++) {
             // check whether the calculation needs to be done with big objects
             boolean needBigObjects = false;
@@ -514,7 +516,7 @@ public class PhosphoRS {
                     needBigObjects = true;
                 }
             }
-            if (!needBigObjects && (i > 0 && i * logP <= precisionLimit || n - i > 0 && (n - i) * logP <= precisionLimit)) {
+            if (!needBigObjects && (i > 0 && i * logP <= precisionLimit + extraPrecision || n - i > 0 && (n - i) * logP <= precisionLimit + extraPrecision)) {
                 needBigObjects = true;
             }
             if (needBigObjects) {

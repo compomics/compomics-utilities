@@ -361,15 +361,26 @@ public class UtilitiesPathPreferences {
     /**
      * Tests whether it is possible to write in a destination folder.
      *
-     * @param destinationFolder the folder to test
+     * @param destinationPath the folder to test
      *
      * @return a boolean indicating whether it is possible to write in the
      * destination folder
      */
-    public static boolean testPath(String destinationFolder) {
+    public static boolean testPath(String destinationPath) {
         try {
+            
+            File destinationFile = new File(destinationPath);
+            if (!destinationFile.exists()) {
+                try {
+                    if (!destinationFile.mkdirs()) {
+                        return false;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
+            }
 
-            File testFile = new File(destinationFolder, "test_path_configuration.tmp");
+            File testFile = new File(destinationPath, "test_path_configuration.tmp");
             BufferedWriter bw = new BufferedWriter(new FileWriter(testFile));
             try {
                 bw.write("test");

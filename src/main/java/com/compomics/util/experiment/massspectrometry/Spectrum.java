@@ -462,6 +462,7 @@ public abstract class Spectrum extends ExperimentObject {
         if (maxMz == null) {
             maxMz = Collections.max(peakList.keySet());
         }
+
         return maxMz;
     }
 

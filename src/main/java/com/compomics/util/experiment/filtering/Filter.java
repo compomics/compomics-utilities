@@ -1,7 +1,5 @@
 package com.compomics.util.experiment.filtering;
 
-import java.util.ArrayList;
-
 /**
  * Generic interface for a filter.
  *

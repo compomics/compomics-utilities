@@ -176,4 +176,9 @@ public enum FilterItemComparator {
     public boolean passes(String threshold, String[] values) {
         return passes(threshold, Arrays.asList(values));
     }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
 }

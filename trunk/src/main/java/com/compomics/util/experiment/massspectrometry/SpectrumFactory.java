@@ -946,7 +946,11 @@ public class SpectrumFactory {
      * @return a list of titles from indexed spectra in the given file
      */
     public ArrayList<String> getSpectrumTitles(String mgfFile) {
-        return mgfIndexesMap.get(mgfFile).getSpectrumTitles();
+        MgfIndex index = mgfIndexesMap.get(mgfFile);
+        if (index == null) {
+            return null;
+        }
+        return index.getSpectrumTitles();
     }
 
     /**

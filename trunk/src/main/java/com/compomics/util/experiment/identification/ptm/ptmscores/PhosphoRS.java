@@ -164,11 +164,12 @@ public class PhosphoRS {
 
         if (possibleSites.size() > nPTM) {
 
+            spectrum = filterSpectrum(spectrum, scoringPreferences.getFragmentIonAccuracy());
+
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
 
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
-            double p = getp(spectrum, scoringPreferences.getFragmentIonAccuracy());
 
             HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(
                     noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, scoringPreferences);
@@ -181,151 +182,161 @@ public class PhosphoRS {
             while (minMz < maxMz) {
 
                 tempMax = minMz + 100;
-                MSnSpectrum tempSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle()
-                        + "_PhosphoRS_minMZ_" + minMz, spectrum.getSubSpectrum(minMz, tempMax), spectrum.getFileName());
-                ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
-                HashMap<ArrayList<Integer>, HashSet<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, HashSet<Double>>();
-                for (double ionMz : siteDeterminingIons) {
-                    if (ionMz > minMz && ionMz <= maxMz) {
-                        ArrayList<ArrayList<Integer>> profiles = siteDeterminingIonsMap.get(ionMz);
-                        for (ArrayList<Integer> profile : profiles) {
-                            HashSet<Double> mzs = subMapGoofy.get(profile);
-                            if (mzs == null) {
-                                mzs = new HashSet<Double>();
-                                subMapGoofy.put(profile, mzs);
-                            }
-                            mzs.add(ionMz);
-                        }
-                    }
-                }
+                HashMap<Double, Peak> extractedPeakList = spectrum.getSubSpectrum(minMz, tempMax);
 
-                if (!subMapGoofy.isEmpty()) {
+                if (!extractedPeakList.isEmpty()) {
 
-                    ArrayList<ArrayList<BigDecimal>> deltas = new ArrayList<ArrayList<BigDecimal>>(spectra.size());
-                    int nDeltas = 0;
+                    MSnSpectrum tempSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle()
+                            + "_PhosphoRS_minMZ_" + minMz, extractedPeakList, spectrum.getFileName());
 
-                    for (MSnSpectrum currentSpectrum : spectra) {
-                        ArrayList<BigDecimal> bigPs = new ArrayList<BigDecimal>(possibleProfiles.size());
-                        ArrayList<BigDecimal> currentDeltas = new ArrayList<BigDecimal>(possibleProfiles.size());
-                        ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfiles.size());
-                        boolean noIons = false;
-                        for (ArrayList<Integer> profile : possibleProfiles) {
-                            if (!subMapGoofy.containsKey(profile)) {
-                                if (!noIons) {
-                                    noIons = true;
-                                    Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
-                                    for (int pos : profile) {
-                                        int index = pos;
-                                        if (index == 0) {
-                                            index = 1;
-                                        } else if (index == peptideLength + 1) {
-                                            index = peptideLength;
-                                        }
-                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
-                                    }
-                                    BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
-                                    if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                        throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                                    } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                        throw new IllegalArgumentException("PhosphoRS probability > 1.");
-                                    }
-                                    bigPs.add(bigP);
+                    ArrayList<MSnSpectrum> spectra = getReducedSpectra(tempSpectrum);
+
+                    HashMap<ArrayList<Integer>, HashSet<Double>> subMapGoofy = new HashMap<ArrayList<Integer>, HashSet<Double>>();
+                    for (double ionMz : siteDeterminingIons) {
+                        if (ionMz > minMz && ionMz <= maxMz) {
+                            ArrayList<ArrayList<Integer>> profiles = siteDeterminingIonsMap.get(ionMz);
+                            for (ArrayList<Integer> profile : profiles) {
+                                HashSet<Double> mzs = subMapGoofy.get(profile);
+                                if (mzs == null) {
+                                    mzs = new HashSet<Double>();
+                                    subMapGoofy.put(profile, mzs);
                                 }
-                            } else {
-                                HashSet<Double> tempSiteDeterminingIons = subMapGoofy.get(profile);
-                                boolean alreadyScored = false;
-                                for (HashSet<Double> scoredIons : scored) {
-                                    if (Util.sameSets(tempSiteDeterminingIons, scoredIons)) {
-                                        alreadyScored = true;
-                                        break;
-                                    }
-                                }
-                                if (!alreadyScored) {
-                                    Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
-                                    for (int pos : profile) {
-                                        int index = pos;
-                                        if (index == 0) {
-                                            index = 1;
-                                        } else if (index == peptideLength + 1) {
-                                            index = peptideLength;
-                                        }
-                                        tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
-                                    }
-                                    BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
-                                    // Check calculation error
-                                    if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                                        throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                                    } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                                        throw new IllegalArgumentException("PhosphoRS probability > 1.");
-                                    }
-                                    // compensate rounding effects
-                                    if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                        bigP = BigDecimal.ZERO;
-                                    } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                                        bigP = BigDecimal.ONE;
-                                    }
-                                    bigPs.add(bigP);
-                                    scored.add(tempSiteDeterminingIons);
-                                }
+                                mzs.add(ionMz);
                             }
                         }
-                        Collections.sort(bigPs, Collections.reverseOrder());
-                        for (int j = 0; j < bigPs.size() - 1; j++) {
-                            BigDecimal pJ = bigPs.get(j);
-                            BigDecimal pJPlusOne = bigPs.get(j + 1);
-                            BigDecimal delta = pJPlusOne.subtract(pJ);
-                            currentDeltas.add(delta);
-                        }
-                        if (currentDeltas.size() > nDeltas) {
-                            nDeltas = currentDeltas.size();
-                        }
-                        deltas.add(currentDeltas);
                     }
 
-                    int bestI = 0;
-                    BigDecimal largestDelta = BigDecimal.ZERO;
+                    if (!subMapGoofy.isEmpty()) {
 
-                    for (int j = 0; j < nDeltas && largestDelta.compareTo(BigDecimal.ZERO) == 0; j++) {
-                        for (int i = 0; i < deltas.size(); i++) {
-                            ArrayList<BigDecimal> tempDeltas = deltas.get(i);
-                            if (j < tempDeltas.size() && tempDeltas.get(j).compareTo(largestDelta) == 1) {
-                                largestDelta = tempDeltas.get(j);
+                        ArrayList<ArrayList<BigDecimal>> deltas = new ArrayList<ArrayList<BigDecimal>>(spectra.size());
+                        int nDeltas = 0;
+
+                        for (MSnSpectrum currentSpectrum : spectra) {
+                            ArrayList<BigDecimal> bigPs = new ArrayList<BigDecimal>(possibleProfiles.size());
+                            ArrayList<BigDecimal> currentDeltas = new ArrayList<BigDecimal>(possibleProfiles.size());
+                            ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfiles.size());
+                            boolean noIons = false;
+                            double currentP = getp(currentSpectrum, scoringPreferences.getFragmentIonAccuracy());
+                            for (ArrayList<Integer> profile : possibleProfiles) {
+                                if (!subMapGoofy.containsKey(profile)) {
+                                    if (!noIons) {
+                                        noIons = true;
+                                        Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
+                                        for (int pos : profile) {
+                                            int index = pos;
+                                            if (index == 0) {
+                                                index = 1;
+                                            } else if (index == peptideLength + 1) {
+                                                index = peptideLength;
+                                            }
+                                            tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
+                                        }
+                                        BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                        }
+                                        bigPs.add(bigP);
+                                    }
+                                } else {
+                                    HashSet<Double> tempSiteDeterminingIons = subMapGoofy.get(profile);
+                                    boolean alreadyScored = false;
+                                    for (HashSet<Double> scoredIons : scored) {
+                                        if (Util.sameSets(tempSiteDeterminingIons, scoredIons)) {
+                                            alreadyScored = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!alreadyScored) {
+                                        Peptide tempPeptide = Peptide.getNoModPeptide(peptide, ptms);
+                                        for (int pos : profile) {
+                                            int index = pos;
+                                            if (index == 0) {
+                                                index = 1;
+                                            } else if (index == peptideLength + 1) {
+                                                index = peptideLength;
+                                            }
+                                            tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
+                                        }
+                                        BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                                        // Check calculation error
+                                        if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                        }
+                                        // compensate rounding effects
+                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                            bigP = BigDecimal.ZERO;
+                                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                            bigP = BigDecimal.ONE;
+                                        }
+                                        bigPs.add(bigP);
+                                        scored.add(tempSiteDeterminingIons);
+                                    }
+                                }
+                            }
+                            Collections.sort(bigPs, Collections.reverseOrder());
+                            for (int j = 0; j < bigPs.size() - 1; j++) {
+                                BigDecimal pJ = bigPs.get(j);
+                                BigDecimal pJPlusOne = bigPs.get(j + 1);
+                                BigDecimal delta = pJPlusOne.subtract(pJ);
+                                currentDeltas.add(delta);
+                            }
+                            if (currentDeltas.size() > nDeltas) {
+                                nDeltas = currentDeltas.size();
+                            }
+                            deltas.add(currentDeltas);
+                        }
+
+                        int bestI = 0;
+                        BigDecimal largestDelta = BigDecimal.ZERO;
+
+                        for (int j = 0; j < nDeltas && largestDelta.compareTo(BigDecimal.ZERO) == 0; j++) {
+                            for (int i = 0; i < deltas.size(); i++) {
+                                ArrayList<BigDecimal> tempDeltas = deltas.get(i);
+                                if (j < tempDeltas.size() && tempDeltas.get(j).compareTo(largestDelta) == 1) {
+                                    largestDelta = tempDeltas.get(j);
+                                    bestI = i;
+                                }
+                            }
+                        }
+
+                        if (largestDelta.compareTo(BigDecimal.ZERO) == 0) {
+                            bestI = Math.min(maxDepth, spectra.size() - 1);
+                        }
+
+                        reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
+                    } else {
+
+                        BigDecimal bestP = BigDecimal.ZERO;
+                        int bestI = 0;
+
+                        for (int i = 0; i < spectra.size(); i++) {
+                            MSnSpectrum currentSpectrum = spectra.get(i);
+                            double currentP = getp(currentSpectrum, scoringPreferences.getFragmentIonAccuracy());
+                            BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                            // Check calculation error
+                            if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
+                                throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                            } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                            }
+                            // compensate rounding effects
+                            if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                bigP = BigDecimal.ZERO;
+                            } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                bigP = BigDecimal.ONE;
+                            }
+                            if (bigP.compareTo(bestP) == -1) {
+                                bestP = bigP;
                                 bestI = i;
                             }
                         }
+
+                        reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
                     }
-
-                    if (largestDelta.compareTo(BigDecimal.ZERO) == 0) {
-                        bestI = Math.min(maxDepth, spectra.size() - 1);
-                    }
-
-                    reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
-                } else {
-
-                    BigDecimal bestP = BigDecimal.ZERO;
-                    int bestI = 0;
-
-                    for (int i = 0; i < spectra.size(); i++) {
-                        BigDecimal bigP = getPhosphoRsScoreP(peptide, spectra.get(i), p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
-                        // Check calculation error
-                        if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
-                        }
-                        // compensate rounding effects
-                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                            bigP = BigDecimal.ZERO;
-                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                            bigP = BigDecimal.ONE;
-                        }
-                        if (bigP.compareTo(bestP) == -1) {
-                            bestP = bigP;
-                            bestI = i;
-                        }
-                    }
-
-                    reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
                 }
 
                 minMz = tempMax;
@@ -349,7 +360,8 @@ public class PhosphoRS {
                     tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                 }
 
-                BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, p, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
+                double currentP = getp(phosphoRsSpectrum, scoringPreferences.getFragmentIonAccuracy());
+                BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, spectrumAnnotator, annotationPreferences, scoringPreferences, mathContext);
                 // Check calculation error
                 if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
                     throw new IllegalArgumentException("PhosphoRS probability < 0.");
@@ -553,7 +565,11 @@ public class PhosphoRS {
     private static double getp(Spectrum spectrum, double ms2Tolerance) {
         int N = spectrum.getPeakMap().size();
         double w = spectrum.getMaxMz() - spectrum.getMinMz();
-        return ms2Tolerance * N / w;
+        double p = ms2Tolerance * N / w;
+        if (p > 1) {
+            p = 1;
+        }
+        return p;
     }
 
     /**
@@ -722,10 +738,66 @@ public class PhosphoRS {
                 }
             }
 
-            reducedSpectra.add(new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_" + depth, mzToPeak, spectrum.getFileName()));
+            if (!mzToPeak.isEmpty()) {
+                reducedSpectra.add(new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_" + depth, mzToPeak, spectrum.getFileName()));
+            }
             depth++;
         }
 
         return reducedSpectra;
+    }
+
+    /**
+     * Filters the spectrum so that p is lower or equal to 1 by retaining the
+     * most intense peaks in a window of 10 times the ms2 tolerance.
+     *
+     * @param spectrum the original spectrum
+     * @param ms2Tolerance the ms2 tolerance
+     *
+     * @return the filtered spectrum
+     */
+    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, double ms2Tolerance) {
+        Double window;
+        Integer maxPeaks;
+        if (ms2Tolerance <= 10) {
+            window = 10 * ms2Tolerance;
+            maxPeaks = 10;
+        } else {
+            window = 100.0;
+            maxPeaks = (int) (window / ms2Tolerance);
+        }
+        if (maxPeaks < 1) {
+            throw new IllegalArgumentException("All peaks removed by filtering");
+        }
+        HashMap<Double, Peak> peakMap = spectrum.getPeakMap(),
+                newMap = new HashMap<Double, Peak>(peakMap.size()),
+                tempMap = new HashMap<Double, Peak>();
+        Double refMz = null;
+
+        for (Double mz : spectrum.getOrderedMzValues()) {
+            if (refMz == null) {
+                refMz = mz;
+            } else if (mz > refMz + window) {
+                ArrayList<Double> intensities = new ArrayList<Double>(tempMap.keySet());
+                Collections.sort(intensities, Collections.reverseOrder());
+                for (int i = 0; i < Math.min(intensities.size(), maxPeaks); i++) {
+                    Double intensity = intensities.get(i);
+                    Peak peak = tempMap.get(intensity);
+                    newMap.put(peak.mz, peak);
+                }
+                tempMap.clear();
+                refMz = mz;
+            }
+            Peak peak = peakMap.get(mz);
+            tempMap.put(peak.intensity, peak);
+        }
+        ArrayList<Double> intensities = new ArrayList<Double>(tempMap.keySet());
+        Collections.sort(intensities, Collections.reverseOrder());
+        for (int i = 0; i < Math.min(intensities.size(), maxPeaks); i++) {
+            Double intensity = intensities.get(i);
+            Peak peak = tempMap.get(intensity);
+            newMap.put(peak.mz, peak);
+        }
+        return new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_filtered", newMap, spectrum.getFileName());
     }
 }

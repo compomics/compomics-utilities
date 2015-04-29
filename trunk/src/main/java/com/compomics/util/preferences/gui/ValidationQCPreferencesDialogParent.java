@@ -34,6 +34,8 @@ public interface ValidationQCPreferencesDialogParent {
      * Allows the edition of a filter.
      *
      * @param filter the filter to edit
+     *
+     * @return the edited filter, null if canceled
      */
-    public void editFilter(Filter filter);
+    public Filter editFilter(Filter filter);
 }

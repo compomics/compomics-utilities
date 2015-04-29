@@ -114,12 +114,15 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         psmPopupMenu = new javax.swing.JPopupMenu();
         addPsmFilterMenuItem = new javax.swing.JMenuItem();
         editPsmFilterMenuItem = new javax.swing.JMenuItem();
+        removePsmFilterMenuItem = new javax.swing.JMenuItem();
         peptidePopupMenu = new javax.swing.JPopupMenu();
         addPeptideFilterMenuItem = new javax.swing.JMenuItem();
         editPeptideFilterMenuItem = new javax.swing.JMenuItem();
+        removePeptideFilterMenuItem = new javax.swing.JMenuItem();
         proteinPopupMenu = new javax.swing.JPopupMenu();
         addProteinFilterMenuItem = new javax.swing.JMenuItem();
         editProteinFilterMenuItem = new javax.swing.JMenuItem();
+        removeProteinFilterMenuItem = new javax.swing.JMenuItem();
         validationQCPreferencesDialogPanel = new javax.swing.JPanel();
         generalSettingsPanel = new javax.swing.JPanel();
         dbCheck = new javax.swing.JCheckBox();
@@ -157,6 +160,14 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         });
         psmPopupMenu.add(editPsmFilterMenuItem);
 
+        removePsmFilterMenuItem.setText("Remove Filter");
+        removePsmFilterMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                removePsmFilterMenuItemMouseReleased(evt);
+            }
+        });
+        psmPopupMenu.add(removePsmFilterMenuItem);
+
         addPeptideFilterMenuItem.setText("Add Filter");
         addPeptideFilterMenuItem.setToolTipText("Add a new filter");
         addPeptideFilterMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -175,6 +186,14 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         });
         peptidePopupMenu.add(editPeptideFilterMenuItem);
 
+        removePeptideFilterMenuItem.setText("Remove Filter");
+        removePeptideFilterMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                removePeptideFilterMenuItemMouseReleased(evt);
+            }
+        });
+        peptidePopupMenu.add(removePeptideFilterMenuItem);
+
         addProteinFilterMenuItem.setText("Add Filter");
         addProteinFilterMenuItem.setToolTipText("Add a new filter");
         addProteinFilterMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -192,6 +211,14 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             }
         });
         proteinPopupMenu.add(editProteinFilterMenuItem);
+
+        removeProteinFilterMenuItem.setText("Remove Filter");
+        removeProteinFilterMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                removeProteinFilterMenuItemMouseReleased(evt);
+            }
+        });
+        proteinPopupMenu.add(removeProteinFilterMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Validation QC Filters");
@@ -445,7 +472,11 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editPsmFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPsmFilterMenuItemActionPerformed
         int row = psmTable.getSelectedRow();
         Filter selectedFilter = psmFilters.get(row);
-        validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        if (editedFilter != null) {
+            psmFilters.set(row, editedFilter);
+            ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
+        }
     }//GEN-LAST:event_editPsmFilterMenuItemActionPerformed
 
     /**
@@ -487,7 +518,11 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editPeptideFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPeptideFilterMenuItemActionPerformed
         int row = peptideTable.getSelectedRow();
         Filter selectedFilter = peptideFilters.get(row);
-        validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        if (editedFilter != null) {
+            peptideFilters.set(row, editedFilter);
+            ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
+        }
     }//GEN-LAST:event_editPeptideFilterMenuItemActionPerformed
 
     /**
@@ -511,7 +546,11 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private void editProteinFilterMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProteinFilterMenuItemActionPerformed
         int row = proteinTable.getSelectedRow();
         Filter selectedFilter = proteinFilters.get(row);
-        validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        Filter editedFilter = validationQCPreferencesDialogParent.editFilter(selectedFilter);
+        if (editedFilter != null) {
+            proteinFilters.set(row, editedFilter);
+            ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
+        }
     }//GEN-LAST:event_editProteinFilterMenuItemActionPerformed
 
     /**
@@ -550,6 +589,24 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_proteinTableMouseReleased
 
+    private void removePsmFilterMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removePsmFilterMenuItemMouseReleased
+        int row = psmTable.getSelectedRow();
+        psmFilters.remove(row);
+            ((DefaultTableModel) psmTable.getModel()).fireTableDataChanged();
+    }//GEN-LAST:event_removePsmFilterMenuItemMouseReleased
+
+    private void removeProteinFilterMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeProteinFilterMenuItemMouseReleased
+        int row = proteinTable.getSelectedRow();
+        proteinFilters.remove(row);
+            ((DefaultTableModel) proteinTable.getModel()).fireTableDataChanged();
+    }//GEN-LAST:event_removeProteinFilterMenuItemMouseReleased
+
+    private void removePeptideFilterMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removePeptideFilterMenuItemMouseReleased
+        int row = peptideTable.getSelectedRow();
+        peptideFilters.remove(row);
+            ((DefaultTableModel) peptideTable.getModel()).fireTableDataChanged();
+    }//GEN-LAST:event_removePeptideFilterMenuItemMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPeptideFilterMenuItem;
     private javax.swing.JMenuItem addProteinFilterMenuItem;
@@ -577,6 +634,9 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private javax.swing.JPopupMenu psmPopupMenu;
     private javax.swing.JScrollPane psmScrollPane;
     private javax.swing.JTable psmTable;
+    private javax.swing.JMenuItem removePeptideFilterMenuItem;
+    private javax.swing.JMenuItem removeProteinFilterMenuItem;
+    private javax.swing.JMenuItem removePsmFilterMenuItem;
     private javax.swing.JPanel validationQCPreferencesDialogPanel;
     // End of variables declaration//GEN-END:variables
 

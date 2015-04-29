@@ -757,8 +757,10 @@ public class PhosphoRS {
      * @return the filtered spectrum
      */
     private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, double ms2Tolerance) {
+
         Double window;
         Integer maxPeaks;
+
         if (ms2Tolerance <= 10) {
             window = 10 * ms2Tolerance;
             maxPeaks = 10;
@@ -766,9 +768,11 @@ public class PhosphoRS {
             window = 100.0;
             maxPeaks = (int) (window / ms2Tolerance);
         }
+
         if (maxPeaks < 1) {
             throw new IllegalArgumentException("All peaks removed by filtering");
         }
+
         HashMap<Double, Peak> peakMap = spectrum.getPeakMap(),
                 newMap = new HashMap<Double, Peak>(peakMap.size()),
                 tempMap = new HashMap<Double, Peak>();
@@ -791,13 +795,16 @@ public class PhosphoRS {
             Peak peak = peakMap.get(mz);
             tempMap.put(peak.intensity, peak);
         }
+
         ArrayList<Double> intensities = new ArrayList<Double>(tempMap.keySet());
         Collections.sort(intensities, Collections.reverseOrder());
+
         for (int i = 0; i < Math.min(intensities.size(), maxPeaks); i++) {
             Double intensity = intensities.get(i);
             Peak peak = tempMap.get(intensity);
             newMap.put(peak.mz, peak);
         }
+
         return new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_filtered", newMap, spectrum.getFileName());
     }
 }

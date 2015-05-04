@@ -484,7 +484,7 @@ public class PhosphoRS {
                     BigInteger iBI = new BigInteger(i + "");
                     conbinationsBI = BigFunctions.getCombination(iBI, nBI);
                     if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
-                        combinations = conbinationsBI.longValueExact();
+                        combinations = conbinationsBI.longValue();
                     } else {
                         needBigObjects = true;
                     }
@@ -523,7 +523,7 @@ public class PhosphoRS {
                 BigInteger iBI = new BigInteger(i + "");
                 conbinationsBI = BigFunctions.getCombination(iBI, nBI);
                 if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
-                    combinations = conbinationsBI.longValueExact();
+                    combinations = conbinationsBI.longValue();
                 } else {
                     needBigObjects = true;
                 }

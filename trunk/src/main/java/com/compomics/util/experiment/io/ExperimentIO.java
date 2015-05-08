@@ -34,12 +34,11 @@ public class ExperimentIO {
     /**
      * Method which loads an experiment.
      *
-     * @param utilitiesFile File to import
+     * @param utilitiesFile file to import
      * @return the loaded experiment
-     * @throws IOException Exception thrown if a problem occurred while reading
-     * the file
-     * @throws ClassNotFoundException Exception thrown if a problem occurred
-     * while creating the experiment (typically a version issue)
+     * @throws IOException thrown if a problem occurred while reading the file
+     * @throws ClassNotFoundException thrown if a problem occurred while
+     * creating the experiment (typically a version issue)
      */
     public static MsExperiment loadExperiment(File utilitiesFile) throws IOException, ClassNotFoundException {
         return (MsExperiment) SerializationUtils.readObject(utilitiesFile);

@@ -1822,9 +1822,12 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection, typically when another software already has
      * a connection open
-     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public void establishConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB = new IdentificationDB(dbFolder, reference, deleteOldDatabase, objectsCache);
@@ -1840,9 +1843,12 @@ public abstract class Identification extends ExperimentObject {
      * @throws SQLException exception thrown whenever an error occurred while
      * establishing the connection, typically when another software already has
      * a connection open
-     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.restoreConnection(dbFolder, deleteOldDatabase, objectsCache);
@@ -2132,7 +2138,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters, 
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<String> peptideKeys, ArrayList<UrParameter> peptideParameters,
             boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(peptideKeys, this, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
@@ -2148,7 +2154,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @return a peptide matches iterator
      */
-    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters, 
+    public PeptideMatchesIterator getPeptideMatchesIterator(ArrayList<UrParameter> peptideParameters,
             boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
         return new PeptideMatchesIterator(this, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }

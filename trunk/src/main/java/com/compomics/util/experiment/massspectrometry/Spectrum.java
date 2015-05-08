@@ -460,7 +460,11 @@ public abstract class Spectrum extends ExperimentObject {
     public double getMaxMz() {
 
         if (maxMz == null) {
-            maxMz = Collections.max(peakList.keySet());
+            if (peakList.keySet().isEmpty()) {
+                maxMz = 0.0;
+            } else {
+                maxMz = Collections.max(peakList.keySet());
+            }
         }
 
         return maxMz;
@@ -474,7 +478,11 @@ public abstract class Spectrum extends ExperimentObject {
     public double getMinMz() {
 
         if (minMz == null) {
-            minMz = Collections.min(peakList.keySet());
+            if (peakList.keySet().isEmpty()) {
+                minMz = 0.0;
+            } else {
+                minMz = Collections.min(peakList.keySet());
+            }
         }
 
         return minMz;

@@ -21,6 +21,15 @@ public class ToolFactory {
      */
     public static final String peptideShakerFileOption = "-cps";
     /**
+     * The command line argument for a zipped cps URL for PeptideShaker.
+     */
+    public static final String peptideShakerUrlOption = "-zipUrl";
+    /**
+     * The command line argument for the download folder for the URL for
+     * PeptideShaker.
+     */
+    public static final String peptideShakerUrlDownloadFolderOption = "-zipUrlFolder";
+    /**
      * The command line argument for mgf files for SearchGUI.
      */
     public static final String searchGuiSpectrumFileOption = "-mgf";
@@ -96,6 +105,51 @@ public class ToolFactory {
     }
 
     /**
+     * Starts PeptideShaker from the location of utilities preferences and opens
+     * the file given as argument. If null is given as file or if the file to
+     * open is not found, the tool will go for a default start.
+     *
+     * @param parent a frame to display the path setting dialog (can be null)
+     * @param zipUrl the URL with the zipped PeptideShaker project to open (can
+     * be null)
+     * @param downloadUrlFolder the folder to download the project to, mandatory
+     * if zipUrl is used
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws InterruptedException if an InterruptedException occurs
+     */
+    public static void startPeptideShakerFromURL(JFrame parent, String zipUrl, String downloadUrlFolder) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
+
+        UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        boolean openPeptideShaker = true;
+
+        if (utilitiesUserPreferences.getPeptideShakerPath() == null || !(new File(utilitiesUserPreferences.getPeptideShakerPath()).exists())) {
+            PeptideShakerSetupDialog peptideShakerSetupDialog = new PeptideShakerSetupDialog(parent, true);
+            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+            openPeptideShaker = !peptideShakerSetupDialog.isDialogCanceled();
+        }
+        if (openPeptideShaker) {
+            if (utilitiesUserPreferences.getPeptideShakerPath() != null
+                    && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
+                if (zipUrl != null) {
+                    ArrayList<String> args = new ArrayList<String>();
+                    args.add(peptideShakerUrlOption);
+                    args.add(CommandLineUtils.getQuoteType() + zipUrl + CommandLineUtils.getQuoteType());
+                    args.add(peptideShakerUrlDownloadFolderOption);
+                    args.add(CommandLineUtils.getQuoteType() + downloadUrlFolder + CommandLineUtils.getQuoteType());
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
+                } else {
+                    launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
+                }
+            } else {
+                throw new IllegalArgumentException("PeptideShaker not found in " + utilitiesUserPreferences.getPeptideShakerPath());
+            }
+        }
+    }
+
+    /**
      * Starts Reporter from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog.
@@ -129,7 +183,7 @@ public class ToolFactory {
      * Starts SearchGUI from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog.
-     * 
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs

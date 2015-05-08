@@ -1,10 +1,15 @@
 package com.compomics.util;
 
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +19,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Includes general help methods that are used by the other classes.
@@ -321,7 +327,7 @@ public class Util {
 
         fileChooser.setDialogTitle(aDialogTitle);
         fileChooser.setMultiSelectionEnabled(false);
-        
+
         // see if we should hide the All option
         fileChooser.setAcceptAllFileFilterUsed(showAllFilesOption);
 
@@ -450,7 +456,7 @@ public class Util {
      * @param approveButtonText the text on the approve button
      * @param openDialog if true the folder has to exist, if false the user will
      * be asked if he/she wants to create the folder is missing
-     * 
+     *
      * @return the file selected by the user, or null if no file was selected
      */
     public static File getUserSelectedFolder(Component parent, String aDialogTitle, String lastSelectedFolder, String aFolderDescription, String approveButtonText, boolean openDialog) {
@@ -517,7 +523,7 @@ public class Util {
      * @param separator the text separator
      * @param progressDialog the progress dialog
      * @param removeHtml if true, HTML is converted to text
-     * 
+     *
      * @return the table as a separated text file
      */
     public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
@@ -567,7 +573,7 @@ public class Util {
      * @param progressDialog the progress dialog
      * @param removeHtml if true, HTML is converted to text
      * @param writer the writer where the file is to be written
-     * 
+     *
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
@@ -623,7 +629,7 @@ public class Util {
      *
      * @param in the file to copy from
      * @param out the file to copy to
-     * 
+     *
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void copyFile(File in, File out) throws IOException {
@@ -645,9 +651,9 @@ public class Util {
      * Returns the number of lines in the given file.
      *
      * @param file the file to find the number of lines in
-     * 
+     *
      * @return the number of lines in the given file
-     * 
+     *
      * @throws IOException if a problem occurs when writing to the file
      */
     public static int getNumberOfLines(File file) throws IOException {
@@ -675,7 +681,7 @@ public class Util {
      *
      * @param list1 the first list
      * @param list2 the second list
-     * 
+     *
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameLists(ArrayList list1, ArrayList list2) {
@@ -796,5 +802,133 @@ public class Util {
         }
 
         return temp.doubleValue();
+    }
+
+    /**
+     * Save a file from a URL.
+     *
+     * @param saveFile the file to save to
+     * @param targetUrlAsString the target URL as a string
+     * @param fileSizeInBytes the file size in bytes
+     * @param userName the user name
+     * @param password the password
+     * @param waitingHandler the waiting handler
+     * @return the saved file
+     *
+     * @throws MalformedURLException thrown if an MalformedURLException occurs
+     * @throws IOException thrown if an IOException occurs
+     * @throws FileNotFoundException thrown if a FileNotFoundException occurs
+     */
+    public static File saveUrl(File saveFile, String targetUrlAsString, int fileSizeInBytes, String userName, String password, WaitingHandler waitingHandler)
+            throws MalformedURLException, IOException, FileNotFoundException {
+
+        BufferedInputStream in = null;
+        FileOutputStream fout = null;
+
+        try {
+            boolean urlExists = checkIfURLExists(targetUrlAsString, userName, password);
+
+            if (!urlExists) {
+                if (targetUrlAsString.endsWith(".gz")) {
+                    targetUrlAsString = targetUrlAsString.substring(0, targetUrlAsString.length() - 3);
+                    saveFile = new File(saveFile.getAbsolutePath().substring(0, saveFile.getAbsolutePath().length() - 3));
+                }
+            }
+
+            URL targetUrl = new URL(targetUrlAsString);
+            URLConnection urlConnection = targetUrl.openConnection();
+
+            if (password != null) {
+                String userpass = userName + ":" + password;
+                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+                urlConnection.setRequestProperty("Authorization", basicAuth);
+            }
+
+            int contentLength = urlConnection.getContentLength();
+
+            if (contentLength != -1) {
+                waitingHandler.resetPrimaryProgressCounter();
+                waitingHandler.setMaxPrimaryProgressCounter(contentLength);
+            } else if (fileSizeInBytes != -1) {
+                waitingHandler.resetPrimaryProgressCounter();
+                contentLength = fileSizeInBytes;
+                waitingHandler.setMaxPrimaryProgressCounter(contentLength);
+            } else {
+                waitingHandler.setPrimaryProgressCounterIndeterminate(true);
+            }
+
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            fout = new FileOutputStream(saveFile);
+            long start = System.currentTimeMillis();
+
+            final byte data[] = new byte[1024];
+            int count;
+            while ((count = in.read(data, 0, 1024)) != -1 && !waitingHandler.isRunCanceled()) {
+                fout.write(data, 0, count);
+
+                if (contentLength != -1) {
+                    long now = System.currentTimeMillis();
+                    if ((now - start) > 100) {
+                        waitingHandler.setPrimaryProgressCounter((int) saveFile.length());
+                        start = System.currentTimeMillis();
+                    }
+                }
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (fout != null) {
+                fout.close();
+            }
+        }
+
+        return saveFile;
+    }
+
+    /**
+     * Check if a given URL exists.
+     *
+     * @param targetUrlAsString the URL to check
+     * @param userName the user name
+     * @param password the password
+     *
+     * @return true of it exists
+     */
+    public static boolean checkIfURLExists(String targetUrlAsString, String userName, String password) {
+
+        try {
+            URL targetUrl = new URL(targetUrlAsString);
+            URLConnection urlConnection = targetUrl.openConnection();
+
+            if (password != null) {
+                String userpass = userName + ":" + password;
+                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+                urlConnection.setRequestProperty("Authorization", basicAuth);
+            }
+
+            InputStream inputStream = urlConnection.getInputStream();
+            inputStream.close();
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static int getFileSize(URL url) {
+        HttpURLConnection conn = null;
+        try {
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.getInputStream();
+            return conn.getContentLength();
+        } catch (IOException e) {
+            return -1;
+        } finally {
+            conn.disconnect();
+        }
     }
 }

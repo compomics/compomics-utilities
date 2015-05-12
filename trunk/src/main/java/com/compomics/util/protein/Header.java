@@ -31,10 +31,12 @@ import java.util.StringTokenizer;
 public class Header implements Cloneable, Serializable {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
+     * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 7665784733371863163L;
-    // Class specific log4j logger for Header instances.
+    /**
+     * Class specific log4j logger for Header instances.
+     */
     static Logger logger = Logger.getLogger(Header.class);
 
     /**
@@ -44,9 +46,9 @@ public class Header implements Cloneable, Serializable {
     }
     /**
      * The ID String corresponds to the String that is present as the first
-     * element following the opening '&gt;'. It is most notably 'sw' for SwissProt,
-     * and 'gi' for NCBI. <br> ID is the first element in the abbreviated
-     * header String.
+     * element following the opening '&gt;'. It is most notably 'sw' for
+     * SwissProt, and 'gi' for NCBI. <br> ID is the first element in the
+     * abbreviated header String.
      */
     private String iID = null;
     /**
@@ -130,8 +132,8 @@ public class Header implements Cloneable, Serializable {
     /**
      * The foreign accession String is an accession String in another database
      * of significance. Most notably used for SwissProt accessions that are kept
-     * in the NCBI database. <br> The foreign accession String is an addendum
-     * to the foreign ID String in the abbreviated header String.
+     * in the NCBI database. <br> The foreign accession String is an addendum to
+     * the foreign ID String in the abbreviated header String.
      */
     private String iForeignAccession = null;
     /**
@@ -182,7 +184,8 @@ public class Header implements Cloneable, Serializable {
      */
     private String iRest = null;
     /**
-     * This variable holds the raw complete unformatted header.
+     * This variable holds the raw complete unformatted header. Only trailing
+     * white space is removed.
      */
     private String iRawHeader = null;
     /**
@@ -221,10 +224,13 @@ public class Header implements Cloneable, Serializable {
         } else {
             result = new Header();
 
+            // remove leading and trailing white space
+            aFASTAHeader = aFASTAHeader.trim();
+
             // save the raw unformatted header
             result.iRawHeader = aFASTAHeader;
 
-            // Remove leading '>', if present.
+            // remove leading '>', if present
             if (aFASTAHeader.startsWith(">")) {
                 aFASTAHeader = aFASTAHeader.substring(1);
             }
@@ -655,19 +661,18 @@ public class Header implements Cloneable, Serializable {
                     parseUniProtDescription(result);
 
                 } else if (aFASTAHeader.startsWith("nxp|NX_") && aFASTAHeader.split("\\|").length == 5) { // @TODO: replace by regular expression?
-                    
+
                     // header should look like this:
                     // >nxp|NX_P02768-1|ALB|Serum albumin|Iso 1
-                    
                     result.databaseType = DatabaseType.NextProt;
                     result.iID = "nxp";
-                    
+
                     String[] headerElements = aFASTAHeader.split("\\|");
-                    
+
                     result.iAccession = headerElements[1];
                     result.iGeneName = headerElements[2];
                     result.iDescription = headerElements[3] + "|" + headerElements[4];
-                    
+
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -1119,7 +1124,8 @@ public class Header implements Cloneable, Serializable {
      * This method returns an abbreviated version of the Header, suitable for
      * inclusion in FASTA formatted files. <br> The abbreviated header is
      * composed in the following way: <br>
-     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description]
+     * )[description]
      *
      * @return String with the abbreviated header.
      */
@@ -1131,7 +1137,8 @@ public class Header implements Cloneable, Serializable {
      * This method returns an abbreviated version of the Header, suitable for
      * inclusion in FASTA formatted files. <br> The abbreviated header is
      * composed in the following way: <br>
-     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description]
+     * )[description]
      *
      *
      * @param decoyTag the decoy tag to add
@@ -1375,7 +1382,8 @@ public class Header implements Cloneable, Serializable {
      * This method returns an abbreviated version of the Header, suitable for
      * inclusion in FASTA formatted files. <br> The abbreviated header is
      * composed in the following way: <br>
-     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description] )[description]([addenda])
+     * &gt;[ID]|[accession_string]|([foreign_ID]|[foreign_accession_string]|[foreign_description]
+     * )[description]([addenda])
      * <br>
      * Note that the output of this method is identical to that of the
      * getAbbreviatedFASTAHeader() if no addenda are present.

@@ -86,10 +86,11 @@ public class Header implements Cloneable, Serializable {
     public enum DatabaseType {
 
         UniProt("UniProtKB", "14681372"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"),
-        PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"), M_Tuberculosis("TBDatabase (TBDB)", "18835847"),
-        H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null), C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null),
-        Listeria("Listeria", null), GAFFA("GAFFA", null), UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null),
-        IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null), NextProt("neXtProt", "22139911"), Unknown(null, null); // @TODO: add support for Ensembl headers?
+        PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"),
+        M_Tuberculosis("TBDatabase (TBDB)", "18835847"), H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null),
+        C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null), Listeria("Listeria", null), GAFFA("GAFFA", null),
+        UPS("Universal Proteomic Standard (UPS)", null), Generic_Header(null, null), IPI("International Protein Index (IPI)", "15221759"), Generic_Split_Header(null, null),
+        NextProt("neXtProt", "22139911"), UniRef("UniRef", null), Unknown(null, null); // @TODO: add support for Ensembl headers?
 
         /**
          * The full name of the database.
@@ -673,6 +674,16 @@ public class Header implements Cloneable, Serializable {
                     result.iGeneName = headerElements[2];
                     result.iDescription = headerElements[3] + "|" + headerElements[4];
 
+                } else if (aFASTAHeader.startsWith("UniRef") && aFASTAHeader.contains(" ")) { // @TODO: replace by regular expression?
+
+                    // header should look like this:
+                    // >UniRef100_U3PVA8 Protein IroK n=22 Tax=Escherichia coli RepID=IROK_ECOL
+                    result.databaseType = DatabaseType.UniRef;
+                    result.iID = ""; // @TODO: could be UniRef or UniRef100 etc?
+
+                    result.iAccession = aFASTAHeader.substring(0, aFASTAHeader.indexOf(" "));
+                    result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf(" ") + 1);
+
                 } else if (aFASTAHeader.matches("^[^\\s]*\\|[^\\s]+_[^\\s]+ .*")) {
                     // New (9.0 release (31 Oct 2006) and beyond) standard SwissProt header as
                     // present in the Expasy FTP FASTA file.
@@ -1183,7 +1194,7 @@ public class Header implements Cloneable, Serializable {
                     // Proprietary PSB A. thaliana entry
                     result.append(" ").append(this.iDescription);
                 }
-            } else if (this.iID.equals("")) {
+            } else {
                 if (this.databaseType == DatabaseType.H_Invitation) {
                     result.append("|").append(this.iDescription);
                 } else {
@@ -1518,6 +1529,8 @@ public class Header implements Cloneable, Serializable {
                 return "Universal Proteomic Standard";
             case NextProt:
                 return "neXtProt";
+            case UniRef:
+                return "UniRef";
             default:
                 throw new IllegalArgumentException("Database type not implemented: " + databaseType + ".");
         }

@@ -1,10 +1,11 @@
-package com.compomics.util.gui.protein;
+package com.compomics.util.protein_sequences_manager.gui;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.LastSelectedFolder;
 import com.compomics.util.preferences.UtilitiesUserPreferences;

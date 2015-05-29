@@ -12,22 +12,20 @@ import com.compomics.util.experiment.identification.spectrum_annotators.PeptideS
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
-import com.compomics.util.math.BasicMathFunctions;
-import com.compomics.util.math.BigFunctions;
 import com.compomics.util.math.BigMathUtils;
+import com.compomics.util.math.statistics.distributions.BinomialDistribution;
 import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import org.apache.commons.math.util.FastMath;
+import org.apache.commons.math.MathException;
 
 /**
  * This class estimates the PhosphoRS score as described in
@@ -70,7 +68,8 @@ public class PhosphoRS {
      * to this peptide and spectrum
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
      * @param mathContext the math context to use for calculation
@@ -86,11 +85,12 @@ public class PhosphoRS {
      * protein sequence index)
      * @throws java.sql.SQLException exception thrown whenever an error occurred
      * while interacting with the protein tree
+     * @throws org.apache.commons.math.MathException exception thrown whenever a math error occurred while computing the score.
      */
     public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
             PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for PhosphoRS calculation.");
@@ -146,15 +146,15 @@ public class PhosphoRS {
 
         for (PTM ptm : ptms) {
             if (ptm.isNTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
                     possibleSites.add(0);
                 }
             } else if (ptm.isCTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(peptideLength)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(peptideLength)) {
                     possibleSites.add(peptideLength + 1);
                 }
             } else {
-                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
+                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
                     if (!possibleSites.contains(potentialSite)) {
                         possibleSites.add(potentialSite);
                     }
@@ -449,107 +449,32 @@ public class PhosphoRS {
      * @return the phosphoRS score
      */
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
-            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences scoringAnnotationPreferences, MathContext mathContext) {
-
-        int logP = (int) BasicMathFunctions.log(p, 10);
-        int precisionLimit = -300 + mathContext.getPrecision();
-        double minProduct = FastMath.pow(10, -mathContext.getPrecision());
+            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences scoringAnnotationPreferences, MathContext mathContext) throws MathException {
 
         int n = 0;
         for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationPreferences, peptide).values()) {
+            for (Ion ion : fragmentIons) {
+                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                    n++;
+                }
+            }
             n += fragmentIons.size();
         }
 
+        BinomialDistribution distribution = new BinomialDistribution(n, p);
+
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, scoringAnnotationPreferences, spectrum, peptide);
-        int k = matches.size();
+        int k = 0;
+        for (IonMatch ionMatch : matches) {
+            if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                k++;
+            }
+        }
         if (k == 0) {
             return BigDecimal.ONE;
         }
 
-        BigDecimal P = new BigDecimal(0.0, mathContext),
-                pBigDecimal = new BigDecimal(p, mathContext),
-                oneMinusSmallPBigDecimal = new BigDecimal(1 - p, mathContext);
-
-        BigInteger nBI = new BigInteger(n + "");
-
-        if (k < n / 2) {
-            // estimate 1-P to be faster
-            int extraPrecision = (int) FastMath.log10((double) k);
-            for (int i = 0; i < k; i++) {
-                // check whether the calculation needs to be done with big objects
-                boolean needBigObjects = false;
-                Long combinations = BasicMathFunctions.getCombination(i, n);
-                BigInteger conbinationsBI = null;
-                if (combinations == null) {
-                    BigInteger iBI = new BigInteger(i + "");
-                    conbinationsBI = BigFunctions.getCombination(iBI, nBI);
-                    if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
-                        combinations = conbinationsBI.longValue();
-                    } else {
-                        needBigObjects = true;
-                    }
-                }
-                if (!needBigObjects && (i > 0 && i * logP <= precisionLimit + extraPrecision || n - i > 0 && (n - i) * logP <= precisionLimit + extraPrecision)) {
-                    needBigObjects = true;
-                }
-                if (needBigObjects) {
-                    BigDecimal product = pBigDecimal.pow(i);
-                    if (combinations != null) {
-                        product.multiply(new BigDecimal(combinations));
-                    } else {
-                        product.multiply(new BigDecimal(conbinationsBI));
-                    }
-                    product = product.multiply(oneMinusSmallPBigDecimal.pow(n - i));
-                    P = P.add(product);
-                } else {
-                    double product = FastMath.pow(p, i);
-                    product *= combinations;
-                    product *= FastMath.pow(1 - p, n - i);
-                    if (product > minProduct) { // avoid rounding effects making P<0
-                        P = P.add(new BigDecimal(product));
-                    }
-                }
-            }
-            return BigDecimal.ONE.subtract(P);
-        }
-
-        int extraPrecision = (int) FastMath.log10((double) n - k);
-        for (int i = k; i <= n; i++) {
-            // check whether the calculation needs to be done with big objects
-            boolean needBigObjects = false;
-            Long combinations = BasicMathFunctions.getCombination(i, n);
-            BigInteger conbinationsBI = null;
-            if (combinations == null) {
-                BigInteger iBI = new BigInteger(i + "");
-                conbinationsBI = BigFunctions.getCombination(iBI, nBI);
-                if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
-                    combinations = conbinationsBI.longValue();
-                } else {
-                    needBigObjects = true;
-                }
-            }
-            if (!needBigObjects && (i > 0 && i * logP <= precisionLimit + extraPrecision || n - i > 0 && (n - i) * logP <= precisionLimit + extraPrecision)) {
-                needBigObjects = true;
-            }
-            if (needBigObjects) {
-                BigDecimal product = pBigDecimal.pow(i);
-                if (combinations != null) {
-                    product.multiply(new BigDecimal(combinations));
-                } else {
-                    product.multiply(new BigDecimal(conbinationsBI));
-                }
-                product = product.multiply(oneMinusSmallPBigDecimal.pow(n - i));
-                P = P.add(product);
-            } else {
-                double product = FastMath.pow(p, i);
-                product *= combinations;
-                product *= FastMath.pow(1 - p, n - i);
-                if (product > minProduct) { // avoid rounding effects making P>1
-                    P = P.add(new BigDecimal(product));
-                }
-            }
-        }
-        return P;
+        return distribution.getCumulativeProbabilityAt((double) k, mathContext);
     }
 
     /**
@@ -655,10 +580,12 @@ public class PhosphoRS {
 
             for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(scoringPreferences, peptide).values()) {
                 for (Ion ion : ions) {
+                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                     for (int charge : scoringPreferences.getSelectedCharges()) {
                         double mz = ion.getTheoreticMz(charge);
                         mzs.add(mz);
                     }
+                }
                 }
             }
 

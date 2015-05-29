@@ -1,6 +1,8 @@
 package com.compomics.util.math.statistics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import org.apache.commons.math.MathException;
 
 /**
@@ -15,65 +17,83 @@ public interface Distribution extends Serializable {
      * Returns the density function value at a given position.
      *
      * @param x the position of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value of the density function at the give position
      */
-    public Double getProbabilityAt(double x);
+    public BigDecimal getProbabilityAt(double x, MathContext mathContext);
 
     /**
      * Returns the cumulative density function value at a given position.
      *
      * @param x the position of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value of the density function at the give position
+     * 
      * @throws MathException if a MathException occurs
      */
-    public Double getCumulativeProbabilityAt(double x) throws MathException;
+    public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException;
 
     /**
      * Returns the cumulative density function value at a given position when
      * starting from the high values.
      *
      * @param x the position of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value of the density function at the give position
+     * 
      * @throws MathException if a MathException occurs
      */
-    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException;
+    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException;
 
     /**
      * The value after which the density function will be smaller than p.
      *
      * @param p the probability of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value after which the density function will be smaller than p
      */
-    public Double getMaxValueForProbability(double p);
+    public BigDecimal getMaxValueForProbability(double p, MathContext mathContext);
 
     /**
      * The value before which the density function will be smaller than p.
      *
      * @param p the probability of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value before which the density function will be smaller than
      * p
      */
-    public Double getMinValueForProbability(double p);
+    public BigDecimal getMinValueForProbability(double p, MathContext mathContext);
 
     /**
      * The value after which the cumulative density function will be smaller
      * than p.
      *
      * @param p the probability of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value after which the cumulative density function will be
      * smaller than p
+     * 
      * @throws MathException if a MathException occurs
      */
-    public Double getValueAtCumulativeProbability(double p) throws MathException;
+    public BigDecimal getValueAtCumulativeProbability(double p, MathContext mathContext) throws MathException;
 
     /**
      * The value after which the cumulative density function will be smaller
      * than p when starting from high values.
      *
      * @param p the probability of interest
+     * @param mathContext the math context to use for calculation
+     * 
      * @return the value after which the cumulative density function will be
      * smaller than p
+     * 
      * @throws MathException if a MathException occurs
      */
-    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException;
+    public BigDecimal getValueAtDescendingCumulativeProbability(double p, MathContext mathContext) throws MathException;
 }

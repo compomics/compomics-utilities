@@ -154,7 +154,8 @@ public class AnnotationPreferences implements Serializable {
      * @param spectrumKey the key of the spectrum to annotate
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
@@ -168,7 +169,7 @@ public class AnnotationPreferences implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         
         if (neutralLossesAuto == null) { // Backward compatibility
             neutralLossesAuto = true;
@@ -180,7 +181,7 @@ public class AnnotationPreferences implements Serializable {
         SpecificAnnotationPreferences specificAnnotationPreferences = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
         if (neutralLossesAuto) {
-            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences));
+            specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
         } else {
             NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
             for (NeutralLoss neutralLoss : getNeutralLosses()) {

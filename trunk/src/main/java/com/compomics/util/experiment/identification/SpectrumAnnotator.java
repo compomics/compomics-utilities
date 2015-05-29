@@ -585,7 +585,8 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      *
      * @return the expected possible neutral losses
      *
@@ -595,10 +596,10 @@ public abstract class SpectrumAnnotator {
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
      * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences);
+            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
             return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), sequenceMatchingPreferences);

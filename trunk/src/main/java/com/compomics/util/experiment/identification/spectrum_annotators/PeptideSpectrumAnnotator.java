@@ -218,7 +218,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * are in the PTMFactory.
      *
      * @param peptide the peptide of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      *
      * @return the expected possible neutral losses
      *
@@ -231,7 +232,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -304,7 +305,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
             }
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences);
+                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
                 if (!indexes.isEmpty()) {
                     Collections.sort(indexes);
                     modMin = indexes.get(0);

@@ -154,8 +154,10 @@ public class AnnotationPreferences implements Serializable {
      * @param spectrumKey the key of the spectrum to annotate
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
@@ -169,25 +171,27 @@ public class AnnotationPreferences implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        
+    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
+            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) 
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+
         if (neutralLossesAuto == null) { // Backward compatibility
             neutralLossesAuto = true;
         }
         if (fragmentIonPpm == null) { // Backward compatibility
             fragmentIonPpm = false;
         }
-        
+
         SpecificAnnotationPreferences specificAnnotationPreferences = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
         if (neutralLossesAuto) {
             specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
         } else {
-            NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
+            NeutralLossesMap tempNeutralLossesMap = new NeutralLossesMap();
             for (NeutralLoss neutralLoss : getNeutralLosses()) {
-                neutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
+                tempNeutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
-            specificAnnotationPreferences.setNeutralLossesMap(neutralLossesMap);
+            specificAnnotationPreferences.setNeutralLossesMap(tempNeutralLossesMap);
         }
         ArrayList<Integer> charges = new ArrayList<Integer>(4);
         int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge().value;

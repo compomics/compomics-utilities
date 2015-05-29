@@ -59,17 +59,19 @@ public class PhosphoRS {
      * the SpecificAnnotationPreferences and will be ignored if
      * accountNeutralLosses is false.
      *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
+     * @param peptide the peptide of interest
+     * @param ptms the PTMs to score, for instance different phosphorylations
+     * (the PTMs are considered as indistinguishable, i.e. of same mass)
+     * @param spectrum the corresponding spectrum
      * @param annotationPreferences the global annotation preferences
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this peptide and spectrum
      * @param accountNeutralLosses a boolean indicating whether or not the
      * calculation shall account for neutral losses.
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
      * @param mathContext the math context to use for calculation
@@ -85,11 +87,12 @@ public class PhosphoRS {
      * protein sequence index)
      * @throws java.sql.SQLException exception thrown whenever an error occurred
      * while interacting with the protein tree
-     * @throws org.apache.commons.math.MathException exception thrown whenever a math error occurred while computing the score.
+     * @throws org.apache.commons.math.MathException exception thrown whenever a
+     * math error occurred while computing the score.
      */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum,
-            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
-            PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences,
+            SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
         if (ptms.isEmpty()) {
@@ -580,12 +583,12 @@ public class PhosphoRS {
 
             for (ArrayList<Ion> ions : spectrumAnnotator.getExpectedIons(scoringPreferences, peptide).values()) {
                 for (Ion ion : ions) {
-                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                    for (int charge : scoringPreferences.getSelectedCharges()) {
-                        double mz = ion.getTheoreticMz(charge);
-                        mzs.add(mz);
+                    if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                        for (int charge : scoringPreferences.getSelectedCharges()) {
+                            double mz = ion.getTheoreticMz(charge);
+                            mzs.add(mz);
+                        }
                     }
-                }
                 }
             }
 

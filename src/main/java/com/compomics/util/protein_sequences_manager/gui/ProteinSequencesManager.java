@@ -3,12 +3,18 @@ package com.compomics.util.protein_sequences_manager.gui;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * ProteinSequencesManager.
+ * 
  * @author Marc Vaudel
  */
 public class ProteinSequencesManager extends javax.swing.JDialog {
 
-    /** Creates new form ProteinSequencesManager */
+    /**
+     * Creates a new ProteinSequencesManager.
+     * 
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
+     */
     public ProteinSequencesManager(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

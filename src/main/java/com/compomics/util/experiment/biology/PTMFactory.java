@@ -830,8 +830,10 @@ public class PTMFactory implements Serializable {
      * results
      * @param ptmMassTolerance the mass tolerance to use to match the
      * modification mass
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return a map of expected PTMs corresponding to the given
      * characteristics. Empty if none found.
@@ -879,8 +881,10 @@ public class PTMFactory implements Serializable {
      * @param peptide the peptide
      * @param ptmName the name of the searched PTM
      * @param ptmMassTolerance the PTM mass tolerance
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return the possible expected modification names. Empty if not found.
      *
@@ -907,8 +911,10 @@ public class PTMFactory implements Serializable {
      *
      * @param modificationProfile the modification profile
      * @param peptide the peptide
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for PTM to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence
@@ -987,7 +993,8 @@ public class PTMFactory implements Serializable {
      *
      * @param modificationProfile the modification profile
      * @param tag the tag
-     * @param sequenceMatchingPreferences the sequence matching preferences for ptm to amino acid mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * PTM to amino acid mapping
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading a protein sequence

@@ -508,7 +508,8 @@ public class Tag extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param ptm the PTM considered
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for the PTM to amino acid sequence mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for the PTM to amino acid sequence mapping
      *
      * @return a list of potential modification sites
      *

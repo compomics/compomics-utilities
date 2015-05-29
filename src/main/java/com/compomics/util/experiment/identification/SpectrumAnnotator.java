@@ -307,7 +307,7 @@ public abstract class SpectrumAnnotator {
      * @param neutralLosses Map of expected neutral losses
      * @param neutralLoss the neutral loss of interest
      * @param ion the fragment ion of interest
-     * 
+     *
      * @return boolean indicating whether the neutral loss should be considered
      */
     public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, Ion ion) {
@@ -359,7 +359,7 @@ public abstract class SpectrumAnnotator {
      *
      * @param neutralLosses map of expected neutral losses: neutral loss.
      * @param theoreticIon the ion of interest
-     * 
+     *
      * @return a boolean indicating whether the neutral losses of the given
      * fragment ion are fit the requirement of the given neutral losses map
      */
@@ -379,7 +379,7 @@ public abstract class SpectrumAnnotator {
      * @param theoreticIon the ion of interest
      * @param charge the candidate charge
      * @param precursorCharge the precursor charge
-     * 
+     *
      * @return a boolean indicating whether the given charge can be found on the
      * given fragment ion
      */
@@ -411,7 +411,7 @@ public abstract class SpectrumAnnotator {
      * @param spectrum the spectrum of interest
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
-     * 
+     *
      * @return the currently matched ions with the given settings
      */
     public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences);
@@ -585,18 +585,24 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return the expected possible neutral losses
      *
      * @throws IOException exception thrown whenever an error occurred while
      * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, 
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
             return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
@@ -658,7 +664,7 @@ public abstract class SpectrumAnnotator {
      * extending class.
      *
      * @param specificAnnotationPreferences the specific annotation preferences
-     * 
+     *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */

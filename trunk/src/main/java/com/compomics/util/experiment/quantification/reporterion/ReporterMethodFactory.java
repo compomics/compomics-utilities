@@ -19,6 +19,7 @@ import java.util.Collections;
  * This factory imports reporter methods details from an XMl file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ReporterMethodFactory extends ExperimentObject {
 
@@ -76,18 +77,21 @@ public class ReporterMethodFactory extends ExperimentObject {
      *
      * @param aFile the file to save to
      *
-     * @throws java.io.IOException exception thrown whenever a problem occurred
-     * while writing the file
+     * @throws IOException thrown whenever a problem occurred while writing the
+     * file
      */
     public void saveFile(File aFile) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(aFile));
+
         try {
             String indent = "\t";
             writer.write("<xml>");
             writer.newLine();
+
             for (ReporterMethod reporterMethod : methods) {
-                writer.write(indent + "<reorterMethod>");
+
+                writer.write(indent + "<reporterMethod>");
                 writer.newLine();
                 writer.write(indent + indent + "<name>" + reporterMethod.getName() + "</name>");
                 writer.newLine();
@@ -95,6 +99,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 writer.newLine();
                 ArrayList<String> reagentNames = new ArrayList<String>(reporterMethod.getReagentNames());
                 Collections.sort(reagentNames);
+
                 for (String reagentName : reagentNames) {
                     Reagent reagent = reporterMethod.getReagent(reagentName);
                     writer.write(indent + indent + indent + "<reagent>");
@@ -105,7 +110,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<minus2>" + reagent.getMinus2() + "</minus2>");
                     writer.newLine();
-                    writer.write(indent + indent + indent + indent + "<minus1>" + reagent.getMinus1() + "</minus2>");
+                    writer.write(indent + indent + indent + indent + "<minus1>" + reagent.getMinus1() + "</minus1>");
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<ref>" + reagent.getRef() + "</ref>");
                     writer.newLine();
@@ -116,13 +121,15 @@ public class ReporterMethodFactory extends ExperimentObject {
                     writer.write(indent + indent + indent + "</reagent>");
                     writer.newLine();
                 }
+
                 writer.write(indent + indent + "</reagentList>");
                 writer.newLine();
-                writer.write(indent + "</reorterMethod>");
-                writer.newLine();
-                writer.write("</xml>");
+                writer.write(indent + "</reporterMethod>");
                 writer.newLine();
             }
+
+            writer.write("</xml>");
+            writer.newLine();
         } finally {
             writer.close();
         }
@@ -138,26 +145,32 @@ public class ReporterMethodFactory extends ExperimentObject {
      * occurred while parsing the XML file
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
+
         methods = new ArrayList();
-        // Create the pull parser.
+
+        // create the pull parser
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
         factory.setNamespaceAware(true);
         XmlPullParser parser = factory.newPullParser();
-        // Create a reader for the input file.
+
+        // create a reader for the input file
         BufferedReader br = new BufferedReader(new FileReader(aFile));
-        // Set the XML Pull Parser to read from this reader.
+
+        // set the XML Pull Parser to read from this reader
         parser.setInput(br);
-        // Start the parsing.
+
+        // start the parsing
         int type = parser.next();
-        // Go through the whole document.
+
+        // go through the whole document
         while (type != XmlPullParser.END_DOCUMENT) {
-            // If we find a 'reporterMethod' start tag,
-            // we should parse the mod.
+            // if we find a 'reporterMethod' start tag, we should parse the mod
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
                 methods.add(parseMethod(parser));
             }
             type = parser.next();
         }
+
         br.close();
     }
 
@@ -180,9 +193,16 @@ public class ReporterMethodFactory extends ExperimentObject {
         type = parser.next();
         String name = parser.getText().trim();
 
+        // list of reagents
         ArrayList<Reagent> reagents = new ArrayList<Reagent>();
+
+        // iterate the reagents
         while (type != XmlPullParser.END_TAG || !parser.getName().equals("reagentList")) {
+
+            // create the empry reagent
             Reagent reagent = new Reagent();
+
+            // reagent name
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("name")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagentList")) {
@@ -192,6 +212,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             String reagentName = parser.getText().trim();
             reagent.setName(reagentName);
+
+            // monoisotopic mass
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("monoisotopicMass")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -202,7 +224,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             Double monoisotopicMass = new Double(parser.getText().trim());
             ReporterIon reporterIon = new ReporterIon(reagentName, monoisotopicMass);
             reagent.setReporterIon(reporterIon);
-            //@TODO: set reporter ion
+
+            // minus 2
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -212,6 +235,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             Double correctionFactor = new Double(parser.getText().trim());
             reagent.setMinus2(correctionFactor);
+
+            // minus 1
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus1")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -221,6 +246,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             correctionFactor = new Double(parser.getText().trim());
             reagent.setMinus1(correctionFactor);
+
+            // ref
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("ref")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -230,6 +257,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             correctionFactor = new Double(parser.getText().trim());
             reagent.setRef(correctionFactor);
+
+            // plus 1
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus1")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -239,6 +268,8 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             correctionFactor = new Double(parser.getText().trim());
             reagent.setPlus1(correctionFactor);
+
+            // plus 2
             while (type != XmlPullParser.START_TAG || !parser.getName().equals("plus2")) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
@@ -249,7 +280,10 @@ public class ReporterMethodFactory extends ExperimentObject {
             correctionFactor = new Double(parser.getText().trim());
             reagent.setPlus2(correctionFactor);
 
+            // add the reagent to the list
             reagents.add(reagent);
+
+            // move to the next reagent
             while (type != XmlPullParser.END_TAG || !parser.getName().equals("reagent")) {
                 type = parser.next();
             }

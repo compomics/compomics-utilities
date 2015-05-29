@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.ions.ReporterIon;
 /**
  * A reporter ion labeling reagent.
  *
- * @author Marc.
+ * @author Marc Vaudel
  */
 public class Reagent {
 
@@ -27,7 +27,7 @@ public class Reagent {
      */
     private double minus1;
     /**
-     * The intensity .
+     * The monoisotopic correction factor.
      */
     private double ref;
     /**

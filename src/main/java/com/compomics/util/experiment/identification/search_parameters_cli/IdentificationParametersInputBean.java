@@ -1340,7 +1340,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id, arg, false)) {
+            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id, arg, true)) {
                 return false;
             }
         }
@@ -1377,7 +1377,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id, arg, false)) {
+            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id, arg, true)) {
                 return false;
             }
         }
@@ -1389,7 +1389,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id, arg, false)) {
+            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id, arg, true)) {
                 return false;
             }
         }
@@ -1521,7 +1521,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id, arg, false)) {
+            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id, arg, true)) {
                 return false;
             }
         }

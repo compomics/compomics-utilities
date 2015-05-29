@@ -46,22 +46,24 @@ public class AScore {
      * (com.compomics.util.experiment.identification.SequenceFactory) and
      * indexed using the protein tree (see getDefaultProteinTree in
      * SequenceFactory). PTMs of same mass should be scored together and given
-     * in the ptms list. Neutral losses of mass equal to the mass of the PTM
+     * in the PTMs list. Neutral losses of mass equal to the mass of the PTM
      * will be ignored. Neutral losses to be accounted for should be given in
      * the SpecificAnnotationPreferences and will be ignored if
      * accountNeutralLosses is false.
      *
-     * @param peptide The peptide of interest
-     * @param ptms The PTMs to score, for instance different phosphorylations.
-     * These PTMs are considered as indistinguishable, i.e. of same mass.
-     * @param spectrum The corresponding spectrum
+     * @param peptide the peptide of interest
+     * @param ptms the PTMs to score, for instance different phosphorylations
+     * (the PTMs are considered as indistinguishable, i.e. of same mass).
+     * @param spectrum the corresponding spectrum
      * @param annotationPreferences the global annotation preferences
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this peptide and spectrum
      * @param accountNeutralLosses if false, neutral losses available in the
      * specific annotation preferences will be ignored
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      * @param spectrumAnnotator a spectrum annotator to annotate the spectra
      * @param mathContext the math context to use for calculation
      *
@@ -80,8 +82,9 @@ public class AScore {
      * @throws org.apache.commons.math.MathException exception thrown whenever a
      * math error occurred while computing the score.
      */
-    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses,
-            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
+    public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences,
+            SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
         if (ptms.isEmpty()) {

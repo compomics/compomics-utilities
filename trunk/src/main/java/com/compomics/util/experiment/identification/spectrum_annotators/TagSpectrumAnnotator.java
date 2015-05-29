@@ -76,8 +76,10 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing an object from the ProteinTree
      */
     public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException {

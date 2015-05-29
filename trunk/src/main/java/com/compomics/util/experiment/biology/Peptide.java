@@ -308,7 +308,7 @@ public class Peptide extends ExperimentObject {
      * factory.
      *
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * 
+     *
      * @return the proteins mapping this peptide
      *
      * @throws IOException exception thrown whenever an error occurs while
@@ -323,7 +323,6 @@ public class Peptide extends ExperimentObject {
     public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         return getParentProteins(true, sequenceMatchingPreferences);
     }
-            
 
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
@@ -808,8 +807,10 @@ public class Peptide extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param ptmMass the mass of the potential PTM
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a list of potential modification sites
@@ -824,8 +825,8 @@ public class Peptide extends ExperimentObject {
      * @throws SQLException if an SQLException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile)
-            throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, 
+            ModificationProfile modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> sites = new ArrayList<Integer>();
 
@@ -849,16 +850,21 @@ public class Peptide extends ExperimentObject {
      * found.
      *
      * @param ptm the PTM considered
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return a list of potential modification sites
      *
      * @throws IOException exception thrown whenever an error occurred while
      * interacting with a file while mapping potential modification sites
-     * @throws InterruptedException exception thrown whenever a threading issue occurred while mapping potential modification sites
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
-     * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while mapping potential modification sites
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing an object from the ProteinTree
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interacting with the ProteinTree
      */
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -1276,14 +1282,14 @@ public class Peptide extends ExperimentObject {
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
      * @param confidentModificationSites the confidently localized variable
-     * modification sites in a map: aa number &gt; list of modifications (1 is the
-     * first AA) (can be null)
+     * modification sites in a map: aa number &gt; list of modifications (1 is
+     * the first AA) (can be null)
      * @param representativeAmbiguousModificationSites the representative site
      * of the ambiguously localized variable modifications in a map: aa number
      * &gt; list of modifications (1 is the first AA) (can be null)
      * @param secondaryAmbiguousModificationSites the secondary sites of the
-     * ambiguously localized variable modifications in a map: aa number &gt; list
-     * of modifications (1 is the first AA) (can be null)
+     * ambiguously localized variable modifications in a map: aa number &gt;
+     * list of modifications (1 is the first AA) (can be null)
      * @param fixedModificationSites the fixed modification sites in a map: aa
      * number &gt; list of modifications (1 is the first AA) (can be null)
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise

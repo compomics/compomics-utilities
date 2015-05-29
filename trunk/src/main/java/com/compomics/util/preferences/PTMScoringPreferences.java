@@ -175,9 +175,11 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Returns the sequence matching preferences to use when mapping ptms on amino acid sequences.
-     * 
-     * @return the sequence matching preferences to use when mapping ptms on amino acid sequences
+     * Returns the sequence matching preferences to use when mapping PTMs on
+     * amino acid sequences.
+     *
+     * @return the sequence matching preferences to use when mapping PTMs on
+     * amino acid sequences
      */
     public SequenceMatchingPreferences getSequenceMatchingPreferences() {
         if (sequenceMatchingPreferences == null) {
@@ -188,9 +190,11 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
-     * Sets the sequence matching preferences to use when mapping ptms on amino acid sequences.
-     * 
-     * @param sequenceMatchingPreferences the sequence matching preferences to use when mapping ptms on amino acid sequences
+     * Sets the sequence matching preferences to use when mapping PTMs on amino
+     * acid sequences.
+     *
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * use when mapping PTMs on amino acid sequences
      */
     public void setSequenceMatchingPreferences(SequenceMatchingPreferences sequenceMatchingPreferences) {
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;

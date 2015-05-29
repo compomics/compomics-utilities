@@ -165,7 +165,7 @@ public class IdFilter implements Serializable {
      * @throws IOException if an IOException occurs
      * @throws SQLException if an SQLException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultProteinTree());
@@ -184,7 +184,7 @@ public class IdFilter implements Serializable {
      * @throws IOException if an IOException occurs
      * @throws SQLException if an SQLException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws InterruptedException if an InterruptedException occurs 
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
@@ -213,13 +213,16 @@ public class IdFilter implements Serializable {
      * Validates the modifications of a peptide.
      *
      * @param peptide the peptide of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
+     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile) {
+    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, 
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile) {
 
         // check if it is an unknown peptide
         if (unknownPtm) {

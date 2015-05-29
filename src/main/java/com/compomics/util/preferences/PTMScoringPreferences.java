@@ -4,7 +4,7 @@ import com.compomics.util.experiment.identification.ptm.PtmScore;
 import java.io.Serializable;
 
 /**
- * This class contains the PTM scoring preferences.
+ * This class contains the PTM localization scoring preferences.
  *
  * @author Marc Vaudel
  */
@@ -52,11 +52,17 @@ public class PTMScoringPreferences implements Serializable {
      * calculation of the probabilistic score.
      */
     private Boolean probabilisticScoreNeutralLosses = false;
+    /**
+     * The preferences to use when matching ptms to amino acid sequences.
+     */
+    private SequenceMatchingPreferences sequenceMatchingPreferences;
 
     /**
      * Constructor.
      */
     public PTMScoringPreferences() {
+        sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.aminoAcid);
     }
 
     /**
@@ -166,6 +172,28 @@ public class PTMScoringPreferences implements Serializable {
      */
     public void setProbabilisticScoreNeutralLosses(boolean probabilisticScoreNeutralLosses) {
         this.probabilisticScoreNeutralLosses = probabilisticScoreNeutralLosses;
+    }
+
+    /**
+     * Returns the sequence matching preferences to use when mapping ptms on amino acid sequences.
+     * 
+     * @return the sequence matching preferences to use when mapping ptms on amino acid sequences
+     */
+    public SequenceMatchingPreferences getSequenceMatchingPreferences() {
+        if (sequenceMatchingPreferences == null) {
+            sequenceMatchingPreferences = new SequenceMatchingPreferences();
+            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.aminoAcid);
+        }
+        return sequenceMatchingPreferences;
+    }
+
+    /**
+     * Sets the sequence matching preferences to use when mapping ptms on amino acid sequences.
+     * 
+     * @param sequenceMatchingPreferences the sequence matching preferences to use when mapping ptms on amino acid sequences
+     */
+    public void setSequenceMatchingPreferences(SequenceMatchingPreferences sequenceMatchingPreferences) {
+        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
     }
 
     /**

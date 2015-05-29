@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.ptm.ptmscores;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
@@ -12,15 +11,20 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.math.BasicMathFunctions;
+import com.compomics.util.math.BigFunctions;
+import com.compomics.util.math.statistics.distributions.BinomialDistribution;
 import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * This class estimates the A-score as described in
@@ -56,10 +60,10 @@ public class AScore {
      * to this peptide and spectrum
      * @param accountNeutralLosses if false, neutral losses available in the
      * specific annotation preferences will be ignored
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      * @param spectrumAnnotator a spectrum annotator to annotate the spectra
-     * @param rounding decimal to which the score should be floored, ignored if
-     * null
+     * @param mathContext the math context to use for calculation
      *
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
@@ -73,10 +77,12 @@ public class AScore {
      * protein sequence index)
      * @throws java.sql.SQLException exception thrown whenever an error occurred
      * while interacting with the protein tree
+     * @throws org.apache.commons.math.MathException exception thrown whenever a
+     * math error occurred while computing the score.
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses,
-            SequenceMatchingPreferences sequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, Integer rounding)
-            throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
+            throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
         if (ptms.isEmpty()) {
             throw new IllegalArgumentException("No PTM given for A-score calculation.");
@@ -115,15 +121,15 @@ public class AScore {
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
         for (PTM ptm : ptms) {
             if (ptm.isNTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
                     possibleSites.add(0);
                 }
             } else if (ptm.isCTerm()) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(peptideLength)) {
+                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(peptideLength)) {
                     possibleSites.add(peptideLength + 1);
                 }
             } else {
-                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
+                for (int potentialSite : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
                     if (!possibleSites.contains(potentialSite)) {
                         possibleSites.add(potentialSite);
                     }
@@ -136,8 +142,8 @@ public class AScore {
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, specificAnnotationPreferences.getFragmentIonAccuracy(), 10);
 
-            HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
-                    spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM);
+            HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
+                    spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM, mathContext);
 
             HashMap<Double, ArrayList<Integer>> peptideScoreToPostitionMap = getPeptideScoreToPositionMap(positionToScoreMap);
             ArrayList<Double> scores = new ArrayList<Double>(peptideScoreToPostitionMap.keySet());
@@ -157,7 +163,7 @@ public class AScore {
                 Double lowestScore = null;
                 for (int secondPosition : secondScoringSites) {
                     int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth), mathContext);
                     Double tempMapLowestScore = null;
                     for (int tempPos : tempMap.keySet()) {
                         double tempScore = tempMap.get(tempPos);
@@ -175,22 +181,13 @@ public class AScore {
                     if (lowestScore == null || tempMapLowestScore < lowestScore) {
                         lowestScore = tempMapLowestScore;
                         lowestScoreMap = tempMap;
-                    } else if (tempMapLowestScore == lowestScore) {
+                    } else if (tempMapLowestScore.equals(lowestScore)) {
                         lowestScoreMap.putAll(tempMap);
                     }
                 }
                 if (lowestScoreMap == null) {
                     throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName()
                             + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
-                }
-                if (rounding != null) {
-                    HashMap<Integer, Double> roundedScoreMap = new HashMap<Integer, Double>(lowestScoreMap.size());
-                    for (Integer site : lowestScoreMap.keySet()) {
-                        double score = lowestScoreMap.get(site);
-                        score = Util.floorDouble(score, rounding);
-                        roundedScoreMap.put(site, score);
-                    }
-                    lowestScoreMap = roundedScoreMap;
                 }
                 return lowestScoreMap;
             } else {
@@ -200,7 +197,7 @@ public class AScore {
                     for (int secondPosition : bestScoringSites) {
                         if (bestPosition != secondPosition) {
                             int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
+                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth), mathContext);
                             Double tempMapLowestScore = null;
                             for (int tempPos : tempMap.keySet()) {
                                 double tempScore = tempMap.get(tempPos);
@@ -215,7 +212,7 @@ public class AScore {
                             if (lowestScore == null || tempMapLowestScore < lowestScore) {
                                 lowestScore = tempMapLowestScore;
                                 lowestScoreMap = tempMap;
-                            } else if (tempMapLowestScore == lowestScore) {
+                            } else if (tempMapLowestScore.equals(lowestScore)) {
                                 lowestScoreMap.putAll(tempMap);
                             }
                         }
@@ -227,15 +224,6 @@ public class AScore {
                 if (lowestScoreMap == null) {
                     throw new IllegalArgumentException("No A-score found for " + spectrum.getSpectrumTitle() + " in file " + spectrum.getFileName()
                             + " for modification " + refPTM.getName() + " on peptide " + peptide.getSequence() + ".");
-                }
-                if (rounding != null) {
-                    HashMap<Integer, Double> roundedScoreMap = new HashMap<Integer, Double>(lowestScoreMap.size());
-                    for (Integer site : lowestScoreMap.keySet()) {
-                        double score = lowestScoreMap.get(site);
-                        score = Util.floorDouble(score, rounding);
-                        roundedScoreMap.put(site, score);
-                    }
-                    lowestScoreMap = roundedScoreMap;
                 }
                 return lowestScoreMap;
             }
@@ -261,14 +249,14 @@ public class AScore {
      * @return the depth at which the score difference between the best position
      * and the second position is maximized
      */
-    private static int getBestDepth(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap, int bestPosition, int secondPosition) {
+    private static int getBestDepth(HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap, int bestPosition, int secondPosition) {
 
-        double diff, maxDiff = 0;
+        BigDecimal diff, maxDiff = BigDecimal.ZERO;
         int bestI = 0;
 
         for (int i = 1; i <= 10; i++) {
-            diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
-            if (diff >= maxDiff) {
+            diff = positionToScoreMap.get(bestPosition).get(i).subtract(positionToScoreMap.get(secondPosition).get(i));
+            if (diff.compareTo(maxDiff) == 1) {
                 bestI = i - 1;
                 maxDiff = diff;
             }
@@ -295,11 +283,15 @@ public class AScore {
      * best and second best scoring sites (see getBestDepth)
      * @param spectrumAtBestDepth the spectrum extracted from the original
      * spectrum filtered at bestDepth intensities
+     * @param mathContext the math context to use for calculation
      *
      * @return the candidate A-score in a map
+     *
+     * @throws org.apache.commons.math.MathException exception thrown whenever a
+     * math error occurred while computing the score.
      */
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationPreferences annotationPreferences,
-            SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) {
+            SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth, MathContext mathContext) throws MathException {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
 
@@ -359,11 +351,9 @@ public class AScore {
             }
         }
 
-        double p1 = 0;
+        BinomialDistribution distribution = new BinomialDistribution(N, p);
 
-        for (int k = n; k <= N; k++) {
-            p1 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
-        }
+        BigDecimal p1 = distribution.getCumulativeProbabilityAt((double) n, mathContext);
 
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
@@ -392,25 +382,51 @@ public class AScore {
                 }
             }
         }
-        double p2 = 0;
+        BigDecimal p2 = distribution.getCumulativeProbabilityAt((double) n, mathContext);
 
-        for (int k = n; k <= N; k++) {
-            p2 += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
-        }
-
-        if (p1 == p2) {
+        if (p1.compareTo(p2) == 0) {
             result.put(posMin, 0.0);
             result.put(posMax, 0.0);
-        } else if (p1 < p2) {
-            double score1 = -10 * Math.log10(p1);
-            double score2 = -10 * Math.log10(p2);
-            double score = score1 - score2;
-            result.put(posMin, score);
+        } else if (p1.compareTo(p2) == -1) {
+            BigDecimal minusTen = BigDecimal.TEN.negate();
+            BigDecimal score1;
+            BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
+            if (p1.compareTo(BigDecimal.ZERO) == 0) {
+                score1 = maxValue;
+            } else {
+                score1 = minusTen.multiply(BigFunctions.log(p1, 10, mathContext), mathContext);
+            }
+            BigDecimal score2;
+            if (p2.compareTo(BigDecimal.ZERO) == 0) {
+                score2 = new BigDecimal(Double.MAX_VALUE);
+            } else {
+                score2 = minusTen.multiply(BigFunctions.log(p2, 10, mathContext), mathContext);
+            }
+            BigDecimal score = score1.subtract(score2);
+            if (score.compareTo(maxValue) == 1) {
+                score = maxValue;
+            }
+            result.put(posMin, score.doubleValue());
         } else {
-            double score1 = -10 * Math.log10(p1);
-            double score2 = -10 * Math.log10(p2);
-            double score = score2 - score1;
-            result.put(posMax, score);
+            BigDecimal minusTen = BigDecimal.TEN.negate();
+            BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
+            BigDecimal score1;
+            if (p1.compareTo(BigDecimal.ZERO) == 0) {
+                score1 = maxValue;
+            } else {
+                score1 = minusTen.multiply(BigFunctions.log(p1, 10, mathContext), mathContext);
+            }
+            BigDecimal score2;
+            if (p2.compareTo(BigDecimal.ZERO) == 0) {
+                score2 = new BigDecimal(Double.MAX_VALUE);
+            } else {
+                score2 = minusTen.multiply(BigFunctions.log(p2, 10, mathContext), mathContext);
+            }
+            BigDecimal score = score2.subtract(score1);
+            if (score.compareTo(maxValue) == 1) {
+                score = maxValue;
+            }
+            result.put(posMax, score.doubleValue());
         }
         return result;
     }
@@ -423,46 +439,59 @@ public class AScore {
      *
      * @return a score to position map
      */
-    public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
+    public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap) {
 
         HashMap<Double, ArrayList<Integer>> result = new HashMap<Double, ArrayList<Integer>>();
 
         for (int pos : positionToScoreMap.keySet()) {
-            Double peptideScore = 0.0;
-            if (positionToScoreMap.get(pos).containsKey(1)) {
-                peptideScore += 0.5 * positionToScoreMap.get(pos).get(1);
+            BigDecimal peptideScore = BigDecimal.ZERO;
+            BigDecimal depthScore = positionToScoreMap.get(pos).get(1);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.5)));
             }
-            if (positionToScoreMap.get(pos).containsKey(2)) {
-                peptideScore += 0.75 * positionToScoreMap.get(pos).get(2);
+            depthScore = positionToScoreMap.get(pos).get(2);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.75)));
             }
-            if (positionToScoreMap.get(pos).containsKey(3)) {
-                peptideScore += 1 * positionToScoreMap.get(pos).get(3);
+            depthScore = positionToScoreMap.get(pos).get(3);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore);
             }
-            if (positionToScoreMap.get(pos).containsKey(4)) {
-                peptideScore += 1 * positionToScoreMap.get(pos).get(4);
+            depthScore = positionToScoreMap.get(pos).get(4);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore);
             }
-            if (positionToScoreMap.get(pos).containsKey(5)) {
-                peptideScore += 1 * positionToScoreMap.get(pos).get(5);
+            depthScore = positionToScoreMap.get(pos).get(5);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore);
             }
-            if (positionToScoreMap.get(pos).containsKey(6)) {
-                peptideScore += 1 * positionToScoreMap.get(pos).get(6);
+            depthScore = positionToScoreMap.get(pos).get(6);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore);
             }
-            if (positionToScoreMap.get(pos).containsKey(7)) {
-                peptideScore += 0.75 * positionToScoreMap.get(pos).get(7);
+            depthScore = positionToScoreMap.get(pos).get(7);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.75)));
             }
-            if (positionToScoreMap.get(pos).containsKey(8)) {
-                peptideScore += 0.5 * positionToScoreMap.get(pos).get(8);
+            depthScore = positionToScoreMap.get(pos).get(8);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.5)));
             }
-            if (positionToScoreMap.get(pos).containsKey(9)) {
-                peptideScore += 0.25 * positionToScoreMap.get(pos).get(9);
+            depthScore = positionToScoreMap.get(pos).get(9);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.25)));
             }
-            if (positionToScoreMap.get(pos).containsKey(10)) {
-                peptideScore += 0.25 * positionToScoreMap.get(pos).get(10);
+            depthScore = positionToScoreMap.get(pos).get(10);
+            if (depthScore != null) {
+                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.25)));
             }
-            if (!result.containsKey(peptideScore)) {
-                result.put(peptideScore, new ArrayList<Integer>());
+            double peptideScoreDouble = peptideScore.doubleValue();
+            ArrayList<Integer> sites = result.get(peptideScoreDouble);
+            if (sites == null) {
+                sites = new ArrayList<Integer>(2);
+                result.put(peptideScoreDouble, sites);
             }
-            result.get(peptideScore).add(pos);
+            sites.add(pos);
         }
         return result;
     }
@@ -483,13 +512,17 @@ public class AScore {
      * @param spectrumMap the map of the extracted spectra: depth &gt; extracted
      * spectrum
      * @param possibleSites the possible modification sites
+     * @param mathContext the math context to use for calculation
      *
      * @return a map PTM localization &gt; score
+     *
+     * @throws org.apache.commons.math.MathException exception thrown whenever a
+     * math error occurred while computing the score.
      */
-    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) {
+    public static HashMap<Integer, HashMap<Integer, BigDecimal>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM, MathContext mathContext) throws MathException {
 
-        HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
+        HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, BigDecimal>>();
 
         int N = 0;
 
@@ -519,18 +552,17 @@ public class AScore {
                 ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
                         spectrumMap.get(i), tempPeptide);
                 int n = matches.size();
-                double P = 0;
-                for (int k = n; k <= N; k++) {
-                    P += BasicMathFunctions.getCombination(k, N) * Math.pow(p, k) * Math.pow(1 - p, N - k);
+
+                BinomialDistribution distribution = new BinomialDistribution(N, p);
+                BigDecimal P = distribution.getCumulativeProbabilityAt((double) n, mathContext);
+                BigDecimal score = BigDecimal.TEN.negate();
+                score = score.multiply(BigFunctions.log(P, 10, mathContext));
+                HashMap<Integer, BigDecimal> scoresAtPosition = positionToScoreMap.get(pos);
+                if (scoresAtPosition == null) {
+                    scoresAtPosition = new HashMap<Integer, BigDecimal>(2);
+                    positionToScoreMap.put(pos, scoresAtPosition);
                 }
-                if (P <= Double.MIN_NORMAL) {
-                    P = Double.MIN_NORMAL;
-                }
-                double score = -10 * Math.log10(P);
-                if (!positionToScoreMap.containsKey(pos)) {
-                    positionToScoreMap.put(pos, new HashMap<Integer, Double>());
-                }
-                positionToScoreMap.get(pos).put(i + 1, score);
+                scoresAtPosition.put(i + 1, score);
             }
         }
         return positionToScoreMap;

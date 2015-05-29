@@ -808,7 +808,8 @@ public class Peptide extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param ptmMass the mass of the potential PTM
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a list of potential modification sites
@@ -823,7 +824,7 @@ public class Peptide extends ExperimentObject {
      * @throws SQLException if an SQLException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, ModificationProfile modificationProfile)
+    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> sites = new ArrayList<Integer>();
@@ -831,7 +832,7 @@ public class Peptide extends ExperimentObject {
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
             if (Math.abs(ptm.getMass() - ptmMass) < sequenceMatchingPreferences.getMs2MzTolerance()) {
-                for (int site : getPotentialModificationSites(ptm, sequenceMatchingPreferences)) {
+                for (int site : getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
                     if (!sites.contains(site)) {
                         sites.add(site);
                     }
@@ -848,7 +849,8 @@ public class Peptide extends ExperimentObject {
      * found.
      *
      * @param ptm the PTM considered
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      *
      * @return a list of potential modification sites
      *
@@ -858,7 +860,7 @@ public class Peptide extends ExperimentObject {
      * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing an object from the ProteinTree
      * @throws SQLException exception thrown whenever an error occurred while interacting with the ProteinTree
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -869,7 +871,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODAA:
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
-                    return pattern.getIndexes(sequence, sequenceMatchingPreferences);
+                    return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
                 } else {
                     SequenceFactory sequenceFactory = SequenceFactory.getInstance();
                     for (String accession : parentProteins) {
@@ -879,8 +881,8 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.matchesIn(tempSequence, sequenceMatchingPreferences)) {
-                                    for (int tempIndex : pattern.getIndexes(tempSequence, sequenceMatchingPreferences)) {
+                                if (pattern.matchesIn(tempSequence, ptmSequenceMatchingPreferences)) {
+                                    for (int tempIndex : pattern.getIndexes(tempSequence, ptmSequenceMatchingPreferences)) {
                                         Integer sequenceIndex = tempIndex - target;
                                         if (!possibleSites.contains(sequenceIndex)) {
                                             possibleSites.add(tempIndex);
@@ -913,7 +915,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODCPAA:
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
-                    if (pattern.isEnding(sequence, sequenceMatchingPreferences)) {
+                    if (pattern.isEnding(sequence, ptmSequenceMatchingPreferences)) {
                         possibleSites.add(sequence.length());
                     }
                     return possibleSites;
@@ -927,7 +929,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isEnding(tempSequence, sequenceMatchingPreferences)) {
+                                if (pattern.isEnding(tempSequence, ptmSequenceMatchingPreferences)) {
                                     possibleSites.add(sequence.length());
                                     return possibleSites;
                                 }
@@ -943,7 +945,7 @@ public class Peptide extends ExperimentObject {
             case PTM.MODNPAA:
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
-                    if (pattern.isStarting(sequence, sequenceMatchingPreferences)) {
+                    if (pattern.isStarting(sequence, ptmSequenceMatchingPreferences)) {
                         possibleSites.add(1);
                     }
                     return possibleSites;
@@ -957,7 +959,7 @@ public class Peptide extends ExperimentObject {
                             int endIndex = index + sequence.length() - 2 + patternLength - target;
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
-                                if (pattern.isStarting(tempSequence, sequenceMatchingPreferences)) {
+                                if (pattern.isStarting(tempSequence, ptmSequenceMatchingPreferences)) {
                                     possibleSites.add(1);
                                     return possibleSites;
                                 }

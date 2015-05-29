@@ -213,14 +213,15 @@ public class IdFilter implements Serializable {
      * Validates the modifications of a peptide.
      *
      * @param peptide the peptide of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences for peptide to protein mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for ptm to peptide mapping
      * @param modificationProfile the modification profile of the identification
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ModificationProfile modificationProfile) {
+    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile) {
 
-        // check it it's an unknown peptide
+        // check if it is an unknown peptide
         if (unknownPtm) {
             ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
             for (ModificationMatch modMatch : modificationMatches) {
@@ -251,7 +252,7 @@ public class IdFilter implements Serializable {
         // check if there are more ptms than ptm sites
         for (double mass : modMatches.keySet()) {
             try {
-                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, sequenceMatchingPreferences, modificationProfile);
+                ArrayList<Integer> possiblePositions = peptide.getPotentialModificationSites(mass, sequenceMatchingPreferences, ptmSequenceMatchingPreferences, modificationProfile);
                 if (possiblePositions.size() < modMatches.get(mass)) {
                     return false;
                 }

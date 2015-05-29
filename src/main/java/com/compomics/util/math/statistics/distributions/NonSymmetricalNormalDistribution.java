@@ -2,6 +2,8 @@ package com.compomics.util.math.statistics.distributions;
 
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.apache.commons.math.MathException;
@@ -110,57 +112,57 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public Double getProbabilityAt(double x) {
+    public BigDecimal getProbabilityAt(double x, MathContext mathContext) {
         if (x >= mean) {
-            return distributionUp.getProbabilityAt(x);
+            return distributionUp.getProbabilityAt(x, mathContext);
         } else {
-            return distributionDown.getProbabilityAt(x);
+            return distributionDown.getProbabilityAt(x, mathContext);
         }
     }
 
     @Override
-    public Double getCumulativeProbabilityAt(double x) throws MathException {
+    public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
         if (x >= mean) {
-            return distributionUp.getCumulativeProbabilityAt(x);
+            return distributionUp.getCumulativeProbabilityAt(x, mathContext);
         } else {
-            return distributionDown.getCumulativeProbabilityAt(x);
+            return distributionDown.getCumulativeProbabilityAt(x, mathContext);
         }
     }
 
     @Override
-    public Double getMaxValueForProbability(double p) {
-        return distributionUp.getMaxValueForProbability(p);
+    public BigDecimal getMaxValueForProbability(double p, MathContext mathContext) {
+        return distributionUp.getMaxValueForProbability(p, mathContext);
     }
 
     @Override
-    public Double getMinValueForProbability(double p) {
-        return distributionDown.getMinValueForProbability(p);
+    public BigDecimal getMinValueForProbability(double p, MathContext mathContext) {
+        return distributionDown.getMinValueForProbability(p, mathContext);
     }
 
     @Override
-    public Double getValueAtCumulativeProbability(double p) throws MathException {
+    public BigDecimal getValueAtCumulativeProbability(double p, MathContext mathContext) throws MathException {
         if (p < 0.5) {
-            return distributionDown.getValueAtCumulativeProbability(p);
+            return distributionDown.getValueAtCumulativeProbability(p, mathContext);
         } else {
-            return distributionUp.getValueAtCumulativeProbability(p);
+            return distributionUp.getValueAtCumulativeProbability(p, mathContext);
         }
     }
 
     @Override
-    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
+    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
         if (x > mean) {
-            return distributionUp.getDescendingCumulativeProbabilityAt(x);
+            return distributionUp.getDescendingCumulativeProbabilityAt(x, mathContext);
         } else {
-            return distributionDown.getDescendingCumulativeProbabilityAt(x);
+            return distributionDown.getDescendingCumulativeProbabilityAt(x, mathContext);
         }
     }
 
     @Override
-    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
+    public BigDecimal getValueAtDescendingCumulativeProbability(double p, MathContext mathContext) throws MathException {
         if (p < 0.5) {
-            return distributionUp.getValueAtDescendingCumulativeProbability(p);
+            return distributionUp.getValueAtDescendingCumulativeProbability(p, mathContext);
         } else {
-            return distributionDown.getValueAtDescendingCumulativeProbability(p);
+            return distributionDown.getValueAtDescendingCumulativeProbability(p, mathContext);
         }
     }
 }

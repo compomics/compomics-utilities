@@ -508,7 +508,7 @@ public class Tag extends ExperimentObject {
      * found. This method does not account for protein terminal modifications.
      *
      * @param ptm the PTM considered
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences for the PTM to amino acid sequence mapping
      *
      * @return a list of potential modification sites
      *
@@ -521,7 +521,7 @@ public class Tag extends ExperimentObject {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences)
+    public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
@@ -534,7 +534,7 @@ public class Tag extends ExperimentObject {
                 for (TagComponent tagComponent : content) {
                     if (tagComponent instanceof AminoAcidPattern) {
                         AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
-                        for (int i : ptmPattern.getIndexes(aminoAcidPattern, sequenceMatchingPreferences)) {
+                        for (int i : ptmPattern.getIndexes(aminoAcidPattern, ptmSequenceMatchingPreferences)) {
                             possibleSites.add(i + offset);
                         }
                         offset += aminoAcidPattern.length();
@@ -559,12 +559,12 @@ public class Tag extends ExperimentObject {
                 TagComponent component = content.get(content.size() - 1);
                 if (component instanceof AminoAcidPattern) {
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
-                    if (ptmPattern.isEnding(aminoAcidPattern, sequenceMatchingPreferences)) {
+                    if (ptmPattern.isEnding(aminoAcidPattern, ptmSequenceMatchingPreferences)) {
                         possibleSites.add(patternLength);
                     }
                 } else if (component instanceof AminoAcidSequence) {
                     AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
-                    if (ptmPattern.isEnding(aminoAcidSequence.getSequence(), sequenceMatchingPreferences)) {
+                    if (ptmPattern.isEnding(aminoAcidSequence.getSequence(), ptmSequenceMatchingPreferences)) {
                         possibleSites.add(patternLength);
                     }
                 } else if (component instanceof MassGap) {
@@ -581,12 +581,12 @@ public class Tag extends ExperimentObject {
                 component = content.get(0);
                 if (component instanceof AminoAcidPattern) {
                     AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) component;
-                    if (ptmPattern.isStarting(aminoAcidPattern, sequenceMatchingPreferences)) {
+                    if (ptmPattern.isStarting(aminoAcidPattern, ptmSequenceMatchingPreferences)) {
                         possibleSites.add(patternLength);
                     }
                 } else if (component instanceof AminoAcidSequence) {
                     AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
-                    if (ptmPattern.isStarting(aminoAcidSequence.getSequence(), sequenceMatchingPreferences)) {
+                    if (ptmPattern.isStarting(aminoAcidSequence.getSequence(), ptmSequenceMatchingPreferences)) {
                         possibleSites.add(patternLength);
                     }
                 } else if (component instanceof MassGap) {

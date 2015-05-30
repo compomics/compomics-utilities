@@ -322,7 +322,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     }
 
                     // create the peptide
-                    Peptide peptide = new Peptide(mzIdentMLPeptide.getPeptideSequence(), utilitiesModifications);
+                    Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
 
                     if (sequenceMatchingPreferences != null) {
                         String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
@@ -1181,7 +1181,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), peptideCharge, eValue, mzIdentMLFileName);
-                    
+
                     if (rawScore != null) {
                         peptideAssumption.setRawScore(rawScore);
                     }
@@ -1194,9 +1194,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                 newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                             }
                             PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                    if (rawScore != null) {
-                        newAssumption.setRawScore(rawScore);
-                    }
+                            if (rawScore != null) {
+                                newAssumption.setRawScore(rawScore);
+                            }
                             currentMatch.addHit(advocate.getIndex(), newAssumption, false);
                         }
                     } else {

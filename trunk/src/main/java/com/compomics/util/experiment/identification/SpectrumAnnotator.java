@@ -608,7 +608,7 @@ public abstract class SpectrumAnnotator {
             return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), sequenceMatchingPreferences);
+            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), ptmSequenceMatchingPreferences);
         } else {
             throw new IllegalArgumentException("Default neutral loss map not implemented for SpectrumIdentificationAssumption " + spectrumIdentificationAssumption.getClass() + ".");
         }

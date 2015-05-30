@@ -70,7 +70,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * PTMFactory.
      *
      * @param tag the tag of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * for PTM to peptide mapping
      *
      * @return the expected possible neutral losses
      *
@@ -81,7 +82,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing an object from the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -184,7 +185,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                             throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences);
+                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingPreferences);
                             if (!indexes.isEmpty()) {
                                 Collections.sort(indexes);
                                 modMin = indexes.get(0);

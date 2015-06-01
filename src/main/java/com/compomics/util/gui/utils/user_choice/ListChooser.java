@@ -3,11 +3,10 @@ package com.compomics.util.gui.utils.user_choice;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 /**
  * Dialog for choosing an item in a list.
@@ -38,25 +37,30 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @param dialogTitle the title to give to the dialog.
      * @param panelTitle the title to give to the panel containing the table.
      * @param instructionsLabel the instructions label on top of the table.
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items.
      */
-    protected ListChooser(java.awt.Frame parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel) {
+    protected ListChooser(java.awt.Frame parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
         super(parent, true);
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("No item to select.");
         }
         initComponents();
         this.items = items;
-        setUpGui(dialogTitle, panelTitle, instructionsLabel);
+        setUpGui(dialogTitle, panelTitle, instructionsLabel, multipleSelection);
         setLocationRelativeTo(parent);
     }
+
     /**
      * Constructor. Null values will be replaced by default.
      *
      * @param dialogTitle the title to give to the dialog.
      * @param panelTitle the title to give to the panel containing the table.
      * @param instructionsLabel the instructions label on top of the table.
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items.
      */
-    private void setUpGui(String dialogTitle, String panelTitle, String instructionsLabel) {
+    private void setUpGui(String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
         if (dialogTitle != null) {
             setTitle(dialogTitle);
         } else {
@@ -70,23 +74,30 @@ public abstract class ListChooser extends javax.swing.JDialog {
         }
         // make sure that the scroll panes are see-through
         itemsTableScrollPane.getViewport().setOpaque(false);
+        if (multipleSelection) {
+            itemsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        } else {
+            itemsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        }
     }
-    
+
     /**
      * Formats the table.
      */
     protected abstract void formatTable();
+
     /**
      * Returns the tooltips used for the column headers.
-     * 
+     *
      * @return the tooltips used for the column headers
      */
     protected ArrayList<String> getTableTooltips() {
         return tableToolTips;
     }
+
     /**
      * Returns the JTable containing the items.
-     * 
+     *
      * @return the JTable containing the items
      */
     protected JTable getTable() {
@@ -103,9 +114,11 @@ public abstract class ListChooser extends javax.swing.JDialog {
     }
 
     /**
-     * Returns a boolean indicating whether the selection was canceled by the user.
-     * 
-     * @return a boolean indicating whether the selection was canceled by the user
+     * Returns a boolean indicating whether the selection was canceled by the
+     * user.
+     *
+     * @return a boolean indicating whether the selection was canceled by the
+     * user
      */
     public boolean isCanceled() {
         return canceled;
@@ -113,13 +126,26 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
      * Returns the item selected by the user.
-     * 
+     *
      * @return the item selected by the user
      */
     public String getSelectedItem() {
         int row = itemsTable.getSelectedRow();
         String itemName = items.get(row);
         return itemName;
+    }
+
+    /**
+     * Returns the items selected by the user in a list.
+     *
+     * @return the items selected by the user in a list
+     */
+    public ArrayList<String> getSelectedItems() {
+        ArrayList<String> result = new ArrayList<String>(itemsTable.getSelectedRowCount());
+        for (int row : itemsTable.getSelectedRows()) {
+            result.add(items.get(row));
+        }
+        return result;
     }
 
     /**
@@ -152,6 +178,8 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,6 +195,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
         });
 
         itemsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Possibilities"));
+        itemsPanel.setOpaque(false);
 
         itemsLabel.setText("Please select one of the following items:");
 
@@ -257,7 +286,6 @@ public abstract class ListChooser extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 
-    
     /**
      * Table model for the items.
      */

@@ -31,10 +31,10 @@ public class PtmChooser extends ListChooser {
      *
      * @param parent the parent frame
      * @param ptms list of the names of the PTMs for the user to select
-     * @param dialogTitle the title to give to the dialog.
-     * @param panelTitle the title to give to the panel containing the table.
-     * @param instructionsLabel the instructions label on top of the table.
-     * @param multipleSelection boolean indicating whether the user should be allowed to select multiple items.
+     * @param dialogTitle the title to give to the dialog
+     * @param panelTitle the title to give to the panel containing the table
+     * @param instructionsLabel the instructions label on top of the table
+     * @param multipleSelection boolean indicating whether the user should be allowed to select multiple items
      */
     public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
         super(parent, ptms, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
@@ -44,6 +44,17 @@ public class PtmChooser extends ListChooser {
         }
         setUpTable();
         setVisible(true);
+    }
+
+    /**
+     * Constructor with default values.
+     *
+     * @param parent the parent frame
+     * @param ptms list of the names of the PTMs for the user to select
+     * @param multipleSelection boolean indicating whether the user should be allowed to select multiple items
+     */
+    public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, boolean multipleSelection) {
+        this(parent, ptms, "PTM selection", "Searched PTMs", "Please select a PTM from the list of possibilities.", multipleSelection);
     }
 
     @Override

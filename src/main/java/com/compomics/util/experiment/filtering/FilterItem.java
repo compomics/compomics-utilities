@@ -24,9 +24,9 @@ public interface FilterItem {
     public String getDescription();
 
     /**
-     * Returns the values this filter item can take.
+     * Returns the possible items of this kind.
      *
-     * @return the values this filter item can take
+     * @return the possible items of this kind
      */
     public FilterItem[] getPossibleValues();
 
@@ -47,7 +47,7 @@ public interface FilterItem {
     public boolean isPtm();
 
     /**
-     * In case the filter has predefined values, return the possible values.
+     * In case the filter has predefined values, return the possible values, null otherwise.
      *
      * @return a list of possible values to select from
      */

@@ -41,8 +41,9 @@ public class ProteinSequencesManager extends javax.swing.JDialog {
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         importMenu = new javax.swing.JMenu();
-        importFromFileMenuItem = new javax.swing.JMenuItem();
         importFromUnitprot = new javax.swing.JMenuItem();
+        importFromFileMenuItem = new javax.swing.JMenuItem();
+        dnaMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -67,17 +68,7 @@ public class ProteinSequencesManager extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Sequence Databases"));
 
-        dbTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        dbTable.setModel(new DatabasesTableModel());
         jScrollPane1.setViewportView(dbTable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -127,11 +118,14 @@ public class ProteinSequencesManager extends javax.swing.JDialog {
 
         importMenu.setText("Import From...");
 
+        importFromUnitprot.setText("UniProtKB");
+        importMenu.add(importFromUnitprot);
+
         importFromFileMenuItem.setText("Fasta File(s)");
         importMenu.add(importFromFileMenuItem);
 
-        importFromUnitprot.setText("UniProtKB");
-        importMenu.add(importFromUnitprot);
+        dnaMenuItem.setText("DNA Sequences");
+        importMenu.add(dnaMenuItem);
 
         fileMenu.add(importMenu);
         fileMenu.add(jSeparator1);
@@ -186,6 +180,7 @@ public class ProteinSequencesManager extends javax.swing.JDialog {
     private javax.swing.JMenuItem bugReportMenuItem;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTable dbTable;
+    private javax.swing.JMenuItem dnaMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
@@ -233,17 +228,25 @@ public class ProteinSequencesManager extends javax.swing.JDialog {
                 case 0:
                     return " ";
                 case 1:
-                    return "Name";
+                    return "Type";
                 case 2:
-                    return "Version";
+                    return "Name";
                 case 3:
-                    return "# Sequences";
+                    return "Version";
                 case 4:
-                    return "Comments";
+                    return "# Sequences";
                 case 5:
-                    return "Contaminants";
+                    return "Comments";
                 case 6:
+                    return "Reviewed";
+                case 7:
+                    return "Isoforms";
+                case 8:
+                    return "Contaminants";
+                case 9:
                     return "Decoy";
+                case 10:
+                    return "  ";
                 default:
                     return "";
             }

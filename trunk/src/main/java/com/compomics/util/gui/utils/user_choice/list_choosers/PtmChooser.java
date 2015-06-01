@@ -34,9 +34,10 @@ public class PtmChooser extends ListChooser {
      * @param dialogTitle the title to give to the dialog.
      * @param panelTitle the title to give to the panel containing the table.
      * @param instructionsLabel the instructions label on top of the table.
+     * @param multipleSelection boolean indicating whether the user should be allowed to select multiple items.
      */
-    public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, String dialogTitle, String panelTitle, String instructionsLabel) {
-        super(parent, ptms, dialogTitle, panelTitle, instructionsLabel);
+    public PtmChooser(java.awt.Frame parent, ArrayList<String> ptms, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+        super(parent, ptms, dialogTitle, panelTitle, instructionsLabel, multipleSelection);
         this.ptmList = ptms;
         if (ptms == null || ptms.isEmpty()) {
             throw new IllegalArgumentException("No item to select.");

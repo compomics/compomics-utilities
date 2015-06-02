@@ -53,11 +53,11 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     /**
      * The lower isotope error range.
      */
-    private Integer lowerIsotopeErrorRange = 0;
+    private Integer lowerIsotopeErrorRange = -1;
     /**
      * The upper isotope error range.
      */
-    private Integer upperIsotopeErrorRange = 1;
+    private Integer upperIsotopeErrorRange = 2;
     /**
      * The number of tolerable termini. E.g. For trypsin, 0: non-tryptic, 1:
      * semi-tryptic, 2: fully-tryptic peptides only.

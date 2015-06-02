@@ -6,7 +6,12 @@ package com.compomics.util.protein_sequences_manager.gui.sequences_import;
  */
 public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
 
-    /** Creates new form ImportSequencesFromFilesDialog */
+    /** 
+     * Creates a new ImportSequencesFromFilesDialog.
+     * 
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
+     */
     public ImportSequencesFromFilesDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

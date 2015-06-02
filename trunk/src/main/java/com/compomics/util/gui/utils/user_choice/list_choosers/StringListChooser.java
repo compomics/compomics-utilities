@@ -19,7 +19,8 @@ public class StringListChooser extends ListChooser {
      * @param dialogTitle the title to give to the dialog.
      * @param panelTitle the title to give to the panel containing the table.
      * @param instructionsLabel the instructions label on top of the table.
-     * @param multipleSelection boolean indicating whether the user should be allowed to select multiple items.
+     * @param multipleSelection boolean indicating whether the user should be
+     * allowed to select multiple items.
      */
     public StringListChooser(java.awt.Frame parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
         super(parent, items, dialogTitle, panelTitle, instructionsLabel, multipleSelection);

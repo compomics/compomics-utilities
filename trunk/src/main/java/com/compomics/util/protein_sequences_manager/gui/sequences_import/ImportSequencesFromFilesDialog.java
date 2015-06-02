@@ -50,21 +50,21 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
 
         inputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Information"));
 
-        typeLbl.setText("Type:");
+        typeLbl.setText("Type");
 
         typeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        nameLbl.setText("Name:");
+        nameLbl.setText("Name");
 
-        versionLbl.setText("Version:");
+        versionLbl.setText("Version");
 
-        descriptionLbl.setText("Description:");
+        descriptionLbl.setText("Description");
 
         descriptionTxt.setColumns(20);
         descriptionTxt.setRows(5);
         jScrollPane1.setViewportView(descriptionTxt);
 
-        parsingRuleLbl.setText("Parsing Rule:");
+        parsingRuleLbl.setText("Parsing Rule");
 
         javax.swing.GroupLayout inputPanelLayout = new javax.swing.GroupLayout(inputPanel);
         inputPanel.setLayout(inputPanelLayout);
@@ -81,18 +81,18 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                                     .addComponent(typeLbl))
                                 .addGap(18, 18, 18)
                                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(typeCmb, 0, 200, Short.MAX_VALUE)
+                                    .addComponent(nameTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                                .addGap(134, 134, 134)
                                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(inputPanelLayout.createSequentialGroup()
                                         .addComponent(parsingRuleLbl)
                                         .addGap(18, 18, 18)
-                                        .addComponent(parsingRuleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(parsingRuleTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                                     .addGroup(inputPanelLayout.createSequentialGroup()
                                         .addComponent(versionLbl)
                                         .addGap(42, 42, 42)
-                                        .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(versionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))))
                             .addComponent(jScrollPane1))
                         .addContainerGap())
                     .addGroup(inputPanelLayout.createSequentialGroup()
@@ -123,7 +123,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
 
         fileSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
 
-        jLabel1.setText("Fasta Files:");
+        jLabel1.setText("FASTA File");
 
         browseButton.setText("Browse");
 
@@ -137,23 +137,24 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(fastaFilesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fastaFilesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(browseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(14, 14, 14))
         );
         fileSelectionPanelLayout.setVerticalGroup(
             fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fileSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                .addGroup(fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(clearButton)
                         .addComponent(browseButton))
-                    .addComponent(fastaFilesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(fastaFilesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -179,8 +180,8 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(fileSelectionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(inputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(importSequencesFromFilesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))

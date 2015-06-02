@@ -16,7 +16,7 @@ import javax.swing.table.JTableHeader;
 public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
-     * The list of items the user will choose from
+     * The list of items the user will choose from.
      */
     public ArrayList<String> items;
 
@@ -64,7 +64,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
         if (dialogTitle != null) {
             setTitle(dialogTitle);
         } else {
-            setTitle("Please select an item from the list of possibilities.");
+            setTitle("Selection");
         }
         if (panelTitle != null) {
             ((TitledBorder) itemsPanel.getBorder()).setTitle(panelTitle);
@@ -244,12 +244,12 @@ public abstract class ListChooser extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(itemsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(itemsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -266,11 +266,21 @@ public abstract class ListChooser extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cancel the dialog without saving.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
@@ -346,5 +356,4 @@ public abstract class ListChooser extends javax.swing.JDialog {
             return columnIndex > 0;
         }
     }
-
 }

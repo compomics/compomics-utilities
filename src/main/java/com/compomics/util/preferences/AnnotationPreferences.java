@@ -457,8 +457,8 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Returns the intensity limit. [0.0 - 1.0], where 1.0 means that all peaks
-     * are considered for annotations, while 0.3 means that only the 30% most
+     * Returns the intensity limit. [0.0 - 1.0], where 0.0 means that all peaks
+     * are considered for annotations, while 0.75 means that only the 75% most
      * intense peaks are considered for annotations.
      *
      * @return the intensityLimit
@@ -468,8 +468,8 @@ public class AnnotationPreferences implements Serializable {
     }
 
     /**
-     * Sets the annotation level. [0.0 - 1.0], where 1.0 means that all peaks
-     * are considered for annotations, while 0.3 means that only the 30% most
+     * Sets the annotation level. [0.0 - 1.0], where 0.0 means that all peaks
+     * are considered for annotations, while 0.75 means that only the 75% most
      * intense peaks are considered for annotations.
      *
      * @param intensityLimit the intensityLimit to set

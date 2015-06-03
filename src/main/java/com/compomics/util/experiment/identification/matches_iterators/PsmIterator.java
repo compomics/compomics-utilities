@@ -259,13 +259,7 @@ public class PsmIterator {
 
                 int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
                 ArrayList<String> keysInBatch = new ArrayList<String>(spectrumKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                if (waitingHandler != null) {
-                    waitingHandler.setDisplayProgress(false);
-                }
-                identification.loadSpectrumMatches(keysInBatch, waitingHandler);
-                if (waitingHandler != null) {
-                    waitingHandler.setDisplayProgress(true);
-                }
+                identification.loadSpectrumMatches(keysInBatch, waitingHandler, false);
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
@@ -276,26 +270,14 @@ public class PsmIterator {
                         if (urParameter == null) {
                             throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
-                        if (waitingHandler != null) {
-                            waitingHandler.setDisplayProgress(false);
-                        }
-                        identification.loadSpectrumMatchParameters(keysInBatch, urParameter, waitingHandler);
-                        if (waitingHandler != null) {
-                            waitingHandler.setDisplayProgress(true);
-                        }
+                        identification.loadSpectrumMatchParameters(keysInBatch, urParameter, waitingHandler, false);
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             return;
                         }
                     }
                 }
                 if (loadAssumptions) {
-                    if (waitingHandler != null) {
-                        waitingHandler.setDisplayProgress(false);
-                    }
-                    identification.loadAssumptions(keysInBatch, waitingHandler);
-                    if (waitingHandler != null) {
-                        waitingHandler.setDisplayProgress(true);
-                    }
+                    identification.loadAssumptions(keysInBatch, waitingHandler, false);
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }

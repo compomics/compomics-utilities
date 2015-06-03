@@ -216,7 +216,8 @@ public abstract class Identification extends ExperimentObject {
      * Loads all spectrum matches of the file in the cache of the database.
      *
      * @param fileName the file name
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -227,15 +228,16 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadAssumptions(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadAssumptions(fileName, waitingHandler);
+    public void loadAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadAssumptions(fileName, waitingHandler, displayProgress);
     }
 
     /**
      * Loads the given spectrum matches in the cache of the database.
      *
      * @param spectrumKeys the spectrum keys
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -246,8 +248,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadAssumptions(spectrumKeys, waitingHandler);
+    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadAssumptions(spectrumKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -255,7 +257,8 @@ public abstract class Identification extends ExperimentObject {
      * the database.
      *
      * @param fileName the file name
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -266,15 +269,16 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(fileName, waitingHandler);
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatches(fileName, waitingHandler, displayProgress);
     }
 
     /**
      * Loads the given spectrum matches in the cache of the database.
      *
      * @param spectrumKeys the spectrum keys
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -285,8 +289,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler);
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatches(spectrumKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -295,7 +299,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -306,8 +311,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler);
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatchParameters(fileName, urParameter, waitingHandler, displayProgress);
     }
 
     /**
@@ -316,7 +321,8 @@ public abstract class Identification extends ExperimentObject {
      * @param spectrumKeys the key of the spectrum match of the parameters to be
      * loaded
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -327,8 +333,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler);
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadSpectrumMatchParameters(spectrumKeys, urParameter, waitingHandler, displayProgress);
     }
 
     /**
@@ -336,7 +342,8 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param peptideKeys the list of peptide keys to load
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -347,14 +354,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatches(peptideKeys, waitingHandler);
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatches(peptideKeys, waitingHandler, displayProgress);
     }
 
     /**
      * Loads all peptide matches in the cache of the database.
      *
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -365,8 +373,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatches(waitingHandler);
+    public void loadPeptideMatches(WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatches(waitingHandler, displayProgress);
     }
 
     /**
@@ -374,7 +382,8 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -385,8 +394,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatchParameters(urParameter, waitingHandler);
+    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatchParameters(urParameter, waitingHandler, displayProgress);
     }
 
     /**
@@ -395,7 +404,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -406,14 +416,15 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler);
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler, displayProgress);
     }
 
     /**
      * Loads all protein matches in the cache of the database.
      *
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -424,8 +435,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatches(waitingHandler);
+    public void loadProteinMatches(WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatches(waitingHandler, displayProgress);
     }
 
     /**
@@ -433,7 +444,8 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param proteinKeys the list of protein keys to load
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -444,8 +456,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatches(proteinKeys, waitingHandler);
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatches(proteinKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -453,7 +465,8 @@ public abstract class Identification extends ExperimentObject {
      * database.
      *
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -464,8 +477,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatchParameters(urParameter, waitingHandler);
+    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatchParameters(urParameter, waitingHandler, displayProgress);
     }
 
     /**
@@ -474,7 +487,8 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * loading the object from the database
@@ -485,8 +499,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        identificationDB.loadProteinMatchParameters(proteinKeys, urParameter, waitingHandler);
+    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadProteinMatchParameters(proteinKeys, urParameter, waitingHandler, displayProgress);
     }
 
     /**

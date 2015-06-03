@@ -447,7 +447,10 @@ public class ObjectsDB implements Serializable {
      * Loads all objects from a table in the cache.
      *
      * @param tableName the table name
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -458,7 +461,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         if (contentTableQueue == null) { // backward compatibility check
             busy = false;
@@ -474,10 +477,10 @@ public class ObjectsDB implements Serializable {
                 System.out.println("getting table objects, table: " + tableName);
             }
             ResultSet results;
-            if (waitingHandler != null) {
+            if (waitingHandler != null && displayProgress) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
-                // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar...
+                // note that using the count statement might take a couple of seconds for a big table, but still better than an indeterminate progressbar.
                 Statement rowCountStatement = dbConnection.createStatement();
                 results = rowCountStatement.executeQuery("select count(*) from " + tableName);
                 results.next();
@@ -499,9 +502,11 @@ public class ObjectsDB implements Serializable {
                         while (results.next()) {
 
                             if (waitingHandler != null) {
-                                waitingHandler.increaseSecondaryProgressCounter();
                                 if (waitingHandler.isRunCanceled()) {
                                     break;
+                                }
+                                if (displayProgress) {
+                                    waitingHandler.increaseSecondaryProgressCounter();
                                 }
                             }
 
@@ -551,7 +556,7 @@ public class ObjectsDB implements Serializable {
                 wait(11);
             }
 
-            loadObjects(tableName, waitingHandler);
+            loadObjects(tableName, waitingHandler, displayProgress);
         }
     }
 
@@ -560,7 +565,10 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param keys the keys of the objects to load
-     * @param waitingHandler the waiting handler, will only be increased
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurs while
      * interacting with the database
@@ -571,7 +579,7 @@ public class ObjectsDB implements Serializable {
      * @throws InterruptedException exception thrown if a threading error occurs
      * while interacting with the database
      */
-    public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
         if (contentTableQueue == null) { // backward compatibility check
             busy = false;
@@ -648,7 +656,7 @@ public class ObjectsDB implements Serializable {
                                         in.close();
                                         bis.close();
                                     }
-                                    if (waitingHandler != null) {
+                                    if (waitingHandler != null && displayProgress) {
                                         waitingHandler.increaseSecondaryProgressCounter();
                                     }
                                 }
@@ -677,7 +685,7 @@ public class ObjectsDB implements Serializable {
                 while (busy) {
                     wait(7);
                 }
-                loadObjects(tableName, keys, waitingHandler);
+                loadObjects(tableName, keys, waitingHandler, displayProgress);
             } else {
                 ArrayList<String> queue = contentQueue.get(tableName);
                 for (String newItem : keys) {
@@ -698,7 +706,7 @@ public class ObjectsDB implements Serializable {
      * @param tableName the name of the table
      * @param objectKey the object key
      * @param useDB if useDB is false, null will be returned if the object is
-     * 
+     *
      * @return the object stored in the table
      *
      * @throws SQLException exception thrown whenever an error occurs while

@@ -599,42 +599,66 @@ public class SequenceFactory {
      * currentFastaFile attribute). If a deserialization problem occurs the file
      * will be automatically overwritten and the stacktrace printed.
      *
-     * @param fastaFile the FASTA file
      * @param overwrite boolean indicating whether the index .cui file shall be
      * overwritten if present.
      * @param waitingHandler a waitingHandler showing the progress
+     *
      * @return the index of the FASTA file
+     *
      * @throws FileNotFoundException exception thrown if the file was not found
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while deserializing the file index
      * @throws StringIndexOutOfBoundsException thrown if issues occur during the
      * parsing of the protein headers
      * @throws IllegalArgumentException if non unique accession numbers are
      * found
      */
     private synchronized FastaIndex getFastaIndex(boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
+        return getFastaIndex(currentFastaFile, overwrite, waitingHandler);
+    }
+
+    /**
+     * Returns the file index of the given fasta file. If a problem occurs while
+     * reading an older index the file will be automatically overwritten and the
+     * stacktrace printed.
+     *
+     * @param fastaFile the fast file to index
+     * @param overwrite boolean indicating whether the index .cui file shall be
+     * overwritten if present.
+     * @param waitingHandler a waitingHandler showing the progress
+     *
+     * @return the index of the FASTA file
+     *
+     * @throws FileNotFoundException exception thrown if the file was not found
+     * @throws IOException exception thrown if an error occurred while reading
+     * the FASTA file
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing of the protein headers
+     * @throws IllegalArgumentException if non unique accession numbers are
+     * found
+     */
+    public static synchronized FastaIndex getFastaIndex(File fastaFile, boolean overwrite, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, StringIndexOutOfBoundsException {
 
         FastaIndex tempFastaIndex;
+        String fileName = fastaFile.getName();
         if (!overwrite) {
-            File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+            File indexFile = new File(fastaFile.getParent(), fastaFile.getName() + ".cui");
             if (indexFile.exists()) {
                 try {
                     tempFastaIndex = (FastaIndex) SerializationUtils.readObject(indexFile);
                     Long indexLastModified = tempFastaIndex.getLastModified();
                     if (indexLastModified != null) {
-                        long fileLastModified = currentFastaFile.lastModified();
+                        long fileLastModified = fastaFile.lastModified();
                         if (indexLastModified == fileLastModified) {
                             return tempFastaIndex;
                         } else {
-                            System.err.println("Reindexing: " + currentFastaFile.getName() + ". (changes in the file detected)");
+                            System.err.println("Reindexing: " + fileName + ". (changes in the file detected)");
                         }
                     }
                 } catch (InvalidClassException e) {
-                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Reason: " + e.getLocalizedMessage() + ")");
+                    System.err.println("Reindexing: " + fileName + ". (Reason: " + e.getLocalizedMessage() + ")");
                 } catch (Exception e) {
-                    System.err.println("Reindexing: " + currentFastaFile.getName() + ". (Reason: " + e.getLocalizedMessage() + ")");
+                    System.err.println("Reindexing: " + fileName + ". (Reason: " + e.getLocalizedMessage() + ")");
                 }
             }
         }
@@ -643,7 +667,7 @@ public class SequenceFactory {
         String decoyTag = null;
         String name = null;
         String version = null;
-        File indexFile = new File(currentFastaFile.getParent(), currentFastaFile.getName() + ".cui");
+        File indexFile = new File(fastaFile.getParent(), fileName + ".cui");
 
         if (indexFile.exists()) {
             try {
@@ -656,12 +680,12 @@ public class SequenceFactory {
             }
         }
 
-        System.out.println("Reindexing: " + currentFastaFile.getName() + ".");
-        tempFastaIndex = createFastaIndex(currentFastaFile, name, decoyTag, version, waitingHandler);
+        System.out.println("Reindexing: " + fileName + ".");
+        tempFastaIndex = createFastaIndex(fastaFile, name, decoyTag, version, waitingHandler);
 
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             try {
-                writeIndex(tempFastaIndex, currentFastaFile.getParentFile());
+                writeIndex(tempFastaIndex, fastaFile.getParentFile());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -803,10 +827,11 @@ public class SequenceFactory {
      *
      * @param fastaIndex the index of the FASTA file
      * @param directory the directory where to write the file
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * writing the file
      */
-    private void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
+    public static void writeIndex(FastaIndex fastaIndex, File directory) throws IOException {
         // Serialize the file index as compomics utilities index
         File destinationFile = new File(directory, getIndexName(fastaIndex.getFileName()));
         SerializationUtils.writeObject(fastaIndex, destinationFile);
@@ -1290,10 +1315,10 @@ public class SequenceFactory {
     public FastaIndex getCurrentFastaIndex() {
         return fastaIndex;
     }
-    
+
     /**
      * Returns the default protein tree. Null if none created.
-     * 
+     *
      * @return the default protein tree
      */
     public ProteinTree getDefaultProteinTree() {
@@ -1404,7 +1429,7 @@ public class SequenceFactory {
 
     /**
      * Try to delete the default protein tree.
-     * 
+     *
      * @param exceptionHandler handler for the exceptions encountered while
      * creating the tree
      *

@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 /**
- *
+ * Dialog for importing sequences from files.
+ * 
  * @author Marc Vaudel
  */
 public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {

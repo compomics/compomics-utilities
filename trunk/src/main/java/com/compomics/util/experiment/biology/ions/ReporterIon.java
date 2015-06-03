@@ -194,7 +194,9 @@ public class ReporterIon extends Ion {
     private String name;
 
     /**
-     * Constructor for a user-defined reporter ion. The reporter ion is saved in a static map by default and can be retrieved using the static methods. See getReporterIon(String name).
+     * Constructor for a user-defined reporter ion. The reporter ion is saved in
+     * a static map by default and can be retrieved using the static methods.
+     * See getReporterIon(String name).
      *
      * @param name name of the reporter ion. Should be unique to the ion.
      * @param mass theoretic mass of the reporter ion
@@ -208,7 +210,8 @@ public class ReporterIon extends Ion {
      *
      * @param name name of the reporter ion. Should be unique to the ion.
      * @param mass theoretic mass of the reporter ion
-     * @param save if true the reporter ion will be saved in the static map for later reuse
+     * @param save if true the reporter ion will be saved in the static map for
+     * later reuse
      */
     public ReporterIon(String name, double mass, boolean save) {
         type = IonType.REPORTER_ION;

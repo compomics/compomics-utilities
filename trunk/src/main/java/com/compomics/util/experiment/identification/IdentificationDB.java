@@ -100,11 +100,15 @@ public class IdentificationDB implements Serializable {
      * @param name the database name
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectCache the objects cache
-     * 
-     * @throws SQLException exception thrown whenever an error occurs while interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public IdentificationDB(String folder, String name, boolean deleteOldDatabase, ObjectsCache objectCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         this.dbName = name;
@@ -580,7 +584,10 @@ public class IdentificationDB implements Serializable {
      * Loads all assumptions of the given file in the cache of the database.
      *
      * @param fileName the file name
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -591,17 +598,20 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadAssumptions(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getAssumptionTable(testKey);
-        objectsDB.loadObjects(tableName, waitingHandler);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
     }
 
     /**
      * Loads all assumptions of the given spectra in the cache of the database.
      *
      * @param spectrumKeys the key of the spectra
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -612,8 +622,8 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
@@ -626,7 +636,9 @@ public class IdentificationDB implements Serializable {
             }
             sortedKeys.get(tableName).add(spectrumKey);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
+                if (displayProgress) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
@@ -634,7 +646,7 @@ public class IdentificationDB implements Serializable {
         }
         for (String tableName : sortedKeys.keySet()) {
             if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
-                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
+                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
             }
         }
     }
@@ -644,7 +656,10 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param fileName the file name
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -655,17 +670,20 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadSpectrumMatches(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumMatchTable(testKey);
-        objectsDB.loadObjects(tableName, waitingHandler);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
     }
 
     /**
      * Loads all given spectrum matches in the cache of the database.
      *
      * @param spectrumKeys the key of the spectrum matches to be loaded
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -676,8 +694,8 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadSpectrumMatches(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
@@ -690,14 +708,16 @@ public class IdentificationDB implements Serializable {
             }
             sortedKeys.get(tableName).add(spectrumKey);
             if (waitingHandler != null) {
-                waitingHandler.increaseSecondaryProgressCounter();
+                if (displayProgress) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
         }
     }
 
@@ -707,7 +727,10 @@ public class IdentificationDB implements Serializable {
      *
      * @param fileName the file name
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -718,10 +741,10 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadSpectrumMatchParameters(String fileName, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String testKey = Spectrum.getSpectrumKey(fileName, "test");
         String tableName = getSpectrumParameterTable(testKey, urParameter);
-        objectsDB.loadObjects(tableName, waitingHandler);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
     }
 
     /**
@@ -730,7 +753,10 @@ public class IdentificationDB implements Serializable {
      * @param spectrumKeys the key of the spectrum match of the parameters to be
      * loaded
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -740,8 +766,8 @@ public class IdentificationDB implements Serializable {
      * object is not found when deserializing it.
      * @throws InterruptedException if an InterruptedException is thrown
      */
-    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadSpectrumMatchParameters(ArrayList<String> spectrumKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
@@ -754,21 +780,26 @@ public class IdentificationDB implements Serializable {
             }
             sortedKeys.get(tableName).add(spectrumKey);
             if (waitingHandler != null) {
+                if (displayProgress) {
                 waitingHandler.increaseSecondaryProgressCounter();
+                }
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
             }
         }
         for (String tableName : sortedKeys.keySet()) {
-            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler);
+            objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
         }
     }
 
     /**
      * Loads all peptide matches in the cache of the database.
      *
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -779,8 +810,8 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadPeptideMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
-        objectsDB.loadObjects(peptideTableName, waitingHandler);
+    public void loadPeptideMatches(WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
+        objectsDB.loadObjects(peptideTableName, waitingHandler, displayProgress);
     }
 
     /**
@@ -788,7 +819,10 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param peptideKeys the list of peptide keys to load
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -799,13 +833,13 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadPeptideMatches(ArrayList<String> peptideKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(peptideKeys.size());
         }
-        objectsDB.loadObjects(peptideTableName, peptideKeys, waitingHandler);
+        objectsDB.loadObjects(peptideTableName, peptideKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -813,7 +847,10 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -824,9 +861,9 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadPeptideMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, waitingHandler);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
     }
 
     /**
@@ -835,7 +872,10 @@ public class IdentificationDB implements Serializable {
      *
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -846,20 +886,23 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadPeptideMatchParameters(ArrayList<String> peptideKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(peptideKeys.size());
         }
         String tableName = getPeptideParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, peptideKeys, waitingHandler);
+        objectsDB.loadObjects(tableName, peptideKeys, waitingHandler, displayProgress);
     }
 
     /**
      * Loads all protein matches in the cache of the database.
      *
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -870,8 +913,8 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadProteinMatches(WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(proteinTableName, waitingHandler);
+    public void loadProteinMatches(WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(proteinTableName, waitingHandler, displayProgress);
     }
 
     /**
@@ -879,7 +922,10 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param proteinKeys the list of protein keys to load
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -890,13 +936,13 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadProteinMatches(ArrayList<String> proteinKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(proteinKeys.size());
         }
-        objectsDB.loadObjects(proteinTableName, proteinKeys, waitingHandler);
+        objectsDB.loadObjects(proteinTableName, proteinKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -904,7 +950,10 @@ public class IdentificationDB implements Serializable {
      * database.
      *
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -915,9 +964,9 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+    public void loadProteinMatchParameters(UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getProteinParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, waitingHandler);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
     }
 
     /**
@@ -926,7 +975,10 @@ public class IdentificationDB implements Serializable {
      *
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
-     * @param waitingHandler the waiting handler
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * interrogating the database
@@ -937,14 +989,14 @@ public class IdentificationDB implements Serializable {
      * @throws java.lang.InterruptedException exception thrown whenever a
      * threading issue occurred when interacting with the database
      */
-    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        if (waitingHandler != null) {
+    public void loadProteinMatchParameters(ArrayList<String> proteinKeys, UrParameter urParameter, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setSecondaryProgressCounter(0);
             waitingHandler.setMaxSecondaryProgressCounter(proteinKeys.size());
         }
         String tableName = getProteinParameterTable(urParameter);
-        objectsDB.loadObjects(tableName, proteinKeys, waitingHandler);
+        objectsDB.loadObjects(tableName, proteinKeys, waitingHandler, displayProgress);
     }
 
     /**
@@ -1232,11 +1284,15 @@ public class IdentificationDB implements Serializable {
      * @param deleteOldDatabase if true, tries to delete the old database
      * @param objectsCache the objects cache
      *
-     * 
-     * @throws SQLException exception thrown whenever an error occurs while interacting with the database
-     * @throws IOException exception thrown whenever an error occurs while reading or writing a file
-     * @throws ClassNotFoundException exception thrown whenever an error occurred while deserializing a file from the database
-     * @throws InterruptedException exception thrown if a threading error occurs while interacting with the database
+     *
+     * @throws SQLException exception thrown whenever an error occurs while
+     * interacting with the database
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while deserializing a file from the database
+     * @throws InterruptedException exception thrown if a threading error occurs
+     * while interacting with the database
      */
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);

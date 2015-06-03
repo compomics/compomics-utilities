@@ -191,13 +191,7 @@ public class PeptideMatchesIterator {
 
                 int newLoadingIndex = Math.min(loadingIndex + batchSize, nMatches - 1);
                 ArrayList<String> keysInBatch = new ArrayList<String>(peptideKeys.subList(loadingIndex + 1, newLoadingIndex + 1));
-                if (waitingHandler != null) {
-                    waitingHandler.setDisplayProgress(false);
-                }
-                identification.loadPeptideMatches(keysInBatch, waitingHandler);
-                if (waitingHandler != null) {
-                    waitingHandler.setDisplayProgress(true);
-                }
+                identification.loadPeptideMatches(keysInBatch, waitingHandler, false);
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
@@ -208,13 +202,7 @@ public class PeptideMatchesIterator {
                         if (urParameter == null) {
                             throw new IllegalArgumentException("Parameter to batch load is null.");
                         }
-                        if (waitingHandler != null) {
-                            waitingHandler.setDisplayProgress(false);
-                        }
-                        identification.loadPeptideMatchParameters(keysInBatch, urParameter, waitingHandler);
-                        if (waitingHandler != null) {
-                            waitingHandler.setDisplayProgress(true);
-                        }
+                        identification.loadPeptideMatchParameters(keysInBatch, urParameter, waitingHandler, false);
 
                         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                             return;
@@ -222,35 +210,26 @@ public class PeptideMatchesIterator {
                     }
                 }
 
-                if (loadPsms) {
-                    ArrayList<String> psmKeys = new ArrayList<String>(batchSize);
+                ArrayList<String> psmKeys = null;
+                if (loadPsms || psmParameters != null) {
+                    psmKeys = new ArrayList<String>(batchSize);
                     for (String peptideKey : keysInBatch) {
                         PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
                         psmKeys.addAll(peptideMatch.getSpectrumMatches());
                     }
-                    if (waitingHandler != null) {
-                        waitingHandler.setDisplayProgress(false);
-                    }
-                    identification.loadSpectrumMatches(psmKeys, waitingHandler);
-                    if (waitingHandler != null) {
-                        waitingHandler.setDisplayProgress(true);
-                    }
-                    if (psmParameters != null) {
-                        for (UrParameter urParameter : psmParameters) {
-                            if (urParameter == null) {
-                                throw new IllegalArgumentException("Parameter to batch load is null.");
-                            }
-                            if (waitingHandler != null) {
-                                waitingHandler.setDisplayProgress(false);
-                            }
-                            identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler);
-                            if (waitingHandler != null) {
-                                waitingHandler.setDisplayProgress(true);
-                            }
+                }
+                if (loadPsms) {
+                    identification.loadSpectrumMatches(psmKeys, waitingHandler, false);
+                }
+                if (psmParameters != null) {
+                    for (UrParameter urParameter : psmParameters) {
+                        if (urParameter == null) {
+                            throw new IllegalArgumentException("Parameter to batch load is null.");
+                        }
+                        identification.loadSpectrumMatchParameters(psmKeys, urParameter, waitingHandler, false);
 
-                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                return;
-                            }
+                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                            return;
                         }
                     }
                 }

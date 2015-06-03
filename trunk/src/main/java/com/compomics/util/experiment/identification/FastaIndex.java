@@ -57,6 +57,14 @@ public class FastaIndex extends ExperimentObject {
      */
     private String version;
     /**
+     * Description of the database
+     */
+    private String description;
+    /**
+     * The accession parsing rule
+     */
+    private String accessionParsingRule;
+    /**
      * Indicates whether the database is a concatenated target/decoy.
      */
     private boolean concatenatedTargetDecoy;
@@ -244,6 +252,42 @@ public class FastaIndex extends ExperimentObject {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * Returns the description for this database.
+     * 
+     * @return the description for this database
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description for this database.
+     * 
+     * @param description the description for this database
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Returns the accession parsing rule to use for this file.
+     * 
+     * @return the accession parsing rule to use for this file
+     */
+    public String getAccessionParsingRule() {
+        return accessionParsingRule;
+    }
+
+    /**
+     * Sets the accession parsing rule to use for this file.
+     * 
+     * @param accessionParsingRule the accession parsing rule to use for this file
+     */
+    public void setAccessionParsingRule(String accessionParsingRule) {
+        this.accessionParsingRule = accessionParsingRule;
     }
 
     /**

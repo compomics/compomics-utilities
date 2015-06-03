@@ -257,14 +257,15 @@ public class ProteinTreeComponentsFactory {
      * Loads nodes in the cache.
      *
      * @param tags list of tags corresponding to the nodes to load
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
      *
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public void loadNodes(ArrayList<String> tags) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        objectsDB.loadObjects(nodeTable, tags, null);
+    public void loadNodes(ArrayList<String> tags, WaitingHandler waitingHandler) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        objectsDB.loadObjects(nodeTable, tags, waitingHandler, false);
     }
 
     /**
@@ -303,7 +304,7 @@ public class ProteinTreeComponentsFactory {
      * @throws SQLException if an SQLException occurs
      */
     public void loadParameters() throws SQLException, ClassNotFoundException, IOException, InterruptedException {
-        objectsDB.loadObjects(parametersTable, null);
+        objectsDB.loadObjects(parametersTable, null, false);
     }
 
     /**

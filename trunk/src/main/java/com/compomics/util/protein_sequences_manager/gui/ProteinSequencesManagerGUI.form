@@ -36,16 +36,21 @@
                 <MenuItem class="javax.swing.JMenuItem" name="importFromUnitprot">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="UniProtKB"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="importFromFileMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Fasta File(s)"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importFromFileMenuItemActionPerformed"/>
+                  </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="dnaMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="DNA Sequences"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>
@@ -68,6 +73,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Configuration"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="configMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

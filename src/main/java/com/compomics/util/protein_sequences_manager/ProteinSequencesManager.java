@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * The protein sequences manager helps the user managing his fasta files.
+ * The protein sequences manager helps the user managing FASTA files.
  *
  * @author Marc Vaudel
  */
@@ -24,21 +24,23 @@ public class ProteinSequencesManager {
      */
     public static final String UNIPROT_FOLDER = "uniprot";
     /**
-     * Name of the folder containing user fasta files.
+     * Name of the folder containing user FASTA files.
      */
     public static final String USER_FOLDER = "user";
     /**
-     * Name of the folder containing DNA translated files
+     * Name of the folder containing DNA translated files.
      */
     public static final String DNA_FOLDER = "dna";
 
     /**
-     * Adds a user fasta file to the folder.
-     * 
-     * @param userFastaFile the fasta file to add
-     * @param waitingHandler a waiting handler displaying progress and allowing cancelling the operation.
-     * 
-     * @throws IOException exception thrown whenever an error occurred while copying the file.
+     * Adds a user FASTA file to the folder.
+     *
+     * @param userFastaFile the FASTA file to add
+     * @param waitingHandler a waiting handler displaying progress and allowing
+     * canceling the operation.
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * copying the file.
      */
     public static void addUserFastaFile(File userFastaFile, WaitingHandler waitingHandler) throws IOException {
         FastaIndex tempIndex = SequenceFactory.getFastaIndex(userFastaFile, true, waitingHandler);

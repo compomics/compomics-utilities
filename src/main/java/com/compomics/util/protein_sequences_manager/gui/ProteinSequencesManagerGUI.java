@@ -6,8 +6,6 @@ import com.compomics.util.protein_sequences_manager.gui.preferences.ProteinSeque
 import com.compomics.util.protein_sequences_manager.gui.sequences_import.ImportSequencesFromFilesDialog;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -115,14 +113,15 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dbPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addContainerGap(897, Short.MAX_VALUE)
+                        .addGap(0, 887, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(dbPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -209,6 +208,11 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Import from file.
+     * 
+     * @param evt 
+     */
     private void importFromFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromFileMenuItemActionPerformed
         ImportSequencesFromFilesDialog importSequencesFromFilesDialog = new ImportSequencesFromFilesDialog(parentFrame);
         if (!importSequencesFromFilesDialog.isCanceled()) {
@@ -221,6 +225,11 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_importFromFileMenuItemActionPerformed
 
+    /**
+     * Open the ProteinSequencesPreferencesDialog.
+     * 
+     * @param evt 
+     */
     private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
         new ProteinSequencesPreferencesDialog(parentFrame);
     }//GEN-LAST:event_configMenuItemActionPerformed

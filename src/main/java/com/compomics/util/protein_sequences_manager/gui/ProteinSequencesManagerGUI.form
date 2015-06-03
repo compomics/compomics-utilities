@@ -152,15 +152,16 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="dbPanel" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <EmptySpace pref="897" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="887" max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="65" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="dbPanel" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

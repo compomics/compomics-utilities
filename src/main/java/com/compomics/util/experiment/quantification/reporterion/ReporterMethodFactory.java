@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
+import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import org.xmlpull.v1.XmlPullParser;
@@ -13,7 +14,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This factory imports reporter methods details from an XMl file.
@@ -97,8 +97,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 writer.newLine();
                 writer.write(indent + indent + "<reagentList>");
                 writer.newLine();
-                ArrayList<String> reagentNames = new ArrayList<String>(reporterMethod.getReagentNames());
-                Collections.sort(reagentNames);
+                ArrayList<String> reagentNames = new ArrayList<String>(reporterMethod.getReagentsSortedByMass());
 
                 for (String reagentName : reagentNames) {
                     Reagent reagent = reporterMethod.getReagent(reagentName);
@@ -106,7 +105,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<name>" + reagent.getName() + "</name>");
                     writer.newLine();
-                    writer.write(indent + indent + indent + indent + "<monoisotopicMass>" + reagent.getReporterIon().getTheoreticMass() + "</monoisotopicMass>");
+                    writer.write(indent + indent + indent + indent + "<monoisotopicMass>" + (reagent.getReporterIon().getTheoreticMass() + ElementaryIon.proton.getTheoreticMass()) + "</monoisotopicMass>");
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<minus2>" + reagent.getMinus2() + "</minus2>");
                     writer.newLine();

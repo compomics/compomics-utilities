@@ -250,18 +250,18 @@ public class ProteinMatchesIterator {
                     }
                 }
 
-                    if (peptidesParameters != null) {
-                        for (UrParameter urParameter : peptidesParameters) {
-                            if (urParameter == null) {
-                                throw new IllegalArgumentException("Parameter to batch load is null.");
-                            }
-                            identification.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler, false);
+                if (peptidesParameters != null) {
+                    for (UrParameter urParameter : peptidesParameters) {
+                        if (urParameter == null) {
+                            throw new IllegalArgumentException("Parameter to batch load is null.");
+                        }
+                        identification.loadPeptideMatchParameters(peptideKeys, urParameter, waitingHandler, false);
 
-                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                return;
-                            }
+                        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                            return;
                         }
                     }
+                }
 
                 loadingIndex = newLoadingIndex;
                 trigger += (int) (margin * batchSize / 2);

@@ -57,11 +57,11 @@ public class FastaIndex extends ExperimentObject {
      */
     private String version;
     /**
-     * Description of the database
+     * Description of the database.
      */
     private String description;
     /**
-     * The accession parsing rule
+     * The accession parsing rule.
      */
     private String accessionParsingRule;
     /**

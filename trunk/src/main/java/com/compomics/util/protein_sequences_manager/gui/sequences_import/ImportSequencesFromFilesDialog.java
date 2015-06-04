@@ -8,6 +8,7 @@ import com.compomics.util.preferences.LastSelectedFolder;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein_sequences_manager.ProteinSequencesManager;
 import static com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog.lastFolderKey;
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
@@ -25,10 +26,6 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
      * A simple progress dialog.
      */
     private static ProgressDialogX progressDialog;
-    /**
-     * The sequence factory.
-     */
-    private SequenceFactory sequenceFactory = SequenceFactory.getInstance();
     /**
      * The utilities user preferences.
      */
@@ -49,11 +46,38 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
      * Boolean indicating whether the import has been canceled by the user.
      */
     private boolean canceled = false;
+    /**
+     * The parent frame
+     */
+    private java.awt.Frame parentFrame;
+    /**
+     * The icon to display when waiting.
+     */
+    private Image waitingImage;
+    /**
+     * The normal icon.
+     */
+    private Image normalImange;
 
-    public ImportSequencesFromFilesDialog(java.awt.Frame parent) {
+    /**
+     * Constructor.
+     *
+     * @param parent the parent frame
+     * @param normalImange the normal icon
+     * @param waitingImage the waiting icon
+     */
+    public ImportSequencesFromFilesDialog(java.awt.Frame parent, Image normalImange, Image waitingImage) {
         super(parent, true);
+
+        this.parentFrame = parent;
+        this.normalImange = normalImange;
+        this.waitingImage = waitingImage;
+
         initComponents();
+        loadUserPreferences();
         clearDatabaseSelection();
+        setLocationRelativeTo(parent);
+        setVisible(true);
     }
 
     /**
@@ -200,6 +224,8 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
             }
         });
 
+        fastaFilesTxt.setEditable(false);
+
         javax.swing.GroupLayout fileSelectionPanelLayout = new javax.swing.GroupLayout(fileSelectionPanel);
         fileSelectionPanel.setLayout(fileSelectionPanelLayout);
         fileSelectionPanelLayout.setHorizontalGroup(
@@ -274,7 +300,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        selectDB(false);
+        selectDB();
     }//GEN-LAST:event_browseButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
@@ -318,14 +344,11 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
      * Loads the user preferences.
      */
     public void loadUserPreferences() {
-        try {
-            utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
-            if (utilitiesUserPreferences.getDbFolder() == null || !utilitiesUserPreferences.getDbFolder().exists()) {
-                throw new IllegalArgumentException("Database folder not set.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        if (utilitiesUserPreferences.getProteinSequencesManagerFolder() == null || !utilitiesUserPreferences.getProteinSequencesManagerFolder().exists()) {
+            throw new IllegalArgumentException("Database folder not set.");
         }
+        lastSelectedFolder = utilitiesUserPreferences.getLastSelectedFolder();
     }
 
     /**
@@ -371,84 +394,119 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
      * copying the database.
      */
     public void importDatabase() throws IOException {
-        selectedFileIndex = SequenceFactory.getFastaIndex(selectedFile, true, progressDialog);
-        if (!progressDialog.isRunCanceled()) {
-            typeCmb.setSelectedItem(selectedFileIndex.getMainDatabaseType());
-            nameTxt.setText(selectedFileIndex.getName());
-            versionTxt.setText(selectedFileIndex.getVersion());
-            descriptionTxt.setText(selectedFileIndex.getDescription());
-            typeCmb.setEnabled(true);
-            nameTxt.setEnabled(true);
-            versionTxt.setEnabled(true);
-            descriptionTxt.setEnabled(true);
-        } else {
-            clearDatabaseSelection();
-        }
+
+        final File finalFile = selectedFile;
+
+        progressDialog = new ProgressDialogX(this, parentFrame,
+                normalImange,
+                waitingImage,
+                true);
+        progressDialog.setPrimaryProgressCounterIndeterminate(true);
+        progressDialog.setTitle("Loading Database. Please Wait...");
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    progressDialog.setVisible(true);
+                } catch (IndexOutOfBoundsException e) {
+                    // ignore
+                }
+            }
+        }, "ProgressDialog").start();
+
+        new Thread("importThread") {
+            public void run() {
+
+                try {
+                    progressDialog.setTitle("Importing Database. Please Wait...");
+                    progressDialog.setPrimaryProgressCounterIndeterminate(false);
+                    selectedFileIndex = SequenceFactory.getFastaIndex(selectedFile, false, progressDialog);
+                } catch (IOException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(ImportSequencesFromFilesDialog.this,
+                            new String[]{"FASTA Import Error.", "File " + finalFile.getAbsolutePath() + " not found."},
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                } catch (StringIndexOutOfBoundsException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(ImportSequencesFromFilesDialog.this,
+                            e.getMessage(),
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                } catch (IllegalArgumentException e) {
+                    progressDialog.setRunFinished();
+                    JOptionPane.showMessageDialog(ImportSequencesFromFilesDialog.this,
+                            e.getMessage(),
+                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    e.printStackTrace();
+                    return;
+                }
+                if (!progressDialog.isRunCanceled()) {
+                    typeCmb.setSelectedItem(selectedFileIndex.getMainDatabaseType());
+                    nameTxt.setText(selectedFileIndex.getName());
+                    versionTxt.setText(selectedFileIndex.getVersion());
+                    descriptionTxt.setText(selectedFileIndex.getDescription());
+                    typeCmb.setEnabled(true);
+                    nameTxt.setEnabled(true);
+                    versionTxt.setEnabled(true);
+                    descriptionTxt.setEnabled(true);
+                } else {
+                    clearDatabaseSelection();
+                }
+                progressDialog.setRunFinished();
+            }
+        }.start();
     }
 
     /**
      * Allows the user to select a db and loads its information.
-     *
-     * @param userCanDispose if true, the dialog is closed if the user cancels
-     * the selection
-     *
-     * @return true if the selection was not canceled by the user or an error
-     * occurred
      */
-    public boolean selectDB(boolean userCanDispose) {
+    public void selectDB() {
 
-        if (sequenceFactory.getFileName() == null || !userCanDispose) {
+        File startLocation = null;
+        if (utilitiesUserPreferences.getDbFolder() != null && utilitiesUserPreferences.getDbFolder().exists()) {
+            startLocation = utilitiesUserPreferences.getDbFolder();
+        }
 
-            File dbFolder = utilitiesUserPreferences.getDbFolder();
-
-            File startLocation = dbFolder;
-            if (utilitiesUserPreferences.getDbFolder() != null && utilitiesUserPreferences.getDbFolder().exists()) {
-                startLocation = utilitiesUserPreferences.getDbFolder();
+        JFileChooser fc = new JFileChooser(startLocation);
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File myFile) {
+                return myFile.getName().toLowerCase().endsWith("fasta")
+                        || myFile.getName().toLowerCase().endsWith("fas")
+                        || myFile.isDirectory();
             }
 
-            JFileChooser fc = new JFileChooser(startLocation);
-            FileFilter filter = new FileFilter() {
-                @Override
-                public boolean accept(File myFile) {
-                    return myFile.getName().toLowerCase().endsWith("fasta")
-                            || myFile.getName().toLowerCase().endsWith("fas")
-                            || myFile.isDirectory();
-                }
-
-                @Override
-                public String getDescription() {
-                    return "FASTA (.fasta or .fas)";
-                }
-            };
-
-            fc.setFileFilter(filter);
-            int result = fc.showOpenDialog(this);
-
-            if (result == JFileChooser.APPROVE_OPTION) {
-                File userSelectedFile = fc.getSelectedFile();
-                lastSelectedFolder.setLastSelectedFolder(lastFolderKey, selectedFile.getParent());
-                try {
-                    String fileName = userSelectedFile.getName();
-                    fileName = fileName.replaceAll(" ", "_");
-                    File tempFolder = new File(dbFolder, ProteinSequencesManager.TEMP_FOLDER);
-                    tempFolder.mkdirs();
-                    selectedFile = new File(tempFolder, fileName);
-                    Util.copyFile(userSelectedFile, selectedFile);
-                    importDatabase();
-                    fastaFilesTxt.setText(selectedFile.getAbsolutePath());
-                    clearButton.setEnabled(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "An error occurred while importing " + selectedFile.getName() + ".", "Error", JOptionPane.ERROR_MESSAGE);
-                    clearDatabaseSelection();
-                }
-            } else if (userCanDispose) {
-                dispose();
+            @Override
+            public String getDescription() {
+                return "FASTA (.fasta or .fas)";
             }
+        };
 
-            return false;
-        } else {
-            return true;
+        fc.setFileFilter(filter);
+        int result = fc.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File userSelectedFile = fc.getSelectedFile();
+            lastSelectedFolder.setLastSelectedFolder(lastFolderKey, userSelectedFile.getParent());
+            try {
+                String fileName = userSelectedFile.getName();
+                fileName = fileName.replaceAll(" ", "_");
+                File managerFolder = utilitiesUserPreferences.getProteinSequencesManagerFolder();
+                File tempFolder = new File(managerFolder, ProteinSequencesManager.TEMP_FOLDER);
+                tempFolder.mkdirs();
+                selectedFile = new File(tempFolder, fileName);
+                Util.copyFile(userSelectedFile, selectedFile);
+                importDatabase();
+                fastaFilesTxt.setText(selectedFile.getAbsolutePath());
+                clearButton.setEnabled(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "An error occurred while importing " + selectedFile.getName() + ".", "Error", JOptionPane.ERROR_MESSAGE);
+                clearDatabaseSelection();
+            }
         }
     }
 

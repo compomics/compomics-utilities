@@ -32,7 +32,7 @@ public class ProteinTreeComponentsFactory {
     /**
      * The folder containing the databases.
      */
-    private static String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/";
+    private static String defaultDbFolderPath = System.getProperty("user.home") + "/.compomics/proteins/indexes/";
     /**
      * The objects db used to retrieve saved nodes.
      */

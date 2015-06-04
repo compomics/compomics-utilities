@@ -152,9 +152,9 @@ public class FastaIndex extends ExperimentObject {
     }
 
     /**
-     * Returns the file name of the inspected FASTA file.
+     * Returns the file name of the indexed FASTA file.
      *
-     * @return the file name of the inspected FASTA file
+     * @return the file name of the indexed FASTA file
      */
     public String getFileName() {
         return fileName;

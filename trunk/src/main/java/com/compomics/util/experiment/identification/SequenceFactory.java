@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
@@ -667,6 +668,8 @@ public class SequenceFactory {
         String decoyTag = null;
         String name = null;
         String version = null;
+        String description = null;
+        String accessionParsingRule = null;
         File indexFile = new File(fastaFile.getParent(), fileName + ".cui");
 
         if (indexFile.exists()) {
@@ -675,6 +678,8 @@ public class SequenceFactory {
                 decoyTag = tempFastaIndex.getDecoyTag();
                 version = tempFastaIndex.getVersion();
                 name = tempFastaIndex.getName();
+                description = tempFastaIndex.getDescription();
+                accessionParsingRule = tempFastaIndex.getAccessionParsingRule();
             } catch (Exception e) {
                 // Fail silently
             }
@@ -682,6 +687,8 @@ public class SequenceFactory {
 
         System.out.println("Reindexing: " + fileName + ".");
         tempFastaIndex = createFastaIndex(fastaFile, name, decoyTag, version, waitingHandler);
+        tempFastaIndex.setDescription(description);
+        tempFastaIndex.setAccessionParsingRule(accessionParsingRule);
 
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
             try {
@@ -804,7 +811,7 @@ public class SequenceFactory {
 
         String fileName = fastaFile.getName();
         if (name == null) {
-            name = fileName;
+            name = Util.removeExtension(fileName);
         }
 
         // find the main database type

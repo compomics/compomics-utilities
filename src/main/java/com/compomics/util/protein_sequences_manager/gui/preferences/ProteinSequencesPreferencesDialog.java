@@ -13,13 +13,24 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
      */
     private UtilitiesUserPreferences utilitiesUserPreferences = null;
 
+    /**
+     * Constructor.
+     * 
+     * @param parent the parent frame
+     */
     public ProteinSequencesPreferencesDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
         loadUserPreferences();
         setUpGUI();
+        setTitle("Protein Sequences Manager Preferences");
+        setLocationRelativeTo(parent);
+        setVisible(true);
     }
 
+    /**
+     * Sets up the gui components
+     */
     private void setUpGUI() {
         folderTxt.setText(utilitiesUserPreferences.getDbFolder().getAbsolutePath());
     }
@@ -63,7 +74,7 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
         parametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Sequences Manager Preferences"));
         parametersPanel.setOpaque(false);
 
-        jLabel1.setText("Folder");
+        jLabel1.setText("Working Folder:");
 
         jButton1.setText("Clear");
 
@@ -79,7 +90,7 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(folderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(folderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

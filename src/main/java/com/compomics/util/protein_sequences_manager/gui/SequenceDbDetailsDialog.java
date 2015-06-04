@@ -76,8 +76,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param lastSelectedFolder the last selected folder
      * @param dbEditable if the database is editable
-     * @param waitingImage the waiting icon
      * @param normalImange the normal icon
+     * @param waitingImage the waiting icon
      */
     public SequenceDbDetailsDialog(Frame parent, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
         super(parent, true);

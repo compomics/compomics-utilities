@@ -122,6 +122,10 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private File dbFolder = null;
     /**
+     * The folder used to store fasta files.
+     */
+    private File proteinSequencesManagerFolder = null;
+    /**
      * The user last used databases.
      */
     private ArrayList<File> favoriteDBs = null;
@@ -580,6 +584,30 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setDbFolder(File dbFolder) {
         this.dbFolder = dbFolder;
+    }
+
+    /**
+     * returns the folder to use in the protein sequences manager.
+     * 
+     * @return the folder to use in the protein sequences manager
+     */
+    public File getProteinSequencesManagerFolder() {
+        if (proteinSequencesManagerFolder == null) { // Backward compatibility
+            proteinSequencesManagerFolder = new File(System.getProperty("user.home") + "/.compomics/proteins/sequences/");
+            if (!proteinSequencesManagerFolder.exists()) {
+                proteinSequencesManagerFolder.mkdirs();
+            }
+        }
+        return proteinSequencesManagerFolder;
+    }
+
+    /**
+     * Sets the folder to use in the protein sequences manager.
+     * 
+     * @param proteinSequencesManagerFolder the folder to use in the protein sequences manager
+     */
+    public void setProteinSequencesManagerFolder(File proteinSequencesManagerFolder) {
+        this.proteinSequencesManagerFolder = proteinSequencesManagerFolder;
     }
 
     /**

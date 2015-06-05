@@ -47,7 +47,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * The parent frame
+     * The parent frame.
      */
     private java.awt.Frame parentFrame;
     /**

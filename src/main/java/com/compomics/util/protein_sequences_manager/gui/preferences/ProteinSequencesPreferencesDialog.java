@@ -3,7 +3,8 @@ package com.compomics.util.protein_sequences_manager.gui.preferences;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 
 /**
- *
+ * Protein sequences preferences dialog.
+ * 
  * @author Marc Vaudel
  */
 public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
@@ -29,7 +30,7 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets up the gui components
+     * Sets up the GUI components.
      */
     private void setUpGUI() {
         folderTxt.setText(utilitiesUserPreferences.getDbFolder().getAbsolutePath());
@@ -150,10 +151,20 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Closes the dialog.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Saves the input and closes the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (utilitiesUserPreferences != null) {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);

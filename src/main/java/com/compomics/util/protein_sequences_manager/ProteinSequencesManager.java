@@ -24,7 +24,7 @@ public class ProteinSequencesManager {
      */
     public static final String TEMP_FOLDER = ".temp";
     /**
-     * Name of the folder containing uniprot files.
+     * Name of the folder containing UniProt files.
      */
     public static final String UNIPROT_FOLDER = "uniprot";
     /**
@@ -36,7 +36,7 @@ public class ProteinSequencesManager {
      */
     public static final String DNA_FOLDER = "dna";
     /**
-     * The list of databases loaded
+     * The list of databases loaded.
      */
     private ArrayList<String> databaseNames;
     /**
@@ -44,7 +44,7 @@ public class ProteinSequencesManager {
      */
     private HashMap<String, SequenceInputType> databaseInputTypes;
     /**
-     * Map of the index for every database: name - version - FastaIndex
+     * Map of the index for every database: name - version - FastaIndex.
      */
     private HashMap<String, HashMap<String, FastaIndex>> databaseIndexes;
     /**
@@ -141,9 +141,9 @@ public class ProteinSequencesManager {
     }
 
     /**
-     * Returns the folder where uniprot databases are stored.
+     * Returns the folder where UniProt databases are stored.
      *
-     * @return the folder where uniprot databases are stored
+     * @return the folder where UniProt databases are stored
      */
     public File getUniprotFolder() {
         return new File(workingFolder, UNIPROT_FOLDER);
@@ -159,21 +159,21 @@ public class ProteinSequencesManager {
     }
 
     /**
-     * Returns the folder where dna databases are stored.
+     * Returns the folder where DNA databases are stored.
      *
-     * @return the folder where dna databases are stored
+     * @return the folder where DNA databases are stored
      */
     public File getDnaFolder() {
         return new File(workingFolder, DNA_FOLDER);
     }
 
     /**
-     * Adds a fasta file to the working folder.
+     * Adds a FASTA file to the working folder.
      *
-     * @param fastaFile the fasta file to add
+     * @param fastaFile the FASTA file to add
      * @param sequenceInputType the type of input
      * @param waitingHandler a waiting handler displaying progress and allowing
-     * cancelling the operation.
+     * canceling the operation.
      *
      * @throws IOException exception thrown whenever an error occurred while
      * copying the file.
@@ -284,12 +284,12 @@ public class ProteinSequencesManager {
     }
 
     /**
-     * Returns the fasta index of the given database name and version.
+     * Returns the FASTA index of the given database name and version.
      *
      * @param databaseName the name of the database of interest
      * @param version the version of the database of interest
      *
-     * @return the corresponding fasta index
+     * @return the corresponding FASTA index
      */
     public FastaIndex getFastaIndex(String databaseName, String version) {
         HashMap<String, FastaIndex> databaseMap = databaseIndexes.get(databaseName);

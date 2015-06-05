@@ -138,6 +138,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     private boolean canceled = false;
     /**
+     * Boolean indicating whether the search settings are editable.
+     */
+    private boolean editable = true;
+    /**
      * The last selected folder to use.
      */
     private final LastSelectedFolder lastSelectedFolder;
@@ -159,21 +163,24 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param modal if the dialog is to be modal
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
+     * @param editable set if the search settings are to be editable or not
      */
-    public SearchSettingsDialog(JFrame parentFrame, SearchParameters searchParameters,
-            Image normalIcon, Image waitingIcon, boolean setVisible, boolean modal,
-            ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder) {
+    public SearchSettingsDialog(JFrame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, modal);
+
         this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.configurationFile = configurationFile;
+        this.editable = editable;
+
         if (searchParameters == null) {
             this.searchParameters = new SearchParameters();
         } else {
             this.searchParameters = searchParameters;
         }
-        this.normalIcon = normalIcon;
-        this.waitingIcon = waitingIcon;
-        this.lastSelectedFolder = lastSelectedFolder;
-        this.configurationFile = configurationFile;
 
         try {
             loadModificationUse(configurationFile);
@@ -203,6 +210,21 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         setScreenProps();
         validateParametersInput(false);
+
+        // set the settings editable or not
+        enzymesCmb.setEnabled(editable);
+        precursorIonAccuracyTxt.setEditable(editable);
+        precursorIonUnit.setEnabled(editable);
+        fragmentIon1Cmb.setEnabled(editable);
+        fragmentIon2Cmb.setEnabled(editable);
+        maxMissedCleavagesTxt.setEditable(editable);
+        fragmentIonAccuracyTxt.setEditable(editable);
+        minPrecursorChargeTxt.setEditable(editable);
+        maxPrecursorChargeTxt.setEditable(editable);
+        addFixedModification.setEnabled(editable);
+        removeFixedModification.setEnabled(editable);
+        addVariableModification.setEnabled(editable);
+        removeVariableModification.setEnabled(editable);
 
         modificationTypesSplitPane.setDividerLocation(0.5);
 
@@ -310,7 +332,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         dataBasePanelSettings = new javax.swing.JPanel();
         databaseSettingsLbl = new javax.swing.JLabel();
         databaseSettingsTxt = new javax.swing.JTextField();
-        editDatabaseSettings = new javax.swing.JButton();
+        editDatabaseDetailsButton = new javax.swing.JButton();
         modificationsLayeredPane = new javax.swing.JLayeredPane();
         modificationsPanel = new javax.swing.JPanel();
         modificationTypesSplitPane = new javax.swing.JSplitPane();
@@ -516,10 +538,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         databaseSettingsTxt.setEditable(false);
 
-        editDatabaseSettings.setText("Edit");
-        editDatabaseSettings.addActionListener(new java.awt.event.ActionListener() {
+        editDatabaseDetailsButton.setText("Edit");
+        editDatabaseDetailsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editDatabaseSettingsActionPerformed(evt);
+                editDatabaseDetailsButtonActionPerformed(evt);
             }
         });
 
@@ -533,7 +555,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(databaseSettingsTxt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editDatabaseSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editDatabaseDetailsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         dataBasePanelSettingsLayout.setVerticalGroup(
@@ -542,7 +564,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 .addContainerGap()
                 .addGroup(dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(databaseSettingsLbl)
-                    .addComponent(editDatabaseSettings)
+                    .addComponent(editDatabaseDetailsButton)
                     .addComponent(databaseSettingsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -780,17 +802,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
                 return canEdit [columnIndex];
             }
         });
-        modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseReleased(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseExited(evt);
-            }
-        });
         modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseMoved(evt);
+            }
+        });
+        modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseReleased(evt);
             }
         });
         modificationsTable.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1000,7 +1022,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      *
      * @param evt
      */
-    private void editDatabaseSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseSettingsActionPerformed
+    private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
 
         // clear the factory
         if (databaseSettingsTxt.getText().trim().length() == 0) {
@@ -1015,7 +1037,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             }
         }
 
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, true, normalIcon, waitingIcon);
+        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
 
         boolean success = sequenceDbDetailsDialog.selectDB(true);
         if (success) {
@@ -1027,7 +1049,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         validateParametersInput(false);
-    }//GEN-LAST:event_editDatabaseSettingsActionPerformed
+    }//GEN-LAST:event_editDatabaseDetailsButtonActionPerformed
 
     /**
      * Add fixed modifications.
@@ -1241,56 +1263,61 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
-        SearchParameters tempSearchParameters = getCurrentSearchParameters();
+        if (editable) {
 
-        if (!searchParameters.equals(tempSearchParameters)) {
+            SearchParameters tempSearchParameters = getCurrentSearchParameters();
 
-            int value = JOptionPane.showConfirmDialog(this, "The search parameters have changed."
-                    + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (!searchParameters.equals(tempSearchParameters)) {
 
-            if (value == JOptionPane.YES_OPTION) {
+                int value = JOptionPane.showConfirmDialog(this, "The search parameters have changed."
+                        + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                boolean userSelectFile = false;
+                if (value == JOptionPane.YES_OPTION) {
 
-                // see if the user wants to overwrite the current settings file
-                if (tempSearchParameters.getParametersFile() != null) {
-                    value = JOptionPane.showConfirmDialog(this, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+                    boolean userSelectFile = false;
 
-                    if (value == JOptionPane.NO_OPTION) {
+                    // see if the user wants to overwrite the current settings file
+                    if (tempSearchParameters.getParametersFile() != null) {
+                        value = JOptionPane.showConfirmDialog(this, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                        if (value == JOptionPane.NO_OPTION) {
+                            userSelectFile = true;
+                        } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
+                            return;
+                        }
+
+                    } else {
+                        // no params file > have the user select a file
                         userSelectFile = true;
-                    } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
-                        return;
                     }
 
-                } else {
-                    // no params file > have the user select a file
-                    userSelectFile = true;
-                }
+                    boolean fileSaved = true;
 
-                boolean fileSaved = true;
-
-                if (userSelectFile) {
-                    fileSaved = saveAsPressed();
-                    tempSearchParameters = getCurrentSearchParameters();
-                }
-
-                if (fileSaved && tempSearchParameters.getParametersFile() != null) {
-
-                    try {
-                        SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
-                        searchParameters = tempSearchParameters;
-                        close();
-                    } catch (ClassNotFoundException e) {
-                        JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
-                                + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
-                                + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                        e.printStackTrace();
+                    if (userSelectFile) {
+                        fileSaved = saveAsPressed();
+                        tempSearchParameters = getCurrentSearchParameters();
                     }
+
+                    if (fileSaved && tempSearchParameters.getParametersFile() != null) {
+
+                        try {
+                            SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
+                            searchParameters = tempSearchParameters;
+                            close();
+                        } catch (ClassNotFoundException e) {
+                            JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
+                                    + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
+                                    + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (value == JOptionPane.NO_OPTION) {
+                    close();
                 }
-            } else if (value == JOptionPane.NO_OPTION) {
+            } else {
                 close();
             }
         } else {
@@ -1665,7 +1692,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     private javax.swing.JPanel dataBasePanelSettings;
     private javax.swing.JLabel databaseSettingsLbl;
     private javax.swing.JTextField databaseSettingsTxt;
-    private javax.swing.JButton editDatabaseSettings;
+    private javax.swing.JButton editDatabaseDetailsButton;
     private javax.swing.JLabel enzymeLabel;
     private javax.swing.JComboBox enzymesCmb;
     private javax.swing.JLabel fixedModificationsLabel;
@@ -2424,10 +2451,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * Enable/disable the add/remove PTM buttons.
      */
     private void enableAddRemoveButtons() {
-        removeVariableModification.setEnabled(variableModsTable.getSelectedRow() != -1);
-        addVariableModification.setEnabled(modificationsTable.getSelectedRow() != -1);
-        removeFixedModification.setEnabled(fixedModsTable.getSelectedRow() != -1);
-        addFixedModification.setEnabled(modificationsTable.getSelectedRow() != -1);
+        removeVariableModification.setEnabled(variableModsTable.getSelectedRow() != -1 && editable);
+        addVariableModification.setEnabled(modificationsTable.getSelectedRow() != -1 && editable);
+        removeFixedModification.setEnabled(fixedModsTable.getSelectedRow() != -1 && editable);
+        addFixedModification.setEnabled(modificationsTable.getSelectedRow() != -1 && editable);
     }
 
     /**

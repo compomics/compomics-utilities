@@ -313,7 +313,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="databaseSettingsTxt" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="editDatabaseSettings" min="-2" pref="80" max="-2" attributes="0"/>
+                      <Component id="editDatabaseDetailsButton" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -324,7 +324,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="databaseSettingsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="editDatabaseSettings" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="editDatabaseDetailsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="databaseSettingsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -343,12 +343,12 @@
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="editDatabaseSettings">
+            <Component class="javax.swing.JButton" name="editDatabaseDetailsButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Edit"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editDatabaseSettingsActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editDatabaseDetailsButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
@@ -734,9 +734,9 @@
                             </Property>
                           </Properties>
                           <Events>
-                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseReleased"/>
-                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseExited"/>
                             <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseMoved"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseExited"/>
+                            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="modificationsTableMouseReleased"/>
                             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="modificationsTableKeyReleased"/>
                           </Events>
                           <AuxValues>

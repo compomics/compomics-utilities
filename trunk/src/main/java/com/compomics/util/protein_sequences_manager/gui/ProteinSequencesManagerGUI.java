@@ -90,7 +90,7 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
     /**
      * Main method to start a standalone version.
      *
-     * @param args
+     * @param args the command line arguments
      */
     public static void main(String[] args) {
         ProteinSequencesManagerGUI m = new ProteinSequencesManagerGUI(null, null, null);

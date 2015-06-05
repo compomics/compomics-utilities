@@ -111,7 +111,7 @@ public class IdMatchValidationPreferences implements Serializable {
 
     /**
      * Indicates whether small subgroups of matches should be grouped together.
-     * 
+     *
      * @return true if small subgroups of matches should be grouped together
      */
     public Boolean getGroupSmallSubgroups() {
@@ -120,12 +120,11 @@ public class IdMatchValidationPreferences implements Serializable {
 
     /**
      * Sets whether small subgroups of matches should be grouped together.
-     * 
-     * @param groupSmallSubgroups a boolean indicating whether small subgroups of matches should be grouped together
+     *
+     * @param groupSmallSubgroups a boolean indicating whether small subgroups
+     * of matches should be grouped together
      */
     public void setGroupSmallSubgroups(Boolean groupSmallSubgroups) {
         this.groupSmallSubgroups = groupSmallSubgroups;
     }
-    
-    
 }

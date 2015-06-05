@@ -26,6 +26,10 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     private double defaultPsmFDR = 1.0;
     /**
+     * If true groups of matches of small size will be grouped.
+     */
+    private Boolean groupSmallSubgroups = true;
+    /**
      * The validation quality control preferences.
      */
     private ValidationQCPreferences validationQCPreferences = new ValidationQCPreferences();
@@ -104,4 +108,24 @@ public class IdMatchValidationPreferences implements Serializable {
     public void setValidationQCPreferences(ValidationQCPreferences validationQCPreferences) {
         this.validationQCPreferences = validationQCPreferences;
     }
+
+    /**
+     * Indicates whether small subgroups of matches should be grouped together.
+     * 
+     * @return true if small subgroups of matches should be grouped together
+     */
+    public Boolean getGroupSmallSubgroups() {
+        return groupSmallSubgroups;
+    }
+
+    /**
+     * Sets whether small subgroups of matches should be grouped together.
+     * 
+     * @param groupSmallSubgroups a boolean indicating whether small subgroups of matches should be grouped together
+     */
+    public void setGroupSmallSubgroups(Boolean groupSmallSubgroups) {
+        this.groupSmallSubgroups = groupSmallSubgroups;
+    }
+    
+    
 }

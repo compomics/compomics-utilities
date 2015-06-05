@@ -156,6 +156,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             decoyButton.setEnabled(!sequenceFactory.concatenatedTargetDecoy() && dbEditable);
             browseButton.setEnabled(dbEditable);
             decoyFlagTxt.setEditable(dbEditable);
+
             if (!sequenceFactory.getAccessions().isEmpty()) {
                 accessionsSpinner.setEnabled(true);
                 List<String> accessionsAsList = new ArrayList<String>();
@@ -556,6 +557,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Database");
         setMinimumSize(new java.awt.Dimension(500, 500));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -858,12 +864,14 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        try {
-            sequenceFactory.clearFactory();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
-                    "Import error", JOptionPane.WARNING_MESSAGE);
-            e.printStackTrace();
+        if (dbEditable) {
+            try {
+                sequenceFactory.clearFactory();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An error occurred while clearing the sequence factory.",
+                        "Import error", JOptionPane.WARNING_MESSAGE);
+                e.printStackTrace();
+            }
         }
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -957,6 +965,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         new AdvancedProteinDatabaseDialog(parentFrame);
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
     }//GEN-LAST:event_advancedButtonActionPerformed
+
+    /**
+     * Close the dialog.
+     *
+     * @param evt the action event
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cancelButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner accessionsSpinner;

@@ -113,7 +113,7 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
     }
 
     /**
-     * Sets up the tool and populates the gui.
+     * Sets up the tool and populates the GUI.
      */
     public void setUpGui() {
 
@@ -440,8 +440,8 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
 
     /**
      * Import from file.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void importFromFileMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromFileMenuItemActionPerformed
         ImportSequencesFromFilesDialog importSequencesFromFilesDialog = new ImportSequencesFromFilesDialog(parentFrame, normalImange, waitingImage);
@@ -455,23 +455,38 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
 
     /**
      * Open the ProteinSequencesPreferencesDialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
         new ProteinSequencesPreferencesDialog(parentFrame);
     }//GEN-LAST:event_configMenuItemActionPerformed
 
+    /**
+     * Deletes the temp folder and closes the dialog.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         close();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Saves the input and closes the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         // @TODO: Set selected database
         UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         close();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Import sequences from UniProt.
+     *
+     * @param evt
+     */
     private void importFromUnitprotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromUnitprotActionPerformed
         ImportSequencesFromUniprotDialog importSequencesFromUniprotDialog = new ImportSequencesFromUniprotDialog(parentFrame);
         if (!importSequencesFromUniprotDialog.isCanceled()) {
@@ -482,6 +497,11 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_importFromUnitprotActionPerformed
 
+    /**
+     * Import DNA.
+     * 
+     * @param evt 
+     */
     private void importFromDNAMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importFromDNAMenuItemActionPerformed
         ImportSequencesFromDnaDialog importSequencesFromDnaDialog = new ImportSequencesFromDnaDialog(parentFrame);
         if (!importSequencesFromDnaDialog.isCanceled()) {
@@ -523,7 +543,7 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Imports a file in the protein sequence manager and updates the gui.
+     * Imports a file in the protein sequence manager and updates the GUI.
      *
      * @param selectedFile the file to import
      * @param sequenceInputType the type of input
@@ -691,19 +711,22 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Database table cell editor.
+     */
     private class DatabasesTableCellEditor implements TableCellEditor {
 
         /**
-         * Map of the individual cell editors. row - column - cell editor
+         * Map of the individual cell editors. row - column - cell editor.
          */
         private HashMap<Integer, HashMap<Integer, DefaultCellEditor>> cellEditorsMap;
         /**
-         * The last accessed cell editor
+         * The last accessed cell editor.
          */
         private DefaultCellEditor lastAccessedEditor = null;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public DatabasesTableCellEditor() {
 
@@ -793,6 +816,5 @@ public class ProteinSequencesManagerGUI extends javax.swing.JDialog {
                 lastAccessedEditor.removeCellEditorListener(l);
             }
         }
-
     }
 }

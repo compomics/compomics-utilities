@@ -19,6 +19,7 @@ Also note that most of the search engine specific settings listed below are for 
   * [#Tide_advanced_parameters Tide advanced parameters]
   * [#PepNovo+_advanced_parameters PepNovo+ advanced parameters]
   * [#DirecTag_advanced_parameters DirecTag advanced parameters]
+  * [#pNovo+_advanced_parameters pNovo+ advanced parameters]
  * [#Comma_Separated_List Comma Separated List]
  * [#Help Help]
 
@@ -504,6 +505,18 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
 
 -directag_complement_weight
                           DirecTag complement_score_weight, default is '1.0'.
+}}}
+
+==`pNovo+` advanced parameters==
+
+{{{
+-pnovo_num_peptides       pNovo+ number of peptides per spectrum, default is '10'.
+
+-pnovo_lower_prec         pNovo+ minimum precursor mass, default is '300'.
+
+-pnovo_upper_prec         pNovo+ maximum precursor mass, default is '5000'.
+
+-pnovo_activation         pNovo+ actication type (HCD, CID or EDT), default is 'HCD'.
 }}}
 
 ----

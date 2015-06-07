@@ -79,8 +79,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      */
     private HashMap<String, String> tagsParameters = new HashMap<String, String>();
     /**
-     * Returns the content of the columns for a spectrum line. Name &gt; index in
-     * the column.
+     * Returns the content of the columns for a spectrum line. Name &gt; index
+     * in the column.
      */
     private HashMap<String, Integer> spectrumLineContent = new HashMap<String, Integer>();
     /**
@@ -444,8 +444,8 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
@@ -501,13 +501,13 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
                             result.add(currentMatch);
                         }
-                        sId = sId + 1;
-                        String spectrumTitle = sId + "";
+                        int utilitiesId = sId + 1; // first spectrum is 1 in utilities
+                        String spectrumTitle = utilitiesId + "";
                         if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                            spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, sId);
+                            spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, utilitiesId);
                         }
                         currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle));
-                        currentMatch.setSpectrumNumber(sId);
+                        currentMatch.setSpectrumNumber(utilitiesId);
                         lastId = sId;
                     }
                     if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {

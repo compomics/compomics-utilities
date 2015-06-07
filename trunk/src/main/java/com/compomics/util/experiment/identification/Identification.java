@@ -1867,6 +1867,15 @@ public abstract class Identification extends ExperimentObject {
     public void restoreConnection(String dbFolder, boolean deleteOldDatabase, ObjectsCache objectsCache) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         identificationDB.restoreConnection(dbFolder, deleteOldDatabase, objectsCache);
     }
+    
+    /**
+     * Indicates whether the connection to the DB is active.
+     * 
+     * @return true if the connection to the DB is active
+     */
+    public boolean isConnectionActive() {
+        return identificationDB.isConnectionActive();
+    }
 
     /**
      * Backward compatibility fix checking whether the tables in the database

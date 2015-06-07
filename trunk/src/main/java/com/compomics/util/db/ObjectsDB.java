@@ -17,7 +17,7 @@ import javax.sql.rowset.serial.SerialBlob;
 public class ObjectsDB implements Serializable {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = -8595805180622832745L;
     /**
@@ -1219,7 +1219,7 @@ public class ObjectsDB implements Serializable {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
-        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path;
+        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
     }
 
     /**

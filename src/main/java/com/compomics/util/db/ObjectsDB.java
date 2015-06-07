@@ -1212,6 +1212,15 @@ public class ObjectsDB implements Serializable {
             insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
         }
     }
+    
+    /**
+     * Indicates whether the connection to the DB is active.
+     * 
+     * @return true if the connection to the DB is active
+     */
+    public boolean isConnectionActive() {
+        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path;
+    }
 
     /**
      * Closes the db connection.
@@ -1234,10 +1243,8 @@ public class ObjectsDB implements Serializable {
 
         objectsCache = null;
 
-        boolean connectionActive = path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
-
         try {
-            if (dbConnection != null && connectionActive) {
+            if (dbConnection != null && isConnectionActive()) {
                 dbConnection.close();
                 DerbyUtil.removeActiveConnection(derbyConnectionID, path);
             }
@@ -1317,7 +1324,7 @@ public class ObjectsDB implements Serializable {
             }
         }
         if (!useSQLite) {
-            if (DerbyUtil.isActiveConnection(path)) {
+            if (isConnectionActive()) {
                 throw new IllegalArgumentException("Impossible to establish a Derby connection in " + path + ", connection to the folder already active.");
             }
             String url = "jdbc:derby:" + path + ";create=true";

@@ -1298,6 +1298,15 @@ public class IdentificationDB implements Serializable {
         objectsDB.establishConnection(dbFolder, deleteOldDatabase, objectsCache);
         objectsCache.addDb(objectsDB);
     }
+    
+    /**
+     * Indicates whether the connection to the DB is active.
+     * 
+     * @return true if the connection to the DB is active
+     */
+    public boolean isConnectionActive() {
+        return objectsDB.isConnectionActive();
+    }
 
     /**
      * Backward compatibility fix checking whether the tables in the database

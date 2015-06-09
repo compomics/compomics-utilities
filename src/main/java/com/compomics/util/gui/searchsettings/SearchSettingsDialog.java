@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Co
 import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
 import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
@@ -2206,7 +2207,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         if (searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()) != null) {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()));
         } else {
-            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), new MsAmandaParameters());
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), new MyriMatchParameters());
         }
         if (searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) != null) {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()));

@@ -504,7 +504,8 @@ public class TagMatcher {
                             if (nTermModifications != null) {
                                 for (Integer site : nTermModifications.keySet()) {
                                     String ptmName = nTermModifications.get(site);
-                                    modificationMatches.add(new ModificationMatch(ptmName, true, nTermSegment.length() - 1 - site));
+                                    int remappedSite = nTermSegment.length() + 1 - site;
+                                    modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
                                 }
                             }
 

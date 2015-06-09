@@ -26,6 +26,8 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
     public ImportSequencesFromUniprotDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
+        setLocationRelativeTo(parent);
+        setVisible(true);
     }
 
     /**

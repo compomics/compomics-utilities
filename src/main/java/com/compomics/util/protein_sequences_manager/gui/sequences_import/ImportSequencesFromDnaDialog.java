@@ -26,6 +26,8 @@ public class ImportSequencesFromDnaDialog extends javax.swing.JDialog {
     public ImportSequencesFromDnaDialog(java.awt.Frame parent) {
         super(parent, true);
         initComponents();
+        setLocationRelativeTo(parent);
+        setVisible(true);
     }
 
     /**

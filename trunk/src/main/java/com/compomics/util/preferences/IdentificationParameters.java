@@ -69,6 +69,32 @@ public class IdentificationParameters implements Serializable {
     public void setSearchParameters(SearchParameters searchParameters) {
         this.searchParameters = searchParameters;
     }
+    
+    /**
+     * Returns the relative tolerance in ppm corresponding to the absolute tolerance in dalton at the given reference mass.
+     * 
+     * @param daltonTolerance the absolute tolerance in dalton
+     * @param refMass the reference mass in dalton
+     * 
+     * @return the relative tolerance in ppm
+     */
+    public static double getPpmTolerance(double daltonTolerance, double refMass) {
+        double result = daltonTolerance / refMass * 1000000;
+        return result;
+    }
+    
+    /**
+     * Returns the absolute tolerance in dalton corresponding to the relative tolerance in ppm at the given reference mass.
+     * 
+     * @param ppmTolerance the absolute tolerance in ppm
+     * @param refMass the reference mass in dalton
+     * 
+     * @return the relative tolerance in ppm
+     */
+    public static double getDaTolerance(double ppmTolerance, double refMass) {
+        double result = ppmTolerance / 1000000 * refMass;
+        return result;
+    }
 
     /**
      * Returns the annotation preferences used for identification.

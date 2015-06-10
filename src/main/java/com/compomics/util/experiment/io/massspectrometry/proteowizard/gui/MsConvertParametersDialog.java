@@ -61,6 +61,8 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             filters = new HashMap<Integer, String>(2);
         }
 
+        filterIndexes = new ArrayList<Integer>(filters.keySet());
+        Collections.sort(filterIndexes);
         DefaultTableModel tableModel = new FiltersTableModel();
         filtersTable.setModel(tableModel);
         TableColumnModel tableColumnModel = filtersTable.getColumnModel();
@@ -68,6 +70,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Updates the table.
+     */
     private void updateTable() {
         filterIndexes = new ArrayList<Integer>(filters.keySet());
         Collections.sort(filterIndexes);
@@ -117,7 +122,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         filtersPopupMenu.add(removeItemMenuItem);
         filtersPopupMenu.add(popupSeparator);
 
-        helpMenuItem.setText("jMenuItem1");
+        helpMenuItem.setText("Help");
         helpMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 helpMenuItemMouseReleased(evt);

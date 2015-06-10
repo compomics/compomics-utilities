@@ -48,8 +48,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
     /**
      * Sets up the GUI components.
-     * 
-     * @param msConvertParameters parameters to display on the interface, ignored if null
+     *
+     * @param msConvertParameters parameters to display on the interface,
+     * ignored if null
      */
     private void setUpGUI(MsConvertParameters msConvertParameters) {
         filtersTableScrollPane.getViewport().setOpaque(false);
@@ -67,7 +68,6 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         filtersTable.setModel(tableModel);
         TableColumnModel tableColumnModel = filtersTable.getColumnModel();
         tableColumnModel.getColumn(0).setMaxWidth(50);
-
     }
 
     /**
@@ -96,7 +96,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         backgourdPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        MsconvertParameters = new javax.swing.JPanel();
+        msconvertParameters = new javax.swing.JPanel();
         filtersTableScrollPane = new javax.swing.JScrollPane();
         filtersTable = new javax.swing.JTable();
         outputFormatLbl = new javax.swing.JLabel();
@@ -131,6 +131,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         filtersPopupMenu.add(helpMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("MSConvert Parameters");
 
         backgourdPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -148,8 +149,8 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        MsconvertParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("msconvert Parameters"));
-        MsconvertParameters.setOpaque(false);
+        msconvertParameters.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
+        msconvertParameters.setOpaque(false);
 
         filtersTableScrollPane.setOpaque(false);
 
@@ -161,41 +162,41 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         });
         filtersTableScrollPane.setViewportView(filtersTable);
 
-        outputFormatLbl.setText("File conversion output format:");
+        outputFormatLbl.setText("Output Format");
 
         outputFormatCmb.setModel(new DefaultComboBoxModel(MsFormat.values()));
 
-        filtersLbl.setText("File processing options:");
+        filtersLbl.setText("Processing options");
 
-        javax.swing.GroupLayout MsconvertParametersLayout = new javax.swing.GroupLayout(MsconvertParameters);
-        MsconvertParameters.setLayout(MsconvertParametersLayout);
-        MsconvertParametersLayout.setHorizontalGroup(
-            MsconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MsconvertParametersLayout.createSequentialGroup()
+        javax.swing.GroupLayout msconvertParametersLayout = new javax.swing.GroupLayout(msconvertParameters);
+        msconvertParameters.setLayout(msconvertParametersLayout);
+        msconvertParametersLayout.setHorizontalGroup(
+            msconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(msconvertParametersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(MsconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(msconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(filtersTableScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 923, Short.MAX_VALUE)
-                    .addGroup(MsconvertParametersLayout.createSequentialGroup()
-                        .addGroup(MsconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(MsconvertParametersLayout.createSequentialGroup()
+                    .addGroup(msconvertParametersLayout.createSequentialGroup()
+                        .addGroup(msconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(filtersLbl)
+                            .addGroup(msconvertParametersLayout.createSequentialGroup()
                                 .addComponent(outputFormatLbl)
                                 .addGap(18, 18, 18)
-                                .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(filtersLbl))
+                                .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        MsconvertParametersLayout.setVerticalGroup(
-            MsconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MsconvertParametersLayout.createSequentialGroup()
+        msconvertParametersLayout.setVerticalGroup(
+            msconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, msconvertParametersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(MsconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(msconvertParametersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFormatLbl)
                     .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(filtersLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(filtersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filtersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -211,19 +212,19 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(MsconvertParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(msconvertParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgourdPanelLayout.setVerticalGroup(
             backgourdPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgourdPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(MsconvertParameters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(msconvertParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgourdPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -234,23 +235,37 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgourdPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgourdPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cancel the dialog without saving.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Add an item to the filters.
+     * 
+     * @param evt 
+     */
     private void addItemMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemMenuItemActionPerformed
-
         ProteoWizardFilter[] filterItems = ProteoWizardFilter.values();
         for (ProteoWizardFilter filter : filterItems) {
             if (!filters.containsKey(filter.number)) {
@@ -261,6 +276,11 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_addItemMenuItemActionPerformed
 
+    /**
+     * Remove an item from the filters.
+     * 
+     * @param evt 
+     */
     private void removeItemMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeItemMenuItemMouseReleased
         int row = filtersTable.getSelectedRow();
         if (row >= 0) {
@@ -273,8 +293,12 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_removeItemMenuItemMouseReleased
 
+    /**
+     * Show the filter popup menu.
+     * 
+     * @param evt 
+     */
     private void filtersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtersTableMouseReleased
-        
         if (evt != null && filtersTable.rowAtPoint(evt.getPoint()) != -1) {
             int row = filtersTable.rowAtPoint(evt.getPoint());
             filtersTable.setRowSelectionInterval(row, row);
@@ -284,13 +308,16 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_filtersTableMouseReleased
 
+    /**
+     * Show the filter help.
+     * 
+     * @param evt 
+     */
     private void helpMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpMenuItemMouseReleased
         BareBonesBrowserLaunch.openURL("http://proteowizard.sourceforge.net/tools/filters.html");
     }//GEN-LAST:event_helpMenuItemMouseReleased
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel MsconvertParameters;
     private javax.swing.JMenuItem addItemMenuItem;
     private javax.swing.JPanel backgourdPanel;
     private javax.swing.JButton cancelButton;
@@ -299,6 +326,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     private javax.swing.JTable filtersTable;
     private javax.swing.JScrollPane filtersTableScrollPane;
     private javax.swing.JMenuItem helpMenuItem;
+    private javax.swing.JPanel msconvertParameters;
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox outputFormatCmb;
     private javax.swing.JLabel outputFormatLbl;

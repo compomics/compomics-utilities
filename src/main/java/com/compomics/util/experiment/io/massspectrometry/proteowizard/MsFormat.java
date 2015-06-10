@@ -1,22 +1,49 @@
 package com.compomics.util.experiment.io.massspectrometry.proteowizard;
 
 /**
- * the mass spectrometry formats supported by ProteoWizard.
+ * The mass spectrometry formats supported by ProteoWizard.
  *
  * @author Marc Vaudel
  */
 public enum MsFormat {
 
-    mzML(0, "mzML", "mzML", "mzML generic PSI format."), 
-    mgf(1, "mgf", "mgf", "Mascot generic format."), 
-    mz5(2, "mz5", "mz5", "Implementation of the PSI mzML ontology that is based on HDF5."), 
-    mzXML(3, "mzXML", "mzXML", "mzXML format."), 
-    text(4, "text", "text", "Proteowizard internal text format."), 
-    ms1(5, "ms1", "ms1", "ms1 format."), 
-    cms1(6, "cms1", "cms1", "cms2 format."), 
-    ms2(7, "ms2", "ms2", "ms2 format."), 
-    cms2(8, "cms2", "cms2", "cms2 format.");
-    
+    /**
+     * mzML generic PSI format
+     */
+    mzML(0, "mzML", "mzML", "mzML generic PSI format"),
+    /**
+     * Mascot generic format
+     */
+    mgf(1, "mgf", "mgf", "Mascot generic format"),
+    /**
+     * Implementation of the PSI mzML ontology that is based on HDF5
+     */
+    mz5(2, "mz5", "mz5", "Implementation of the PSI mzML ontology that is based on HDF5"),
+    /**
+     * mzXML format
+     */
+    mzXML(3, "mzXML", "mzXML", "mzXML format"),
+    /**
+     * ProteoWizard internal text format
+     */
+    text(4, "text", "text", "ProteoWizard internal text format"),
+    /**
+     * ms1 format
+     */
+    ms1(5, "ms1", "ms1", "ms1 format"),
+    /**
+     * cms2 format
+     */
+    cms1(6, "cms1", "cms1", "cms2 format"),
+    /**
+     * ms2 forma
+     */
+    ms2(7, "ms2", "ms2", "ms2 format"),
+    /**
+     * cms2 forma
+     */
+    cms2(8, "cms2", "cms2", "cms2 format");
+
     /**
      * The index of the format.
      */
@@ -33,9 +60,10 @@ public enum MsFormat {
      * A brief description of the format.
      */
     public final String description;
+
     /**
      * Constructor.
-     * 
+     *
      * @param index index of the format
      * @param commandLineOption command line option name
      * @param name name of the format
@@ -47,10 +75,9 @@ public enum MsFormat {
         this.name = name;
         this.description = description;
     }
-    
+
     @Override
     public String toString() {
         return name;
     }
-    
 }

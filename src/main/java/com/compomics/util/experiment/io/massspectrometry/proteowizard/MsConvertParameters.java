@@ -20,7 +20,7 @@ public class MsConvertParameters {
     private HashMap<Integer, String> filters = new HashMap<Integer, String>(2);
 
     /**
-     * Constructor
+     * Constructor.
      */
     public MsConvertParameters() {
 
@@ -57,7 +57,7 @@ public class MsConvertParameters {
      * Adds a filter.
      *
      * @param msConvertFilterIndex the index of the filter according to the
-     * MsConvertFilter enum.
+     * MsConvertFilter enumerator.
      * @param value the value of the filter according to the filter
      * specifications.
      */
@@ -75,14 +75,13 @@ public class MsConvertParameters {
     public String getValue(Integer msConvertFilterIndex) {
         return filters.get(msConvertFilterIndex);
     }
-    
+
     /**
      * Returns the filters map, filter index - value.
-     * 
+     *
      * @return the filters map
      */
     public HashMap<Integer, String> getFiltersMap() {
         return filters;
     }
-
 }

@@ -35,7 +35,7 @@ public enum ProteoWizardFilter {
     activation(25, "activation", "Keeps only spectra whose precursors have the specifed activation type. It does not affect non-MS spectra, and does not affect MS1 spectra. Use it to create output files containing only ETD or CID/HCD MSn data where both activation modes have been interleaved within a given input vendor data file (eg: Thermo's Decision Tree acquisition mode)."),
     analyzer(26, "analyzer", "This filter keeps only spectra with the indicated mass analyzer type."),
     polarity(27, "polarity", "Keeps only spectra with scan of the selected polarity.");
-    
+
     /**
      * The index of the format.
      */
@@ -48,9 +48,10 @@ public enum ProteoWizardFilter {
      * A brief description of the format.
      */
     public final String description;
+
     /**
      * Constructor.
-     * 
+     *
      * @param index index of the format
      * @param commandLineOption command line option name
      * @param name name of the format
@@ -61,12 +62,12 @@ public enum ProteoWizardFilter {
         this.name = name;
         this.description = description;
     }
-    
+
     /**
      * Returns the filter designed by the given number. Null if not found.
-     * 
+     *
      * @param number the filter number
-     * 
+     *
      * @return the filter designed by the given number
      */
     public static ProteoWizardFilter getFilter(Integer number) {
@@ -77,12 +78,12 @@ public enum ProteoWizardFilter {
         }
         return null;
     }
-    
+
     /**
      * Returns the filter designed by the given name. Null if not found.
-     * 
+     *
      * @param name the name of the filter
-     * 
+     *
      * @return the filter designed by the given number
      */
     public static ProteoWizardFilter getFilter(String name) {
@@ -93,5 +94,4 @@ public enum ProteoWizardFilter {
         }
         return null;
     }
-    
 }

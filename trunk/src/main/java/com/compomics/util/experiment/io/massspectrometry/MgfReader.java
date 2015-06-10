@@ -640,7 +640,6 @@ public class MgfReader {
                             }
 
                         } else if (line.equals("END IONS")) {
-
                             spectrum = false;
                         }
 
@@ -655,7 +654,7 @@ public class MgfReader {
                         }
                         if (peak) {
                             try {
-                                Double mass = new Double(split[0]);
+                                new Double(split[0]);
                             } catch (Exception e) {
                                 peak = false;
                             }

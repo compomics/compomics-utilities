@@ -695,7 +695,6 @@ public class SpectrumFactory {
                 loadedPrecursorsMap.put(fileName, fileMap);
             }
             fileMap.put(spectrumTitle, currentPrecursor);
-            String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
         }
 
         return currentPrecursor;

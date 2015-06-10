@@ -36,7 +36,7 @@ public class MgfReader {
      *
      * @return the next spectrum found in the mgf file
      *
-     * @throws IOException if an IOException occurs 
+     * @throws IOException if an IOException occurs
      */
     public static MSnSpectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
 
@@ -560,6 +560,120 @@ public class MgfReader {
                             title = null;
                         } else {
                             currentSpectrum += line + System.getProperty("line.separator");
+                        }
+                    }
+                } finally {
+                    bw.close();
+                }
+            } finally {
+                fw.close();
+            }
+        } finally {
+            br.close();
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+        }
+
+        // replace the old file
+        String orignalFilePath = mgfFile.getAbsolutePath();
+        boolean fileDeleted = mgfFile.delete();
+
+        if (!fileDeleted) {
+            throw new IOException("Failed to delete the original spectrum file.");
+        }
+
+        boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
+
+        if (!fileRenamed) {
+            throw new IOException("Failed to replace the original spectrum file.");
+        }
+    }
+
+    /**
+     * Removes zero intensity peaks.
+     *
+     * @param mgfFile the MGF file to fix
+     * @param waitingHandler a waitingHandler showing the progress, can be null
+     *
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     * @throws UnsupportedEncodingException if the decoding of a spectrum title
+     * fails
+     */
+    public static void removeZeroes(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+
+        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+
+        try {
+            long progressUnit = br.length() / 100;
+
+            FileWriter fw = new FileWriter(tempSpectrumFile);
+            try {
+                BufferedWriter bw = new BufferedWriter(fw);
+                try {
+
+                    String line;
+                    boolean spectrum = false;
+
+                    while ((line = br.readLine()) != null) {
+
+                        if (line.equals("BEGIN IONS")) {
+                            spectrum = true;
+
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) {
+                                    break;
+                                }
+                                waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
+                            }
+
+                        } else if (line.equals("END IONS")) {
+
+                            spectrum = false;
+                        }
+
+                        boolean peak = true;
+                        boolean zero = false;
+                        String[] split = line.split(" ");
+                        if (split.length != 2) {
+                            split = line.split("\t");
+                            if (split.length != 2) {
+                                peak = false;
+                            }
+                        }
+                        if (peak) {
+                            try {
+                                Double mass = new Double(split[0]);
+                            } catch (Exception e) {
+                                peak = false;
+                            }
+                            if (peak) {
+                                try {
+                                    Double intensity = new Double(split[1]);
+                                    if (intensity == 0.0) {
+                                        zero = true;
+                                    }
+                                } catch (Exception e) {
+                                    throw new IllegalArgumentException("Line not recognized:\n" + line);
+                                }
+                            }
+                        }
+
+                        if (!spectrum || !peak || !zero) {
+                            bw.write(line);
+                            bw.newLine();
                         }
                     }
                 } finally {

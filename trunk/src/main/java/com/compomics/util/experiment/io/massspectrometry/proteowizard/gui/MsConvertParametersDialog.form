@@ -41,12 +41,15 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="title" type="java.lang.String" value="MSConvert Parameters"/>
+    <Property name="title" type="java.lang.String" value="MSConvert Settings"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -133,7 +136,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Parameters"/>
+                <TitledBorder title="Settings"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -145,7 +148,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="filtersTableScrollPane" alignment="1" pref="923" max="32767" attributes="0"/>
+                          <Component id="filtersTableScrollPane" alignment="1" pref="682" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="filtersLbl" min="-2" max="-2" attributes="0"/>
@@ -173,7 +176,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="filtersLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="filtersTableScrollPane" pref="228" max="32767" attributes="0"/>
+                      <Component id="filtersTableScrollPane" pref="253" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

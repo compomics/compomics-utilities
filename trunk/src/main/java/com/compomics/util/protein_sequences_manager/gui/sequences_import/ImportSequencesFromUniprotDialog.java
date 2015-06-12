@@ -406,11 +406,8 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Copies the selected database to the temp folder and populates the gui
+     * Copies the selected database to the temp folder and populates the GUI
      * with the relevant information.
-     *
-     * @throws IOException exception thrown whenever an error occurred while
-     * copying the database.
      */
     public void downloadDatabase() {
         try {
@@ -451,7 +448,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                         progressDialog.setTitle("Downloading Database. Please Wait...");
                         progressDialog.setPrimaryProgressCounterIndeterminate(false);
                         //do the actual downloading?
-                        if (DownloadingUtil.downloadFileFromURL(ImportSequencesFromUniprotDialog.this, query.getQueryURL(), downloadFile, progressDialog)) {
+                        if (DownloadingUtil.downloadFileFromURL(ImportSequencesFromUniprotDialog.this, query.getQueryURL(), downloadFile, progressDialog)) { // @TODO: should be replaced by Util.saveUrl(...)
                             progressDialog.setTitle("Indexing Database. Please Wait...");
                             selectedFileIndex = SequenceFactory.getFastaIndex(downloadFile, false, progressDialog);
                             //TODO set the correct reviewed/isoform state?

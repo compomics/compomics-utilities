@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * The protein sequences manager helps the user managing FASTA files.
+ * The protein sequences manager helps the user manage FASTA files.
  *
  * @author Marc Vaudel
  */
@@ -221,11 +221,11 @@ public class ProteinSequencesManager {
     }
 
     /**
-     * Corrects the name of the given fasta file.
+     * Corrects the name of the given FASTA file.
      *
-     * @param fastaName the name of the given fasta file
+     * @param fastaName the name of the given FASTA file
      *
-     * @return a corrected name for the given fasta file
+     * @return a corrected name for the given FASTA file
      */
     public static String correctFastaName(String fastaName) {
         return fastaName.replaceAll(" ", "_");

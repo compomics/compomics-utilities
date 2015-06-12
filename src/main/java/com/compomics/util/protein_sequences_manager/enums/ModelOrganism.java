@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.protein_sequences_manager.enums;
 
 /**
+ * ModelOrganism enumerator.
  *
- * @author Kenneth
+ * @author Kenneth Verheggen
  */
 public enum ModelOrganism {
 
@@ -24,14 +20,26 @@ public enum ModelOrganism {
     yeast(559292),
     zebrafish(7955);
 
+    /**
+     * The organism.
+     */
     private final int organism;
 
+    /**
+     * Constructor.
+     * 
+     * @param organism the organism
+     */
     private ModelOrganism(int organism) {
         this.organism = organism;
     }
 
+    /**
+     * Returns the taxonomy.
+     * 
+     * @return the taxonomy
+     */
     public int getTaxonomyID() {
         return organism;
     }
-
 }

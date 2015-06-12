@@ -758,7 +758,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         // check if the current modification is a fixed modification
         for (SearchModificationCustom fixedModification : fixedModificationsCustomParser) {
-            if (modification.getAccession().equals(fixedModification.getAccession()) || fixedModification.getMassDelta() == modification.getMassDelta()) {
+
+            // compare accession numbers (excluding  MS:1001460 - unknown modification) and if not equal then compare the delta masses
+            if ((modification.getAccession().equals(fixedModification.getAccession()) && !modification.getAccession().equals("MS:1001460"))
+                    || fixedModification.getMassDelta() == modification.getMassDelta()) {
+
                 boolean allRules = true;
                 ArrayList<String> specificityRuleCvTerms = fixedModification.getModRuleCvTerms();
                 if (specificityRuleCvTerms != null && !specificityRuleCvTerms.isEmpty()) {
@@ -857,7 +861,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 if (parser.getName() != null && parser.getName().equals("SpecificityRules")) {
 
                     parser.next();
-                    parser.next();
+
+                    if (parser.getName() == null) { // no idea why this is needed for ms-gf+...
+                        parser.next();
+                    }
 
                     while (parser.getName() != null && parser.getName().equals("cvParam")) {
 
@@ -882,7 +889,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     }
 
                     parser.next();
-                    parser.next();
+                    if (parser.getName() == null) { // don't get why this is needed for ms-gf+...
+                        parser.next();
+                    }
                 }
 
                 while (parser.getName() != null && (parser.getName().equals("cvParam") || parser.getName().equals("userParam"))) {
@@ -899,7 +908,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             }
                         }
 
-                        ptmCvTerms.add(accession);
+                        if (accession != null && !accession.equalsIgnoreCase("MS:1002504")) { // ignore MS:1002504 - modification index
+                            ptmCvTerms.add(accession);
+                        }
                     }
 
                     parser.next();
@@ -912,6 +923,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         fixedModificationsCustomParser.add(new SearchModificationCustom(tempPtmCvTerm, residues, massDelta, modRuleCvTerms));
                     }
                 }
+
+                parser.next();
+                parser.next();
             }
         }
     }
@@ -2179,7 +2193,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         /**
          * Returns the location.
-         * 
+         *
          * @return the location
          */
         public int getLocation() {
@@ -2203,7 +2217,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         /**
          * Create a new PeptideCustom object.
-         * 
+         *
          * @param peptideSequence the peptide sequence
          * @param modifications the modifications
          */
@@ -2214,7 +2228,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         /**
          * Returns the peptide sequence.
-         * 
+         *
          * @return the peptideSequence
          */
         public String getPeptideSequence() {
@@ -2223,7 +2237,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         /**
          * Returns the modifications.
-         * 
+         *
          * @return the modifications
          */
         public ArrayList<SearchModificationCustom> getModifications() {

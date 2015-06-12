@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.compomics.util.protein_sequences_manager;
 
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
@@ -11,21 +7,31 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- *
- * @author Kenneth
+ * Helper class for downloading a file from a URL.
+ * 
+ * @author Kenneth Verheggen
  */
 public class DownloadingUtil {
 
-    public static boolean downloadFileFromURL(ImportSequencesFromUniprotDialog parent, URL url, File outputFile, ProgressDialogX dialog) throws IOException {
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+    /**
+     * Download a file from a URL.
+     * 
+     * @param parent the parent
+     * @param url the URL to download
+     * @param outputFile the output file
+     * @param progressDialog the progress dialog
+     * @return true if the downloading worked
+     * @throws IOException if an exception occurs
+     */
+    public static boolean downloadFileFromURL(ImportSequencesFromUniprotDialog parent, URL url, File outputFile, ProgressDialogX progressDialog) throws IOException {
 
         //start the downloading and update the dialog every read?
         BufferedInputStream in = null;
         FileOutputStream fout = null;
+
         try {
             in = new BufferedInputStream(url.openStream());
             fout = new FileOutputStream(outputFile);
@@ -33,10 +39,10 @@ public class DownloadingUtil {
             int totalCount = 0;
             int count;
             while ((count = in.read(data, 0, 1024)) != -1) {
-                if (!parent.isCanceled() & !dialog.isRunCanceled()) {
+                if (!parent.isCanceled() & !progressDialog.isRunCanceled()) {
                     fout.write(data, 0, count);
                     totalCount += count;
-                    dialog.setSecondaryProgressText("Downloaded " + totalCount + " bytes");
+                    progressDialog.setSecondaryProgressText("Downloaded " + totalCount + " bytes");
                 } else {
                     return false;
                 }
@@ -48,9 +54,10 @@ public class DownloadingUtil {
             if (fout != null) {
                 fout.close();
             }
-            dialog.setSecondaryProgressText("");
-            dialog.resetSecondaryProgressCounter();
+            progressDialog.setSecondaryProgressText("");
+            progressDialog.resetSecondaryProgressCounter();
         }
+
         return true;
     }
 }

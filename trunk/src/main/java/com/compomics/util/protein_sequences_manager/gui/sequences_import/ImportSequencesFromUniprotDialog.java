@@ -1,6 +1,25 @@
 package com.compomics.util.protein_sequences_manager.gui.sequences_import;
 
+import com.compomics.util.experiment.identification.FastaIndex;
+import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
+import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
+import com.compomics.util.protein_sequences_manager.DownloadingUtil;
+import com.compomics.util.protein_sequences_manager.ProteinSequencesManager;
+import com.compomics.util.protein_sequences_manager.UniProtQuery;
+import com.compomics.util.protein_sequences_manager.enums.ModelOrganism;
+import com.compomics.util.protein_sequences_manager.enums.SequenceContentType;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  * Dialog allowing the import of sequences from UniProt.
@@ -10,13 +29,41 @@ import java.io.File;
 public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
 
     /**
+     * A simple progress dialog.
+     */
+    private static ProgressDialogX progressDialog;
+    /**
+     * The utilities user preferences.
+     */
+    private UtilitiesUserPreferences utilitiesUserPreferences = null;
+    /**
+     * The last selected folder.
+     */
+    private LastSelectedFolder lastSelectedFolder = null;
+    /**
+     * The file selected by the user.
+     */
+    private File downloadFile = null;
+    /**
+     * The index of the file selected by the user.
+     */
+    private FastaIndex selectedFileIndex = null;
+    /**
      * Boolean indicating whether the import has been canceled by the user.
      */
     private boolean canceled = false;
     /**
-     * The file containing the downloaded protein sequences.
+     * The parent frame.
      */
-    private File selectedFile = null;
+    private java.awt.Frame parentFrame;
+    /**
+     * The icon to display when waiting.
+     */
+    private Image waitingImage;
+    /**
+     * The normal icon.
+     */
+    private Image normalImange;
 
     /**
      * Constructor.
@@ -25,9 +72,36 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
      */
     public ImportSequencesFromUniprotDialog(java.awt.Frame parent) {
         super(parent, true);
-        initComponents();
+        init();
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    private void init() {
+        initComponents();
+        loadUserPreferences();
+        //init the comboboxes
+        cbSequenceDatabaseType.removeAllItems();
+        for (SequenceContentType aContentType : SequenceContentType.values()) {
+            cbSequenceDatabaseType.addItem(aContentType);
+        }
+        cbModelOrganism.removeAllItems();
+        for (ModelOrganism anOrganism : ModelOrganism.values()) {
+            cbModelOrganism.addItem(anOrganism);
+        }
+        cbModelOrganism.addItem("other");
+        cbModelOrganism.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object selectedItem = cbModelOrganism.getSelectedItem();
+                if (selectedItem.toString().equals("other")) {
+                    tfTaxonomyID.setText("-");
+                } else {
+                    ModelOrganism organism = (ModelOrganism) selectedItem;
+                    tfTaxonomyID.setText(String.valueOf(organism.getTaxonomyID()));
+                }
+            }
+        });
     }
 
     /**
@@ -39,13 +113,180 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        importSequencesFromUniprotPanel = new javax.swing.JPanel();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        taxonomyPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        tfTaxonomyID = new javax.swing.JTextField();
+        downloadButton = new javax.swing.JButton();
+        cbSequenceDatabaseType = new javax.swing.JComboBox();
+        typeLbl1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        cbModelOrganism = new javax.swing.JComboBox();
+        inputPanel = new javax.swing.JPanel();
+        typeLbl = new javax.swing.JLabel();
+        nameLbl = new javax.swing.JLabel();
+        versionLbl = new javax.swing.JLabel();
+        nameTxt = new javax.swing.JTextField();
+        versionTxt = new javax.swing.JTextField();
+        descriptionLbl = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        descriptionTxt = new javax.swing.JTextArea();
+        parsingRuleTxt = new javax.swing.JTextField();
+        parsingRuleLbl = new javax.swing.JLabel();
+        lbSequenceContentType = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        importSequencesFromUniprotPanel.setBackground(new java.awt.Color(230, 230, 230));
+        taxonomyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
+
+        jLabel1.setText("Taxonomy ID");
+
+        tfTaxonomyID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTaxonomyIDActionPerformed(evt);
+            }
+        });
+
+        downloadButton.setText("Download");
+        downloadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadButtonActionPerformed(evt);
+            }
+        });
+
+        cbSequenceDatabaseType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbSequenceDatabaseType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSequenceDatabaseTypeActionPerformed(evt);
+            }
+        });
+
+        typeLbl1.setText("Type");
+
+        jLabel3.setText("Modelorganism");
+
+        cbModelOrganism.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbModelOrganism.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbModelOrganismActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout taxonomyPanelLayout = new javax.swing.GroupLayout(taxonomyPanel);
+        taxonomyPanel.setLayout(taxonomyPanelLayout);
+        taxonomyPanelLayout.setHorizontalGroup(
+            taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(taxonomyPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(typeLbl1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbSequenceDatabaseType, 0, 177, Short.MAX_VALUE)
+                    .addComponent(cbModelOrganism, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6)
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(downloadButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18))
+        );
+        taxonomyPanelLayout.setVerticalGroup(
+            taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbModelOrganism, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(typeLbl1)
+                    .addComponent(cbSequenceDatabaseType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(downloadButton))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        inputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Information"));
+        inputPanel.setOpaque(false);
+
+        typeLbl.setText("Type");
+
+        nameLbl.setText("Name");
+
+        versionLbl.setText("Version");
+
+        descriptionLbl.setText("Description");
+
+        descriptionTxt.setColumns(20);
+        descriptionTxt.setRows(5);
+        jScrollPane1.setViewportView(descriptionTxt);
+
+        parsingRuleTxt.setEditable(false);
+        parsingRuleTxt.setEnabled(false);
+
+        parsingRuleLbl.setText("Parsing Rule");
+
+        lbSequenceContentType.setText("-");
+
+        javax.swing.GroupLayout inputPanelLayout = new javax.swing.GroupLayout(inputPanel);
+        inputPanel.setLayout(inputPanelLayout);
+        inputPanelLayout.setHorizontalGroup(
+            inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inputPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(inputPanelLayout.createSequentialGroup()
+                        .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(inputPanelLayout.createSequentialGroup()
+                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameLbl)
+                                    .addComponent(typeLbl))
+                                .addGap(18, 18, 18)
+                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameTxt)
+                                    .addComponent(lbSequenceContentType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(parsingRuleLbl)
+                                    .addComponent(versionLbl))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(versionTxt)
+                                    .addComponent(parsingRuleTxt)))
+                            .addComponent(jScrollPane1))
+                        .addContainerGap())
+                    .addGroup(inputPanelLayout.createSequentialGroup()
+                        .addComponent(descriptionLbl)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        inputPanelLayout.setVerticalGroup(
+            inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inputPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(typeLbl)
+                    .addComponent(parsingRuleLbl)
+                    .addComponent(parsingRuleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbSequenceContentType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLbl)
+                    .addComponent(versionLbl)
+                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(descriptionLbl)
+                .addGap(4, 4, 4)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -61,65 +302,89 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout importSequencesFromUniprotPanelLayout = new javax.swing.GroupLayout(importSequencesFromUniprotPanel);
-        importSequencesFromUniprotPanel.setLayout(importSequencesFromUniprotPanelLayout);
-        importSequencesFromUniprotPanelLayout.setHorizontalGroup(
-            importSequencesFromUniprotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, importSequencesFromUniprotPanelLayout.createSequentialGroup()
-                .addContainerGap(254, Short.MAX_VALUE)
-                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton)
-                .addContainerGap())
-        );
-        importSequencesFromUniprotPanelLayout.setVerticalGroup(
-            importSequencesFromUniprotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, importSequencesFromUniprotPanelLayout.createSequentialGroup()
-                .addContainerGap(266, Short.MAX_VALUE)
-                .addGroup(importSequencesFromUniprotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(importSequencesFromUniprotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)
+                        .addComponent(cancelButton))
+                    .addComponent(taxonomyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(inputPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(importSequencesFromUniprotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(taxonomyPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(inputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * Closes the dialog.
-     *
-     * @param evt
-     */
+    private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
+        downloadDatabase();
+    }//GEN-LAST:event_downloadButtonActionPerformed
+
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
-    /**
-     * Closes the dialog without saving.
-     *
-     * @param evt
-     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    private void cbSequenceDatabaseTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSequenceDatabaseTypeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbSequenceDatabaseTypeActionPerformed
+
+    private void tfTaxonomyIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTaxonomyIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTaxonomyIDActionPerformed
+
+    private void cbModelOrganismActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbModelOrganismActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbModelOrganismActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel importSequencesFromUniprotPanel;
+    private javax.swing.JComboBox cbModelOrganism;
+    private javax.swing.JComboBox cbSequenceDatabaseType;
+    private javax.swing.JLabel descriptionLbl;
+    private javax.swing.JTextArea descriptionTxt;
+    private javax.swing.JButton downloadButton;
+    private javax.swing.JPanel inputPanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbSequenceContentType;
+    private javax.swing.JLabel nameLbl;
+    private javax.swing.JTextField nameTxt;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel parsingRuleLbl;
+    private javax.swing.JTextField parsingRuleTxt;
+    private javax.swing.JPanel taxonomyPanel;
+    private javax.swing.JTextField tfTaxonomyID;
+    private javax.swing.JLabel typeLbl;
+    private javax.swing.JLabel typeLbl1;
+    private javax.swing.JLabel versionLbl;
+    private javax.swing.JTextField versionTxt;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -137,6 +402,149 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
      * @return the file selected by the user
      */
     public File getSelectedFile() {
-        return selectedFile;
+        return downloadFile;
+    }
+
+    /**
+     * Copies the selected database to the temp folder and populates the gui
+     * with the relevant information.
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * copying the database.
+     */
+    public void downloadDatabase() {
+        try {
+            String fileName = tfTaxonomyID.getText() + "_" + String.valueOf(cbSequenceDatabaseType.getSelectedItem()) + ".FASTA";
+            File managerFolder = utilitiesUserPreferences.getProteinSequencesManagerFolder();
+            File tempFolder = new File(managerFolder, ProteinSequencesManager.TEMP_FOLDER);
+            tempFolder.mkdirs();
+            downloadFile = new File(tempFolder, fileName);
+            progressDialog = new ProgressDialogX(this, parentFrame,
+                    normalImange,
+                    waitingImage,
+                    true);
+
+            //add a windowlistener to the progressDialog?
+            progressDialog.setPrimaryProgressCounterIndeterminate(true);
+            progressDialog.setTitle("Loading Database. Please Wait...");
+
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        progressDialog.setVisible(true);
+                    } catch (IndexOutOfBoundsException e) {
+                        // ignore
+                    }
+                }
+            }, "ProgressDialog").start();
+
+            new Thread("importThread") {
+                private FastaIndex selectedFileIndex;
+
+                public void run() {
+
+                    try {
+                        //get the query
+                        int taxID = Integer.parseInt(tfTaxonomyID.getText());
+                        UniProtQuery query = new UniProtQuery(taxID, (SequenceContentType) cbSequenceDatabaseType.getSelectedItem());
+                        //set the progress dialog
+                        progressDialog.setTitle("Downloading Database. Please Wait...");
+                        progressDialog.setPrimaryProgressCounterIndeterminate(false);
+                        //do the actual downloading?
+                        if (DownloadingUtil.downloadFileFromURL(ImportSequencesFromUniprotDialog.this, query.getQueryURL(), downloadFile, progressDialog)) {
+                            progressDialog.setTitle("Indexing Database. Please Wait...");
+                            selectedFileIndex = SequenceFactory.getFastaIndex(downloadFile, false, progressDialog);
+                            //TODO set the correct reviewed/isoform state?
+                        }
+                    } catch (NumberFormatException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(ImportSequencesFromUniprotDialog.this,
+                                e.getMessage(),
+                                "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                        e.printStackTrace();
+                        return;
+                    } catch (MalformedURLException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(ImportSequencesFromUniprotDialog.this,
+                                e.getMessage(),
+                                "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                        e.printStackTrace();
+                        return;
+                    } catch (IOException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(ImportSequencesFromUniprotDialog.this,
+                                new String[]{"FASTA Import Error.", "File " + downloadFile.getAbsolutePath() + " not found."},
+                                "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                        e.printStackTrace();
+                        return;
+                    } catch (StringIndexOutOfBoundsException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(ImportSequencesFromUniprotDialog.this,
+                                e.getMessage(),
+                                "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                        e.printStackTrace();
+                        return;
+                    } catch (IllegalArgumentException e) {
+                        progressDialog.setRunFinished();
+                        JOptionPane.showMessageDialog(ImportSequencesFromUniprotDialog.this,
+                                e.getMessage(),
+                                "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                        e.printStackTrace();
+                        return;
+                    }
+                    if (!progressDialog.isRunCanceled()) {
+                        lbSequenceContentType.setText(cbSequenceDatabaseType.getSelectedItem().toString().toLowerCase());
+                        cbSequenceDatabaseType.setSelectedItem(selectedFileIndex.getMainDatabaseType());
+                        nameTxt.setText(selectedFileIndex.getName());
+                        versionTxt.setText(selectedFileIndex.getVersion());
+                        //make a generic description
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        descriptionTxt.setText("Taxonomy ID : "
+                                + tfTaxonomyID.getText() + " "
+                                + cbSequenceDatabaseType.getSelectedItem().toString().toLowerCase()
+                                + " downloaded at " + dateFormat.format(date));
+                        cbSequenceDatabaseType.setEnabled(true);
+                        nameTxt.setEnabled(true);
+                        versionTxt.setEnabled(true);
+                        descriptionTxt.setEnabled(true);
+                    } else {
+                        clearDatabaseSelection();
+                    }
+                    progressDialog.setRunFinished();
+                }
+            }.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while importing " + downloadFile.getName() + ".", "Error", JOptionPane.ERROR_MESSAGE);
+            clearDatabaseSelection();
+        }
+    }
+
+    /**
+     * Clears the database selection and information.
+     */
+    public void clearDatabaseSelection() {
+        downloadFile = null;
+        parsingRuleTxt.setText("");
+        parsingRuleTxt.setEnabled(false);
+        nameTxt.setText("");
+        nameTxt.setEnabled(false);
+        versionTxt.setText("");
+        versionTxt.setEnabled(false);
+        descriptionTxt.setText("");
+        descriptionTxt.setEnabled(false);
+    }
+
+    /**
+     * Loads the user preferences.
+     */
+    public void loadUserPreferences() {
+        utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        if (utilitiesUserPreferences.getProteinSequencesManagerFolder() == null || !utilitiesUserPreferences.getProteinSequencesManagerFolder().exists()) {
+            throw new IllegalArgumentException("Database folder not set.");
+        }
+        lastSelectedFolder = utilitiesUserPreferences.getLastSelectedFolder();
     }
 }

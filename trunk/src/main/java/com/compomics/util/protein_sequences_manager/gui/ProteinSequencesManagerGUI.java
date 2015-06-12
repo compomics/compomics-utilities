@@ -5,7 +5,7 @@ import com.compomics.util.experiment.identification.FastaIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein_sequences_manager.ProteinSequencesManager;
-import com.compomics.util.protein_sequences_manager.SequenceInputType;
+import com.compomics.util.protein_sequences_manager.enums.SequenceInputType;
 import com.compomics.util.protein_sequences_manager.gui.preferences.ProteinSequencesPreferencesDialog;
 import com.compomics.util.protein_sequences_manager.gui.sequences_import.ImportSequencesFromDnaDialog;
 import com.compomics.util.protein_sequences_manager.gui.sequences_import.ImportSequencesFromFilesDialog;

@@ -1506,7 +1506,7 @@ public class Header implements Cloneable, Serializable {
             case M_Tuberculosis:
                 return "M_Tuberculosis";
             case Drosophile:
-                return "M_Tuberculosis";
+                return "Drosophile";
             case SGD:
                 return "SGD";
             case Flybase:
@@ -1532,7 +1532,7 @@ public class Header implements Cloneable, Serializable {
             case UniRef:
                 return "UniRef";
             default:
-                throw new IllegalArgumentException("Database type not implemented: " + databaseType + ".");
+                throw new UnsupportedOperationException("Database type not implemented: " + databaseType + ".");
         }
     }
 

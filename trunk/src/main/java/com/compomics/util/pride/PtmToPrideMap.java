@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class PtmToPrideMap implements Serializable {
 
     /**
-     * Serialization number for backward compatibility.
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 2436108005958307507L;
     /**

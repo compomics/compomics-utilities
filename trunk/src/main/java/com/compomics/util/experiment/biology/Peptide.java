@@ -377,8 +377,24 @@ public class Peptide extends ExperimentObject {
 
         if (remap && parentProteins == null) {
             HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, sequenceMatchingPreferences);
-            parentProteins = new ArrayList<String>();
+            saveProteins(proteinMapping, remap, sequenceMatchingPreferences);
+        }
 
+        return parentProteins;
+    }
+
+    /**
+     * Saves the peptide protein mapping in the parentProteins list.
+     *
+     * @param proteinMapping the protein mapping for this peptide
+     * @param overwrite boolean indicating whether previous mapping should be
+     * overwritten
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     */
+    private synchronized void saveProteins(HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping, boolean overwrite, SequenceMatchingPreferences sequenceMatchingPreferences) {
+        if (overwrite || parentProteins == null) {
+
+            parentProteins = new ArrayList<String>();
             for (String peptideSequence : proteinMapping.keySet()) {
                 double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length();
                 if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
@@ -394,7 +410,6 @@ public class Peptide extends ExperimentObject {
             Collections.sort(parentProteins);
         }
 
-        return parentProteins;
     }
 
     /**
@@ -825,7 +840,7 @@ public class Peptide extends ExperimentObject {
      * @throws SQLException if an SQLException occurs
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences, 
+    public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
             ModificationProfile modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> sites = new ArrayList<Integer>();

@@ -4,6 +4,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.massspectrometry.proteowizard.MsConvertParameters;
 import com.compomics.util.experiment.massspectrometry.proteowizard.MsFormat;
 import com.compomics.util.experiment.massspectrometry.proteowizard.ProteoWizardFilter;
+import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -71,12 +73,16 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         DefaultTableModel tableModel = new FiltersTableModel();
         filtersTable.setModel(tableModel);
         TableColumnModel tableColumnModel = filtersTable.getColumnModel();
+        tableColumnModel.getColumn(0).setMinWidth(50);
         tableColumnModel.getColumn(0).setMaxWidth(50);
         
         TableColumn filterColumn = tableColumnModel.getColumn(1);
-        filterColumn.setMaxWidth(500);
+        filterColumn.setMinWidth(200);
+        filterColumn.setMaxWidth(200);
         JComboBox comboBox = new JComboBox(ProteoWizardFilter.values());
         filterColumn.setCellEditor(new DefaultCellEditor(comboBox));
+        
+        outputFormatCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -180,7 +186,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         outputFormatCmb.setModel(new DefaultComboBoxModel(MsFormat.values()));
 
-        filtersLbl.setText("Processing options");
+        filtersLbl.setText("Processing Options");
 
         javax.swing.GroupLayout msconvertParametersLayout = new javax.swing.GroupLayout(msconvertParameters);
         msconvertParameters.setLayout(msconvertParametersLayout);
@@ -210,7 +216,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(filtersLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filtersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                .addComponent(filtersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -234,7 +240,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgourdPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(msconvertParameters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgourdPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))

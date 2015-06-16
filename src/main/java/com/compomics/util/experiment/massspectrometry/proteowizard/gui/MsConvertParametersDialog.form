@@ -105,7 +105,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="msconvertParameters" max="32767" attributes="0"/>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -176,7 +176,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="filtersLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="filtersTableScrollPane" pref="253" max="32767" attributes="0"/>
+                      <Component id="filtersTableScrollPane" pref="272" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -225,7 +225,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="filtersLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Processing options"/>
+                <Property name="text" type="java.lang.String" value="Processing Options"/>
               </Properties>
             </Component>
           </SubComponents>

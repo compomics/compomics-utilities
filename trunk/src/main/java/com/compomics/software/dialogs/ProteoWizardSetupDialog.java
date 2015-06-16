@@ -12,11 +12,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * A dialog used to set up the connection to Proteowizard.
+ * A dialog used to set up the connection to ProteoWizard.
  *
+ * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ProteowizardSetupDialog extends javax.swing.JDialog {
+public class ProteoWizardSetupDialog extends javax.swing.JDialog {
 
     /**
      * The utilities preferences.
@@ -44,7 +45,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
     private ProgressDialogX progressDialog;
 
     /**
-     * Creates a new dialog.
+     * Creates a new ProteoWizardSetupDialog.
      *
      * @param parent the parent dialog
      * @param modal if the dialog is to be modal or not
@@ -53,7 +54,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ProteowizardSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public ProteoWizardSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
         initComponents();
         parentFrame = parent;
@@ -62,7 +63,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Creates a new dialog.
+     * Creates a new ProteoWizardSetupDialog.
      *
      * @param parent the parent dialog
      * @param modal if the dialog is to be modal or not
@@ -70,7 +71,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ProteowizardSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public ProteoWizardSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
         initComponents();
         parentDialog = parent;
@@ -82,24 +83,24 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
+
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
-            int option = JOptionPane.showConfirmDialog(this, "Cannot find Proteowizard. Do you want to download it now?", "Download Proteowizard?", JOptionPane.OK_CANCEL_OPTION);
+            int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
 
-            if (option == JOptionPane.OK_OPTION) {
+            if (option == JOptionPane.YES_OPTION) {
                 openWebPage();
             }
-        } else {
-
-            // display the current path
-            if (utilitiesUserPreferences != null) {
-                installationJTextField.setText(utilitiesUserPreferences.getProteoWizardPath());
-                lastSelectedFolder = utilitiesUserPreferences.getProteoWizardPath();
-            }
-
-            setVisible(true);
         }
+
+        // display the current path
+        if (utilitiesUserPreferences != null) {
+            installationJTextField.setText(utilitiesUserPreferences.getProteoWizardPath());
+            lastSelectedFolder = utilitiesUserPreferences.getProteoWizardPath();
+        }
+
+        setVisible(true);
     }
 
     /**
@@ -116,7 +117,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
         installationPanel = new javax.swing.JPanel();
         installationJTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        jarFileHelpLabel = new javax.swing.JLabel();
+        folderHelpLabel = new javax.swing.JLabel();
         downloadPanel = new javax.swing.JPanel();
         infoLabel = new javax.swing.JLabel();
         downloadLinkLabel = new javax.swing.JLabel();
@@ -127,7 +128,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
         jLabel2.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("PeptideShaker Settings");
+        setTitle("ProteoWizard Settings");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -137,7 +138,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        installationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Proteowizard Installation"));
+        installationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("ProteoWizard Installation"));
         installationPanel.setOpaque(false);
 
         installationJTextField.setEditable(false);
@@ -151,8 +152,8 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
             }
         });
 
-        jarFileHelpLabel.setFont(jarFileHelpLabel.getFont().deriveFont((jarFileHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        jarFileHelpLabel.setText("Please locate the Proteowizard installation folder.");
+        folderHelpLabel.setFont(folderHelpLabel.getFont().deriveFont((folderHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        folderHelpLabel.setText("Please locate the ProteoWizard installation folder.");
 
         javax.swing.GroupLayout installationPanelLayout = new javax.swing.GroupLayout(installationPanel);
         installationPanel.setLayout(installationPanelLayout);
@@ -163,7 +164,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
                 .addGroup(installationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(installationPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jarFileHelpLabel))
+                        .addComponent(folderHelpLabel))
                     .addComponent(installationJTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseButton)
@@ -177,15 +178,15 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
                     .addComponent(installationJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jarFileHelpLabel)
+                .addComponent(folderHelpLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        downloadPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Download Proteowizard"));
+        downloadPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Download ProteoWizard"));
         downloadPanel.setOpaque(false);
 
         infoLabel.setFont(infoLabel.getFont().deriveFont(infoLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        infoLabel.setText("Proteowizard - processing of mass spectrometry data");
+        infoLabel.setText("ProteoWizard - open-source and cross-platform proteomics data analysis");
 
         downloadLinkLabel.setText("<html>Download here: <a href> http://proteowizard.sourceforge.net</a></html>");
         downloadLinkLabel.setToolTipText("Go to http://proteowizard.sourceforge.net");
@@ -224,25 +225,24 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
             downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(downloadPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(downloadPanelLayout.createSequentialGroup()
-                        .addComponent(infoLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, downloadPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(infoLabel)
+                    .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 96, Short.MAX_VALUE)
                 .addComponent(iconButton)
                 .addContainerGap())
         );
         downloadPanelLayout.setVerticalGroup(
             downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(downloadPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(infoLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(iconButton)
+                .addGroup(downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(downloadPanelLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(infoLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(iconButton))
+                .addGap(4, 4, 4))
         );
 
         okButton.setText("OK");
@@ -301,7 +301,7 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -323,14 +323,14 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFolder(this, "Proteowizard installation folder", lastSelectedFolder, "Proteowizard installation folder", "OK", true);
+        File selectedFile = Util.getUserSelectedFolder(this, "ProteoWizard installation folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
 
         if (selectedFile != null) {
                 // @TODO: check if it is a valid folder?
-                // file assumed to be ok
-                lastSelectedFolder = selectedFile.getPath();
-                installationJTextField.setText(lastSelectedFolder);
-                okButton.setEnabled(true);
+            // file assumed to be ok
+            lastSelectedFolder = selectedFile.getPath();
+            installationJTextField.setText(lastSelectedFolder);
+            okButton.setEnabled(true);
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
@@ -420,17 +420,17 @@ public class ProteowizardSetupDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel downloadLinkLabel;
     private javax.swing.JPanel downloadPanel;
+    private javax.swing.JLabel folderHelpLabel;
     private javax.swing.JButton iconButton;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JTextField installationJTextField;
     private javax.swing.JPanel installationPanel;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jarFileHelpLabel;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Opens the Proteowizard web page.
+     * Opens the ProteoWizard web page.
      */
     private void openWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));

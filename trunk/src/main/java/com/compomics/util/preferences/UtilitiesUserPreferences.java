@@ -93,7 +93,7 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
-     * The path to the Proteowizard installation (if any). Set to null if no path is
+     * The path to the ProteoWizard installation (if any). Set to null if no path is
      * provided.
      */
     private String proteoWizardPath = null;
@@ -456,18 +456,18 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Returns the path to Proteowizard.
+     * Returns the path to ProteoWizard.
      * 
-     * @return the path to Proteowizard
+     * @return the path to ProteoWizard
      */
     public String getProteoWizardPath() {
         return proteoWizardPath;
     }
 
     /**
-     * Set the path to Proteowizard.
+     * Set the path to ProteoWizard.
      * 
-     * @param proteoWizardPath the path to Proteowizard
+     * @param proteoWizardPath the path to ProteoWizard
      */
     public void setProteoWizardPath(String proteoWizardPath) {
         this.proteoWizardPath = proteoWizardPath;

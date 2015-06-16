@@ -93,6 +93,11 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
+     * The path to the Proteowizard installation (if any). Set to null if no path is
+     * provided.
+     */
+    private String proteoWizardPath = null;
+    /**
      * The path to the SearchGUI installation (if any). Makes it possible to
      * start SearchGUI directly from PeptideShaker. Set to null if no path is
      * provided.
@@ -448,6 +453,24 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSearchGuiPath(String searchGuiPath) {
         this.searchGuiPath = searchGuiPath;
+    }
+
+    /**
+     * Returns the path to Proteowizard.
+     * 
+     * @return the path to Proteowizard
+     */
+    public String getProteoWizardPath() {
+        return proteoWizardPath;
+    }
+
+    /**
+     * Set the path to Proteowizard.
+     * 
+     * @param proteoWizardPath the path to Proteowizard
+     */
+    public void setProteoWizardPath(String proteoWizardPath) {
+        this.proteoWizardPath = proteoWizardPath;
     }
 
     /**

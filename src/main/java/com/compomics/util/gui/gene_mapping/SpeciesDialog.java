@@ -131,9 +131,11 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     boolean dbVersion = content.contains("N/A");
                     if (dbVersion) {
                         updateMappingsButton.setText("Download");
+                        updateMappingsButton.setToolTipText("Download Gene and GO Mappings");
                         updateMappingsButton.setEnabled(true);
                     } else {
                         updateMappingsButton.setText("Update");
+                        updateMappingsButton.setToolTipText("Update Gene and GO Mappings");
                         updateMappingsButton.setEnabled(speciesUpdateExist());
                     }
 
@@ -255,7 +257,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
         });
 
         updateMappingsButton.setText("Update");
-        updateMappingsButton.setToolTipText("Update the GO Mappings");
+        updateMappingsButton.setToolTipText("Update Gene and GO Mappings");
         updateMappingsButton.setEnabled(false);
         updateMappingsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -517,13 +519,16 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     || !GenePreferences.getGeneMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()
                     || !GenePreferences.getGoMappingFile(genePreferences.getEnsemblDatabaseName(currentEnsemblSpeciesType, selectedSpecies)).exists()) {
                 updateMappingsButton.setText("Download");
+                updateMappingsButton.setToolTipText("Download Gene and GO Mappings");
                 updateMappingsButton.setEnabled(true);
             } else {
                 updateMappingsButton.setText("Update");
+                updateMappingsButton.setToolTipText("Update Gene and GO Mappings");
                 updateMappingsButton.setEnabled(speciesUpdateExist());
             }
         } else {
             updateMappingsButton.setText("Download");
+            updateMappingsButton.setToolTipText("Download Gene and GO Mappings");
             updateMappingsButton.setEnabled(false);
         }
     }//GEN-LAST:event_speciesJComboBoxActionPerformed

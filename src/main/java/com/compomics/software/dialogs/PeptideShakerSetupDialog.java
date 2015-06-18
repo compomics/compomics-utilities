@@ -341,7 +341,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
             if (!selectedFile.getName().endsWith(".jar")) {
                 JOptionPane.showMessageDialog(this, "The selected file is not a jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
-            } else if (selectedFile.getName().indexOf("PeptideShaker") == -1) {
+            } else if (!selectedFile.getName().contains("PeptideShaker")) {
                 JOptionPane.showMessageDialog(this, "The selected file is not a PeptideShaker jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
             } else {

@@ -8,39 +8,39 @@ package com.compomics.util.experiment.massspectrometry.proteowizard;
 public enum MsFormat {
 
     /**
-     * mzML generic PSI format
+     * Mascot generic format.
      */
-    mzML(0, "mzML", "mzML", "mzML generic PSI format"),
+    mgf(0, "mgf", "mgf", "Mascot generic format"),
     /**
-     * Mascot generic format
+     * mzML generic PSI format.
      */
-    mgf(1, "mgf", "mgf", "Mascot generic format"),
+    mzML(1, "mzML", "mzML", "mzML generic PSI format"),
     /**
-     * Implementation of the PSI mzML ontology that is based on HDF5
+     * Implementation of the PSI mzML ontology that is based on HDF5.
      */
     mz5(2, "mz5", "mz5", "Implementation of the PSI mzML ontology that is based on HDF5"),
     /**
-     * mzXML format
+     * mzXML format.
      */
     mzXML(3, "mzXML", "mzXML", "mzXML format"),
     /**
-     * ProteoWizard internal text format
+     * ProteoWizard internal text format.
      */
     text(4, "text", "text", "ProteoWizard internal text format"),
     /**
-     * ms1 format
+     * ms1 format.
      */
     ms1(5, "ms1", "ms1", "ms1 format"),
     /**
-     * cms2 format
+     * cms2 format.
      */
     cms1(6, "cms1", "cms1", "cms2 format"),
     /**
-     * ms2 forma
+     * ms2 format.
      */
     ms2(7, "ms2", "ms2", "ms2 format"),
     /**
-     * cms2 forma
+     * cms2 format.
      */
     cms2(8, "cms2", "cms2", "cms2 format");
 

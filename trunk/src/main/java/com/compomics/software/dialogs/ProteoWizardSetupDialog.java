@@ -2,7 +2,6 @@ package com.compomics.software.dialogs;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,18 +30,6 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      * Set to true if the dialog was canceled.
      */
     private boolean dialogCanceled = true;
-    /**
-     * The parent frame. Can be null.
-     */
-    private JFrame parentFrame = null;
-    /**
-     * The parent dialog. Can be null.
-     */
-    private JDialog parentDialog = null;
-    /**
-     * The progress dialog.
-     */
-    private ProgressDialogX progressDialog;
 
     /**
      * Creates a new ProteoWizardSetupDialog.
@@ -57,7 +44,6 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     public ProteoWizardSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
         initComponents();
-        parentFrame = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
     }
@@ -74,7 +60,6 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
     public ProteoWizardSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
         super(parent, modal);
         initComponents();
-        parentDialog = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
     }
@@ -323,14 +308,19 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFolder(this, "ProteoWizard installation folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
+        File selectedFile = Util.getUserSelectedFolder(this, "ProteoWizard Installation Folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
 
         if (selectedFile != null) {
-                // @TODO: check if it is a valid folder?
-            // file assumed to be ok
-            lastSelectedFolder = selectedFile.getPath();
-            installationJTextField.setText(lastSelectedFolder);
-            okButton.setEnabled(true);
+            // check if it is a valid folder
+            if (!new File(selectedFile, "msconvert.exe").exists()) {
+                JOptionPane.showMessageDialog(this, "The selected folder is not a valid ProteoWizard folder!", "Wrong Folder Selected", JOptionPane.WARNING_MESSAGE);
+                okButton.setEnabled(false);
+            } else {
+                // assumed to be valid folder
+                lastSelectedFolder = selectedFile.getPath();
+                installationJTextField.setText(lastSelectedFolder);
+                okButton.setEnabled(true);
+            }
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 

@@ -37,25 +37,25 @@ public enum ProteoWizardFilter {
     polarity(27, "polarity", "Keeps only spectra with scan of the selected polarity.");
 
     /**
-     * The index of the format.
+     * The index of the filter.
      */
     public final int number;
     /**
-     * The name of the format.
+     * The name of the filter.
      */
     public final String name;
     /**
-     * A brief description of the format.
+     * A brief description of the filter.
      */
     public final String description;
 
     /**
      * Constructor.
      *
-     * @param index index of the format
+     * @param index index of the filter
      * @param commandLineOption command line option name
-     * @param name name of the format
-     * @param description brief description of the format
+     * @param name name of the filter
+     * @param description brief description of the filter
      */
     private ProteoWizardFilter(int number, String name, String description) {
         this.number = number;

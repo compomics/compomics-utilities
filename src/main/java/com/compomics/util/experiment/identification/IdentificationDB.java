@@ -52,6 +52,10 @@ public class IdentificationDB implements Serializable {
      */
     private static String assumptionsTableSuffix = "_assumptions";
     /**
+     * The suffix for a raw assumptions table.
+     */
+    private static String rawAssumptionsTableSuffix = "_raw_assumptions";
+    /**
      * The suffix for a PSM parameters table.
      */
     private static String psmParametersTableSuffix = "_psm_parameters";
@@ -61,6 +65,10 @@ public class IdentificationDB implements Serializable {
      * @deprecated use match specific mapping instead
      */
     private String parametersSuffix = "_parameters";
+    /**
+     * List of all raw assumptions tables.
+     */
+    private ArrayList<String> rawAssumptionsTables = new ArrayList<String>();
     /**
      * List of all assumptions tables.
      */
@@ -226,6 +234,22 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
+     * Updates the map of raw assumptions for a given spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param rawAssumptionsMap map of assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * updating a match in the table
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing in the database
+     */
+    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> rawAssumptionsMap) throws SQLException, IOException {
+        String tableName = getRawAssumptionTable(spectrumKey);
+        objectsDB.updateObject(tableName, spectrumKey, rawAssumptionsMap);
+    }
+
+    /**
      * Updates a match.
      *
      * @param match the match to update
@@ -353,8 +377,24 @@ public class IdentificationDB implements Serializable {
      * reading or writing in the database
      */
     public void removeAssumptions(String key) throws SQLException, IOException {
-        for (String psmTable : assumptionsTables) {
-            objectsDB.deleteObject(psmTable, key);
+        for (String table : assumptionsTables) {
+            objectsDB.deleteObject(table, key);
+        }
+    }
+
+    /**
+     * Deletes the raw assumptions corresponding to a given psm from the database.
+     *
+     * @param key the key of the psm
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading or writing in the database
+     */
+    public void removeRawAssumptions(String key) throws SQLException, IOException {
+        for (String table : rawAssumptionsTables) {
+            objectsDB.deleteObject(table, key);
         }
     }
 
@@ -430,6 +470,50 @@ public class IdentificationDB implements Serializable {
             assumptionsTables = new ArrayList<String>(psmParametersTables.size());
         }
         checkTable(assumptionsTables, tableName);
+        objectsDB.insertObject(tableName, spectrumKey, assumptions, true);
+    }
+
+    /**
+     * Returns the raw assumptions of the given spectrum in a map: advocate id →
+     * score → list of assumptions.
+     *
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     * @param key the key of the spectrum
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred when interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getRawAssumptions(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        String tableName = getRawAssumptionTable(key);
+        checkTable(rawAssumptionsTables, tableName);
+        return (HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>) objectsDB.retrieveObject(tableName, key, useDB);
+    }
+
+    /**
+     * Adds raw assumptions for a given match to the database.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param assumptions map of all assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred when interacting with the database
+     */
+    public void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
+        String tableName = getRawAssumptionTable(spectrumKey);
+        checkTable(rawAssumptionsTables, tableName);
         objectsDB.insertObject(tableName, spectrumKey, assumptions, true);
     }
 
@@ -631,6 +715,77 @@ public class IdentificationDB implements Serializable {
         HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
         for (String spectrumKey : spectrumKeys) {
             String tableName = getAssumptionTable(spectrumKey);
+            if (!sortedKeys.containsKey(tableName)) {
+                sortedKeys.put(tableName, new ArrayList<String>());
+            }
+            sortedKeys.get(tableName).add(spectrumKey);
+            if (waitingHandler != null) {
+                if (displayProgress) {
+                    waitingHandler.increaseSecondaryProgressCounter();
+                }
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
+            }
+        }
+        for (String tableName : sortedKeys.keySet()) {
+            if (objectsDB.hasTable(tableName)) { // Escape for old projects which don't contain this table
+                objectsDB.loadObjects(tableName, sortedKeys.get(tableName), waitingHandler, displayProgress);
+            }
+        }
+    }
+
+    /**
+     * Loads all raw assumptions of the given file in the cache of the database.
+     *
+     * @param fileName the file name
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred when interacting with the database
+     */
+    public void loadRawAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        String testKey = Spectrum.getSpectrumKey(fileName, "test");
+        String tableName = getRawAssumptionTable(testKey);
+        objectsDB.loadObjects(tableName, waitingHandler, displayProgress);
+    }
+
+    /**
+     * Loads all raw assumptions of the given spectra in the cache of the database.
+     *
+     * @param spectrumKeys the key of the spectra
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * interrogating the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the database
+     * @throws ClassNotFoundException exception thrown whenever the class of the
+     * object is not found when deserializing it.
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurred when interacting with the database
+     */
+    public void loadRawAssumptions(ArrayList<String> spectrumKeys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        if (waitingHandler != null && displayProgress) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setSecondaryProgressCounter(0);
+            waitingHandler.setMaxSecondaryProgressCounter(2 * spectrumKeys.size());
+        }
+        HashMap<String, ArrayList<String>> sortedKeys = new HashMap<String, ArrayList<String>>();
+        for (String spectrumKey : spectrumKeys) {
+            String tableName = getRawAssumptionTable(spectrumKey);
             if (!sortedKeys.containsKey(tableName)) {
                 sortedKeys.put(tableName, new ArrayList<String>());
             }
@@ -1215,6 +1370,19 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
+     * Returns the raw assumptions table name associated with the given spectrum
+     * key.
+     *
+     * @param spectrumKey the given spectrum key
+     * @return the table name of the given spectrum
+     */
+    public String getRawAssumptionTable(String spectrumKey) {
+        String tableName = Spectrum.getSpectrumFile(spectrumKey) + rawAssumptionsTableSuffix;
+        tableName = objectsDB.correctTableName(tableName);
+        return tableName;
+    }
+
+    /**
      * Returns the PSM table name associated with the given spectrum key.
      *
      * @param spectrumKey the given spectrum key
@@ -1310,7 +1478,7 @@ public class IdentificationDB implements Serializable {
 
     /**
      * Backward compatibility fix checking whether the tables in the database
-     * are all loaded in the attribute maps of this object.
+     * are all loaded in the attribute maps of this object. Raw assumptions tables are not included since used only for the creation of the project.
      *
      * @throws SQLException exception thrown whenever an error occurred while
      * retrieving table names from the database.

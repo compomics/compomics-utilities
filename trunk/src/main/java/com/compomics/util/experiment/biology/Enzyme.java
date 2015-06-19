@@ -486,4 +486,45 @@ public class Enzyme extends ExperimentObject {
         }
         return isWholeProtein;
     }
+
+    /**
+     * Returns the description of the cleavage of this enzyme.
+     *
+     * @return the description of the cleavage of this enzyme
+     */
+    public String getDescription() {
+
+        String description = "Cleaves ";
+        if (!getAminoAcidBefore().isEmpty()) {
+            description += "after ";
+            for (Character aa : getAminoAcidBefore()) {
+                description += aa;
+            }
+            if (!getAminoAcidAfter().isEmpty()) {
+                description += " and ";
+            }
+        }
+        if (!getAminoAcidAfter().isEmpty()) {
+            description += "before ";
+            for (Character aa : getAminoAcidBefore()) {
+                description += aa;
+            }
+        }
+        if (!getRestrictionBefore().isEmpty()) {
+            description += " not preceeded by ";
+            for (Character aa : getRestrictionBefore()) {
+                description += aa;
+            }
+            if (!getRestrictionAfter().isEmpty()) {
+                description += " and ";
+            }
+        }
+        if (!getRestrictionAfter().isEmpty()) {
+            description += " not followed by ";
+            for (Character aa : getRestrictionAfter()) {
+                description += aa;
+            }
+        }
+        return description;
+    }
 }

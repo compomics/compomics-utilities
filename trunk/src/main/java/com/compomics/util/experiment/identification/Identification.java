@@ -233,7 +233,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads the given spectrum matches in the cache of the database.
+     * Loads the assumptions of the spectrum matches indicated by the given keys in the cache of the database.
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
@@ -253,8 +253,27 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads all assumptions of all spectrum matches of the file in the cache of
-     * the database.
+     * Loads the raw assumptions of the spectrum matches indicated by the given keys in the cache of the database.
+     *
+     * @param fileName the file name
+     * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
+     * @param displayProgress boolean indicating whether the progress of this method should be displayed on the waiting handler
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public void loadRawAssumptions(String fileName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        identificationDB.loadRawAssumptions(fileName, waitingHandler, displayProgress);
+    }
+
+    /**
+     * Loads all spectrum matches of the file in cache.
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
@@ -274,7 +293,7 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Loads the given spectrum matches in the cache of the database.
+     * Loads the spectrum matches corresponding to the given keys in cache.
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler allowing displaying progress and cancelling the process
@@ -771,6 +790,21 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Updates the raw assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param assumptions the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * adding the object in the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the object
+     */
+    public void updateRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException {
+        identificationDB.updateRawAssumptions(spectrumKey, assumptions);
+    }
+
+    /**
      * Updates a spectrum match in the database.
      *
      * @param spectrumMatch the match
@@ -951,6 +985,20 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
+     * Removes the raw assumptions of a spectrum.
+     *
+     * @param matchKey the key of the spectrum
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * deleting the match
+     * @throws IOException exception thrown whenever an IO issue occurred while
+     * interacting with the database
+     */
+    public void removeRawAssumptions(String matchKey) throws SQLException, IOException {
+        identificationDB.removeRawAssumptions(matchKey);
+    }
+
+    /**
      * Removes a spectrum match from the model.
      *
      * @param matchKey the key of the match to remove
@@ -1109,48 +1157,6 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns a the assumptions of a spectrum.
-     *
-     * @param spectrumKey the key of the spectrum
-     *
-     * @return the assumptions
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return getAssumptions(spectrumKey, true, true);
-    }
-
-    /**
-     * Returns the assumptions of a spectrum.
-     *
-     * @param spectrumKey the key of the spectrum
-     * @param useDB if useDB is false, null will be returned if the object is
-     * not in the cache
-     *
-     * @return the assumptions
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        return getAssumptions(spectrumKey, true, true);
-    }
-
-    /**
      * Returns the assumptions of a spectrum.
      *
      * @param spectrumKey the key of the spectrum
@@ -1184,6 +1190,90 @@ public abstract class Identification extends ExperimentObject {
             }
         }
         return assumptions;
+    }
+
+    /**
+     * Returns the assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getAssumptions(spectrumKey, true, true);
+    }
+
+    /**
+     * Returns a the assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getAssumptions(spectrumKey, true, true);
+    }
+
+    /**
+     * Returns the raw assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param useDB if useDB is false, null will be returned if the object is
+     * not in the cache
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getRawAssumptions(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return identificationDB.getRawAssumptions(spectrumKey, useDB);
+    }
+
+    /**
+     * Returns a the raw assumptions of a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     *
+     * @return the assumptions
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getRawAssumptions(String spectrumKey) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
+        return getRawAssumptions(spectrumKey, true);
     }
 
     /**
@@ -1443,27 +1533,6 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Adds the assumptions corresponding to a spectrum.
-     *
-     * @param spectrumKey the key of the spectrum
-     * @param newAssumptions the assumptions to add to the mapping
-     * @param newSpectrum if this is the first time this spectrum is seen
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     * @throws InterruptedException thrown whenever a threading issue occurred
-     * while interacting with the database
-     */
-    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean newSpectrum)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        addAssumptions(spectrumKey, newAssumptions, false, newSpectrum);
-    }
-
-    /**
      * Adds the assumptions corresponding to a spectrum to the database.
      *
      * @param spectrumKey the key of the spectrum
@@ -1516,6 +1585,77 @@ public abstract class Identification extends ExperimentObject {
             identificationDB.addAssumptions(spectrumKey, currentAssumptions);
         } else {
             updateAssumptions(spectrumKey, currentAssumptions);
+        }
+    }
+
+    /**
+     * Adds the assumptions corresponding to a spectrum.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param newAssumptions the assumptions to add to the mapping
+     * @param newSpectrum if this is the first time this spectrum is seen
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public synchronized void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions, boolean newSpectrum)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        addAssumptions(spectrumKey, newAssumptions, false, newSpectrum);
+    }
+
+    /**
+     * Adds the raw assumptions corresponding to a spectrum to the database.
+     *
+     * @param spectrumKey the key of the spectrum
+     * @param newAssumptions the assumptions to add to the mapping
+     *
+     * @throws SQLException exception thrown whenever an error occurred while
+     * loading the object from the database
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the object in the database
+     * @throws ClassNotFoundException exception thrown whenever an error
+     * occurred while casting the database input in the desired match class
+     * @throws InterruptedException thrown whenever a threading issue occurred
+     * while interacting with the database
+     */
+    public synchronized void addRawAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> newAssumptions)
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        boolean createAssumptions = false;
+        HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> currentAssumptions = getRawAssumptions(spectrumKey, true);
+        if (currentAssumptions == null) {
+            currentAssumptions = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(newAssumptions.size());
+            createAssumptions = true;
+        }
+        for (Integer advocateId : newAssumptions.keySet()) {
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> newAdvocateMap = newAssumptions.get(advocateId);
+            HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> currentAdvocateMap = currentAssumptions.get(advocateId);
+            if (newAdvocateMap != null) {
+                if (currentAdvocateMap == null) {
+                    currentAdvocateMap = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(newAdvocateMap.size());
+                    currentAssumptions.put(advocateId, currentAdvocateMap);
+                }
+                for (double score : newAdvocateMap.keySet()) {
+                    ArrayList<SpectrumIdentificationAssumption> newAssumptionList = newAdvocateMap.get(score);
+                    ArrayList<SpectrumIdentificationAssumption> currentAssumptionList = currentAdvocateMap.get(score);
+                    if (currentAssumptionList == null) {
+                        currentAssumptionList = new ArrayList<SpectrumIdentificationAssumption>(newAssumptionList);
+                        currentAdvocateMap.put(score, currentAssumptionList);
+                    } else {
+                        currentAssumptionList.addAll(newAssumptionList);
+                    }
+                }
+            }
+        }
+        if (createAssumptions) {
+            identificationDB.addRawAssumptions(spectrumKey, currentAssumptions);
+        } else {
+            updateRawAssumptions(spectrumKey, currentAssumptions);
         }
     }
 

@@ -203,7 +203,7 @@ public class GenePreferences implements Serializable {
         String accessionMapping;
 
         if (swissProtMapping) {
-            accessionMapping = "\"uniprot_swissprot_accession\"";
+            accessionMapping = "\"uniprot_swissprot\"";
         } else {
             accessionMapping = "\"uniprot_sptrembl\"";
         }
@@ -544,8 +544,11 @@ public class GenePreferences implements Serializable {
      * @param aDefaultSpeciesGoMappingsFile the default species GO mappings file
      * @param aDefaultSpeciesGeneMappingFile the default species gene mappings
      * file
+     * @param updateEqualVersion if true, the version is updated with equal
+     * version numbers, false, only update if the new version is newer
      */
-    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile, File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile) {
+    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile, 
+            File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile, boolean updateEqualVersion) {
 
         if (!getGeneMappingFolder().exists()) {
             boolean folderCreated = getGeneMappingFolder().mkdir();
@@ -627,12 +630,13 @@ public class GenePreferences implements Serializable {
                                 Integer humanEnsemblVersionOld = new Integer(tok.nextToken());
 
                                 if (tempSpecies.equalsIgnoreCase("hsapiens_gene_ensembl")) {
-                                    if (humanEnsemblVersionOld < humanEnsemblVersionNew) {
+                                    if (humanEnsemblVersionOld.intValue() == humanEnsemblVersionNew.intValue() && updateEqualVersion) {
+                                        updateHumanEnsembl = true;
+                                    } else if (humanEnsemblVersionOld < humanEnsemblVersionNew) {
                                         updateHumanEnsembl = true;
                                     }
                                 }
                             }
-
                         } finally {
                             br.close();
                         }
@@ -1041,6 +1045,19 @@ public class GenePreferences implements Serializable {
      * @return a boolean indicating whether the loading was successful
      */
     public boolean loadGeneMappings(String jarFilePath, WaitingHandler waitingHandler) {
+        return loadGeneMappings(jarFilePath, false, waitingHandler);
+    }
+    
+    /**
+     * Imports the gene mappings.
+     *
+     * @param jarFilePath the jar file path
+     * @param updateEqualVersion if true, the version is updated with equal
+     * version numbers, false, only update if the new version is newer
+     * @param waitingHandler the waiting handler
+     * @return a boolean indicating whether the loading was successful
+     */
+    public boolean loadGeneMappings(String jarFilePath, boolean updateEqualVersion, WaitingHandler waitingHandler) {
 
         //@TODO: we might want to split this method?
         boolean success = true;
@@ -1050,7 +1067,8 @@ public class GenePreferences implements Serializable {
                     new File(jarFilePath, "resources/conf/gene_ontology/go_domains"),
                     new File(jarFilePath, "resources/conf/gene_ontology/species"),
                     new File(jarFilePath, "resources/conf/gene_ontology/hsapiens_gene_ensembl_go_mappings"),
-                    new File(jarFilePath, "resources/conf/gene_ontology/hsapiens_gene_ensembl_gene_mappings"));
+                    new File(jarFilePath, "resources/conf/gene_ontology/hsapiens_gene_ensembl_gene_mappings"),
+                    updateEqualVersion);
             loadSpeciesAndGoDomains();
         } catch (IOException e) {
             if (waitingHandler.isReport()) {

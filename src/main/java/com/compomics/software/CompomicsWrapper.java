@@ -317,7 +317,7 @@ public class CompomicsWrapper {
                 // if needed, try re-launching with reduced memory settings
                 if (temp.contains("could not create the java virtual machine")) {
                     if (userPreferences.getMemoryPreference() > 4 * 1024) {
-                        userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() /2);
+                        userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() / 2);
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() > 2 * 1024) {
@@ -329,7 +329,7 @@ public class CompomicsWrapper {
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else if (userPreferences.getMemoryPreference() <= 1024) {
-                        userPreferences.setMemoryPreference(800); // one last desparate try!
+                        userPreferences.setMemoryPreference(800); // one last desperate try!
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
                         launch(jarFile, splashName, mainClass, args, bw);
                     } else {

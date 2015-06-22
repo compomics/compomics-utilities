@@ -10,6 +10,7 @@ import com.compomics.util.protein_sequences_manager.ProteinSequencesManager;
 import com.compomics.util.protein_sequences_manager.UniProtQuery;
 import com.compomics.util.protein_sequences_manager.enums.ModelOrganism;
 import com.compomics.util.protein_sequences_manager.enums.SequenceContentType;
+import com.compomics.util.protein_sequences_manager.gui.taxonomy.TaxonomyTreeDialog;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.swing.JOptionPane;
 
 /**
@@ -122,6 +125,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         typeLbl1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         cbModelOrganism = new javax.swing.JComboBox();
+        btnTaxonomyTree = new javax.swing.JButton();
         inputPanel = new javax.swing.JPanel();
         typeLbl = new javax.swing.JLabel();
         nameLbl = new javax.swing.JLabel();
@@ -174,6 +178,13 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
             }
         });
 
+        btnTaxonomyTree.setText("...");
+        btnTaxonomyTree.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTaxonomyTreeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout taxonomyPanelLayout = new javax.swing.GroupLayout(taxonomyPanel);
         taxonomyPanel.setLayout(taxonomyPanelLayout);
         taxonomyPanelLayout.setHorizontalGroup(
@@ -184,17 +195,21 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(typeLbl1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbModelOrganism, 0, 106, Short.MAX_VALUE)
+                    .addComponent(cbSequenceDatabaseType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbSequenceDatabaseType, 0, 177, Short.MAX_VALUE)
-                    .addComponent(cbModelOrganism, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(6, 6, 6)
-                .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
+                    .addGroup(taxonomyPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(downloadButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 18, 18))
+                        .addComponent(tfTaxonomyID, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnTaxonomyTree, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(downloadButton)))
+                .addContainerGap())
         );
         taxonomyPanelLayout.setVerticalGroup(
             taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +219,8 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(cbModelOrganism, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTaxonomyTree))
                 .addGap(18, 18, 18)
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(typeLbl1)
@@ -284,7 +300,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(descriptionLbl)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -360,8 +376,25 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbModelOrganismActionPerformed
 
+    private void btnTaxonomyTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaxonomyTreeActionPerformed
+        TaxonomyTreeDialog treeDialog = new TaxonomyTreeDialog(null, true);
+        treeDialog.setTitle("Taxonomy browser");
+        treeDialog.setLocationRelativeTo(null);
+        treeDialog.setVisible(true);
+        HashMap<String, String> taxonomyResult = treeDialog.getTaxonomyResult();
+        if (taxonomyResult != null) {
+            Iterator<String> iterator = taxonomyResult.keySet().iterator();
+            if (iterator.hasNext()) {
+                tfTaxonomyID.setText(iterator.next());
+            }
+        }
+        treeDialog.dispose();
+        downloadButtonActionPerformed(evt);
+    }//GEN-LAST:event_btnTaxonomyTreeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnTaxonomyTree;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox cbModelOrganism;

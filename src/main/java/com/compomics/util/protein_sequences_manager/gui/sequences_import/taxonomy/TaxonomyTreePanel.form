@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.7" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+    </Property>
+  </Properties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="tfSearchField" min="-2" pref="126" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="191" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="tfSearchField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="260" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTree" name="taxonomyTree">
+          <Properties>
+            <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
+              <TreeModel code="root&#xa; Eukaryota&#xa;  Alveolata&#xa;  Amoebozoa&#xa;  Apusozoa&#xa;  Breviatea&#xa;  Centroheliozoa&#xa;  Cryptophyta&#xa;  environmental samples&#xa;  Euglenozoa&#xa;  Fornicata&#xa;  Glaucocystophyceae&#xa;  Haptophyceae&#xa;  Heterolobosea&#xa;  Jakobida&#xa;  Katablepharidophyta&#xa;  Malawimonadidae&#xa;  Opisthokonta&#xa;  Oxymonadida&#xa;  Parabasalia&#xa;  Rhizaria&#xa;  Rhodophyta&#xa;  Stramenopiles&#xa;  unclassified eukaryotes&#xa;  Viridiplantae&#xa; Bacteria&#xa;  Actinobacteria&#xa;  Aquificae&#xa;  Armatimonadetes&#xa;  Bacteroidetes/Chlorobi group&#xa;  Caldiserica&#xa;  Chlamydiae/Verrucomicrobia group&#xa;  Chloroflexi&#xa;  Chrysiogenetes&#xa;  Cyanobacteria&#xa;  Deferribacteres&#xa;  Deinococcus-Thermus&#xa;  Dictyoglomi&#xa;  Elusimicrobia&#xa;  environmental samples&#xa;  Fibrobacteres/Acidobacteria group&#xa;  Firmicutes&#xa;  Fusobacteria&#xa;  Gemmatimonadetes&#xa;  Nitrospinae&#xa;  Nitrospirae&#xa;  Planctomycetes&#xa;  Proteobacteria&#xa;  Spirochaetes&#xa;  Synergistetes&#xa;  Tenericutes&#xa;  Thermodesulfobacteria&#xa;  Thermotogae&#xa;  unclassified Bacteria&#xa; Archaea&#xa;  Aenigmarchaeota&#xa;  Crenarchaeota&#xa;  Diapherotrites&#xa;  environmental samples&#xa;  Euryarchaeota&#xa;  Geoarchaeota&#xa;  Korarchaeota&#xa;  Nanoarchaeota&#xa;  Nanohaloarchaeota&#xa;  Parvarchaeota&#xa;  Thaumarchaeota&#xa;  unclassified Archaea&#xa; Viruses&#xa;  Deltavirus&#xa;  dsDNA viruses, no RNA stage&#xa;  dsRNA viruses&#xa;  environmental samples&#xa;  Retro-transcribing viruses&#xa;  Satellites&#xa;  ssDNA viruses&#xa;  ssRNA viruses&#xa;  unassigned viruses&#xa;  unclassified archaeal viruses&#xa;  unclassified phages&#xa;  unclassified virophages&#xa;  unclassified viruses"/>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JTextField" name="tfSearchField">
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSearch">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Search"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

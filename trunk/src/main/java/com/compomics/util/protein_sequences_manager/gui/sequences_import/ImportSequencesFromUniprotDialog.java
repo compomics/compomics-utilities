@@ -10,7 +10,7 @@ import com.compomics.util.protein_sequences_manager.ProteinSequencesManager;
 import com.compomics.util.protein_sequences_manager.UniProtQuery;
 import com.compomics.util.protein_sequences_manager.enums.ModelOrganism;
 import com.compomics.util.protein_sequences_manager.enums.SequenceContentType;
-import com.compomics.util.protein_sequences_manager.gui.taxonomy.TaxonomyTreeDialog;
+import com.compomics.util.protein_sequences_manager.gui.sequences_import.taxonomy.TaxonomyTreeDialog;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -80,6 +80,9 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         setVisible(true);
     }
 
+    /**
+     * Set up the dialog.
+     */
     private void init() {
         initComponents();
         loadUserPreferences();
@@ -118,12 +121,12 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         taxonomyPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        taxIdLabel = new javax.swing.JLabel();
         tfTaxonomyID = new javax.swing.JTextField();
         downloadButton = new javax.swing.JButton();
         cbSequenceDatabaseType = new javax.swing.JComboBox();
-        typeLbl1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
+        modelOrganismLabel = new javax.swing.JLabel();
         cbModelOrganism = new javax.swing.JComboBox();
         btnTaxonomyTree = new javax.swing.JButton();
         inputPanel = new javax.swing.JPanel();
@@ -133,7 +136,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         nameTxt = new javax.swing.JTextField();
         versionTxt = new javax.swing.JTextField();
         descriptionLbl = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        descriptionScrollPane = new javax.swing.JScrollPane();
         descriptionTxt = new javax.swing.JTextArea();
         parsingRuleTxt = new javax.swing.JTextField();
         parsingRuleLbl = new javax.swing.JLabel();
@@ -145,7 +148,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
 
         taxonomyPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
 
-        jLabel1.setText("Taxonomy ID");
+        taxIdLabel.setText("Taxonomy ID");
 
         tfTaxonomyID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,9 +170,9 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
             }
         });
 
-        typeLbl1.setText("Type");
+        typeLabel.setText("Type");
 
-        jLabel3.setText("Modelorganism");
+        modelOrganismLabel.setText("Model Organism");
 
         cbModelOrganism.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbModelOrganism.addActionListener(new java.awt.event.ActionListener() {
@@ -192,8 +195,8 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
             .addGroup(taxonomyPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(typeLbl1))
+                    .addComponent(modelOrganismLabel)
+                    .addComponent(typeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbModelOrganism, 0, 106, Short.MAX_VALUE)
@@ -201,9 +204,9 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(taxonomyPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(taxIdLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfTaxonomyID, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                        .addComponent(tfTaxonomyID, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnTaxonomyTree, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
@@ -216,17 +219,17 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, taxonomyPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(modelOrganismLabel)
                     .addComponent(cbModelOrganism, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+                    .addComponent(taxIdLabel)
                     .addComponent(tfTaxonomyID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTaxonomyTree))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(taxonomyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(typeLbl1)
+                    .addComponent(typeLabel)
                     .addComponent(cbSequenceDatabaseType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(downloadButton))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         inputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Information"));
@@ -242,7 +245,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
 
         descriptionTxt.setColumns(20);
         descriptionTxt.setRows(5);
-        jScrollPane1.setViewportView(descriptionTxt);
+        descriptionScrollPane.setViewportView(descriptionTxt);
 
         parsingRuleTxt.setEditable(false);
         parsingRuleTxt.setEnabled(false);
@@ -276,7 +279,7 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(versionTxt)
                                     .addComponent(parsingRuleTxt)))
-                            .addComponent(jScrollPane1))
+                            .addComponent(descriptionScrollPane))
                         .addContainerGap())
                     .addGroup(inputPanelLayout.createSequentialGroup()
                         .addComponent(descriptionLbl)
@@ -291,16 +294,16 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
                     .addComponent(parsingRuleLbl)
                     .addComponent(parsingRuleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbSequenceContentType))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLbl)
                     .addComponent(versionLbl)
                     .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(versionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(descriptionLbl)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -351,14 +354,29 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Download a database.
+     * 
+     * @param evt 
+     */
     private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
         downloadDatabase();
     }//GEN-LAST:event_downloadButtonActionPerformed
 
+    /**
+     * Close the dialog and save the content.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the dialog without saving.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
@@ -376,9 +394,14 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbModelOrganismActionPerformed
 
+    /**
+     * Open the taxonomy browser.
+     * 
+     * @param evt 
+     */
     private void btnTaxonomyTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaxonomyTreeActionPerformed
         TaxonomyTreeDialog treeDialog = new TaxonomyTreeDialog(null, true);
-        treeDialog.setTitle("Taxonomy browser");
+        treeDialog.setTitle("Taxonomy Browser");
         treeDialog.setLocationRelativeTo(null);
         treeDialog.setVisible(true);
         HashMap<String, String> taxonomyResult = treeDialog.getTaxonomyResult();
@@ -400,22 +423,22 @@ public class ImportSequencesFromUniprotDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox cbModelOrganism;
     private javax.swing.JComboBox cbSequenceDatabaseType;
     private javax.swing.JLabel descriptionLbl;
+    private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextArea descriptionTxt;
     private javax.swing.JButton downloadButton;
     private javax.swing.JPanel inputPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbSequenceContentType;
+    private javax.swing.JLabel modelOrganismLabel;
     private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel parsingRuleLbl;
     private javax.swing.JTextField parsingRuleTxt;
+    private javax.swing.JLabel taxIdLabel;
     private javax.swing.JPanel taxonomyPanel;
     private javax.swing.JTextField tfTaxonomyID;
+    private javax.swing.JLabel typeLabel;
     private javax.swing.JLabel typeLbl;
-    private javax.swing.JLabel typeLbl1;
     private javax.swing.JLabel versionLbl;
     private javax.swing.JTextField versionTxt;
     // End of variables declaration//GEN-END:variables

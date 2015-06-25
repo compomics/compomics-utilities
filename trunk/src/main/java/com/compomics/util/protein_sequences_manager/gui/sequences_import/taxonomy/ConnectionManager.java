@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.compomics.util.protein_sequences_manager.gui.taxonomy;
+package com.compomics.util.protein_sequences_manager.gui.sequences_import.taxonomy;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,30 +6,38 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- *
- * @author Kenneth
+ * Connection manager.
+ * 
+ * @author Kenneth Verheggen
  */
 public class ConnectionManager {
-    //the spoofed agent to make sure the uniprot host does not disconnect us
-    private static final String USER_AGENT = "Mozilla/5.0";
-    //the uniprot host name
-    private static final String uniprotHost = "http://www.uniprot.org/";
-   
+
     /**
-     *
-     * @return the uniprot website hostname
+     * The spoofed agent to make sure the uniprot host does not disconnect us.
+     */
+    private static final String USER_AGENT = "Mozilla/5.0";
+    /**
+     * The UniProt host name.
+     */
+    private static final String uniprotHost = "http://www.uniprot.org/";
+
+    /**
+     * Returns the UniProt web site host name.
+     * 
+     * @return the UniProt web site host name
      */
     public static String getUniprotHost() {
         return uniprotHost;
     }
 
     /**
-     *
-     * @param query the queryterm you wish to search for
-     * @param queryType the type of query (taxonomy or fasta)
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
+     * Returns the query connection.
+     * 
+     * @param query the query term you wish to search for
+     * @param queryType the type of query (taxonomy or FASTA)
+     * @return the query connection
+     * @throws IOException if an IOException is thrown
+     * @throws URISyntaxException if an URISyntaxException is thrown
      */
     public static HttpURLConnection getQueryConnection(String query, QueryType queryType) throws IOException, URISyntaxException {
         //String address = uniprotHost + queryType.getLocation() + "/?query=" + URLEncoder.encode(query, encoding);
@@ -47,5 +50,4 @@ public class ConnectionManager {
         con.setConnectTimeout(10000);
         return con;
     }
-
 }

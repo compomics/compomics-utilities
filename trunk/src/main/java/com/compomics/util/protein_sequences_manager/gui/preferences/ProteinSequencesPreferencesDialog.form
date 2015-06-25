@@ -107,7 +107,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="folderTxt" pref="477" max="32767" attributes="0"/>
+                      <Component id="folderTxt" pref="481" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -134,7 +134,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Working Folder:"/>
+                <Property name="text" type="java.lang.String" value="Working Folder"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton1">

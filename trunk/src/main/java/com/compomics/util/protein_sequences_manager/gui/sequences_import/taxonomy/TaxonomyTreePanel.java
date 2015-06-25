@@ -1,13 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.compomics.util.protein_sequences_manager.gui.taxonomy;
+package com.compomics.util.protein_sequences_manager.gui.sequences_import.taxonomy;
 
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,57 +10,34 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import org.apache.log4j.Logger;
 
 /**
+ * Taxonomy tree panel.
  *
- * @author Kenneth
+ * @author Kenneth Verheggen
  */
 public class TaxonomyTreePanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form TaxonomyTree
+     * The query.
      */
     private final UniprotTaxonomyProvider query;
-    private static final Logger LOGGER = Logger.getLogger(TaxonomyTreePanel.class);
-    private ProgressDialogX progressDialog;
 
+    /**
+     * Constructor.
+     */
     public TaxonomyTreePanel() {
         initComponents();
-        addMouseListener();
         query = new UniprotTaxonomyProvider((DefaultTreeModel) taxonomyTree.getModel());
         taxonomyTree.setExpandsSelectedPaths(true);
     }
 
-    private void addMouseListener() {
-        taxonomyTree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent me) {
-                TreePath tp = taxonomyTree.getPathForLocation(me.getX(), me.getY());
-                //     if (!me.isControlDown() && !me.isShiftDown()) {
-                try {
-                    if (tp != null) {
-                        DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) tp.getLastPathComponent();
-                        buildTreeAfterClick(clickedNode.toString());
-                        DefaultMutableTreeNode childAt = (DefaultMutableTreeNode) clickedNode.getChildAt(0);
-                        taxonomyTree.addSelectionPath(new TreePath(childAt.getPath()));
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    //just the end of a node reached
-                } catch (IOException ex) {
-                    LOGGER.error(ex);
-                }
-                // }
-            }
-        }
-        );
-    }
-
     /**
+     * Build the tree from a tab file.
      *
      * @param tabFile a taxonomy TabFile (as downloaded from UniProt)
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException if an IOException is thrown
+     * @throws InterruptedException if an InterruptedException is thrown
      */
     public void buildTreeFromTabFile(File tabFile) throws IOException, InterruptedException {
         //  collapseAll();
@@ -77,12 +46,13 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
     }
 
     /**
+     * Build the ree after search.
      *
      * @param taxonomyName the taxonomy term (ID or name)
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws MalformedURLException
-     * @throws URISyntaxException
+     * @throws IOException if an IOException is thrown
+     * @throws InterruptedException if an InterruptedException is thrown
+     * @throws MalformedURLException if a MalformedURLException is thrown
+     * @throws URISyntaxException if a URISyntaxException is thrown
      */
     public void buildTreeAfterSearch(String taxonomyName) throws IOException, InterruptedException, MalformedURLException, URISyntaxException {
         //  collapseAll();
@@ -104,9 +74,10 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * Build tree after click.
+     * 
      * @param taxonomyName the taxonomy term (ID or name)
-     * @throws IOException
+     * @throws IOException if an IOException is thrown
      */
     public void buildTreeAfterClick(String taxonomyName) throws IOException {
         String taxonomyID = (taxonomyName);
@@ -118,6 +89,11 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
         taxonomyTree.setSelectionPaths(selectionPaths);
     }
 
+    /**
+     * Returns the selected taxonomy map.
+     * 
+     * @return the selected taxonomy map
+     */
     public HashMap<String, String> getSelectedTaxonomyMap() {
         HashMap<String, String> taxIDMap = new HashMap<String, String>();
         if (taxonomyTree.getSelectionPaths().length > 0) {
@@ -129,12 +105,17 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
         return taxIDMap;
     }
 
+    /**
+     * Returns the taxonomy tree.
+     * 
+     * @return the taxonomy tree
+     */
     public JTree getTaxonomyTree() {
         return taxonomyTree;
     }
 
     /**
-     * expands all found nodes in the taxonomy tree
+     * Expands all found nodes in the taxonomy tree.
      */
     public void expandAll() {
         for (int i = 0; i < taxonomyTree.getRowCount(); i++) {
@@ -143,7 +124,7 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
     }
 
     /**
-     * collapses all found nodes in the taxonomy tree
+     * Collapses all found nodes in the taxonomy tree.
      */
     public void collapseAll() {
         for (int i = 0; i < taxonomyTree.getRowCount(); i++) {
@@ -160,14 +141,14 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        taxonomyTreeScrollPane = new javax.swing.JScrollPane();
         taxonomyTree = new javax.swing.JTree();
         tfSearchField = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jScrollPane1.setBorder(null);
+        taxonomyTreeScrollPane.setBorder(null);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Eukaryota");
@@ -331,7 +312,12 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         taxonomyTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jScrollPane1.setViewportView(taxonomyTree);
+        taxonomyTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                taxonomyTreeMouseClicked(evt);
+            }
+        });
+        taxonomyTreeScrollPane.setViewportView(taxonomyTree);
 
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -344,7 +330,7 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(taxonomyTreeScrollPane)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tfSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -360,31 +346,58 @@ public class TaxonomyTreePanel extends javax.swing.JPanel {
                     .addComponent(tfSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                .addComponent(taxonomyTreeScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Search UniProt.
+     * 
+     * @param evt 
+     */
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try {
             buildTreeAfterSearch(tfSearchField.getText().replace(" ", "%20"));
-
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this,
                     "Connection to UniProt failed " + System.lineSeparator() + ex,
                     "Connection error",
                     JOptionPane.ERROR_MESSAGE);
         } catch (InterruptedException ex) {
-            LOGGER.error(ex);
+            ex.printStackTrace(); // @TODO: better error handling
         } catch (URISyntaxException ex) {
-            LOGGER.error(ex);
+            ex.printStackTrace(); // @TODO: better error handling
         }
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    /**
+     * Taxonomy selection.
+     * 
+     * @param evt 
+     */
+    private void taxonomyTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_taxonomyTreeMouseClicked
+        TreePath tp = taxonomyTree.getPathForLocation(evt.getX(), evt.getY());
+        //     if (!evt.isControlDown() && !evt.isShiftDown()) {
+        try {
+            if (tp != null) {
+                DefaultMutableTreeNode clickedNode = (DefaultMutableTreeNode) tp.getLastPathComponent();
+                buildTreeAfterClick(clickedNode.toString());
+                DefaultMutableTreeNode childAt = (DefaultMutableTreeNode) clickedNode.getChildAt(0);
+                taxonomyTree.addSelectionPath(new TreePath(childAt.getPath()));
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            //just the end of a node reached
+        } catch (IOException ex) {
+            ex.printStackTrace(); // @TODO: better error handling
+        }
+        // }
+    }//GEN-LAST:event_taxonomyTreeMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSearch;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTree taxonomyTree;
+    private javax.swing.JScrollPane taxonomyTreeScrollPane;
     private javax.swing.JTextField tfSearchField;
     // End of variables declaration//GEN-END:variables
 }

@@ -21,7 +21,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+          <Component id="taxonomyTreeScrollPane" alignment="0" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tfSearchField" min="-2" pref="126" max="-2" attributes="0"/>
@@ -40,13 +40,13 @@
                   <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="260" max="32767" attributes="0"/>
+              <Component id="taxonomyTreeScrollPane" pref="260" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+    <Container class="javax.swing.JScrollPane" name="taxonomyTreeScrollPane">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
@@ -61,6 +61,9 @@
               <TreeModel code="root&#xa; Eukaryota&#xa;  Alveolata&#xa;  Amoebozoa&#xa;  Apusozoa&#xa;  Breviatea&#xa;  Centroheliozoa&#xa;  Cryptophyta&#xa;  environmental samples&#xa;  Euglenozoa&#xa;  Fornicata&#xa;  Glaucocystophyceae&#xa;  Haptophyceae&#xa;  Heterolobosea&#xa;  Jakobida&#xa;  Katablepharidophyta&#xa;  Malawimonadidae&#xa;  Opisthokonta&#xa;  Oxymonadida&#xa;  Parabasalia&#xa;  Rhizaria&#xa;  Rhodophyta&#xa;  Stramenopiles&#xa;  unclassified eukaryotes&#xa;  Viridiplantae&#xa; Bacteria&#xa;  Actinobacteria&#xa;  Aquificae&#xa;  Armatimonadetes&#xa;  Bacteroidetes/Chlorobi group&#xa;  Caldiserica&#xa;  Chlamydiae/Verrucomicrobia group&#xa;  Chloroflexi&#xa;  Chrysiogenetes&#xa;  Cyanobacteria&#xa;  Deferribacteres&#xa;  Deinococcus-Thermus&#xa;  Dictyoglomi&#xa;  Elusimicrobia&#xa;  environmental samples&#xa;  Fibrobacteres/Acidobacteria group&#xa;  Firmicutes&#xa;  Fusobacteria&#xa;  Gemmatimonadetes&#xa;  Nitrospinae&#xa;  Nitrospirae&#xa;  Planctomycetes&#xa;  Proteobacteria&#xa;  Spirochaetes&#xa;  Synergistetes&#xa;  Tenericutes&#xa;  Thermodesulfobacteria&#xa;  Thermotogae&#xa;  unclassified Bacteria&#xa; Archaea&#xa;  Aenigmarchaeota&#xa;  Crenarchaeota&#xa;  Diapherotrites&#xa;  environmental samples&#xa;  Euryarchaeota&#xa;  Geoarchaeota&#xa;  Korarchaeota&#xa;  Nanoarchaeota&#xa;  Nanohaloarchaeota&#xa;  Parvarchaeota&#xa;  Thaumarchaeota&#xa;  unclassified Archaea&#xa; Viruses&#xa;  Deltavirus&#xa;  dsDNA viruses, no RNA stage&#xa;  dsRNA viruses&#xa;  environmental samples&#xa;  Retro-transcribing viruses&#xa;  Satellites&#xa;  ssDNA viruses&#xa;  ssRNA viruses&#xa;  unassigned viruses&#xa;  unclassified archaeal viruses&#xa;  unclassified phages&#xa;  unclassified virophages&#xa;  unclassified viruses"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="taxonomyTreeMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

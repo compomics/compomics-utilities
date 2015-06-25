@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.compomics.util.protein_sequences_manager.gui.taxonomy;
-
+package com.compomics.util.protein_sequences_manager.gui.sequences_import.taxonomy;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,29 +15,37 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
+ * UniProt taxonomy provider.
  *
- * @author Kenneth
+ * @author Kenneth Verheggen
  */
 public class UniprotTaxonomyProvider {
-    //the lowest layer of taxonomy 
+
+    /**
+     * The lowest layer of taxonomy.
+     */
     private static DefaultMutableTreeNode rootNode;
-    //the lineages for a certain taxonomy
+    /**
+     * The lineages for a certain taxonomy.
+     */
     private final HashSet<String> lineages = new HashSet<String>();
-    //the default JTreeModel
+    /**
+     * The default JTreeModel.
+     */
     private final DefaultTreeModel model;
-    //a cache of taxonomies to increase speed and reduce server load
+    /**
+     * Cache of taxonomies to increase speed and reduce server load.
+     */
     private final HashMap<String, String> cachedTaxonomies = new HashMap<String, String>();
 
     /**
-     * Gui Constructor
+     * GUI constructor.
      *
-     * @param model the treemodel you wish to have updated
+     * @param model the tree model you want to update
      */
     public UniprotTaxonomyProvider(DefaultTreeModel model) {
         rootNode = (DefaultMutableTreeNode) model.getRoot();
@@ -51,7 +53,7 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
-     * Normal constructor, guiless mode
+     * Normal constructor, GUI-less mode.
      */
     public UniprotTaxonomyProvider() {
         rootNode = new DefaultMutableTreeNode("root");
@@ -59,39 +61,39 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns the child taxonomies.
      *
-     * @param taxonomyName
+     * @param taxonomyName the taxonomy name
      * @return all the children names for a given taxonomy name (or identifier)
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if a MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public List<String> getChildTaxonomies(String taxonomyName) throws MalformedURLException, IOException {
+
         List<String> childrenTaxonomies = new ArrayList<String>();
         String url = ConnectionManager.getUniprotHost() + "taxonomy/?query=\"" + taxonomyName + "\"&format=tab";
         URL website = new URL(url);
         URLConnection connection = website.openConnection();
         BufferedReader in = null;
+
         try {
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
-            String lineage;
-            String taxName;
-            String taxID;
-            String headers = in.readLine();
+            in.readLine();
             while ((inputLine = in.readLine()) != null) {
                 String[] split = inputLine.split("\t");
-                taxName = split[2];
-                taxID = split[0];
-                lineage = split[8] + ";" + taxName;
+                String taxName = split[2];
+                String taxID = split[0];
+                String lineage = split[8] + ";" + taxName;
                 lineages.add(lineage);
                 cachedTaxonomies.put(taxName, taxID);
                 childrenTaxonomies.add(taxName);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-
-//this was an endpoint
+            //this was an endpoint
+            // @TODO: better error handling
         } catch (IOException e) {
-
+            // @TODO: better error handling
         } finally {
             if (in != null) {
                 in.close();
@@ -101,48 +103,47 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns the possible lineages for a given taxonomy.
      *
-     * @param taxonomyName
+     * @param taxonomyName the taxonomy name
      * @return the possible lineages for a given taxonomy
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws java.net.URISyntaxException
+     * @throws MalformedURLException if a MalformedURLException occurs
+     * @throws IOException if an IOException occurs
+     * @throws URISyntaxException if a URISyntaxException occurs
      */
     public Set<String> getLineagesForTaxonomyID(String taxonomyName) throws MalformedURLException, IOException, IllegalArgumentException, URISyntaxException {
+
         int maxPerQuery = 20000;
         String query = "\"" + taxonomyName + "\"" + "&sort=score&format=tab";
         URLConnection connection = ConnectionManager.getQueryConnection(query, QueryType.TAXONOMY);
         HashMap<String, String> tempTaxIdMap = new HashMap<String, String>();
         List<String> tempLineages = new ArrayList<String>();
         BufferedReader in = null;
+
         try {
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
+
             String inputLine;
-            String lineage;
-            String taxName;
-            String taxID;
-            String headers = in.readLine();
+            in.readLine(); // read the header
             while ((inputLine = in.readLine()) != null) {
                 String[] split = inputLine.split("\t");
-                taxName = split[2];
-                taxID = split[0];
-                lineage = split[8] + ";" + taxName;
+                String taxName = split[2];
+                String taxID = split[0];
+                String lineage = split[8] + ";" + taxName;
                 tempLineages.add(lineage);
                 tempTaxIdMap.put(taxName, taxID);
                 if (tempLineages.size() > maxPerQuery) {
-                    //throw exception
                     throw new IllegalArgumentException("There were over " + maxPerQuery + " lineages found for this query. Try a more specific search or browse manually");
                 }
             }
+
             lineages.addAll(tempLineages);
             cachedTaxonomies.putAll(tempTaxIdMap);
-
         } catch (ArrayIndexOutOfBoundsException e) {
-//this was an endpoint
-//            e.printStackTrace();
+            //this was an endpoint
+            // @TODO: better error handling
         } catch (IOException e) {
-
+            // @TODO: better error handling
         } finally {
             if (in != null) {
                 in.close();
@@ -152,33 +153,32 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns the possible lineages for a given taxonomy
      *
-     * @param taxonomyFile taxonomy file from the uniprot webpage
+     * @param taxonomyFile taxonomy file from the UniProt web page
      * @return the possible lineages for a given taxonomy
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException if a MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public Set<String> getLineagesFromFile(File taxonomyFile) throws MalformedURLException, IOException {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(new FileInputStream(taxonomyFile)));
             String inputLine;
-            String lineage;
-            String taxName;
-            String taxID;
-            String headers = in.readLine();
+            in.readLine(); // read the header
             while ((inputLine = in.readLine()) != null) {
                 if (lineages.size() % 10000 == 0) {
-                    System.out.println(lineages.size() + " processed lineages");
+                    System.out.println(lineages.size() + " processed lineages"); // @TODO: never have prints in a method
                 }
                 String[] split = inputLine.split("\t");
                 lineages.add(split[8] + ";" + split[2]);
                 cachedTaxonomies.put(split[2], split[0]);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-//this was an endpoint
+            //this was an endpoint
+            // @TODO: better error handling
         } catch (IOException e) {
-
+            // @TODO: better error handling
         } finally {
             if (in != null) {
                 in.close();
@@ -188,20 +188,24 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns a model after searching for an unknown taxonomy name (for example
+     * after a search).
      *
-     * @param taxonomyTabFile
-     * @return a model after searching for an unknown taxonomy name (example
+     * @param taxonomyTabFile taxonomy file from the UniProt web page
+     * @return a model after searching for an unknown taxonomy name (for example
      * after a search)
-     * @throws IOException
-     * @throws java.lang.InterruptedException
+     * @throws IOException if an IOException occurs
+     * @throws InterruptedException if an InterruptedException occurs
      */
     public DefaultTreeModel getModelFromFile(File taxonomyTabFile) throws IOException, InterruptedException {
-        System.out.println("Building Tree");
+
+        System.out.println("Building Tree"); // @TODO: never have prints in a method
         getLineagesFromFile(taxonomyTabFile);
         int processed = 0;
+
         for (String lineage : lineages) {
             if (processed % 10000 == 0) {
-                System.out.println(processed + " added in tree");
+                System.out.println(processed + " added in tree"); // @TODO: never have prints in a method
             }
             String[] taxonomies = lineage.split(";");
             DefaultMutableTreeNode parent = new DefaultMutableTreeNode(new String[]{"root", taxonomies[0]});
@@ -216,17 +220,20 @@ public class UniprotTaxonomyProvider {
             }
             processed++;
         }
+
         return model;
     }
 
     /**
+     * Returns a model after searching for an unknown taxonomy name (for example
+     * after a search).
      *
-     * @param taxonomyName
-     * @return a model after searching for an unknown taxonomy name (example
+     * @param taxonomyName the taxonomy name
+     * @return a model after searching for an unknown taxonomy name (for example
      * after a search)
-     * @throws IOException
-     * @throws java.net.URISyntaxException
-     * @throws java.net.MalformedURLException
+     * @throws MalformedURLException if a MalformedURLException occurs
+     * @throws IOException if an IOException occurs
+     * @throws URISyntaxException if a URISyntaxException occurs
      */
     public DefaultTreeModel getModelAfterSearch(String taxonomyName) throws IllegalArgumentException, IOException, MalformedURLException, URISyntaxException {
         getLineagesForTaxonomyID(taxonomyName);
@@ -247,10 +254,11 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns a model for a known taxonomy name (for example after node click).
      *
-     * @param taxonomyName
-     * @return a model for a known taxonomy name (example after node click)
-     * @throws IOException
+     * @param taxonomyName the taxonomy name
+     * @return a model for a known taxonomy name (for example after node click)
+     * @throws IOException if an IOException occurs
      */
     public DefaultTreeModel getModelAfterClick(String taxonomyName) throws IOException {
         List<String> childTaxonomies = getChildTaxonomies(taxonomyName);
@@ -262,7 +270,6 @@ public class UniprotTaxonomyProvider {
                 taxonomy = taxonomy.trim();
                 node = new DefaultMutableTreeNode(taxonomy);
                 try {
-
                     model.insertNodeInto(node, parent, parent.getChildCount());
                 } catch (NullPointerException e) {
                     //no more children here
@@ -272,6 +279,12 @@ public class UniprotTaxonomyProvider {
         return model;
     }
 
+    /**
+     * Returns the given node.
+     *
+     * @param nodeStr the node string.
+     * @return the given node
+     */
     private DefaultMutableTreeNode searchNode(String nodeStr) {
         DefaultMutableTreeNode node;
         Enumeration e = rootNode.breadthFirstEnumeration();
@@ -285,37 +298,40 @@ public class UniprotTaxonomyProvider {
     }
 
     /**
+     * Returns the taxonomyID that was encountered for a taxonomyName. This is
+     * required to speed up the tree considerably.
      *
-     * @param taxonomyName
-     * @return the taxonomyID that was encountered for a taxonomyName. This is
-     * required to speed up the tree considerably
+     * @param taxonomyName the taxonomy name
+     * @return the taxonomyID
      */
     public String getCachedTaxonomyID(String taxonomyName) {
         return cachedTaxonomies.get(taxonomyName);
     }
 
     /**
+     * Returns the query taxonomy.
      *
      * @param queryTerm the term you wish to search for (example "human" or
      * 9606)
      * @param returnID boolean indicating whether you want the taxonomyID or the
      * taxonomy name
-     * @return
-     * @throws MalformedURLException
-     * @throws IOException
+     * @return the query taxonomy
+     * @throws MalformedURLException if a MalformedURLException occurs
+     * @throws IOException if an IOException occurs
      */
     public String queryTaxonomy(String queryTerm, boolean returnID) throws MalformedURLException, IOException {
+
         String url = ConnectionManager.getUniprotHost() + "taxonomy/?query=" + queryTerm + "&sort=score&format=tab";
         URL website = new URL(url);
         String taxName = "";
         String taxID = "";
         URLConnection connection = website.openConnection();
         HashMap<String, String> tempTaxIdMap = new HashMap<String, String>();
-        BufferedReader in = null;
+
         try {
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
-            String headers = in.readLine();
+            in.readLine(); // read the header
             if ((inputLine = in.readLine()) != null) {
                 String[] split = inputLine.split("\t");
                 taxName = split[2];
@@ -328,8 +344,9 @@ public class UniprotTaxonomyProvider {
         } catch (ArrayIndexOutOfBoundsException ex) {
             //this was an endpoint?
         } catch (IOException ex) {
-            Logger.getLogger(UniprotTaxonomyProvider.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace(); // @TODO: better error handling
         }
+
         if (returnID) {
             return taxID;
         } else {

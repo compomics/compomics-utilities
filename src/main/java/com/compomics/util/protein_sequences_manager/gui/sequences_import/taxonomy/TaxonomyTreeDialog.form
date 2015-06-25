@@ -23,17 +23,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
+          <Component id="backgroundPanel" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="backgroundPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="backgroundPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -73,7 +73,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="com.compomics.util.protein_sequences_manager.gui.taxonomy.TaxonomyTreePanel" name="taxonomyTreePanel1">
+        <Component class="com.compomics.util.protein_sequences_manager.gui.sequences_import.taxonomy.TaxonomyTreePanel" name="taxonomyTreePanel1">
         </Component>
         <Component class="javax.swing.JButton" name="btnConfirm">
           <Properties>

@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * Dialog for importing sequences from files.
- * 
+ *
  * @author Marc Vaudel
  */
 public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
@@ -100,12 +100,12 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
         nameTxt = new javax.swing.JTextField();
         versionTxt = new javax.swing.JTextField();
         descriptionLbl = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        descriptionScrollPane = new javax.swing.JScrollPane();
         descriptionTxt = new javax.swing.JTextArea();
         parsingRuleTxt = new javax.swing.JTextField();
         parsingRuleLbl = new javax.swing.JLabel();
         fileSelectionPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        fastaFileLabel = new javax.swing.JLabel();
         browseButton = new javax.swing.JButton();
         clearButton = new javax.swing.JButton();
         fastaFilesTxt = new javax.swing.JTextField();
@@ -143,7 +143,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
 
         descriptionTxt.setColumns(20);
         descriptionTxt.setRows(5);
-        jScrollPane1.setViewportView(descriptionTxt);
+        descriptionScrollPane.setViewportView(descriptionTxt);
 
         parsingRuleTxt.setEditable(false);
         parsingRuleTxt.setEnabled(false);
@@ -177,7 +177,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                                         .addComponent(versionLbl)
                                         .addGap(42, 42, 42)
                                         .addComponent(versionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))))
-                            .addComponent(jScrollPane1))
+                            .addComponent(descriptionScrollPane))
                         .addContainerGap())
                     .addGroup(inputPanelLayout.createSequentialGroup()
                         .addComponent(descriptionLbl)
@@ -192,7 +192,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                     .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(parsingRuleLbl)
                     .addComponent(parsingRuleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLbl)
                     .addComponent(versionLbl)
@@ -201,14 +201,14 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(descriptionLbl)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         fileSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
         fileSelectionPanel.setOpaque(false);
 
-        jLabel1.setText("FASTA File");
+        fastaFileLabel.setText("FASTA File");
 
         browseButton.setText("Browse");
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -232,7 +232,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
             fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fileSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(fastaFileLabel)
                 .addGap(18, 18, 18)
                 .addComponent(fastaFilesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -250,7 +250,7 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
                         .addComponent(clearButton)
                         .addComponent(browseButton))
                     .addGroup(fileSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
+                        .addComponent(fastaFileLabel)
                         .addComponent(fastaFilesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -299,19 +299,39 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Select the database.
+     * 
+     * @param evt 
+     */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         selectDB();
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    /**
+     * Clear the database selection.
+     * 
+     * @param evt 
+     */
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         clearDatabaseSelection();
     }//GEN-LAST:event_clearButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
@@ -322,13 +342,13 @@ public class ImportSequencesFromFilesDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearButton;
     private javax.swing.JLabel descriptionLbl;
+    private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JTextArea descriptionTxt;
+    private javax.swing.JLabel fastaFileLabel;
     private javax.swing.JTextField fastaFilesTxt;
     private javax.swing.JPanel fileSelectionPanel;
     private javax.swing.JPanel importSequencesFromFilesPanel;
     private javax.swing.JPanel inputPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JButton okButton;

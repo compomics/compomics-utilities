@@ -119,7 +119,7 @@ public class Enzyme extends ExperimentObject {
     /**
      * Get the enzyme name.
      *
-     * @return The enzyme name as String
+     * @return the enzyme name as String
      */
     public String getName() {
         return name;
@@ -128,7 +128,7 @@ public class Enzyme extends ExperimentObject {
     /**
      * Get the enzyme id.
      *
-     * @return The enzyme number
+     * @return the enzyme number
      */
     public int getId() {
         return id;
@@ -137,7 +137,7 @@ public class Enzyme extends ExperimentObject {
     /**
      * Get the X!Tandem enzyme format.
      *
-     * @return The enzyme X!Tandem format as String
+     * @return the enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
         String result = "";

@@ -135,9 +135,9 @@
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <Component id="jScrollPane1" max="32767" attributes="0"/>
+                                  <Component id="descriptionScrollPane" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="descriptionLbl" min="-2" max="-2" attributes="0"/>
@@ -157,7 +157,7 @@
                           <Component id="parsingRuleLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="parsingRuleTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nameLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="versionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -167,7 +167,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="descriptionLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="188" max="32767" attributes="0"/>
+                      <Component id="descriptionScrollPane" pref="193" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -210,7 +210,7 @@
                 <Property name="text" type="java.lang.String" value="Description"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JScrollPane" name="descriptionScrollPane">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -253,7 +253,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="fastaFileLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                       <Component id="fastaFilesTxt" pref="433" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -274,7 +274,7 @@
                               <Component id="browseButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="fastaFileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fastaFilesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -284,7 +284,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="fastaFileLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="FASTA File"/>
               </Properties>

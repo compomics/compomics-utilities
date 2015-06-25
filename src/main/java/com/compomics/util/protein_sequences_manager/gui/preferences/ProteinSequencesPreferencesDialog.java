@@ -75,7 +75,7 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
         parametersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Sequences Manager Preferences"));
         parametersPanel.setOpaque(false);
 
-        jLabel1.setText("Working Folder:");
+        jLabel1.setText("Working Folder");
 
         jButton1.setText("Clear");
 
@@ -91,7 +91,7 @@ public class ProteinSequencesPreferencesDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(folderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                .addComponent(folderTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

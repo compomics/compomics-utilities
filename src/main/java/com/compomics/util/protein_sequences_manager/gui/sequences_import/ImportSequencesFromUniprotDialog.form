@@ -76,10 +76,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="typeLbl1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="modelOrganismLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="typeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="cbModelOrganism" pref="106" max="32767" attributes="0"/>
                       <Component id="cbSequenceDatabaseType" max="32767" attributes="0"/>
@@ -87,9 +87,9 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jLabel1" min="-2" pref="71" max="-2" attributes="0"/>
+                          <Component id="taxIdLabel" min="-2" pref="71" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="tfTaxonomyID" pref="123" max="32767" attributes="0"/>
+                          <Component id="tfTaxonomyID" pref="118" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnTaxonomyTree" min="-2" pref="22" max="-2" attributes="0"/>
                       </Group>
@@ -107,25 +107,25 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="modelOrganismLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbModelOrganism" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="taxIdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tfTaxonomyID" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnTaxonomyTree" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="typeLbl1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="typeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbSequenceDatabaseType" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="downloadButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="taxIdLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Taxonomy ID"/>
           </Properties>
@@ -158,14 +158,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSequenceDatabaseTypeActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="typeLbl1">
+        <Component class="javax.swing.JLabel" name="typeLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Type"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
+        <Component class="javax.swing.JLabel" name="modelOrganismLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Modelorganism"/>
+            <Property name="text" type="java.lang.String" value="Model Organism"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbModelOrganism">
@@ -232,9 +232,9 @@
                                       <Component id="parsingRuleTxt" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="descriptionScrollPane" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="descriptionLbl" min="-2" max="-2" attributes="0"/>
@@ -254,17 +254,17 @@
                       <Component id="parsingRuleTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbSequenceContentType" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="nameLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="versionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="nameTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="versionTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="descriptionLbl" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="142" max="32767" attributes="0"/>
+                  <Component id="descriptionScrollPane" pref="171" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -295,7 +295,7 @@
             <Property name="text" type="java.lang.String" value="Description"/>
           </Properties>
         </Component>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+        <Container class="javax.swing.JScrollPane" name="descriptionScrollPane">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>

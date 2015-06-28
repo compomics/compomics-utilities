@@ -165,7 +165,7 @@ public class CommandLineUtils {
                     for (File childFile : testFile.listFiles()) {
                         String fileName = Util.getFileName(childFile.getAbsolutePath());
                         for (String extention : fileExtentions) {
-                            if (fileName.toLowerCase().endsWith(extention)) {
+                            if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
                                 if (childFile.exists()) {
                                     result.add(childFile);
                                     break;
@@ -178,7 +178,7 @@ public class CommandLineUtils {
                 } else {
                     String fileName = Util.getFileName(testFile.getAbsolutePath());
                     for (String extention : fileExtentions) {
-                        if (fileName.toLowerCase().endsWith(extention)) {
+                        if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
                             result.add(testFile);
                             break;
                         }
@@ -190,7 +190,7 @@ public class CommandLineUtils {
         } else {
             for (String file : files) {
                 for (String extention : fileExtentions) {
-                    if (file.toLowerCase().endsWith(extention)) {
+                    if (file.toLowerCase().endsWith(extention.toLowerCase())) {
                         File testFile = new File(file);
                         if (testFile.exists()) {
                             result.add(testFile);

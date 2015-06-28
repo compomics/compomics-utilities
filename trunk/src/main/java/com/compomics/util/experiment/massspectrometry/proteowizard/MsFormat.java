@@ -26,10 +26,10 @@ public enum MsFormat {
      * Thermo/Waters raw format.
      */
     raw(3, "raw", null, "Thermo/Waters raw format", ".raw", true, false), // @TODO: also add: .bms2, .d, .fid, .yep, .baf..?
-    /**
-     * Applied Biosystems wiff format.
-     */
-    wiff(4, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false),
+//    /**
+//     * Applied Biosystems wiff format.
+//     */
+//    wiff(4, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false), // @TODO: requires two files: .wiff and .scan...
     /**
      * Implementation of the PSI mzML ontology that is based on HDF5.
      */

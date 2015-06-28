@@ -72,7 +72,8 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
         utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
-            int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
+            int option = JOptionPane.showConfirmDialog(this, "ProteoWizard is required to convert raw files. "
+                    + "Do you want to download it now? (Click \'No\' if already downloaded.)", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
 
             if (option == JOptionPane.YES_OPTION) {
                 openWebPage();
@@ -138,7 +139,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
         });
 
         folderHelpLabel.setFont(folderHelpLabel.getFont().deriveFont((folderHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        folderHelpLabel.setText("Please locate the ProteoWizard installation folder.");
+        folderHelpLabel.setText("Please locate the ProteoWizard folder, for example: C:\\Program Files\\ProteoWizard\\ProteoWizard 3.0.7665.");
 
         javax.swing.GroupLayout installationPanelLayout = new javax.swing.GroupLayout(installationPanel);
         installationPanel.setLayout(installationPanelLayout);
@@ -147,10 +148,11 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, installationPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(installationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(installationJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
                     .addGroup(installationPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(folderHelpLabel))
-                    .addComponent(installationJTextField))
+                        .addGap(10, 10, 10)
+                        .addComponent(folderHelpLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseButton)
                 .addContainerGap())
@@ -213,21 +215,20 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
                 .addGroup(downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(infoLabel)
                     .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 96, Short.MAX_VALUE)
+                .addGap(0, 168, Short.MAX_VALUE)
                 .addComponent(iconButton)
                 .addContainerGap())
         );
         downloadPanelLayout.setVerticalGroup(
             downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(downloadPanelLayout.createSequentialGroup()
-                .addGroup(downloadPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(downloadPanelLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(infoLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(iconButton))
+                .addComponent(iconButton)
                 .addGap(4, 4, 4))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, downloadPanelLayout.createSequentialGroup()
+                .addComponent(infoLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(downloadLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         okButton.setText("OK");

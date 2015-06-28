@@ -34,6 +34,10 @@ public class ToolFactory {
      */
     public static final String searchGuiSpectrumFileOption = "-mgf";
     /**
+     * The command line argument for raw files for SearchGUI.
+     */
+    public static final String searchGuiRawFileOption = "-raw";
+    /**
      * The command line argument for a parameters file for SearchGUI.
      */
     public static final String searchGuiParametersFileOption = "-search_parameters";
@@ -190,7 +194,7 @@ public class ToolFactory {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public static void startSearchGUI(JFrame parent) throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null, null, null, null);
+        startSearchGUI(parent, null, null, null, null, null, null);
     }
 
     /**
@@ -198,6 +202,7 @@ public class ToolFactory {
      *
      * @param parent a frame to display the path setting dialog.
      * @param mgfFiles the mgf files to search (can be null)
+     * @param rawFiles the raw files to search (can be null)
      * @param searchParameters the search parameters as a file (can be null)
      * @param outputFolder outputFolder the output folder (can be null)
      * @param species the species (can be null)
@@ -208,7 +213,7 @@ public class ToolFactory {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, File searchParameters, File outputFolder, String species, String speciesType)
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType)
             throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserPreferences utilitiesUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
@@ -222,13 +227,17 @@ public class ToolFactory {
         if (openSearchGUI) {
             if (utilitiesUserPreferences.getSearchGuiPath() != null
                     && new File(utilitiesUserPreferences.getSearchGuiPath()).exists()) {
-                if (mgfFiles == null && searchParameters == null && species == null) {
+                if (mgfFiles == null && rawFiles == null && searchParameters == null && species == null) {
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
                 } else {
                     ArrayList<String> args = new ArrayList<String>();
-                    if (mgfFiles != null) {
+                    if (mgfFiles != null && !mgfFiles.isEmpty()) {
                         args.add(searchGuiSpectrumFileOption);
                         args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
+                    }
+                    if (rawFiles != null && !rawFiles.isEmpty()) {
+                        args.add(searchGuiRawFileOption);
+                        args.add(CommandLineUtils.getCommandLineArgument(rawFiles));
                     }
                     if (searchParameters != null) {
                         args.add(searchGuiParametersFileOption);

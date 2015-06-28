@@ -207,7 +207,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         outputFormatLbl.setText("Output Format");
 
         outputFormatCmb.setMaximumRowCount(10);
-        outputFormatCmb.setModel(new DefaultComboBoxModel(MsFormat.values()));
+        outputFormatCmb.setModel(new DefaultComboBoxModel(MsFormat.getDataFormats(null, true)));
 
         filtersLbl.setText("Filters (right click in the table to edit)");
 

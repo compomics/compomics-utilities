@@ -15,41 +15,61 @@ public enum MsFormat {
      */
     mgf(0, "mgf", "mgf", "Mascot generic format", ".mgf", false, true),
     /**
-     * mzML generic PSI format.
-     */
-    mzML(1, "mzML", "mzML", "mzML generic PSI format", ".mzml", true, true),
-    /**
-     * mzXML format.
-     */
-    mzXML(2, "mzXML", "mzXML", "mzXML format", ".mzxml", true, true),
-    /**
-     * Thermo/Waters raw format.
-     */
-    raw(3, "raw", null, "Thermo/Waters raw format", ".raw", true, false), // @TODO: also add: .bms2, .d, .fid, .yep, .baf..?
-//    /**
-//     * Applied Biosystems wiff format.
-//     */
-//    wiff(4, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false), // @TODO: requires two files: .wiff and .scan...
-    /**
-     * Implementation of the PSI mzML ontology that is based on HDF5.
-     */
-    mz5(5, "mz5", "mz5", "mzML based on HDF5", ".mz5", true, true),
-    /**
      * ms1 format.
      */
-    ms1(6, "ms1", "ms1", "ms1 format", ".ms1", false, true),
+    ms1(1, "ms1", "ms1", "ms1 format", ".ms1", false, true),
     /**
      * ms2 format.
      */
-    ms2(7, "ms2", "ms2", "ms2 format", ".ms2", false, true),
+    ms2(2, "ms2", "ms2", "ms2 format", ".ms2", false, true),
     /**
      * cms1 format.
      */
-    cms1(8, "cms1", "cms1", "cms1 format", ".cms1", false, true),
+    cms1(3, "cms1", "cms1", "cms1 format", ".cms1", false, true),
     /**
      * cms2 format.
      */
-    cms2(9, "cms2", "cms2", "cms2 format", ".cms2", false, true);
+    cms2(4, "cms2", "cms2", "cms2 format", ".cms2", false, true),
+    /**
+     * Binary bms2 format.
+     */
+    bms2(5, "bms2", "bms2", "bms2 format", ".bms2", false, true),
+    /**
+     * mzML generic PSI format.
+     */
+    mzML(6, "mzML", "mzML", "mzML generic PSI format", ".mzml", true, true),
+    /**
+     * mzXML format.
+     */
+    mzXML(7, "mzXML", "mzXML", "mzXML format", ".mzxml", true, true),
+    /**
+     * Implementation of the PSI mzML ontology that is based on HDF5.
+     */
+    mz5(8, "mz5", "mz5", "mzML based on HDF5", ".mz5", true, true),
+    /**
+     * Thermo/Waters raw format.
+     */
+    raw(9, "raw", null, "Thermo/Waters raw format", ".raw", true, false),
+    /**
+     * Agilent/Bruker d format.
+     */
+    d(10, "d", null, "Agilent/Buker d format", ".d", true, false),
+    /**
+     * Bruker FID format.
+     */
+    fid(11, "fid", null, "Bruker FID format", ".fid", true, false),
+    /**
+     * Bruker FID format.
+     */
+    yep(12, "yep", null, "Bruker YEP format", ".yep", true, false),
+    /**
+     * Bruker FID format.
+     */
+    baf(13, "baf", null, "Bruker BAF format", ".baf", true, false);
+//    /**
+//     * Applied Biosystems wiff format.
+//     */
+//    wiff(14, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false); // @TODO: requires two files: .wiff and .scan...
 
     /**
      * The index of the format.

@@ -67,7 +67,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
             if (!instrumentID.equalsIgnoreCase(msAmandaParameters.getInstrumentID())) {
                 return false;
             }
-            if (maxRank != msAmandaParameters.getMaxRank()) {
+            if (!maxRank.equals(msAmandaParameters.getMaxRank())) {
                 return false;
             }
             if (isLowMemoryMode() != msAmandaParameters.isLowMemoryMode()) {

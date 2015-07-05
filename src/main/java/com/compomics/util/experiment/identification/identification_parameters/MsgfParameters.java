@@ -96,28 +96,28 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
             if (protocol != msgfParameters.getProtocol()) {
                 return false;
             }
-            if (minPeptideLength != msgfParameters.getMinPeptideLength()) {
+            if (!minPeptideLength.equals(msgfParameters.getMinPeptideLength())) {
                 return false;
             }
-            if (maxPeptideLength != msgfParameters.getMaxPeptideLength()) {
+            if (!maxPeptideLength.equals(msgfParameters.getMaxPeptideLength())) {
                 return false;
             }
-            if (numberOfSpectrumMarches != msgfParameters.getNumberOfSpectrumMatches()) {
+            if (!numberOfSpectrumMarches.equals(msgfParameters.getNumberOfSpectrumMatches())) {
                 return false;
             }
             if (additionalOutput != msgfParameters.isAdditionalOutput()) {
                 return false;
             }
-            if (lowerIsotopeErrorRange != msgfParameters.getLowerIsotopeErrorRange()) {
+            if (!lowerIsotopeErrorRange.equals(msgfParameters.getLowerIsotopeErrorRange())) {
                 return false;
             }
-            if (upperIsotopeErrorRange != msgfParameters.getUpperIsotopeErrorRange()) {
+            if (!upperIsotopeErrorRange.equals(msgfParameters.getUpperIsotopeErrorRange())) {
                 return false;
             }
-            if (numberTolerableTermini != msgfParameters.getNumberTolerableTermini()) {
+            if (!numberTolerableTermini.equals(msgfParameters.getNumberTolerableTermini())) {
                 return false;
             }
-            if (numberOfPtmsPerPeptide != msgfParameters.getNumberOfPtmsPerPeptide()) {
+            if (!numberOfPtmsPerPeptide.equals(msgfParameters.getNumberOfPtmsPerPeptide())) {
                 return false;
             }
             return true;

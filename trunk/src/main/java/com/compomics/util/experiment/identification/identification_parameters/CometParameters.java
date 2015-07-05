@@ -126,23 +126,23 @@ public class CometParameters implements IdentificationAlgorithmParameter {
         if (identificationAlgorithmParameter instanceof CometParameters) {
             CometParameters cometParameters = (CometParameters) identificationAlgorithmParameter;
 
-            if (numberOfSpectrumMatches != cometParameters.getNumberOfSpectrumMatches()) {
+            if (!numberOfSpectrumMatches.equals(cometParameters.getNumberOfSpectrumMatches())) {
                 return false;
             }
-            if (maxVariableMods != cometParameters.getMaxVariableMods()) {
+            if (!maxVariableMods.equals(cometParameters.getMaxVariableMods())) {
                 return false;
             }
             if (getRequireVariableMods() != cometParameters.getRequireVariableMods()) {
                 return false;
             }
-            if (minPeaks != cometParameters.getMinPeaks()) {
+            if (!minPeaks.equals(cometParameters.getMinPeaks())) {
                 return false;
             }
             double diff = Math.abs(minPeakIntensity - cometParameters.getMinPeakIntensity());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (removePrecursor != cometParameters.getRemovePrecursor()) {
+            if (!removePrecursor.equals(cometParameters.getRemovePrecursor())) {
                 return false;
             }
             diff = Math.abs(removePrecursorTolerance - cometParameters.getRemovePrecursorTolerance());
@@ -157,10 +157,10 @@ public class CometParameters implements IdentificationAlgorithmParameter {
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (enzymeType != cometParameters.getEnzymeType()) {
+            if (!enzymeType.equals(cometParameters.getEnzymeType())) {
                 return false;
             }
-            if (isotopeCorrection != cometParameters.getIsotopeCorrection()) {
+            if (!isotopeCorrection.equals(cometParameters.getIsotopeCorrection())) {
                 return false;
             }
             diff = Math.abs(minPrecursorMass - cometParameters.getMinPrecursorMass());
@@ -171,23 +171,23 @@ public class CometParameters implements IdentificationAlgorithmParameter {
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (maxFragmentCharge != cometParameters.getMaxFragmentCharge()) {
+            if (!maxFragmentCharge.equals(cometParameters.getMaxFragmentCharge())) {
                 return false;
             }
-            if (removeMethionine != cometParameters.getRemoveMethionine()) {
+            if (!removeMethionine.equals(cometParameters.getRemoveMethionine())) {
                 return false;
             }
-            if (batchSize != cometParameters.getBatchSize()) {
+            if (!batchSize.equals(cometParameters.getBatchSize())) {
                 return false;
             }
-            if (theoreticalFragmentIonsSumOnly != cometParameters.getTheoreticalFragmentIonsSumOnly()) {
+            if (!theoreticalFragmentIonsSumOnly.equals(cometParameters.getTheoreticalFragmentIonsSumOnly())) {
                 return false;
             }
             diff = Math.abs(fragmentBinOffset - cometParameters.getFragmentBinOffset());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (useSparseMatrix != cometParameters.getUseSparseMatrix()) {
+            if (!useSparseMatrix.equals(cometParameters.getUseSparseMatrix())) {
                 return false;
             }
 

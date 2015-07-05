@@ -113,23 +113,23 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
 
         if (identificationAlgorithmParameter instanceof MyriMatchParameters) {
             MyriMatchParameters myriMatchParameters = (MyriMatchParameters) identificationAlgorithmParameter;
-            if (minPeptideLength != myriMatchParameters.getMinPeptideLength()) {
+            if (!minPeptideLength.equals(myriMatchParameters.getMinPeptideLength())) {
                 return false;
             }
-            if (maxPeptideLength != myriMatchParameters.getMaxPeptideLength()) {
+            if (!maxPeptideLength.equals(myriMatchParameters.getMaxPeptideLength())) {
                 return false;
             }
-            if (numberOfSpectrumMatches != myriMatchParameters.getNumberOfSpectrumMatches()) {
+            if (!numberOfSpectrumMatches.equals(myriMatchParameters.getNumberOfSpectrumMatches())) {
                 return false;
             }
             double diff = Math.abs(ticCutoffPercentage - myriMatchParameters.getTicCutoffPercentage());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (maxDynamicMods != myriMatchParameters.getMaxDynamicMods()) {
+            if (!maxDynamicMods.equals(myriMatchParameters.getMaxDynamicMods())) {
                 return false;
             }
-            if (minTerminiCleavages != myriMatchParameters.getMinTerminiCleavages()) {
+            if (!minTerminiCleavages.equals(myriMatchParameters.getMinTerminiCleavages())) {
                 return false;
             }
             diff = Math.abs(minPrecursorMass - myriMatchParameters.getMinPrecursorMass());
@@ -146,28 +146,28 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             if (computeXCorr != myriMatchParameters.getComputeXCorr()) {
                 return false;
             }
-            if (numIntensityClasses != myriMatchParameters.getNumIntensityClasses()) {
+            if (!numIntensityClasses.equals(myriMatchParameters.getNumIntensityClasses())) {
                 return false;
             }
-            if (classSizeMultiplier != myriMatchParameters.getClassSizeMultiplier()) {
+            if (!classSizeMultiplier.equals(myriMatchParameters.getClassSizeMultiplier())) {
                 return false;
             }
-            if (numberOfBatches != myriMatchParameters.getNumberOfBatches()) {
+            if (!numberOfBatches.equals(myriMatchParameters.getNumberOfBatches())) {
                 return false;
             }
-            if (lowerIsotopeCorrection != myriMatchParameters.getLowerIsotopeCorrectionRange()) {
+            if (!lowerIsotopeCorrection.equals(myriMatchParameters.getLowerIsotopeCorrectionRange())) {
                 return false;
             }
-            if (upperIsotopeCorrection != myriMatchParameters.getUpperIsotopeCorrectionRange()) {
+            if (!upperIsotopeCorrection.equals(myriMatchParameters.getUpperIsotopeCorrectionRange())) {
                 return false;
             }
             if (!fragmentationRule.equalsIgnoreCase(myriMatchParameters.getFragmentationRule())) {
                 return false;
             }
-            if (maxPeakCount != myriMatchParameters.getMaxPeakCount()) {
+            if (!maxPeakCount.equals(myriMatchParameters.getMaxPeakCount())) {
                 return false;
             }
-            if (!outputFormat.equalsIgnoreCase(myriMatchParameters.getOutputFormat())) {
+            if (!getOutputFormat().equalsIgnoreCase(myriMatchParameters.getOutputFormat())) {
                 return false;
             }
 

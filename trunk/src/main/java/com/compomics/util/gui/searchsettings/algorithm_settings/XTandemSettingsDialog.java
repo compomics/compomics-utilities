@@ -58,6 +58,12 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
+    /**
+     * Boolean indicating whether the modification profile has been changed.
+     * Note that it only checks if the user has made changed to the selection,
+     * not if the end result is different or not.
+     */
+    private boolean modProfileChanged = false;
 
     /**
      * Creates new form XtandemParametersDialog.
@@ -331,6 +337,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
      */
     public ModificationProfile getModificationProfile() {
         return modificationProfile;
+    }
+
+    /**
+     * Returns true if the user edited the modification profile. Note that it
+     * only checks if the user has made changed to the selection, not if the end
+     * result is different or not.
+     *
+     * @return true if the user edited the modification profile
+     */
+    public boolean modProfileEdited() {
+        return modProfileChanged;
     }
 
     /**
@@ -2183,10 +2200,12 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     // add as refinement ptm
                     if (!modificationProfile.getRefinementVariableModifications().contains(ptmName)) {
                         modificationProfile.addRefinementVariableModification(ptmFactory.getPTM(ptmName));
+                        modProfileChanged = true;
                     }
                 } else {
                     // remove the ptm as refinement ptm
                     modificationProfile.removeRefinementVariableModification(ptmName);
+                    modProfileChanged = true;
                 }
 
                 updateModificationList();
@@ -2207,10 +2226,12 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
                     // add as refinement ptm
                     if (!modificationProfile.getRefinementFixedModifications().contains(ptmName)) {
                         modificationProfile.addRefinementFixedModification(ptmFactory.getPTM(ptmName));
+                        modProfileChanged = true;
                     }
                 } else {
                     // remove the ptm as refinement ptm
                     modificationProfile.removeRefinementFixedModification(ptmName);
+                    modProfileChanged = true;
                 }
 
                 updateModificationList();
@@ -2339,7 +2360,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
         valid = GuiUtilities.validateDoubleInput(this, maxEValueRefinmentLbl, maxEValueRefineTxt, "maximal e-value for the refinement", "Maximal Refinement E-Value Error", true, showMessage, valid);
 
         okButton.setEnabled(valid);
-        
+
         return valid;
     }
 

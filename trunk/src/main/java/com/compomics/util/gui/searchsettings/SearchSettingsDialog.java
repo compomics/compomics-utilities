@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.SearchParameters;
 import com.compomics.util.experiment.identification.SequenceFactory;
 import com.compomics.util.experiment.identification.identification_parameters.AndromedaParameters;
@@ -1263,66 +1264,19 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
         if (editable) {
+            // get the parameters from the GUI
+            SearchParameters currentSearchParameters = getCurrentSearchParameters();
 
-            SearchParameters tempSearchParameters = getCurrentSearchParameters();
-
-            if (!searchParameters.equals(tempSearchParameters)) {
-
-                int value = JOptionPane.showConfirmDialog(this, "The search parameters have changed."
-                        + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
-
-                if (value == JOptionPane.YES_OPTION) {
-
-                    boolean userSelectFile = false;
-
-                    // see if the user wants to overwrite the current settings file
-                    if (tempSearchParameters.getParametersFile() != null) {
-                        value = JOptionPane.showConfirmDialog(this, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
-
-                        if (value == JOptionPane.NO_OPTION) {
-                            userSelectFile = true;
-                        } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
-                            return;
-                        }
-
-                    } else {
-                        // no params file > have the user select a file
-                        userSelectFile = true;
-                    }
-
-                    boolean fileSaved = true;
-
-                    if (userSelectFile) {
-                        fileSaved = saveAsPressed();
-                        tempSearchParameters = getCurrentSearchParameters();
-                    }
-
-                    if (fileSaved && tempSearchParameters.getParametersFile() != null) {
-
-                        try {
-                            SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
-                            searchParameters = tempSearchParameters;
-                            close();
-                        } catch (ClassNotFoundException e) {
-                            JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
-                                    + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            JOptionPane.showMessageDialog(this, "An error occurred when saving the search parameter:\n"
-                                    + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                            e.printStackTrace();
-                        }
-                    }
-                } else if (value == JOptionPane.NO_OPTION) {
+            // see if there are changes to the parameters and ask the user if these are to be saved
+            if (!searchParameters.equals(currentSearchParameters)) {
+                SearchParameters tempSearchParameters = SearchSettingsDialog.saveSearchParameters(this, currentSearchParameters, null, null, lastSelectedFolder);
+                if (tempSearchParameters != null) {
                     close();
                 }
             } else {
                 close();
             }
-        } else {
-            close();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -1759,29 +1713,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }
 
     /**
-     * This method is called when the user clicks the 'Save' button.
-     *
-     * @return true of the file was saved
-     */
-    public boolean savePressed() {
-        if (parametersFile == null) {
-            return saveAsPressed();
-        } else if (validateParametersInput(true)) {
-            try {
-                searchParameters = getCurrentSearchParameters();
-                SearchParameters.saveIdentificationParameters(searchParameters, parametersFile);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, new String[]{"An error occurred while witing: " + parametersFile.getName(), e.getMessage()}, "Error Saving File", JOptionPane.WARNING_MESSAGE);
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * This method takes the specified search parameters instance and reads the
      * values for (some of) the GUI components from it.
      */
@@ -2028,77 +1959,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             JOptionPane.showMessageDialog(this, new String[]{"Unable to read file: " + aFile.getName(), ioe.getMessage()}, "Error Reading File", JOptionPane.WARNING_MESSAGE);
         }
         return screenProps;
-    }
-
-    /**
-     * This method is called when the user clicks the 'Save As' button.
-     *
-     * @return true of the file was saved
-     */
-    public boolean saveAsPressed() {
-
-        if (validateParametersInput(true)) {
-
-            File startLocation = null;
-            if (lastSelectedFolder != null) {
-                startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
-            }
-
-            if (searchParameters.getParametersFile() != null) {
-                startLocation = searchParameters.getParametersFile();
-            }
-
-            boolean complete = false;
-
-            while (!complete) {
-                JFileChooser fc = new JFileChooser(startLocation);
-                FileFilter filter = new FileFilter() {
-                    @Override
-                    public boolean accept(File myFile) {
-                        return myFile.getName().toLowerCase().endsWith(".parameters") || myFile.isDirectory();
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "SearchGUI settings file (.parameters)";
-                    }
-                };
-                fc.setFileFilter(filter);
-                int result = fc.showSaveDialog(this);
-
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selected = fc.getSelectedFile();
-                    if (lastSelectedFolder != null) {
-                        lastSelectedFolder.setLastSelectedFolder(selected.getAbsolutePath());
-                    }
-                    // Make sure the file is appended with '.parameters'
-                    if (!selected.getName().toLowerCase().endsWith(".parameters")) {
-                        selected = new File(selected.getParentFile(), selected.getName() + ".parameters");
-                        parametersFile = selected;
-                    } else {
-                        selected = new File(selected.getParentFile(), selected.getName());
-                        parametersFile = selected;
-                    }
-                    complete = true;
-                    if (selected.exists()) {
-                        int choice = JOptionPane.showConfirmDialog(this,
-                                new String[]{"The file " + selected.getName() + " already exists.", "Overwrite?"},
-                                "File Already Exists", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.NO_OPTION) {
-                            complete = false;
-                        }
-                    }
-                } else {
-                    return complete;
-                }
-            }
-
-            boolean saved = savePressed();
-            searchParameters.setParametersFile(parametersFile);
-            return saved;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -2643,5 +2503,125 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      */
     public SearchParameters getSearchParameters() {
         return searchParameters;
+    }
+
+    /**
+     * Saves the search parameters to a file of the users choice.
+     *
+     * @param parentDialog the parent dialog
+     * @param tempSearchParameters the current search parameters
+     * @param advocate the advocate of the algorithm, can be null
+     * @param identificationAlgorithmParameter the algorithm parameters, can be
+     * null
+     * @param lastSelectedFolder the last selected folder
+     * @return the saved settings, or null of not saved
+     */
+    public static SearchParameters saveSearchParameters(JDialog parentDialog, SearchParameters tempSearchParameters,
+            Advocate advocate, IdentificationAlgorithmParameter identificationAlgorithmParameter, LastSelectedFolder lastSelectedFolder) {
+
+        int value = JOptionPane.showConfirmDialog(parentDialog, "The search parameters have changed."
+                + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+        if (value == JOptionPane.YES_OPTION) {
+
+            boolean userSelectFile = false;
+
+            // see if the user wants to overwrite the current settings file
+            if (tempSearchParameters.getParametersFile() != null) {
+                value = JOptionPane.showConfirmDialog(parentDialog, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                if (value == JOptionPane.NO_OPTION) {
+                    userSelectFile = true;
+                } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
+                    return null;
+                }
+
+            } else {
+                // no params file > have the user select a file
+                userSelectFile = true;
+            }
+
+            if (userSelectFile) {
+                File startLocation = null;
+                if (lastSelectedFolder != null) {
+                    startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
+                }
+
+                if (tempSearchParameters.getParametersFile() != null) {
+                    startLocation = tempSearchParameters.getParametersFile();
+                }
+
+                File selectedFile;
+
+                JFileChooser fc = new JFileChooser(startLocation);
+                FileFilter filter = new FileFilter() {
+                    @Override
+                    public boolean accept(File myFile) {
+                        return myFile.getName().toLowerCase().endsWith(".parameters") || myFile.isDirectory();
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "SearchGUI settings file (.parameters)";
+                    }
+                };
+                fc.setFileFilter(filter);
+                int result = fc.showSaveDialog(parentDialog);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    selectedFile = fc.getSelectedFile();
+                    if (lastSelectedFolder != null) {
+                        lastSelectedFolder.setLastSelectedFolder(selectedFile.getAbsolutePath());
+                    }
+                    // make sure the file is appended with '.parameters'
+                    if (!selectedFile.getName().toLowerCase().endsWith(".parameters")) {
+                        selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".parameters");
+                    } else {
+                        selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName());
+                    }
+                    if (selectedFile.exists()) {
+                        int choice = JOptionPane.showConfirmDialog(parentDialog,
+                                new String[]{"The file " + selectedFile.getName() + " already exists.", "Overwrite?"},
+                                "File Already Exists", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.NO_OPTION) {
+                            return null;
+                        }
+                    }
+
+                    tempSearchParameters.setParametersFile(selectedFile);
+                } else {
+                    return null;
+                }
+            }
+
+            if (tempSearchParameters.getParametersFile() != null) {
+
+                // set the algorithm specific parameters
+                if (identificationAlgorithmParameter != null && advocate != null) {
+                    tempSearchParameters.setIdentificationAlgorithmParameter(advocate.getIndex(), identificationAlgorithmParameter);
+                }
+
+                try {
+                    SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
+                    return tempSearchParameters;
+                } catch (ClassNotFoundException e) {
+                    JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
+                            + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                    return null;
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
+                            + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        } else if (value == JOptionPane.NO_OPTION) {
+            return tempSearchParameters;
+        } else {
+            return null; // canceled by the user
+        }
+
+        return null; // dialog canceled by the user
     }
 }

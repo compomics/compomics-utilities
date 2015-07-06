@@ -1272,6 +1272,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             if (!searchParameters.equals(currentSearchParameters)) {
                 SearchParameters tempSearchParameters = SearchSettingsDialog.saveSearchParameters(this, currentSearchParameters, null, null, lastSelectedFolder);
                 if (tempSearchParameters != null) {
+                    searchParameters = tempSearchParameters;
                     close();
                 }
             } else {

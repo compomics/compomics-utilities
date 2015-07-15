@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
+ * A chain of atoms.
  *
  * @author Marc Vaudel
  */
@@ -113,7 +114,7 @@ public class AtomChain implements Serializable {
 
     /**
      * Returns the atom chain as a list of AtomImpl.
-     * 
+     *
      * @return the atom chain as a list of AtomImpl
      */
     public ArrayList<AtomImpl> getAtomChain() {
@@ -131,10 +132,10 @@ public class AtomChain implements Serializable {
         }
         return mass;
     }
-    
+
     /**
      * Returns the number of atoms in this atom chain.
-     * 
+     *
      * @return the number of atoms in this atom chain
      */
     public int size() {
@@ -150,13 +151,13 @@ public class AtomChain implements Serializable {
             mass += atom.getMass();
         }
     }
-    
+
     /**
      * Returns the occurrence of a given atom in the chain.
-     * 
+     *
      * @param atom the atom of interest
      * @param isotope the isotope to look for
-     * 
+     *
      * @return the occurrence of the atom in this atom chain
      */
     public int getOccurrence(Atom atom, Integer isotope) {
@@ -169,10 +170,10 @@ public class AtomChain implements Serializable {
         }
         return occurrence;
     }
-    
+
     /**
      * Removes all the occurrences of the given atom.
-     * 
+     *
      * @param atom the atom
      * @param isotope the isotope
      */
@@ -187,10 +188,10 @@ public class AtomChain implements Serializable {
         atomChain = newAtomChain;
         mass = null;
     }
-    
+
     /**
      * Sets the occurrence of a given atom.
-     * 
+     *
      * @param atom the atom
      * @param isotope the isotope number
      * @param occurrence the occurrence
@@ -199,13 +200,15 @@ public class AtomChain implements Serializable {
         remove(atom, isotope);
         append(new AtomImpl(atom, isotope), occurrence);
     }
-    
+
     /**
-     * Indicates whether two atom chains are of the same composition by comparing their string.
-     * 
+     * Indicates whether two atom chains are of the same composition by
+     * comparing their string.
+     *
      * @param atomChain another atom chain
-     * 
-     * @return a boolean indicating whether two atom chains are of the same composition
+     *
+     * @return a boolean indicating whether two atom chains are of the same
+     * composition
      */
     public boolean isSameCompositionAs(AtomChain atomChain) {
         if (atomChain == null) {
@@ -216,7 +219,7 @@ public class AtomChain implements Serializable {
 
     @Override
     public String toString() {
-        
+
         HashMap<String, Integer> composition = new HashMap<String, Integer>();
         for (AtomImpl atom : atomChain) {
             String name = atom.toString();
@@ -226,7 +229,7 @@ public class AtomChain implements Serializable {
             }
             composition.put(name, occurrence + 1);
         }
-        
+
         ArrayList<String> names = new ArrayList<String>(composition.keySet());
         Collections.sort(names);
         StringBuilder result = new StringBuilder(names.size());
@@ -237,10 +240,10 @@ public class AtomChain implements Serializable {
                 result.append(occurrence);
             }
         }
-        
+
         return result.toString();
     }
-    
+
     @Override
     public AtomChain clone() {
         AtomChain result = new AtomChain();
@@ -249,5 +252,4 @@ public class AtomChain implements Serializable {
         }
         return result;
     }
-    
 }

@@ -2497,5 +2497,4 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel usePotentialModsLabel;
     // End of variables declaration//GEN-END:variables
 
-    
 }

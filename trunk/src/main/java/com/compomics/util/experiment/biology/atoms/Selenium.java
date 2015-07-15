@@ -4,13 +4,14 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- *
+ * Selenium.
+ * 
  * @author Marc Vaudel
  */
 public class Selenium extends Atom {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Selenium() {
         monoisotopicMass = 79.9165213;
@@ -56,5 +57,4 @@ public class Selenium extends Atom {
         this.name = "Selenium";
         this.letter = "Se";
     }
-
 }

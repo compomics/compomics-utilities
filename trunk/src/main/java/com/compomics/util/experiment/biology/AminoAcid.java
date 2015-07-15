@@ -70,7 +70,7 @@ public abstract class AminoAcid implements Serializable {
      */
     protected Double monoisotopicMass;
     /**
-     * The monoisotopic atom chain
+     * The monoisotopic atom chain.
      */
     protected AtomChain monoisotopicAtomChain;
     /**

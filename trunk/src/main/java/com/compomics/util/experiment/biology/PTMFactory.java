@@ -1110,7 +1110,7 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Sets the default moditications.
+     * Sets the default modifications.
      */
     private void setDefaultModifications() {
 

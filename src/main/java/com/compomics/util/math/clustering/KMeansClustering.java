@@ -1,11 +1,14 @@
 package com.compomics.util.math.clustering;
 
+import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import no.uib.jsparklines.renderers.util.Util;
 
@@ -115,8 +118,10 @@ public class KMeansClustering {
 
     /**
      * Run the k-means clustering.
+     *
+     * @param waitingHandler the waiting handler
      */
-    private void kMeanCluster() {
+    public void kMeanCluster(WaitingHandler waitingHandler) {
 
         boolean clustersChanged = true;
 
@@ -126,7 +131,7 @@ public class KMeansClustering {
         int iterationCounter = 0;
 
         // iterate until the clustering no longer changes
-        while (clustersChanged && iterationCounter < MAX_ITERATIONS) {
+        while (clustersChanged && iterationCounter < MAX_ITERATIONS && !waitingHandler.isRunCanceled()) {
 
             // calculate the new centroids
             calculateNewCentroids();
@@ -286,7 +291,7 @@ public class KMeansClustering {
         System.out.print("\n");
 
         // exectute the clustering
-        kMeansClutering.kMeanCluster();
+        kMeansClutering.kMeanCluster(new WaitingHandlerCLIImpl());
 
         // print the clustering results
         kMeansClutering.printClusters();
@@ -300,7 +305,7 @@ public class KMeansClustering {
     /**
      * Print the centroids.
      */
-    private void printCentroids() {
+    public void printCentroids() {
         for (int centroidNumber = 0; centroidNumber < NUM_CLUSTERS; centroidNumber++) {
             System.out.print("     " + (centroidNumber + 1) + "\t\t");
             for (int valueNumber = 0; valueNumber < NUM_VALUES; valueNumber++) {
@@ -316,7 +321,7 @@ public class KMeansClustering {
     /**
      * Print the current clusters.
      */
-    private void printClusters() {
+    public void printClusters() {
         for (int clusterIndex = 0; clusterIndex < NUM_CLUSTERS; clusterIndex++) {
             System.out.println("Cluster " + (clusterIndex + 1) + " includes:");
             for (int sampleIndex = 0; sampleIndex < NUM_SAMPLES; sampleIndex++) {
@@ -333,6 +338,52 @@ public class KMeansClustering {
             }
             System.out.println();
         }
+    }
+
+    /**
+     * Get the sample names of all the members in the given cluster.
+     *
+     * @param clusterIndex the index of the cluster
+     * @return the sample names of all the members in the given cluster
+     */
+    public ArrayList<String> getClusterMembers(int clusterIndex) {
+
+        ArrayList<String> clusterMembers = new ArrayList<String>();
+
+        for (int sampleIndex = 0; sampleIndex < NUM_SAMPLES; sampleIndex++) {
+            if (clusters[sampleIndex] == clusterIndex) {
+                clusterMembers.add(SAMPLE_IDS[sampleIndex]);
+            }
+        }
+
+        return clusterMembers;
+    }
+
+    /**
+     * Returns a hashmap with the values for the members in the given cluster.
+     * Key: sample id, value: the data points.
+     *
+     * @param clusterIndex the index of the cluster
+     * @return the values for the members in the given cluster
+     */
+    public HashMap<String, ArrayList<Double>> getClusterMembersData(int clusterIndex) {
+
+        HashMap<String, ArrayList<Double>> clusterMembers = new HashMap<String, ArrayList<Double>>();
+
+        for (int sampleIndex = 0; sampleIndex < NUM_SAMPLES; sampleIndex++) {
+            if (clusters[sampleIndex] == clusterIndex) {
+
+                ArrayList<Double> values = new ArrayList<Double>();
+
+                for (int valueNumber = 0; valueNumber < NUM_VALUES; valueNumber++) {
+                    values.add(SAMPLES[sampleIndex][valueNumber]);
+                }
+
+                clusterMembers.put(SAMPLE_IDS[sampleIndex], values);
+            }
+        }
+
+        return clusterMembers;
     }
 
     /**
@@ -399,6 +450,15 @@ public class KMeansClustering {
         }
 
         return sampleData;
+    }
+
+    /**
+     * Returns the number of clusters.
+     *
+     * @return the number of clusters
+     */
+    public int getNumberOfClusters() {
+        return NUM_CLUSTERS;
     }
 
     /**

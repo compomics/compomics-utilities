@@ -104,8 +104,6 @@ public class ProteinTreeTest extends TestCase {
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = PTMFactory.getInstance();
-        File ptmFile = new File("src/test/resources/experiment/mods.xml");
-        ptmFactory.importModifications(ptmFile, false);
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
@@ -118,12 +116,12 @@ public class ProteinTreeTest extends TestCase {
 
         // TESTMRITESTCKTESTK
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern("LTEST");
-        double nTermGap = AminoAcid.R.monoisotopicMass + AminoAcid.M.monoisotopicMass + AminoAcid.T.monoisotopicMass;
-        double cTermGap = AminoAcid.C.monoisotopicMass + AminoAcid.K.monoisotopicMass;
+        double nTermGap = AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        double cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         Tag tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
 
         ArrayList<String> fixedModifications = new ArrayList<String>();
-        fixedModifications.add("carbamidomethyl c");
+        fixedModifications.add("Carbamidomethylation of C");
         for (String ptmName : fixedModifications) {
             PTM ptm = ptmFactory.getPTM(ptmName);
             if (ptm.getName().equals(PTMFactory.unknownPTM.getName())) {
@@ -132,8 +130,8 @@ public class ProteinTreeTest extends TestCase {
         }
 
         ArrayList<String> variableModifications = new ArrayList<String>();
-        variableModifications.add("oxidation of m");
-        variableModifications.add("pyro-cmc");
+        variableModifications.add("Oxidation of M");
+        variableModifications.add("Pyrolidone from carbamidomethylated C");
         for (String ptmName : variableModifications) {
             PTM ptm = ptmFactory.getPTM(ptmName);
             if (ptm.getName().equals(PTMFactory.unknownPTM.getName())) {
@@ -168,8 +166,8 @@ public class ProteinTreeTest extends TestCase {
         Assert.assertTrue(indexes.get(0) == 3);
 
         aminoAcidPattern = new AminoAcidPattern("TEST");
-        nTermGap = AminoAcid.K.monoisotopicMass + AminoAcid.C.monoisotopicMass + 57.02 - 17.0265;
-        cTermGap = AminoAcid.K.monoisotopicMass;
+        nTermGap = AminoAcid.K.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + 57.02 - 17.0265;
+        cTermGap = AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
 
         proteinMapping = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.5);

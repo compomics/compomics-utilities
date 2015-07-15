@@ -43,19 +43,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public void initiate(String[] args) {
 
         try {
-            // load modifications
-            try {
-                ptmFactory.importModifications(getModificationsFile(), false);
-            } catch (Exception e) {
-                System.out.println("An error occurred while loading the modifications.");
-                e.printStackTrace();
-            }
-            try {
-                ptmFactory.importModifications(getUserModificationsFile(), true);
-            } catch (Exception e) {
-                System.out.println("An error occurred while loading the user modifications.");
-                e.printStackTrace();
-            }
             try {
                 enzymeFactory.importEnzymes(getEnzymeFile());
             } catch (Exception e) {
@@ -201,20 +188,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
         return ptm.getName() + " (" + sign + ptm.getMass() + " targeting " + target + ")";
     }
-
-    /**
-     * Returns the modification file needed to initiate the factory.
-     *
-     * @return the modification file needed to initiate the factory
-     */
-    protected abstract File getModificationsFile();
-
-    /**
-     * Returns the user modification file needed to initiate the factory.
-     *
-     * @return the user modification file needed to initiate the factory
-     */
-    protected abstract File getUserModificationsFile();
 
     /**
      * Returns the enzyme file needed to initiate the factory.

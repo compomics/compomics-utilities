@@ -113,7 +113,7 @@ public class AScore {
         if (accountNeutralLosses) {
             // here annotation should be sequence and modification independant
             for (NeutralLoss neutralLoss : annotationNeutralLosses.getAccountedNeutralLosses()) {
-                if (Math.abs(neutralLoss.mass - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
+                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }

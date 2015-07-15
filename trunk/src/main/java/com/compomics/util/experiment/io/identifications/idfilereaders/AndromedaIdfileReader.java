@@ -34,14 +34,9 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 public class AndromedaIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * A map of all spectrum titles and the associated index in the random
-     * access file.
+     * The Andromeda result file to parse.
      */
-    private HashMap<String, Long> index;
-    /**
-     * Andromeda result file in random access.
-     */
-    private BufferedRandomAccessFile bufferedRandomAccessFile = null;
+    private File resultsFile;
     /**
      * The name of the Andromeda result file.
      */
@@ -69,45 +64,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @throws IOException if a IOException occurs
      */
     public AndromedaIdfileReader(File resultsFile) throws FileNotFoundException, IOException {
-        this(resultsFile, null);
-    }
-
-    /**
-     * Constructor for an Andromeda result file reader.
-     *
-     * @param resultsFile the Andromeda results file
-     * @param waitingHandler the waiting handler
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if a IOException occurs
-     */
-    public AndromedaIdfileReader(File resultsFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
-
+        this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
-
-        if (waitingHandler != null) {
-            waitingHandler.setMaxSecondaryProgressCounter(100);
-        }
-
-        long progressUnit = bufferedRandomAccessFile.length() / 100;
-
-        index = new HashMap<String, Long>();
-
-        String line, title = null;
-        boolean newTitle = false;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
-            if (line.startsWith(">")) {
-                title = line.substring(1);
-                newTitle = true;
-            } else if (newTitle) {
-                long currentIndex = bufferedRandomAccessFile.getFilePointer();
-                index.put(title, currentIndex);
-                newTitle = false;
-                if (waitingHandler != null) {
-                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
-                }
-            }
-        }
     }
 
     @Override
@@ -122,13 +80,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+            SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
-        if (bufferedRandomAccessFile == null) {
-            throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
-        }
 
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -136,19 +90,39 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
             peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
         }
 
+        String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
+
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
-
-        for (String title : index.keySet()) {
-
-            // @TODO: need to implement the spectrum number as well
-            SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(fileName, title));
-
-            int cpt = 1;
-            String line;
-
-            while ((line = bufferedRandomAccessFile.getNextLine()) != null
-                    && !line.startsWith(">")) {
-                PeptideAssumption peptideAssumption = getAssumptionFromLine(line, cpt, sequenceMatchingPreferences);
+        BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
+        if (waitingHandler != null) {
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+        }
+        long progressUnit = bufferedRandomAccessFile.length() / 100;
+        String line, title = null;
+        SpectrumMatch spectrumMatch = null;
+        int rank = 0;
+        boolean firstSpectrum = false;
+        while ((line = bufferedRandomAccessFile.readLine()) != null) {
+            if (line.startsWith(">")) {
+                if (!firstSpectrum) {
+                    firstSpectrum = true;
+                }
+                title = line.substring(1);
+                if (spectrumMatch != null) {
+                    result.add(spectrumMatch);
+                }
+                spectrumMatch = null;
+                long currentIndex = bufferedRandomAccessFile.getFilePointer();
+                if (waitingHandler != null) {
+                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
+                }
+            } else if (firstSpectrum) {
+                if (spectrumMatch == null) {
+                    spectrumMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFile, title));
+                    rank = 0;
+                }
+                rank++;
+                PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank, sequenceMatchingPreferences);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
                     Peptide peptide = peptideAssumption.getPeptide();
                     ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
@@ -158,14 +132,15 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                             newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                        currentMatch.addHit(Advocate.andromeda.getIndex(), newAssumption, true);
+                        spectrumMatch.addHit(Advocate.andromeda.getIndex(), newAssumption, true);
                     }
                 } else {
-                    currentMatch.addHit(Advocate.andromeda.getIndex(), peptideAssumption, true);
+                    spectrumMatch.addHit(Advocate.andromeda.getIndex(), peptideAssumption, true);
                 }
-                cpt++;
             }
-            result.add(currentMatch);
+        }
+        if (spectrumMatch != null) {
+            result.add(spectrumMatch);
         }
 
         return result;
@@ -217,7 +192,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public void close() throws IOException {
-        bufferedRandomAccessFile.close();
     }
 
     @Override

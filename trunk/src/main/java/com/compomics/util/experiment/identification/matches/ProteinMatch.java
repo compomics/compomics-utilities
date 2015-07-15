@@ -37,9 +37,9 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The corresponding peptide match keys.
      */
-    private ArrayList<String> peptideMatches = new ArrayList<String>(); // @TODO: should be renamed to peptideKeys as it does not contain the actual peptide matches
+    private ArrayList<String> peptideMatchesKeys = new ArrayList<String>();
     /**
-     * The splitter in the key between spectrumFile and spectrumTitle.
+     * The splitter in the key between protein accessions.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
 
@@ -87,7 +87,7 @@ public class ProteinMatch extends IdentificationMatch {
             }
         }
         mainMatch = parentProteins.get(0);
-        peptideMatches.add(peptideMatchKey);
+        peptideMatchesKeys.add(peptideMatchKey);
     }
 
     /**
@@ -129,32 +129,10 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Getter for the peptide keys.
      *
-     * @deprecated renamed getPeptideMatchesKeys()
-     *
-     * @return subordinated peptide keys
-     */
-    public ArrayList<String> getPeptideMatches() {
-        return getPeptideMatchesKeys();
-    }
-
-    /**
-     * Getter for the peptide keys.
-     *
      * @return subordinated peptide keys
      */
     public ArrayList<String> getPeptideMatchesKeys() {
-        return peptideMatches;
-    }
-
-    /**
-     * Add a subordinated peptide key.
-     *
-     * @deprecated renamed addPeptideMatchKey
-     *
-     * @param peptideMatchKey a peptide key
-     */
-    public void addPeptideMatch(String peptideMatchKey) {
-        addPeptideMatchKey(peptideMatchKey);
+        return peptideMatchesKeys;
     }
 
     /**
@@ -163,8 +141,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKey a peptide key
      */
     public void addPeptideMatchKey(String peptideMatchKey) {
-        if (!peptideMatches.contains(peptideMatchKey)) {
-            peptideMatches.add(peptideMatchKey);
+        if (!peptideMatchesKeys.contains(peptideMatchKey)) {
+            peptideMatchesKeys.add(peptideMatchKey);
         }
     }
 
@@ -174,7 +152,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @param peptideMatchKeys the peptide match keys
      */
     public void setPeptideKeys(ArrayList<String> peptideMatchKeys) {
-        peptideMatches = peptideMatchKeys;
+        peptideMatchesKeys = peptideMatchKeys;
     }
 
     /**
@@ -183,7 +161,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of peptides found
      */
     public int getPeptideCount() {
-        return peptideMatches.size();
+        return peptideMatchesKeys.size();
     }
 
     /**
@@ -411,7 +389,7 @@ public class ProteinMatch extends IdentificationMatch {
     public boolean hasEnzymaticPeptide(String accession, Enzyme enzyme, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        for (String peptideKey : peptideMatches) {
+        for (String peptideKey : peptideMatchesKeys) {
             String peptideSequence = Peptide.getSequence(peptideKey);
             Protein protein = sequenceFactory.getProtein(accession);
             if (protein.isEnzymaticPeptide(peptideSequence, enzyme, sequenceMatchingPreferences)) {

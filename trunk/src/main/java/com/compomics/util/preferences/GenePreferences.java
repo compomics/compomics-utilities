@@ -62,13 +62,6 @@ public class GenePreferences implements Serializable {
      */
     private HashMap<String, String> goDomainMap;
     /**
-     * The species map, key: latin name, element: ensembl database name, e.g.,
-     * key: Homo sapiens, element: hsapiens_gene_ensembl.
-     *
-     * @deprecated use
-     */
-    private HashMap<String, String> speciesMap;
-    /**
      * The species map. Main key: Ensembl type, e.g., Vertebrates or Plants.
      * Next level: key: latin name, element: ensembl database name, e.g., key:
      * Homo sapiens, element: hsapiens_gene_ensembl.
@@ -79,21 +72,9 @@ public class GenePreferences implements Serializable {
      */
     private HashMap<String, String> ensemblVersionsMap;
     /**
-     * The list of species.
-     *
-     * @deprecated use allSpecies instead
-     */
-    private ArrayList<String> availableSpecies;
-    /**
      * Map of all the species.
      */
     private HashMap<String, ArrayList<String>> allSpecies;
-    /**
-     * Old vector of species.
-     *
-     * @deprecated
-     */
-    private Vector<String> species;
 
     /**
      * Create a new GenePreferences object.
@@ -114,9 +95,6 @@ public class GenePreferences implements Serializable {
         if (genePreferences.getEnsemblVersionsMap() != null) {
             ensemblVersionsMap = new HashMap<String, String>();
             ensemblVersionsMap.putAll(genePreferences.getEnsemblVersionsMap());
-        }
-        if (genePreferences.getSpecies() != null || genePreferences.getSpeciesMap() != null) {
-            allSpecies = getAllSpecies();
         }
         if (genePreferences.getCurrentSpecies() != null) {
             currentSpecies = genePreferences.getCurrentSpecies();
@@ -838,17 +816,6 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Returns the species map. Key: Latin name, element: Ensembl database name,
-     * e.g., key: Homo sapiens, element: hsapiens.
-     *
-     * @return the speciesMap
-     * @deprecated use getAllSpeciesMap instead
-     */
-    public HashMap<String, String> getSpeciesMap() {
-        return speciesMap;
-    }
-
-    /**
      * Returns the species map. Main key: Ensembl type, e.g., Vertebrates or
      * Plants. Next level: key: Latin name, element: ensembl database name,
      * e.g., key: Homo sapiens, element: hsapiens_gene_ensembl.
@@ -857,18 +824,6 @@ public class GenePreferences implements Serializable {
      */
     public HashMap<String, HashMap<String, String>> getAllSpeciesMap() {
         return allSpeciesMap;
-    }
-
-    /**
-     * Returns the Ensembl database name corresponding to a species name
-     * according to the speciesMap. Null if not found.
-     *
-     * @param speciesName the species name as available in the species list
-     * @return the Ensembl database name
-     * @deprecated use the one with the Ensembl type parameter instead
-     */
-    public String getEnsemblDatabaseName(String speciesName) {
-        return speciesMap.get(speciesName);
     }
 
     /**
@@ -907,23 +862,6 @@ public class GenePreferences implements Serializable {
      * Returns the Ensembl version for the given species name. Null if not
      * found.
      *
-     * @param speciesName the species name as available in the species list
-     * @return the Ensembl version
-     * @deprecated use getEnsemblSpeciesVersion(String ensemblType, String
-     * speciesName) instead
-     */
-    public String getEnsemblSpeciesVersion(String speciesName) {
-        String ensemblDB = getEnsemblDatabaseName(speciesName);
-        if (ensemblDB != null) {
-            return getEnsemblVersion(ensemblDB);
-        }
-        return null;
-    }
-
-    /**
-     * Returns the Ensembl version for the given species name. Null if not
-     * found.
-     *
      * @param ensemblType the Ensembl type, e.g., Vertebrates or Plants
      * @param speciesName the species name as available in the species list
      * @return the Ensembl version
@@ -937,35 +875,11 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Return the species list. NB: also contains species separators.
-     *
-     * @return the species
-     * @deprecated use getAllSpecies instead
-     */
-    public ArrayList<String> getSpecies() {
-        if (availableSpecies == null && species != null) {
-            availableSpecies = new ArrayList<String>();
-            availableSpecies.addAll(species);
-        }
-        return availableSpecies;
-    }
-
-    /**
      * Return the species lists.
      *
      * @return the species
      */
     public HashMap<String, ArrayList<String>> getAllSpecies() {
-        if (species != null) {
-            allSpecies = new HashMap<String, ArrayList<String>>();
-            ArrayList<String> temp = new ArrayList<String>();
-            temp.addAll(species);
-            allSpecies.put("Vertebrates", temp);
-        }
-        if (availableSpecies != null) {
-            allSpecies = new HashMap<String, ArrayList<String>>();
-            allSpecies.put("Vertebrates", availableSpecies);
-        }
         return allSpecies;
     }
 

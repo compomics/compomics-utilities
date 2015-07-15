@@ -74,10 +74,14 @@ public abstract class Ion extends ExperimentObject {
      * Type of ion.
      */
     protected IonType type = IonType.UNKNOWN;
-    /*
-     * Ion attribute - the theoretic mass.
+    /**
+     * The theoretic mass.
      */
-    protected double theoreticMass;
+    protected Double theoreticMass;
+    /**
+     * The atomic composition of the ion.
+     */
+    protected AtomChain atomChain;
 
     /**
      * Returns the name of the ion. The name should be short enough to be
@@ -182,12 +186,34 @@ public abstract class Ion extends ExperimentObject {
     }
 
     /**
-     * Returns the theoretic mass.
+     * Returns the theoretic mass, from the atomic composition if available,
+     * from the theoreticMass field otherwise.
      *
      * @return the theoretic mass
      */
-    public double getTheoreticMass() {
+    public Double getTheoreticMass() {
+        if (atomChain != null) {
+            return atomChain.getMass();
+        }
         return theoreticMass;
+    }
+
+    /**
+     * Returns the atomic composition.
+     *
+     * @return the atomic composition
+     */
+    public AtomChain getAtomicComposition() {
+        return atomChain;
+    }
+
+    /**
+     * Returns the atomic composition.
+     *
+     * @param atomChain the atomic composition
+     */
+    public void setAtomicComposition(AtomChain atomChain) {
+        this.atomChain = atomChain;
     }
 
     /**

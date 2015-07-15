@@ -32,13 +32,6 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private String spectrumKey;
     /**
-     * The corresponding peptide assumptions indexed by search engine and
-     * e-value.
-     *
-     * @deprecated use the assumptionsMap instead
-     */
-    private HashMap<Integer, HashMap<Double, ArrayList<PeptideAssumption>>> assumptions = null;
-    /**
      * Map of the identification algorithm assumption: advocate number &gt;
      * score &gt; assumptions.
      */
@@ -52,32 +45,13 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private int tagAssumptionsMapKeySize = -1;
     /**
-     * Map containing the first hits indexed by the Advocate index.
-     *
-     * @deprecated use the assumptions map instead
+     * The best peptide assumption.
      */
-    private HashMap<Integer, PeptideAssumption> firstHits = null;
-    /**
-     * Map containing the first hits indexed by the Advocate index.
-     *
-     * @deprecated use the assumptions map instead
-     */
-    private HashMap<Integer, SpectrumIdentificationAssumption> firstHitsMap = null;
-    /**
-     * The best peptide assumption. Note: cannot be renamed for backward
-     * compatibility.
-     */
-    private PeptideAssumption bestAssumption;
+    private PeptideAssumption bestPeptideAssumption;
     /**
      * The best tag assumption.
      */
     private TagAssumption bestTagAsssumption;
-    /**
-     * All advocates used.
-     * 
-     * @deprecated use the assumptions map instead
-     */
-    private ArrayList<Integer> advocates = null;
     /**
      * The spectrum number in the mgf file. Will be used in case the spectrum
      * title does not match
@@ -122,7 +96,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the best peptide assumption for the spectrum
      */
     public PeptideAssumption getBestPeptideAssumption() {
-        return bestAssumption;
+        return bestPeptideAssumption;
     }
 
     /**
@@ -131,7 +105,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * @param bestAssumption the best peptide assumption for the spectrum
      */
     public void setBestPeptideAssumption(PeptideAssumption bestAssumption) {
-        this.bestAssumption = bestAssumption;
+        this.bestPeptideAssumption = bestAssumption;
     }
 
     /**
@@ -166,30 +140,10 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> getAllAssumptions(int advocateId) {
-        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
-            update();
-        }
         if (assumptionsMap == null) {
             return null;
         }
         return assumptionsMap.get(advocateId);
-    }
-
-    /**
-     * Updates the assumption maps based on the old structure where only peptide
-     * assumptions were supported.
-     */
-    private void update() {
-        if (assumptionsMap == null && assumptions != null) {
-            assumptionsMap = new HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>(assumptions.size());
-            for (int advocate : assumptions.keySet()) {
-                HashMap<Double, ArrayList<SpectrumIdentificationAssumption>> advocateMapping = new HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>(assumptions.get(advocate).size());
-                for (double score : assumptions.get(advocate).keySet()) {
-                    advocateMapping.put(score, new ArrayList<SpectrumIdentificationAssumption>(assumptions.get(advocate).get(score)));
-                }
-                assumptionsMap.put(advocate, advocateMapping);
-            }
-        }
     }
 
     /**
@@ -199,9 +153,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return all assumptions
      */
     public ArrayList<SpectrumIdentificationAssumption> getAllAssumptions() {
-        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
-            update();
-        }
         if (assumptionsMap == null) {
             return null;
         }
@@ -220,9 +171,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * @return the assumptions map
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptionsMap() {
-        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
-            update();
-        }
         return assumptionsMap;
     }
 
@@ -330,9 +278,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * assumption
      */
     public boolean hasAssumption() {
-        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
-            update();
-        }
         if (assumptionsMap == null) {
             return false;
         }
@@ -355,9 +300,6 @@ public class SpectrumMatch extends IdentificationMatch {
      * peptide assumption for the given advocate
      */
     public boolean hasAssumption(int advocateId) {
-        if (assumptionsMap == null && assumptions != null) { // backward compatibility check
-            update();
-        }
         if (assumptionsMap == null) {
             return false;
         }

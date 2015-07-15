@@ -114,7 +114,7 @@ public class ProteinTree {
     /**
      * The version of the protein tree.
      */
-    public static final String version = "1.1.1";
+    public static final String version = "1.1.2";
     /**
      * The sequence matching preferences of the matches in cache.
      */
@@ -238,13 +238,6 @@ public class ProteinTree {
      */
     public void initiateTree(int initialTagSize, int maxNodeSize, int maxPeptideSize, Enzyme enzyme, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean printExpectedImportTime, boolean displayProgress, int nThreads)
             throws IOException, InterruptedException, IOException, InterruptedException, ClassNotFoundException, SQLException {
-
-        // delete outdated trees
-        try {
-            ProteinTreeComponentsFactory.deletOutdatedTrees();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         tree.clear();
 
@@ -1532,7 +1525,7 @@ public class ProteinTree {
     }
 
     /**
-     * Closes all connections to files.
+     * Closes all connections to files, tries to delete corrupted and deprecated trees.
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
@@ -1550,6 +1543,13 @@ public class ProteinTree {
         }
         emptyCache();
         componentsFactory.close();
+        
+        // delete outdated trees
+        try {
+            ProteinTreeComponentsFactory.deletOutdatedTrees();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

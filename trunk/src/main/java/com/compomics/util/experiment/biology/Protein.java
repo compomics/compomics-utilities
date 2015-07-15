@@ -206,7 +206,7 @@ public class Protein extends ExperimentObject {
             try {
                 if (aa != '*') {
                     AminoAcid currentAA = AminoAcid.getAminoAcid(aa);
-                    mass += currentAA.monoisotopicMass;
+                    mass += currentAA.getMonoisotopicMass();
                 }
             } catch (NullPointerException e) {
                 if (aa == '>') {

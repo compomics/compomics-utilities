@@ -360,7 +360,6 @@ public class IdentificationParametersInputBean {
             omssaParameters.setMaxFragmentPerSeries(option);
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), omssaParameters);
-        ptmFactory.setSearchedOMSSAIndexes(searchParameters.getModificationProfile());
 
         ///////////////////////////////////
         // X!Tandem parameters

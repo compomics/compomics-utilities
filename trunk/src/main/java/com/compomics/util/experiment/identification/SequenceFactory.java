@@ -931,24 +931,6 @@ public class SequenceFactory {
     }
 
     /**
-     * Indicates whether a protein accession is decoy according to the standard
-     * decoy flags.
-     *
-     * @deprecated deprecated, use the isDecoy(proteinAccession, flag) with file
-     * dependent flag or isDecoyAccession(String proteinAccession) instead.
-     * @param proteinAccession the accession of interest
-     * @return true if decoy
-     */
-    public static boolean isDecoy(String proteinAccession) {
-        for (String flag : decoyFlags) {
-            if (isDecoy(proteinAccession, flag)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Indicates whether the database loaded contains decoy sequences.
      *
      * @return a boolean indicating whether the database loaded contains decoy

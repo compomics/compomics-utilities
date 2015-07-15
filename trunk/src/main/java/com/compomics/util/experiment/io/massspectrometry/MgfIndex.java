@@ -384,11 +384,10 @@ public class MgfIndex extends ExperimentObject {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
-        if (spectrumCount != null) {
-            return spectrumCount;
-        } else {
-            return spectrumTitles.size(); // backwards compatibility
+        if (spectrumCount == null) {
+            spectrumCount = spectrumTitles.size();
         }
+        return spectrumCount;
     }
 
     /**

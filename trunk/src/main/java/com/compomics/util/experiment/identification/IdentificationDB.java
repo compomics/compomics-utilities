@@ -60,12 +60,6 @@ public class IdentificationDB implements Serializable {
      */
     private static String psmParametersTableSuffix = "_psm_parameters";
     /**
-     * The suffix for a generic parameter table.
-     *
-     * @deprecated use match specific mapping instead
-     */
-    private String parametersSuffix = "_parameters";
-    /**
      * List of all raw assumptions tables.
      */
     private ArrayList<String> rawAssumptionsTables = new ArrayList<String>();
@@ -89,12 +83,6 @@ public class IdentificationDB implements Serializable {
      * List of all proteins parameters tables.
      */
     private ArrayList<String> proteinParametersTables = new ArrayList<String>();
-    /**
-     * List of all match parameters tables.
-     *
-     * @deprecated use match specific mapping instead
-     */
-    private ArrayList<String> matchParametersTables = new ArrayList<String>();
     /**
      * The database which will contain the objects.
      */
@@ -399,22 +387,6 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Deletes a match from the database.
-     *
-     * @param key the key of the match
-     * @deprecated it is advised to use the specific PSM/peptide/protein method
-     * instead
-     * @throws SQLException exception thrown whenever an error occurred while
-     * deleting the match
-     * @throws IOException if an IOException is thrown
-     */
-    public void removeMatch(String key) throws SQLException, IOException {
-        removeProteinMatch(key);
-        removePeptideMatch(key);
-        removeSpectrumMatch(key);
-    }
-
-    /**
      * Returns the names of the tables containing peptide parameters.
      *
      * @return the names of the tables containing peptide parameters
@@ -444,9 +416,6 @@ public class IdentificationDB implements Serializable {
      */
     public HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> getAssumptions(String key, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
         String tableName = getAssumptionTable(key);
-        if (assumptionsTables == null) { // Backward compatibility fix
-            assumptionsTables = new ArrayList<String>(psmParametersTables.size());
-        }
         checkTable(assumptionsTables, tableName);
         return (HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>>) objectsDB.retrieveObject(tableName, key, useDB);
     }
@@ -466,9 +435,6 @@ public class IdentificationDB implements Serializable {
      */
     public void addAssumptions(String spectrumKey, HashMap<Integer, HashMap<Double, ArrayList<SpectrumIdentificationAssumption>>> assumptions) throws SQLException, IOException, InterruptedException {
         String tableName = getAssumptionTable(spectrumKey);
-        if (assumptionsTables == null) { // Backward compatibility fix
-            assumptionsTables = new ArrayList<String>(psmParametersTables.size());
-        }
         checkTable(assumptionsTables, tableName);
         objectsDB.insertObject(tableName, spectrumKey, assumptions, true);
     }
@@ -1276,51 +1242,6 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the desired match parameter.
-     *
-     * @param key the match key
-     * @param useDB if useDB is false, null will be returned if the object is
-     * not in the cache
-     * @param urParameter the match parameter
-     * @return the match match
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading issue occurred when interacting with the database
-     * @deprecated use match specific mapping instead
-     * @throws SQLException exception thrown whenever an error occurred while
-     * loading the object from the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the object in the database
-     * @throws ClassNotFoundException exception thrown whenever an error
-     * occurred while casting the database input in the desired match class
-     */
-    public UrParameter getMatchPArameter(String key, UrParameter urParameter, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-        String tableName = getParameterTable(urParameter);
-        return (UrParameter) objectsDB.retrieveObject(tableName, key, useDB);
-    }
-
-    /**
-     * Adds a protein match parameter to the database.
-     *
-     * @param key the protein key
-     * @param urParameter the match parameter
-     * @throws java.lang.InterruptedException exception thrown whenever a
-     * threading issue occurred when interacting with the database
-     * @deprecated use match specific mapping instead
-     * @throws SQLException exception thrown whenever an error occurred while
-     * adding the object in the database
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the object
-     */
-    public void addMatchParameter(String key, UrParameter urParameter) throws SQLException, IOException, InterruptedException {
-        String tableName = getParameterTable(urParameter);
-        if (!matchParametersTables.contains(tableName)) {
-            checkTable(matchParametersTables, tableName);
-            matchParametersTables.add(tableName);
-        }
-        objectsDB.insertObject(tableName, key, urParameter, true);
-    }
-
-    /**
      * Verifies that a table exists and creates it if not.
      *
      * @param tableList the list containing the created tables
@@ -1433,19 +1354,6 @@ public class IdentificationDB implements Serializable {
     }
 
     /**
-     * Returns the table name associated with the given parameter.
-     *
-     * @param urParameter the parameter
-     * @return the table name of the given protein parameter
-     * @deprecated use match specific mapping instead
-     */
-    public String getParameterTable(UrParameter urParameter) {
-        String tableName = ExperimentObject.getParameterKey(urParameter) + parametersSuffix;
-        tableName = objectsDB.correctTableName(tableName);
-        return tableName;
-    }
-
-    /**
      * Restores the connection to the database.
      *
      * @param dbFolder the folder where the database is located
@@ -1474,50 +1382,6 @@ public class IdentificationDB implements Serializable {
      */
     public boolean isConnectionActive() {
         return objectsDB.isConnectionActive();
-    }
-
-    /**
-     * Backward compatibility fix checking whether the tables in the database
-     * are all loaded in the attribute maps of this object. Raw assumptions tables are not included since used only for the creation of the project.
-     *
-     * @throws SQLException exception thrown whenever an error occurred while
-     * retrieving table names from the database.
-     */
-    public void checkTables() throws SQLException {
-        ArrayList<String> tablesInDb = objectsDB.getTables();
-        for (String tableName : tablesInDb) {
-            if (tableName.endsWith(assumptionsTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!assumptionsTables.contains(tableName)) {
-                    assumptionsTables.add(tableName);
-                }
-            } else if (tableName.endsWith(psmParametersTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!psmParametersTables.contains(tableName)) {
-                    psmParametersTables.add(tableName);
-                }
-            } else if (tableName.endsWith(peptideParametersTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!peptideParametersTables.contains(tableName)) {
-                    peptideParametersTables.add(tableName);
-                }
-            } else if (tableName.endsWith(proteinParametersTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!proteinParametersTables.contains(tableName)) {
-                    proteinParametersTables.add(tableName);
-                }
-            } else if (tableName.endsWith(assumptionsTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!assumptionsTables.contains(tableName)) {
-                    assumptionsTables.add(tableName);
-                }
-            } else if (tableName.endsWith(psmTableSuffix)) {
-                tableName = "\"" + tableName + "\"";
-                if (!psmTables.contains(tableName)) {
-                    psmTables.add(tableName);
-                }
-            }
-        }
     }
 
     /**

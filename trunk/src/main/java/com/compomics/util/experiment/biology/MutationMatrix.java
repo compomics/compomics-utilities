@@ -99,7 +99,7 @@ public class MutationMatrix implements Serializable {
             deltaMasses = new HashMap<Double, HashSet<Character>>(1);
             mutationsMasses.put(originalAa, deltaMasses);
         }
-        double deltaMass = AminoAcid.getAminoAcid(mutatedAa).monoisotopicMass - AminoAcid.getAminoAcid(originalAa).monoisotopicMass;
+        double deltaMass = AminoAcid.getAminoAcid(mutatedAa).getMonoisotopicMass() - AminoAcid.getAminoAcid(originalAa).getMonoisotopicMass();
         if (minDelta == null || deltaMass < minDelta) {
             minDelta = deltaMass;
         }

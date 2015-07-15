@@ -781,7 +781,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
             if (!useHtmlColorCoding) {
                 if (localizationConfidenceLevel == 1 || localizationConfidenceLevel == 2) {
                     if (useShortName) {
-                        taggedResidue.append(residue).append("<").append(ptmFactory.getShortName(ptmName)).append(">");
+                        taggedResidue.append(residue).append("<").append(ptm.getShortName()).append(">");
                     } else {
                         taggedResidue.append(residue).append("<").append(ptmName).append(">");
                     }
@@ -1024,7 +1024,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         double mass = 0;
         for (int i = 0; i < length(); i++) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(sequence.charAt(i));
-            mass += aminoAcid.monoisotopicMass;
+            mass += aminoAcid.getMonoisotopicMass();
             if (modifications != null) {
                 ArrayList<ModificationMatch> modificationAtIndex = modifications.get(i + 1);
                 if (modificationAtIndex != null) {

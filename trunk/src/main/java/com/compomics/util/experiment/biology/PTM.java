@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class PTM extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The version UID for backward compatibility.
      */
     static final long serialVersionUID = -545472596243822505L;
     /**
@@ -63,13 +63,6 @@ public class PTM extends ExperimentObject {
      */
     private int type;
     /**
-     * The residues affected by this modification. '[' denotes N-term and ']'
-     * C-term.
-     *
-     * @deprecated use amino acid pattern instead
-     */
-    private ArrayList<String> residuesArray = new ArrayList<String>();
-    /**
      * Name of the modification.
      */
     private String name;
@@ -84,16 +77,24 @@ public class PTM extends ExperimentObject {
     /**
      * List of known neutral losses for this modification.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>(0);
     /**
      * List of known reporter ions for this modification.
      */
-    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
+    private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>(0);
     /**
      * The amino acid pattern targeted by this modification (can be set using
      * the AminoAcidPatternDialog).
      */
     private AminoAcidPattern pattern = new AminoAcidPattern();
+    /**
+     * The composition of the molecule added.
+     */
+    private AtomChain atomChainAdded = new AtomChain();
+    /**
+     * The composition of the molecule removed.
+     */
+    private AtomChain atomChainRemoved = new AtomChain();
 
     /**
      * Constructor for the modification.
@@ -104,68 +105,19 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for a reference modification.
      *
-     * @deprecated use amino acid pattern instead
-     * @param type Type of modification according to static attributes
-     * @param name Name of the modification
-     * @param mass Mass difference produced by the modification
-     * @param residuesArray Residue array affected by this modification
-     */
-    public PTM(int type, String name, double mass, ArrayList<String> residuesArray) {
-        this.type = type;
-        this.name = name;
-        this.mass = mass;
-        this.residuesArray.addAll(residuesArray);
-        pattern = new AminoAcidPattern(residuesArray);
-    }
-
-    /**
-     * Constructor for a reference modification.
-     *
-     * @deprecated use amino acid pattern instead
      * @param type Type of modification according to static attributes
      * @param name Name of the modification
      * @param shortName Short name of the modification
-     * @param mass Mass difference produced by the modification
-     * @param residuesArray Residue array affected by this modification
+     * @param atomChainAdded Atomic composition of the molecule added
+     * @param atomChainRemoved Atomic composition of the molecule removed
+     * @param aminoAcidPattern Residue pattern affected by this modification
      */
-    public PTM(int type, String name, String shortName, double mass, ArrayList<String> residuesArray) {
+    public PTM(int type, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern) {
         this.type = type;
         this.name = name;
         this.shortName = shortName;
-        this.mass = mass;
-        this.residuesArray.addAll(residuesArray);
-        pattern = new AminoAcidPattern(residuesArray);
-    }
-
-    /**
-     * Constructor for a reference modification.
-     *
-     * @param type Type of modification according to static attributes
-     * @param name Name of the modification
-     * @param mass Mass difference produced by the modification
-     * @param aminoAcidPattern Residue pattern affected by this modification
-     */
-    public PTM(int type, String name, double mass, AminoAcidPattern aminoAcidPattern) {
-        this.type = type;
-        this.name = name;
-        this.mass = mass;
-        this.pattern = aminoAcidPattern;
-    }
-
-    /**
-     * Constructor for a reference modification.
-     *
-     * @param type Type of modification according to static attributes
-     * @param name Name of the modification
-     * @param shortName Short name of the modification
-     * @param mass Mass difference produced by the modification
-     * @param aminoAcidPattern Residue pattern affected by this modification
-     */
-    public PTM(int type, String name, String shortName, double mass, AminoAcidPattern aminoAcidPattern) {
-        this.type = type;
-        this.name = name;
-        this.shortName = shortName;
-        this.mass = mass;
+        this.atomChainAdded = atomChainAdded;
+        this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
     }
 
@@ -220,17 +172,53 @@ public class PTM extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
-        return mass;
+        if (atomChainAdded == null && atomChainRemoved == null) { // Backward compatibility
+            return mass;
+        }
+        Double result = 0.0;
+        if (atomChainAdded != null) {
+            result += atomChainAdded.getMass();
+        }
+        if (atomChainRemoved != null) {
+            result -= atomChainRemoved.getMass();
+        }
+        return result;
     }
 
     /**
-     * Getter for the residues affected by this modification.
+     * Returns the atom chain added.
      *
-     * @deprecated use amino acid pattern instead
-     * @return an array containing potentially modified residues
+     * @return the atom chain added
      */
-    public ArrayList<String> getResidues() {
-        return residuesArray;
+    public AtomChain getAtomChainAdded() {
+        return atomChainAdded;
+    }
+
+    /**
+     * Sets the atom chain added.
+     *
+     * @param atomChainAdded the atom chain added
+     */
+    public void setAtomChainAdded(AtomChain atomChainAdded) {
+        this.atomChainAdded = atomChainAdded;
+    }
+
+    /**
+     * Returns the atom chain removed.
+     *
+     * @return the atom chain removed
+     */
+    public AtomChain getAtomChainRemoved() {
+        return atomChainRemoved;
+    }
+
+    /**
+     * Sets the atom chain removed.
+     *
+     * @param atomChainRemoved the atom chain removed
+     */
+    public void setAtomChainRemoved(AtomChain atomChainRemoved) {
+        this.atomChainRemoved = atomChainRemoved;
     }
 
     /**
@@ -240,7 +228,7 @@ public class PTM extends ExperimentObject {
      * @return true if the given PTM is the same as the current PTM
      */
     public boolean isSameAs(PTM anotherPTM) {
-        double massDiff = Math.abs(mass - anotherPTM.getMass());
+        double massDiff = Math.abs(getMass() - anotherPTM.getMass());
         return type == anotherPTM.getType()
                 && (massDiff == 0 || massDiff <= 0.0000000000001)
                 && anotherPTM.getPattern().isSameAs(pattern, SequenceMatchingPreferences.defaultStringMatching);
@@ -308,10 +296,6 @@ public class PTM extends ExperimentObject {
      * @return the amino acid pattern targeted by this modification
      */
     public AminoAcidPattern getPattern() {
-        if (pattern == null) {
-            // Backward compatibility code
-            pattern = new AminoAcidPattern(residuesArray);
-        }
         return pattern;
     }
 
@@ -388,7 +372,7 @@ public class PTM extends ExperimentObject {
         tooltip += "<br>";
 
         tooltip += "Target: ";
-        if (!pattern.getAminoAcidsAtTarget().isEmpty()) {
+        if (pattern != null && !pattern.getAminoAcidsAtTarget().isEmpty()) {
             String patternAsString = pattern.toString();
             tooltip += patternAsString;
         } else {

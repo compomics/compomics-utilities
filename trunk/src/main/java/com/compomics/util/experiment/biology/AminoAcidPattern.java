@@ -41,20 +41,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     private HashMap<Integer, ArrayList<Character>> residueTargeted = null;
     /**
-     * The list of targeted amino acids at a given index. For trypsin: 0 &gt; {R,
-     * K} 1 &gt; {all but P}
-     *
-     * @deprecated use residueTargeted instead
-     */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaTargeted = null;
-    /**
-     * The list of excluded amino acids at a given index For trypsin: 0 &gt; {} 1
-     * &gt; {P}
-     *
-     * @deprecated target all but this one instead
-     */
-    private HashMap<Integer, ArrayList<AminoAcid>> aaExcluded = null;
-    /**
      * The modifications carried by the amino acid sequence at target amino
      * acids.
      */
@@ -116,18 +102,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 residueTargeted.put(index, (ArrayList<Character>) otherTargets.get(index).clone());
             }
         }
-        HashMap<Integer, ArrayList<AminoAcid>> otherExcluded = aminoAcidPattern.getAaExcluded();
-        if (otherExcluded != null) {
-            // Backward compatibility
-            for (int index : otherExcluded.keySet()) {
-                ArrayList<AminoAcid> aasAtExclusion = otherExcluded.get(index);
-                ArrayList<Character> chars = new ArrayList<Character>(aasAtExclusion.size());
-                for (AminoAcid aminoAcid : aasAtExclusion) {
-                    chars.add(aminoAcid.getSingleLetterCodeAsChar());
-                }
-                setExcluded(index, chars);
-            }
-        }
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = aminoAcidPattern.getModificationMatches();
         if (modificationMatches != null) {
             targetModifications = new HashMap<Integer, ArrayList<ModificationMatch>>(modificationMatches.size());
@@ -144,16 +118,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public HashMap<Integer, ArrayList<Character>> getAaTargeted() {
         return residueTargeted;
-    }
-
-    /**
-     * Returns the map of excluded amino acids. Null if not set.
-     *
-     * @deprecated use targeted amino acids only
-     * @return the map of excluded amino acids
-     */
-    public HashMap<Integer, ArrayList<AminoAcid>> getAaExcluded() {
-        return aaExcluded;
     }
 
     /**
@@ -239,7 +203,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void setTargeted(int index, ArrayList<Character> targets) {
         if (residueTargeted == null) {
-            backwardCompatibilityCheck();
             residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
         }
         residueTargeted.put(index, targets);
@@ -257,7 +220,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void setExcluded(int index, ArrayList<Character> exceptions) {
         if (residueTargeted == null) {
-            backwardCompatibilityCheck();
             residueTargeted = new HashMap<Integer, ArrayList<Character>>(1);
         }
         if (exceptions == null || exceptions.isEmpty()) {
@@ -293,9 +255,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the targeted amino acids
      */
     public ArrayList<Character> getTargetedAA(int index) {
-        if (residueTargeted == null) {
-            backwardCompatibilityCheck();
-        }
         if (residueTargeted != null) {
             ArrayList<Character> result = residueTargeted.get(index);
             if (result != null) {
@@ -315,9 +274,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public int getNTargetedAA(int index) {
         if (residueTargeted == null) {
-            backwardCompatibilityCheck();
-        }
-        if (residueTargeted == null) {
             return 0;
         }
         ArrayList<Character> aas = getTargetedAA(index);
@@ -331,9 +287,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public void removeAA(int index) {
 
-        if (residueTargeted == null) {
-            backwardCompatibilityCheck();
-        }
         if (residueTargeted != null) {
             ArrayList<Integer> indexes = new ArrayList<Integer>(residueTargeted.keySet());
             Collections.sort(indexes);
@@ -383,9 +336,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
             ArrayList<Character> toAdd = new ArrayList<Character>(1);
 
-            if (residueTargeted == null) {
-                backwardCompatibilityCheck();
-            }
             if (residueTargeted != null) {
                 ArrayList<Character> tempTarget = residueTargeted.get(i);
 
@@ -716,9 +666,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isTargeted(char aa, int index, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
-        if (residueTargeted == null) {
-            backwardCompatibilityCheck();
-        }
         if (residueTargeted != null) {
 
             MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
@@ -780,9 +727,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
 
         if (!sequenceMatchingPreferences.hasMutationMatrix()) {
             return false;
-        }
-        if (residueTargeted == null) {
-            backwardCompatibilityCheck();
         }
         if (residueTargeted != null) {
 
@@ -1089,10 +1033,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      * @return the length of the pattern in amino acids
      */
     public int length() {
-        if (length == -1 || length == 0) { // we need to check the 0 case every time due to backward compatibility issues
-            if (residueTargeted == null) {
-                backwardCompatibilityCheck();
-            }
+        if (length == -1) {
             if (residueTargeted == null || residueTargeted.isEmpty()) {
                 length = 0;
             } else {
@@ -1100,24 +1041,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             }
         }
         return length;
-    }
-
-    /**
-     * Correct deprecated patterns.
-     */
-    private void backwardCompatibilityCheck() {
-        if (aaTargeted != null) {
-            residueTargeted = new HashMap<Integer, ArrayList<Character>>(aaTargeted.size());
-            for (int i : aaTargeted.keySet()) {
-                ArrayList<AminoAcid> oldAas = aaTargeted.get(i);
-                ArrayList<Character> newAas = new ArrayList<Character>(oldAas.size());
-                for (AminoAcid aminoAcid : oldAas) {
-                    newAas.add(aminoAcid.getSingleLetterCodeAsChar());
-                }
-                residueTargeted.put(i, newAas);
-            }
-            aaTargeted = null;
-        }
     }
 
     /**
@@ -1167,7 +1090,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int i : otherInclusionMap.keySet()) {
                 ArrayList<Character> otherAAs = otherPattern.getTargetedAA(i);
                 if (residueTargeted == null) {
-                    backwardCompatibilityCheck();
                     residueTargeted = new HashMap<Integer, ArrayList<Character>>(otherInclusionMap.size());
                 }
                 ArrayList<Character> targetedAA = residueTargeted.get(i);
@@ -1211,7 +1133,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         HashMap<Integer, ArrayList<Character>> otherTargetedMap = otherPattern.getAaTargeted();
         if (otherTargetedMap != null) {
             if (residueTargeted == null) {
-                backwardCompatibilityCheck();
                 residueTargeted = new HashMap<Integer, ArrayList<Character>>(otherTargetedMap.size());
             }
             for (int i : otherTargetedMap.keySet()) {
@@ -1592,7 +1513,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         if (ptm.getType() == PTM.MODAA) {
             if (!useHtmlColorCoding) {
                 if (useShortName) {
-                    taggedResidue += residue + "<" + ptmFactory.getShortName(ptmName) + ">";
+                    taggedResidue += residue + "<" + ptm.getShortName() + ">";
                 } else {
                     taggedResidue += residue + "<" + ptmName + ">";
                 }
@@ -1694,7 +1615,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 if (aminoAcids.size() == 1) {
                     Character aa = getTargetedAA(i).get(0);
                     AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                    mass += aminoAcid.monoisotopicMass;
+                    mass += aminoAcid.getMonoisotopicMass();
                 } else {
                     throw new IllegalArgumentException("Impossible to estimate the mass of the amino acid pattern " + asSequence() + ". "
                             + aminoAcids.size() + " amino acids at target position " + i + " as targeted amino acid.");

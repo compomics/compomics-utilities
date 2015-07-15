@@ -2,6 +2,7 @@ package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
@@ -22,12 +23,6 @@ public class ModificationProfile implements Serializable {
      */
     static final long serialVersionUID = 342611308111304721L;
     /**
-     * Mapping of the utilities modification names to the PeptideShaker names.
-     *
-     * @deprecated use the expected variable modification lists.
-     */
-    private HashMap<String, String> modificationNames = new HashMap<String, String>(0);
-    /**
      * List of the expected fixed modifications.
      */
     private ArrayList<String> fixedModifications = new ArrayList<String>();
@@ -43,16 +38,6 @@ public class ModificationProfile implements Serializable {
      * List of variable modifications searched during the second pass search.
      */
     private ArrayList<String> refinementFixedModifications = new ArrayList<String>();
-    /**
-     * List of modifications searched during the second pass search.
-     *
-     * @deprecated use the variable/fixed versions
-     */
-    private ArrayList<String> refinementModifications = new ArrayList<String>(0);
-    /**
-     * Map of the OMSSA indexes used for user modifications in this search.
-     */
-    private HashMap<Integer, String> omssaIndexes = new HashMap<Integer, String>();
     /**
      * Mapping of the expected modification names to the color used.
      */
@@ -78,7 +63,6 @@ public class ModificationProfile implements Serializable {
         variableModifications = modificationProfile.getVariableModifications();
         refinementFixedModifications = modificationProfile.getRefinementFixedModifications();
         refinementVariableModifications = modificationProfile.getRefinementVariableModifications();
-        omssaIndexes = modificationProfile.getOmssaIndexes();
         colors = modificationProfile.getColors();
         backUp = modificationProfile.getBackedUpPtmsMap();
     }
@@ -109,9 +93,6 @@ public class ModificationProfile implements Serializable {
      * @return the refinement variable modifications
      */
     public ArrayList<String> getRefinementVariableModifications() {
-        if (refinementVariableModifications == null) {
-            repair();
-        }
         return refinementVariableModifications;
     }
 
@@ -122,9 +103,6 @@ public class ModificationProfile implements Serializable {
      * @return the refinement fixed modifications
      */
     public ArrayList<String> getRefinementFixedModifications() {
-        if (refinementFixedModifications == null) {
-            repair();
-        }
         return refinementFixedModifications;
     }
 
@@ -134,13 +112,9 @@ public class ModificationProfile implements Serializable {
      * @return a list of all searched modifications
      */
     public ArrayList<String> getAllModifications() {
-        compatibilityCheck();
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(fixedModifications);
         result.addAll(variableModifications);
-        if (refinementFixedModifications == null) {
-            repair();
-        }
         for (String ptmName : refinementFixedModifications) {
             if (!result.contains(ptmName)) {
                 result.add(ptmName);
@@ -164,16 +138,10 @@ public class ModificationProfile implements Serializable {
     public ArrayList<String> getAllNotFixedModifications() {
         ArrayList<String> result = new ArrayList<String>();
         result.addAll(variableModifications);
-        if (refinementVariableModifications == null) {
-            repair();
-        }
         for (String ptmName : refinementVariableModifications) {
             if (!result.contains(ptmName)) {
                 result.add(ptmName);
             }
-        }
-        if (refinementFixedModifications == null) {
-            repair();
         }
         for (String ptmName : refinementFixedModifications) {
             if (!fixedModifications.contains(ptmName) && !result.contains(ptmName)) {
@@ -196,7 +164,6 @@ public class ModificationProfile implements Serializable {
         if (!variableModifications.contains(modName)) {
             variableModifications.add(modName);
         }
-        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -210,13 +177,9 @@ public class ModificationProfile implements Serializable {
      */
     public void addRefinementVariableModification(PTM modification) {
         String modName = modification.getName();
-        if (refinementVariableModifications == null) {
-            repair();
-        }
         if (!refinementVariableModifications.contains(modName)) {
             refinementVariableModifications.add(modName);
         }
-        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -230,13 +193,9 @@ public class ModificationProfile implements Serializable {
      */
     public void addRefinementFixedModification(PTM modification) {
         String modName = modification.getName();
-        if (refinementFixedModifications == null) {
-            repair();
-        }
         if (!refinementFixedModifications.contains(modName)) {
             refinementFixedModifications.add(modName);
         }
-        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -253,7 +212,6 @@ public class ModificationProfile implements Serializable {
         if (!fixedModifications.contains(modName)) {
             fixedModifications.add(modName);
         }
-        modification.setShortName(PTMFactory.getInstance().getShortName(modName));
         backUp.put(modName, modification);
     }
 
@@ -291,46 +249,11 @@ public class ModificationProfile implements Serializable {
     }
 
     /**
-     * Checks the compatibility with older versions of the class and makes the
-     * necessary changes. By default all modifications are set as variable.
-     */
-    public void compatibilityCheck() {
-        if (fixedModifications == null) {
-            fixedModifications = new ArrayList<String>();
-        }
-        if (variableModifications == null) {
-            variableModifications = new ArrayList<String>();
-            for (String modName : modificationNames.values()) {
-                variableModifications.add(modName);
-            }
-        }
-        if (refinementVariableModifications == null) {
-            refinementVariableModifications = new ArrayList<String>();
-        }
-        if (refinementFixedModifications == null) {
-            refinementFixedModifications = new ArrayList<String>();
-        }
-        if (refinementModifications != null && !refinementModifications.isEmpty()) {
-            for (String ptm : refinementModifications) {
-                if (!refinementVariableModifications.contains(ptm)) {
-                    refinementVariableModifications.add(ptm);
-                }
-            }
-        }
-        if (backUp == null) {
-            backUp = new HashMap<String, PTM>();
-        }
-    }
-
-    /**
      * Returns the names of the backed-up PTMs.
      *
      * @return the names of the backed-up PTMs
      */
     public Set<String> getBackedUpPtms() {
-        if (backUp == null) {
-            repair();
-        }
         return backUp.keySet();
     }
 
@@ -382,9 +305,6 @@ public class ModificationProfile implements Serializable {
      * @param modificationName the name of the modification
      */
     public void removeRefinementVariableModification(String modificationName) {
-        if (refinementVariableModifications == null) {
-            repair();
-        }
         while (refinementVariableModifications.contains(modificationName)) {
             refinementVariableModifications.remove(modificationName);
         }
@@ -396,68 +316,9 @@ public class ModificationProfile implements Serializable {
      * @param modificationName the name of the modification
      */
     public void removeRefinementFixedModification(String modificationName) {
-        if (refinementFixedModifications == null) {
-            repair();
-        }
         while (refinementFixedModifications.contains(modificationName)) {
             refinementFixedModifications.remove(modificationName);
         }
-    }
-
-    /**
-     * Sets the OMSSA index for a given modification. If another modification
-     * was already given with the same index the previous setting will be
-     * silently overwritten.
-     *
-     * @param modificationName the name of the modification
-     * @param omssaIndex the OMSSA index of the modification
-     */
-    public void setOmssaIndex(String modificationName, int omssaIndex) {
-        omssaIndexes.put(omssaIndex, modificationName);
-    }
-
-    /**
-     * Returns the name of the modification indexed by the given OMSSA index.
-     * Null if not found.
-     *
-     * @param omssaIndex the OMSSA index of the modification to look for
-     * @return the name of the modification indexed by the given OMSSA index
-     */
-    public String getModification(int omssaIndex) {
-        return omssaIndexes.get(omssaIndex);
-    }
-
-    /**
-     * Indicates whether the modification profile has OMSSA indexes.
-     *
-     * @return true if an OMSSA indexes map is set
-     */
-    public boolean hasOMSSAIndexes() {
-        return omssaIndexes != null && !omssaIndexes.isEmpty();
-    }
-
-    /**
-     * Returns the OMSSA index of a given modification, null if not found.
-     *
-     * @param modificationName the name of the modification
-     * @return the corresponding OMSSA index
-     */
-    public Integer getOmssaIndex(String modificationName) {
-        for (int index : omssaIndexes.keySet()) {
-            if (modificationName.equalsIgnoreCase(omssaIndexes.get(index))) {
-                return index;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns the OMSSA indexes as a map.
-     *
-     * @return the OMSSA indexes
-     */
-    public HashMap<Integer, String> getOmssaIndexes() {
-        return omssaIndexes;
     }
 
     /**
@@ -469,9 +330,6 @@ public class ModificationProfile implements Serializable {
      * mapping
      */
     public boolean contains(String modificationName) {
-        if (refinementVariableModifications == null) {
-            repair();
-        }
         return variableModifications.contains(modificationName)
                 || fixedModifications.contains(modificationName)
                 || (refinementVariableModifications != null && refinementVariableModifications.contains(modificationName))
@@ -509,10 +367,6 @@ public class ModificationProfile implements Serializable {
         if (otherProfile == null) {
             return false;
         }
-
-        if (refinementFixedModifications == null) {
-            repair();
-        }
         
         // note that the following three tests results in false even if only the order is different
         if (!this.getVariableModifications().equals(otherProfile.getVariableModifications())) {
@@ -526,22 +380,6 @@ public class ModificationProfile implements Serializable {
         }
         if (!this.getRefinementFixedModifications().equals(otherProfile.getRefinementFixedModifications())) {
             return false;
-        }
-
-        if (this.omssaIndexes.size() != otherProfile.omssaIndexes.size()) {
-            return false;
-        }
-
-        Iterator<Integer> omssaIndexkeys = this.omssaIndexes.keySet().iterator();
-
-        while (omssaIndexkeys.hasNext()) {
-            Integer tempKey = omssaIndexkeys.next();
-            if (!otherProfile.omssaIndexes.containsKey(tempKey)) {
-                return false;
-            }
-            if (!this.omssaIndexes.get(tempKey).equals(otherProfile.omssaIndexes.get(tempKey))) {
-                return false;
-            }
         }
 
         if (this.colors.size() != otherProfile.colors.size()) {
@@ -579,34 +417,5 @@ public class ModificationProfile implements Serializable {
         }
 
         return true;
-    }
-
-    /**
-     * Sets empty lists and maps to the values lost due to backward
-     * compatability issues.
-     */
-    public void repair() {
-        if (fixedModifications == null) {
-            fixedModifications = new ArrayList<String>(0);
-        }
-        if (variableModifications == null) {
-            variableModifications = new ArrayList<String>(0);
-        }
-        if (refinementVariableModifications == null) {
-            refinementVariableModifications = new ArrayList<String>(0);
-        }
-        if (refinementFixedModifications == null) {
-            refinementFixedModifications = new ArrayList<String>(0);
-            refinementFixedModifications.addAll(fixedModifications);
-        }
-        if (omssaIndexes == null) {
-            omssaIndexes = new HashMap<Integer, String>(0);
-        }
-        if (colors == null) {
-            colors = new HashMap<String, Color>(0);
-        }
-        if (backUp == null) {
-            backUp = new HashMap<String, PTM>(0);
-        }
     }
 }

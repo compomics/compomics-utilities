@@ -403,7 +403,7 @@ public class Tag extends ExperimentObject {
             for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(1)) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    nTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
+                    nTerm = ptm.getShortName();
                 }
             }
             nTerm = nTerm.replaceAll("-", " ");
@@ -415,7 +415,7 @@ public class Tag extends ExperimentObject {
             for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(1)) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    nTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
+                    nTerm = ptm.getShortName();
                 }
             }
             nTerm = nTerm.replaceAll("-", " ");
@@ -450,7 +450,7 @@ public class Tag extends ExperimentObject {
             for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(1)) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    cTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
+                    cTerm = ptm.getShortName();
                 }
             }
             cTerm = cTerm.replaceAll("-", " ");
@@ -462,7 +462,7 @@ public class Tag extends ExperimentObject {
             for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(1)) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    cTerm = ptmFactory.getShortName(modificationMatch.getTheoreticPtm());
+                    cTerm = ptm.getShortName();
                 }
             }
             cTerm = cTerm.replaceAll("-", " ");

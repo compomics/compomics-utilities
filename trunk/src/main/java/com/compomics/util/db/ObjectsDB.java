@@ -47,12 +47,6 @@ public class ObjectsDB implements Serializable {
     public static final int MAX_KEY_LENGTH = 1000;
     /**
      * List of keys too long to create a table.
-     *
-     * @deprecated use longTableNames and longKeysMap instead
-     */
-    private ArrayList<String> longKeys = new ArrayList<String>();
-    /**
-     * List of keys too long to create a table.
      */
     private ArrayList<String> longTableNames = new ArrayList<String>();
     /**
@@ -167,10 +161,6 @@ public class ObjectsDB implements Serializable {
      * @return the database name
      */
     public String getName() {
-        if (dbName == null) {
-            // backward compatibility check
-            dbName = "old_idDB";
-        }
         return dbName;
     }
 
@@ -463,14 +453,6 @@ public class ObjectsDB implements Serializable {
      */
     public synchronized void loadObjects(String tableName, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
 
-        if (contentTableQueue == null) { // backward compatibility check
-            busy = false;
-            tableQueueUpdating = "";
-            tableQueue = new ArrayList<String>();
-            contentQueue = new HashMap<String, ArrayList<String>>();
-            contentTableQueue = new ArrayList<String>();
-        }
-
         if (!busy && (tableQueue.isEmpty() || tableQueue.indexOf(tableName) == 0)) {
 
             if (debugInteractions) {
@@ -580,14 +562,6 @@ public class ObjectsDB implements Serializable {
      * while interacting with the database
      */
     public synchronized void loadObjects(String tableName, ArrayList<String> keys, WaitingHandler waitingHandler, boolean displayProgress) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-
-        if (contentTableQueue == null) { // backward compatibility check
-            busy = false;
-            tableQueueUpdating = "";
-            tableQueue = new ArrayList<String>();
-            contentQueue = new HashMap<String, ArrayList<String>>();
-            contentTableQueue = new ArrayList<String>();
-        }
 
         if (!busy && (contentTableQueue.isEmpty() || contentTableQueue.indexOf(tableName) == 0)) {
 
@@ -1219,7 +1193,7 @@ public class ObjectsDB implements Serializable {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
-        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path); // backward compatibility check on the path
+        return path != null && DerbyUtil.isActiveConnection(derbyConnectionID, path);
     }
 
     /**
@@ -1379,17 +1353,6 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Verifies that the ObjectDB is up to date and makes the necessary fixes.
-     */
-    private void compatibilityCheck() {
-        if (longTableNames == null) {
-            // version older than 3.16.0
-            longTableNames = new ArrayList<String>(longKeys);
-            longKeysMap = new HashMap<String, ArrayList<String>>();
-        }
-    }
-
-    /**
      * Surrounds the table name with quotation marks such that spaces etc are
      * allowed.
      *
@@ -1399,7 +1362,6 @@ public class ObjectsDB implements Serializable {
      */
     public String correctTableName(String tableName) {
         tableName = "\"" + tableName + "\"";
-        compatibilityCheck();
         if (longTableNames.contains(tableName)) {
             tableName = "\"" + longTableNames.indexOf(tableName) + "\"";
         } else if (tableName.length() >= TABLE_NAME_MAX_LENGTH) {
@@ -1424,7 +1386,6 @@ public class ObjectsDB implements Serializable {
     public String correctKey(String tableName, String key) {
 
         String correctedKey = key;
-        compatibilityCheck();
         if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
             if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {
                 correctedKey = LONG_KEY_PREFIX + longKeysMap.get(tableName).indexOf(key);
@@ -1456,7 +1417,6 @@ public class ObjectsDB implements Serializable {
     public String getOriginalKey(String tableName, String correctedKey) {
 
         String subKey = correctedKey.substring(LONG_KEY_PREFIX.length());
-        compatibilityCheck();
         try {
             Integer index = new Integer(subKey);
             return longKeysMap.get(tableName).get(index);

@@ -30,7 +30,7 @@ public class Mutation {
     public Mutation(AminoAcid origin, AminoAcid target) {
         this.origin = origin;
         this.target = target;
-        this.massShift = target.monoisotopicMass - origin.monoisotopicMass;
+        this.massShift = target.getMonoisotopicMass() - origin.getMonoisotopicMass();
     }
 
     /**

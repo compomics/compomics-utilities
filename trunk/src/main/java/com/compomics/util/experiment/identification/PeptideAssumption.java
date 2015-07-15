@@ -19,37 +19,6 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * The theoretic peptide.
      */
     private Peptide peptide;
-    /**
-     * The advocate supporting this assumption.
-     *
-     * @deprecated use the SpectrumIdentificationAssumption attribute
-     */
-    private int advocate;
-    /**
-     * The charge used for identification.
-     *
-     * @deprecated use the SpectrumIdentificationAssumption attribute
-     */
-    private Charge identificationCharge;
-    /**
-     * The rank of the peptide assumption for the concerned spectrum.
-     *
-     * @deprecated use the SpectrumIdentificationAssumption attribute
-     */
-    private int rank;
-    /**
-     * The score, the lower the better. Ought to be renamed but kept for
-     * backward compatibility.
-     *
-     * @deprecated use the SpectrumIdentificationAssumption attribute
-     */
-    private double eValue;
-    /**
-     * The corresponding identification file.
-     *
-     * @deprecated use the SpectrumIdentificationAssumption attribute
-     */
-    private String file;
 
     /**
      * Constructor for a peptide assumption.
@@ -102,62 +71,7 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     }
 
     @Override
-    public int getRank() {
-        if (super.identificationCharge == null) { // backward compatibility check
-            return rank;
-        } else {
-            return super.rank;
-        }
-    }
-
-    @Override
-    public int getAdvocate() {
-        if (super.identificationCharge == null) { // backward compatibility check
-            return advocate;
-        } else {
-            return super.advocate;
-        }
-    }
-
-    /**
-     * Returns the e-value assigned by the advocate.
-     *
-     * @deprecated use getScore instead
-     * @return the e-value
-     */
-    public double getEValue() {
-        return eValue;
-    }
-
-    @Override
-    public double getScore() {
-        if (super.identificationCharge == null) { // backward compatibility check
-            return eValue;
-        } else {
-            return super.score;
-        }
-    }
-
-    @Override
-    public String getIdentificationFile() {
-        if (super.identificationCharge == null) { // backward compatibility check
-            return file;
-        } else {
-            return super.identificationFile;
-        }
-    }
-
-    @Override
-    public Charge getIdentificationCharge() {
-        if (super.identificationCharge == null) { // backward compatibility check
-            return identificationCharge;
-        } else {
-            return super.identificationCharge;
-        }
-    }
-
-    @Override
-    public double getTheoreticMass() {
+    public Double getTheoreticMass() {
         return peptide.getMass();
     }
 }

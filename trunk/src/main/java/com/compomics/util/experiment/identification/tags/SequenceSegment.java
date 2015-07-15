@@ -334,7 +334,7 @@ public class SequenceSegment {
             terminalIndex++;
         }
         length++;
-        mass += aminoAcid.monoisotopicMass;
+        mass += aminoAcid.getMonoisotopicMass();
     }
 
     /**

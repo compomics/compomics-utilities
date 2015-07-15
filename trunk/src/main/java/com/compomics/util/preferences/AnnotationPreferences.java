@@ -60,42 +60,17 @@ public class AnnotationPreferences implements Serializable {
     private boolean automaticAnnotation = true;
     /**
      * The types of ions to annotate.
-     *
-     * @deprecated use selectedIonsMap instead
-     */
-    private HashMap<Ion.IonType, ArrayList<Integer>> selectedIons = new HashMap<Ion.IonType, ArrayList<Integer>>();
-    /**
-     * The types of ions to annotate.
      */
     private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
-    /**
-     * The neutral losses searched for.
-     *
-     * @deprecated use the SpecificAnnotationPreferencesClass
-     */
-    private NeutralLossesMap neutralLossesMap;
     /**
      * List of neutral losses to annotate.
      */
     private ArrayList<NeutralLoss> neutralLossesList;
     /**
-     * Shall neutral losses be only considered for ions containing amino acids
-     * of interest?
-     *
-     * @deprecated use neutralLossesAuto instead
-     */
-    private boolean neutralLossesSequenceDependant;
-    /**
      * If true neutral losses will be automatically deduced from the spectrum
      * identification assumption.
      */
     private Boolean neutralLossesAuto = true;
-    /**
-     * The fragment charge to be searched for.
-     *
-     * @deprecated use the SpecificAnnotationPreferencesClass
-     */
-    private ArrayList<Integer> selectedCharges;
     /**
      * Fragment ion accuracy used for peak matching.
      */
@@ -104,24 +79,6 @@ public class AnnotationPreferences implements Serializable {
      * Indicates whether the fragment ion accuracy is in ppm.
      */
     private Boolean fragmentIonPpm = false;
-    /**
-     * The currently inspected peptide.
-     *
-     * @deprecated use the specific annotation preferences instead
-     */
-    private Peptide currentPeptide;
-    /**
-     * The currently annotated spectrumIdentificationAssumption.
-     *
-     * @deprecated use the specific annotation preferences instead
-     */
-    private SpectrumIdentificationAssumption spectrumIdentificationAssumption;
-    /**
-     * The charge of the currently inspected precursor.
-     *
-     * @deprecated use the specific annotation preferences instead
-     */
-    private int currentPrecursorCharge = 0;
     /**
      * If true, the automatic forward ion de novo tags are shown.
      */
@@ -174,13 +131,6 @@ public class AnnotationPreferences implements Serializable {
     public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
             SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) 
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-
-        if (neutralLossesAuto == null) { // Backward compatibility
-            neutralLossesAuto = true;
-        }
-        if (fragmentIonPpm == null) { // Backward compatibility
-            fragmentIonPpm = false;
-        }
 
         SpecificAnnotationPreferences specificAnnotationPreferences = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
@@ -261,10 +211,6 @@ public class AnnotationPreferences implements Serializable {
      * Clears the considered neutral losses.
      */
     public void clearNeutralLosses() {
-        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility        
-            neutralLossesMap.clearNeutralLosses();
-            neutralLossesList = new ArrayList<NeutralLoss>();
-        }
         neutralLossesList.clear();
     }
 
@@ -274,9 +220,6 @@ public class AnnotationPreferences implements Serializable {
      * @return the considered neutral losses
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
-            neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
-        }
         if (neutralLossesList == null) {
             neutralLossesList = new ArrayList<NeutralLoss>(2);
         }
@@ -289,9 +232,6 @@ public class AnnotationPreferences implements Serializable {
      * @param neutralLoss a new neutral loss
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
-        if (neutralLossesList == null && neutralLossesMap != null) { // backwards compatibility
-            neutralLossesList = neutralLossesMap.getAccountedNeutralLosses();
-        }
         if (neutralLossesList == null) {
             neutralLossesList = new ArrayList<NeutralLoss>(2);
         }
@@ -313,27 +253,7 @@ public class AnnotationPreferences implements Serializable {
      * @return the type of ions annotated
      */
     public HashMap<Ion.IonType, HashSet<Integer>> getIonTypes() {
-        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
-            backwardsCompatibilitySelectedIonsFix();
-        }
         return selectedIonsMap;
-    }
-
-    /**
-     * Backwards compatibility fix for the selection ions.
-     */
-    private void backwardsCompatibilitySelectedIonsFix() {
-        selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
-        Iterator<IonType> iterator = selectedIons.keySet().iterator();
-        while (iterator.hasNext()) {
-            IonType tempIonType = iterator.next();
-            ArrayList<Integer> tempIntegers = selectedIons.get(tempIonType);
-            HashSet<Integer> tempSet = new HashSet<Integer>();
-            for (Integer temp : tempIntegers) {
-                tempSet.add(temp);
-            }
-            selectedIonsMap.put(tempIonType, tempSet);
-        }
     }
 
     /**
@@ -342,9 +262,6 @@ public class AnnotationPreferences implements Serializable {
      * @return the type of peptide fragment ions annotated
      */
     public HashSet<Integer> getFragmentIonTypes() {
-        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
-            backwardsCompatibilitySelectedIonsFix();
-        }
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
             return new HashSet<Integer>();
         } else {
@@ -359,9 +276,6 @@ public class AnnotationPreferences implements Serializable {
      * @param subType the ion sub type
      */
     public void addIonType(Ion.IonType ionType, int subType) {
-        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
-            backwardsCompatibilitySelectedIonsFix();
-        }
         if (!selectedIonsMap.containsKey(ionType)) {
             selectedIonsMap.put(ionType, new HashSet<Integer>());
         }
@@ -374,9 +288,6 @@ public class AnnotationPreferences implements Serializable {
      * @param ionType a new ion type to annotate
      */
     public void addIonType(Ion.IonType ionType) {
-        if (selectedIonsMap == null && selectedIons != null) { // backwards compatibility
-            backwardsCompatibilitySelectedIonsFix();
-        }
         if (!selectedIonsMap.containsKey(ionType)) {
             selectedIonsMap.put(ionType, new HashSet<Integer>());
         }

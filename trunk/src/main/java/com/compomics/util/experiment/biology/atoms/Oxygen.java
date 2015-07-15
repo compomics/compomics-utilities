@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- * An oxygen atom.
+ * The oxygen atom.
  *
  * @author Marc Vaudel
  */

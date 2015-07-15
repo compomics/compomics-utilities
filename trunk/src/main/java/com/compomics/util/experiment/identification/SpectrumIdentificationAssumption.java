@@ -33,7 +33,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * The (advocate specific) score used to rank this assumption.
      */
-    protected double score;
+    protected Double score;
     /**
      * The identification file.
      */
@@ -75,7 +75,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the score
      */
-    public double getScore() {
+    public Double getScore() {
         return score;
     }
 
@@ -121,14 +121,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @return the theoretic mass of the given assumption
      */
-    public abstract double getTheoreticMass();
+    public abstract Double getTheoreticMass();
 
     /**
      * Returns the theoretic m/z.
      *
      * @return the theoretic m/z
      */
-    public double getTheoreticMz() {
+    public Double getTheoreticMz() {
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * (identificationCharge.value - 1)) / identificationCharge.value;
     }
 
@@ -145,7 +145,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * the theoretic mass
      * @return the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
+    public Double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, subtractIsotope);
     }
 
@@ -160,7 +160,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * in Da
      * @return the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass(double measuredMZ, boolean ppm) {
+    public Double getDeltaMass(double measuredMZ, boolean ppm) {
         return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
     }
 

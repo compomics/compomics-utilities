@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- * A phosphorus atom.
+ * The phosphorus atom.
  *
  * @author Marc Vaudel
  */

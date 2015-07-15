@@ -26,7 +26,6 @@ import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
-import com.compomics.util.gui.ptm.PtmDialogParent;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.LastSelectedFolder;
@@ -55,7 +54,7 @@ import org.jfree.chart.plot.PlotOrientation;
  *
  * @author Harald Barsnes
  */
-public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDialogParent {
+public class SearchSettingsDialog extends javax.swing.JDialog {
 
     /**
      * A simple progress dialog.
@@ -270,7 +269,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
 
         setAllModificationTableProperties();
 
-        loadModificationsInGUI();
+        updateModificationList();
     }
 
     /**
@@ -295,13 +294,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
             modificationsTable.getColumn("  ").setMaxWidth(30);
             modificationsTable.getColumn("  ").setMinWidth(30);
         }
-    }
-
-    /**
-     * Loads the modifications.
-     */
-    private void loadModificationsInGUI() {
-        updateModificationList();
     }
 
     /**
@@ -1518,7 +1510,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
      * @param evt
      */
     private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
-        new ModificationsDialog(parentFrame, this, true);
+        new ModificationsDialog(parentFrame, true);
+        updateModificationList();
     }//GEN-LAST:event_openModificationSettingsJButtonActionPerformed
 
     /**
@@ -1938,31 +1931,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
     }
 
     /**
-     * This method loads the necessary parameters for populating (part of) the
-     * GUI from a properties file.
-     *
-     * @deprecated use SearchParameters instead
-     * @param aFile File with the relevant properties file.
-     * @return Properties with the loaded properties.
-     */
-    private Properties loadProperties(File aFile) {
-        Properties screenProps = new Properties();
-        try {
-            FileInputStream fis = new FileInputStream(aFile);
-            if (fis != null) {
-                screenProps.load(fis);
-                fis.close();
-            } else {
-                throw new IllegalArgumentException("Could not read the file you specified ('" + aFile.getAbsolutePath() + "').");
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            JOptionPane.showMessageDialog(this, new String[]{"Unable to read file: " + aFile.getName(), ioe.getMessage()}, "Error Reading File", JOptionPane.WARNING_MESSAGE);
-        }
-        return screenProps;
-    }
-
-    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -2156,9 +2124,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         if (searchParameters.getParametersFile() != null && searchParameters.getParametersFile().exists()) {
             tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         }
-
-        // Set omssa indexes
-        ptmFactory.setSearchedOMSSAIndexes(tempSearchParameters.getModificationProfile());
 
         // Adapt X!Tandem options
         XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex());
@@ -2382,13 +2347,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog implements PtmDial
         }
 
         list.setToolTipText(toolTip);
-    }
-
-    /**
-     * Updates the modification lists and tables.
-     */
-    public void updateModifications() {
-        updateModificationList();
     }
 
     /**

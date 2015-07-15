@@ -104,7 +104,7 @@ public class AaMass extends javax.swing.JDialog {
         double mass = 0;
         for (char aa : array) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-            mass += aminoAcid.monoisotopicMass;
+            mass += aminoAcid.getMonoisotopicMass();
         }
         massTxt.setText(mass + "");
 

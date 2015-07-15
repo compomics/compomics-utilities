@@ -94,9 +94,6 @@ public class IdMatchValidationPreferences implements Serializable {
      * @return the validation QC preferences
      */
     public ValidationQCPreferences getValidationQCPreferences() {
-        if (validationQCPreferences == null) { // Backward compatibility
-            validationQCPreferences = new ValidationQCPreferences();
-        }
         return validationQCPreferences;
     }
 

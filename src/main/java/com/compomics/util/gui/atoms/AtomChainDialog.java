@@ -195,8 +195,10 @@ public class AtomChainDialog extends javax.swing.JDialog {
         });
 
         compositionSplitPane.setBorder(null);
-        compositionSplitPane.setDividerLocation(450);
+        compositionSplitPane.setDividerLocation(400);
         compositionSplitPane.setDividerSize(0);
+        compositionSplitPane.setResizeWeight(0.5);
+        compositionSplitPane.setPreferredSize(new java.awt.Dimension(800, 229));
 
         compositionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Atomic Composition"));
 
@@ -227,7 +229,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(compositionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(compositionPanelLayout.createSequentialGroup()
-                        .addComponent(compositionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                        .addComponent(compositionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clearButton))
                     .addComponent(massTxt))
@@ -287,10 +289,11 @@ public class AtomChainDialog extends javax.swing.JDialog {
             .addGroup(editPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editPanelLayout.createSequentialGroup()
+                    .addGroup(editPanelLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
                         .addComponent(occurrenceLbl)
                         .addGap(18, 18, 18)
-                        .addComponent(occurrenceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(occurrenceTxt))
                     .addComponent(updateButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(editPanelLayout.createSequentialGroup()
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -298,7 +301,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
                             .addComponent(isotopeLbl))
                         .addGap(38, 38, 38)
                         .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(isotopeCmb, 0, 237, Short.MAX_VALUE)
+                            .addComponent(isotopeCmb, 0, 279, Short.MAX_VALUE)
                             .addComponent(atomCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -336,14 +339,14 @@ public class AtomChainDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(compositionSplitPane))
+                    .addComponent(compositionSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(compositionSplitPane)
+                .addComponent(compositionSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)

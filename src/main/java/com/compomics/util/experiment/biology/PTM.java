@@ -354,7 +354,7 @@ public class PTM extends ExperimentObject {
         String tooltip = "<html>";
 
         tooltip += "Name: " + name + "<br>";
-        tooltip += "Mass: " + Util.roundDouble(mass, 4) + "<br>";
+        tooltip += "Mass: " + Util.roundDouble(getMass(), 4) + "<br>";
         tooltip += "Type: ";
 
         if (type == MODAA) {

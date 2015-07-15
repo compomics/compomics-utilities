@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.identification_parameters;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import java.util.HashMap;
 
 /**
  * The Andromeda specific parameters.
@@ -81,6 +82,10 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * The number of candidates to report.
      */
     private Integer numberOfCandidates = 15;
+    /**
+     * Map of the Andromeda indexes used for user modifications in this search.
+     */
+    private HashMap<Integer, String> ptmIndexes = new HashMap<Integer, String>(128);
 
     /**
      * Constructor.
@@ -94,9 +99,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal peptide mass
      */
     public Double getMaxPeptideMass() {
-        if (maxPeptideMass == null) { // backward compatibility
-            maxPeptideMass = 4600.0;
-        }
         return maxPeptideMass;
     }
 
@@ -115,9 +117,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal number of combinations
      */
     public int getMaxCombinations() {
-        if (maxCombinations == null) { // backward compatibility
-            maxCombinations = 250;
-        }
         return maxCombinations;
     }
 
@@ -136,9 +135,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the top peaks number
      */
     public int getTopPeaks() {
-        if (topPeaks == null) { // backward compatibility
-            topPeaks = 8;
-        }
         return topPeaks;
     }
 
@@ -157,9 +153,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the top peaks window size
      */
     public int getTopPeaksWindow() {
-        if (topPeaksWindow == null) { // backward compatibility
-            topPeaksWindow = 100;
-        }
         return topPeaksWindow;
     }
 
@@ -179,9 +172,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether water losses should be accounted for
      */
     public boolean isIncludeWater() {
-        if (includeWater == null) { // backward compatibility
-            includeWater = true;
-        }
         return includeWater;
     }
 
@@ -203,9 +193,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * for
      */
     public boolean isIncludeAmmonia() {
-        if (includeAmmonia == null) { // backward compatibility
-            includeAmmonia = true;
-        }
         return includeAmmonia;
     }
 
@@ -226,9 +213,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * dependent
      */
     public boolean isDependentLosses() {
-        if (dependentLosses == null) { // backward compatibility
-            dependentLosses = true;
-        }
         return dependentLosses;
     }
 
@@ -249,9 +233,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * used
      */
     public boolean isFragmentAll() {
-        if (fragmentAll == null) { // backward compatibility
-            fragmentAll = false;
-        }
         return fragmentAll;
     }
 
@@ -271,9 +252,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether empirical correction should be used
      */
     public boolean isEmpiricalCorrection() {
-        if (empiricalCorrection == null) { // backward compatibility
-            empiricalCorrection = true;
-        }
         return empiricalCorrection;
     }
 
@@ -293,9 +271,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return a boolean indicating whether higher charge should be considered
      */
     public boolean isHigherCharge() {
-        if (higherCharge == null) { // backward compatibility
-            higherCharge = true;
-        }
         return higherCharge;
     }
 
@@ -333,9 +308,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal number of modifications
      */
     public int getMaxNumberOfModifications() {
-        if (maxNumberOfModifications == null) { // backward compatibility
-            maxNumberOfModifications = 5;
-        }
         return maxNumberOfModifications;
     }
 
@@ -354,9 +326,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the minimal peptide length to use when searching with no enzyme
      */
     public int getMinPeptideLengthNoEnzyme() {
-        if (minPeptideLengthNoEnzyme == null) { // backward compatibility
-            minPeptideLengthNoEnzyme = 8;
-        }
         return minPeptideLengthNoEnzyme;
     }
 
@@ -376,9 +345,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the maximal peptide length to use when searching with no enzyme
      */
     public int getMaxPeptideLengthNoEnzyme() {
-        if (maxPeptideLengthNoEnzyme == null) { // backward compatibility
-            maxPeptideLengthNoEnzyme = 25;
-        }
         return maxPeptideLengthNoEnzyme;
     }
 
@@ -399,9 +365,6 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * indistinguishable
      */
     public boolean isEqualIL() {
-        if (equalIL == null) { // backward compatibility
-            equalIL = false;
-        }
         return equalIL;
     }
 
@@ -421,10 +384,65 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * @return the number of candidates
      */
     public int getNumberOfCandidates() {
-        if (numberOfCandidates == null) { // backward compatibility
-            numberOfCandidates = 15;
-        }
         return numberOfCandidates;
+    }
+
+    /**
+     * Sets the index for a given modification. If another modification
+     * was already given with the same index the previous setting will be
+     * silently overwritten.
+     *
+     * @param modificationName the name of the modification
+     * @param ptmIndex the index of the modification
+     */
+    public void setPtmIndex(String modificationName, int ptmIndex) {
+        ptmIndexes.put(ptmIndex, modificationName);
+    }
+
+    /**
+     * Returns the name of the modification indexed by the given index.
+     * Null if not found.
+     *
+     * @param ptmIndex the index of the modification to look for
+     * 
+     * @return the name of the modification indexed by the given index
+     */
+    public String getModificationName(int ptmIndex) {
+        return ptmIndexes.get(ptmIndex);
+    }
+
+    /**
+     * Indicates whether the modification profile has PTM indexes.
+     *
+     * @return true if an PTM indexes map is set
+     */
+    public boolean hasPtmIndexes() {
+        return ptmIndexes != null && !ptmIndexes.isEmpty();
+    }
+
+    /**
+     * Returns the index of a given modification, null if not found.
+     *
+     * @param modificationName the name of the modification
+     * 
+     * @return the corresponding index
+     */
+    public Integer getPtmIndex(String modificationName) {
+        for (int index : ptmIndexes.keySet()) {
+            if (modificationName.equalsIgnoreCase(ptmIndexes.get(index))) {
+                return index;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the PTM indexes as a map.
+     *
+     * @return the PTM indexes
+     */
+    public HashMap<Integer, String> getPtmIndexes() {
+        return ptmIndexes;
     }
 
     /**

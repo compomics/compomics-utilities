@@ -155,7 +155,6 @@ public class SpectrumFactory {
      * @throws ClassNotFoundException Exception thrown whenever an error
      * occurred while deserializing the index .cui file.
      *
-     * @deprecated use the version with the waiting handler instead
      */
     public void addSpectra(File spectrumFile) throws FileNotFoundException, IOException, ClassNotFoundException {
         addSpectra(spectrumFile, null);

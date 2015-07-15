@@ -3,7 +3,17 @@ package com.compomics.util.experiment.identification.identification_parameters;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.massspectrometry.Charge;
+import com.compomics.util.preferences.ModificationProfile;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * The OMSSA specific parameters.
@@ -180,6 +190,10 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      * NOTE: not implemented for now.
      */
     private ArrayList<Integer> noProlineRuleSeries = new ArrayList<Integer>();
+    /**
+     * Map of the OMSSA indexes used for user modifications in this search.
+     */
+    private HashMap<Integer, String> ptmIndexes = new HashMap<Integer, String>();
 
     /**
      * Constructor.
@@ -954,6 +968,133 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     public void setNoProlineRuleSeries(ArrayList<Integer> noProlineRuleSeries) {
         this.noProlineRuleSeries = noProlineRuleSeries;
+    }
+
+    /**
+     * Sets the index for a given modification. If another modification
+     * was already given with the same index the previous setting will be
+     * silently overwritten.
+     *
+     * @param modificationName the name of the modification
+     * @param ptmIndex the index of the modification
+     */
+    public void setPtmIndex(String modificationName, int ptmIndex) {
+        ptmIndexes.put(ptmIndex, modificationName);
+    }
+
+    /**
+     * Returns the name of the modification indexed by the given index.
+     * Null if not found.
+     *
+     * @param ptmIndex the index of the modification to look for
+     * 
+     * @return the name of the modification indexed by the given index
+     */
+    public String getModificationName(int ptmIndex) {
+        return ptmIndexes.get(ptmIndex);
+    }
+
+    /**
+     * Indicates whether the modification profile has PTM indexes.
+     *
+     * @return true if an PTM indexes map is set
+     */
+    public boolean hasPtmIndexes() {
+        return ptmIndexes != null && !ptmIndexes.isEmpty();
+    }
+
+    /**
+     * Returns the index of a given modification, null if not found.
+     *
+     * @param modificationName the name of the modification
+     * 
+     * @return the corresponding index
+     */
+    public Integer getPtmIndex(String modificationName) {
+        for (int index : ptmIndexes.keySet()) {
+            if (modificationName.equalsIgnoreCase(ptmIndexes.get(index))) {
+                return index;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the PTM indexes as a map.
+     *
+     * @return the PTM indexes
+     */
+    public HashMap<Integer, String> getPtmIndexes() {
+        return ptmIndexes;
+    }
+
+    /**
+     * Set the PTM indexes of the modifications searched.
+     * 
+     * @param modificationProfile the modification profile of this search
+     */
+    public void setPtmIndexes(ModificationProfile modificationProfile) {
+        ptmIndexes.clear();
+        int rank = 1;
+        for (String ptm : modificationProfile.getAllModifications()) {
+            int omssaIndex = rank + 118;
+            if (omssaIndex > 128) {
+                omssaIndex += 13;
+            }
+            setPtmIndex(ptm, omssaIndex);
+            rank++;
+        }
+    }
+
+    /**
+     * Imports the OMSSA indexes from an XML file.
+     *
+     * @param modificationsFile the modification file
+     * 
+     * @return a map of all indexes: modification name &gt; OMSSA index
+     * @throws XmlPullParserException if an XmlPullParserException occurs
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     */
+    public static HashMap<String, Integer> getOMSSAIndexes(File modificationsFile) throws XmlPullParserException, FileNotFoundException, IOException {
+
+        HashMap<String, Integer> indexes = new HashMap<String, Integer>();
+
+        // Create the pull parser.
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
+        factory.setNamespaceAware(true);
+        XmlPullParser parser = factory.newPullParser();
+        // Create a reader for the input file.
+        BufferedReader br = new BufferedReader(new FileReader(modificationsFile));
+        // Set the XML Pull Parser to read from this reader.
+        parser.setInput(br);
+        // Start the parsing.
+        int type = parser.next();
+        Integer number = null;
+        // Go through the whole document.
+        while (type != XmlPullParser.END_DOCUMENT) {
+            if (type == XmlPullParser.START_TAG && parser.getName().equals("MSMod")) {
+                parser.next();
+                String numberString = parser.getText();
+                try {
+                    number = new Integer(numberString);
+                } catch (NumberFormatException nfe) {
+                    throw new XmlPullParserException("Found non-parseable text '" + numberString
+                            + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");
+                }
+            }
+            if (type == XmlPullParser.START_TAG && parser.getName().equals("MSModSpec_name")) {
+                parser.next();
+                String name = parser.getText();
+                if (number != null) {
+                    indexes.put(name, number);
+                }
+            }
+            type = parser.next();
+        }
+        br.close();
+
+        return indexes;
     }
 
     @Override

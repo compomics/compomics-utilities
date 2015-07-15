@@ -279,13 +279,17 @@ public class ObjectsCache {
                 throw new IllegalArgumentException("Object key (" + objectKey + ") should not contain " + cacheSeparator);
             }
             loadedObjectsKeys.add(getCacheKey(dbName, tableName, objectKey));
-            if (!loadedObjectsMap.containsKey(dbName)) {
-                loadedObjectsMap.put(dbName, new HashMap<String, HashMap<String, CacheEntry>>());
+            HashMap<String, HashMap<String, CacheEntry>> dbCache = loadedObjectsMap.get(dbName);
+            if (dbCache == null) {
+                dbCache = new HashMap<String, HashMap<String, CacheEntry>>(2);
+                loadedObjectsMap.put(dbName, dbCache);
             }
-            if (!loadedObjectsMap.get(dbName).containsKey(tableName)) {
-                loadedObjectsMap.get(dbName).put(tableName, new HashMap<String, CacheEntry>());
+            HashMap<String, CacheEntry> tableCache = dbCache.get(tableName);
+            if (tableCache == null) {
+                tableCache = new HashMap<String, CacheEntry>(512);
+                dbCache.put(tableName, tableCache);
             }
-            loadedObjectsMap.get(dbName).get(tableName).put(objectKey, new CacheEntry(object, modifiedOrNew));
+            tableCache.put(objectKey, new CacheEntry(object, modifiedOrNew));
             updateCache();
         }
     }

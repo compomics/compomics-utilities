@@ -16,27 +16,33 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * H2O loss.
      */
-    public static final NeutralLoss H2O = new NeutralLoss("H2O", 2 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass(), false);
+    public static final NeutralLoss H2O = new NeutralLoss("H2O", new AtomChain("H2O"), false);
     /**
      * NH3 loss.
      */
-    public static final NeutralLoss NH3 = new NeutralLoss("NH3", Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass(), false);
+    public static final NeutralLoss NH3 = new NeutralLoss("NH3", new AtomChain("NH3"), false);
     /**
      * H3PO4 loss.
      */
-    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", 3 * Atom.H.getMonoisotopicMass() + Atom.P.getMonoisotopicMass() + 4 * Atom.O.getMonoisotopicMass(), false);
+    public static final NeutralLoss H3PO4 = new NeutralLoss("H3PO4", new AtomChain("H3PO4"), false);
     /**
      * H3PO3 loss.
      */
-    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", Atom.H.getMonoisotopicMass() + Atom.P.getMonoisotopicMass() + 3 * Atom.O.getMonoisotopicMass(), false);
+    public static final NeutralLoss HPO3 = new NeutralLoss("HPO3", new AtomChain("HPO3"), false);
     /**
      * CH4OS loss.
      */
-    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", Atom.C.getMonoisotopicMass() + 4 * Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() + Atom.S.getMonoisotopicMass(), false);
+    public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", new AtomChain("CH4OS"), false);
     /**
      * The mass lost.
+     *
+     * @deprecated use the composition instead.
      */
-    public double mass;
+    private Double mass;
+    /**
+     * The composition of the ion.
+     */
+    private AtomChain composition;
     /**
      * The name of the neutral loss.
      */
@@ -55,20 +61,24 @@ public class NeutralLoss extends ExperimentObject {
      * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
-        return anotherNeutralLoss.name.equals(name)
+        if (anotherNeutralLoss.getComposition() == null || getComposition() == null) { // Backward compatibility
+            return anotherNeutralLoss.name.equals(name)
                 || Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
+        }
+        return anotherNeutralLoss.name.equals(name)
+                || anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
     }
 
     /**
      * Constructor for a user defined neutral loss.
      *
      * @param name name of the neutral loss
-     * @param mass mass of the neutral loss
+     * @param composition the atomic composition of the neutral loss
      * @param fixed is the neutral loss fixed or not
      */
-    public NeutralLoss(String name, double mass, boolean fixed) {
+    public NeutralLoss(String name, AtomChain composition, boolean fixed) {
         this.name = name;
-        this.mass = mass;
+        this.composition = composition;
         this.fixed = fixed;
     }
 
@@ -92,4 +102,35 @@ public class NeutralLoss extends ExperimentObject {
     public void setFixed(boolean fixed) {
         this.fixed = fixed;
     }
+
+    /**
+     * The composition of the loss.
+     *
+     * @return The composition of the loss
+     */
+    public AtomChain getComposition() {
+        return composition;
+    }
+    
+    /**
+     * Sets the composition of the neutral loss.
+     * 
+     * @param composition the composition of the neutral loss
+     */
+    public void setComposition(AtomChain composition) {
+        this.composition = composition;
+    }
+    
+    /**
+     * Returns the mass of the neutral loss, from the atomic composition if available, from the mass field otherwise.
+     * 
+     * @return the mass of the neutral loss
+     */
+    public Double getMass() {
+        if (composition != null) {
+            return composition.getMass();
+        }
+        return mass;
+    }
+
 }

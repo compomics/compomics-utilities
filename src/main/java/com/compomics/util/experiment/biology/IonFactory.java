@@ -168,7 +168,7 @@ public class IonFactory {
 
             int faa = aa + 1;
             AminoAcid currentAA = AminoAcid.getAminoAcid(aaName);
-            forwardMass += currentAA.monoisotopicMass;
+            forwardMass += currentAA.getMonoisotopicMass();
 
             if (modifications.get(faa) != null) {
                 for (PTM ptm : modifications.get(faa)) {
@@ -217,7 +217,7 @@ public class IonFactory {
 
             int raa = sequence.length() - aa - 1;
             currentAA = AminoAcid.getAminoAcid(sequence.charAt(raa));
-            rewindMass += currentAA.monoisotopicMass;
+            rewindMass += currentAA.getMonoisotopicMass();
 
             if (modifications.get(raa + 1) != null) {
                 for (PTM ptm : modifications.get(raa + 1)) {
@@ -260,7 +260,7 @@ public class IonFactory {
         }
 
         AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(sequence.length() - 1));
-        forwardMass += currentAA.monoisotopicMass;
+        forwardMass += currentAA.getMonoisotopicMass();
 
         if (modifications.get(sequence.length()) != null) {
             for (PTM ptm : modifications.get(sequence.length())) {
@@ -316,7 +316,7 @@ public class IonFactory {
                     ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
                     for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                        double mass = aminoAcid.monoisotopicMass;
+                        double mass = aminoAcid.getMonoisotopicMass();
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
                             String ptmName = modificationMatch.getTheoreticPtm();
                             PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
@@ -505,7 +505,7 @@ public class IonFactory {
                         ions.add(immoniumIon);
                     }
 
-                    double mass = aminoAcid.monoisotopicMass;
+                    double mass = aminoAcid.getMonoisotopicMass();
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i + 1)) {
                         String ptmName = modificationMatch.getTheoreticPtm();
                         PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
@@ -672,7 +672,7 @@ public class IonFactory {
                     ArrayList<Double> aminoAcidMasses = new ArrayList<Double>();
                     for (Character aa : aminoAcidPattern.getTargetedAA(i)) {
                         AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                        double mass = aminoAcid.monoisotopicMass;
+                        double mass = aminoAcid.getMonoisotopicMass();
                         for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(i + 1)) {
                             String ptmName = modificationMatch.getTheoreticPtm();
                             PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
@@ -867,7 +867,7 @@ public class IonFactory {
                         ionsMap.put(subType, ions);
                         ions.add(immoniumIon);
                     }
-                    double mass = aminoAcid.monoisotopicMass;
+                    double mass = aminoAcid.getMonoisotopicMass();
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i + 1)) {
                         String ptmName = modificationMatch.getTheoreticPtm();
                         PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
@@ -1095,7 +1095,7 @@ public class IonFactory {
     public static double getLossesMass(ArrayList<NeutralLoss> neutralLosses) {
         double result = 0;
         for (NeutralLoss neutralLoss : neutralLosses) {
-            result += neutralLoss.mass;
+            result += neutralLoss.getMass();
         }
         return result;
     }

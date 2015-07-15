@@ -19,6 +19,7 @@ public abstract class AminoAcid implements Serializable {
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -3158896310928354857L;
+    
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();
     public static final AminoAcid D = new AsparticAcid();
@@ -64,8 +65,14 @@ public abstract class AminoAcid implements Serializable {
     public double averageMass;
     /**
      * Monoisotopic mass of the amino acid.
+     * 
+     * @deprecated use the atomchain
      */
-    public double monoisotopicMass;
+    protected Double monoisotopicMass;
+    /**
+     * The monoisotopic atom chain
+     */
+    protected AtomChain monoisotopicAtomChain;
     /**
      * Cache of the indistinguishable amino acids.
      */
@@ -329,7 +336,11 @@ public abstract class AminoAcid implements Serializable {
     public synchronized void setIndistinguishibleAACache(Double massTolerance) {
         ArrayList<Character> result = new ArrayList<Character>();
         for (char aa : getAminoAcids()) {
-            if (Math.abs(monoisotopicMass - getAminoAcid(aa).monoisotopicMass) < massTolerance) {
+            AminoAcid aminoAcid = getAminoAcid(aa);
+            if (aminoAcid == null) {
+                throw new IllegalArgumentException("Amino acid not found for letter " + aa + ".");
+            }
+            if (Math.abs(getMonoisotopicMass() - aminoAcid.getMonoisotopicMass()) < massTolerance) {
                 result.add(aa);
             }
         }
@@ -484,6 +495,27 @@ public abstract class AminoAcid implements Serializable {
             }
         }
         return uniqueCodes.toArray(new String[uniqueCodes.size()]);
+    }
+    
+    /**
+     * Returns the monoisotopic atom chain representing this amino acid.
+     * 
+     * @return the monoisotopic atom chain representing this amino acid
+     */
+    public AtomChain getMonoisotopicAtomChain() {
+        return monoisotopicAtomChain;
+    }
+    
+    /**
+     * Returns the mass of the amino acid.
+     * 
+     * @return the mass of the amino acid
+     */
+    public Double getMonoisotopicMass() {
+        if (monoisotopicAtomChain == null) {
+            return monoisotopicMass;
+        }
+        return monoisotopicAtomChain.getMass();
     }
 
     @Override

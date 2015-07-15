@@ -85,7 +85,7 @@ public class PsmIterator {
         this.identification = identification;
         if (spectrumKeys == null) {
             if (spectrumFile != null) {
-                this.spectrumKeys = identification.getSpectrumIdentification(spectrumFile);
+                this.spectrumKeys = new ArrayList<String>(identification.getSpectrumIdentification(spectrumFile));
             } else {
                 this.spectrumKeys = new ArrayList<String>(identification.getSpectrumIdentificationSize());
                 for (String tempSpectrumFile : identification.getOrderedSpectrumFileNames()) {

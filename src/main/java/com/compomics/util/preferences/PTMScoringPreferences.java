@@ -15,19 +15,6 @@ public class PTMScoringPreferences implements Serializable {
      */
     static final long serialVersionUID = -6656074270981104708L;
     /**
-     * Boolean indicating whether the A-score should be calculated.
-     *
-     * @deprecated use probabilitsticScoreCalculation instead
-     */
-    private boolean aScoreCalculation = true;
-    /**
-     * Boolean indicating whether neutral losses shall be accounted in the
-     * calculation of the A-score.
-     *
-     * @deprecated use probabilisticScoreNeutralLosses instead
-     */
-    private boolean aScoreNeutralLosses = false;
-    /**
      * The FLR threshold in percent
      */
     private double flr = 1.0;
@@ -72,10 +59,6 @@ public class PTMScoringPreferences implements Serializable {
      * required
      */
     public Boolean isProbabilitsticScoreCalculation() {
-        if (probabilitsticScoreCalculation == null) {
-            // Backward compatibility check
-            probabilitsticScoreCalculation = aScoreCalculation;
-        }
         return probabilitsticScoreCalculation;
     }
 
@@ -155,10 +138,6 @@ public class PTMScoringPreferences implements Serializable {
      * score
      */
     public Boolean isProbabilisticScoreNeutralLosses() {
-        if (probabilisticScoreNeutralLosses == null) {
-            // Backward compatibility check
-            probabilisticScoreNeutralLosses = aScoreNeutralLosses;
-        }
         return probabilisticScoreNeutralLosses;
     }
 
@@ -199,52 +178,7 @@ public class PTMScoringPreferences implements Serializable {
     public void setSequenceMatchingPreferences(SequenceMatchingPreferences sequenceMatchingPreferences) {
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
     }
-
-    /**
-     * Returns a boolean indicating whether the A-score should be calculated.
-     *
-     * @deprecated use isProbabilitsticScoreCalculation instead
-     * @return a boolean indicating whether the A-score should be calculated
-     */
-    public boolean aScoreCalculation() {
-        return aScoreCalculation;
-    }
-
-    /**
-     * Sets whether the A-score should be calculated.
-     *
-     * @deprecated use setProbabilitsticScoreCalculation instead
-     * @param aScoreCalculation a boolean indicating whether the A-score should
-     * be calculated
-     */
-    public void setaScoreCalculation(boolean aScoreCalculation) {
-        this.aScoreCalculation = aScoreCalculation;
-    }
-
-    /**
-     * Indicates whether the A-score calculation should take neutral losses into
-     * account.
-     *
-     * @deprecated use isProbabilisticScoreNeutralLosses instead
-     * @return a boolean indicating whether the A-score calculation should take
-     * neutral losses into account
-     */
-    public boolean isaScoreNeutralLosses() {
-        return aScoreNeutralLosses;
-    }
-
-    /**
-     * Sets whether the A-score calculation should take neutral losses into
-     * account.
-     *
-     * @deprecated use setProbabilisticScoreNeutralLosses instead
-     * @param aScoreNeutralLosses a boolean indicating whether the A-score
-     * calculation should take neutral losses into account
-     */
-    public void setaScoreNeutralLosses(boolean aScoreNeutralLosses) {
-        this.aScoreNeutralLosses = aScoreNeutralLosses;
-    }
-
+    
     /**
      * Returns the FLR threshold.
      *

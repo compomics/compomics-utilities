@@ -1,10 +1,14 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.atoms.Carbon;
+import com.compomics.util.experiment.biology.atoms.Helium;
 import com.compomics.util.experiment.biology.atoms.Hydrogen;
+import com.compomics.util.experiment.biology.atoms.Lithium;
 import com.compomics.util.experiment.biology.atoms.Nitrogen;
 import com.compomics.util.experiment.biology.atoms.Oxygen;
 import com.compomics.util.experiment.biology.atoms.Phosphorus;
+import com.compomics.util.experiment.biology.atoms.Selenium;
+import com.compomics.util.experiment.biology.atoms.Sodium;
 import com.compomics.util.experiment.biology.atoms.Sulfur;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
@@ -18,29 +22,86 @@ import java.util.HashMap;
 public abstract class Atom extends ExperimentObject {
 
     /**
-     * A hydrogen atom.
+     * The hydrogen atom.
      */
     public static final Atom H = new Hydrogen();
     /**
-     * A nitrogen atom.
+     * The nitrogen atom.
      */
     public static final Atom N = new Nitrogen();
     /**
-     * An oxygen atom.
+     * The oxygen atom.
      */
     public static final Atom O = new Oxygen();
     /**
-     * A carbon atom.
+     * The carbon atom.
      */
     public static final Atom C = new Carbon();
     /**
-     * A sulfur atom.
+     * The sulfur atom.
      */
     public static final Atom S = new Sulfur();
     /**
-     * A phosphorys atom.
+     * The phosphorus atom.
      */
     public static final Atom P = new Phosphorus();
+    /**
+     * The helium atom.
+     */
+    public static final Atom He = new Helium();
+    /**
+     * The phosphorus atom.
+     */
+    public static final Atom Li = new Lithium();
+    /**
+     * The sodium atom.
+     */
+    public static final Atom Na = new Sodium();
+    /**
+     * The selenium atom.
+     */
+    public static final Atom Se = new Selenium();
+    
+    /**
+     * Returns an array of implemented atoms indicated by their short name.
+     * 
+     * @return an array of implemented atoms
+     */
+    public static String[] getImplementedAtoms() {
+        return new String[] {"H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+    }
+
+    /**
+     * Returns the atom corresponding to the given short name.
+     *
+     * @param shortName the short name of the atom
+     *
+     * @return the atom corresponding to the given short name
+     */
+    public static Atom getAtom(String shortName) {
+        if (shortName.equals("H")) {
+            return H;
+        } else if (shortName.equals("N")) {
+            return N;
+        } else if (shortName.equals("O")) {
+            return O;
+        } else if (shortName.equals("C")) {
+            return C;
+        } else if (shortName.equals("S")) {
+            return S;
+        } else if (shortName.equals("P")) {
+            return P;
+        } else if (shortName.equals("He")) {
+            return He;
+        } else if (shortName.equals("Li")) {
+            return Li;
+        } else if (shortName.equals("Na")) {
+            return Na;
+        } else if (shortName.equals("Se")) {
+            return Se;
+        }
+        throw new UnsupportedOperationException("Atom " + shortName + " not implemented.");
+    }
 
     /**
      * The monoisotopic mass. Access is faster then querying the isotope map.
@@ -92,7 +153,7 @@ public abstract class Atom extends ExperimentObject {
     }
 
     /**
-     * returns a list of isotopes for which a mass is available relative to the
+     * returns an unsorted list of isotopes for which a mass is available relative to the
      * monoisotopic peak (+1 for carbon 13).
      *
      * @return a list of isotopes for which a mass is available

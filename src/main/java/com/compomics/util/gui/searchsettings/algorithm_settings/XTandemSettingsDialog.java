@@ -7,7 +7,6 @@ import com.compomics.util.experiment.identification.identification_parameters.Xt
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
-import com.compomics.util.gui.ptm.PtmDialogParent;
 import com.compomics.util.preferences.ModificationProfile;
 import java.awt.Color;
 import java.awt.Frame;
@@ -32,7 +31,7 @@ import org.jfree.chart.plot.PlotOrientation;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDialogParent {
+public class XTandemSettingsDialog extends javax.swing.JDialog {
 
     /**
      * The X!Tandem parameters class containing the information to display.
@@ -2277,7 +2276,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
     }//GEN-LAST:event_openModificationSettingsJButtonMouseExited
 
     private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
-        new ModificationsDialog((Frame) this.getParent(), this, true);
+        new ModificationsDialog((Frame) this.getParent(), true);
+        updateModificationList();
     }//GEN-LAST:event_openModificationSettingsJButtonActionPerformed
 
     /**
@@ -2497,8 +2497,5 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements PtmDia
     private javax.swing.JLabel usePotentialModsLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void updateModifications() {
-        updateModificationList();
-    }
+    
 }

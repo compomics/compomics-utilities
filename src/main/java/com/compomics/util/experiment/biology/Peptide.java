@@ -66,24 +66,6 @@ public class Peptide extends ExperimentObject {
      * Constructor for the peptide.
      *
      * @param aSequence The peptide sequence
-     * @param parentProteins The parent proteins, cannot be null or empty
-     * @param modifications The PTM of this peptide
-     *
-     * @deprecated use peptide without proteins and remap the peptide to the
-     * proteins a posteriori instead
-     *
-     * @throws IllegalArgumentException Thrown if the peptide sequence contains
-     * unknown amino acids
-     */
-    public Peptide(String aSequence, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
-        this(aSequence, modifications);
-        setParentProteins(parentProteins);
-    }
-
-    /**
-     * Constructor for the peptide.
-     *
-     * @param aSequence The peptide sequence
      * @param modifications The PTM of this peptide
      * @throws IllegalArgumentException Thrown if the peptide sequence contains
      * unknown amino acids
@@ -101,27 +83,7 @@ public class Peptide extends ExperimentObject {
             this.modifications.add(mod);
         }
     }
-
-    /**
-     * Constructor for the peptide.
-     *
-     * @deprecated use the constructor without mass. The mass will be
-     * recalculated.
-     * @param aSequence The peptide sequence
-     * @param mass The peptide mass
-     * @param parentProteins The parent proteins, cannot be null or empty
-     * @param modifications The PTM of this peptide
-     */
-    public Peptide(String aSequence, Double mass, ArrayList<String> parentProteins, ArrayList<ModificationMatch> modifications) {
-        this.sequence = aSequence;
-        sequence = sequence.replaceAll("[#*$%&]", "");
-        this.mass = mass;
-        for (ModificationMatch mod : modifications) {
-            this.modifications.add(mod);
-        }
-        setParentProteins(parentProteins);
-    }
-
+    
     /**
      * Getter for the mass.
      *
@@ -1184,10 +1146,10 @@ public class Peptide extends ExperimentObject {
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         for (int i = 0; i < modifications.size(); i++) {
-            if (modifications.get(i).getModificationSite() == 1) { // ! (MODAA && MODMAX)
+            if (modifications.get(i).getModificationSite() == 1) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    nTerm = ptmFactory.getShortName(modifications.get(i).getTheoreticPtm());
+                    nTerm = ptm.getShortName();
                 }
             }
         }
@@ -1213,7 +1175,7 @@ public class Peptide extends ExperimentObject {
             if (modifications.get(i).getModificationSite() == sequence.length()) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    cTerm = ptmFactory.getShortName(modifications.get(i).getTheoreticPtm());
+                    cTerm = ptm.getShortName();
                 }
             }
         }
@@ -1422,7 +1384,7 @@ public class Peptide extends ExperimentObject {
                 AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
 
                 if (currentAA != null) {
-                    mass += currentAA.monoisotopicMass;
+                    mass += currentAA.getMonoisotopicMass();
                 } else {
                     System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
                 }

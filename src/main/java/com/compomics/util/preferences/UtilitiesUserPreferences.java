@@ -75,7 +75,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * The memory to use.
      */
-    private int memoryPreference = 4 * 1024;
+    private Integer memoryPreference = 4 * 1024;
     /**
      * The Java Home, for example, C:\Program Files\Java\jdk1.8.0_25\bin. Null
      * if not set. Note that this setting will be ignored of a JavaHome.txt file
@@ -83,13 +83,12 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private String javaHome = null;
     /**
-     * The folder where to store the protein trees. Note: for backward
-     * compatibility not initialized here.
+     * The folder where to store the protein trees.
      */
     private File proteinTreeFolder = null;
     /**
      * Maps saving the protein trees import time in a map: FASTA file size &gt;
-     * import times. Note: for backward compatibility not initialized here.
+     * import times.
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
@@ -296,11 +295,7 @@ public class UtilitiesUserPreferences implements Serializable {
      *
      * @return the preferred upper memory limit
      */
-    public int getMemoryPreference() {
-        if (memoryPreference == 0) {
-            // needed for backward compatibility
-            memoryPreference = 4 * 1024;
-        }
+    public Integer getMemoryPreference() {
         return memoryPreference;
     }
 
@@ -639,12 +634,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the last used databases.
      */
     public ArrayList<File> getFavoriteDBs() {
-        if (favoriteDBs == null) {
-            // backward compatibility check
-            favoriteDBs = new ArrayList<File>();
-        } else {
             checkDbFiles();
-        }
         return favoriteDBs;
     }
 
@@ -703,7 +693,6 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public HashMap<Long, ArrayList<Long>> getProteinTreeImportTime() {
         if (proteinTreeImportTime == null) {
-            // backward compatibility check
             proteinTreeImportTime = new HashMap<Long, ArrayList<Long>>();
         }
         return proteinTreeImportTime;
@@ -716,11 +705,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * @param importTime the import time
      */
     public void addProteinTreeImportTime(long fileSize, long importTime) {
-        if (proteinTreeImportTime == null) {
-            // backward compatibility check
-            proteinTreeImportTime = new HashMap<Long, ArrayList<Long>>();
-        }
-        ArrayList<Long> importTimes = proteinTreeImportTime.get(fileSize);
+        ArrayList<Long> importTimes = getProteinTreeImportTime().get(fileSize);
         if (importTimes == null) {
             importTimes = new ArrayList<Long>();
             proteinTreeImportTime.put(fileSize, importTimes);

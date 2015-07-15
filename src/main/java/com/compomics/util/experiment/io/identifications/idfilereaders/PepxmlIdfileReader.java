@@ -359,7 +359,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             if (modifiedAaMass != null) {
                                 char aa = sequence.charAt(site - 1);
                                 AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                                double modificationMass = modifiedAaMass - aminoAcid.monoisotopicMass;
+                                double modificationMass = modifiedAaMass - aminoAcid.getMonoisotopicMass();
                                 modificationMass = Util.roundDouble(modificationMass, 2);
                                 String tempModificationName = modificationMass + "@" + aa;
                                 ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);

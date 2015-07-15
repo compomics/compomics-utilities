@@ -1,5 +1,8 @@
 package com.compomics.util.experiment.biology.ions;
 
+import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.AtomChain;
+import com.compomics.util.experiment.biology.AtomImpl;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.pride.CvTerm;
@@ -9,8 +12,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * This class models a reporter ion and is its own factory. Note: By convention
- * the mass includes a proton here.
+ * This class models a reporter ion and is its own factory.
  *
  * @author Marc Vaudel
  */
@@ -25,169 +27,193 @@ public class ReporterIon extends Ion {
      */
     private static HashMap<String, ReporterIon> implementedIons = new HashMap<String, ReporterIon>();
     /**
-     * Standard reporter ion iTRAQ 113.
+     * Standard reporter ion iTRAQ 4Plex 114.
      */
-    public final static ReporterIon iTRAQ113 = new ReporterIon("iTRAQ113", 113.1075);
+    public final static ReporterIon iTRAQ4Plex_114 = new ReporterIon("iTRAQ4Plex_114", getComposition("iTRAQ4Plex_114"));
     /**
-     * Standard reporter ion iTRAQ 114.
+     * Standard reporter ion iTRAQ 4Plex 115.
      */
-    public final static ReporterIon iTRAQ114 = new ReporterIon("iTRAQ114", 114.111);
+    public final static ReporterIon iTRAQ4Plex_115 = new ReporterIon("iTRAQ4Plex_115", getComposition("iTRAQ4Plex_115"));
     /**
-     * Standard reporter ion iTRAQ 115.
+     * Standard reporter ion iTRAQ 4Plex 116.
      */
-    public final static ReporterIon iTRAQ115 = new ReporterIon("iTRAQ115", 115.1079);
+    public final static ReporterIon iTRAQ4Plex_116 = new ReporterIon("iTRAQ4Plex_116", getComposition("iTRAQ4Plex_116"));
     /**
-     * Standard reporter ion iTRAQ 116.
+     * Standard reporter ion iTRAQ 4Plex 117.
      */
-    public final static ReporterIon iTRAQ116 = new ReporterIon("iTRAQ116", 116.1113);
+    public final static ReporterIon iTRAQ4Plex_117 = new ReporterIon("iTRAQ4Plex_117", getComposition("iTRAQ4Plex_117"));
     /**
-     * Standard reporter ion iTRAQ 117.
+     * Standard reporter ion iTRAQ 8Plex 113.
      */
-    public final static ReporterIon iTRAQ117 = new ReporterIon("iTRAQ117", 117.11465);
+    public final static ReporterIon iTRAQ8Plex_113 = new ReporterIon("iTRAQ8Plex_113", getComposition("iTRAQ8Plex_113"));
     /**
-     * Standard reporter ion iTRAQ 118.
+     * Standard reporter ion iTRAQ 8Plex 114.
      */
-    public final static ReporterIon iTRAQ118 = new ReporterIon("iTRAQ118", 118.1117);
+    public final static ReporterIon iTRAQ8Plex_114 = new ReporterIon("iTRAQ8Plex_114", getComposition("iTRAQ8Plex_114"));
     /**
-     * Standard reporter ion iTRAQ 119.
+     * Standard reporter ion iTRAQ 8Plex 115.
      */
-    public final static ReporterIon iTRAQ119 = new ReporterIon("iTRAQ119", 119.115);
+    public final static ReporterIon iTRAQ8Plex_115 = new ReporterIon("iTRAQ8Plex_115", getComposition("iTRAQ8Plex_115"));
     /**
-     * Standard reporter ion iTRAQ 121.
+     * Standard reporter ion iTRAQ 8Plex 116.
      */
-    public final static ReporterIon iTRAQ121 = new ReporterIon("iTRAQ121", 121.1217);
+    public final static ReporterIon iTRAQ8Plex_116 = new ReporterIon("iTRAQ8Plex_116", getComposition("iTRAQ8Plex_116"));
+    /**
+     * Standard reporter ion iTRAQ 8Plex 117.
+     */
+    public final static ReporterIon iTRAQ8Plex_117 = new ReporterIon("iTRAQ8Plex_117", getComposition("iTRAQ8Plex_117"));
+    /**
+     * Standard reporter ion iTRAQ 8Plex 118.
+     */
+    public final static ReporterIon iTRAQ8Plex_118 = new ReporterIon("iTRAQ8Plex_118", getComposition("iTRAQ8Plex_118"));
+    /**
+     * Standard reporter ion iTRAQ 8Plex 119.
+     */
+    public final static ReporterIon iTRAQ8Plex_119 = new ReporterIon("iTRAQ8Plex_119", getComposition("iTRAQ8Plex_119"));
+    /**
+     * Standard reporter ion iTRAQ 8Plex 121.
+     */
+    public final static ReporterIon iTRAQ8Plex_121 = new ReporterIon("iTRAQ8Plex_121", getComposition("iTRAQ8Plex_121"));
     /**
      * Standard reporter ion iTRAQ (reporter + balancer).
      */
-    public final static ReporterIon iTRAQ_145 = new ReporterIon("iTRAQ145", 145.1); // @TODO: check the mass!!
+    public final static ReporterIon iTRAQ_145 = new ReporterIon("iTRAQ145", 145.1); // @TODO: add the actual composition
     /**
      * Standard reporter ion iTRAQ (reporter + balancer).
      */
-    public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 305.2); // @TODO: check the mass!!
+    public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 305.2); // @TODO: add the actual composition
     /**
-     * Standard reporter ion for an old TMT 126.
+     * Standard reporter ion TMT 126.
      */
-    public final static ReporterIon TMT126_old = new ReporterIon("TMT126", 126.127491);
+    public final static ReporterIon TMT_126 = new ReporterIon("TMT_126", getComposition("TMT_126"));
     /**
-     * Standard reporter ion for an old TMT 127.
+     * Standard reporter ion TMT 127N.
      */
-    public final static ReporterIon TMT127_old = new ReporterIon("TMT127", 127.1308594);
+    public final static ReporterIon TMT_127N = new ReporterIon("TMT_127N", getComposition("TMT_127N"));
     /**
-     * Standard reporter ion for an old TMT 128.
+     * Standard reporter ion TMT 127C.
      */
-    public final static ReporterIon TMT128_old = new ReporterIon("TMT128", 128.1341553);
+    public final static ReporterIon TMT_127C = new ReporterIon("TMT_127C", getComposition("TMT_127C"));
     /**
-     * Standard reporter ion for an old TMT 129.
+     * Standard reporter ion TMT 128N.
      */
-    public final static ReporterIon TMT129_old = new ReporterIon("TMT129", 129.1375046);
+    public final static ReporterIon TMT_128N = new ReporterIon("TMT_128N", getComposition("TMT_128N"));
     /**
-     * Standard reporter ion for an old TMT 130.
+     * Standard reporter ion TMT 128C.
      */
-    public final static ReporterIon TMT130_old = new ReporterIon("TMT130", 130.1408768);
+    public final static ReporterIon TMT_128C = new ReporterIon("TMT_128C", getComposition("TMT_128C"));
     /**
-     * Standard reporter ion for an old TMT 131.
+     * Standard reporter ion TMT 129N.
      */
-    public final static ReporterIon TMT131_old = new ReporterIon("TMT131", 131.1444851);
+    public final static ReporterIon TMT_129N = new ReporterIon("TMT_129N", getComposition("TMT_129N"));
     /**
-     * Standard reporter ion TMT 126 obtained by hcd fragmentation.
+     * Standard reporter ion TMT 129C.
      */
-    public final static ReporterIon TMT126_hcd = new ReporterIon("TMT126", 126.127726);
+    public final static ReporterIon TMT_129C = new ReporterIon("TMT_129C", getComposition("TMT_129C"));
     /**
-     * Standard reporter ion TMT 126 obtained by etd fragmentation.
+     * Standard reporter ion TMT 130N.
      */
-    public final static ReporterIon TMT126_etd = new ReporterIon("TMT114", 114.127725);
+    public final static ReporterIon TMT_130N = new ReporterIon("TMT_130N", getComposition("TMT_130N"));
     /**
-     * Standard reporter ion TMT 127 obtained by hcd fragmentation.
+     * Standard reporter ion TMT 130C.
      */
-    public final static ReporterIon TMT127_hcd = new ReporterIon("TMT127", 127.124761);
+    public final static ReporterIon TMT_130C = new ReporterIon("TMT_130C", getComposition("TMT_130C"));
     /**
-     * Standard reporter ion TMT 127 obtained by etd fragmentation.
+     * Standard reporter ion TMT 131.
      */
-    public final static ReporterIon TMT127_etd = new ReporterIon("TMT115", 115.124760);
+    public final static ReporterIon TMT_131 = new ReporterIon("TMT_131", getComposition("TMT_131"));
     /**
-     * Standard reporter ion TMT 127N obtained by hcd fragmentation.
+     * Standard reporter ion TMT 126 with ETD fragmentation.
      */
-    public final static ReporterIon TMT127N_hcd = new ReporterIon("TMT127N", 127.124761);
+    public final static ReporterIon TMT_126_ETD = new ReporterIon("TMT_126_ETD", getComposition("TMT_126_ETD"));
     /**
-     * Standard reporter ion TMT 127C obtained by hcd fragmentation.
+     * Standard reporter ion TMT 127N with ETD fragmentation.
      */
-    public final static ReporterIon TMT127C_hcd = new ReporterIon("TMT127C", 127.131081);
+    public final static ReporterIon TMT_127N_ETD = new ReporterIon("TMT_127N_ETD", getComposition("TMT_127N_ETD"));
     /**
-     * Standard reporter ion TMT 128 obtained by hcd fragmentation.
+     * Standard reporter ion TMT 127C with ETD fragmentation.
      */
-    public final static ReporterIon TMT128_hcd = new ReporterIon("TMT128", 128.134433);
+    public final static ReporterIon TMT_127C_ETD = new ReporterIon("TMT_127C_ETD", getComposition("TMT_127C_ETD"));
     /**
-     * Standard reporter ion TMT 128 obtained by etd fragmentation.
+     * Standard reporter ion TMT 128N with ETD fragmentation.
      */
-    public final static ReporterIon TMT128_etd = new ReporterIon("TMT116", 116.134433);
+    public final static ReporterIon TMT_128N_ETD = new ReporterIon("TMT_128N_ETD", getComposition("TMT_128N_ETD"));
     /**
-     * Standard reporter ion TMT 128N obtained by hcd fragmentation.
+     * Standard reporter ion TMT 128C with ETD fragmentation.
      */
-    public final static ReporterIon TMT128N_hcd = new ReporterIon("TMT128N", 128.128116);
+    public final static ReporterIon TMT_128C_ETD = new ReporterIon("TMT_128C_ETD", getComposition("TMT_128C_ETD"));
     /**
-     * Standard reporter ion TMT 128C obtained by hcd fragmentation.
+     * Standard reporter ion TMT 129N with ETD fragmentation.
      */
-    public final static ReporterIon TMT128C_hcd = new ReporterIon("TMT128C", 128.134436);
+    public final static ReporterIon TMT_129N_ETD = new ReporterIon("TMT_129N_ETD", getComposition("TMT_129N_ETD"));
     /**
-     * Standard reporter ion TMT 129 obtained by hcd fragmentation.
+     * Standard reporter ion TMT 129C with ETD fragmentation.
      */
-    public final static ReporterIon TMT129_hcd = new ReporterIon("TMT129", 129.131471);
+    public final static ReporterIon TMT_129C_ETD = new ReporterIon("TMT_129C_ETD", getComposition("TMT_129C_ETD"));
     /**
-     * Standard reporter ion TMT 129 obtained by etd fragmentation.
+     * Standard reporter ion TMT 130N with ETD fragmentation.
      */
-    public final static ReporterIon TMT129_etd = new ReporterIon("TMT117", 117.131468);
+    public final static ReporterIon TMT_130N_ETD = new ReporterIon("TMT_130N_ETD", getComposition("TMT_130N_ETD"));
     /**
-     * Standard reporter ion TMT 129N obtained by hcd fragmentation.
+     * Standard reporter ion TMT 130C with ETD fragmentation.
      */
-    public final static ReporterIon TMT129N_hcd = new ReporterIon("TMT129N", 129.131471);
+    public final static ReporterIon TMT_130C_ETD = new ReporterIon("TMT_130C_ETD", getComposition("TMT_130C_ETD"));
     /**
-     * Standard reporter ion TMT 129C obtained by hcd fragmentation.
+     * Standard reporter ion TMT 131 with ETD fragmentation.
      */
-    public final static ReporterIon TMT129C_hcd = new ReporterIon("TMT129C", 129.137790);
-    /**
-     * Standard reporter ion TMT 130 obtained by hcd fragmentation.
-     */
-    public final static ReporterIon TMT130_hcd = new ReporterIon("TMT130", 130.141141);
-    /**
-     * Standard reporter ion TMT 130 obtained by etd fragmentation.
-     */
-    public final static ReporterIon TMT130_etd = new ReporterIon("TMT118", 118.141141);
-    /**
-     * Standard reporter ion TMT 130N obtained by hcd fragmentation.
-     */
-    public final static ReporterIon TMT130N_hcd = new ReporterIon("TMT130N", 130.134825);
-    /**
-     * Standard reporter ion TMT 130C obtained by hcd fragmentation.
-     */
-    public final static ReporterIon TMT130C_hcd = new ReporterIon("TMT130C", 130.141145);
-    /**
-     * Standard reporter ion TMT 131 obtained by hcd fragmentation.
-     */
-    public final static ReporterIon TMT131_hcd = new ReporterIon("TMT131", 131.138180);
-    /**
-     * Standard reporter ion TMT 131 obtained by etd fragmentation.
-     */
-    public final static ReporterIon TMT131_etd = new ReporterIon("TMT119", 119.138176);
+    public final static ReporterIon TMT_131_ETD = new ReporterIon("TMT_131_ETD", getComposition("TMT_131_ETD"));
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
-    public final static ReporterIon TMT_230 = new ReporterIon("TMT230", 230.2); // @TODO: check the mass!!
+    public final static ReporterIon TMT_230 = new ReporterIon("TMT230", 230.2); // @TODO: add the actual composition
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
-    public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 226.2); // @TODO: check the mass!!
+    public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 226.2); // @TODO: add the actual composition
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
-    public final static ReporterIon ACE_K_126 = new ReporterIon("aceK126", 126);
+    public final static ReporterIon ACE_K_126 = new ReporterIon("aceK126", new AtomChain("C7H11ON"));
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
-    public final static ReporterIon ACE_K_143 = new ReporterIon("aceK143", 143);
+    public final static ReporterIon ACE_K_143 = new ReporterIon("aceK143", new AtomChain("C7H14ON2"));
     /**
      * Standard reporter ion for phosphorylation of tyrosine (PMID: 11473401).
      */
-    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY216", 216);
+    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY", new AtomChain("C8H10PO4"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQ = new ReporterIon("QQ", new AtomChain("C10H16N4O4"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQ_H2O = new ReporterIon("QQ-H2O", new AtomChain("C10H14N4O3"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQT = new ReporterIon("QQT", new AtomChain("C14H24N5O6"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQT_H2O = new ReporterIon("QQT-H2O", new AtomChain("C14H22N5O5"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQTG = new ReporterIon("QQTG", new AtomChain("C16H26N6O7"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQTG_H2O = new ReporterIon("QQTG-H2O", new AtomChain("C16H24N6O6"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQTGG = new ReporterIon("QQTGG", new AtomChain("C18H29N7O8"));
+    /**
+     * Standard reporter ion for SUMO-2/3 Q87R.
+     */
+    public final static ReporterIon QQTGG_H2O = new ReporterIon("QQTGG-H2O", new AtomChain("C18H27N7O7"));
     /**
      * Ion name for user defined ions.
      */
@@ -217,6 +243,35 @@ public class ReporterIon extends Ion {
         type = IonType.REPORTER_ION;
         this.name = name;
         this.theoreticMass = mass;
+        if (save) {
+            implementedIons.put(name, this);
+        }
+    }
+
+    /**
+     * Constructor for a user-defined reporter ion. The reporter ion is saved in
+     * a static map by default and can be retrieved using the static methods.
+     * See getReporterIon(String name).
+     *
+     * @param name name of the reporter ion. Should be unique to the ion
+     * @param atomChain the atomic composition of this ion
+     */
+    public ReporterIon(String name, AtomChain atomChain) {
+        this(name, atomChain, true);
+    }
+
+    /**
+     * Constructor for a user-defined reporter ion.
+     *
+     * @param name name of the reporter ion. Should be unique to the ion.
+     * @param atomChain the atomic composition of this ion
+     * @param save if true the reporter ion will be saved in the static map for
+     * later reuse
+     */
+    public ReporterIon(String name, AtomChain atomChain, boolean save) {
+        type = IonType.REPORTER_ION;
+        this.name = name;
+        this.atomChain = atomChain;
         if (save) {
             implementedIons.put(name, this);
         }
@@ -273,7 +328,7 @@ public class ReporterIon extends Ion {
      * @return the index of a reporter ion.
      */
     public int getIndex() {
-        return (int) getTheoreticMass();
+        return getTheoreticMass().intValue();
     }
 
     @Override
@@ -349,8 +404,257 @@ public class ReporterIon extends Ion {
         return false;
     }
 
-    @Override
-    public double getTheoreticMass() {
-        return theoreticMass - ElementaryIon.proton.getTheoreticMass();
+    /**
+     * Convenience method returning the mass + the mass of a proton.
+     *
+     * @return the mass + the mass of a proton
+     */
+    public Double getProtonatedMass() {
+        return getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
+    }
+
+    /**
+     * Returns the atomic composition of the reporter ion of the given name.
+     *
+     * @param reporterIonName the name of the reporter ion of interest
+     *
+     * @return the atomic composition of the reporter ion of the given name
+     */
+    private static AtomChain getComposition(String reporterIonName) {
+        if (reporterIonName.equals("iTRAQ4Plex_114")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 1);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ4Plex_115")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ4Plex_116")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ4Plex_117")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ4Plex_118")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_113")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 6);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_114")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 1);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_115")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 1);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_116")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_117")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_118")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 1), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_119")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 2);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 1), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ8Plex_121")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 1), 6);
+            atomChain.append(new AtomImpl(Atom.H, 0), 12);
+            atomChain.append(new AtomImpl(Atom.N, 1), 2);
+            return atomChain;
+        } else if (reporterIonName.equals("iTRAQ145")) {
+            //@TODO!
+        } else if (reporterIonName.equals("iTRAQ305")) {
+            //@TODO!
+        } else if (reporterIonName.equals("TMT_126")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 8);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_127N")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 8);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_127C")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.C, 1), 1);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_128N")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.C, 1), 1);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_128C")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 6);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_129N")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 6);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_129C")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_130N")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 3);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_130C")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_131")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_126_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_127N_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_127C_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_128N_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_128C_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_129N_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_129C_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_130N_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_130C_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_131_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        }
+        throw new UnsupportedOperationException("Atomic composition not implemented for reporter ion " + reporterIonName + ".");
     }
 }

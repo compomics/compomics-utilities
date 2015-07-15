@@ -132,7 +132,7 @@ public class TarUtils {
      * @throws IOException if an IOException occurs
      */
     public static void extractFile(File tarFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
-        extractFile(tarFile, null, null, waitingHandler);
+        extractFile(tarFile, null, waitingHandler);
     }
 
     /**
@@ -149,25 +149,6 @@ public class TarUtils {
      * @throws IOException if an IOException occurs
      */
     public static void extractFile(File tarFile, File destinationFolder, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
-        extractFile(tarFile, destinationFolder, null, waitingHandler);
-    }
-
-    /**
-     * Extracts files from a tar.
-     *
-     * @param tarFile the tar file
-     * @param destinationFolder the destination folder, if null the file will be
-     * extracted according to the archive name
-     * @param backwardCompatibilityCorrection prefix to subtract to entry names
-     * for backward compatibility, ignored if null
-     * @param waitingHandler a waiting handler displaying progress and allowing
-     * canceling the process
-     *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws ArchiveException if an ArchiveException occurs
-     * @throws IOException if an IOException occurs
-     */
-    public static void extractFile(File tarFile, File destinationFolder, String backwardCompatibilityCorrection, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
 
         final int BUFFER = 2048;
         byte data[] = new byte[BUFFER];
@@ -198,9 +179,6 @@ public class TarUtils {
                         if (destinationFolder == null) {
                             entryFolder = entryFile.getParentFile();
                         } else {
-                            if (backwardCompatibilityCorrection != null && entryName.startsWith(backwardCompatibilityCorrection)) {
-                                entryName = entryName.substring(backwardCompatibilityCorrection.length() + 1);
-                            }
                             entryFolder = (new File(destinationFolder, entryName)).getParentFile();
                         }
                         File destinationFile = new File(entryFolder, entryFile.getName());

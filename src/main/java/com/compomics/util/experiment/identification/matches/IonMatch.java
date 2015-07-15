@@ -46,16 +46,6 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Get the matching error.
-     *
-     * @deprecated replaced by getAbsoluteError() and getRelativeError()
-     * @return the matching error
-     */
-    public double getError() {
-        return peak.mz - ((ion.getTheoreticMass() + charge.value * Atom.H.getMonoisotopicMass()) / charge.value);
-    }
-
-    /**
      * Get the absolute matching error in Da.
      *
      * @param subtractIsotope indicates whether the isotope number shall be

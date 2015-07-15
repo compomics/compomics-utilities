@@ -30,16 +30,12 @@ import org.jfree.chart.plot.PlotOrientation;
  *
  * @author Harald Barsnes
  */
-public class ModificationsDialog extends javax.swing.JDialog implements PtmDialogParent {
+public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The dialog parent.
-     */
-    private PtmDialogParent ptmDialogParent;
     /**
      * The CV term mappings.
      */
@@ -83,12 +79,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
      * Creates a new ModificationsDialog.
      *
      * @param parentFrame the parent frame
-     * @param parent the PtmDialogParent parent
      * @param modal if the dialog is to be modal or not
      */
-    public ModificationsDialog(Frame parentFrame, PtmDialogParent parent, boolean modal) {
+    public ModificationsDialog(Frame parentFrame, boolean modal) {
         super(parentFrame, modal);
-        ptmDialogParent = parent;
         initComponents();
 
         // set up tables
@@ -598,7 +592,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            new PtmDialog(this, this, ptmToPrideMap, ptm, false);
+            new PtmDialog(this, ptmToPrideMap, ptm, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
 
@@ -807,7 +801,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            new PtmDialog(this, this, ptmToPrideMap, ptm, true);
+            PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+            if (!ptmDialog.isCanceled()) {
+                updateModifications();
+            }
         }
     }//GEN-LAST:event_userModificationsTableMouseClicked
 
@@ -903,7 +900,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
         int row = userModificationsTable.getSelectedRow();
         String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, this, ptmToPrideMap, ptm, true);
+        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        if (!ptmDialog.isCanceled()) {
+            updateModifications();
+        }
     }//GEN-LAST:event_editUserPTMActionPerformed
 
     /**
@@ -913,7 +913,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
         if (ptmFactory.getUserModifications().size() < 30) {
-            new PtmDialog(this, this, ptmToPrideMap, null, true);
+            PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, null, true);
+            if (!ptmDialog.isCanceled()) {
+                updateModifications();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "In order to ensure compatibility with OMSSA, only 30 user modifications can be implemented. Please delete unused modifications.",
                     "Too many modifications", JOptionPane.WARNING_MESSAGE);
@@ -960,7 +963,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     private void editDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, this, ptmToPrideMap, ptm, false);
+        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        if (!ptmDialog.isCanceled()) {
+            updateModifications();
+        }
     }//GEN-LAST:event_editDefaultPtmJMenuItemActionPerformed
 
     /**
@@ -971,7 +977,10 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        new PtmDialog(this, this, ptmToPrideMap, ptm, true);
+        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        if (!ptmDialog.isCanceled()) {
+            updateModifications();
+        }
     }//GEN-LAST:event_editUserPtmJMenuItemActionPerformed
 
     /**
@@ -994,7 +1003,6 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                     "Saving Error", JOptionPane.WARNING_MESSAGE);
         }
 
-        ptmDialogParent.updateModifications();
         dispose();
     }//GEN-LAST:event_formWindowClosing
 
@@ -1078,7 +1086,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getShortName(name);
+                    return ptmFactory.getPTM(name).getShortName();
                 case 3:
                     return ptmFactory.getPTM(name).getMass();
                 case 4:
@@ -1181,7 +1189,7 @@ public class ModificationsDialog extends javax.swing.JDialog implements PtmDialo
                 case 1:
                     return name;
                 case 2:
-                    return ptmFactory.getShortName(name);
+                    return ptmFactory.getPTM(name).getShortName();
                 case 3:
                     return ptmFactory.getPTM(name).getMass();
                 case 4:

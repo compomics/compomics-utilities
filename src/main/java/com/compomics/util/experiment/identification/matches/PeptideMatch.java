@@ -24,13 +24,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     private String matchKey;
     /**
-     * The key of the main match, typically of the highest score.
-     */
-    private String mainMatchKey;
-    /**
      * All spectrum matches indexed by spectrum id. See Spectrum class.
      */
-    private ArrayList<String> spectrumMatches = new ArrayList<String>();
+    private ArrayList<String> spectrumMatchesKeys = new ArrayList<String>();
     /**
      * Is the peptide match a decoy hit?
      */
@@ -44,9 +40,6 @@ public class PeptideMatch extends IdentificationMatch {
 
     @Override
     public String getKey() {
-        if (matchKey == null) { // needed for backward compatibility
-            return theoreticPeptide.getKey();
-        }
         return matchKey;
     }
     
@@ -71,20 +64,6 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * Constructor for the peptide match.
-     *
-     * @param peptide The matching peptide
-     * @param spectrumMatchKey The key of the main spectrum match
-     * @param matchKey the key of the match as referenced in the identification.
-     */
-    public PeptideMatch(Peptide peptide, String spectrumMatchKey, String matchKey) {
-        theoreticPeptide = peptide;
-        mainMatchKey = spectrumMatchKey;
-        spectrumMatches.add(spectrumMatchKey);
-        this.matchKey = matchKey;
-    }
-
-    /**
      * Getter for the theoretic peptide.
      *
      * @return the theoretic peptide
@@ -103,40 +82,22 @@ public class PeptideMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the key of the main match.
+     * Returns the keys of all spectra matched.
      *
-     * @return the main match key
+     * @return the keys of all spectrum matches
      */
-    public String getMainMatchKey() {
-        return mainMatchKey;
+    public ArrayList<String> getSpectrumMatchesKeys() {
+        return spectrumMatchesKeys;
     }
 
     /**
-     * Sets the main match.
+     * Add a spectrum match key.
      *
-     * @param spectrumMatchKey the key of the main match
+     * @param spectrumMatchKey the key of a spectrum match
      */
-    public void setMainMatch(String spectrumMatchKey) {
-        this.mainMatchKey = spectrumMatchKey;
-    }
-
-    /**
-     * Returns all spectra matched.
-     *
-     * @return all spectrum matches
-     */
-    public ArrayList<String> getSpectrumMatches() {
-        return spectrumMatches;
-    }
-
-    /**
-     * Add a spectrum match.
-     *
-     * @param spectrumMatchKey a spectrum match
-     */
-    public void addSpectrumMatch(String spectrumMatchKey) {
-        if (!spectrumMatches.contains(spectrumMatchKey)) {
-            spectrumMatches.add(spectrumMatchKey);
+    public void addSpectrumMatchKey(String spectrumMatchKey) {
+        if (!spectrumMatchesKeys.contains(spectrumMatchKey)) {
+            spectrumMatchesKeys.add(spectrumMatchKey);
         } else {
             throw new IllegalArgumentException("Trying to add two times the same spectrum match (" + spectrumMatchKey + ") to the same peptide match (" + getKey() + ").");
         }
@@ -148,7 +109,7 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
-        return spectrumMatches.size();
+        return spectrumMatchesKeys.size();
     }
 
     @Override

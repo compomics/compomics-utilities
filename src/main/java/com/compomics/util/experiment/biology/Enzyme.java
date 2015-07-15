@@ -224,18 +224,6 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
-     * Returns a boolean indicating whether a cleavage site was implemented for
-     * this enzyme.
-     *
-     * @return a boolean indicating whether a cleavage site was implemented for
-     * this enzyme
-     * @deprecated use isSemiSpecific instead
-     */
-    public boolean enzymeCleaves() {
-        return !getAminoAcidBefore().isEmpty() || !getAminoAcidAfter().isEmpty();
-    }
-
-    /**
      * Returns a boolean indicating whether the given amino acids represent a
      * cleavage site. Trypsin example: (D, E) returns false (R, D) returns true
      * Note: returns false if no cleavage site is implemented.

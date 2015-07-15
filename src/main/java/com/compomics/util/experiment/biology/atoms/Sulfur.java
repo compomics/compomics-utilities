@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- * A sulfur atom.
+ * The sulfur atom.
  *
  * @author Marc Vaudel
  */

@@ -107,7 +107,7 @@ public class ProteinMatchesIterator {
 
         this.identification = identification;
         if (proteinKeys == null) {
-            this.proteinKeys = identification.getProteinIdentification();
+            this.proteinKeys = new ArrayList<String>(identification.getProteinIdentification());
         } else {
             this.proteinKeys = proteinKeys;
         }
@@ -231,7 +231,7 @@ public class ProteinMatchesIterator {
                         ArrayList<String> psmKeys = new ArrayList<String>(peptideKeys.size());
                         for (String peptideKey : peptideKeys) {
                             PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
-                            psmKeys.addAll(peptideMatch.getSpectrumMatches());
+                            psmKeys.addAll(peptideMatch.getSpectrumMatchesKeys());
                         }
                         identification.loadSpectrumMatches(psmKeys, waitingHandler, false);
                         if (psmParameters != null) {

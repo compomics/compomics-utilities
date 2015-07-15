@@ -178,13 +178,6 @@ public class TagMatcher {
     public TagMatcher(ArrayList<String> fixedModifications, ArrayList<String> variableModifications, SequenceMatchingPreferences sequenceMatchingPreferences) {
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         importModificationMapping(fixedModifications, variableModifications);
-//        try {
-//            debugbw = new BufferedWriter(new FileWriter(new File("C:\\Users\\mva037\\Desktop\\test\\tagCache.txt")));
-//            debugbw.write("Index\n");
-//        } catch (IOException ex) {
-//            System.out.println("Debug error");
-//            ex.printStackTrace();
-//        }
     }
 
     /**

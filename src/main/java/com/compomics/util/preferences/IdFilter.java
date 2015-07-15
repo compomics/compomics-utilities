@@ -38,36 +38,6 @@ public class IdFilter implements Serializable {
      */
     private int maxPepLength;
     /**
-     * Mascot maximal e-value allowed.
-     *
-     * @deprecated
-     */
-    private double mascotMaxEvalue;
-    /**
-     * OMSSA maximal e-value allowed.
-     *
-     * @deprecated
-     */
-    private double omssaMaxEvalue;
-    /**
-     * X!Tandem maximal e-value allowed.
-     *
-     * @deprecated
-     */
-    private double xtandemMaxEvalue;
-    /**
-     * MS-GF+ maximal e-value allowed.
-     *
-     * @deprecated
-     */
-    private double msgfMaxEvalue;
-    /**
-     * MS Amanda maximal e-value allowed.
-     *
-     * @deprecated
-     */
-    private double msAmandaMaxEvalue;
-    /**
      * The maximal m/z deviation allowed.
      */
     private double maxMassDeviation;

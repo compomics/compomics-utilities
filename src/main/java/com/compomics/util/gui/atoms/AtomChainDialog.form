@@ -87,6 +87,9 @@
         </Component>
         <Container class="javax.swing.JSplitPane" name="compositionSplitPane">
           <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
             <Property name="dividerLocation" type="int" value="450"/>
             <Property name="dividerSize" type="int" value="0"/>
           </Properties>
@@ -119,7 +122,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="compositionTxt" pref="279" max="32767" attributes="0"/>
+                                  <Component id="compositionTxt" pref="286" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="clearButton" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -138,12 +141,12 @@
                               <Component id="compositionTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="clearButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="MassLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="massTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="139" max="32767" attributes="0"/>
+                          <EmptySpace pref="146" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -151,7 +154,7 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="compositionLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Composition: "/>
+                    <Property name="text" type="java.lang.String" value="Composition"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="compositionTxt">
@@ -161,7 +164,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="MassLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Mass:"/>
+                    <Property name="text" type="java.lang.String" value="Mass"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="clearButton">
@@ -201,23 +204,20 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="occurrenceLbl" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="occurrenceTxt" max="32767" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="occurrenceTxt" min="-2" pref="237" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="updateButton" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="atomLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="isotopeLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="isotopeCmb" pref="247" max="32767" attributes="0"/>
+                                      <Component id="isotopeCmb" pref="237" max="32767" attributes="0"/>
                                       <Component id="atomCmb" max="32767" attributes="0"/>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="updateButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -232,12 +232,12 @@
                               <Component id="atomLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="atomCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="isotopeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="isotopeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="occurrenceTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="occurrenceLbl" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -252,12 +252,12 @@
               <SubComponents>
                 <Component class="javax.swing.JLabel" name="atomLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Atom:"/>
+                    <Property name="text" type="java.lang.String" value="Atom"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="isotopeLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Isotope:"/>
+                    <Property name="text" type="java.lang.String" value="Isotope"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="occurrenceTxt">
@@ -267,12 +267,12 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="updateButton">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="update"/>
+                    <Property name="text" type="java.lang.String" value="Update"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="occurrenceLbl">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Occurrence:"/>
+                    <Property name="text" type="java.lang.String" value="Occurrence"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="atomCmb">

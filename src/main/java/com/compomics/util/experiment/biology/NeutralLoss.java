@@ -63,7 +63,7 @@ public class NeutralLoss extends ExperimentObject {
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         if (anotherNeutralLoss.getComposition() == null || getComposition() == null) { // Backward compatibility
             return anotherNeutralLoss.name.equals(name)
-                || Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
+                    || Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
         }
         return anotherNeutralLoss.name.equals(name)
                 || anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
@@ -111,19 +111,20 @@ public class NeutralLoss extends ExperimentObject {
     public AtomChain getComposition() {
         return composition;
     }
-    
+
     /**
      * Sets the composition of the neutral loss.
-     * 
+     *
      * @param composition the composition of the neutral loss
      */
     public void setComposition(AtomChain composition) {
         this.composition = composition;
     }
-    
+
     /**
-     * Returns the mass of the neutral loss, from the atomic composition if available, from the mass field otherwise.
-     * 
+     * Returns the mass of the neutral loss, from the atomic composition if
+     * available, from the mass field otherwise.
+     *
      * @return the mass of the neutral loss
      */
     public Double getMass() {
@@ -132,5 +133,4 @@ public class NeutralLoss extends ExperimentObject {
         }
         return mass;
     }
-
 }

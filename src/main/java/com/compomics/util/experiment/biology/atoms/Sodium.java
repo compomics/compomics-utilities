@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.Atom;
 import java.util.HashMap;
 
 /**
- * The sodium atom
+ * The sodium atom.
  *
  * @author Marc Vaudel
  */

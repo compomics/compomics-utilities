@@ -1,6 +1,7 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.identification.spectrum_assumptions;
 
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.massspectrometry.Charge;
 
 /**

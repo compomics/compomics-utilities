@@ -2,8 +2,8 @@ package com.compomics.util.protein_sequences_manager;
 
 import com.compomics.util.protein_sequences_manager.enums.SequenceInputType;
 import com.compomics.util.Util;
-import com.compomics.util.experiment.identification.FastaIndex;
-import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;

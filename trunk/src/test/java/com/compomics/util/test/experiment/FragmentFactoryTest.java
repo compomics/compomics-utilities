@@ -9,7 +9,7 @@ import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

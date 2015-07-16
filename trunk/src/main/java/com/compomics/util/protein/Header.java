@@ -12,7 +12,7 @@
  */
 package com.compomics.util.protein;
 
-import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import java.io.Serializable;
 import org.apache.log4j.Logger;
 

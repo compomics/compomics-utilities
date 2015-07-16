@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.annotation.gene;
 
-import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.protein.Header;
 import java.io.File;

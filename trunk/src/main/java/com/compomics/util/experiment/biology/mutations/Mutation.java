@@ -1,4 +1,6 @@
-package com.compomics.util.experiment.biology;
+package com.compomics.util.experiment.biology.mutations;
+
+import com.compomics.util.experiment.biology.AminoAcid;
 
 /**
  * This class represents a mutation of one amino acid to another from the

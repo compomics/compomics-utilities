@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.identification.protein_sequences;
 
 import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;

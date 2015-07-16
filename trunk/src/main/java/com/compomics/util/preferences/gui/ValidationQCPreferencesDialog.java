@@ -1,7 +1,7 @@
 package com.compomics.util.preferences.gui;
 
 import com.compomics.util.experiment.filtering.Filter;
-import com.compomics.util.experiment.identification.SequenceFactory;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.preferences.ValidationQCPreferences;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;

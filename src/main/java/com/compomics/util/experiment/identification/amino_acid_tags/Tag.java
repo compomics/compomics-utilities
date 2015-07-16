@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.tags;
+package com.compomics.util.experiment.identification.amino_acid_tags;
 
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
@@ -6,7 +6,7 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
+import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.ModificationProfile;
 import com.compomics.util.preferences.SequenceMatchingPreferences;

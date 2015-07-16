@@ -1,17 +1,17 @@
-package com.compomics.util.experiment.identification.tags.matchers;
+package com.compomics.util.experiment.identification.amino_acid_tags.matchers;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.MutationMatrix;
+import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.tags.SequenceSegment;
+import com.compomics.util.experiment.identification.amino_acid_tags.SequenceSegment;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.tags.Tag;
-import com.compomics.util.experiment.identification.tags.TagComponent;
-import com.compomics.util.experiment.identification.tags.tagcomponents.MassGap;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.BufferedWriter;
 import java.io.File;

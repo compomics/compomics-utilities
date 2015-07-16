@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.tags;
+package com.compomics.util.experiment.identification.amino_acid_tags;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;

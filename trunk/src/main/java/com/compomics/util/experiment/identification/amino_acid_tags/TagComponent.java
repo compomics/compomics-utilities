@@ -1,6 +1,5 @@
-package com.compomics.util.experiment.identification.tags;
+package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 /**

@@ -1,5 +1,6 @@
-package com.compomics.util.experiment.biology;
+package com.compomics.util.experiment.biology.mutations;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

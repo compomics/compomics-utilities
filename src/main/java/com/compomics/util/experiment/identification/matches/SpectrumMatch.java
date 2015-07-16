@@ -2,11 +2,11 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.IdentificationMatch;
-import com.compomics.util.experiment.identification.PeptideAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.identification.TagAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
-import com.compomics.util.experiment.identification.tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;

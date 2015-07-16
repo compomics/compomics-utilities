@@ -1,6 +1,6 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.biology.MutationMatrix;
+import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.experiment.identification.SearchParameters;
 import java.io.Serializable;
 

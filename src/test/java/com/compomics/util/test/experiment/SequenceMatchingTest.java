@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.MutationMatrix;
+import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;

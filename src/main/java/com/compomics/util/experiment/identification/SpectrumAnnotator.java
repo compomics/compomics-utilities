@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;

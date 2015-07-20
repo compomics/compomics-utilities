@@ -13,7 +13,7 @@ import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.refinementparameters.MascotScore;
+import com.compomics.util.experiment.refinementparameters.PepnovoAssumptionDetails;
 import junit.framework.Assert;
 
 import java.io.File;
@@ -103,10 +103,11 @@ public class IdentificationDBTest extends TestCase {
                 Assert.assertTrue(testProteinMatch.getKey().equals(proteinKey));
 
                 double testScore = 12.3;
-                MascotScore testParameter = new MascotScore(testScore);
+                PepnovoAssumptionDetails testParameter = new PepnovoAssumptionDetails();
+                testParameter.setRankScore(testScore);
                 idDB.addSpectrumMatchParameter(spectrumKey, testParameter);
-                testParameter = (MascotScore) idDB.getSpectrumMatchParameter(spectrumKey, testParameter, true);
-                Assert.assertTrue(testParameter.getScore() == testScore);
+                testParameter = (PepnovoAssumptionDetails) idDB.getSpectrumMatchParameter(spectrumKey, testParameter, true);
+                Assert.assertTrue(testParameter.getRankScore()== testScore);
 
             } finally {
                 idDB.close();

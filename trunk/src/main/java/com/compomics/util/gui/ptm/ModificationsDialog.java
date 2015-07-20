@@ -1,6 +1,7 @@
 package com.compomics.util.gui.ptm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
@@ -227,7 +228,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         defaultPtmPopupMenu = new javax.swing.JPopupMenu();
-        editDefaultPtmJMenuItem = new javax.swing.JMenuItem();
+        viewDefaultPtmJMenuItem = new javax.swing.JMenuItem();
         userPtmPopupMenu = new javax.swing.JPopupMenu();
         editUserPtmJMenuItem = new javax.swing.JMenuItem();
         modificationsEditorPanel = new javax.swing.JPanel();
@@ -271,13 +272,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         modificationsHelpJButton = new javax.swing.JButton();
 
-        editDefaultPtmJMenuItem.setText("Edit");
-        editDefaultPtmJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        viewDefaultPtmJMenuItem.setText("View");
+        viewDefaultPtmJMenuItem.setToolTipText("View Details");
+        viewDefaultPtmJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editDefaultPtmJMenuItemActionPerformed(evt);
+                viewDefaultPtmJMenuItemActionPerformed(evt);
             }
         });
-        defaultPtmPopupMenu.add(editDefaultPtmJMenuItem);
+        defaultPtmPopupMenu.add(viewDefaultPtmJMenuItem);
 
         editUserPtmJMenuItem.setText("Edit");
         editUserPtmJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -310,20 +312,20 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         defaultModificationsTable.setModel(new DefaultPTMTable());
         defaultModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        defaultModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                defaultModificationsTableMouseReleased(evt);
+        defaultModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                defaultModificationsTableMouseMoved(evt);
             }
+        });
+        defaultModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 defaultModificationsTableMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 defaultModificationsTableMouseExited(evt);
             }
-        });
-        defaultModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                defaultModificationsTableMouseMoved(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                defaultModificationsTableMouseReleased(evt);
             }
         });
         defaultModsScrollPane.setViewportView(defaultModificationsTable);
@@ -432,14 +434,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModificationsTable.setModel(new UserPTMTable());
         userModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         userModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                userModificationsTableMouseReleased(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 userModificationsTableMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 userModificationsTableMouseExited(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                userModificationsTableMouseReleased(evt);
             }
         });
         userModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -540,7 +542,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
+                    .addComponent(modificationsSplitPane)
                     .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -960,14 +962,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void editDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDefaultPtmJMenuItemActionPerformed
+    private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
         PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
         }
-    }//GEN-LAST:event_editDefaultPtmJMenuItemActionPerformed
+    }//GEN-LAST:event_viewDefaultPtmJMenuItemActionPerformed
 
     /**
      * Edit user PTM.
@@ -1022,7 +1024,6 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane defaultModsScrollPane;
     private javax.swing.JPopupMenu defaultPtmPopupMenu;
     private javax.swing.JButton deleteUserPTM;
-    private javax.swing.JMenuItem editDefaultPtmJMenuItem;
     private javax.swing.JButton editUserPTM;
     private javax.swing.JMenuItem editUserPtmJMenuItem;
     private javax.swing.JLabel findJLabel;
@@ -1038,6 +1039,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel userModsPanel;
     private javax.swing.JScrollPane userModsScrollPane;
     private javax.swing.JPopupMenu userPtmPopupMenu;
+    private javax.swing.JMenuItem viewDefaultPtmJMenuItem;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -1093,11 +1095,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     return ptmFactory.getPTM(name).getType();
                 case 5:
                     String residues = "";
-                    for (Character residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
-                        if (!residues.equals("")) {
-                            residues += ", ";
+                    AminoAcidPattern aminoAcidPattern = ptmFactory.getPTM(name).getPattern();
+                    if (aminoAcidPattern != null) {
+                        for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
+                            if (!residues.equals("")) {
+                                residues += ", ";
+                            }
+                            residues += residue;
                         }
-                        residues += residue;
                     }
                     return residues;
                 case 6:
@@ -1196,11 +1201,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     return ptmFactory.getPTM(name).getType();
                 case 5:
                     String residues = "";
-                    for (Character residue : ptmFactory.getPTM(name).getPattern().getAminoAcidsAtTarget()) {
+                    AminoAcidPattern aminoAcidPattern = ptmFactory.getPTM(name).getPattern();
+                    if (aminoAcidPattern != null) {
+                    for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
                         if (!residues.equals("")) {
                             residues += ", ";
                         }
                         residues += residue;
+                    }
                     }
                     return residues;
                 case 6:

@@ -2378,12 +2378,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             }
 
             for (String name : modificationUses) {
-                start = name.indexOf("_");
                 String modificationName = name;
-
-                if (start != -1) {
-                    modificationName = name.substring(0, start); // old format, remove usage statistics
-                }
 
                 if (PTMFactory.getInstance().containsPTM(modificationName)) {
                     modificationUse.add(modificationName);

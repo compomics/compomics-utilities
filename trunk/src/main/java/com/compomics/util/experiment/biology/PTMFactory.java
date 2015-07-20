@@ -597,8 +597,10 @@ public class PTMFactory implements Serializable {
         } else if (modification.toLowerCase().contains("ox")) {
             return Color.BLUE;
         } else if (modification.toLowerCase().contains("itraq")) {
-            return Color.orange;
+            return Color.cyan;
         } else if (modification.toLowerCase().contains("tmt")) {
+            return Color.cyan;
+        } else if (modification.toLowerCase().contains("pyro")) {
             return Color.orange;
         } else if (modification.toLowerCase().contains("carbamido")) {
             return Color.LIGHT_GRAY;
@@ -1778,7 +1780,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "TMT 2-plex of N-term (old)";
+        ptmName = "TMT 2-plex of N-term";
         ptm = new PTM(PTM.MODNP, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.addReporterIon(ReporterIon.TMT_126);
         ptm.addReporterIon(ReporterIon.TMT_127C);
@@ -1795,7 +1797,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainRemoved = null;
         aminoAcidPattern = new AminoAcidPattern("K");
-        ptmName = "TMT 2-plex of K (old)";
+        ptmName = "TMT 2-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.addReporterIon(ReporterIon.TMT_126);
         ptm.addReporterIon(ReporterIon.TMT_127C);

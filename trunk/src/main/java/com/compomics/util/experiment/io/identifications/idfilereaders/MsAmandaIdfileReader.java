@@ -14,7 +14,6 @@ import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.experiment.refinementparameters.MsAmandaScore;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
@@ -304,8 +303,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaEValue, Util.getFileName(msAmandaCsvFile));
                 peptideAssumption.setRawScore(msAmandaScore);
 
-                MsAmandaScore scoreParam = new MsAmandaScore(msAmandaScore);
-
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
                     ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
@@ -315,11 +312,9 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(msAmandaScore);
-                        peptideAssumption.addUrParam(scoreParam);
                         currentMatch.addHit(Advocate.msAmanda.getIndex(), newAssumption, false);
                     }
                 } else {
-                    peptideAssumption.addUrParam(scoreParam);
                     currentMatch.addHit(Advocate.msAmanda.getIndex(), peptideAssumption, false);
                 }
 

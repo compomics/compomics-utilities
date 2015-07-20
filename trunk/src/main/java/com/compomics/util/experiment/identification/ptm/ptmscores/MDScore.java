@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import com.compomics.util.experiment.refinementparameters.MascotScore;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,9 +42,7 @@ public class MDScore {
                 if (assumption instanceof PeptideAssumption) {
                     PeptideAssumption peptideAssumption = (PeptideAssumption) assumption;
                     if (peptideAssumption.getPeptide().isSameSequenceAndModificationStatus(peptideCandidate, sequenceMatchingPreferences)) {
-                        MascotScore mascotScore = new MascotScore();
-                        mascotScore = (MascotScore) peptideAssumption.getUrParam(mascotScore);
-                        Double score = mascotScore.getScore();
+                        Double score = peptideAssumption.getRawScore();
                         if (!mascotAssumptionsMap.containsKey(score)) {
                             mascotAssumptionsMap.put(score, new ArrayList<Peptide>());
                         }

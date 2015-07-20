@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javax.xml.bind.JAXBException;
+import org.apache.commons.math.util.FastMath;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -185,9 +186,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
-        double score = new Double(temp[1]);
-
-        return new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, score, fileName);
+        Double score = new Double(temp[1]);
+        Double p = FastMath.pow(10, -(score/10));
+        PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);
+        peptideAssumption.setRawScore(score);
+        return peptideAssumption;
     }
 
     @Override
@@ -198,7 +201,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
         HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
         ArrayList<String> versions = new ArrayList<String>();
-        versions.add("1.4.0.0");
+        versions.add("1.5.3.4");
         result.put("Andromeda", versions);
         return result;
     }

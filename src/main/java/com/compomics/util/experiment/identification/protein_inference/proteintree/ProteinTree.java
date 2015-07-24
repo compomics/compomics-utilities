@@ -254,14 +254,14 @@ public class ProteinTree {
                         throw new IllegalArgumentException("Index is corrupted. Database will be reindexed.");
                     }
                     if (!componentsFactory.importComplete()) {
-                        throw new IllegalArgumentException("Database import was not successfully completed. Tree will be reindexed.");
+                        throw new IllegalArgumentException("Database import was not successfully completed. Database will be reindexed.");
                     }
                     String tempVersion = componentsFactory.getVersion();
                     if (tempVersion == null || !tempVersion.equals(version)) {
-                        throw new IllegalArgumentException("Database version " + tempVersion + " obsolete. Tree will be reindexed.");
+                        throw new IllegalArgumentException("Database index version " + tempVersion + " obsolete. Database will be reindexed.");
                     }
                     if (initialTagSize != componentsFactory.getInitialSize()) {
-                        throw new IllegalArgumentException("Different initial size. Tree will be reindexed.");
+                        throw new IllegalArgumentException("Different initial size. Database will be reindexed.");
                     }
                 }
             } catch (Exception e) {

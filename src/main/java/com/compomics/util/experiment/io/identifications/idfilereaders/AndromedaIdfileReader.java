@@ -94,6 +94,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
+        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<String, SpectrumMatch>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
         if (waitingHandler != null) {
             waitingHandler.setMaxSecondaryProgressCounter(100);
@@ -109,9 +110,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     firstSpectrum = true;
                 }
                 title = line.substring(1);
-                if (spectrumMatch != null) {
-                    result.add(spectrumMatch);
-                }
                 spectrumMatch = null;
                 long currentIndex = bufferedRandomAccessFile.getFilePointer();
                 if (waitingHandler != null) {
@@ -119,8 +117,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                 }
             } else if (firstSpectrum) {
                 if (spectrumMatch == null) {
-                    spectrumMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFile, title));
-                    rank = 0;
+                    String spectrumKey = Spectrum.getSpectrumKey(mgfFile, title);
+                    spectrumMatch = spectrumMatchesMap.get(spectrumKey);
+                    rank = 0; // the rank is here per charge
+                    if (spectrumMatch == null) {
+                        spectrumMatch = new SpectrumMatch(Spectrum.getSpectrumKey(mgfFile, title));
+                        result.add(spectrumMatch);
+                        spectrumMatchesMap.put(spectrumKey, spectrumMatch);
+                    }
                 }
                 rank++;
                 PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank, sequenceMatchingPreferences);
@@ -139,9 +143,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     spectrumMatch.addHit(Advocate.andromeda.getIndex(), peptideAssumption, true);
                 }
             }
-        }
-        if (spectrumMatch != null) {
-            result.add(spectrumMatch);
         }
 
         return result;
@@ -187,7 +188,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         Double score = new Double(temp[1]);
-        Double p = FastMath.pow(10, -(score/10));
+        Double p = FastMath.pow(10, -(score / 10));
         PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);
         peptideAssumption.setRawScore(score);
         return peptideAssumption;

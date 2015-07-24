@@ -597,17 +597,17 @@ public class PTMFactory implements Serializable {
         } else if (modification.toLowerCase().contains("ox")) {
             return Color.BLUE;
         } else if (modification.toLowerCase().contains("itraq")) {
-            return Color.cyan;
+            return Color.ORANGE;
         } else if (modification.toLowerCase().contains("tmt")) {
-            return Color.cyan;
+            return Color.ORANGE;
         } else if (modification.toLowerCase().contains("pyro")) {
-            return Color.orange;
+            return Color.CYAN;
         } else if (modification.toLowerCase().contains("carbamido")) {
             return Color.LIGHT_GRAY;
         } else if (modification.toLowerCase().contains("ace")) {
             return new Color(153, 153, 0);
         } else if (modification.toLowerCase().contains("glyco")) {
-            return Color.ORANGE;
+            return Color.MAGENTA;
         } else {
             float r = (float) Math.random();
             float g = (float) Math.random();
@@ -629,6 +629,8 @@ public class PTMFactory implements Serializable {
      */
     public String convertPridePtm(String pridePtmName, ModificationProfile modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
 
+        // @TODO: has to be updated with the new ptm names!!!
+        
         String prideParametersReport = "";
 
         // special cases for when multiple ptms are needed
@@ -902,6 +904,8 @@ public class PTMFactory implements Serializable {
      * @return the utilities PTM name, or null if there is no mapping
      */
     private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
+        
+        // @TODO: has to be updated with the new ptm names!!!
 
         // @TODO: check for more unmapped ptms! everything used in getDefaultCVTerm in PtmToPrideMap should be mapped back as well!!
         if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")
@@ -1130,26 +1134,26 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Acetylation of peptide N-terminus
+        // Acetylation of peptide N-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetylation of Peptide N-terminus";
+        ptmName = "Acetylation of peptide N-term"; // note: if name changed also change in TandemProcessBuilder
         ptm = new PTM(PTM.MODNP, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Acetylation of protein N-terminus
+        // Acetylation of protein N-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetylation of Protein N-terminus";
+        ptmName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder
         ptm = new PTM(PTM.MODN, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -2049,7 +2053,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = new AminoAcidPattern("E");
-        ptmName = "Pyrolidone from E";
+        ptmName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -2060,7 +2064,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = new AminoAcidPattern("Q");
-        ptmName = "Pyrolidone from Q";
+        ptmName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -2071,7 +2075,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = new AminoAcidPattern("C");
-        ptmName = "Pyrolidone from carbamidomethylated C";
+        ptmName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -2280,14 +2284,14 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Amidation of the protein C-terminus
+        // Amidation of the protein C-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = null;
-        ptmName = "Amidation of the protein C-terminus";
+        ptmName = "Amidation of the protein C-term";
         ptm = new PTM(PTM.MODC, ptmName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
@@ -2321,6 +2325,5 @@ public class PTMFactory implements Serializable {
         ptm = new PTM(PTM.MODAA, ptmName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-
     }
 }

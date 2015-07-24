@@ -1203,12 +1203,12 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     String residues = "";
                     AminoAcidPattern aminoAcidPattern = ptmFactory.getPTM(name).getPattern();
                     if (aminoAcidPattern != null) {
-                    for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
-                        if (!residues.equals("")) {
-                            residues += ", ";
+                        for (Character residue : aminoAcidPattern.getAminoAcidsAtTarget()) {
+                            if (!residues.equals("")) {
+                                residues += ", ";
+                            }
+                            residues += residue;
                         }
-                        residues += residue;
-                    }
                     }
                     return residues;
                 case 6:

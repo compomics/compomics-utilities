@@ -2193,7 +2193,8 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Deamidation of N
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
@@ -2205,7 +2206,7 @@ public class PTMFactory implements Serializable {
 
         // Deamidation of Q
         atomChainAdded = new AtomChain();
-        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);

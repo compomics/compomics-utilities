@@ -620,7 +620,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     private void parsePeptide(XmlPullParser parser) throws Exception {
 
         String pepKey = parser.getAttributeValue(0);
-
+        
         int type = parser.next();
         while (type != XmlPullParser.START_TAG || !parser.getName().equals("PeptideSequence")) {
             type = parser.next();

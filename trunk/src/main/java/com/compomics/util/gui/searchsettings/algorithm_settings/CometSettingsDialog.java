@@ -53,7 +53,6 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         isotopeCorrectionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removePrecursorPeakCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         correlationScoreTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        useSparseMatrixCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         requireVariablePtmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
@@ -146,12 +145,6 @@ public class CometSettingsDialog extends javax.swing.JDialog {
 
         if (cometParameters.getFragmentBinOffset() != null) {
             fragmentBinOffsetTxt.setText(cometParameters.getFragmentBinOffset() + "");
-        }
-
-        if (cometParameters.getUseSparseMatrix()) {
-            useSparseMatrixCmb.setSelectedIndex(0);
-        } else {
-            useSparseMatrixCmb.setSelectedIndex(1);
         }
     }
 
@@ -257,8 +250,6 @@ public class CometSettingsDialog extends javax.swing.JDialog {
             result.setFragmentBinOffset(new Double(input));
         }
 
-        result.setUseSparseMatrix(useSparseMatrixCmb.getSelectedIndex() == 0);
-
         return result;
     }
 
@@ -316,8 +307,6 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         correlationScoreTypeCmb = new javax.swing.JComboBox();
         fragmentBinOffsetLabel = new javax.swing.JLabel();
         fragmentBinOffsetTxt = new javax.swing.JTextField();
-        useSparseMatrixLabel = new javax.swing.JLabel();
-        useSparseMatrixCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Advanced Comet Settings");
@@ -681,11 +670,6 @@ public class CometSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        useSparseMatrixLabel.setText("Use Sparse Matrix");
-
-        useSparseMatrixCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        useSparseMatrixCmb.setSelectedIndex(1);
-
         javax.swing.GroupLayout fragmentIonsPanelLayout = new javax.swing.GroupLayout(fragmentIonsPanel);
         fragmentIonsPanel.setLayout(fragmentIonsPanelLayout);
         fragmentIonsPanelLayout.setHorizontalGroup(
@@ -694,11 +678,9 @@ public class CometSettingsDialog extends javax.swing.JDialog {
                 .addGap(25, 25, 25)
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(correlationScoreTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fragmentBinOffsetLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(useSparseMatrixLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fragmentBinOffsetLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useSparseMatrixCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fragmentBinOffsetTxt)
                     .addComponent(correlationScoreTypeCmb, 0, 209, Short.MAX_VALUE))
                 .addGap(30, 30, 30))
@@ -714,11 +696,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentBinOffsetLabel)
                     .addComponent(fragmentBinOffsetTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(useSparseMatrixLabel)
-                    .addComponent(useSparseMatrixCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Fragment Ions", fragmentIonsPanel);
@@ -1039,7 +1017,5 @@ public class CometSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel searchSettingsPanel;
     private javax.swing.JPanel spectrumProcessingPanel;
     private javax.swing.JTabbedPane tabbedPane;
-    private javax.swing.JComboBox useSparseMatrixCmb;
-    private javax.swing.JLabel useSparseMatrixLabel;
     // End of variables declaration//GEN-END:variables
 }

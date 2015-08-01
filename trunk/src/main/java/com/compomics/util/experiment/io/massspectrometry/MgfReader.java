@@ -357,7 +357,7 @@ public class MgfReader {
             minRT = 0;
         }
 
-        // convert the spectrum tiltes to an arraylist
+        // convert the spectrum titles to an arraylist
         ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<String>(); // @TODO: is there a faster way of doing this?
         for (String temp : spectrumTitles) {
             spectrumTitlesAsArrayList.add(temp);

@@ -622,11 +622,9 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="correlationScoreTypeLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
                               <Component id="fragmentBinOffsetLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                              <Component id="useSparseMatrixLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="useSparseMatrixCmb" max="32767" attributes="0"/>
                               <Component id="fragmentBinOffsetTxt" max="32767" attributes="2"/>
                               <Component id="correlationScoreTypeCmb" pref="209" max="32767" attributes="0"/>
                           </Group>
@@ -647,12 +645,7 @@
                               <Component id="fragmentBinOffsetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentBinOffsetTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="useSparseMatrixLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="useSparseMatrixCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="246" max="32767" attributes="0"/>
+                          <EmptySpace pref="272" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -686,22 +679,6 @@
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="fragmentBinOffsetTxtKeyReleased"/>
                   </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="useSparseMatrixLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Use Sparse Matrix"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="useSparseMatrixCmb">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
-                      </StringArray>
-                    </Property>
-                    <Property name="selectedIndex" type="int" value="1"/>
-                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

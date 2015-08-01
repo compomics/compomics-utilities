@@ -106,6 +106,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
     /**
      * Controls whether or not internal sparse matrix data representation is
      * used.
+     *
+     * @deprecated from Comet release 2015.02 all searches use this internal
+     * data representation by default
      */
     private Boolean useSparseMatrix = true;
 
@@ -593,6 +596,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Returns true if a sparse matrix is to be used.
      *
      * @return the useSparseMatrix
+     * 
+     * @deprecated from Comet release 2015.02 all searches use this internal
+     * data representation by default
      */
     public Boolean getUseSparseMatrix() {
         return useSparseMatrix;
@@ -602,6 +608,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Set if a sparse matrix is to be used.
      *
      * @param useSparseMatrix the useSparseMatrix to set
+     * 
+     * @deprecated from Comet release 2015.02 all searches use this internal
+     * data representation by default
      */
     public void setUseSparseMatrix(Boolean useSparseMatrix) {
         this.useSparseMatrix = useSparseMatrix;
@@ -615,7 +624,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public boolean getRequireVariableMods() {
         if (requireVariableMods == null) {
-            requireVariableMods = false; 
+            requireVariableMods = false;
         }
         return requireVariableMods;
     }

@@ -763,11 +763,6 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             cometParameters.setFragmentBinOffset(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id);
-            Integer option = new Integer(arg);
-            cometParameters.setUseSparseMatrix(option == 1);
-        }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
 
@@ -2157,12 +2152,6 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id);
             if (!isPositiveDouble(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.COMET_USE_SPARSE_MATRIX.id, arg)) {
                 return false;
             }
         }

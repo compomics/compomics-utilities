@@ -165,7 +165,6 @@ public enum IdentificationParametersCLIParams {
     COMET_BATCH_SIZE("comet_batch_size", "Comet batch size, '0' means load and search all spectra at once, default is '0'.", false),
     COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, 1: true, 0: false, default is '1'.", false),
     COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.0'.", false),
-    COMET_USE_SPARSE_MATRIX("comet_sparse_matrix", "Comet use sparse matrix, 1: true, 0: false, default is '1'.", false),
     //////////////////////////////////
     // Tide specific parameters
     //////////////////////////////////

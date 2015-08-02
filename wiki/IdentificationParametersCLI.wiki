@@ -355,8 +355,6 @@ com.compomics.denovogui.cmd.IdentificationParametersCLI [parameters]
                           Comet theoretical_fragment_ions option, default is '1'.
 
 -comet_frag_bin_offset    Comet fragment bin offset, default is '0.0'.
-
--comet_sparse_matrix      Comet use sparse matrix, 1: true, 0: false, default is '1'.
 }}}
 
 ==Tide advanced parameters==

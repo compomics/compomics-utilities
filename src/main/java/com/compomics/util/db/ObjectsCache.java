@@ -367,7 +367,7 @@ public class ObjectsCache {
                 CacheEntry entry = getEntry(dbName, tableName, objectKey);
 
                 if (entry == null) {
-                    System.out.println(objectKey + " not found! " + "entryKey: " + entryKey);
+                    throw new IllegalArgumentException("Object " + objectKey + " corresponding to entry " + entryKey + " not found in cache when saving.");
                 } else {
                     if (entry.isModified()) {
                         HashMap<String, HashMap<String, Object>> dbMap = toSave.get(dbName);

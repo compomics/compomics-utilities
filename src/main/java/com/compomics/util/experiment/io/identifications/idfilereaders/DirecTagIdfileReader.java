@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssu
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -122,6 +123,15 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
+    /**
+     * The DirecTag parameters.
+     */
+    private DirecTagParameters direcTagParameters;
+    /**
+     * The residues modified by the different PTMs in the DynamicMods tag.
+     * Indexed on the symbol used to represent the PTM.
+     */
+    private HashMap<Character, Character> dynamicModsResidues;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -448,6 +458,21 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
+        direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
+
+        // get the ptm residues from the DynamicMods field
+        dynamicModsResidues = new HashMap<Character, Character>();
+        String dynamicMods = tagsParameters.get("DynamicMods"); // assume something like: "M 0 15.994915 N 1 0.984016 Q 2 0.984016"
+        dynamicMods = dynamicMods.trim();
+        if (!dynamicMods.isEmpty()) {
+            String[] modElements = dynamicMods.split(" ");
+            int index = 0;
+            while (index + 2 < modElements.length) {
+                dynamicModsResidues.put(modElements[index + 1].charAt(0), modElements[index].charAt(0));
+                index += 3;
+            }
+        }
+
         int tagMapKeyLength = 0;
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -460,16 +485,19 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
             waitingHandler.setSecondaryProgressCounter(0);
         }
+
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
         int sCpt = 0;
-        Integer sIdColumnIndex = spectrumLineContent.get("ID"),
-                chargeColumnIndex = spectrumLineContent.get("Charge");
+        Integer sIdColumnIndex = spectrumLineContent.get("ID");
+        Integer chargeColumnIndex = spectrumLineContent.get("Charge");
         BufferedReader reader = new BufferedReader(new FileReader(tagFile));
+
         try {
-            String line;
             Integer lastId = null, lastCharge = null;
             int rank = 0;
             SpectrumMatch currentMatch = null;
+            String line;
+
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("S")) {
                     Integer sId = ++sCpt;
@@ -588,10 +616,12 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 residues.append(aa.singleLetterCode);
             } catch (IllegalArgumentException e) {
                 try {
+                    // modified residue
                     String modIndexString = charAtI + "";
-                    new Integer(modIndexString);
-                    residues.append("X");
-                    modificationMatches.put(i + 1, new ModificationMatch(modIndexString, true, i + 1));
+                    int modIndex = new Integer(modIndexString);
+                    String utilitiesPtm = direcTagParameters.getUtilitiesPtmName(modIndex);
+                    modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, true, i + 1));
+                    residues.append(dynamicModsResidues.get(modIndexString.charAt(0)));
                 } catch (Exception e1) {
                     throw new IllegalArgumentException("No amino acid or modification could be mapped to tag component \"" + charAtI + "\" in tag \"" + tagSequence + "\".");
                 }

@@ -111,7 +111,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -120,33 +120,40 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="typeCmb" pref="383" max="32767" attributes="2"/>
+                                  <Component id="typeCmb" max="32767" attributes="2"/>
                                   <Component id="nameTxt" max="32767" attributes="2"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="patternLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="1"/>
-                                  <Component id="additionLbl" linkSize="2" min="-2" pref="90" max="-2" attributes="1"/>
-                              </Group>
+                              <Component id="patternLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="1"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="additionTxt" max="32767" attributes="0"/>
-                                  <Component id="patternTxt" max="32767" attributes="2"/>
-                              </Group>
+                              <Component id="patternTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="nameShortLabel" linkSize="2" min="-2" pref="90" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="nameShortTxt" max="32767" attributes="2"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="deletionLbl" min="-2" pref="90" max="-2" attributes="1"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="deletionTxt" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="nameShortLabel" linkSize="2" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                  <Component id="compositionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="additionLbl" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                      <Component id="additionTxt" linkSize="9" min="-2" pref="40" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                      <Component id="deletionLbl" min="-2" max="-2" attributes="1"/>
+                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                      <Component id="deletionTxt" linkSize="9" min="-2" pref="42" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                      <Component id="massLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                                      <Component id="massTxt" linkSize="9" min="-2" pref="92" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="nameShortTxt" max="32767" attributes="2"/>
+                              </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -172,11 +179,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="additionTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="additionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="deletionTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="deletionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="compositionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="massLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="massTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -246,6 +253,9 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="additionTxtMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="patternLabel">
               <Properties>
@@ -274,6 +284,9 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="The modification name"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameShortTxtKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="deletionTxt">
               <Properties>
@@ -281,12 +294,36 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="deletionTxtMouseReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="deletionLbl">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Deletion"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="compositionLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Composition"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="massLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mass"/>
+                <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="massTxt">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="massTxtKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -304,14 +341,14 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="addNeutralLoss" max="32767" attributes="0"/>
-                          <Component id="removeNeutralLoss" pref="90" max="32767" attributes="0"/>
+                          <Component id="addNeutralLoss" min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="removeNeutralLoss" min="-2" pref="90" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="neutralLossesJScrollPane" min="-2" pref="383" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Component id="neutralLossesJScrollPane" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

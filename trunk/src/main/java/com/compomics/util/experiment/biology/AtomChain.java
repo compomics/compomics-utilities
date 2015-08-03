@@ -36,8 +36,9 @@ public class AtomChain implements Serializable {
      * Constructor for a monoisotopic chain as a string, e.g. C3PO.
      *
      * @param chain the atomic chain as a string
+     * @throws IllegalArgumentException if an illegal atom is used
      */
-    public AtomChain(String chain) {
+    public AtomChain(String chain) throws IllegalArgumentException {
         atomChain = new ArrayList<AtomImpl>(chain.length());
         String lastLetter = null;
         Integer lastInt = null;
@@ -85,7 +86,9 @@ public class AtomChain implements Serializable {
         if (lastInt == null) {
             lastInt = 1;
         }
-        append(new AtomImpl(lastAtom, 0), lastInt);
+        if (lastAtom != null) {
+            append(new AtomImpl(lastAtom, 0), lastInt);
+        }
     }
 
     /**

@@ -1033,7 +1033,7 @@ public class Peptide extends ExperimentObject {
         for (Double tempMass : masses1.keySet()) {
             Integer occurrence1 = masses1.get(tempMass);
             Integer occurrence2 = masses2.get(tempMass);
-            if (occurrence2 == null || occurrence2 != occurrence1) {
+            if (occurrence2 == null || occurrence2.intValue() != occurrence1) {
                 return false;
             }
         }
@@ -1095,7 +1095,7 @@ public class Peptide extends ExperimentObject {
             Collections.sort(sites1);
             Collections.sort(sites2);
             for (int i = 0; i < sites1.size(); i++) {
-                if (sites1.get(i) != sites2.get(i)) {
+                if (sites1.get(i).intValue() != sites2.get(i)) {
                     return false;
                 }
             }

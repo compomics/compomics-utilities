@@ -943,7 +943,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 boolean found = false;
                 for (ModificationMatch modificationMatch2 : mods2) {
                     PTM ptm2 = ptmFactory.getPTM(modificationMatch2.getTheoreticPtm());
-                    if (ptm1.getMass() == ptm2.getMass()) {
+                    if (ptm1.getMass() == ptm2.getMass()) { // @TODO: compare against the accuracy
                         found = true;
                         break;
                     }
@@ -1010,7 +1010,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         for (Double mass : masses1.keySet()) {
             Integer occurrence1 = masses1.get(mass);
             Integer occurrence2 = masses2.get(mass);
-            if (occurrence2 == null || occurrence2 != occurrence1) {
+            if (occurrence2 == null || occurrence2.intValue() != occurrence1) {
                 return false;
             }
         }
@@ -1028,6 +1028,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                 }
             }
         }
+
         return true;
     }
 

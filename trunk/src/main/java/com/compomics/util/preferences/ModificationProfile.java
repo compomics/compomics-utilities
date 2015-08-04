@@ -2,7 +2,6 @@ package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
@@ -349,7 +348,7 @@ public class ModificationProfile implements Serializable {
         ArrayList<String> ptms = new ArrayList<String>();
         for (String ptmName : getAllNotFixedModifications()) {
             PTM ptm = ptmFactory.getPTM(ptmName);
-            if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) {
+            if (!ptms.contains(ptmName) && ptm.getMass() == ptmMass) { // @TODO: should compare against the accuracy
                 ptms.add(ptmName);
             }
         }

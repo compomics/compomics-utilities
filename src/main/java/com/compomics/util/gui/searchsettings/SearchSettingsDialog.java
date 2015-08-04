@@ -2336,7 +2336,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     + "</tr>"
                     + "<tr>"
                     + "<td>Mass:</td>"
-                    + "<td>" + ptm.getMass() + "</td>"
+                    + "<td>" + ptm.getRoundedMass() + "</td>"
                     + "</tr>"
                     + "<tr>"
                     + "<td>Target:</td>"

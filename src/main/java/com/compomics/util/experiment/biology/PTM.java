@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.pride.CvTerm;
 import java.util.ArrayList;
 
 /**
@@ -71,9 +72,9 @@ public class PTM extends ExperimentObject {
      */
     private String shortName;
     /**
-     * Mass difference produced by this modification.
+     * Mass difference produced by this modification. Null if not set.
      */
-    private double mass;
+    private Double mass = null;
     /**
      * List of known neutral losses for this modification.
      */
@@ -95,6 +96,14 @@ public class PTM extends ExperimentObject {
      * The composition of the molecule removed.
      */
     private AtomChain atomChainRemoved = new AtomChain();
+    /**
+     * The CV term associated with this PTM. Null if not set.
+     */
+    private CvTerm cvTerm = null;
+    /**
+     * The number of decimals used in the getRoundedMass method.
+     */
+    private static final int NUMBER_OF_ROUNDED_DECIMALS = 6;
 
     /**
      * Constructor for the modification.
@@ -105,12 +114,12 @@ public class PTM extends ExperimentObject {
     /**
      * Constructor for a reference modification.
      *
-     * @param type Type of modification according to static attributes
-     * @param name Name of the modification
-     * @param shortName Short name of the modification
-     * @param atomChainAdded Atomic composition of the molecule added
-     * @param atomChainRemoved Atomic composition of the molecule removed
-     * @param aminoAcidPattern Residue pattern affected by this modification
+     * @param type type of modification according to static attributes
+     * @param name name of the modification
+     * @param shortName short name of the modification
+     * @param atomChainAdded atomic composition of the molecule added
+     * @param atomChainRemoved atomic composition of the molecule removed
+     * @param aminoAcidPattern residue pattern affected by this modification
      */
     public PTM(int type, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern) {
         this.type = type;
@@ -119,6 +128,30 @@ public class PTM extends ExperimentObject {
         this.atomChainAdded = atomChainAdded;
         this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
+        this.cvTerm = null;
+        mass = null;
+    }
+
+    /**
+     * Constructor for a reference modification.
+     *
+     * @param type type of modification according to static attributes
+     * @param name name of the modification
+     * @param shortName short name of the modification
+     * @param atomChainAdded atomic composition of the molecule added
+     * @param atomChainRemoved atomic composition of the molecule removed
+     * @param aminoAcidPattern residue pattern affected by this modification
+     * @param cvTerm the CV term associated with this PTM, null if not set
+     */
+    public PTM(int type, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
+        this.type = type;
+        this.name = name;
+        this.shortName = shortName;
+        this.atomChainAdded = atomChainAdded;
+        this.atomChainRemoved = atomChainRemoved;
+        this.pattern = aminoAcidPattern;
+        this.cvTerm = cvTerm;
+        mass = null;
     }
 
     /**
@@ -172,17 +205,38 @@ public class PTM extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
-        if (atomChainAdded == null && atomChainRemoved == null) { // Backward compatibility
+        if (mass != null) {
             return mass;
         }
-        Double result = 0.0;
+        mass = 0.0;
         if (atomChainAdded != null) {
-            result += atomChainAdded.getMass();
+            mass += atomChainAdded.getMass();
         }
         if (atomChainRemoved != null) {
-            result -= atomChainRemoved.getMass();
+            mass -= atomChainRemoved.getMass();
         }
-        return result;
+        return mass;
+    }
+
+    /**
+     * Getter for the rounded mass difference induced by this modification.
+     *
+     * @param numberOfDecimals the number of decimals to round to
+     * @return the rounded mass difference induced by the modification
+     */
+    public double getRoundedMass(int numberOfDecimals) {
+        double roundedMass = getMass();
+        return Util.roundDouble(roundedMass, numberOfDecimals);
+    }
+
+    /**
+     * Getter for the rounded mass difference induced by this modification.
+     * Rounded to the number of decimals set in NUMBER_OF_ROUNDED_DECIMALS.
+     *
+     * @return the rounded mass difference induced by the modification
+     */
+    public double getRoundedMass() {
+        return getRoundedMass(NUMBER_OF_ROUNDED_DECIMALS);
     }
 
     /**
@@ -201,6 +255,7 @@ public class PTM extends ExperimentObject {
      */
     public void setAtomChainAdded(AtomChain atomChainAdded) {
         this.atomChainAdded = atomChainAdded;
+        mass = null;
     }
 
     /**
@@ -219,14 +274,17 @@ public class PTM extends ExperimentObject {
      */
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
         this.atomChainRemoved = atomChainRemoved;
+        mass = null;
     }
-    
+
     /**
-     * Returns true if the atomic composition of the PTM is the same as another one.
-     * 
+     * Returns true if the atomic composition of the PTM is the same as another
+     * one.
+     *
      * @param anotherPTM the PTM to compare to
-     * 
-     * @return true if the atomic composition of the PTM is the same as the other one
+     *
+     * @return true if the atomic composition of the PTM is the same as the
+     * other one
      */
     public boolean isSameAtomicComposition(PTM anotherPTM) {
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
@@ -239,13 +297,15 @@ public class PTM extends ExperimentObject {
         }
         return true;
     }
-    
+
     /**
-     * Returns true if the targeted pattern of the PTM is the same as another one.
-     * 
+     * Returns true if the targeted pattern of the PTM is the same as another
+     * one.
+     *
      * @param anotherPTM the PTM to compare to
-     * 
-     * @return true if the targeted pattern of the PTM is the same as the other one
+     *
+     * @return true if the targeted pattern of the PTM is the same as the other
+     * one
      */
     public boolean isSamePattern(PTM anotherPTM) {
         if (pattern == null && anotherPTM.getPattern() != null) {
@@ -261,7 +321,7 @@ public class PTM extends ExperimentObject {
      * Returns true if the PTM is the same as another one.
      *
      * @param anotherPTM another PTM
-     * 
+     *
      * @return true if the PTM is the same as the other one
      */
     public boolean isSameAs(PTM anotherPTM) {
@@ -388,7 +448,7 @@ public class PTM extends ExperimentObject {
         String tooltip = "<html>";
 
         tooltip += "Name: " + name + "<br>";
-        tooltip += "Mass: " + Util.roundDouble(getMass(), 4) + "<br>";
+        tooltip += "Mass: " + getRoundedMass(4) + "<br>";
         tooltip += "Type: ";
 
         if (type == MODAA) {
@@ -416,5 +476,23 @@ public class PTM extends ExperimentObject {
         tooltip += "</html>";
 
         return tooltip;
+    }
+
+    /**
+     * Returns the CV term associated with this PTM.
+     *
+     * @return the cvTerm
+     */
+    public CvTerm getCvTerm() {
+        return cvTerm;
+    }
+
+    /**
+     * Set the CV term associated with this PTM.
+     *
+     * @param cvTerm the cvTerm to set
+     */
+    public void setCvTerm(CvTerm cvTerm) {
+        this.cvTerm = cvTerm;
     }
 }

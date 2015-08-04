@@ -150,11 +150,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      * @return the description line for a PTM
      */
     private String getPtmLine(PTM ptm) {
-        double ptmMass = ptm.getMass();
-        String sign = "";
-        if (ptmMass > 0) {
-            sign = "+";
-        }
+
         String target = "";
         switch (ptm.getType()) {
             case PTM.MODAA:
@@ -186,7 +182,13 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 break;
         }
 
-        return ptm.getName() + " (" + sign + ptm.getMass() + " targeting " + target + ")";
+        double ptmMass = ptm.getRoundedMass();
+        String sign = "";
+        if (ptmMass > 0) {
+            sign = "+";
+        }
+
+        return ptm.getName() + " (" + sign + ptmMass + " targeting " + target + ")";
     }
 
     /**

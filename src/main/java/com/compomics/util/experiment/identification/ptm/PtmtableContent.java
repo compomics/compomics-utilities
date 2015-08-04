@@ -14,7 +14,6 @@ import com.compomics.util.preferences.AnnotationPreferences;
 import com.compomics.util.preferences.SpecificAnnotationPreferences;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Convenience class for the content of a PTM table.
@@ -124,10 +123,9 @@ public class PtmtableContent {
 
         if (intensities.size() > 0) {
 
-            for (int i = 0; i < intensities.size(); i++) {
+            for (Double intensity : intensities) {
 
-                double currentIntensity = intensities.get(i);// / maxIntensity;
-
+                double currentIntensity = intensity; // / maxIntensity;
                 for (int j = 0; j < bins; j++) {
 
                     double index = (double) j;

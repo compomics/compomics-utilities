@@ -10,7 +10,6 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.ToolTipComboBoxRenderer;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.pride.CvTerm;
-import com.compomics.util.pride.PrideObjectsFactory;
 import com.compomics.util.pride.PtmToPrideMap;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -46,10 +45,6 @@ public class PtmDialog extends javax.swing.JDialog {
      * The reporter ions.
      */
     private ArrayList<ReporterIon> reporterIons = new ArrayList<ReporterIon>();
-    /**
-     * The PTM to PRIDE map.
-     */
-    private PtmToPrideMap ptmToPrideMap;
     /**
      * Boolean indicating whether the user can edit the PTM or not.
      */
@@ -87,15 +82,13 @@ public class PtmDialog extends javax.swing.JDialog {
      * Creates a new PTM dialog.
      *
      * @param parent the JDialog parent
-     * @param ptmToPrideMap the PTM to PRIDE map
      * @param currentPTM the PTM to edit (can be null)
      * @param editable boolean indicating whether the user can edit the PTM
      * details
      */
-    public PtmDialog(JDialog parent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
+    public PtmDialog(JDialog parent, PTM currentPTM, boolean editable) {
         super(parent, true);
 
-        this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
         if (currentPTM != null) {
             this.pattern = currentPtm.getPattern();
@@ -127,7 +120,6 @@ public class PtmDialog extends javax.swing.JDialog {
         super(parent, true);
 
         this.parent = parent;
-        this.ptmToPrideMap = ptmToPrideMap;
         this.currentPtm = currentPTM;
         this.editable = editable;
         if (currentPTM != null) {
@@ -230,11 +222,7 @@ public class PtmDialog extends javax.swing.JDialog {
             this.reporterIons.addAll(currentPtm.getReporterIons());
             updateTables();
 
-            CvTerm cvTerm = ptmToPrideMap.getCVTerm(currentPtm.getName());
-
-            if (cvTerm == null) {
-                cvTerm = PtmToPrideMap.getDefaultCVTerm(currentPtm.getName());
-            }
+            CvTerm cvTerm = currentPtm.getCvTerm();
             if (cvTerm != null) {
                 updateModMappingText(cvTerm);
             }
@@ -1052,7 +1040,7 @@ public class PtmDialog extends javax.swing.JDialog {
             PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
                     nameTxt.getText().trim(),
                     nameShortTxt.getText().trim().toLowerCase(),
-                    atomChainAdded, atomChainRemoved, pattern);
+                    atomChainAdded, atomChainRemoved, pattern, cvTerm);
             newPTM.setNeutralLosses(neutralLosses);
             newPTM.setReporterIons(reporterIons);
 
@@ -1075,7 +1063,6 @@ public class PtmDialog extends javax.swing.JDialog {
                 ptmFactory.addUserPTM(newPTM); // note: "editable" is here used to decide if it's a user ptm
             }
 
-            ptmToPrideMap.putCVTerm(newPTM.getName(), cvTerm);
             saveChanges();
             dispose();
         }
@@ -1414,14 +1401,8 @@ public class PtmDialog extends javax.swing.JDialog {
     private void saveChanges() {
         try {
             ptmFactory.saveFactory();
-            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
-            prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
-                    "Saving Error", JOptionPane.WARNING_MESSAGE);
-        } catch (ClassNotFoundException ce) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
-                    "Saving Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.", "Saving Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 

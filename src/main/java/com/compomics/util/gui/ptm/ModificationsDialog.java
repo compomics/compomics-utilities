@@ -6,8 +6,6 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.pride.CvTerm;
-import com.compomics.util.pride.PrideObjectsFactory;
-import com.compomics.util.pride.PtmToPrideMap;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -37,10 +35,6 @@ public class ModificationsDialog extends javax.swing.JDialog {
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The CV term mappings.
-     */
-    private PtmToPrideMap ptmToPrideMap;
     /**
      * The color used for the sparkline bar chart plots.
      */
@@ -88,14 +82,6 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         // set up tables
         setUpTables();
-
-        // get the cv term mappings
-        try {
-            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
-            ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         searchInputTxt.setText(searchWelcomeText);
         searchIndexLabel.setText("");
@@ -212,10 +198,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         }
 
         defaultModificationsTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, -maxMassChange, maxMassChange));
-        ((JSparklinesBarChartTableCellRenderer) defaultModificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 55, new DecimalFormat("0.0000"));
+        ((JSparklinesBarChartTableCellRenderer) defaultModificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 57, new DecimalFormat("0.0000"));
 
         userModificationsTable.getColumn("Mass").setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, -maxMassChange, maxMassChange));
-        ((JSparklinesBarChartTableCellRenderer) userModificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 55, new DecimalFormat("0.0000"));
+        ((JSparklinesBarChartTableCellRenderer) userModificationsTable.getColumn("Mass").getCellRenderer()).showNumberAndChart(true, 57, new DecimalFormat("0.0000"));
     }
 
     /**
@@ -594,7 +580,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            new PtmDialog(this, ptmToPrideMap, ptm, false);
+            new PtmDialog(this, ptm, false);
         }
     }//GEN-LAST:event_defaultModificationsTableMouseClicked
 
@@ -760,7 +746,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             String input = searchInputTxt.getText().trim().toLowerCase();
             if (!input.equals("")) {
                 for (int row = 0; row < ptmFactory.getDefaultModifications().size(); row++) {
-                    ptmName = ptmFactory.getDefaultModifications().get(row);
+                    ptmName = ptmFactory.getDefaultModifications().get(row).toLowerCase();
                     mass = ptmFactory.getPTM(ptmName).getMass() + "";
                     if (mass.startsWith(input)) {
                         searchPossibilities.add(row);
@@ -803,7 +789,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
             PTM ptm = ptmFactory.getPTM(ptmName);
-            PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+            PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
             if (!ptmDialog.isCanceled()) {
                 updateModifications();
             }
@@ -902,7 +888,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int row = userModificationsTable.getSelectedRow();
         String ptmName = (String) userModificationsTable.getValueAt(row, userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
         }
@@ -915,7 +901,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      */
     private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
         if (ptmFactory.getUserModifications().size() < 30) {
-            PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, null, true);
+            PtmDialog ptmDialog = new PtmDialog(this, null, true);
             if (!ptmDialog.isCanceled()) {
                 updateModifications();
             }
@@ -965,7 +951,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
         String ptmName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
         }
@@ -979,7 +965,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void editUserPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserPtmJMenuItemActionPerformed
         String ptmName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
         PTM ptm = ptmFactory.getPTM(ptmName);
-        PtmDialog ptmDialog = new PtmDialog(this, ptmToPrideMap, ptm, true);
+        PtmDialog ptmDialog = new PtmDialog(this, ptm, true);
         if (!ptmDialog.isCanceled()) {
             updateModifications();
         }
@@ -995,12 +981,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         // save any changes to the factory
         try {
             ptmFactory.saveFactory();
-            PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
-            prideObjectsFactory.setPtmToPrideMap(ptmToPrideMap);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
-                    "Saving Error", JOptionPane.WARNING_MESSAGE);
-        } catch (ClassNotFoundException ce) {
             JOptionPane.showMessageDialog(this, "An error occurred while saving the modification.",
                     "Saving Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -1106,10 +1087,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = null;
-                    if (ptmToPrideMap != null) {
-                        cvTerm = ptmToPrideMap.getCVTerm(name);
-                    }
+                    CvTerm cvTerm = ptmFactory.getPTM(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());
@@ -1117,15 +1095,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                             return getOlsAccessionLink(cvTerm.getAccession());
                         }
                     } else {
-                        cvTerm = PtmToPrideMap.getDefaultCVTerm(name);
-                    }
-
-                    if (cvTerm != null) {
-                        if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
-                            return getUniModAccessionLink(cvTerm.getAccession());
-                        } else { // psi-ms assumed
-                            return getOlsAccessionLink(cvTerm.getAccession());
-                        }
+                        return null;
                     }
                 default:
                     return "";
@@ -1212,10 +1182,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = null;
-                    if (ptmToPrideMap != null) {
-                        cvTerm = ptmToPrideMap.getCVTerm(name);
-                    }
+                    CvTerm cvTerm = ptmFactory.getPTM(name).getCvTerm();
                     if (cvTerm != null) {
                         if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
                             return getUniModAccessionLink(cvTerm.getAccession());
@@ -1223,15 +1190,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                             return getOlsAccessionLink(cvTerm.getAccession());
                         }
                     } else {
-                        cvTerm = PtmToPrideMap.getDefaultCVTerm(name);
-                    }
-
-                    if (cvTerm != null) {
-                        if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
-                            return getUniModAccessionLink(cvTerm.getAccession());
-                        } else { // psi-ms assumed
-                            return getOlsAccessionLink(cvTerm.getAccession());
-                        }
+                        return null;
                     }
                 default:
                     return "";

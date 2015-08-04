@@ -62,9 +62,13 @@ public class PtmToPrideMap implements Serializable {
      * @param ptmName the PTM name according to the XML file, null if no mapping
      * is found
      * @return a default CV term
+     * 
+     * @deprecated use the getCvTerm method for the PTM instead
      */
     public static CvTerm getDefaultCVTerm(String ptmName) {
 
+        // @TODO: add more of the below PTMs to the new utilities PTMs?
+        
         if (ptmName.equalsIgnoreCase("methylation of K")
                 || ptmName.equalsIgnoreCase("methylation of protein n-term")
                 || ptmName.equalsIgnoreCase("methylation of Q")
@@ -367,6 +371,8 @@ public class PtmToPrideMap implements Serializable {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * 
+     * @deprecated the CV term is now part of the PTM object
      */
     public static PtmToPrideMap loadPtmToPrideMap(SearchParameters searchParameters) throws FileNotFoundException, IOException, ClassNotFoundException {
         PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();

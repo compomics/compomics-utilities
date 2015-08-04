@@ -923,6 +923,10 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingPreferences sequenceMatchingPreferences) {
 
+        if (anotherPattern == null) {
+            return false;
+        }
+        
         if (!matches(anotherPattern, sequenceMatchingPreferences)) {
             return false;
         }

@@ -228,10 +228,24 @@ public class PTM extends ExperimentObject {
      * @return true if the given PTM is the same as the current PTM
      */
     public boolean isSameAs(PTM anotherPTM) {
-        double massDiff = Math.abs(getMass() - anotherPTM.getMass());
-        return type == anotherPTM.getType()
-                && (massDiff == 0 || massDiff <= 0.0000000000001)
-                && anotherPTM.getPattern().isSameAs(pattern, SequenceMatchingPreferences.defaultStringMatching);
+        if (type != anotherPTM.getType()) {
+            return false;
+        }
+        if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
+                || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
+            return false;
+        }
+        if (atomChainAdded == null && anotherPTM.getAtomChainAdded() != null
+                || atomChainRemoved == null && anotherPTM.getAtomChainRemoved() != null) {
+            return false;
+        }
+        if (pattern == null && anotherPTM.getPattern() != null) {
+            return false;
+        }
+        if (pattern != null && !pattern.isSameAs(anotherPTM.getPattern(), SequenceMatchingPreferences.defaultStringMatching)) {
+            return false;
+        }
+        return true;
     }
 
     /**

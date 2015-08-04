@@ -220,17 +220,15 @@ public class PTM extends ExperimentObject {
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
         this.atomChainRemoved = atomChainRemoved;
     }
-
+    
     /**
-     * Compares two PTMs.
-     *
-     * @param anotherPTM another PTM
-     * @return true if the given PTM is the same as the current PTM
+     * Returns true if the atomic composition of the PTM is the same as another one.
+     * 
+     * @param anotherPTM the PTM to compare to
+     * 
+     * @return true if the atomic composition of the PTM is the same as the other one
      */
-    public boolean isSameAs(PTM anotherPTM) {
-        if (type != anotherPTM.getType()) {
-            return false;
-        }
+    public boolean isSameAtomicComposition(PTM anotherPTM) {
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherPTM.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
             return false;
@@ -239,6 +237,17 @@ public class PTM extends ExperimentObject {
                 || atomChainRemoved == null && anotherPTM.getAtomChainRemoved() != null) {
             return false;
         }
+        return true;
+    }
+    
+    /**
+     * Returns true if the targeted pattern of the PTM is the same as another one.
+     * 
+     * @param anotherPTM the PTM to compare to
+     * 
+     * @return true if the targeted pattern of the PTM is the same as the other one
+     */
+    public boolean isSamePattern(PTM anotherPTM) {
         if (pattern == null && anotherPTM.getPattern() != null) {
             return false;
         }
@@ -246,6 +255,17 @@ public class PTM extends ExperimentObject {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Returns true if the PTM is the same as another one.
+     *
+     * @param anotherPTM another PTM
+     * 
+     * @return true if the PTM is the same as the other one
+     */
+    public boolean isSameAs(PTM anotherPTM) {
+        return type == anotherPTM.getType() && isSamePattern(anotherPTM) && isSameAtomicComposition(anotherPTM);
     }
 
     /**

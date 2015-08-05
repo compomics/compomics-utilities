@@ -39,7 +39,7 @@ public class Advocate {
     /**
      * The Andromeda search engine.
      */
-    public static final Advocate andromeda = new Advocate(4, "Andromeda", AdvocateType.search_engine, new Color(85, 107, 47));
+    public static final Advocate andromeda = new Advocate(4, "Andromeda", AdvocateType.search_engine, new Color(230, 230, 250));
     /**
      * The MS Amanda search engine.
      */

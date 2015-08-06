@@ -1,11 +1,12 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
@@ -192,7 +193,7 @@ public class IdFilter implements Serializable {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, 
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences, ModificationProfile modificationProfile) {
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
 
         // check if it is an unknown peptide
         if (unknownPtm) {

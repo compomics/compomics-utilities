@@ -1,12 +1,12 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.io.SerializationUtils;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
@@ -295,7 +295,7 @@ public class PTMFactory implements Serializable {
      * checked.
      */
     public ArrayList<String> loadBackedUpModifications(SearchParameters searchParameters, boolean overwrite) {
-        ModificationProfile modificationProfile = searchParameters.getModificationProfile();
+        PtmSettings modificationProfile = searchParameters.getModificationProfile();
         ArrayList<String> toCheck = new ArrayList<String>();
         for (String modification : modificationProfile.getBackedUpPtms()) {
             if (containsPTM(modification)) {
@@ -345,7 +345,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide,
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(PtmSettings modificationProfile, Peptide peptide,
             double modificationMass, double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, FileNotFoundException, SQLException {
 
@@ -396,7 +396,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(ModificationProfile modificationProfile, Peptide peptide, String ptmName,
+    public HashMap<Integer, ArrayList<String>> getExpectedPTMs(PtmSettings modificationProfile, Peptide peptide, String ptmName,
             Double ptmMassTolerance, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
         PTM ptm = getPTM(ptmName);
         return getExpectedPTMs(modificationProfile, peptide, ptm.getMass(), ptmMassTolerance, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
@@ -424,7 +424,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
+    public void checkFixedModifications(PtmSettings modificationProfile, Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
@@ -504,7 +504,7 @@ public class PTMFactory implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    public void checkFixedModifications(ModificationProfile modificationProfile, Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
+    public void checkFixedModifications(PtmSettings modificationProfile, Tag tag, SequenceMatchingPreferences sequenceMatchingPreferences)
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         int indexInTag = 0, componentNumber = 0;
@@ -629,7 +629,7 @@ public class PTMFactory implements Serializable {
      * @param isFixed if true, the PTM will be added as a fixed modification
      * @return a pride parameters report as a string (for use in PRIDE Reshake)
      */
-    public String convertPridePtm(String pridePtmName, ModificationProfile modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
+    public String convertPridePtm(String pridePtmName, PtmSettings modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
 
         // @TODO: add more ptms/mappings?
         String prideParametersReport = "";

@@ -1,7 +1,7 @@
 package com.compomics.util.gui.searchsettings.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
 import com.compomics.util.gui.GuiUtilities;
 import java.awt.Color;
 import javax.swing.JOptionPane;

@@ -1,4 +1,4 @@
-package com.compomics.util.preferences;
+package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class ModificationProfile implements Serializable {
+public class PtmSettings implements Serializable {
 
     /**
      * Serial version number for serialization compatibility.
@@ -49,7 +49,7 @@ public class ModificationProfile implements Serializable {
     /**
      * Constructor.
      */
-    public ModificationProfile() {
+    public PtmSettings() {
     }
 
     /**
@@ -57,7 +57,7 @@ public class ModificationProfile implements Serializable {
      * 
      * @param modificationProfile the modification profile
      */
-    public ModificationProfile(ModificationProfile modificationProfile) {
+    public PtmSettings(PtmSettings modificationProfile) {
         fixedModifications = modificationProfile.getFixedModifications();
         variableModifications = modificationProfile.getVariableModifications();
         refinementFixedModifications = modificationProfile.getRefinementFixedModifications();
@@ -361,7 +361,7 @@ public class ModificationProfile implements Serializable {
      * @param otherProfile the profile to compare against
      * @return true of the two profiles are identical
      */
-    public boolean equals(ModificationProfile otherProfile) {
+    public boolean equals(PtmSettings otherProfile) {
 
         if (otherProfile == null) {
             return false;

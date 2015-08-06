@@ -3,7 +3,7 @@ package com.compomics.util.gui.spectrum;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
@@ -85,7 +85,7 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * The modification profile.
      */
-    private ModificationProfile modificationProfile;
+    private PtmSettings modificationProfile;
     /**
      * the forward ion type (for instance B ion) as indexed by the
      * PeptideFragmentIon static fields
@@ -124,7 +124,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, ModificationProfile modificationProfile) throws HeadlessException {
+            boolean aHighlightModifications, PtmSettings modificationProfile) throws HeadlessException {
         this(aSequence, aIonMatches, boolModifiedSequence, aHighlightModifications, modificationProfile, PeptideFragmentIon.B_ION, PeptideFragmentIon.Y_ION);
     }
 
@@ -150,7 +150,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public SequenceFragmentationPanel(String aSequence, ArrayList<IonMatch> aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, ModificationProfile modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
+            boolean aHighlightModifications, PtmSettings modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
         super();
 
         this.forwardIon = forwardIon;
@@ -196,7 +196,7 @@ public class SequenceFragmentationPanel extends JPanel {
      * @see javax.swing.JComponent#getDefaultLocale
      */
     public SequenceFragmentationPanel(String taggedModifiedSequence, ArrayList<IonMatch> aIonMatches, 
-            boolean aHighlightModifications, ModificationProfile modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
+            boolean aHighlightModifications, PtmSettings modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
         super();
 
         this.forwardIon = forwardIon;

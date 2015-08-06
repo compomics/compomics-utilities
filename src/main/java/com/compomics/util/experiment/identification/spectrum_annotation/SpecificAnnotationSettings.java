@@ -1,8 +1,8 @@
-package com.compomics.util.preferences;
+package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.identification.NeutralLossesMap;
+import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class SpecificAnnotationPreferences {
+public class SpecificAnnotationSettings {
 
     /**
      * The key of the currently annotated spectrum.
@@ -57,7 +57,7 @@ public class SpecificAnnotationPreferences {
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
      */
-    public SpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
+    public SpecificAnnotationSettings(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
         this.spectrumKey = spectrumKey;
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
     }
@@ -284,8 +284,8 @@ public class SpecificAnnotationPreferences {
     }
     
     @Override
-    public SpecificAnnotationPreferences clone() {
-        SpecificAnnotationPreferences clone = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
+    public SpecificAnnotationSettings clone() {
+        SpecificAnnotationSettings clone = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
         clone.setFragmentIonAccuracy(getFragmentIonAccuracy());
         clone.setFragmentIonPpm(isFragmentIonPpm());
         clone.setNeutralLossesAuto(isNeutralLossesAuto());

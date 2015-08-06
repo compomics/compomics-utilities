@@ -1,7 +1,7 @@
 package com.compomics.util.gui.searchsettings.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
 import javax.swing.SwingConstants;
 

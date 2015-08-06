@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.search_parameters_cli;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;

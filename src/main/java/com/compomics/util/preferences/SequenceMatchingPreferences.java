@@ -1,7 +1,7 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.mutations.MutationMatrix;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import java.io.Serializable;
 
 /**
@@ -25,7 +25,7 @@ public class SequenceMatchingPreferences implements Serializable {
          */
         aminoAcid,
         /**
-         * Matches amino acids of indistinguishable masses.
+         * Matches amino acids of indistinguishable masses (I/L).
          */
         indistiguishableAminoAcids;
     }
@@ -38,12 +38,6 @@ public class SequenceMatchingPreferences implements Serializable {
      * The amino acid matching type.
      */
     private MatchingType sequenceMatchingType;
-    /**
-     * The ms2 m/z tolerance to use for amino acid distinction when
-     * sequenceMatchingType is indistiguishableAminoAcids. Can be null
-     * otherwise.
-     */
-    private Double ms2MzTolerance = null;
     /**
      * Limit the share of Xs a match can contain.
      */
@@ -83,14 +77,11 @@ public class SequenceMatchingPreferences implements Serializable {
     /**
      * Returns default preferences from amino acid matching.
      *
-     * @param searchParameters the identification parameters used
-     *
      * @return default preferences from amino acid matching
      */
-    public static SequenceMatchingPreferences getDefaultSequenceMatching(SearchParameters searchParameters) {
+    public static SequenceMatchingPreferences getDefaultSequenceMatching() {
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMs2MzTolerance(searchParameters.getFragmentIonAccuracy());
         sequenceMatchingPreferences.setLimitX(0.25);
         return sequenceMatchingPreferences;
     }
@@ -111,24 +102,6 @@ public class SequenceMatchingPreferences implements Serializable {
      */
     public void setSequenceMatchingType(MatchingType sequenceMatchingType) {
         this.sequenceMatchingType = sequenceMatchingType;
-    }
-
-    /**
-     * Returns the ms2 m/z tolerance for amino acid distinction.
-     *
-     * @return the ms2 m/z tolerance for amino acid distinction
-     */
-    public Double getMs2MzTolerance() {
-        return ms2MzTolerance;
-    }
-
-    /**
-     * Sets the ms2 m/z tolerance for amino acid distinction.
-     *
-     * @param ms2MzTolerance the ms2 m/z tolerance for amino acid distinction
-     */
-    public void setMs2MzTolerance(Double ms2MzTolerance) {
-        this.ms2MzTolerance = ms2MzTolerance;
     }
 
     /**
@@ -217,18 +190,6 @@ public class SequenceMatchingPreferences implements Serializable {
      */
     public boolean isSameAs(SequenceMatchingPreferences proteinInferencePreferences) {
         if (sequenceMatchingType != proteinInferencePreferences.getSequenceMatchingType()) {
-            return false;
-        }
-        if (ms2MzTolerance != null && proteinInferencePreferences.getMs2MzTolerance() != null) {
-            double diff = Math.abs(ms2MzTolerance - proteinInferencePreferences.getMs2MzTolerance());
-            if (diff > 0.0000000000001) {
-                return false;
-            }
-        }
-        if (ms2MzTolerance == null && proteinInferencePreferences.getMs2MzTolerance() != null) {
-            return false;
-        }
-        if (ms2MzTolerance != null && proteinInferencePreferences.getMs2MzTolerance() == null) {
             return false;
         }
         if (hasLimitX() && proteinInferencePreferences.hasLimitX()) {

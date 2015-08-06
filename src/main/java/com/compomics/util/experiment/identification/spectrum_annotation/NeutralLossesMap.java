@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.NeutralLoss;
 import java.io.Serializable;

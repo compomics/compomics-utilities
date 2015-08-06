@@ -1,5 +1,6 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.identification.identification_parameters;
 
+import com.compomics.util.experiment.identification.Advocate;
 import java.io.Serializable;
 
 /**

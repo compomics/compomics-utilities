@@ -39,26 +39,30 @@ public class LinearRegression {
     }
 
     /**
-     * Returns a simple linear regression performed after outlier removal. If less than
-     * 100 points are available before or after filtering, a robust regression is used.
+     * Returns a simple linear regression performed after outlier removal. If
+     * less than 100 points are available before or after filtering, a robust
+     * regression is used.
      *
      * @param x the x series
      * @param y the y series
-     * @param p the probability for outlier exclusion, e.g. 0.95 for 95% confidence
+     * @param p the probability for outlier exclusion, e.g. 0.95 for 95%
+     * confidence
      *
      * @return a simple linear regression
      */
     public static RegressionStatistics getSimpleLinearRegressionOutlierRemoval(ArrayList<Double> x, ArrayList<Double> y, Double p) {
+
         if (x.size() < 100) {
             return MedianRegression.getLinearRegression(x, y);
         }
+
         ArrayList<ArrayList<Double>> filteredInput = ProbabilityFilter.getFilteredInput(x, y, p, new MathContext(10, RoundingMode.HALF_UP));
-        ArrayList<Double> filteredX = filteredInput.get(0),
-                filteredY = filteredInput.get(1);
+        ArrayList<Double> filteredX = filteredInput.get(0);
+        ArrayList<Double> filteredY = filteredInput.get(1);
         if (filteredX.size() < 100) {
             return MedianRegression.getLinearRegression(x, y);
         }
+
         return SimpleLinearRegression.getLinearRegression(filteredX, filteredY);
     }
-
 }

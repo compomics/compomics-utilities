@@ -1,8 +1,6 @@
 package com.compomics.util.math.statistics.linear_regression.filters;
 
 import com.compomics.util.math.BasicMathFunctions;
-import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -38,10 +36,12 @@ public class BinningFilter {
         if (x.size() != y.size()) {
             throw new IllegalArgumentException("Attempting to perform filtering of lists of different sizes.");
         }
+
         int n = x.size();
         if (n <= nBins) {
             throw new IllegalArgumentException("Vector size (" + n + ") smaller than number of bins (" + nBins + ").");
         }
+
         int binSize = n / nBins;
         int rest = n - (binSize * nBins);
         return getFilteredInput(x, y, binSize, rest);
@@ -80,18 +80,20 @@ public class BinningFilter {
         int rest = n - (binSize * nBins);
         return getFilteredInput(x, y, binSize, rest);
     }
-    
+
     /**
-     * Filters the input vectors x and y in bins of size binSize with the rest distributed in the first bins.
-     * 
+     * Filters the input vectors x and y in bins of size binSize with the rest
+     * distributed in the first bins.
+     *
      * @param x x series
      * @param y y series
      * @param binSize the bin size
      * @param rest the rest to distribute
-     * 
+     *
      * @return a filtered list of x and y
      */
     private static ArrayList<ArrayList<Double>> getFilteredInput(ArrayList<Double> x, ArrayList<Double> y, int binSize, int rest) {
+
         int currentBin = 0;
         ArrayList<Double> sortedX = new ArrayList<Double>(x);
         Collections.sort(sortedX);
@@ -101,6 +103,7 @@ public class BinningFilter {
         ArrayList<Double> filteredY = new ArrayList<Double>(y.size());
         Double x0 = x.get(0);
         boolean newX = false;
+
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
             if (!newX && !xi.equals(x0)) {
@@ -123,9 +126,11 @@ public class BinningFilter {
                 currentBin++;
             }
         }
+
         if (!newX) {
             throw new IllegalArgumentException("Attempting to perform the linear regression of a vertical line or a point.");
         }
+
         if (!currentX.isEmpty()) {
             throw new IllegalArgumentException("Not all points in bins.");
         }
@@ -135,5 +140,4 @@ public class BinningFilter {
         result.add(filteredY);
         return result;
     }
-
 }

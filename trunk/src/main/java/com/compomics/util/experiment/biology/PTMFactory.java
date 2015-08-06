@@ -597,13 +597,13 @@ public class PTMFactory implements Serializable {
         } else if (modification.toLowerCase().contains("phospho")) {
             return Color.RED;
         } else if (modification.toLowerCase().contains("pyro")) {
-            return Color.ORANGE;
+            return new Color(255, 102, 51);
         } else if (modification.toLowerCase().contains("ox")) {
             return Color.BLUE;
         } else if (modification.toLowerCase().contains("itraq")) {
-            return Color.CYAN;
+            return Color.ORANGE;
         } else if (modification.toLowerCase().contains("tmt")) {
-            return Color.CYAN;
+            return Color.ORANGE;
         } else if (modification.toLowerCase().contains("carbamido")) {
             return Color.LIGHT_GRAY;
         } else if (modification.toLowerCase().contains("ace")) {

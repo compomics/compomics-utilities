@@ -81,7 +81,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * The number of candidates to report.
      */
-    private Integer numberOfCandidates = 15;
+    private Integer numberOfCandidates = 5;
     /**
      * Map of the Andromeda indexes used for user modifications in this search.
      */

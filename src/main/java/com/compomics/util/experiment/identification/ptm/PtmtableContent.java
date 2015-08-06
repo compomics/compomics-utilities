@@ -25,8 +25,8 @@ public class PtmtableContent {
 
     /**
      * The content of the table: modification status &gt; fragment ion type
-     * according to the peptide fragment ion static fields &gt; aa number &gt; list
-     * of intensities.
+     * according to the peptide fragment ion static fields &gt; aa number &gt;
+     * list of intensities.
      */
     private HashMap<Integer, HashMap<Integer, HashMap<Integer, ArrayList<Double>>>> map;
     /**
@@ -214,7 +214,7 @@ public class PtmtableContent {
      * @param spectrum the corresponding spectrum
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
-     * 
+     *
      * @return the PTM plot series in the JFreechart format for one PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getPTMPlotData(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
@@ -223,21 +223,23 @@ public class PtmtableContent {
         //@TODO: use Peptide.getNoModPeptide instead
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
 
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                noModPeptide.addModificationMatch(modificationMatch);
+        if (peptide.isModified()) {
+            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+                if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                    noModPeptide.addModificationMatch(modificationMatch);
+                }
             }
         }
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
-        HashMap<Integer, ArrayList<Ion>> fragmentIons =
-                spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
+        HashMap<Integer, ArrayList<Ion>> fragmentIons
+                = spectrumAnnotator.getExpectedIons(specificAnnotationPreferences, noModPeptide);
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<PeptideFragmentIon, ArrayList<IonMatch>>();
 
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-                                        
+
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
 
             for (IonMatch ionMatch : matches) {
@@ -270,7 +272,7 @@ public class PtmtableContent {
      * @param spectrum the corresponding spectrum
      * @param annotationPreferences the annotation preferences
      * @param specificAnnotationPreferences the specific annotation preferences
-     * 
+     *
      * @return the PtmtableContent object
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
@@ -281,9 +283,11 @@ public class PtmtableContent {
         //@TODO: use Peptide.getNoModPeptide instead
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
 
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                noModPeptide.addModificationMatch(modificationMatch);
+        if (peptide.isModified()) {
+            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+                if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                    noModPeptide.addModificationMatch(modificationMatch);
+                }
             }
         }
 
@@ -294,15 +298,14 @@ public class PtmtableContent {
             }
         }
 
-
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
-        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge());
+        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationPreferences.getPrecursorCharge(), specificAnnotationPreferences);
         PeptideFragmentIon peptideFragmentIon;
 
         for (int i = 0; i <= nPTM; i++) {
 
             spectrumAnnotator.setMassShift(i * ptm.getMass());
-                                        
+
             ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, noModPeptide);
 
             for (IonMatch ionMatch : matches) {

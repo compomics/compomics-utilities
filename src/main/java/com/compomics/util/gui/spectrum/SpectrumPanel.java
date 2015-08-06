@@ -149,8 +149,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
-     * @param aSpectrumFilenameColor Color with the color for the
-     * spectrum filename in the panel can be 'null' for default coloring.
+     * @param aSpectrumFilenameColor Color with the color for the spectrum
+     * filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
@@ -175,8 +175,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
-     * @param aSpectrumFilenameColor Color with the color for the
-     * spectrum filename in the panel can be 'null' for default coloring.
+     * @param aSpectrumFilenameColor Color with the color for the spectrum
+     * filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
@@ -202,8 +202,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aDrawStyle the drawing style to use.
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
-     * @param aSpectrumFilenameColor Color with the color for the
-     * spectrum filename in the panel can be 'null' for default coloring.
+     * @param aSpectrumFilenameColor Color with the color for the spectrum
+     * filename in the panel can be 'null' for default coloring.
      * @param aMaxPadding int the sets the maximum padding size.
      *
      * @param aShowFileName boolean that specifies if the file name should be
@@ -689,7 +689,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * assumed to have the following form: ion type + [ion number] + [charge] +
      * [neutral loss]
      * @param iontypes the fragment ion types to include, assumed to be one of
-     * the Ion types, e.g, IonType.PeptideFragmentIon &gt; PeptideFragmentIon.B_ION
+     * the Ion types, e.g, IonType.PeptideFragmentIon &gt;
+     * PeptideFragmentIon.B_ION
      * @param neutralLosses list of neutral losses to display
      * @param singleChargeSelected if singly charged fragments are to be
      * included
@@ -871,102 +872,112 @@ public class SpectrumPanel extends GraphicsPanel {
             case TAG_FRAGMENT_ION:
                 switch (ion.getSubType()) {
                     case PeptideFragmentIon.A_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                // light purple-blue
-                                return new Color(171, 161, 255);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                // ugly purple pink
-                                return new Color(248, 151, 202);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    // light purple-blue
+                                    return new Color(171, 161, 255);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    // ugly purple pink
+                                    return new Color(248, 151, 202);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+                                }
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
                         // turquoise
                         return new Color(153, 0, 0);
                     case PeptideFragmentIon.B_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                // nice blue
-                                return new Color(0, 125, 200);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                // another purple
-                                return new Color(153, 0, 255);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    // nice blue
+                                    return new Color(0, 125, 200);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    // another purple
+                                    return new Color(153, 0, 255);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+                                }
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
                         // dark blue
                         return new Color(0, 0, 255);
                     case PeptideFragmentIon.C_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                // ??
-                                return new Color(188, 150, 255);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                // ??
-                                return new Color(255, 0, 255);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    // ??
+                                    return new Color(188, 150, 255);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    // ??
+                                    return new Color(255, 0, 255);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+                                }
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
                         // purple blue
                         return new Color(188, 0, 255);
                     case PeptideFragmentIon.X_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                // ??
-                                return new Color(78, 200, 150);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                // ??
-                                return new Color(255, 200, 255);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    // ??
+                                    return new Color(78, 200, 150);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    // ??
+                                    return new Color(255, 200, 255);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+                                }
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
                         // green
                         return new Color(78, 200, 0);
                     case PeptideFragmentIon.Y_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                if (isSpectrum) {
-                                    // navy blue
-                                    return new Color(0, 70, 135);
-                                } else {
-                                    // orange
-                                    return new Color(255, 150, 0);
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    if (isSpectrum) {
+                                        // navy blue
+                                        return new Color(0, 70, 135);
+                                    } else {
+                                        // orange
+                                        return new Color(255, 150, 0);
+                                    }
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    if (isSpectrum) {
+                                        // another purple
+                                        return new Color(155, 0, 155);
+                                    } else {
+                                        // pink
+                                        return new Color(255, 0, 150);
+                                    }
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
                                 }
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                if (isSpectrum) {
-                                    // another purple
-                                    return new Color(155, 0, 155);
-                                } else {
-                                    // pink
-                                    return new Color(255, 0, 150);
-                                }
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
 
                         if (isSpectrum) {
@@ -977,20 +988,22 @@ public class SpectrumPanel extends GraphicsPanel {
                             return new Color(255, 0, 0);
                         }
                     case PeptideFragmentIon.Z_ION:
-                        if (ion.getNeutralLosses().size() == 1) {
-                            NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
-                            if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
-                                // ??
-                                return new Color(64, 179, 150);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                // ??
-                                return new Color(255, 179, 150);
-                            } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
-                                    || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                return Color.BLACK; // @TODO: black can _not_ be used here!!
+                        if (ion.hasNeutralLosses()) {
+                            if (ion.getNeutralLosses().size() == 1) {
+                                NeutralLoss neutralLoss = ion.getNeutralLosses().get(0);
+                                if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+                                    // ??
+                                    return new Color(64, 179, 150);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+                                    // ??
+                                    return new Color(255, 179, 150);
+                                } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
+                                        || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
+                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+                                }
+                            } else if (ion.getNeutralLosses().size() > 1) {
+                                return Color.GRAY;
                             }
-                        } else if (ion.getNeutralLosses().size() > 1) {
-                            return Color.GRAY;
                         }
                         // dark green
                         return new Color(64, 179, 0);
@@ -1345,7 +1358,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel, 
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel,
             boolean excludeFixedPtms, boolean mirrored) {
 
         int forwardIon = aForwardIon;
@@ -1358,7 +1371,7 @@ public class SpectrumPanel extends GraphicsPanel {
         // iterate the annotations and find the de novo tags
         for (IonMatch tempMatch : annotations) {
             if (tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
-                    && tempMatch.ion.getNeutralLosses().isEmpty()
+                    && !tempMatch.ion.hasNeutralLosses()
                     && tempMatch.charge.value == deNovoCharge) {
 
                 PeptideFragmentIon fragmentIon = (PeptideFragmentIon) tempMatch.ion;
@@ -1450,7 +1463,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showReverseTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel, 
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel,
             boolean excludeFixedPtms, boolean mirrored) {
 
         int forwardIon = aForwardIon;
@@ -1461,7 +1474,7 @@ public class SpectrumPanel extends GraphicsPanel {
         HashMap<Integer, IonMatch> rewindMap = new HashMap<Integer, IonMatch>();
         for (IonMatch ionMatch : annotations) {
             if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
-                    && ionMatch.ion.getNeutralLosses().isEmpty()
+                    && !ionMatch.ion.hasNeutralLosses()
                     && ionMatch.charge.value == deNovoCharge) {
 
                 TagFragmentIon fragmentIon = (TagFragmentIon) ionMatch.ion;

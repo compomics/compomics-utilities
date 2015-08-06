@@ -49,11 +49,10 @@ public class FragmentFactoryTest extends TestCase {
         HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> ions = fragmentFactory.getFragmentIons(peptide);
         HashMap<Integer, ArrayList<Ion>> fragmentIons = ions.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
 
-        // add the theoretical masses to the table
         for (Integer subType : fragmentIons.keySet()) {
             for (Ion ion : fragmentIons.get(subType)) {
                 PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
-                if (peptideFragmentIon.getNeutralLosses().isEmpty()) {
+                if (!peptideFragmentIon.hasNeutralLosses()) {
                     if (peptideFragmentIon.getNumber() == 1) {
                         if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
                             Assert.assertTrue(
@@ -242,126 +241,129 @@ public class FragmentFactoryTest extends TestCase {
                             Assert.assertTrue(
                                     Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1265.5857) < tolerance);
                         }
-
-                    } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                            && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
-                        if (peptideFragmentIon.getNumber() == 3) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 272.0700) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 4) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 401.1125) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 550.2660) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 5) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 548.1810) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 637.2980) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 6) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 605.2024) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 793.3991) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 7) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 742.2613) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 921.4517) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 8) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 855.3454) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1018.5105) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 9) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 983.4404) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1132.5534) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 10) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1096.5244) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
-                            }
+                    }
+                } else if (peptideFragmentIon.getNeutralLosses().size() == 1
+                        && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                    if (peptideFragmentIon.getNumber() == 3) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 272.0700) < tolerance);
                         }
-                    } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                            && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
-                        if (peptideFragmentIon.getNumber() == 6) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 794.3832) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 7) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 922.4417) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 8) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1019.4945) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 9) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 956.4295) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 984.4244) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1133.5374) < tolerance);
-                            }
-                        } else if (peptideFragmentIon.getNumber() == 10) {
-                            if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1069.5135) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1097.5084) < tolerance);
-                            } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1264.5779) < tolerance);
-                            }
+                    } else if (peptideFragmentIon.getNumber() == 4) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 401.1125) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 550.2660) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 5) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 548.1810) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 637.2980) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 6) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 605.2024) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 793.3991) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 7) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 742.2613) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 921.4517) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 8) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 855.3454) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1018.5105) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 9) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 983.4404) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1132.5534) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 10) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1096.5244) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
                         }
                     }
-                } else if (ion.getType() == Ion.IonType.PRECURSOR_ION) {
-                    if (ion.getNeutralLosses().isEmpty()) {
-                        Assert.assertTrue(
-                                Math.abs(peptideFragmentIon.getTheoreticMass() + 2 * protonMass - 2395.1322) < tolerance);
-
-                    } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                            && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
-                        Assert.assertTrue(
-                                Math.abs(peptideFragmentIon.getTheoreticMass() + 2 * protonMass - 2377.1216) < tolerance);
-                    } else if (peptideFragmentIon.getNeutralLosses().size() == 1
-                            && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
-                        Assert.assertTrue(
-                                Math.abs(peptideFragmentIon.getTheoreticMass() + 2 * protonMass - 2378.1056) < tolerance);
+                } else if (peptideFragmentIon.getNeutralLosses().size() == 1
+                        && peptideFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                    if (peptideFragmentIon.getNumber() == 6) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 794.3832) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 7) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 922.4417) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 8) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1019.4945) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 9) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 956.4295) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 984.4244) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1133.5374) < tolerance);
+                        }
+                    } else if (peptideFragmentIon.getNumber() == 10) {
+                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1069.5135) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1097.5084) < tolerance);
+                        } else if (peptideFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(peptideFragmentIon.getTheoreticMass() + protonMass - 1264.5779) < tolerance);
+                        }
                     }
+                }
+            }
+        }
+        HashMap<Integer, ArrayList<Ion>> precursorIons = ions.get(Ion.IonType.PRECURSOR_ION.index);
+        for (Integer subType : precursorIons.keySet()) {
+            for (Ion ion : precursorIons.get(subType)) {
+                if (!ion.hasNeutralLosses()) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2395.1322) < tolerance);
+
+                } else if (ion.getNeutralLosses().size() == 1
+                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2377.1216) < tolerance);
+                } else if (ion.getNeutralLosses().size() == 1
+                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2378.1056) < tolerance);
                 }
             }
         }
@@ -387,7 +389,7 @@ public class FragmentFactoryTest extends TestCase {
         for (Integer subType : fragmentIons.keySet()) {
             for (Ion ion : fragmentIons.get(subType)) {
                 TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
-                if (tagFragmentIon.getNeutralLosses().isEmpty()) {
+                if (!tagFragmentIon.hasNeutralLosses()) {
                     if (tagFragmentIon.getNumber() == 1) {
                         if (tagFragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
                             Assert.assertTrue(
@@ -576,126 +578,130 @@ public class FragmentFactoryTest extends TestCase {
                             Assert.assertTrue(
                                     Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1265.5857) < tolerance);
                         }
+                    }
 
-                    } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                            && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
-                        if (tagFragmentIon.getNumber() == 3) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 272.0700) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 4) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 401.1125) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 550.2660) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 5) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 548.1810) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 637.2980) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 6) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 605.2024) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 793.3991) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 7) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 742.2613) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 921.4517) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 8) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 855.3454) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1018.5105) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 9) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 983.4404) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1132.5534) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 10) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1096.5244) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
-                            }
+                } else if (tagFragmentIon.getNeutralLosses().size() == 1
+                        && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                    if (tagFragmentIon.getNumber() == 3) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 272.0700) < tolerance);
                         }
-                    } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                            && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
-                        if (tagFragmentIon.getNumber() == 6) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 794.3832) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 7) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 922.4417) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 8) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1019.4945) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 9) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 956.4295) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 984.4244) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1133.5374) < tolerance);
-                            }
-                        } else if (tagFragmentIon.getNumber() == 10) {
-                            if (tagFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1069.5135) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1097.5084) < tolerance);
-                            } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                Assert.assertTrue(
-                                        Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1264.5779) < tolerance);
-                            }
+                    } else if (tagFragmentIon.getNumber() == 4) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 401.1125) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 550.2660) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 5) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 548.1810) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 637.2980) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 6) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 605.2024) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 793.3991) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 7) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 742.2613) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 921.4517) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 8) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 855.3454) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1018.5105) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 9) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 983.4404) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1132.5534) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 10) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1096.5244) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1263.5939) < tolerance);
                         }
                     }
-                } else if (ion.getType() == Ion.IonType.PRECURSOR_ION) {
-                    if (ion.getNeutralLosses().isEmpty()) {
-                        Assert.assertTrue(
-                                Math.abs(tagFragmentIon.getTheoreticMass() + 2 * protonMass - 2395.1322) < tolerance);
-
-                    } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                            && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
-                        Assert.assertTrue(
-                                Math.abs(tagFragmentIon.getTheoreticMass() + 2 * protonMass - 2377.1216) < tolerance);
-                    } else if (tagFragmentIon.getNeutralLosses().size() == 1
-                            && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
-                        Assert.assertTrue(
-                                Math.abs(tagFragmentIon.getTheoreticMass() + 2 * protonMass - 2378.1056) < tolerance);
+                } else if (tagFragmentIon.getNeutralLosses().size() == 1
+                        && tagFragmentIon.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                    if (tagFragmentIon.getNumber() == 6) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 794.3832) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 7) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 922.4417) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 8) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1019.4945) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 9) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 956.4295) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 984.4244) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1133.5374) < tolerance);
+                        }
+                    } else if (tagFragmentIon.getNumber() == 10) {
+                        if (tagFragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1069.5135) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1097.5084) < tolerance);
+                        } else if (tagFragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                            Assert.assertTrue(
+                                    Math.abs(tagFragmentIon.getTheoreticMass() + protonMass - 1264.5779) < tolerance);
+                        }
                     }
+                }
+            }
+        }
+        HashMap<Integer, ArrayList<Ion>> precursorIons = ions.get(Ion.IonType.PRECURSOR_ION.index);
+        for (Integer subType : precursorIons.keySet()) {
+            for (Ion ion : precursorIons.get(subType)) {
+                if (!ion.hasNeutralLosses()) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2395.1322) < tolerance);
+
+                } else if (ion.getNeutralLosses().size() == 1
+                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.H2O)) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2377.1216) < tolerance);
+                } else if (ion.getNeutralLosses().size() == 1
+                        && ion.getNeutralLosses().get(0).isSameAs(NeutralLoss.NH3)) {
+                    Assert.assertTrue(
+                            Math.abs(ion.getTheoreticMass() + protonMass - 2378.1056) < tolerance);
                 }
             }
         }

@@ -1083,7 +1083,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
         }
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
@@ -1121,7 +1121,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         fixedModel.getDataVector().removeAllElements();
 
         for (String fixedMod : fixedModifications) {
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
         }
         ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
         fixedModsTable.repaint();
@@ -1168,7 +1168,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(variabledMod), variabledMod, ptmFactory.getPTM(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, ptmFactory.getPTM(variabledMod).getMass()});
         }
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
@@ -1212,7 +1212,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         variableModel.getDataVector().removeAllElements();
 
         for (String variabledMod : variableModifications) {
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(variabledMod), variabledMod, ptmFactory.getPTM(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variabledMod), variabledMod, ptmFactory.getPTM(variabledMod).getMass()});
         }
         ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
         variableModsTable.repaint();
@@ -1341,7 +1341,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) fixedModsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    searchParameters.getModificationProfile().setColor((String) fixedModsTable.getValueAt(row, 1), newColor);
+                    searchParameters.getPtmSettings().setColor((String) fixedModsTable.getValueAt(row, 1), newColor);
                     fixedModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
                     fixedModsTable.repaint();
@@ -1493,7 +1493,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) variableModsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    searchParameters.getModificationProfile().setColor((String) variableModsTable.getValueAt(row, 1), newColor);
+                    searchParameters.getPtmSettings().setColor((String) variableModsTable.getValueAt(row, 1), newColor);
                     variableModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
                     variableModsTable.repaint();
@@ -1726,7 +1726,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         ArrayList<String> missingPtms = new ArrayList<String>();
-        PtmSettings modificationProfile = searchParameters.getModificationProfile();
+        PtmSettings modificationProfile = searchParameters.getPtmSettings();
         if (modificationProfile != null) {
             ArrayList<String> fixedMods = modificationProfile.getFixedModifications();
 
@@ -1766,7 +1766,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             fixedModel.getDataVector().removeAllElements();
 
             for (String fixedMod : fixedMods) {
-                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
+                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(fixedMod), fixedMod, ptmFactory.getPTM(fixedMod).getMass()});
             }
             ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
             fixedModsTable.repaint();
@@ -1808,7 +1808,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             DefaultTableModel variableModel = (DefaultTableModel) variableModsTable.getModel();
             variableModel.getDataVector().removeAllElements();
             for (String variableMod : variableMods) {
-                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationProfile().getColor(variableMod), variableMod, ptmFactory.getPTM(variableMod).getMass()});
+                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getPtmSettings().getColor(variableMod), variableMod, ptmFactory.getPTM(variableMod).getMass()});
             }
             ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
             variableModsTable.repaint();
@@ -2103,7 +2103,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
         }
 
-        tempSearchParameters.setModificationProfile(modificationProfile);
+        tempSearchParameters.setPtmSettings(modificationProfile);
 
         tempSearchParameters.setnMissedCleavages(new Integer(maxMissedCleavagesTxt.getText().trim()));
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));

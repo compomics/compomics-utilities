@@ -70,7 +70,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * PTMFactory.
      *
      * @param tag the tag of interest
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * @param ptmSequenceMatchingSettings the sequence matching settings
      * for PTM to peptide mapping
      *
      * @return the expected possible neutral losses
@@ -82,7 +82,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing an object from the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
+    public static NeutralLossesMap getDefaultLosses(Tag tag, SequenceMatchingPreferences ptmSequenceMatchingSettings)
             throws IOException, InterruptedException, ClassNotFoundException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
@@ -185,7 +185,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                             throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingPreferences);
+                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings);
                             if (!indexes.isEmpty()) {
                                 Collections.sort(indexes);
                                 modMin = indexes.get(0);
@@ -210,24 +210,24 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param annotationPreferences the annotation preferences
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
      * @param spectrum the spectrum to match
      * @param tag the tag of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, MSnSpectrum spectrum, Tag tag) {
+    public ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Tag tag) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationPreferences.getAnnotationIntensityLimit()));
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
 
-        setTag(tag, specificAnnotationPreferences.getPrecursorCharge());
-        setMassTolerance(specificAnnotationPreferences.getFragmentIonAccuracy(), specificAnnotationPreferences.isFragmentIonPpm(), annotationPreferences.isHighResolutionAnnotation());
+        setTag(tag, specificAnnotationSettings.getPrecursorCharge());
+        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -236,7 +236,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             precursorCharges.add(i);
         }
 
-        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         if (theoreticalFragmentIons != null) {
             for (Ion.IonType ionType : ionTypes.keySet()) {
                 HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
@@ -247,14 +247,14 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                         if (ions != null) {
                             for (Ion ion : ions) {
 
-                                if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
+                                if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
 
                                     ArrayList<Integer> tempCharges;
                                     // have to treat precursor charges separately, as to not increase the max charge for the other ions
                                     if (ionType == Ion.IonType.PRECURSOR_ION) {
                                         tempCharges = precursorCharges;
                                     } else {
-                                        tempCharges = specificAnnotationPreferences.getSelectedCharges();
+                                        tempCharges = specificAnnotationSettings.getSelectedCharges();
                                     }
 
                                     for (int charge : tempCharges) {
@@ -282,7 +282,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
-        return getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, tag);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, tag);
     }
 }

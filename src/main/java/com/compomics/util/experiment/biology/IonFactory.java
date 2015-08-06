@@ -8,9 +8,11 @@ import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This factory generates the expected ions from a peptide.
@@ -77,73 +79,106 @@ public class IonFactory {
     }
 
     /**
+     * This method returns all the theoretic ions expected from a peptide. /!\
+     * this method will work only if the PMTs found in the peptide are in the
+     * PTMFactory.
+     *
+     * @param peptide The considered peptide
+     *
+     * @return the expected fragment ions
+     */
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide) {
+        return getFragmentIons(peptide, null);
+    }
+
+    /**
      * This method returns the theoretic ions expected from a peptide. /!\ this
      * method will work only if the PMTs found in the peptide are in the
      * PTMFactory.
      *
      * @param peptide The considered peptide
+     * @param specificAnnotationSettings if provided, only the ions detectable
+     * using these settings will be selected
+     *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide) {
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide, SpecificAnnotationSettings specificAnnotationSettings) {
+
+        HashMap<Ion.IonType, HashSet<Integer>> selectedIonTypes = null;
+        if (specificAnnotationSettings != null) {
+            selectedIonTypes = specificAnnotationSettings.getIonTypes();
+        }
 
         HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>();
-        String sequence = peptide.getSequence().toUpperCase();
-        HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<Integer, ArrayList<PTM>>();
+        String sequence = peptide.getSequence();
+        HashMap<Integer, ArrayList<PTM>> modifications = new HashMap<Integer, ArrayList<PTM>>(peptide.getNModifications());
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ArrayList<String> processedPtms = null;
-        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>(defaultNeutralLosses);
+        ArrayList<NeutralLoss> possibleNeutralLosses = null;
+        if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
+            possibleNeutralLosses = new ArrayList<NeutralLoss>(defaultNeutralLosses);
+        }
 
-        for (ModificationMatch ptmMatch : peptide.getModificationMatches()) {
-            int location = ptmMatch.getModificationSite();
-            String ptmName = ptmMatch.getTheoreticPtm();
-            PTM ptm = ptmFactory.getPTM(ptmName);
-            if (ptm == null) {
-                throw new IllegalArgumentException("PTM " + ptmName + " not loaded in the PTM factory.");
-            }
-            ArrayList<PTM> modificationsAtSite = modifications.get(location);
-            if (modificationsAtSite == null) {
-                modificationsAtSite = new ArrayList<PTM>();
-                modifications.put(location, modificationsAtSite);
-            }
-            modificationsAtSite.add(ptm);
-            if (processedPtms == null || !processedPtms.contains(ptmName)) {
-                for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
-                    HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
-                    if (ionsMap == null) {
-                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
-                        result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
-                    }
-                    int subType = ptmReporterIon.getSubType();
-                    ArrayList<Ion> ions = ionsMap.get(subType);
-                    if (ions == null) {
-                        ions = new ArrayList<Ion>();
-                        ionsMap.put(subType, ions);
-                        ions.add(ptmReporterIon);
-                    }
+        if (peptide.isModified()) {
+            for (ModificationMatch ptmMatch : peptide.getModificationMatches()) {
+                int location = ptmMatch.getModificationSite();
+                String ptmName = ptmMatch.getTheoreticPtm();
+                PTM ptm = ptmFactory.getPTM(ptmName);
+                if (ptm == null) {
+                    throw new IllegalArgumentException("PTM " + ptmName + " not loaded in the PTM factory.");
                 }
-                for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
-                    boolean found = false;
-                    for (NeutralLoss neutralLoss : possibleNeutralLosses) {
-                        // @TODO: we keep only different neutral losses. We might want to change that when people 
-                        //       are working with modifications having reproducible motifs like ubiquitin or some glycons.
-                        if (ptmNeutralLoss.isSameAs(neutralLoss)) {
-                            found = true;
-                            break;
+                ArrayList<PTM> modificationsAtSite = modifications.get(location);
+                if (modificationsAtSite == null) {
+                    modificationsAtSite = new ArrayList<PTM>(1);
+                    modifications.put(location, modificationsAtSite);
+                }
+                modificationsAtSite.add(ptm);
+                if (processedPtms == null || !processedPtms.contains(ptmName)) {
+                    if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.REPORTER_ION)) {
+                        for (ReporterIon ptmReporterIon : ptm.getReporterIons()) {
+                            HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.REPORTER_ION.index);
+                            if (ionsMap == null) {
+                                ionsMap = new HashMap<Integer, ArrayList<Ion>>(ptm.getReporterIons().size());
+                                result.put(Ion.IonType.REPORTER_ION.index, ionsMap);
+                            }
+                            int subType = ptmReporterIon.getSubType();
+                            ArrayList<Ion> ions = ionsMap.get(subType);
+                            if (ions == null) {
+                                ions = new ArrayList<Ion>(1);
+                                ionsMap.put(subType, ions);
+                                ions.add(ptmReporterIon);
+                            }
                         }
                     }
-                    if (!found) {
-                        possibleNeutralLosses.add(ptmNeutralLoss);
+                    if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
+                        for (NeutralLoss ptmNeutralLoss : ptm.getNeutralLosses()) {
+                            boolean found = false;
+                            for (NeutralLoss neutralLoss : possibleNeutralLosses) {
+                                // @TODO: we keep only different neutral losses. We might want to change that when people 
+                                //       are working with modifications having reproducible motifs like ubiquitin or some glycons.
+                                if (ptmNeutralLoss.isSameAs(neutralLoss)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                possibleNeutralLosses.add(ptmNeutralLoss);
+                            }
+                        }
                     }
+                    if (processedPtms == null) {
+                        processedPtms = new ArrayList<String>(peptide.getNModifications());
+                    }
+                    processedPtms.add(ptmName);
                 }
-                if (processedPtms == null) {
-                    processedPtms = new ArrayList<String>();
-                }
-                processedPtms.add(ptmName);
             }
         }
 
         // We will account for up to two neutral losses per ion maximum
-        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
+        ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = null;
+        if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
+            neutralLossesCombinations = getAccountedNeutralLosses(possibleNeutralLosses);
+        }
 
         double forwardMass = 0;
         double rewindMass = Atom.O.getMonoisotopicMass();
@@ -151,18 +186,21 @@ public class IonFactory {
         for (int aa = 0; aa < sequence.length() - 1; aa++) {
 
             char aaName = sequence.charAt(aa);
-            HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
-            if (ionsMap == null) {
-                ionsMap = new HashMap<Integer, ArrayList<Ion>>();
-                result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
-            }
-            ImmoniumIon immoniumIon = new ImmoniumIon(aaName);
-            int subType = immoniumIon.getSubType();
-            ArrayList<Ion> ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-                ions.add(immoniumIon);
+
+            if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.IMMONIUM_ION)) {
+                HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
+                if (ionsMap == null) {
+                    ionsMap = new HashMap<Integer, ArrayList<Ion>>(sequence.length());
+                    result.put(Ion.IonType.IMMONIUM_ION.index, ionsMap);
+                }
+                ImmoniumIon immoniumIon = new ImmoniumIon(aaName);
+                int subType = immoniumIon.getSubType();
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    ions = new ArrayList<Ion>(1);
+                    ionsMap.put(subType, ions);
+                    ions.add(immoniumIon);
+                }
             }
 
             int faa = aa + 1;
@@ -175,43 +213,73 @@ public class IonFactory {
                 }
             }
 
-            ionsMap = result.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
+            HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PEPTIDE_FRAGMENT_ION.index);
             if (ionsMap == null) {
-                ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                ionsMap = new HashMap<Integer, ArrayList<Ion>>(6);
                 result.put(Ion.IonType.PEPTIDE_FRAGMENT_ION.index, ionsMap);
             }
 
-            // add the a-ions
-            subType = PeptideFragmentIon.A_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, forwardMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.A_ION)) {
+                // add the a-ions
+                int subType = PeptideFragmentIon.A_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, forwardMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, forwardMass - Atom.C.getMonoisotopicMass() - Atom.O.getMonoisotopicMass(), null));
+                }
             }
 
-            // add the b-ions
-            subType = PeptideFragmentIon.B_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, forwardMass - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.B_ION)) {
+                // add the b-ions
+                int subType = PeptideFragmentIon.B_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, forwardMass - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, forwardMass, null));
+                }
             }
 
-            // add the c-ion
-            subType = PeptideFragmentIon.C_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, forwardMass + Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.C_ION)) {
+                // add the c-ion
+                int subType = PeptideFragmentIon.C_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, forwardMass + Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, forwardMass + Atom.N.getMonoisotopicMass() + 3 * Atom.H.getMonoisotopicMass(), null));
+                }
             }
 
             int raa = sequence.length() - aa - 1;
@@ -224,37 +292,67 @@ public class IonFactory {
                 }
             }
 
-            // add the x-ion
-            subType = PeptideFragmentIon.X_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, rewindMass + Atom.C.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.X_ION)) {
+                // add the x-ion
+                int subType = PeptideFragmentIon.X_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, rewindMass + Atom.C.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, rewindMass + Atom.C.getMonoisotopicMass() + Atom.O.getMonoisotopicMass(), null));
+                }
             }
 
-            // add the y-ions
-            subType = PeptideFragmentIon.Y_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, rewindMass + 2 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.Y_ION)) {
+                // add the y-ions
+                int subType = PeptideFragmentIon.Y_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, rewindMass + 2 * Atom.H.getMonoisotopicMass() - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, rewindMass + 2 * Atom.H.getMonoisotopicMass(), null));
+                }
             }
 
-            // add the z-ions
-            subType = PeptideFragmentIon.Z_ION;
-            ions = ionsMap.get(subType);
-            if (ions == null) {
-                ions = new ArrayList<Ion>();
-                ionsMap.put(subType, ions);
-            }
-            for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-                ions.add(new PeptideFragmentIon(subType, faa, rewindMass - Atom.N.getMonoisotopicMass() - getLossesMass(losses), losses));
+            if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PEPTIDE_FRAGMENT_ION) && specificAnnotationSettings.getFragmentIonTypes().contains(PeptideFragmentIon.Z_ION)) {
+                // add the z-ions
+                int subType = PeptideFragmentIon.Z_ION;
+                ArrayList<Ion> ions = ionsMap.get(subType);
+                if (ions == null) {
+                    if (neutralLossesCombinations != null) {
+                        ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                    } else {
+                        ions = new ArrayList<Ion>(1);
+                    }
+                    ionsMap.put(subType, ions);
+                }
+                if (neutralLossesCombinations != null) {
+                    for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                        ions.add(new PeptideFragmentIon(subType, faa, rewindMass - Atom.N.getMonoisotopicMass() - getLossesMass(losses), losses));
+                    }
+                } else {
+                    ions.add(new PeptideFragmentIon(subType, faa, rewindMass - Atom.N.getMonoisotopicMass(), null));
+                }
             }
         }
 
@@ -267,20 +365,30 @@ public class IonFactory {
             }
         }
 
-        // add the precursor ion
-        HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PRECURSOR_ION.index);
-        if (ionsMap == null) {
-            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
-            result.put(Ion.IonType.PRECURSOR_ION.index, ionsMap);
-        }
-        int subType = PrecursorIon.PRECURSOR;
-        ArrayList<Ion> ions = ionsMap.get(subType);
-        if (ions == null) {
-            ions = new ArrayList<Ion>();
-            ionsMap.put(subType, ions);
-        }
-        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
-            ions.add(new PrecursorIon(forwardMass + Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+        if (specificAnnotationSettings == null || selectedIonTypes.keySet().contains(Ion.IonType.PRECURSOR_ION)) {
+            // add the precursor ion
+            HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PRECURSOR_ION.index);
+            if (ionsMap == null) {
+                ionsMap = new HashMap<Integer, ArrayList<Ion>>(1);
+                result.put(Ion.IonType.PRECURSOR_ION.index, ionsMap);
+            }
+            int subType = PrecursorIon.PRECURSOR;
+            ArrayList<Ion> ions = ionsMap.get(subType);
+            if (ions == null) {
+                if (neutralLossesCombinations != null) {
+                    ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+                } else {
+                    ions = new ArrayList<Ion>(1);
+                }
+                ionsMap.put(subType, ions);
+            }
+            if (neutralLossesCombinations != null) {
+                for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+                    ions.add(new PrecursorIon(forwardMass + (2 * Atom.H.getMonoisotopicMass()) + Atom.O.getMonoisotopicMass() - getLossesMass(losses), losses));
+                }
+            } else {
+                ions.add(new PrecursorIon(forwardMass + Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass(), null));
+            }
         }
 
         return result;
@@ -1027,6 +1135,22 @@ public class IonFactory {
             }
         }
 
+        // add the precursor ion
+        HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.PRECURSOR_ION.index);
+        if (ionsMap == null) {
+            ionsMap = new HashMap<Integer, ArrayList<Ion>>(1);
+            result.put(Ion.IonType.PRECURSOR_ION.index, ionsMap);
+        }
+        int subType = PrecursorIon.PRECURSOR;
+        ArrayList<Ion> ions = ionsMap.get(subType);
+        if (ions == null) {
+            ions = new ArrayList<Ion>(neutralLossesCombinations.size());
+            ionsMap.put(subType, ions);
+        }
+        for (ArrayList<NeutralLoss> losses : neutralLossesCombinations) {
+            ions.add(new PrecursorIon(tag.getMass() - getLossesMass(losses), losses));
+        }
+
         return result;
     }
 
@@ -1042,7 +1166,7 @@ public class IonFactory {
 
         // We will account for up to two neutral losses per ion maximum
         ArrayList<ArrayList<NeutralLoss>> neutralLossesCombinations = new ArrayList<ArrayList<NeutralLoss>>();
-        ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>();
+        ArrayList<NeutralLoss> tempList = new ArrayList<NeutralLoss>(0);
         neutralLossesCombinations.add(tempList);
 
         for (NeutralLoss neutralLoss1 : possibleNeutralLosses) {
@@ -1053,7 +1177,7 @@ public class IonFactory {
                 }
             }
             if (!found) {
-                tempList = new ArrayList<NeutralLoss>();
+                tempList = new ArrayList<NeutralLoss>(1);
                 tempList.add(neutralLoss1);
                 neutralLossesCombinations.add(tempList);
             }
@@ -1073,7 +1197,7 @@ public class IonFactory {
                         }
                     }
                     if (!found) {
-                        tempList = new ArrayList<NeutralLoss>();
+                        tempList = new ArrayList<NeutralLoss>(2);
                         tempList.add(neutralLoss1);
                         tempList.add(neutralLoss2);
                         neutralLossesCombinations.add(tempList);

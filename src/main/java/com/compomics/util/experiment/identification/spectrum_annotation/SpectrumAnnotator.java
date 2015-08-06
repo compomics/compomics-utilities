@@ -105,6 +105,10 @@ public abstract class SpectrumAnnotator {
      * while setting this to false annotates the most intense peak.
      */
     protected boolean pickMostAccuratePeak = true;
+    /**
+     * If provided, the annotator will only look for the ions included in the specific annotation settings.
+     */
+    protected SpecificAnnotationSettings specificAnnotationSettings = null;
 
     /**
      * Translates the list of ion matches into a vector of annotations which can
@@ -365,9 +369,11 @@ public abstract class SpectrumAnnotator {
      * fragment ion are fit the requirement of the given neutral losses map
      */
     public boolean lossesValidated(NeutralLossesMap neutralLosses, Ion theoreticIon) {
-        for (NeutralLoss neutralLoss : theoreticIon.getNeutralLosses()) {
-            if (!isAccounted(neutralLosses, neutralLoss, theoreticIon)) {
-                return false;
+        if (theoreticIon.hasNeutralLosses()) {
+            for (NeutralLoss neutralLoss : theoreticIon.getNeutralLosses()) {
+                if (!isAccounted(neutralLosses, neutralLoss, theoreticIon)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -410,12 +416,12 @@ public abstract class SpectrumAnnotator {
      * Returns the currently matched ions with the given settings.
      *
      * @param spectrum the spectrum of interest
-     * @param annotationPreferences the annotation preferences
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
      *
      * @return the currently matched ions with the given settings
      */
-    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences);
+    public abstract ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings);
 
     /**
      * Returns the spectrum currently inspected.
@@ -586,9 +592,9 @@ public abstract class SpectrumAnnotator {
      *
      * @param spectrumIdentificationAssumption the
      * spectrumIdentificationAssumption of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * @param sequenceMatchingPreferences the sequence matching settings for
      * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
+     * @param ptmSequenceMatchingPreferences the sequence matching settings
      * for PTM to peptide mapping
      *
      * @return the expected possible neutral losses
@@ -602,7 +608,7 @@ public abstract class SpectrumAnnotator {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences, 
+    public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
@@ -620,15 +626,15 @@ public abstract class SpectrumAnnotator {
      * given peak. Note: fragment ions need to be initiated by the
      * SpectrumAnnotator extending class.
      *
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param specificAnnotationSettings the specific annotation settings
      * @param peak The peak to match
      * @return A list of potential ion matches
      */
-    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationSettings specificAnnotationPreferences, Peak peak) {
+    protected ArrayList<IonMatch> matchPeak(SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
-        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
@@ -637,11 +643,11 @@ public abstract class SpectrumAnnotator {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            for (int charge : specificAnnotationPreferences.getSelectedCharges()) {
-                                if (chargeValidated(ion, charge, specificAnnotationPreferences.getPrecursorCharge())
-                                        && lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
+                            for (int charge : specificAnnotationSettings.getSelectedCharges()) {
+                                if (chargeValidated(ion, charge, specificAnnotationSettings.getPrecursorCharge())
+                                        && lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
                                     IonMatch ionMatch = new IonMatch(peak, ion, new Charge(Charge.PLUS, charge));
-                                    if (Math.abs(ionMatch.getError(specificAnnotationPreferences.isFragmentIonPpm(), subtractIsotope)) <= specificAnnotationPreferences.getFragmentIonAccuracy()) {
+                                    if (Math.abs(ionMatch.getError(specificAnnotationSettings.isFragmentIonPpm(), subtractIsotope)) <= specificAnnotationSettings.getFragmentIonAccuracy()) {
                                         result.add(ionMatch);
                                     }
                                 }
@@ -664,16 +670,16 @@ public abstract class SpectrumAnnotator {
      * Note: fragment ions need to be initiated by the SpectrumAnnotator
      * extending class.
      *
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param specificAnnotationSettings the specific annotation settings
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationPreferences) {
+    protected HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings) {
 
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<Integer, ArrayList<Ion>>();
 
-        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
@@ -682,8 +688,8 @@ public abstract class SpectrumAnnotator {
                     ArrayList<Ion> ions = ionMap.get(subType);
                     if (ions != null) {
                         for (Ion ion : ions) {
-                            if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
-                                for (int charge : specificAnnotationPreferences.getSelectedCharges()) {
+                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
+                                for (int charge : specificAnnotationSettings.getSelectedCharges()) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
                                         ArrayList<Ion> resultsAtCharge = result.get(charge);
                                         if (resultsAtCharge == null) {

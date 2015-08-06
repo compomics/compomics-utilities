@@ -150,6 +150,23 @@ public abstract class Ion extends ExperimentObject {
     public abstract ArrayList<NeutralLoss> getNeutralLosses();
 
     /**
+     * Indicates whether the ion has a neutral loss.
+     *
+     * @return a boolean indicating whether the ion has a neutral loss
+     */
+    public boolean hasNeutralLosses() {
+        switch (type) {
+            case PEPTIDE_FRAGMENT_ION:
+            case TAG_FRAGMENT_ION:
+            case PRECURSOR_ION:
+                ArrayList<NeutralLoss> neutralLosses = getNeutralLosses();
+                return neutralLosses != null && !neutralLosses.isEmpty();
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Returns a boolean indicating whether the ion is the same as another ion.
      *
      * @param anotherIon the other ion
@@ -173,7 +190,10 @@ public abstract class Ion extends ExperimentObject {
      * @return the neutral loss
      */
     public static String getNeutralLossesAsString(ArrayList<NeutralLoss> neutralLosses) {
-        ArrayList<String> names = new ArrayList<String>();
+        if (neutralLosses == null) {
+            return "";
+        }
+        ArrayList<String> names = new ArrayList<String>(neutralLosses.size());
         for (NeutralLoss neutralLoss : neutralLosses) {
             names.add(neutralLoss.name);
         }
@@ -304,13 +324,10 @@ public abstract class Ion extends ExperimentObject {
      *
      * @param ionType the ion type
      * @param subType the ion subtype
-     * @param neutralLosses the neutral losses. An empty or null list if none.
+     * @param neutralLosses the neutral losses. Null list if none.
      * @return a generic ion
      */
     public static Ion getGenericIon(IonType ionType, int subType, ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
-        }
         switch (ionType) {
             case ELEMENTARY_ION:
                 return new ElementaryIon("new ElementaryIon", 0.0, subType);

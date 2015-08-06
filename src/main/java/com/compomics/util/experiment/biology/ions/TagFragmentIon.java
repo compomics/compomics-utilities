@@ -39,7 +39,7 @@ public class TagFragmentIon extends Ion {
     /**
      * The neutral losses found on the ion.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = null;
     /**
      * Position of the ion in the tag of amino acids considering gaps as an
      * amino acid. 0 based.
@@ -71,13 +71,12 @@ public class TagFragmentIon extends Ion {
      * @param massGap the mass gap before this tag fragment ions
      */
     public TagFragmentIon(int fragmentType, int number, int subNumber, double mass, ArrayList<NeutralLoss> neutralLosses, double massGap) {
-        if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
+        if (neutralLosses != null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
         }
         this.subType = fragmentType;
         type = Ion.IonType.TAG_FRAGMENT_ION;
         this.theoreticMass = mass;
-        this.neutralLosses.addAll(neutralLosses);
         this.number = number;
         this.subNumber = subNumber;
         this.massGap = massGap;
@@ -91,12 +90,11 @@ public class TagFragmentIon extends Ion {
      * @param neutralLosses the neutral losses of the ion
      */
     public TagFragmentIon(int fragmentType, ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
+        if (neutralLosses != null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
         }
         this.subType = fragmentType;
         type = Ion.IonType.PEPTIDE_FRAGMENT_ION;
-        this.neutralLosses.addAll(neutralLosses);
     }
 
     /**
@@ -165,7 +163,7 @@ public class TagFragmentIon extends Ion {
     public CvTerm getPrideCvTerm() {
         switch (subType) {
             case A_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000233", "a ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000234", "a ion -H2O", null);
@@ -175,7 +173,7 @@ public class TagFragmentIon extends Ion {
                     return null;
                 }
             case B_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000194", "b ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000196", "b ion -H2O", null);
@@ -185,7 +183,7 @@ public class TagFragmentIon extends Ion {
                     return null;
                 }
             case C_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000236", "c ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000237", "c ion -H2O", null);
@@ -195,7 +193,7 @@ public class TagFragmentIon extends Ion {
                     return null;
                 }
             case X_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000227", "x ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000228", "x ion -H2O", null);
@@ -205,7 +203,7 @@ public class TagFragmentIon extends Ion {
                     return null;
                 }
             case Y_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000193", "y ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000197", "y ion -H2O", null);
@@ -215,7 +213,7 @@ public class TagFragmentIon extends Ion {
                     return null;
                 }
             case Z_ION:
-                if (neutralLosses.isEmpty()) {
+                if (neutralLosses == null || neutralLosses.isEmpty()) {
                     return new CvTerm("PRIDE", "PRIDE:0000230", "z ion", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PRIDE", "PRIDE:0000231", "z ion -H2O", null);

@@ -113,21 +113,21 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Returns the modification profile of the project.
+     * Returns the PTM settings.
      *
-     * @return the modification profile of the project
+     * @return the PTM settings
      */
-    public PtmSettings getModificationProfile() {
+    public PtmSettings getPtmSettings() {
         return ptmSettings;
     }
 
     /**
-     * Sets the modification profile of the project.
+     * Sets the PTM settings.
      *
-     * @param modificationProfile The modification profile
+     * @param ptmSettings the PTM settings
      */
-    public void setModificationProfile(PtmSettings modificationProfile) {
-        this.ptmSettings = modificationProfile;
+    public void setPtmSettings(PtmSettings ptmSettings) {
+        this.ptmSettings = ptmSettings;
     }
 
     /**
@@ -792,7 +792,7 @@ public class SearchParameters implements Serializable {
                 || (this.getParametersFile() == null && otherSearchParameters.getParametersFile() != null)) {
             return false;
         }
-        if (!this.getModificationProfile().equals(otherSearchParameters.getModificationProfile())) {
+        if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {
             return false;
         }
         if (this.getFractionMolecularWeightRanges() != null && otherSearchParameters.getFractionMolecularWeightRanges() != null) {

@@ -5,7 +5,7 @@ import com.compomics.util.math.statistics.linear_regression.RegressionStatistics
 import java.util.ArrayList;
 
 /**
- * Performs a robust linear regression
+ * Performs a robust linear regression.
  *
  * @author Marc Vaudel
  */
@@ -20,6 +20,7 @@ public class MedianRegression {
      * @return a simple linear regression
      */
     public static RegressionStatistics getLinearRegression(ArrayList<Double> x, ArrayList<Double> y) {
+
         if (x == null) {
             throw new IllegalArgumentException("null given as x for linear regression.");
         }
@@ -33,6 +34,7 @@ public class MedianRegression {
         if (n <= 1) {
             throw new IllegalArgumentException("Attempting to perform linear regression of a vectore of size " + n + ".");
         }
+
         Double medianX = BasicMathFunctions.median(x);
         Double quantileX1 = BasicMathFunctions.percentile(x, 0.25);
         Double quantileX2 = BasicMathFunctions.percentile(x, 0.75);
@@ -43,6 +45,7 @@ public class MedianRegression {
         Double x0 = x.get(0);
         Double meanY = 0.0;
         boolean newX = false;
+
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
             if (!newX && !xi.equals(x0)) {
@@ -58,15 +61,18 @@ public class MedianRegression {
                 slopes.add(slope);
             }
         }
+
         if (!newX) {
             throw new IllegalArgumentException("Attempting to perform the linear regression of a vertical line or a point.");
         }
+
         meanY /= n;
         Double a = BasicMathFunctions.median(slopes);
         Double b = medianY - (a * medianX);
         Double ssTot = 0.0;
         Double ssRes = 0.0;
         ArrayList<Double> deltasSquare = new ArrayList<Double>(x.size());
+
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
             Double yi = y.get(i);
@@ -80,17 +86,19 @@ public class MedianRegression {
             Double deltaA = ai - a;
             Double deltaSquare = (xi * xi) + (deltaY * deltaY);
             deltaSquare *= deltaA * deltaA;
-            deltaSquare /= (1+(ai*ai));
-            deltaSquare /= (1+(a*a));
+            deltaSquare /= (1 + (ai * ai));
+            deltaSquare /= (1 + (a * a));
             deltasSquare.add(deltaSquare);
         }
+
         Double rSquared = 1.0;
         if (ssTot > 0) {
             rSquared = 1 - (ssRes / ssTot);
         }
+
         Double meanDelta = BasicMathFunctions.mean(deltasSquare);
         Double medianDelta = BasicMathFunctions.median(deltasSquare);
+
         return new RegressionStatistics(a, b, rSquared, meanDelta, medianDelta);
     }
-
 }

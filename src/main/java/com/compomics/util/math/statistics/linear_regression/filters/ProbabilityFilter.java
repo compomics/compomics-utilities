@@ -53,6 +53,7 @@ public class ProbabilityFilter {
         HashMap<Integer, Double> slopesMap = new HashMap<Integer, Double>(n);
         Double x0 = x.get(0);
         boolean newX = false;
+
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
             if (!newX && !xi.equals(x0)) {
@@ -69,12 +70,15 @@ public class ProbabilityFilter {
                 slopesMap.put(i, slope);
             }
         }
+
         if (!newX) {
             throw new IllegalArgumentException("Attempting to perform the linear regression of a vertical line or a point.");
         }
+
         Double medianSlope = BasicMathFunctions.median(slopes);
         ArrayList<Double> deviationsSquare = new ArrayList<Double>(n);
         HashMap<Integer, Double> deviationsSquareMap = new HashMap<Integer, Double>(n);
+
         for (int i = 0; i < x.size(); i++) {
             Double xi = x.get(i);
             Double slope = slopesMap.get(i);
@@ -99,21 +103,19 @@ public class ProbabilityFilter {
         Double deviationMin = slopeDistribution.getMinValueForProbability(threshold, mathContext).doubleValue();
         ArrayList<Double> filteredX = new ArrayList<Double>(x.size());
         ArrayList<Double> filteredY = new ArrayList<Double>(y.size());
-        for (int i = 0;
-                i < slopes.size();
-                i++) {
+
+        for (int i = 0; i < slopes.size(); i++) {
             Double deviation = slopes.get(i);
             if (deviation != null && deviation >= deviationMin && deviation <= deviationMax) {
                 filteredX.add(x.get(i));
                 filteredY.add(y.get(i));
             }
         }
+
         ArrayList<ArrayList<Double>> result = new ArrayList<ArrayList<Double>>(2);
-
         result.add(filteredX);
-
         result.add(filteredY);
+
         return result;
     }
-
 }

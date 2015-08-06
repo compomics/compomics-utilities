@@ -13,7 +13,6 @@ public class Duration {
      * The system current time in milliseconds when the process was started.
      */
     private Long start = null;
-
     /**
      * The system current time in milliseconds when the process was ended.
      */
@@ -63,12 +62,15 @@ public class Duration {
 
     @Override
     public String toString() {
+
         if (start == null) {
             throw new IllegalArgumentException("Start time not set.");
         }
+
         if (end == null) {
             throw new IllegalArgumentException("End time not set.");
         }
+
         long processingTimeMilliseconds = end - start;
         double processingTimeSeconds = ((double) processingTimeMilliseconds) / 1000;
         double processingTimeMinutes = processingTimeSeconds / 60;
@@ -80,8 +82,9 @@ public class Duration {
         double processingTimeDays = ((double) nHours) / 24;
         int nDays = (int) processingTimeDays;
         int restHours = nHours - (24 * nDays);
-        
+
         StringBuilder result = new StringBuilder();
+
         if (nDays > 0) {
             result.append(nDays);
             if (nDays == 1) {
@@ -90,6 +93,7 @@ public class Duration {
                 result.append(" days ");
             }
         }
+
         if (restHours > 0) {
             result.append(restHours);
             if (restHours == 1) {
@@ -98,6 +102,7 @@ public class Duration {
                 result.append(" hours ");
             }
         }
+
         if (restMinutes > 0) {
             result.append(restMinutes);
             if (restMinutes == 1) {
@@ -106,8 +111,8 @@ public class Duration {
                 result.append(" minutes ");
             }
         }
+
         result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");
         return result.toString();
     }
-
 }

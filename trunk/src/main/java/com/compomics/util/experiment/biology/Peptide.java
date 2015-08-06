@@ -45,7 +45,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The modifications carried by the peptide.
      */
-    private ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+    private ArrayList<ModificationMatch> modifications = null;
     /**
      * Separator preceding confident localization of the confident localization
      * of a modification
@@ -73,17 +73,19 @@ public class Peptide extends ExperimentObject {
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;
         sequence = sequence.replaceAll("[#*$%&]", "");
-        for (ModificationMatch mod : modifications) {
-            if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
-                throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+        if (modifications != null) {
+            for (ModificationMatch mod : modifications) {
+                if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
+                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+                }
+                if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
+                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+                }
             }
-            if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
-                throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
-            }
-            this.modifications.add(mod);
+            this.modifications = new ArrayList<ModificationMatch>(modifications);
         }
     }
-    
+
     /**
      * Getter for the mass.
      *
@@ -129,6 +131,9 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addModificationMatch(ModificationMatch modificationMatch) {
+        if (modifications == null) {
+            modifications = new ArrayList<ModificationMatch>(1);
+        }
         modifications.add(modificationMatch);
         mass = null;
     }
@@ -159,10 +164,11 @@ public class Peptide extends ExperimentObject {
             for (int i = 0; i < sequence.length(); i++) {
 
                 boolean modified = false;
-
-                for (int j = 0; j < modifications.size() && !modified; j++) {
-                    if (modifications.get(j).getModificationSite() == (i + 1)) {
-                        modified = true;
+                if (modifications != null) {
+                    for (int j = 0; j < modifications.size() && !modified; j++) {
+                        if (modifications.get(j).getModificationSite() == (i + 1)) {
+                            modified = true;
+                        }
                     }
                 }
 
@@ -433,28 +439,39 @@ public class Peptide extends ExperimentObject {
      * @return the index of a peptide
      */
     public static String getKey(String sequence, ArrayList<ModificationMatch> modificationMatches) {
-        ArrayList<String> tempModifications = new ArrayList<String>();
-        for (ModificationMatch mod : modificationMatches) {
-            if (mod.isVariable()) {
-                if (mod.getTheoreticPtm() != null) {
-                    String ptmName = mod.getTheoreticPtm();
-                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                    if (mod.isConfident() || mod.isInferred()) {
-                        tempModifications.add(ptm.getMass() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
+        String result = sequence;
+        if (modificationMatches != null) {
+            ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
+            for (ModificationMatch mod : modificationMatches) {
+                if (mod.isVariable()) {
+                    if (mod.getTheoreticPtm() != null) {
+                        String ptmName = mod.getTheoreticPtm();
+                        PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                        if (mod.isConfident() || mod.isInferred()) {
+                            tempModifications.add(ptm.getMass() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
+                        } else {
+                            tempModifications.add(ptm.getMass() + "");
+                        }
                     } else {
-                        tempModifications.add(ptm.getMass() + "");
+                        tempModifications.add("unknown-modification");
                     }
-                } else {
-                    tempModifications.add("unknown-modification");
                 }
             }
-        }
-        Collections.sort(tempModifications);
-        String result = sequence;
-        for (String mod : tempModifications) {
-            result += MODIFICATION_SEPARATOR + mod;
+            Collections.sort(tempModifications);
+            for (String mod : tempModifications) {
+                result += MODIFICATION_SEPARATOR + mod;
+            }
         }
         return result;
+    }
+
+    /**
+     * Indicates whether a peptide carries modifications.
+     *
+     * @return a boolean indicating whether a peptide carries modifications
+     */
+    public boolean isModified() {
+        return modifications != null && !modifications.isEmpty();
     }
 
     /**
@@ -504,15 +521,30 @@ public class Peptide extends ExperimentObject {
      */
     public int getNVariableModifications(double modificationMass) {
         int n = 0;
-        for (ModificationMatch modificationMatch : modifications) {
-            if (modificationMatch.isVariable()) {
-                PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
-                if (ptm.getMass() == modificationMass) {
-                    n++;
+        if (modifications != null) {
+            for (ModificationMatch modificationMatch : modifications) {
+                if (modificationMatch.isVariable()) {
+                    PTM ptm = PTMFactory.getInstance().getPTM(modificationMatch.getTheoreticPtm());
+                    if (ptm.getMass() == modificationMass) {
+                        n++;
+                    }
                 }
             }
         }
         return n;
+    }
+
+    /**
+     * Returns the number of modifications carried by this peptide.
+     *
+     * @return the number of modifications carried by this peptide
+     */
+    public int getNModifications() {
+        if (modifications != null) {
+            return modifications.size();
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -996,7 +1028,12 @@ public class Peptide extends ExperimentObject {
      * variable modifications as the peptide of interest
      */
     public boolean isSameModificationStatus(Peptide anotherPeptide) {
-        if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
+
+        if (!isModified() && !anotherPeptide.isModified()) {
+            return true;
+        }
+
+        if (getNModifications() != anotherPeptide.getNModifications()) {
             return false;
         }
 
@@ -1054,9 +1091,15 @@ public class Peptide extends ExperimentObject {
      * location as the considered peptide
      */
     public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> ptms) {
-        if (anotherPeptide.getModificationMatches().size() != modifications.size()) {
+
+        if (!isModified() && !anotherPeptide.isModified()) {
+            return true;
+        }
+
+        if (getNModifications() != anotherPeptide.getNModifications()) {
             return false;
         }
+
         HashMap<Double, ArrayList<Integer>> ptmToPositionsMap1 = new HashMap<Double, ArrayList<Integer>>();
         HashMap<Double, ArrayList<Integer>> ptmToPositionsMap2 = new HashMap<Double, ArrayList<Integer>>();
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -1115,6 +1158,15 @@ public class Peptide extends ExperimentObject {
      * location as the considered peptide
      */
     public boolean sameModificationsAs(Peptide anotherPeptide) {
+
+        if (!isModified() && !anotherPeptide.isModified()) {
+            return true;
+        }
+
+        if (getNModifications() != anotherPeptide.getNModifications()) {
+            return false;
+        }
+
         ArrayList<String> ptms = new ArrayList<String>();
         for (ModificationMatch modificationMatch : modifications) {
             String modName = modificationMatch.getTheoreticPtm();
@@ -1145,11 +1197,13 @@ public class Peptide extends ExperimentObject {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        for (int i = 0; i < modifications.size(); i++) {
-            if (modifications.get(i).getModificationSite() == 1) {
-                PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    nTerm = ptm.getShortName();
+        if (modifications != null) {
+            for (ModificationMatch modificationMatch : modifications) {
+                if (modificationMatch.getModificationSite() == 1) {
+                    PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
+                    if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                        nTerm = ptm.getShortName();
+                    }
                 }
             }
         }
@@ -1171,11 +1225,13 @@ public class Peptide extends ExperimentObject {
         String cTerm = "COOH";
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
-        for (int i = 0; i < modifications.size(); i++) {
-            if (modifications.get(i).getModificationSite() == sequence.length()) {
-                PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
-                if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
-                    cTerm = ptm.getShortName();
+        if (modifications != null) {
+            for (int i = 0; i < modifications.size(); i++) {
+                if (modifications.get(i).getModificationSite() == sequence.length()) {
+                    PTM ptm = ptmFactory.getPTM(modifications.get(i).getTheoreticPtm());
+                    if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
+                        cTerm = ptm.getShortName();
+                    }
                 }
             }
         }
@@ -1205,26 +1261,28 @@ public class Peptide extends ExperimentObject {
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
 
-        for (ModificationMatch modMatch : modifications) {
-            String modName = modMatch.getTheoreticPtm();
-            int modSite = modMatch.getModificationSite();
-            if (modMatch.isVariable()) {
-                if (modMatch.isConfident()) {
-                    if (!confidentModificationSites.containsKey(modSite)) {
-                        confidentModificationSites.put(modSite, new ArrayList<String>());
+        if (modifications != null) {
+            for (ModificationMatch modMatch : modifications) {
+                String modName = modMatch.getTheoreticPtm();
+                int modSite = modMatch.getModificationSite();
+                if (modMatch.isVariable()) {
+                    if (modMatch.isConfident()) {
+                        if (!confidentModificationSites.containsKey(modSite)) {
+                            confidentModificationSites.put(modSite, new ArrayList<String>(1));
+                        }
+                        confidentModificationSites.get(modSite).add(modName);
+                    } else {
+                        if (!representativeModificationSites.containsKey(modSite)) {
+                            representativeModificationSites.put(modSite, new ArrayList<String>(1));
+                        }
+                        representativeModificationSites.get(modSite).add(modName);
                     }
-                    confidentModificationSites.get(modSite).add(modName);
-                } else {
-                    if (!representativeModificationSites.containsKey(modSite)) {
-                        representativeModificationSites.put(modSite, new ArrayList<String>());
+                } else if (!excludeAllFixedPtms) {
+                    if (!fixedModificationSites.containsKey(modSite)) {
+                        fixedModificationSites.put(modSite, new ArrayList<String>(1));
                     }
-                    representativeModificationSites.get(modSite).add(modName);
+                    fixedModificationSites.get(modSite).add(modName);
                 }
-            } else if (!excludeAllFixedPtms) {
-                if (!fixedModificationSites.containsKey(modSite)) {
-                    fixedModificationSites.put(modSite, new ArrayList<String>());
-                }
-                fixedModificationSites.get(modSite).add(modName);
             }
         }
         return getTaggedModifiedSequence(modificationProfile, this, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
@@ -1280,16 +1338,16 @@ public class Peptide extends ExperimentObject {
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
 
         if (confidentModificationSites == null) {
-            confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
+            confidentModificationSites = new HashMap<Integer, ArrayList<String>>(0);
         }
         if (representativeAmbiguousModificationSites == null) {
-            representativeAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+            representativeAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>(0);
         }
         if (secondaryAmbiguousModificationSites == null) {
-            secondaryAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>();
+            secondaryAmbiguousModificationSites = new HashMap<Integer, ArrayList<String>>(0);
         }
         if (fixedModificationSites == null) {
-            fixedModificationSites = new HashMap<Integer, ArrayList<String>>();
+            fixedModificationSites = new HashMap<Integer, ArrayList<String>>(0);
         }
 
         String modifiedSequence = "";
@@ -1331,9 +1389,13 @@ public class Peptide extends ExperimentObject {
      */
     public ArrayList<Integer> getModifiedIndexes(boolean excludeFixed) {
 
-        ArrayList<Integer> modifiedResidues = new ArrayList<Integer>();
-        PTMFactory ptmFactory = PTMFactory.getInstance();
+        if (modifications == null) {
+            return new ArrayList<Integer>(0);
+        }
 
+        ArrayList<Integer> modifiedResidues = new ArrayList<Integer>(modifications.size());
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
         for (int i = 0; i < sequence.length(); i++) {
             for (int j = 0; j < modifications.size(); j++) {
                 PTM ptm = ptmFactory.getPTM(modifications.get(j).getTheoreticPtm());
@@ -1355,7 +1417,12 @@ public class Peptide extends ExperimentObject {
      * @return an indexed map of all fixed modifications amino acid
      */
     public HashMap<Integer, ArrayList<String>> getIndexedFixedModifications() {
-        HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>();
+
+        if (modifications == null) {
+            return new HashMap<Integer, ArrayList<String>>(0);
+        }
+
+        HashMap<Integer, ArrayList<String>> result = new HashMap<Integer, ArrayList<String>>(modifications.size());
         for (ModificationMatch modificationMatch : modifications) {
             if (!modificationMatch.isVariable()) {
                 int aa = modificationMatch.getModificationSite();
@@ -1395,10 +1462,11 @@ public class Peptide extends ExperimentObject {
 
         mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-
-        for (ModificationMatch ptmMatch : modifications) {
-            mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+        if (modifications != null) {
+            PTMFactory ptmFactory = PTMFactory.getInstance();
+            for (ModificationMatch ptmMatch : modifications) {
+                mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+            }
         }
     }
 
@@ -1489,16 +1557,18 @@ public class Peptide extends ExperimentObject {
         Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
         noModPeptide.setParentProteins(peptide.getParentProteinsNoRemapping());
 
-        for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-            boolean found = false;
-            for (PTM ptm : ptms) {
-                if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                    found = true;
-                    break;
+        if (peptide.isModified()) {
+            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+                boolean found = false;
+                for (PTM ptm : ptms) {
+                    if (modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
+                        found = true;
+                        break;
+                    }
                 }
-            }
-            if (!found) {
-                noModPeptide.addModificationMatch(modificationMatch);
+                if (!found) {
+                    noModPeptide.addModificationMatch(modificationMatch);
+                }
             }
         }
 

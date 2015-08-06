@@ -168,7 +168,7 @@ public class IdentificationParametersInputBean {
                 modificationProfile.addVariableModification(modification);
             }
         }
-        searchParameters.setModificationProfile(modificationProfile);
+        searchParameters.setPtmSettings(modificationProfile);
 
         ///////////////////////////////////
         // OMSSA parameters

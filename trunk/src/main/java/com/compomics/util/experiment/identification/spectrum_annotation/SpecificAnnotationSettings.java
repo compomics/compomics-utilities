@@ -105,7 +105,7 @@ public class SpecificAnnotationSettings {
      */
     public HashSet<Integer> getFragmentIonTypes() {
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-            return new HashSet<Integer>();
+            return new HashSet<Integer>(0);
         } else {
             return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION);
         }

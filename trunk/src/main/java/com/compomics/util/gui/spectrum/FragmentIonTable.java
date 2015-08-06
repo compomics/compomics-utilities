@@ -371,7 +371,7 @@ public class FragmentIonTable extends JTable {
         for (Integer subType : fragmentIons.keySet()) {
             for (Ion ion : fragmentIons.get(subType)) {
                 // @TODO: implement neutral losses
-                if (ion.getNeutralLosses().isEmpty()) {
+                if (!ion.hasNeutralLosses()) {
                     PeptideFragmentIon fragmention = (PeptideFragmentIon) ion;
                     double fragmentMzChargeOne = (ion.getTheoreticMass() + 1 * ElementaryIon.proton.getTheoreticMass()) / 1;
                     double fragmentMzChargeTwo = (ion.getTheoreticMass() + 2 * ElementaryIon.proton.getTheoreticMass()) / 2;
@@ -490,7 +490,7 @@ public class FragmentIonTable extends JTable {
                                 aIonsSinglyCharged.add(fragmentNumber - 1);
                             }
                         } else if (fragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                            if (fragmentIon.getNeutralLosses().isEmpty()) {
+                            if (!fragmentIon.hasNeutralLosses()) {
                                 if (currentCharge == 1 && singleCharge) {
                                     bIonsSinglyCharged.add(fragmentNumber - 1);
                                 } else if (twoCharges) {
@@ -516,7 +516,7 @@ public class FragmentIonTable extends JTable {
                                 cIonsSinglyCharged.add(fragmentNumber - 1);
                             }
                         } else if (fragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                            if (fragmentIon.getNeutralLosses().isEmpty()) {
+                            if (!fragmentIon.hasNeutralLosses()) {
                                 if (currentCharge == 1 && singleCharge) {
                                     yIonsSinglyCharged.add(peptideSequence.length() - fragmentNumber);
                                 } else if (twoCharges) {
@@ -678,7 +678,7 @@ public class FragmentIonTable extends JTable {
                                     addValue(values, key, peakIntensity);
                                 }
                             } else if (fragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                if (fragmentIon.getNeutralLosses().isEmpty()) {
+                            if (!fragmentIon.hasNeutralLosses()) {
                                     if (currentCharge == 1 && singleCharge) {
                                         String key = "b" + "_" + (fragmentNumber - 1);
                                         addValue(values, key, peakIntensity);
@@ -711,7 +711,7 @@ public class FragmentIonTable extends JTable {
                                     addValue(values, key, peakIntensity);
                                 }
                             } else if (fragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                if (fragmentIon.getNeutralLosses().isEmpty()) {
+                            if (!fragmentIon.hasNeutralLosses()) {
                                     if (currentCharge == 1 && singleCharge) {
                                         String key = "y" + "_" + (peptideSequence.length() - fragmentNumber);
                                         addValue(values, key, peakIntensity);

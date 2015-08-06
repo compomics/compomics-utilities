@@ -192,16 +192,18 @@ public class IdFilter implements Serializable {
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, 
+    public boolean validateModifications(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences, PtmSettings modificationProfile) {
 
         // check if it is an unknown peptide
         if (unknownPtm) {
             ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
-            for (ModificationMatch modMatch : modificationMatches) {
-                String ptmName = modMatch.getTheoreticPtm();
-                if (ptmName.equals(PTMFactory.unknownPTM.getName())) {
-                    return false;
+            if (modificationMatches != null) {
+                for (ModificationMatch modMatch : modificationMatches) {
+                    String ptmName = modMatch.getTheoreticPtm();
+                    if (ptmName.equals(PTMFactory.unknownPTM.getName())) {
+                        return false;
+                    }
                 }
             }
         }
@@ -209,16 +211,18 @@ public class IdFilter implements Serializable {
         PTMFactory ptmFactory = PTMFactory.getInstance();
 
         // get the variable ptms and the number of times they occur
-        HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>();
-        for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-            if (modMatch.isVariable()) {
-                String modName = modMatch.getTheoreticPtm();
-                PTM ptm = ptmFactory.getPTM(modName);
-                double mass = ptm.getMass();
-                if (!modMatches.containsKey(mass)) {
-                    modMatches.put(mass, 1);
-                } else {
-                    modMatches.put(mass, modMatches.get(mass) + 1);
+        HashMap<Double, Integer> modMatches = new HashMap<Double, Integer>(peptide.getNModifications());
+        if (peptide.isModified()) {
+            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+                if (modMatch.isVariable()) {
+                    String modName = modMatch.getTheoreticPtm();
+                    PTM ptm = ptmFactory.getPTM(modName);
+                    double mass = ptm.getMass();
+                    if (!modMatches.containsKey(mass)) {
+                        modMatches.put(mass, 1);
+                    } else {
+                        modMatches.put(mass, modMatches.get(mass) + 1);
+                    }
                 }
             }
         }

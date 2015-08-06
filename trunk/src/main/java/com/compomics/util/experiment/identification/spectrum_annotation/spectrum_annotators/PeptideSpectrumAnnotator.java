@@ -48,12 +48,20 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @param peptide the new peptide
      * @param precursorCharge the new precursor charge
+     * @param specificAnnotationSettings if provided, only the ions detectable
+     * using these settings will be selected
      */
-    public void setPeptide(Peptide peptide, int precursorCharge) {
-        if (this.peptide == null || !this.peptide.getKey().equals(peptide.getKey()) || !this.peptide.sameModificationsAs(peptide) || this.precursorCharge != precursorCharge) {
+    public void setPeptide(Peptide peptide, int precursorCharge, SpecificAnnotationSettings specificAnnotationSettings) {
+        if (specificAnnotationSettings != null && super.specificAnnotationSettings == null
+                || specificAnnotationSettings == null && super.specificAnnotationSettings != null
+                || specificAnnotationSettings != null && super.specificAnnotationSettings != null && specificAnnotationSettings != super.specificAnnotationSettings
+                || this.peptide == null
+                || !this.peptide.getKey().equals(peptide.getKey())
+                || !this.peptide.sameModificationsAs(peptide)
+                || this.precursorCharge != precursorCharge) {
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
-            theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide);
+            theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide, specificAnnotationSettings);
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 updateMassShifts();
             }
@@ -64,16 +72,16 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * This method matches the potential fragment ions of a given peptide with a
-     * given peak.
+     * given peak according to the annotation settings.
      *
      * @param peptide the peptide
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param specificAnnotationSettings the specific annotation settings
      * @param peak the peak to match
      * @return a list of potential ion matches
      */
-    public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationSettings specificAnnotationPreferences, Peak peak) {
-        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
-        return matchPeak(specificAnnotationPreferences, peak);
+    public ArrayList<IonMatch> matchPeak(Peptide peptide, SpecificAnnotationSettings specificAnnotationSettings, Peak peak) {
+        setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
+        return matchPeak(specificAnnotationSettings, peak);
     }
 
     /**
@@ -82,24 +90,24 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param annotationPreferences the annotation preferences
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
      * @param spectrum the spectrum to match
      * @param peptide the peptide of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
         if (spectrum != null) {
-            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationPreferences.getAnnotationIntensityLimit()));
+            setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
 
-        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
-        setMassTolerance(specificAnnotationPreferences.getFragmentIonAccuracy(), specificAnnotationPreferences.isFragmentIonPpm(), annotationPreferences.isHighResolutionAnnotation());
+        setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
+        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
 
@@ -108,7 +116,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             precursorCharges.add(i);
         }
 
-        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationPreferences.getIonTypes();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
         for (Ion.IonType ionType : ionTypes.keySet()) {
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
             if (ionMap != null) {
@@ -118,14 +126,14 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     if (ions != null) {
                         for (Ion ion : ions) {
 
-                            if (lossesValidated(specificAnnotationPreferences.getNeutralLossesMap(), ion)) {
+                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
 
                                 ArrayList<Integer> ionPossibleCharges;
 
                                 if (ionType == Ion.IonType.PRECURSOR_ION) {
                                     ionPossibleCharges = precursorCharges;
                                 } else {
-                                    ionPossibleCharges = specificAnnotationPreferences.getSelectedCharges();
+                                    ionPossibleCharges = specificAnnotationSettings.getSelectedCharges();
                                 }
 
                                 for (int charge : ionPossibleCharges) {
@@ -155,19 +163,19 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Returns the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence. 1 is first amino acid.
      *
-     * @param annotationPreferences the annotation preferences
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
      * @param spectrum The spectrum to match
      * @param peptide The peptide of interest
      *
      * @return the ion matches corresponding to fragment ions indexed by amino
      * acid number in the sequence
      */
-    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationPreferences,
-            SpecificAnnotationSettings specificAnnotationPreferences, MSnSpectrum spectrum, Peptide peptide) {
+    public HashMap<Integer, ArrayList<IonMatch>> getCoveredAminoAcids(AnnotationSettings annotationSettings,
+            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
 
         HashMap<Integer, ArrayList<IonMatch>> matchesMap = new HashMap<Integer, ArrayList<IonMatch>>();
-        ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
+        ArrayList<IonMatch> matches = getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
 
         for (IonMatch ionMatch : matches) {
             Ion ion = ionMatch.ion;
@@ -196,20 +204,20 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
      *
-     * @param specificAnnotationPreferences the specific annotation preferences
+     * @param specificAnnotationSettings the specific annotation settings
      * @param peptide The peptide of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationPreferences, Peptide peptide) {
-        setPeptide(peptide, specificAnnotationPreferences.getPrecursorCharge());
-        return getExpectedIons(specificAnnotationPreferences);
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings, Peptide peptide) {
+        setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
+        return getExpectedIons(specificAnnotationSettings);
     }
 
     @Override
-    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
-        return getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences, spectrum, peptide);
+    public ArrayList<IonMatch> getCurrentAnnotation(MSnSpectrum spectrum, AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings) {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide);
     }
 
     /**
@@ -218,10 +226,10 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * are in the PTMFactory.
      *
      * @param peptide the peptide of interest
-     * @param sequenceMatchingPreferences the sequence matching preferences for
+     * @param sequenceMatchingSettings the sequence matching settings for
      * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching preferences
-     * for PTM to peptide mapping
+     * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
+     * to peptide mapping
      *
      * @return the expected possible neutral losses
      *
@@ -234,8 +242,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, 
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public static NeutralLossesMap getDefaultLosses(Peptide peptide, SequenceMatchingPreferences sequenceMatchingSettings,
+            SequenceMatchingPreferences ptmSequenceMatchingSettings) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         PTMFactory pTMFactory = PTMFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -302,19 +310,21 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
         int modMin = sequence.length();
         int modMax = 0;
 
-        for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-            PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
-            if (ptm == null) {
-                throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
-            }
-            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences);
-                if (!indexes.isEmpty()) {
-                    Collections.sort(indexes);
-                    modMin = indexes.get(0);
-                    modMax = indexes.get(indexes.size() - 1);
+        if (peptide.isModified()) {
+            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+                PTM ptm = pTMFactory.getPTM(modMatch.getTheoreticPtm());
+                if (ptm == null) {
+                    throw new IllegalArgumentException("PTM " + modMatch.getTheoreticPtm() + " not loaded in PTM factory.");
                 }
-                neutralLossesMap.addNeutralLoss(neutralLoss, modMin, sequence.length() - modMax + 1);
+                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                    ArrayList<Integer> indexes = peptide.getPotentialModificationSites(ptm, sequenceMatchingSettings, ptmSequenceMatchingSettings);
+                    if (!indexes.isEmpty()) {
+                        Collections.sort(indexes);
+                        modMin = indexes.get(0);
+                        modMax = indexes.get(indexes.size() - 1);
+                    }
+                    neutralLossesMap.addNeutralLoss(neutralLoss, modMin, sequence.length() - modMax + 1);
+                }
             }
         }
 

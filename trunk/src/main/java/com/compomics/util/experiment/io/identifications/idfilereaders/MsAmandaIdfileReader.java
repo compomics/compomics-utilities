@@ -304,11 +304,17 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 peptideAssumption.setRawScore(msAmandaScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                    ArrayList<ModificationMatch> modificationMatches = peptide.getModificationMatches();
+                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+                            newModificationMatches = null;
+                    if (previousModificationMatches != null) {
+                        newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
+                    }
                     for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                        Peptide newPeptide = new Peptide(expandedSequence.toString(), new ArrayList<ModificationMatch>(modificationMatches.size()));
-                        for (ModificationMatch modificationMatch : modificationMatches) {
-                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                        if (previousModificationMatches != null) {
+                            for (ModificationMatch modificationMatch : previousModificationMatches) {
+                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                            }
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                         newAssumption.setRawScore(msAmandaScore);

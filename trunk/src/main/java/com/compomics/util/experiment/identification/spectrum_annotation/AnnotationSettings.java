@@ -183,7 +183,7 @@ public class AnnotationSettings implements Serializable {
         addIonType(Ion.IonType.REPORTER_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         PTMFactory ptmFactory = PTMFactory.getInstance();
-        for (String modName : searchParameters.getModificationProfile().getAllModifications()) {
+        for (String modName : searchParameters.getPtmSettings().getAllModifications()) {
             PTM ptm = ptmFactory.getPTM(modName);
             for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                 addNeutralLoss(neutralLoss);

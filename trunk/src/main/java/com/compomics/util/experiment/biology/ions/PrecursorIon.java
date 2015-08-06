@@ -23,7 +23,7 @@ public class PrecursorIon extends Ion {
     /**
      * the neutral losses found on the ion.
      */
-    private ArrayList<NeutralLoss> neutralLosses = new ArrayList<NeutralLoss>();
+    private ArrayList<NeutralLoss> neutralLosses = null;
 
     /**
      * Constructor.
@@ -32,11 +32,10 @@ public class PrecursorIon extends Ion {
      * @param neutralLosses the neutral losses
      */
     public PrecursorIon(double theoreticMass, ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
+        if (neutralLosses != null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
         }
         type = IonType.PRECURSOR_ION;
-        this.neutralLosses.addAll(neutralLosses);
         this.theoreticMass = theoreticMass;
     }
 
@@ -46,11 +45,10 @@ public class PrecursorIon extends Ion {
      * @param neutralLosses the neutral losses
      */
     public PrecursorIon(ArrayList<NeutralLoss> neutralLosses) {
-        if (neutralLosses == null) {
-            neutralLosses = new ArrayList<NeutralLoss>();
+        if (neutralLosses != null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(neutralLosses);
         }
         type = IonType.PRECURSOR_ION;
-        this.neutralLosses.addAll(neutralLosses);
     }
 
     /**

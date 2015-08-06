@@ -378,7 +378,7 @@ public class PtmToPrideMap implements Serializable {
         PrideObjectsFactory prideObjectsFactory = PrideObjectsFactory.getInstance();
         PtmToPrideMap ptmToPrideMap = prideObjectsFactory.getPtmToPrideMap();
         boolean changes = false;
-        PtmSettings modificationProfile = searchParameters.getModificationProfile();
+        PtmSettings modificationProfile = searchParameters.getPtmSettings();
         for (String psPtm : modificationProfile.getAllModifications()) {
             if (ptmToPrideMap.getCVTerm(psPtm) == null) {
                 CvTerm defaultCVTerm = PtmToPrideMap.getDefaultCVTerm(psPtm);

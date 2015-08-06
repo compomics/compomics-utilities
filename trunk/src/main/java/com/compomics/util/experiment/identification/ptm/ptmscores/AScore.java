@@ -92,11 +92,13 @@ public class AScore {
         }
 
         int nPTM = 0;
-        for (ModificationMatch modMatch : peptide.getModificationMatches()) {
-            if (modMatch.isVariable()) {
-                for (PTM ptm : ptms) {
-                    if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
-                        nPTM++;
+        if (peptide.isModified()) {
+            for (ModificationMatch modMatch : peptide.getModificationMatches()) {
+                if (modMatch.isVariable()) {
+                    for (PTM ptm : ptms) {
+                        if (ptm.getName().equals(modMatch.getTheoreticPtm())) {
+                            nPTM++;
+                        }
                     }
                 }
             }

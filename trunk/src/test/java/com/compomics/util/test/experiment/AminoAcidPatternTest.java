@@ -37,7 +37,6 @@ public class AminoAcidPatternTest extends TestCase {
         input = "IJX";
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMs2MzTolerance(0.5);
         AminoAcidPattern pattern = new AminoAcidPattern("IJX");
         Assert.assertTrue(pattern.matches(input, sequenceMatchingPreferences));
         pattern = new AminoAcidPattern("IIX");

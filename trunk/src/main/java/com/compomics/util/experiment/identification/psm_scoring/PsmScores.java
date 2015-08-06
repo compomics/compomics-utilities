@@ -8,10 +8,10 @@ import com.compomics.util.experiment.identification.psm_scoring.psm_scores.Compl
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.IntensityRankScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.MS2MzFidelityScore;
 import com.compomics.util.experiment.identification.psm_scoring.psm_scores.PrecursorAccuracy;
-import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
+import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.SpecificAnnotationPreferences;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 
 /**
  * Enum listing the PSM scores implemented in compomics utilities.
@@ -115,7 +115,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, int scoreIndex) {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
         double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
         if (psmScore.increasing) {
@@ -137,7 +137,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, int scoreIndex) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
         PsmScores psmScore = getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
     }
@@ -155,7 +155,7 @@ public enum PsmScores {
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationPreferences specificAnnotationPreferences, PsmScores psmScore) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PsmScores psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");

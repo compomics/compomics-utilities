@@ -1,7 +1,8 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import java.io.Serializable;
 
 /**
@@ -22,7 +23,7 @@ public class IdentificationParameters implements Serializable {
     /**
      * The peak annotation preferences.
      */
-    private AnnotationPreferences annotationPreferences;
+    private AnnotationSettings annotationPreferences;
     /**
      * The PSM filter.
      */
@@ -103,7 +104,7 @@ public class IdentificationParameters implements Serializable {
      *
      * @return the annotation preferences used for identification
      */
-    public AnnotationPreferences getAnnotationPreferences() {
+    public AnnotationSettings getAnnotationPreferences() {
         return annotationPreferences;
     }
 
@@ -113,7 +114,7 @@ public class IdentificationParameters implements Serializable {
      * @param annotationPreferences the annotation preferences used for
      * identification
      */
-    public void setAnnotationPreferences(AnnotationPreferences annotationPreferences) {
+    public void setAnnotationPreferences(AnnotationSettings annotationPreferences) {
         this.annotationPreferences = annotationPreferences;
     }
 
@@ -265,7 +266,7 @@ public class IdentificationParameters implements Serializable {
     public static IdentificationParameters getDefaultIdentificationParameters(SearchParameters searchParameters) {
         IdentificationParameters identificationParameters = new IdentificationParameters();
         identificationParameters.setSearchParameters(searchParameters);
-        AnnotationPreferences annotationPreferences = new AnnotationPreferences();
+        AnnotationSettings annotationPreferences = new AnnotationSettings();
         annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
         annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {
@@ -284,7 +285,7 @@ public class IdentificationParameters implements Serializable {
         PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
         identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
         if (searchParameters != null) {
-            SequenceMatchingPreferences sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching(searchParameters);
+            SequenceMatchingPreferences sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching();
             identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
         }
         GenePreferences genePreferences = new GenePreferences();
@@ -306,7 +307,7 @@ public class IdentificationParameters implements Serializable {
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
         setSearchParameters(searchParameters);
-        annotationPreferences = new AnnotationPreferences();
+        annotationPreferences = new AnnotationSettings();
         annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
         annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {
@@ -325,7 +326,7 @@ public class IdentificationParameters implements Serializable {
             ptmScoringPreferences = new PTMScoringPreferences();
         }
         if (searchParameters != null) {
-            sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching(searchParameters);
+            sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching();
         }
         if (genePreferences == null) {
             genePreferences = new GenePreferences();

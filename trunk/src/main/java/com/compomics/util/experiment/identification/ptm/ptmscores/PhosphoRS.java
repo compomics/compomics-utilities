@@ -5,18 +5,18 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.NeutralLossesMap;
+import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.spectrum_annotators.PeptideSpectrumAnnotator;
+import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
 import com.compomics.util.math.BigMathUtils;
 import com.compomics.util.math.statistics.distributions.BinomialDistribution;
-import com.compomics.util.preferences.AnnotationPreferences;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.preferences.SpecificAnnotationPreferences;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -90,8 +90,8 @@ public class PhosphoRS {
      * @throws org.apache.commons.math.MathException exception thrown whenever a
      * math error occurred while computing the score.
      */
-    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationPreferences annotationPreferences,
-            SpecificAnnotationPreferences specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
+    public static HashMap<Integer, Double> getSequenceProbabilities(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationSettings annotationPreferences,
+            SpecificAnnotationSettings specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
             SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
@@ -131,7 +131,7 @@ public class PhosphoRS {
                 }
             }
         }
-        SpecificAnnotationPreferences scoringPreferences = specificAnnotationPreferences.clone();
+        SpecificAnnotationSettings scoringPreferences = specificAnnotationPreferences.clone();
         scoringPreferences.setNeutralLossesMap(scoringLossesMap);
         HashMap<Ion.IonType, HashSet<Integer>> ions = specificAnnotationPreferences.getIonTypes(),
                 newIons = new HashMap<Ion.IonType, HashSet<Integer>>(1);
@@ -452,7 +452,7 @@ public class PhosphoRS {
      * @return the phosphoRS score
      */
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
-            AnnotationPreferences annotationPreferences, SpecificAnnotationPreferences scoringAnnotationPreferences, MathContext mathContext) throws MathException {
+            AnnotationSettings annotationPreferences, SpecificAnnotationSettings scoringAnnotationPreferences, MathContext mathContext) throws MathException {
 
         int n = 0;
         for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationPreferences, peptide).values()) {
@@ -556,7 +556,7 @@ public class PhosphoRS {
      * @return a list of mz where we can possibly find a site determining ion
      */
     private static HashMap<Double, ArrayList<ArrayList<Integer>>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles,
-            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationPreferences scoringPreferences) {
+            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringPreferences) {
 
         HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();
         HashMap<Double, ArrayList<ArrayList<Integer>>> commonIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();

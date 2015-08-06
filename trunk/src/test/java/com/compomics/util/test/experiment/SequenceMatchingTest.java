@@ -29,9 +29,9 @@ public class SequenceMatchingTest extends TestCase {
 
         String ref = "TESTIKTEST";
         String testAminoAcid = "TESTJKTEST";
-        String testIndistinguishible = "TESTLQTEST";
-        String test1Mutation = "TESTLQTETT";
-        String test2Mutations = "TESTLQTETS";
+        String testIndistinguishible = "TESTLKTEST";
+        String test1Mutation = "TESTLKTETT";
+        String test2Mutations = "TESTLKTETS";
         AminoAcidSequence aminoAcidSequence = new AminoAcidSequence("TESTIKTEST");
 
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
@@ -52,7 +52,6 @@ public class SequenceMatchingTest extends TestCase {
 
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMs2MzTolerance(0.5);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
@@ -61,7 +60,6 @@ public class SequenceMatchingTest extends TestCase {
 
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMs2MzTolerance(0.5);
         MutationMatrix mutationMatrix = MutationMatrix.synonymousMutation;
         sequenceMatchingPreferences.setMutationMatrix(mutationMatrix);
         sequenceMatchingPreferences.setMaxMutationsPerPeptide(1);
@@ -73,7 +71,6 @@ public class SequenceMatchingTest extends TestCase {
 
         sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMs2MzTolerance(0.5);
         sequenceMatchingPreferences.setMutationMatrix(mutationMatrix);
         Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
         Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));

@@ -1,9 +1,9 @@
-package com.compomics.util.experiment.identification.identification_parameters;
+package com.compomics.util.experiment.identification.identification_parameters.tool_specific;
 
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1033,7 +1033,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      * 
      * @param modificationProfile the modification profile of this search
      */
-    public void setPtmIndexes(ModificationProfile modificationProfile) {
+    public void setPtmIndexes(PtmSettings modificationProfile) {
         ptmIndexes.clear();
         int rank = 1;
         for (String ptm : modificationProfile.getAllModifications()) {

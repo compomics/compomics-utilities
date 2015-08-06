@@ -1,28 +1,14 @@
-package com.compomics.util.experiment.identification;
+package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.identification_parameters.AndromedaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
-import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.TideParameters;
-import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
-import com.compomics.util.preferences.ModificationProfile;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import no.uib.jsparklines.data.XYDataPoint;
 
@@ -58,7 +44,7 @@ public class SearchParameters implements Serializable {
      */
     private Double precursorTolerance = 10.0;
     /**
-     * The precursor mass tolerance in Dalton (for de novo searches).
+     * The precursor mass tolerance in Dalton.
      */
     private Double precursorToleranceDalton = 0.5;
     /**
@@ -69,7 +55,7 @@ public class SearchParameters implements Serializable {
      * The expected modifications. Modified peptides will be grouped and
      * displayed according to this classification.
      */
-    private ModificationProfile utilitiesModificationProfile = new ModificationProfile();
+    private PtmSettings ptmSettings = new PtmSettings();
     /**
      * The enzyme used for digestion.
      */
@@ -83,7 +69,7 @@ public class SearchParameters implements Serializable {
      */
     private File fastaFile;
     /**
-     * The corresponding searchGUI file.
+     * The corresponding file.
      */
     private File parametersFile;
     /**
@@ -131,8 +117,8 @@ public class SearchParameters implements Serializable {
      *
      * @return the modification profile of the project
      */
-    public ModificationProfile getModificationProfile() {
-        return utilitiesModificationProfile;
+    public PtmSettings getModificationProfile() {
+        return ptmSettings;
     }
 
     /**
@@ -140,8 +126,8 @@ public class SearchParameters implements Serializable {
      *
      * @param modificationProfile The modification profile
      */
-    public void setModificationProfile(ModificationProfile modificationProfile) {
-        this.utilitiesModificationProfile = modificationProfile;
+    public void setModificationProfile(PtmSettings modificationProfile) {
+        this.ptmSettings = modificationProfile;
     }
 
     /**
@@ -616,8 +602,8 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("FIXED_MODIFICATIONS=");
-        if (utilitiesModificationProfile != null) {
-            ArrayList<String> fixedPtms = utilitiesModificationProfile.getFixedModifications();
+        if (ptmSettings != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getFixedModifications();
             boolean first = true;
             for (String ptm : fixedPtms) {
                 if (first) {
@@ -631,8 +617,8 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("VARIABLE_MODIFICATIONS=");
-        if (utilitiesModificationProfile != null) {
-            ArrayList<String> fixedPtms = utilitiesModificationProfile.getVariableModifications();
+        if (ptmSettings != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getVariableModifications();
             boolean first = true;
             for (String ptm : fixedPtms) {
                 if (first) {
@@ -646,8 +632,8 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("REFINEMENT_FIXED_MODIFICATIONS=");
-        if (utilitiesModificationProfile != null && utilitiesModificationProfile.getRefinementFixedModifications() != null) {
-            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementFixedModifications();
+        if (ptmSettings != null && ptmSettings.getRefinementFixedModifications() != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getRefinementFixedModifications();
             boolean first = true;
             for (String ptm : fixedPtms) {
                 if (first) {
@@ -661,8 +647,8 @@ public class SearchParameters implements Serializable {
         output.append(newLine);
 
         output.append("REFINEMENT_VARIABLE_MODIFICATIONS=");
-        if (utilitiesModificationProfile != null && utilitiesModificationProfile.getRefinementVariableModifications() != null) {
-            ArrayList<String> fixedPtms = utilitiesModificationProfile.getRefinementVariableModifications();
+        if (ptmSettings != null && ptmSettings.getRefinementVariableModifications() != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getRefinementVariableModifications();
             boolean first = true;
             for (String ptm : fixedPtms) {
                 if (first) {

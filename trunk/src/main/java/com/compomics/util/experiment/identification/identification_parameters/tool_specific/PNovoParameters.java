@@ -1,7 +1,7 @@
-package com.compomics.util.experiment.identification.identification_parameters;
+package com.compomics.util.experiment.identification.identification_parameters.tool_specific;
 
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.IdentificationAlgorithmParameter;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import java.util.HashMap;
 
 /**

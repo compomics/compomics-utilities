@@ -6,20 +6,20 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SearchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.AndromedaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.CometParameters;
-import com.compomics.util.experiment.identification.identification_parameters.DirecTagParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MsAmandaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MsgfParameters;
-import com.compomics.util.experiment.identification.identification_parameters.MyriMatchParameters;
-import com.compomics.util.experiment.identification.identification_parameters.OmssaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.PNovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.PepnovoParameters;
-import com.compomics.util.experiment.identification.identification_parameters.TideParameters;
-import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -151,7 +151,7 @@ public class IdentificationParametersInputBean {
             searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, option));
         }
 
-        ModificationProfile modificationProfile = new ModificationProfile();
+        PtmSettings modificationProfile = new PtmSettings();
         if (aLine.hasOption(IdentificationParametersCLIParams.FIXED_MODS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FIXED_MODS.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);

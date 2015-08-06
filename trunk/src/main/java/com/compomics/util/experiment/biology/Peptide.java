@@ -6,7 +6,7 @@ import com.compomics.util.experiment.identification.protein_sequences.SequenceFa
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 
@@ -803,13 +803,13 @@ public class Peptide extends ExperimentObject {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ArrayList<Integer> getPotentialModificationSites(Double ptmMass, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences,
-            ModificationProfile modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
+            PtmSettings modificationProfile) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         ArrayList<Integer> sites = new ArrayList<Integer>();
 
         for (String ptmName : modificationProfile.getAllNotFixedModifications()) {
             PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-            if (Math.abs(ptm.getMass() - ptmMass) < sequenceMatchingPreferences.getMs2MzTolerance()) {
+            if (ptm.getMass() == ptmMass) { //@TODO: use a mass tolerance
                 for (int site : getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
                     if (!sites.contains(site)) {
                         sites.add(site);
@@ -1199,7 +1199,7 @@ public class Peptide extends ExperimentObject {
      * @param excludeAllFixedPtms if true, all fixed PTMs are excluded
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
+    public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean excludeAllFixedPtms) {
         HashMap<Integer, ArrayList<String>> confidentModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> representativeModificationSites = new HashMap<Integer, ArrayList<String>>();
         HashMap<Integer, ArrayList<String>> secondaryModificationSites = new HashMap<Integer, ArrayList<String>>();
@@ -1245,7 +1245,7 @@ public class Peptide extends ExperimentObject {
      * @param useShortName if true the short names are used in the tags
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationProfile modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
+    public String getTaggedModifiedSequence(PtmSettings modificationProfile, boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {
         return getTaggedModifiedSequence(modificationProfile, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, false);
     }
 
@@ -1274,7 +1274,7 @@ public class Peptide extends ExperimentObject {
      * @param useShortName if true the short names are used in the tags
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(ModificationProfile modificationProfile, Peptide peptide,
+    public static String getTaggedModifiedSequence(PtmSettings modificationProfile, Peptide peptide,
             HashMap<Integer, ArrayList<String>> confidentModificationSites, HashMap<Integer, ArrayList<String>> representativeAmbiguousModificationSites,
             HashMap<Integer, ArrayList<String>> secondaryAmbiguousModificationSites, HashMap<Integer, ArrayList<String>> fixedModificationSites,
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName) {

@@ -3,11 +3,11 @@ package com.compomics.util.gui.searchsettings.algorithm_settings;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.identification_parameters.XtandemParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
-import com.compomics.util.preferences.ModificationProfile;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -40,7 +40,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
     /**
      * The modification profile used for the search.
      */
-    private ModificationProfile modificationProfile;
+    private PtmSettings modificationProfile;
     /**
      * The fragment ion mass accuracy.
      */
@@ -73,10 +73,10 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
      * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
      * spectrometer
      */
-    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, ModificationProfile modificationProfile, double fragmentIonMassAccuracy) {
+    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy) {
         super(parent, true);
         this.xtandemParameters = xtandemParameters;
-        this.modificationProfile = new ModificationProfile(modificationProfile);
+        this.modificationProfile = new PtmSettings(modificationProfile);
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
         initComponents();
         setUpGUI();
@@ -334,7 +334,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
      *
      * @return the modification profile corresponding to the input by the user
      */
-    public ModificationProfile getModificationProfile() {
+    public PtmSettings getModificationProfile() {
         return modificationProfile;
     }
 

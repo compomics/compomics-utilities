@@ -1,22 +1,20 @@
-package com.compomics.util.preferences;
+package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.Peptide;
-import com.compomics.util.experiment.identification.NeutralLossesMap;
-import com.compomics.util.experiment.identification.SearchParameters;
-import com.compomics.util.experiment.identification.SpectrumAnnotator;
+import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * This class contains the spectrum annotation preferences.
@@ -24,7 +22,7 @@ import java.util.Iterator;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AnnotationPreferences implements Serializable {
+public class AnnotationSettings implements Serializable {
 
     /**
      * Serial version UID for post-serialization compatibility.
@@ -101,7 +99,7 @@ public class AnnotationPreferences implements Serializable {
     /**
      * Constructor.
      */
-    public AnnotationPreferences() {
+    public AnnotationSettings() {
     }
 
     /**
@@ -128,11 +126,11 @@ public class AnnotationPreferences implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public SpecificAnnotationPreferences getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
+    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
             SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) 
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        SpecificAnnotationPreferences specificAnnotationPreferences = new SpecificAnnotationPreferences(spectrumKey, spectrumIdentificationAssumption);
+        SpecificAnnotationSettings specificAnnotationPreferences = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationPreferences.setNeutralLossesAuto(neutralLossesAuto);
         if (neutralLossesAuto) {
             specificAnnotationPreferences.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, sequenceMatchingPreferences, ptmSequenceMatchingPreferences));
@@ -164,7 +162,7 @@ public class AnnotationPreferences implements Serializable {
      *
      * @param searchParameters the search parameters
      */
-    public AnnotationPreferences(SearchParameters searchParameters) {
+    public AnnotationSettings(SearchParameters searchParameters) {
         setPreferencesFromSearchParameters(searchParameters);
     }
 

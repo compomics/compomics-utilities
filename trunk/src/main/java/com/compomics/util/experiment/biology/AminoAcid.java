@@ -74,10 +74,6 @@ public abstract class AminoAcid implements Serializable {
      */
     protected AtomChain monoisotopicAtomChain;
     /**
-     * Cache of the indistinguishable amino acids.
-     */
-    private ArrayList<Character> indistinguishableAACache = null;
-    /**
      * The mass tolerance used for the indistinguishable amino acids in cache.
      */
     private Double indistinguishableAACacheMass = null;
@@ -305,47 +301,6 @@ public abstract class AminoAcid implements Serializable {
      */
     public char[] getCombinations() {
         return aminoAcidCombinations;
-    }
-
-    /**
-     * Returns the amino acids which cannot be distinguished from this amino
-     * acid given a mass tolerance. Note that these amino acids may contain the
-     * getActualAminoAcids() and getCombinations() amino acids, not
-     * comprehensively though, and the amino acid itself.
-     *
-     * @param massTolerance the mass tolerance for amino acid distinction
-     *
-     * @return the amino acids which cannot be distinguished using their single
-     * character code
-     */
-    public ArrayList<Character> getIndistinguishableAminoAcids(Double massTolerance) {
-        if (massTolerance == null || massTolerance == Double.NaN || massTolerance == Double.NEGATIVE_INFINITY || massTolerance == Double.POSITIVE_INFINITY) {
-            throw new IllegalArgumentException("Mass tolerance " + massTolerance + " not valid for amino acids comparison.");
-        }
-        if (indistinguishableAACache == null || indistinguishableAACacheMass.doubleValue() != massTolerance.doubleValue()) {
-            setIndistinguishibleAACache(massTolerance);
-        }
-        return indistinguishableAACache;
-    }
-
-    /**
-     * Sets the indistinguishibleAACache.
-     *
-     * @param massTolerance the mass tolerance for amino acid distinction
-     */
-    public synchronized void setIndistinguishibleAACache(Double massTolerance) {
-        ArrayList<Character> result = new ArrayList<Character>();
-        for (char aa : getAminoAcids()) {
-            AminoAcid aminoAcid = getAminoAcid(aa);
-            if (aminoAcid == null) {
-                throw new IllegalArgumentException("Amino acid not found for letter " + aa + ".");
-            }
-            if (Math.abs(getMonoisotopicMass() - aminoAcid.getMonoisotopicMass()) < massTolerance) {
-                result.add(aa);
-            }
-        }
-        indistinguishableAACache = result;
-        indistinguishableAACacheMass = massTolerance;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.io.identifications;
 
 import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.identification.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;

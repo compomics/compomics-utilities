@@ -71,8 +71,8 @@ public class Node implements Serializable {
 
     /**
      * Returns the protein mappings for the given peptide sequence. peptide
-     * sequence &gt; protein accession &gt; index in the protein. An empty map if
-     * not found.
+     * sequence &gt; protein accession &gt; index in the protein. An empty map
+     * if not found.
      *
      * @param query the given amino acid sequence to query the tree
      * @param currentSequence the sequence found until now
@@ -154,10 +154,11 @@ public class Node implements Serializable {
                 result.add(aaChar);
             }
 
-            if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids) {
-                for (char aaChar : aminoAcid.getIndistinguishableAminoAcids(sequenceMatchingPreferences.getMs2MzTolerance())) {
-                    result.add(aaChar);
-                }
+            if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids
+                    && (aminoAcid == AminoAcid.I || aminoAcid == AminoAcid.J || aminoAcid == AminoAcid.L)) {
+                result.add('I');
+                result.add('J');
+                result.add('L');
             }
 
             if (sequenceMatchingPreferences.hasMutationMatrix()) {
@@ -413,9 +414,9 @@ public class Node implements Serializable {
     }
 
     /**
-     * Returns a map of the amino acids found on the sequence: aa &gt; indexes. If
-     * the termination of the protein is reached the terminal character is used
-     * (see static field)
+     * Returns a map of the amino acids found on the sequence: aa &gt; indexes.
+     * If the termination of the protein is reached the terminal character is
+     * used (see static field)
      *
      * @param accession the accession of the protein of interest
      * @param seeds the indexes where to start looking at

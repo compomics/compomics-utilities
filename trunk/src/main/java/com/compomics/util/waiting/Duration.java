@@ -120,6 +120,7 @@ public class Duration {
         } else {
             result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");
         }
+
         return result.toString();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Random;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
- * K-means clustering. Work in progress.
+ * K-means clustering.
  *
  * @author Harald Barsnes
  */
@@ -50,7 +50,7 @@ public class KMeansClustering {
     /**
      * The maximum number of iteration.
      */
-    private final int MAX_ITERATIONS = 500; // @TODO: no idea what this number ought to be...
+    private int maxIterations = 500; // @TODO: what should the default be..?
 
     /**
      * Constructor.
@@ -131,7 +131,7 @@ public class KMeansClustering {
         int iterationCounter = 0;
 
         // iterate until the clustering no longer changes
-        while (clustersChanged && iterationCounter < MAX_ITERATIONS && !waitingHandler.isRunCanceled()) {
+        while (clustersChanged && iterationCounter < maxIterations && !waitingHandler.isRunCanceled()) {
 
             // calculate the new centroids
             calculateNewCentroids();
@@ -459,6 +459,24 @@ public class KMeansClustering {
      */
     public int getNumberOfClusters() {
         return NUM_CLUSTERS;
+    }
+
+    /**
+     * Returns the maximum number of iterations.
+     *
+     * @return the maximum number of iterations
+     */
+    public int getMaxIterations() {
+        return maxIterations;
+    }
+
+    /**
+     * Set the maximum number of iterations.
+     *
+     * @param maxIterations the maximum number of iterations
+     */
+    public void setMaxIterations(int maxIterations) {
+        this.maxIterations = maxIterations;
     }
 
     /**

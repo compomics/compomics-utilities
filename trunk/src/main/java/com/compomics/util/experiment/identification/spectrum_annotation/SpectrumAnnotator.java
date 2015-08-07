@@ -106,7 +106,8 @@ public abstract class SpectrumAnnotator {
      */
     protected boolean pickMostAccuratePeak = true;
     /**
-     * If provided, the annotator will only look for the ions included in the specific annotation settings.
+     * If provided, the annotator will only look for the ions included in the
+     * specific annotation settings.
      */
     protected SpecificAnnotationSettings specificAnnotationSettings = null;
 
@@ -594,8 +595,8 @@ public abstract class SpectrumAnnotator {
      * spectrumIdentificationAssumption of interest
      * @param sequenceMatchingPreferences the sequence matching settings for
      * peptide to protein mapping
-     * @param ptmSequenceMatchingPreferences the sequence matching settings
-     * for PTM to peptide mapping
+     * @param ptmSequenceMatchingPreferences the sequence matching settings for
+     * PTM to peptide mapping
      *
      * @return the expected possible neutral losses
      *

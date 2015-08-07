@@ -1166,7 +1166,7 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
         atomChainRemoved = null;
         aminoAcidPattern = null;
-        ptmName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder
+        ptmName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODN, ptmName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
@@ -2139,7 +2139,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = new AminoAcidPattern("E");
-        ptmName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder
+        ptmName = "Pyrolidone from E"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:27", "Glu->pyro-Glu", String.valueOf(ptm.getRoundedMass()))); // @TODO: does '>' have to be escaped when exporting to html..?
         defaultMods.add(ptmName);
@@ -2151,7 +2151,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = new AminoAcidPattern("Q");
-        ptmName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder
+        ptmName = "Pyrolidone from Q"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:28", "Gln->pyro-Glu", String.valueOf(ptm.getRoundedMass()))); // @TODO: does '>' have to be escaped when exporting to html..?
         defaultMods.add(ptmName);
@@ -2163,7 +2163,7 @@ public class PTMFactory implements Serializable {
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
         aminoAcidPattern = new AminoAcidPattern("C");
-        ptmName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder
+        ptmName = "Pyrolidone from carbamidomethylated C"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         ptm = new PTM(PTM.MODNPAA, ptmName, "pyro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);

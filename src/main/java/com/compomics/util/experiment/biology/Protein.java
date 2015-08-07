@@ -259,10 +259,13 @@ public class Protein extends ExperimentObject {
         if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
             return true;
         }
-        subSequence = sequence.substring(0, peptideSequence.length()+1);
-        AminoAcidSequence mAminoAcidPattern = new AminoAcidSequence("M");
-        mAminoAcidPattern.appendCTerm(aminoAcidPattern);
-        return mAminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
+        if (sequence.charAt(0) == 'M') {
+            subSequence = sequence.substring(1, peptideSequence.length() + 1);
+            if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -313,7 +316,6 @@ public class Protein extends ExperimentObject {
             String after = surroundingAminoAcids.get(index)[1];
 
             // @TODO: how to handle semi-specific enzymes??
-
             if ((enzyme.isCleavageSite(before, firstAA) && enzyme.isCleavageSite(lastAA, after)
                     || (before.length() == 0 && enzyme.isCleavageSite(lastAA, after)
                     || (enzyme.isCleavageSite(before, firstAA) && after.length() == 0)))) {
@@ -326,8 +328,8 @@ public class Protein extends ExperimentObject {
 
     /**
      * Returns the amino acids surrounding a peptide in the sequence of the
-     * given protein in a map: peptide start index &gt; (amino acids before, amino
-     * acids after).
+     * given protein in a map: peptide start index &gt; (amino acids before,
+     * amino acids after).
      *
      * @param peptide the sequence of the peptide of interest
      * @param nAA the number of amino acids to include

@@ -135,7 +135,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         advancedSettingsWarningLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Advanced MS Amanda Settings");
+        setTitle("MS Amanda Advanced Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));

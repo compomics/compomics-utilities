@@ -432,7 +432,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         advancedSettingsWarningLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Advanced X!Tandem Settings");
+        setTitle("X!Tandem Advanced Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
@@ -927,17 +927,17 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                modificationsTableMouseMoved(evt);
+            }
+        });
         modificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseExited(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 modificationsTableMouseReleased(evt);
-            }
-        });
-        modificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                modificationsTableMouseMoved(evt);
             }
         });
         modificationsJScrollPane.setViewportView(modificationsTable);

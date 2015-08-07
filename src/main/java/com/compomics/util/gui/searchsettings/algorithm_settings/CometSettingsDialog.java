@@ -309,7 +309,7 @@ public class CometSettingsDialog extends javax.swing.JDialog {
         fragmentBinOffsetTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Advanced Comet Settings");
+        setTitle("Comet Advanced Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));

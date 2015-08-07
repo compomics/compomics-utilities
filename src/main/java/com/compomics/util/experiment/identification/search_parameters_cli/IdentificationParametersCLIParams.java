@@ -70,7 +70,7 @@ public enum IdentificationParametersCLIParams {
     OMSSA_SCALE_PREC("omssa_scale_prec", "OMSSA scale precursor mass option, 1: true, 0: false, default is '0'.", false),
     OMSSA_ESTIMATE_CHARGE("omssa_estimate_charge", "OMSSA estimate precursor charge option, 1: true, 0: false, default is '1'.", false),
     OMSSA_MAX_EVALUE("omssa_max_evalue", "OMSSA maximal evalue considered, default is '100'.", false),
-    OMSSA_HITLIST_LENGTH("omssa_hitlist_length", "OMSSA hitlist length, 0 means all, default is '0'.", false),
+    OMSSA_HITLIST_LENGTH("omssa_hitlist_length", "OMSSA hitlist length, 0 means all, default is '10'.", false),
     OMSSA_HITLIST_LENGTH_CHARGE("omssa_hitlist_charge", "OMSSA number of hits per spectrum per charge, default is '30'.", false),
     OMSSA_MIN_PEP_LENGTH("omssa_min_pep_length", "OMSSA minumum peptide length (semi-tryptic or no enzyme searches only).", false),
     OMSSA_MAX_PEP_LENGTH("omssa_max_pep_length", "OMSSA maximum peptide length (OMSSA semi-tryptic or no enzyme searches only).", false),
@@ -205,6 +205,25 @@ public enum IdentificationParametersCLIParams {
     TIDE_EXPORT_MZID("tide_export_mzid", "Tide export mzid, 1: true, 0: false, default is '0'.", false),
     TIDE_EXPORT_PIN("tide_export_pin", "Tide export Percolator input file, 1: true, 0: false, default is '0'.", false),
     TIDE_REMOVE_TEMP("tide_remove_temp", "Tide remove temp folders when the search is done, 1: true, 0: false, default is '1'.", false),
+    //////////////////////////////////
+    // Andromeda specific parameters
+    //////////////////////////////////
+    ANDROMEDA_MAX_PEPTIDE_MASS("andromeda_max_pep_mass", "Andromeda maximum peptide mass, default is '4600.0'.", false),
+    ANDROMEDA_MAX_COMBINATIONS("andromeda_max_comb", "Andromeda maximum combinations, default is '250'.", false),
+    ANDROMEDA_TOP_PEAKS("andromeda_top_peaks", "Andromeda number of top peaks, default is '8'.", false),
+    ANDROMEDA_TOP_PEAKS_WINDOW("andromeda_top_peaks_window", "Andromeda top peaks window width, default is '100'.", false),
+    ANDROMEDA_INCL_WATER("andromeda_incl_water", "Andromeda account for water losses, 1: true, 0: false, default is '1'.", false),
+    ANDROMEDA_INCL_AMMONIA("andromeda_incl_ammonia", "Andromeda account for ammonina losses, 1: true, 0: false, default is '1'.", false),
+    ANDROMEDA_NEUTRAL_LOSSES("andromeda_neutral_losses", "Andromeda neutral losses are sequence dependent, 1: true, 0: false, default is '1'.", false),
+    ANDROMEDA_FRAGMENT_ALL("andromeda_fragment_all", "Andromeda fragment all option, 1: true, 0: false, default is '0'.", false),
+    ANDROMEDA_EMP_CORRECTION("andromeda_emp_correction", "Andromeda emperical correction, 1: true, 0: false, default is '1'.", false),
+    ANDROMEDA_HIGHER_CHARGE("andromeda_higher_charge", "Andromeda higher charge option, 1: true, 0: false, default is '1'.", false),
+    ANDROMEDA_FRAG_METHOD("andromeda_frag_method", "Andromeda fragmentation method, (HCD, CID or EDT), default is 'CID'.", false),
+    ANDROMEDA_MAX_MODS("andromeda_max_mods", "Andromeda maximum number of modifications, default is '5'.", false),
+    ANDROMEDA_MIN_PEP_LENGTH("andromeda_min_pep_length", "Andromeda minimum peptide length when using no enzyme, default is '8'.", false),
+    ANDROMEDA_MAX_PEP_LENGTH("andromeda_max_pep_length", "Andromeda maximum peptide length when using no enzyme, default is '25'.", false),
+    ANDROMEDA_EQUAL_IL("andromeda_equal_il", "Andromeda whether I and L should be considered indistinguishable, 1: true, 0: false, default is '0'.", false),
+    ANDROMEDA_MAX_PSMS("andromeda_max_psms", "Andromeda maximum number of spectrum matches spectrum, default is '10'.", false),
     //////////////////////////////////
     // PepNovo+ specific parameters
     //////////////////////////////////

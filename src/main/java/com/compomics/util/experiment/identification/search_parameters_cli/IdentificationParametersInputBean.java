@@ -20,6 +20,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -957,7 +958,87 @@ public class IdentificationParametersInputBean {
         // Andromeda parameters
         ///////////////////////////////////
         AndromedaParameters andromedaParameters = new AndromedaParameters();
-        // @TODO: implement me!!
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
+            Double option = new Double(arg);
+            andromedaParameters.setMaxPeptideMass(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setMaxCombinations(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setTopPeaksWindow(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setIncludeWater(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setIncludeAmmonia(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setDependentLosses(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setFragmentAll(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setEmpiricalCorrection(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setHigherCharge(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id);
+            if (arg.equalsIgnoreCase("CID")) {
+                andromedaParameters.setFragmentationMethod(FragmentationMethod.CID);
+            } else if (arg.equalsIgnoreCase("HCD")) {
+                andromedaParameters.setFragmentationMethod(FragmentationMethod.HCD);
+            } else if (arg.equalsIgnoreCase("ETD")) {
+                andromedaParameters.setFragmentationMethod(FragmentationMethod.ETD);
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setMaxNumberOfModifications(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setMinPeptideLengthNoEnzyme(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setMaxPeptideLengthNoEnzyme(option);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setEqualIL(option == 1);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
+            Integer option = new Integer(arg);
+            andromedaParameters.setNumberOfCandidates(option);
+        }
+
         searchParameters.setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), andromedaParameters);
 
         ///////////////////////////////////
@@ -2377,6 +2458,107 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id, arg)) {
+                return false;
+            }
+        }
+
+        //*************************
+        // Andromeda options
+        //*************************
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id);
+            List<String> supportedInput = Arrays.asList("HCD", "CID", "ETD");
+            if (!isInList(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id, arg, false)) {
                 return false;
             }
         }

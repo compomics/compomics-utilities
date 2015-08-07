@@ -54,7 +54,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      */
     private Boolean empiricalCorrection = true;
     /**
-     * Boolean indicating whether the empirical correction should be used.
+     * Boolean indicating whether the higher charge option should be used.
      */
     private Boolean higherCharge = true;
     /**
@@ -81,7 +81,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * The number of candidates to report.
      */
-    private Integer numberOfCandidates = 5;
+    private Integer numberOfCandidates = 10;
     /**
      * Map of the Andromeda indexes used for user modifications in this search.
      */
@@ -98,7 +98,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      *
      * @return the maximal peptide mass
      */
-    public Double getMaxPeptideMass() {
+    public double getMaxPeptideMass() {
         return maxPeptideMass;
     }
 
@@ -388,9 +388,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Sets the index for a given modification. If another modification
-     * was already given with the same index the previous setting will be
-     * silently overwritten.
+     * Sets the index for a given modification. If another modification was
+     * already given with the same index the previous setting will be silently
+     * overwritten.
      *
      * @param modificationName the name of the modification
      * @param ptmIndex the index of the modification
@@ -400,11 +400,11 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the name of the modification indexed by the given index.
-     * Null if not found.
+     * Returns the name of the modification indexed by the given index. Null if
+     * not found.
      *
      * @param ptmIndex the index of the modification to look for
-     * 
+     *
      * @return the name of the modification indexed by the given index
      */
     public String getModificationName(int ptmIndex) {
@@ -424,7 +424,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * Returns the index of a given modification, null if not found.
      *
      * @param modificationName the name of the modification
-     * 
+     *
      * @return the corresponding index
      */
     public Integer getPtmIndex(String modificationName) {
@@ -465,7 +465,55 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
         if (identificationAlgorithmParameter instanceof AndromedaParameters) {
             AndromedaParameters andromedaParameters = (AndromedaParameters) identificationAlgorithmParameter;
 
-            // @TODO: implement me!
+            if (minPeptideLengthNoEnzyme != andromedaParameters.getMinPeptideLengthNoEnzyme()) {
+                return false;
+            }
+            if (maxPeptideLengthNoEnzyme != andromedaParameters.getMaxPeptideLengthNoEnzyme()) {
+                return false;
+            }
+            if (maxPeptideMass != andromedaParameters.getMaxPeptideMass()) {
+                return false;
+            }
+            if (numberOfCandidates != andromedaParameters.getNumberOfCandidates()) {
+                return false;
+            }
+            if (maxNumberOfModifications != andromedaParameters.getMaxNumberOfModifications()) {
+                return false;
+            }
+            if (fragmentationMethod != andromedaParameters.getFragmentationMethod()) {
+                return false;
+            }
+            if (!includeWater.equals(andromedaParameters.isIncludeWater())) {
+                return false;
+            }
+            if (!includeAmmonia.equals(andromedaParameters.isIncludeAmmonia())) {
+                return false;
+            }
+            if (!dependentLosses.equals(andromedaParameters.isDependentLosses())) {
+                return false;
+            }
+            if (!equalIL.equals(andromedaParameters.isEqualIL())) {
+                return false;
+            }
+            if (!fragmentAll.equals(andromedaParameters.isFragmentAll())) {
+                return false;
+            }
+            if (!empiricalCorrection.equals(andromedaParameters.isEmpiricalCorrection())) {
+                return false;
+            }
+            if (!higherCharge.equals(andromedaParameters.isHigherCharge())) {
+                return false;
+            }
+            if (maxCombinations != andromedaParameters.getMaxCombinations()) {
+                return false;
+            }
+            if (topPeaks != andromedaParameters.getTopPeaks()) {
+                return false;
+            }
+            if (topPeaksWindow != andromedaParameters.getTopPeaksWindow()) {
+                return false;
+            }
+
             return true;
         }
 
@@ -490,9 +538,55 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append(newLine);
 
-//        output.append("NUMBER_SPECTRUM_MATCHES="); // @TODO: implement me!
-//        output.append(numberOfSpectrumMatches);
-//        output.append(newLine);
+        output.append("MIN_PEPTIDE_LENGHT_NO_ENZYME=");
+        output.append(minPeptideLengthNoEnzyme);
+        output.append(newLine);
+        output.append("MAX_PEPTIDE_LENGHT_NO_ENZYME=");
+        output.append(maxPeptideLengthNoEnzyme);
+        output.append(newLine);
+        output.append("MAX_PEPTIDE_MASS=");
+        output.append(maxPeptideMass);
+        output.append(newLine);
+        output.append("NUMBER_SPECTRUM_MATCHES=");
+        output.append(numberOfCandidates);
+        output.append(newLine);
+        output.append("MAX_PTMS=");
+        output.append(maxNumberOfModifications);
+        output.append(newLine);
+        output.append("FRAGMENTATION_METHOD=");
+        output.append(fragmentationMethod);
+        output.append(newLine);
+        output.append("WATER_LOSS=");
+        output.append(includeWater);
+        output.append(newLine);
+        output.append("AMMONIA_LOSS=");
+        output.append(includeAmmonia);
+        output.append(newLine);
+        output.append("SEQUENCE_DEPENDENT_NEUTRAL_LOSS=");
+        output.append(dependentLosses);
+        output.append(newLine);
+        output.append("EQUAL_IL=");
+        output.append(equalIL);
+        output.append(newLine);
+        output.append("FRAGMENT_ALL=");
+        output.append(fragmentAll);
+        output.append(newLine);
+        output.append("EMPERICAL_CORRECTION=");
+        output.append(empiricalCorrection);
+        output.append(newLine);
+        output.append("HIGHER_CHARGE=");
+        output.append(higherCharge);
+        output.append(newLine);
+        output.append("MAX_COMBINATIONS=");
+        output.append(maxCombinations);
+        output.append(newLine);
+        output.append("TOP_PEAKS=");
+        output.append(topPeaks);
+        output.append(newLine);
+        output.append("TOP_PEAKS_WINDOW=");
+        output.append(topPeaksWindow);
+        output.append(newLine);
+
         return output.toString();
     }
 }

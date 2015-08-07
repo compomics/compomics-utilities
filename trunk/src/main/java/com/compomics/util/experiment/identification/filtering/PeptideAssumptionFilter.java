@@ -1,4 +1,4 @@
-package com.compomics.util.preferences;
+package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.protein_sequences.SequenceFa
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -19,12 +20,12 @@ import java.util.HashMap;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
- * This class achieves a pre-filtering of the identifications for PeptideShaker.
+ * This class filters peptide assumptions based on various properties.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdFilter implements Serializable {
+public class PeptideAssumptionFilter implements Serializable {
 
     /**
      * Serial number for backward compatibility.
@@ -56,7 +57,7 @@ public class IdFilter implements Serializable {
     /**
      * Constructor with default settings.
      */
-    public IdFilter() {
+    public PeptideAssumptionFilter() {
         minPepLength = 4;
         maxPepLength = 30;
         maxMassDeviation = -1;
@@ -77,7 +78,7 @@ public class IdFilter implements Serializable {
      * (true: ppm, false: Da)
      * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
      */
-    public IdFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
+    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.maxMassDeviation = maxMzDeviation;
@@ -359,7 +360,7 @@ public class IdFilter implements Serializable {
      * @param anotherFilter another filter
      * @return a boolean indicating that the filters have the same parameters
      */
-    public boolean equals(IdFilter anotherFilter) {
+    public boolean equals(PeptideAssumptionFilter anotherFilter) {
         return isPpm == anotherFilter.isPpm
                 && unknownPtm == anotherFilter.removeUnknownPTMs()
                 && minPepLength == anotherFilter.getMinPepLength()

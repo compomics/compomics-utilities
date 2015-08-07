@@ -878,12 +878,12 @@ public class Peptide extends ExperimentObject {
     public ArrayList<Integer> getPotentialModificationSites(PTM ptm, SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
-        ArrayList<Integer> possibleSites = new ArrayList<Integer>();
-        AminoAcidPattern pattern = ptm.getPattern();
-        int patternLength = pattern.length();
+        ArrayList<Integer> possibleSites = new ArrayList<Integer>(1);
 
         switch (ptm.getType()) {
             case PTM.MODAA:
+                AminoAcidPattern pattern = ptm.getPattern();
+                int patternLength = pattern.length();
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
                     return pattern.getIndexes(sequence, ptmSequenceMatchingPreferences);
@@ -928,6 +928,8 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
             case PTM.MODCPAA:
+                pattern = ptm.getPattern();
+                patternLength = pattern.length();
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
                     if (pattern.isEnding(sequence, ptmSequenceMatchingPreferences)) {
@@ -958,6 +960,8 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
             case PTM.MODNPAA:
+                pattern = ptm.getPattern();
+                patternLength = pattern.length();
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
                     if (pattern.isStarting(sequence, ptmSequenceMatchingPreferences)) {

@@ -2,7 +2,7 @@ package com.compomics.util.preferences.gui;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.IdFilter;
+import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -24,11 +24,11 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
     /**
      * The identification filter set by the user. Null if cancel was pressed.
      */
-    private IdFilter userFilter = null;
+    private PeptideAssumptionFilter userFilter = null;
     /**
      * The original filter.
      */
-    private IdFilter originalFilter;
+    private PeptideAssumptionFilter originalFilter;
 
     /**
      * Creates a new ImportSettingsDialog.
@@ -37,7 +37,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JFrame parent, IdFilter idFilter, boolean editable) {
+    public ImportSettingsDialog(JFrame parent, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parent, true);
         this.editable = editable;
         this.originalFilter = idFilter;
@@ -53,7 +53,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JDialog parent, IdFilter idFilter, boolean editable) {
+    public ImportSettingsDialog(JDialog parent, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parent, true);
         this.editable = editable;
         this.originalFilter = idFilter;
@@ -143,7 +143,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      *
      * @return the id filter as set by the user
      */
-    public IdFilter getFilter() {
+    public PeptideAssumptionFilter getFilter() {
         return userFilter;
     }
 
@@ -361,7 +361,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
                 boolean ppm = unitCmb.getSelectedIndex() == 0;
                 boolean removePTM = ptmsCheck.isSelected();
 
-                IdFilter tempFilter = new IdFilter(
+                PeptideAssumptionFilter tempFilter = new PeptideAssumptionFilter(
                         nAAmin,
                         nAAmax,
                         precDev,

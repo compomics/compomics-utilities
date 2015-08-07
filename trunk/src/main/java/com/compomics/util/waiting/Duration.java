@@ -112,7 +112,14 @@ public class Duration {
             }
         }
 
-        result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");
+        if (restSeconds < 1) {
+            result.append(processingTimeMilliseconds).append(" milliseconds");
+        } else if (restMinutes > 1) {
+            int nSeconds = (int) restSeconds;
+            result.append(nSeconds).append(" seconds");
+        } else {
+            result.append(Util.roundDouble(restSeconds, 3)).append(" seconds");
+        }
         return result.toString();
     }
 }

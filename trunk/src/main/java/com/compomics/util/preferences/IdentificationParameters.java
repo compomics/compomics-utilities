@@ -1,5 +1,6 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
@@ -27,7 +28,7 @@ public class IdentificationParameters implements Serializable {
     /**
      * The PSM filter.
      */
-    private IdFilter idFilter = new IdFilter();
+    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
     /**
      * The PSM scores to use.
      */
@@ -123,17 +124,17 @@ public class IdentificationParameters implements Serializable {
      *
      * @return the filter used when importing PSMs
      */
-    public IdFilter getIdFilter() {
-        return idFilter;
+    public PeptideAssumptionFilter getPeptideAssumptionFilter() {
+        return peptideAssumptionFilter;
     }
 
     /**
      * Sets the filter used when importing PSMs.
      *
-     * @param idFilter the filter used when importing PSMs
+     * @param peptideAssumptionFilter the filter used when importing PSMs
      */
-    public void setIdFilter(IdFilter idFilter) {
-        this.idFilter = idFilter;
+    public void setIdFilter(PeptideAssumptionFilter peptideAssumptionFilter) {
+        this.peptideAssumptionFilter = peptideAssumptionFilter;
     }
 
     /**
@@ -275,7 +276,7 @@ public class IdentificationParameters implements Serializable {
         annotationPreferences.setAnnotationLevel(0.75);
         annotationPreferences.useAutomaticAnnotation(true);
         identificationParameters.setAnnotationPreferences(annotationPreferences);
-        IdFilter idFilter = new IdFilter();
+        PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
             idFilter.setFilterFromSearchParameters(searchParameters);
         }
@@ -315,9 +316,9 @@ public class IdentificationParameters implements Serializable {
         }
         annotationPreferences.setAnnotationLevel(0.75);
         annotationPreferences.useAutomaticAnnotation(true);
-        idFilter = new IdFilter();
+        peptideAssumptionFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
-            idFilter.setFilterFromSearchParameters(searchParameters);
+            peptideAssumptionFilter.setFilterFromSearchParameters(searchParameters);
         }
         if (psmScoringPreferences == null) {
             psmScoringPreferences = new PsmScoringPreferences();

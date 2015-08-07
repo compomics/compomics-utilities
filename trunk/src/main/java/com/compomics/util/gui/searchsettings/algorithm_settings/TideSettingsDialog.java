@@ -68,7 +68,7 @@ public class TideSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Fills the GUI with the information contained in the Comet settings
+     * Fills the GUI with the information contained in the Tide settings
      * object.
      */
     private void fillGUI() {
@@ -391,7 +391,7 @@ public class TideSettingsDialog extends javax.swing.JDialog {
         closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Advanced Tide Settings");
+        setTitle("Tide Advanced Settings");
         setResizable(false);
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));

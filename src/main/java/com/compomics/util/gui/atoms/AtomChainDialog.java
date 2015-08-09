@@ -139,7 +139,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
     /**
      * Remove the given elements panel.
      *
-     * @param panelIndex
+     * @param panelIndex the index of the panel to remove
      */
     public void removeElementsPanel(int panelIndex) {
 

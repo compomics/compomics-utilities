@@ -1,63 +1,67 @@
 package com.compomics.util.gui.atoms;
 
-import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.AtomChain;
-import java.awt.event.KeyEvent;
+import com.compomics.util.experiment.biology.AtomImpl;
+import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
+import no.uib.jsparklines.renderers.util.Util;
 
 /**
  * AtomChainDialog.
- * 
+ *
+ * @author Harald Barsnes
  * @author Marc Vaudel
  */
 public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
-     * The atom chain edited by the user.
+     * The added atom chain edited by the user.
      */
-    private AtomChain atomChain;
+    private AtomChain atomChainAdded;
+    /**
+     * The removed atom chain edited by the user.
+     */
+    private AtomChain atomChainRemoved;
     /**
      * Boolean indicating whether the user canceled the input.
      */
     private boolean canceled = false;
     /**
-     * The selected atom, the initial value will be selected by default.
+     * The atom panel index.
      */
-    private String selectedAtom = "C";
+    private int atomPanelIndex = 0;
     /**
-     * Map of the isotopes as displayed: displayed string | isotope number.
+     * True of the GUI is currently being set up.
      */
-    private HashMap<String, Integer> isotopesMap;
+    private boolean settingUpGUI = false;
     /**
-     * The selected isotope, the initial value will be selected by default.
+     * If true, then only adding atoms is allowed.
      */
-    private Integer selectedIsotope = 0;
-    /**
-     * Boolean indicating whether the atom chain can be edited.
-     */
-    private boolean editable;
+    private boolean addOnly;
 
     /**
      * Creates a new dialog.
      *
      * @param parent the parent frame
-     * @param atomChain the atom chain to edit
-     * @param editable if the dialog is editable or not
+     * @param atomChainAdded the added atom chain to edit
+     * @param atomChainRemoved the removed atom chain to edit
+     * @param onlyAddition if true, atoms can only be added and not removed
      */
-    public AtomChainDialog(java.awt.Frame parent, AtomChain atomChain, boolean editable) {
+    public AtomChainDialog(java.awt.Frame parent, AtomChain atomChainAdded, AtomChain atomChainRemoved, boolean onlyAddition) {
         super(parent, true);
         initComponents();
-        if (atomChain != null) {
-            this.atomChain = atomChain.clone();
+        if (atomChainAdded != null) {
+            this.atomChainAdded = atomChainAdded.clone();
         } else {
-            this.atomChain = new AtomChain();
+            this.atomChainAdded = new AtomChain(true);
         }
-        this.editable = editable;
+        if (atomChainRemoved != null) {
+            this.atomChainRemoved = atomChainRemoved.clone();
+        } else {
+            this.atomChainRemoved = new AtomChain(false);
+        }
+        this.addOnly = onlyAddition;
         setupGUI();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -67,68 +71,127 @@ public class AtomChainDialog extends javax.swing.JDialog {
      * Sets up the GUI components.
      */
     private void setupGUI() {
-        atomCmb.setModel(new DefaultComboBoxModel(Atom.getImplementedAtoms()));
-        if (selectedAtom != null) {
-            atomCmb.setSelectedItem(selectedAtom);
+        elementsScrollPane.getViewport().setOpaque(false);
+        settingUpGUI = true;
+
+        if (atomChainAdded.getAtomChain().isEmpty() && atomChainRemoved.getAtomChain().isEmpty()) {
+            elementsPanel.add(new AtomPanel(this, null, 0, 0, atomPanelIndex++, addOnly));
         }
-        clearButton.setEnabled(editable);
-        atomCmb.setEnabled(editable);
-        isotopeCmb.setEnabled(editable);
-        occurrenceTxt.setEditable(editable);
-        if (!editable) {
-            compositionSplitPane.setDividerLocation(1.0);
+
+        if (!atomChainAdded.getAtomChain().isEmpty()) {
+            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
+
+            for (AtomImpl tempAtom : atomChainAdded.getAtomChain()) {
+                if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                            atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                    ArrayList<Integer> tempList = new ArrayList<Integer>();
+                    tempList.add(tempAtom.getIsotope());
+                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+                } else {
+                    if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
+                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                                atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                        ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
+                        tempList.add(tempAtom.getIsotope());
+                        atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+                    }
+                }
+            }
         }
-        updateIsotopes();
+
+        if (!atomChainRemoved.getAtomChain().isEmpty()) {
+            HashMap<String, ArrayList<Integer>> atomsAdded = new HashMap<String, ArrayList<Integer>>();
+
+            for (AtomImpl tempAtom : atomChainRemoved.getAtomChain()) {
+                if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                            -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                    ArrayList<Integer> tempList = new ArrayList<Integer>();
+                    tempList.add(tempAtom.getIsotope());
+                    atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+                } else {
+                    if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
+                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                                -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
+                        ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
+                        tempList.add(tempAtom.getIsotope());
+                        atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
+                    }
+                }
+            }
+        }
+
+        settingUpGUI = false;
+        updateAtomComposition();
+
+        elementsPanel.revalidate();
+        elementsPanel.repaint();
+    }
+
+    /**
+     * Add a new atom panel.
+     */
+    public void addElementsPanel() {
+        elementsPanel.add(new AtomPanel(this, null, 0, 0, atomPanelIndex++, addOnly));
+    }
+
+    /**
+     * Remove the given elements panel.
+     *
+     * @param panelIndex
+     */
+    public void removeElementsPanel(int panelIndex) {
+
+        for (int componentIndex = 0; componentIndex < elementsPanel.getComponentCount(); componentIndex++) {
+            Component tempComponent = elementsPanel.getComponent(componentIndex);
+            if (tempComponent instanceof AtomPanel) {
+                AtomPanel tempAtomPanel = (AtomPanel) tempComponent;
+                if (tempAtomPanel.getPanelIndex() == panelIndex) {
+                    elementsPanel.remove(componentIndex);
+                    break;
+                }
+            }
+        }
+
+        updateAtomComposition();
+
+        if (elementsPanel.getComponents().length == 0) {
+            addElementsPanel();
+        }
+
+        elementsPanel.revalidate();
+        elementsPanel.repaint();
     }
 
     /**
      * Updates the atom composition panel.
      */
-    private void updateAtomComposition() {
-        compositionTxt.setText(atomChain.toString());
-        massTxt.setText(atomChain.getMass() + " Da");
-    }
+    public void updateAtomComposition() {
 
-    /**
-     * Updates the isotope list.
-     */
-    private void updateIsotopes() {
-        String atomShortName = (String) atomCmb.getSelectedItem();
-        Atom atom = Atom.getAtom(atomShortName);
-        ArrayList<Integer> isotopesList = atom.getImplementedIsotopes();
-        Collections.sort(isotopesList);
-        isotopesMap = new HashMap<String, Integer>(isotopesList.size());
-        String[] itemsArray = new String[isotopesList.size()];
-        int zeroIndex = 0;
-        for (int i = 0; i < isotopesList.size(); i++) {
-            Integer isotope = isotopesList.get(i);
-            String isotopeName;
-            if (isotope == 0) {
-                zeroIndex = i;
-                isotopeName = "Monoisotopic";
-            } else if (isotope > 0) {
-                isotopeName = "+" + isotope;
-            } else {
-                isotopeName = isotope + "";
+        if (!settingUpGUI) {
+            atomChainAdded = new AtomChain(true);
+            atomChainRemoved = new AtomChain(false);
+
+            for (int componentIndex = 0; componentIndex < elementsPanel.getComponentCount(); componentIndex++) {
+                Component tempComponent = elementsPanel.getComponent(componentIndex);
+                if (tempComponent instanceof AtomPanel) {
+                    AtomPanel tempAtomPanel = (AtomPanel) tempComponent;
+                    if (tempAtomPanel.getAtom() != null && tempAtomPanel.getIsotope() != null && tempAtomPanel.getOccurrence() != 0) {
+                        if (tempAtomPanel.getOccurrence() > 0) {
+                            int previousOccurence = atomChainAdded.getOccurrence(tempAtomPanel.getAtom(), tempAtomPanel.getIsotope());
+                            atomChainAdded.setOccurrence(tempAtomPanel.getAtom(), tempAtomPanel.getIsotope(), previousOccurence + tempAtomPanel.getOccurrence());
+                        } else {
+                            int previousOccurence = atomChainRemoved.getOccurrence(tempAtomPanel.getAtom(), tempAtomPanel.getIsotope());
+                            atomChainRemoved.setOccurrence(tempAtomPanel.getAtom(), tempAtomPanel.getIsotope(), previousOccurence + Math.abs(tempAtomPanel.getOccurrence()));
+                        }
+                    }
+                }
             }
-            Double mass = atom.getIsotopeMass(isotope);
-            mass = Util.roundDouble(mass, 2);
-            String display = isotopeName + " (" + mass + " Da)";
-            isotopesMap.put(display, isotope);
-            itemsArray[i] = display;
-        }
-        isotopeCmb.setModel(new DefaultComboBoxModel(itemsArray));
-        isotopeCmb.setSelectedIndex(zeroIndex);
-        updateOccurrence();
-    }
 
-    /**
-     * Updates the occurrence of the selected isotope.
-     */
-    private void updateOccurrence() {
-        Atom atom = Atom.getAtom(selectedAtom);
-        Integer occurrence = atomChain.getOccurrence(atom, selectedIsotope);
-        occurrenceTxt.setText(occurrence + "");
+            compositionTxt.setText((atomChainAdded.toString() + " " + atomChainRemoved.toString()).trim());
+            massTxt.setText(Util.roundDouble(atomChainAdded.getMass() + atomChainRemoved.getMass(), 6) + " Da");
+        }
     }
 
     /**
@@ -142,12 +205,21 @@ public class AtomChainDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the atom chain as edited by the user.
+     * Returns the added atom chain as edited by the user.
      *
      * @return the atom chain as edited by the user
      */
-    public AtomChain getAtomChain() {
-        return atomChain;
+    public AtomChain getAtomChainAdded() {
+        return atomChainAdded;
+    }
+
+    /**
+     * Returns the removed atom chain as edited by the user.
+     *
+     * @return the atom chain as edited by the user
+     */
+    public AtomChain getAtomChainRemoved() {
+        return atomChainRemoved;
     }
 
     /**
@@ -162,24 +234,19 @@ public class AtomChainDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        compositionSplitPane = new javax.swing.JSplitPane();
+        editPanel = new javax.swing.JPanel();
+        elementsScrollPane = new javax.swing.JScrollPane();
+        elementsPanel = new javax.swing.JPanel();
         compositionPanel = new javax.swing.JPanel();
         compositionLbl = new javax.swing.JLabel();
         compositionTxt = new javax.swing.JTextField();
         MassLbl = new javax.swing.JLabel();
-        clearButton = new javax.swing.JButton();
         massTxt = new javax.swing.JTextField();
-        editPanel = new javax.swing.JPanel();
-        atomLbl = new javax.swing.JLabel();
-        isotopeLbl = new javax.swing.JLabel();
-        occurrenceTxt = new javax.swing.JTextField();
-        updateButton = new javax.swing.JButton();
-        occurrenceLbl = new javax.swing.JLabel();
-        atomCmb = new javax.swing.JComboBox();
-        isotopeCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Atomic Composition");
+
+        backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -195,28 +262,47 @@ public class AtomChainDialog extends javax.swing.JDialog {
             }
         });
 
-        compositionSplitPane.setBorder(null);
-        compositionSplitPane.setDividerLocation(400);
-        compositionSplitPane.setDividerSize(0);
-        compositionSplitPane.setResizeWeight(0.5);
-        compositionSplitPane.setPreferredSize(new java.awt.Dimension(800, 229));
+        editPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Composition Editor"));
+        editPanel.setOpaque(false);
+
+        elementsScrollPane.setBorder(null);
+        elementsScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        elementsScrollPane.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        elementsScrollPane.setOpaque(false);
+
+        elementsPanel.setOpaque(false);
+        elementsPanel.setLayout(new javax.swing.BoxLayout(elementsPanel, javax.swing.BoxLayout.Y_AXIS));
+        elementsScrollPane.setViewportView(elementsPanel);
+
+        javax.swing.GroupLayout editPanelLayout = new javax.swing.GroupLayout(editPanel);
+        editPanel.setLayout(editPanelLayout);
+        editPanelLayout.setHorizontalGroup(
+            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(elementsScrollPane)
+                .addContainerGap())
+        );
+        editPanelLayout.setVerticalGroup(
+            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(elementsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         compositionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Atomic Composition"));
+        compositionPanel.setOpaque(false);
 
         compositionLbl.setText("Composition");
 
         compositionTxt.setEditable(false);
+        compositionTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         MassLbl.setText("Mass");
 
-        clearButton.setText("Clear");
-        clearButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButtonActionPerformed(evt);
-            }
-        });
-
         massTxt.setEditable(false);
+        massTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout compositionPanelLayout = new javax.swing.GroupLayout(compositionPanel);
         compositionPanel.setLayout(compositionPanelLayout);
@@ -227,12 +313,9 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 .addGroup(compositionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(compositionLbl)
                     .addComponent(MassLbl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(compositionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(compositionPanelLayout.createSequentialGroup()
-                        .addComponent(compositionTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearButton))
+                    .addComponent(compositionTxt)
                     .addComponent(massTxt))
                 .addContainerGap())
         );
@@ -242,91 +325,13 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(compositionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(compositionLbl)
-                    .addComponent(compositionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clearButton))
+                    .addComponent(compositionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(compositionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(MassLbl)
                     .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(146, Short.MAX_VALUE))
-        );
-
-        compositionSplitPane.setLeftComponent(compositionPanel);
-
-        editPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Edit"));
-
-        atomLbl.setText("Atom");
-
-        isotopeLbl.setText("Isotope");
-
-        occurrenceTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                occurrenceTxtKeyReleased(evt);
-            }
-        });
-
-        updateButton.setText("Update");
-
-        occurrenceLbl.setText("Occurrence");
-
-        atomCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        atomCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                atomCmbActionPerformed(evt);
-            }
-        });
-
-        isotopeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        isotopeCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                isotopeCmbActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout editPanelLayout = new javax.swing.GroupLayout(editPanel);
-        editPanel.setLayout(editPanelLayout);
-        editPanelLayout.setHorizontalGroup(
-            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(occurrenceLbl)
-                        .addGap(18, 18, 18)
-                        .addComponent(occurrenceTxt))
-                    .addComponent(updateButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(editPanelLayout.createSequentialGroup()
-                        .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(atomLbl)
-                            .addComponent(isotopeLbl))
-                        .addGap(38, 38, 38)
-                        .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(isotopeCmb, 0, 279, Short.MAX_VALUE)
-                            .addComponent(atomCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        editPanelLayout.setVerticalGroup(
-            editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(atomLbl)
-                    .addComponent(atomCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(isotopeLbl)
-                    .addComponent(isotopeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(occurrenceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(occurrenceLbl))
-                .addGap(18, 18, 18)
-                .addComponent(updateButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        compositionSplitPane.setRightComponent(editPanel);
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -335,20 +340,23 @@ public class AtomChainDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(compositionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addGap(0, 431, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(compositionSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(compositionSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(compositionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -369,64 +377,36 @@ public class AtomChainDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void occurrenceTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_occurrenceTxtKeyReleased
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                Atom atom = Atom.getAtom(selectedAtom);
-                Integer occurrence = new Integer(occurrenceTxt.getText());
-                atomChain.setOccurrence(atom, selectedIsotope, occurrence);
-                updateAtomComposition();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Please verify the number of atoms.", "Input Error", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_occurrenceTxtKeyReleased
-
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        atomChain = new AtomChain();
-        updateAtomComposition();
-        updateOccurrence();
-    }//GEN-LAST:event_clearButtonActionPerformed
-
+    /**
+     * Save the input and close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the dialog without saving.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void atomCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atomCmbActionPerformed
-        selectedAtom = (String) atomCmb.getSelectedItem();
-        updateIsotopes();
-    }//GEN-LAST:event_atomCmbActionPerformed
-
-    private void isotopeCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isotopeCmbActionPerformed
-        selectedIsotope = isotopesMap.get((String) isotopeCmb.getSelectedItem());
-        updateOccurrence();
-    }//GEN-LAST:event_isotopeCmbActionPerformed
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel MassLbl;
-    private javax.swing.JComboBox atomCmb;
-    private javax.swing.JLabel atomLbl;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton clearButton;
     private javax.swing.JLabel compositionLbl;
     private javax.swing.JPanel compositionPanel;
-    private javax.swing.JSplitPane compositionSplitPane;
     private javax.swing.JTextField compositionTxt;
     private javax.swing.JPanel editPanel;
-    private javax.swing.JComboBox isotopeCmb;
-    private javax.swing.JLabel isotopeLbl;
+    private javax.swing.JPanel elementsPanel;
+    private javax.swing.JScrollPane elementsScrollPane;
     private javax.swing.JTextField massTxt;
-    private javax.swing.JLabel occurrenceLbl;
-    private javax.swing.JTextField occurrenceTxt;
     private javax.swing.JButton okButton;
-    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
-
 }

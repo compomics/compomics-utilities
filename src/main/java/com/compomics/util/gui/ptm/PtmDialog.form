@@ -137,19 +137,13 @@
                               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="additionLbl" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                      <Component id="additionTxt" linkSize="9" min="-2" pref="40" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                      <Component id="deletionLbl" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                      <Component id="deletionTxt" linkSize="9" min="-2" pref="42" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                                      <Component id="compositionTxt" max="32767" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="massLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                      <Component id="massTxt" linkSize="9" min="-2" pref="92" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="massTxt" min="-2" pref="116" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="nameShortTxt" max="32767" attributes="2"/>
+                                  <Component id="nameShortTxt" pref="444" max="32767" attributes="2"/>
                               </Group>
                           </Group>
                       </Group>
@@ -177,10 +171,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="additionTxt" alignment="3" min="-2" max="-2" attributes="1"/>
-                          <Component id="additionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="deletionTxt" alignment="3" min="-2" max="-2" attributes="1"/>
-                          <Component id="deletionLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="compositionTxt" alignment="3" min="-2" max="-2" attributes="1"/>
                           <Component id="compositionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="massLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="massTxt" alignment="3" min="-2" max="-2" attributes="1"/>
@@ -241,20 +232,14 @@
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameTxtKeyReleased"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="additionLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Addition"/>
-                <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="additionTxt">
+            <Component class="javax.swing.JTextField" name="compositionTxt">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="additionTxtMouseReleased"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="compositionTxtMouseReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="patternLabel">
@@ -288,22 +273,6 @@
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameShortTxtKeyReleased"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="deletionTxt">
-              <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
-              </Properties>
-              <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="deletionTxtMouseReleased"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="deletionLbl">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Deletion"/>
-                <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="compositionLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Composition"/>
@@ -321,9 +290,6 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" value="Monoisotopic mass in Dalton"/>
               </Properties>
-              <Events>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="massTxtKeyReleased"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

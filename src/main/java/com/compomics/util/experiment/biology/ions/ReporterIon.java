@@ -318,7 +318,7 @@ public class ReporterIon extends Ion {
      * @return a boolean indicating whether masses are equal
      */
     public boolean isSameAs(ReporterIon anotherReporterIon) {
-        return theoreticMass == anotherReporterIon.getTheoreticMass();
+        return theoreticMass.doubleValue() == anotherReporterIon.getTheoreticMass(); // @TODO: compare against the accuracy!
     }
 
     /**

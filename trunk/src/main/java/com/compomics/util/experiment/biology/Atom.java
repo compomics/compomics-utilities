@@ -65,10 +65,15 @@ public abstract class Atom extends ExperimentObject {
     /**
      * Returns an array of implemented atoms indicated by their short name.
      * 
+     * @param includeSelect if true, the first item is set to '- Select -' 
      * @return an array of implemented atoms
      */
-    public static String[] getImplementedAtoms() {
-        return new String[] {"H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+    public static String[] getImplementedAtoms(boolean includeSelect) {
+        if (includeSelect) {
+            return new String[] {"- Select -", "H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+        } else {
+            return new String[] {"H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+        }
     }
 
     /**

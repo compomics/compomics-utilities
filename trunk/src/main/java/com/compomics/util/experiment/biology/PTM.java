@@ -91,11 +91,11 @@ public class PTM extends ExperimentObject {
     /**
      * The composition of the molecule added.
      */
-    private AtomChain atomChainAdded = new AtomChain();
+    private AtomChain atomChainAdded = new AtomChain(true);
     /**
      * The composition of the molecule removed.
      */
-    private AtomChain atomChainRemoved = new AtomChain();
+    private AtomChain atomChainRemoved = new AtomChain(false);
     /**
      * The CV term associated with this PTM. Null if not set.
      */
@@ -213,7 +213,7 @@ public class PTM extends ExperimentObject {
             mass += atomChainAdded.getMass();
         }
         if (atomChainRemoved != null) {
-            mass -= atomChainRemoved.getMass();
+            mass += atomChainRemoved.getMass();
         }
         return mass;
     }

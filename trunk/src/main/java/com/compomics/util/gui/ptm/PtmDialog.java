@@ -96,8 +96,8 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
             pattern = new AminoAcidPattern();
-            this.atomChainAdded = new AtomChain();
-            this.atomChainRemoved = new AtomChain();
+            this.atomChainAdded = new AtomChain(true);
+            this.atomChainRemoved = new AtomChain(false);
         }
         this.editable = editable;
 
@@ -128,8 +128,8 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
             pattern = new AminoAcidPattern();
-            this.atomChainAdded = new AtomChain();
-            this.atomChainRemoved = new AtomChain();
+            this.atomChainAdded = new AtomChain(true);
+            this.atomChainRemoved = new AtomChain(false);
         }
 
         initComponents();
@@ -205,16 +205,18 @@ public class PtmDialog extends javax.swing.JDialog {
             typeCmb.setSelectedIndex(currentPtm.getType());
             nameTxt.setText(currentPtm.getName());
             nameShortTxt.setText(currentPtm.getShortName());
+
             String addition = "";
             if (atomChainAdded != null) {
                 addition = atomChainAdded.toString();
             }
-            additionTxt.setText(addition);
             String deletion = "";
             if (atomChainRemoved != null) {
                 deletion = atomChainRemoved.toString();
             }
-            deletionTxt.setText(deletion);
+            String temp = addition + " " + deletion;
+            compositionTxt.setText(temp.trim());
+
             patternTxt.setText(pattern.toString());
             updateMass();
 
@@ -249,7 +251,7 @@ public class PtmDialog extends javax.swing.JDialog {
                 mass += atomChainAdded.getMass();
             }
             if (atomChainRemoved != null) {
-                mass -= atomChainRemoved.getMass();
+                mass += atomChainRemoved.getMass();
             }
             massTxt.setText("" + Util.roundDouble(mass, 4));
         } catch (IllegalArgumentException e) {
@@ -280,8 +282,6 @@ public class PtmDialog extends javax.swing.JDialog {
 
         nameLabel.setForeground(Color.BLACK);
         compositionLabel.setForeground(Color.BLACK);
-        additionLbl.setForeground(Color.BLACK);
-        deletionLbl.setForeground(Color.BLACK);
         patternLabel.setForeground(Color.BLACK);
         unimodAccessionLabel.setForeground(Color.BLACK);
         unimodNameLabel.setForeground(Color.BLACK);
@@ -289,17 +289,14 @@ public class PtmDialog extends javax.swing.JDialog {
         nameLabel.setToolTipText(null);
         nameTxt.setToolTipText(null);
         compositionLabel.setToolTipText(null);
-        additionLbl.setToolTipText(null);
-        deletionLbl.setToolTipText(null);
-        additionTxt.setToolTipText(null);
-        deletionTxt.setToolTipText(null);
+        compositionTxt.setToolTipText(null);
         patternLabel.setToolTipText(null);
         patternTxt.setToolTipText(null);
         unimodAccessionLabel.setToolTipText(null);
         unimodAccessionJTextField.setToolTipText(null);
 
         // check the modification mass
-        if (additionTxt.getText().trim().length() == 0 && deletionTxt.getText().trim().length() == 0) {
+        if (compositionTxt.getText().trim().length() == 0) {
             error = true;
             compositionLabel.setForeground(Color.RED);
             compositionLabel.setToolTipText("Please provide a modification composition");
@@ -482,14 +479,11 @@ public class PtmDialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         nameTxt = new javax.swing.JTextField();
-        additionLbl = new javax.swing.JLabel();
-        additionTxt = new javax.swing.JTextField();
+        compositionTxt = new javax.swing.JTextField();
         patternLabel = new javax.swing.JLabel();
         patternTxt = new javax.swing.JTextField();
         nameShortLabel = new javax.swing.JLabel();
         nameShortTxt = new javax.swing.JTextField();
-        deletionTxt = new javax.swing.JTextField();
-        deletionLbl = new javax.swing.JLabel();
         compositionLabel = new javax.swing.JLabel();
         massLabel = new javax.swing.JLabel();
         massTxt = new javax.swing.JTextField();
@@ -577,15 +571,12 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
-        additionLbl.setText("Addition");
-        additionLbl.setToolTipText("Monoisotopic mass in Dalton");
-
-        additionTxt.setEditable(false);
-        additionTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        additionTxt.setToolTipText("Monoisotopic mass in Dalton");
-        additionTxt.addMouseListener(new java.awt.event.MouseAdapter() {
+        compositionTxt.setEditable(false);
+        compositionTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        compositionTxt.setToolTipText("Monoisotopic mass in Dalton");
+        compositionTxt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                additionTxtMouseReleased(evt);
+                compositionTxtMouseReleased(evt);
             }
         });
 
@@ -612,18 +603,6 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
-        deletionTxt.setEditable(false);
-        deletionTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        deletionTxt.setToolTipText("Monoisotopic mass in Dalton");
-        deletionTxt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                deletionTxtMouseReleased(evt);
-            }
-        });
-
-        deletionLbl.setText("Deletion");
-        deletionLbl.setToolTipText("Monoisotopic mass in Dalton");
-
         compositionLabel.setText("Composition");
 
         massLabel.setText("Mass");
@@ -632,11 +611,6 @@ public class PtmDialog extends javax.swing.JDialog {
         massTxt.setEditable(false);
         massTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         massTxt.setToolTipText("Monoisotopic mass in Dalton");
-        massTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                massTxtKeyReleased(evt);
-            }
-        });
 
         javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
         detailsPanel.setLayout(detailsPanelLayout);
@@ -664,24 +638,16 @@ public class PtmDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(detailsPanelLayout.createSequentialGroup()
-                                .addComponent(additionLbl)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(additionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(deletionLbl)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(deletionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(compositionTxt)
                                 .addGap(18, 18, 18)
                                 .addComponent(massLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(nameShortTxt))))
+                                .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(nameShortTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
         detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, nameLabel, nameShortLabel, patternLabel});
-
-        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {additionTxt, deletionTxt, massTxt});
 
         detailsPanelLayout.setVerticalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -700,10 +666,7 @@ public class PtmDialog extends javax.swing.JDialog {
                     .addComponent(nameShortLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(additionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(additionLbl)
-                    .addComponent(deletionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deletionLbl)
+                    .addComponent(compositionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(compositionLabel)
                     .addComponent(massLabel)
                     .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1033,7 +996,7 @@ public class PtmDialog extends javax.swing.JDialog {
             if (cvTermOk) {
                 int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
                 cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-                Double mass = atomChainAdded.getMass() - atomChainRemoved.getMass();
+                Double mass = atomChainAdded.getMass() + atomChainRemoved.getMass();
                 cvTerm.setValue(mass + "");
             }
 
@@ -1125,7 +1088,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
-        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(), false));
+        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(true), false));
         updateTables();
     }//GEN-LAST:event_addNeutralLossActionPerformed
 
@@ -1181,20 +1144,20 @@ public class PtmDialog extends javax.swing.JDialog {
             int row = neutralLossesTable.getSelectedRow();
             removeNeutralLoss.setEnabled(row != -1);
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && editable) {
             int column = neutralLossesTable.columnAtPoint(evt.getPoint());
             if (column == 2 || column == 3) {
                 int row = neutralLossesTable.rowAtPoint(evt.getPoint());
                 NeutralLoss neutralLoss = neutralLosses.get(row);
                 AtomChain atomChain = neutralLoss.getComposition();
-                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, editable);
+                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, new AtomChain(), true);
                 if (!atomChainDialog.isCanceled()) {
-                    atomChain = atomChainDialog.getAtomChain();
+                    atomChain = atomChainDialog.getAtomChainAdded();
                     if (atomChain.size() > 0) {
                         neutralLoss.setComposition(atomChain);
                     }
+                    updateTables();
                 }
-                updateTables();
             }
         }
     }//GEN-LAST:event_neutralLossesTableMouseReleased
@@ -1209,20 +1172,20 @@ public class PtmDialog extends javax.swing.JDialog {
             int row = reporterIonsTable.getSelectedRow();
             removerReporterIon.setEnabled(row != -1);
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && editable) {
             int column = reporterIonsTable.columnAtPoint(evt.getPoint());
             if (column == 2 || column == 3) {
                 int row = reporterIonsTable.rowAtPoint(evt.getPoint());
                 ReporterIon reporterIon = reporterIons.get(row);
                 AtomChain atomChain = reporterIon.getAtomicComposition();
-                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, editable);
+                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, new AtomChain(), true);
                 if (!atomChainDialog.isCanceled()) {
-                    atomChain = atomChainDialog.getAtomChain();
+                    atomChain = atomChainDialog.getAtomChainAdded();
                     if (atomChain.size() > 0) {
                         reporterIon.setAtomicComposition(atomChain);
                     }
+                    updateTables();
                 }
-                updateTables();
             }
         }
     }//GEN-LAST:event_reporterIonsTableMouseReleased
@@ -1233,7 +1196,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void patternTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_patternTxtMouseReleased
-        if (patternTxt.isEnabled() && evt.getButton() == MouseEvent.BUTTON1) {
+        if (editable && patternTxt.isEnabled() && evt.getButton() == MouseEvent.BUTTON1) {
             AminoAcidPatternDialog dialog = new AminoAcidPatternDialog(null, pattern, editable);
             if (!dialog.isCanceled()) {
                 pattern = dialog.getPattern();
@@ -1308,47 +1271,33 @@ public class PtmDialog extends javax.swing.JDialog {
         validateInput(false);
     }//GEN-LAST:event_nameShortTxtKeyReleased
 
-    private void massTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_massTxtKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_massTxtKeyReleased
-
-    private void additionTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_additionTxtMouseReleased
+    /**
+     * Open the AtomChainDialog for editing the atomics composition.
+     * 
+     * @param evt 
+     */
+    private void compositionTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_compositionTxtMouseReleased
         if (editable) {
-            AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChainAdded, editable);
+            AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChainAdded, atomChainRemoved, false);
             if (!atomChainDialog.isCanceled()) {
-                atomChainAdded = atomChainDialog.getAtomChain();
-                additionTxt.setText(atomChainAdded.toString());
+                atomChainAdded = atomChainDialog.getAtomChainAdded();
+                atomChainRemoved = atomChainDialog.getAtomChainRemoved();
+                compositionTxt.setText((atomChainAdded.toString() + " " + atomChainRemoved.toString()).trim());
             }
 
             validateInput(false);
             updateMass();
         }
-    }//GEN-LAST:event_additionTxtMouseReleased
-
-    private void deletionTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deletionTxtMouseReleased
-        if (editable) {
-            AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChainRemoved, editable);
-            if (!atomChainDialog.isCanceled()) {
-                atomChainRemoved = atomChainDialog.getAtomChain();
-                deletionTxt.setText(atomChainRemoved.toString());
-            }
-
-            validateInput(false);
-            updateMass();
-        }
-    }//GEN-LAST:event_deletionTxtMouseReleased
+    }//GEN-LAST:event_compositionTxtMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
-    private javax.swing.JLabel additionLbl;
-    private javax.swing.JTextField additionTxt;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel compositionLabel;
+    private javax.swing.JTextField compositionTxt;
     private javax.swing.JLabel cvExampleLabel;
-    private javax.swing.JLabel deletionLbl;
-    private javax.swing.JTextField deletionTxt;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel jLabel1;

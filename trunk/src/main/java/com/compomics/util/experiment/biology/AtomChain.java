@@ -24,6 +24,12 @@ public class AtomChain implements Serializable {
      * The mass of the atom chain.
      */
     private Double mass = null;
+    /**
+     * If true, the atom chain consists of additions, i.e., all atoms are added
+     * when calculating the mass, false, means that all atoms are subtracted.
+     * This variable also impacts the toString method.
+     */
+    private Boolean addition = true;
 
     /**
      * Creates an empty atom chain.
@@ -33,13 +39,39 @@ public class AtomChain implements Serializable {
     }
 
     /**
-     * Constructor for a monoisotopic chain as a string, e.g. C3PO.
+     * Creates an empty atom chain.
+     *
+     * @param addition if the atom chain consists of additions
+     */
+    public AtomChain(boolean addition) {
+        atomChain = new ArrayList<AtomImpl>(4);
+        this.addition = addition;
+    }
+
+    /**
+     * Constructor for a monoisotopic chain as a string of additions, e.g. C3PO
+     * which is interpreted as three C's, one P and one O.
      *
      * @param chain the atomic chain as a string
+     *
      * @throws IllegalArgumentException if an illegal atom is used
      */
     public AtomChain(String chain) throws IllegalArgumentException {
+        this(chain, true);
+    }
+
+    /**
+     * Constructor for a monoisotopic chain as a string, e.g. C3PO which is
+     * interpreted as three C's, one P and one O.
+     *
+     * @param chain the atomic chain as a string
+     * @param addition if the atom chain consists of additions
+     *
+     * @throws IllegalArgumentException if an illegal atom is used
+     */
+    public AtomChain(String chain, boolean addition) throws IllegalArgumentException {
         atomChain = new ArrayList<AtomImpl>(chain.length());
+        this.addition = addition;
         String lastLetter = null;
         Integer lastInt = null;
         Atom lastAtom = null;
@@ -151,7 +183,11 @@ public class AtomChain implements Serializable {
     private void estimateMass() {
         mass = 0.0;
         for (AtomImpl atom : atomChain) {
-            mass += atom.getMass();
+            if (addition) {
+                mass += atom.getMass();
+            } else {
+                mass -= atom.getMass();
+            }
         }
     }
 
@@ -206,7 +242,7 @@ public class AtomChain implements Serializable {
 
     /**
      * Indicates whether two atom chains are of the same composition by
-     * comparing their string.
+     * comparing their string and type.
      *
      * @param atomChain another atom chain
      *
@@ -215,6 +251,9 @@ public class AtomChain implements Serializable {
      */
     public boolean isSameCompositionAs(AtomChain atomChain) {
         if (atomChain == null) {
+            return false;
+        }
+        if (!addition.equals(atomChain.getAddition())) {
             return false;
         }
         return atomChain.toString().equals(toString());
@@ -237,10 +276,17 @@ public class AtomChain implements Serializable {
         Collections.sort(names);
         StringBuilder result = new StringBuilder(names.size());
         for (String name : names) {
-            Integer occurrence = composition.get(name);
+            if (result.length() > 0) {
+                result.append(" ");
+            }
             result.append(name);
-            if (occurrence > 1) {
-                result.append(occurrence);
+            Integer occurrence = composition.get(name);
+            if (addition) {
+                if (occurrence > 1) {
+                    result.append("(").append(occurrence).append(")");
+                }
+            } else {
+                result.append("(").append("-").append(occurrence).append(")");
             }
         }
 
@@ -249,10 +295,32 @@ public class AtomChain implements Serializable {
 
     @Override
     public AtomChain clone() {
-        AtomChain result = new AtomChain();
+        AtomChain result = new AtomChain(addition);
         for (AtomImpl atom : atomChain) {
             result.append(new AtomImpl(atom.getAtom(), atom.getIsotope()));
         }
         return result;
+    }
+
+    /**
+     * Returns true of the given atomic chain consists of additions, i.e., all
+     * atoms are added when calculating the mass, false, means that all atoms
+     * are subtracted.
+     *
+     * @return true of the given atomic consists of additions
+     */
+    public Boolean getAddition() {
+        return addition;
+    }
+
+    /**
+     * Set if the given atomic chain consists of additions, i.e., all atoms are
+     * added when calculating the mass, false, means that all atoms are
+     * subtracted.
+     *
+     * @param addition true if the given atomic chain consists of additions
+     */
+    public void setAddition(Boolean addition) {
+        this.addition = addition;
     }
 }

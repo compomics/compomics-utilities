@@ -43,7 +43,7 @@ public class AtomImpl implements Serializable {
         if (isotope == 0) {
             return atom.getLetter();
         } else {
-            return atom.getLetter() + "(" + getMass().intValue() + ")";
+            return getMass().intValue() + atom.getLetter();
         }
     }
 

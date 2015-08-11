@@ -5,6 +5,8 @@ import com.compomics.util.experiment.biology.AtomImpl;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import no.uib.jsparklines.renderers.util.Util;
 
 /**
@@ -39,6 +41,33 @@ public class AtomChainDialog extends javax.swing.JDialog {
      * If true, then only adding atoms is allowed.
      */
     private boolean addOnly;
+
+    /**
+     * Creates a new dialog.
+     *
+     * @param parent the parent dialog
+     * @param atomChainAdded the added atom chain to edit
+     * @param atomChainRemoved the removed atom chain to edit
+     * @param onlyAddition if true, atoms can only be added and not removed
+     */
+    public AtomChainDialog(JDialog parent, AtomChain atomChainAdded, AtomChain atomChainRemoved, boolean onlyAddition) {
+        super(parent, true);
+        initComponents();
+        if (atomChainAdded != null) {
+            this.atomChainAdded = atomChainAdded.clone();
+        } else {
+            this.atomChainAdded = new AtomChain(true);
+        }
+        if (atomChainRemoved != null) {
+            this.atomChainRemoved = atomChainRemoved.clone();
+        } else {
+            this.atomChainRemoved = new AtomChain(false);
+        }
+        this.addOnly = onlyAddition;
+        setupGUI();
+        setLocationRelativeTo(parent);
+        setVisible(true);
+    }
 
     /**
      * Creates a new dialog.
@@ -83,14 +112,14 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
             for (AtomImpl tempAtom : atomChainAdded.getAtomChain()) {
                 if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                             atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
                     ArrayList<Integer> tempList = new ArrayList<Integer>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 } else {
                     if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                                 atomChainAdded.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
                         ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
                         tempList.add(tempAtom.getIsotope());
@@ -105,14 +134,14 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
             for (AtomImpl tempAtom : atomChainRemoved.getAtomChain()) {
                 if (!atomsAdded.containsKey(tempAtom.getAtom().getLetter())) {
-                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                    elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                             -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
                     ArrayList<Integer> tempList = new ArrayList<Integer>();
                     tempList.add(tempAtom.getIsotope());
                     atomsAdded.put(tempAtom.getAtom().getLetter(), tempList);
                 } else {
                     if (!atomsAdded.get(tempAtom.getAtom().getLetter()).contains(tempAtom.getIsotope())) {
-                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(), 
+                        elementsPanel.add(new AtomPanel(this, tempAtom.getAtom(), tempAtom.getIsotope(),
                                 -atomChainRemoved.getOccurrence(tempAtom.getAtom(), tempAtom.getIsotope()), atomPanelIndex++, addOnly));
                         ArrayList<Integer> tempList = atomsAdded.get(tempAtom.getAtom().getLetter());
                         tempList.add(tempAtom.getIsotope());
@@ -224,11 +253,11 @@ public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
      * Main method for testing purposes.
-     * 
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         /* Set the Nimbus look and feel */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -240,11 +269,11 @@ public class AtomChainDialog extends javax.swing.JDialog {
         } catch (Exception e) {
             // ignore
         }
-        
+
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AtomChainDialog dialog = new AtomChainDialog(null, new AtomChain(true), new AtomChain(false), false);
+                AtomChainDialog dialog = new AtomChainDialog(new JFrame(), new AtomChain(true), new AtomChain(false), false);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

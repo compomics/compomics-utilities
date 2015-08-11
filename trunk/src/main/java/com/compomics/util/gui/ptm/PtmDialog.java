@@ -73,10 +73,6 @@ public class PtmDialog extends javax.swing.JDialog {
      * Boolean indicating whether the edition has been canceled by the user.
      */
     private boolean canceled = false;
-    /**
-     * The parent frame.
-     */
-    private JFrame parent = null;
 
     /**
      * Creates a new PTM dialog.
@@ -119,7 +115,6 @@ public class PtmDialog extends javax.swing.JDialog {
     public PtmDialog(JFrame parent, PtmToPrideMap ptmToPrideMap, PTM currentPTM, boolean editable) {
         super(parent, true);
 
-        this.parent = parent;
         this.currentPtm = currentPTM;
         this.editable = editable;
         if (currentPTM != null) {
@@ -1150,7 +1145,7 @@ public class PtmDialog extends javax.swing.JDialog {
                 int row = neutralLossesTable.rowAtPoint(evt.getPoint());
                 NeutralLoss neutralLoss = neutralLosses.get(row);
                 AtomChain atomChain = neutralLoss.getComposition();
-                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, new AtomChain(), true);
+                AtomChainDialog atomChainDialog = new AtomChainDialog(this, atomChain, new AtomChain(), true);
                 if (!atomChainDialog.isCanceled()) {
                     atomChain = atomChainDialog.getAtomChainAdded();
                     if (atomChain.size() > 0) {
@@ -1178,7 +1173,7 @@ public class PtmDialog extends javax.swing.JDialog {
                 int row = reporterIonsTable.rowAtPoint(evt.getPoint());
                 ReporterIon reporterIon = reporterIons.get(row);
                 AtomChain atomChain = reporterIon.getAtomicComposition();
-                AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChain, new AtomChain(), true);
+                AtomChainDialog atomChainDialog = new AtomChainDialog(this, atomChain, new AtomChain(), true);
                 if (!atomChainDialog.isCanceled()) {
                     atomChain = atomChainDialog.getAtomChainAdded();
                     if (atomChain.size() > 0) {
@@ -1278,7 +1273,7 @@ public class PtmDialog extends javax.swing.JDialog {
      */
     private void compositionTxtMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_compositionTxtMouseReleased
         if (editable) {
-            AtomChainDialog atomChainDialog = new AtomChainDialog(parent, atomChainAdded, atomChainRemoved, false);
+            AtomChainDialog atomChainDialog = new AtomChainDialog(this, atomChainAdded, atomChainRemoved, false);
             if (!atomChainDialog.isCanceled()) {
                 atomChainAdded = atomChainDialog.getAtomChainAdded();
                 atomChainRemoved = atomChainDialog.getAtomChainRemoved();

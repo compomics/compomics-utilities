@@ -1479,6 +1479,18 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
+        // Mono 18O
+        atomChainAdded = new AtomChain(true);
+        atomChainAdded.append(new AtomImpl(Atom.O, 2), 1);
+        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
+        aminoAcidPattern = null;
+        ptmName = "Mono 18O of peptide C-term ";
+        ptm = new PTM(PTM.MODCP, ptmName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+
         // ICAT-0
         atomChainAdded = new AtomChain(true);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 10);
@@ -2081,6 +2093,30 @@ public class PTMFactory implements Serializable {
         ptmName = "Methylation of E";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", String.valueOf(ptm.getRoundedMass())));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+
+        // Methylation of C
+        atomChainAdded = new AtomChain(true);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = new AminoAcidPattern("C");
+        ptmName = "Methylation of C";
+        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", String.valueOf(ptm.getRoundedMass()))); //@TODO: update
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+
+        // Methylation of D
+        atomChainAdded = new AtomChain(true);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = new AminoAcidPattern("D");
+        ptmName = "Methylation of D";
+        ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", String.valueOf(ptm.getRoundedMass()))); //@TODO: update
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 

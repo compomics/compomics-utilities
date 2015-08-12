@@ -606,6 +606,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             if (column == defaultModificationsTable.getColumn("CV").getModelIndex()) {
                 // open protein link in web browser
                 if (column == defaultModificationsTable.getColumn("CV").getModelIndex() && evt.getButton() == MouseEvent.BUTTON1
+                        && defaultModificationsTable.getValueAt(row, column) != null
                         && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
 
                     String link = (String) defaultModificationsTable.getValueAt(row, column);

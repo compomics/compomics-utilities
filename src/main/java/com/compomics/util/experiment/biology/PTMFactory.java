@@ -861,7 +861,7 @@ public class PTMFactory implements Serializable {
                 modProfile.addVariableModification(getPTM("Dimethylation of R"));
                 prideParametersReport += "<br>" + "Dimethylation of R" + " (assumed variable)";
             }
-//            if (!modProfile.contains("di-methylation of peptide n-term")) { // @TODO: re-add ptm?
+//            if (!modProfile.contains("di-methylation of peptide n-term")) { // @TODO: re-add ptm? // @TODO: map to N-term dimethylation of K
 //                modProfile.addVariableModification(getPTM("di-methylation of peptide n-term"));
 //                prideParametersReport += "<br>" + "di-methylation of peptide n-term" + " (assumed variable)";
 //            }
@@ -869,7 +869,7 @@ public class PTMFactory implements Serializable {
         } // @TODO: re-add ptm?
         //        else if (pridePtmName.equalsIgnoreCase("trimethylated residue")) {
         //
-        //            if (!modProfile.contains("tri-methylation of k")) {
+        //            if (!modProfile.contains("tri-methylation of k")) { // @TODO: map to: Trimethylation of K
         //                modProfile.addVariableModification(getPTM("tri-methylation of k"));
         //                prideParametersReport += "<br>" + "tri-methylation of k" + " (assumed variable)";
         //            }
@@ -930,7 +930,7 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("oxidized residue")) {
             return "Oxidation of M";
         } else if (pridePtmName.equalsIgnoreCase("Acetylation")) {
-            return null; // @TODO: can be 'Acetylation of K', 'Acetylation of peptide N-term' or 'Acetylation of protein N-term'... // return "acetylation of k";
+            return null; // @TODO: can be 'Acetylation of K', 'Acetylation of peptide N-term' or 'Acetylation of protein N-term'... // @TODO: return all three!!!;
         } else if (pridePtmName.equalsIgnoreCase("Amidation")) {
             return "Amidation of the peptide C-term"; // note: can also be 'Amidation of the protein C-term'
         } else if (pridePtmName.equalsIgnoreCase("Carboxymethyl")
@@ -966,11 +966,9 @@ public class PTMFactory implements Serializable {
             return null; // @TODO: no longer a utilities ptm.. // return "propionamide c";
         } else if (pridePtmName.equalsIgnoreCase("Pyridylethyl")) {
             return null; // @TODO: no longer a utilities ptm.. // return "s-pyridylethylation of c";
-        } else if (pridePtmName.equalsIgnoreCase("Pyridylethyl")) {
-            return null; // @TODO: no longer a utilities ptm.. // return "s-pyridylethylation of c";
         } else if (pridePtmName.equalsIgnoreCase("Sulfo")
                 || pridePtmName.equalsIgnoreCase("sulfated residue")) {
-            return null; // @TOOD: can be 'Sulfonation of Y', 'Sulfonation of S' or 'Sulfonation of T'...
+            return null; // @TOOD: can be 'Sulfonation of Y', 'Sulfonation of S' or 'Sulfonation of T'... // @TODO: map to all three
         } else if (pridePtmName.equalsIgnoreCase("Dehydratation")) {
             return null; // @TODO: no longer a utilities ptm.. // return "dehydro of s and t";
         } else if (pridePtmName.equalsIgnoreCase("Deamination")
@@ -978,13 +976,13 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("deamidated L-glutamine")
                 || pridePtmName.equalsIgnoreCase("deamidated residue")
                 || pridePtmName.equalsIgnoreCase("deaminated residue")) {
-            return null; // @TODO: how separate between deamidation on n and deamidation q..?
+            return null; // @TODO: how separate between deamidation on n and deamidation q..? // @TODO: map to both
         } else if (pridePtmName.equalsIgnoreCase("Dioxidation")) {
-            return null; // @TODO: how separate between deoxidation on m and deoxidation w..?
+            return null; // @TODO: how separate between deoxidation on m and deoxidation w..? // @TODO: map to both
         } else if (pridePtmName.equalsIgnoreCase("(18)O label at both C-terminal oxygens")) {
-            return null; // @TODO: no longer a utilities ptm... // return "di-o18 on peptide n-term";
+            return null; // @TODO: no longer a utilities ptm... // return "di-o18 on peptide n-term"; // @TODO: map to double O18
         } else if (pridePtmName.equalsIgnoreCase("(18)O monosubstituted residue")) {
-            return null; // @TODO: no longer a utilities ptm... // return "o18 on peptide n-term";
+            return null; // @TODO: no longer a utilities ptm... // return "o18 on peptide n-term"; // @TODO: map to single O18
         } else if (pridePtmName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
             return "Lysine 2H4";
         } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")
@@ -994,7 +992,7 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("Glu->pyro-Glu")) {
             return "Pyrolidone from E";
         } else if (pridePtmName.equalsIgnoreCase("3-hydroxy-L-proline")) {
-            return null; // @TODO: no longer a utilities ptm... // return "hydroxylation of p";
+            return null; // @TODO: no longer a utilities ptm... // return "hydroxylation of p"; // will be added
         } else if (pridePtmName.equalsIgnoreCase("3x(2)H labeled L-aspartic acid 4-methyl ester")) {
             return null; // @TODO: no longer a utilities ptm... // return "tri-deuteromethylation of d";
         } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled alpha-dimethylamino N-terminal residue")) {
@@ -1032,7 +1030,7 @@ public class PTMFactory implements Serializable {
                 || pridePtmName.equalsIgnoreCase("L-methionine sulfoxide")) {
             return "Oxidation of M";
         } else if (pridePtmName.equalsIgnoreCase("L-methionine sulfone")) {
-            return null; // @TODO: no longer a utilities ptm... // return "sulphone of m";
+            return null; // @TODO: no longer a utilities ptm... // return "sulphone of m"; // @TODO: map to: Dioxidation of M
         } else if (pridePtmName.equalsIgnoreCase("N-acetyl-L-asparagine")
                 || pridePtmName.equalsIgnoreCase("N-acetyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("N-acetyl-L-glutamic acid")
@@ -1076,9 +1074,9 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("S-carboxamidoethyl-L-cysteine")) {
             return null; // @TODO: no longer a utilities ptm... // return "propionamide c";
         } else if (pridePtmName.equalsIgnoreCase("S-methyl-L-cysteine")) {
-            return null; // @TODO: no longer a utilities ptm... // return "methyl c";
+            return null; // @TODO: no longer a utilities ptm... // return "methyl c"; // @TODO: map to: 
         } else if (pridePtmName.equalsIgnoreCase("alpha-amino dimethylated residue")) {
-            return null; // @TODO: no longer a utilities ptm... // return "di-methylation of peptide n-term";
+            return null; // @TODO: no longer a utilities ptm... // return "di-methylation of peptide n-term"; // @TODO: map to: Dimethylation of N-term K
         } else if (pridePtmName.equalsIgnoreCase("amidated residue")) {
             return "Amidation of the peptide C-term";
         } else if (pridePtmName.equalsIgnoreCase("deamidated L-asparagine")
@@ -1098,11 +1096,11 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("iodoacetamide N6-derivatized lysine")) {
             return null; // @TODO: no longer a utilities ptm... // return "carboxyamidomethylation of k";
         } else if (pridePtmName.equalsIgnoreCase("monomethylated L-aspartic acid")) {
-            return null; // @TODO: no longer a utilities ptm... // return "methylation of d";
+            return null; // @TODO: no longer a utilities ptm... // return "methylation of d"; //
         } else if (pridePtmName.equalsIgnoreCase("thioacylation of primary amines - site N-term")) {
             return null; // @TODO: no longer a utilities ptm... // return "gammathiopropionylation of peptide n-term";
         } else if (pridePtmName.equalsIgnoreCase("ubiquitination signature dipeptidyl lysine")) {
-            return null; // @TODO: no longer a utilities ptm... // return "ubiquitinylation residue";
+            return null; // @TODO: no longer a utilities ptm... // return "ubiquitinylation residue"; // @TODO: maps to ubiq
         } else {
             return null;
         }
@@ -1307,7 +1305,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = new AminoAcidPattern("R");
         ptmName = "Arginine 13C(6) 15N(4)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term... 
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:267", "Label:13C(6)15N(4)", String.valueOf(ptm.getRoundedMass()))); 
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1357,7 +1355,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = new AminoAcidPattern("P");
         ptmName = "Proline 13C(5)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:772", "Label:13C(5)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1433,9 +1431,9 @@ public class PTMFactory implements Serializable {
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = null;
         aminoAcidPattern = new AminoAcidPattern("K");
-        ptmName = "dimethylation of N-term K 2H(4)";
+        ptmName = "Dimethylation of N-term K 2H(4)";
         ptm = new PTM(PTM.MODNPAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-//        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass())));
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291 ", "Dimethyl:2H(6)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1446,9 +1444,9 @@ public class PTMFactory implements Serializable {
         atomChainRemoved = new AtomChain(false);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = null;
-        ptmName = "dimethylation N-term 2H(6)";
+        ptmName = "Dimethylation N-term 2H(6)";
         ptm = new PTM(PTM.MODNP, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 199", "Dimethyl:2H(4)", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
         ptmMap.put(ptmName, ptm);
@@ -1462,7 +1460,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = null;
         ptmName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
         ptm = new PTM(PTM.MODNP, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
         ptmMap.put(ptmName, ptm);
@@ -1475,7 +1473,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = null;
         ptmName = "18O of peptide C-term ";
         ptm = new PTM(PTM.MODCP, ptmName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 193", "Label:18O(2)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1487,7 +1485,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = null;
         ptmName = "Mono 18O of peptide C-term ";
         ptm = new PTM(PTM.MODCP, ptmName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:258", "Label:18O(1)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1646,7 +1644,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = new AminoAcidPattern("K");
         ptmName = "mTRAQ of K light";
         ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass())));
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", String.valueOf(ptm.getRoundedMass()))); // note: does not have a PSI name, using interim name
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -2360,7 +2358,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = new AminoAcidPattern("N");
         ptmName = "Deamidation of N 18O";
         ptm = new PTM(PTM.MODAA, ptmName, "deam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", String.valueOf(ptm.getRoundedMass()))); // @TODO: add cv term...
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 366", "Deamidation in presence of O18", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 

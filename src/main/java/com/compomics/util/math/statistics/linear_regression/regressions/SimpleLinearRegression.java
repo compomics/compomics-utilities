@@ -5,7 +5,8 @@ import com.compomics.util.math.statistics.linear_regression.RegressionStatistics
 import java.util.ArrayList;
 
 /**
- * Performs a simple linear regression.
+ * Performs a simple linear regression. 
+ * TODO: replace with the Apache implementation
  *
  * @author Marc Vaudel
  */

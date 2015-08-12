@@ -2,7 +2,9 @@ package com.compomics.util.gui.atoms;
 
 import com.compomics.util.experiment.biology.AtomChain;
 import com.compomics.util.experiment.biology.AtomImpl;
+import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JDialog;
@@ -304,6 +306,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
         compositionTxt = new javax.swing.JTextField();
         MassLbl = new javax.swing.JLabel();
         massTxt = new javax.swing.JTextField();
+        helpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Atomic Composition");
@@ -395,6 +398,25 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -405,7 +427,9 @@ public class AtomChainDialog extends javax.swing.JDialog {
                     .addComponent(compositionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(editPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 431, Short.MAX_VALUE)
+                        .addGap(10, 10, 10)
+                        .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 398, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton)))
@@ -419,9 +443,11 @@ public class AtomChainDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton)
-                    .addComponent(okButton))
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cancelButton)
+                        .addComponent(okButton))
+                    .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -458,6 +484,38 @@ public class AtomChainDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Change the icon to a hand cursor.
+     * 
+     * @param evt 
+     */
+    private void helpJButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseEntered
+
+    /**
+     * Change the icon back to the default cursor.
+     * 
+     * @param evt 
+     */
+    private void helpJButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_helpJButtonMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonMouseExited
+
+    /**
+     * Open the help dialog.
+     * 
+     * @param evt 
+     */
+    private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        new HelpDialog(this, getClass().getResource("/helpFiles/AtomChainDialog.html"),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
+            "Help - Atom Composition", 500, 10);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_helpJButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel MassLbl;
     private javax.swing.JPanel backgroundPanel;
@@ -468,6 +526,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
     private javax.swing.JPanel editPanel;
     private javax.swing.JPanel elementsPanel;
     private javax.swing.JScrollPane elementsScrollPane;
+    private javax.swing.JButton helpJButton;
     private javax.swing.JTextField massTxt;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables

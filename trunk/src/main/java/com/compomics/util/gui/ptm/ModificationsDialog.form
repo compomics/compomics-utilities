@@ -65,7 +65,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="709" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="976" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="modificationsEditorPanel" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -73,7 +73,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="534" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="673" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="modificationsEditorPanel" max="32767" attributes="0"/>
@@ -130,10 +130,10 @@
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
             </Property>
-            <Property name="dividerLocation" type="int" value="296"/>
+            <Property name="dividerLocation" type="int" value="400"/>
             <Property name="dividerSize" type="int" value="-1"/>
             <Property name="orientation" type="int" value="0"/>
-            <Property name="resizeWeight" type="double" value="0.5"/>
+            <Property name="resizeWeight" type="double" value="0.7"/>
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
 
@@ -160,7 +160,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="defaultModsScrollPane" alignment="0" pref="657" max="32767" attributes="0"/>
+                              <Component id="defaultModsScrollPane" alignment="0" pref="924" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="findJLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -181,7 +181,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="defaultModsScrollPane" pref="224" max="32767" attributes="0"/>
+                          <Component id="defaultModsScrollPane" pref="328" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="findJLabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -326,9 +326,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="userModsScrollPane" alignment="0" pref="657" max="32767" attributes="0"/>
+                              <Component id="userModsScrollPane" alignment="0" pref="924" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="10" pref="450" max="32767" attributes="0"/>
+                                  <EmptySpace min="10" pref="717" max="32767" attributes="0"/>
                                   <Component id="addUserPTM" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editUserPTM" min="-2" pref="65" max="-2" attributes="2"/>
@@ -344,7 +344,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="userModsScrollPane" pref="114" max="32767" attributes="0"/>
+                          <Component id="userModsScrollPane" pref="149" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="deleteUserPTM" alignment="1" max="32767" attributes="1"/>

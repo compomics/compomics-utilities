@@ -34,6 +34,10 @@ public class NeutralLoss extends ExperimentObject {
      */
     public static final NeutralLoss CH4OS = new NeutralLoss("CH4OS", new AtomChain("CH4OS", true), false);
     /**
+     * C3H9N loss.
+     */
+    public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", new AtomChain("C3H9N", true), false);
+    /**
      * The mass lost.
      *
      * @deprecated use the composition instead.

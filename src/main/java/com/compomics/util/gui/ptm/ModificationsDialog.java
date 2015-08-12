@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.HtmlLinksRenderer;
@@ -113,6 +114,16 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModificationsTable.getColumn(" ").setMaxWidth(50);
         userModificationsTable.getColumn(" ").setMinWidth(50);
 
+        defaultModificationsTable.getColumn("Short").setMaxWidth(100);
+        defaultModificationsTable.getColumn("Short").setMinWidth(100);
+        userModificationsTable.getColumn("Short").setMaxWidth(100);
+        userModificationsTable.getColumn("Short").setMinWidth(100);
+
+        defaultModificationsTable.getColumn("Residues").setMaxWidth(100);
+        defaultModificationsTable.getColumn("Residues").setMinWidth(100);
+        userModificationsTable.getColumn("Residues").setMaxWidth(100);
+        userModificationsTable.getColumn("Residues").setMinWidth(100);
+
         defaultModificationsTable.getColumn("Type").setMaxWidth(50);
         defaultModificationsTable.getColumn("Type").setMinWidth(50);
         userModificationsTable.getColumn("Type").setMaxWidth(50);
@@ -175,6 +186,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModsTableToolTips.add("Modification Type");
         userModsTableToolTips.add("Affected Residues");
         userModsTableToolTips.add("CV Term Mapping");
+
+        ((TitledBorder) defaultModsPanel.getBorder()).setTitle("Default Modifications (" + defaultModificationsTable.getRowCount() + ")");
+        ((TitledBorder) userModsPanel.getBorder()).setTitle("User Modifications (" + userModificationsTable.getRowCount() + ")");
     }
 
     /**
@@ -287,10 +301,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         modificationsEditorPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         modificationsSplitPane.setBorder(null);
-        modificationsSplitPane.setDividerLocation(296);
+        modificationsSplitPane.setDividerLocation(400);
         modificationsSplitPane.setDividerSize(-1);
         modificationsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        modificationsSplitPane.setResizeWeight(0.5);
+        modificationsSplitPane.setResizeWeight(0.7);
         modificationsSplitPane.setOpaque(false);
 
         defaultModsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Modifications"));
@@ -384,7 +398,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
                     .addGroup(defaultModsPanelLayout.createSequentialGroup()
                         .addComponent(findJLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -401,7 +415,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(findJLabel)
@@ -419,20 +433,20 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         userModificationsTable.setModel(new UserPTMTable());
         userModificationsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        userModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                userModificationsTableMouseReleased(evt);
+        userModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                userModificationsTableMouseMoved(evt);
             }
+        });
+        userModificationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 userModificationsTableMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 userModificationsTableMouseExited(evt);
             }
-        });
-        userModificationsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                userModificationsTableMouseMoved(evt);
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                userModificationsTableMouseReleased(evt);
             }
         });
         userModsScrollPane.setViewportView(userModificationsTable);
@@ -470,9 +484,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createSequentialGroup()
-                        .addGap(10, 450, Short.MAX_VALUE)
+                        .addGap(10, 717, Short.MAX_VALUE)
                         .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -484,7 +498,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -552,13 +566,13 @@ public class ModificationsDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 709, Short.MAX_VALUE)
+            .addGap(0, 976, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 534, Short.MAX_VALUE)
+            .addGap(0, 673, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1254,6 +1268,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         editUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
         deleteUserPTM.setEnabled(userModificationsTable.getSelectedColumnCount() > 0);
         updateMassSparklines();
+
+        ((TitledBorder) userModsPanel.getBorder()).setTitle("User Modifications (" + userModificationsTable.getRowCount() + ")");
+        userModsPanel.revalidate();
+        userModsPanel.repaint();
     }
 
     /**

@@ -65,10 +65,10 @@ public class Peptide extends ExperimentObject {
     /**
      * Constructor for the peptide.
      *
-     * @param aSequence The peptide sequence
-     * @param modifications The PTM of this peptide
-     * @throws IllegalArgumentException Thrown if the peptide sequence contains
-     * unknown amino acids
+     * @param aSequence the peptide sequence, assumed to be in upper case only
+     * @param modifications the PTM of this peptide
+     * @throws IllegalArgumentException if the peptide sequence contains unknown
+     * amino acids
      */
     public Peptide(String aSequence, ArrayList<ModificationMatch> modifications) throws IllegalArgumentException {
         this.sequence = aSequence;

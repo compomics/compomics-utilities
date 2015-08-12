@@ -126,6 +126,7 @@ public class FastaIndex extends ExperimentObject {
      * Returns true if the given accession number is a decoy.
      *
      * @param accession the accession number to check
+     * 
      * @return true if the given accession number is a decoy
      */
     public boolean isDecoy(String accession) {

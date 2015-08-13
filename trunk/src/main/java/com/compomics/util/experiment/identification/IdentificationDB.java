@@ -1383,6 +1383,15 @@ public class IdentificationDB implements Serializable {
     public boolean isConnectionActive() {
         return objectsDB.isConnectionActive();
     }
+    
+    /**
+     * Returns the database used to store matches.
+     * 
+     * @return the database used to store matches
+     */
+    public ObjectsDB getObjectsDB() {
+        return objectsDB;
+    }
 
     /**
      * Closes the db connection.

@@ -592,7 +592,7 @@ public class ObjectsCache {
                 HashMap<String, Object> objectsToStore = new HashMap<String, Object>(data.size());
 
                 for (String objectKey : data.keySet()) {
-                    CacheEntry entry = loadedObjectsMap.get(dbName).get(tableName).get(objectKey);
+                    CacheEntry entry = data.get(objectKey);
                     if (entry.isModified()) {
                         objectsToStore.put(objectKey, entry.getObject());
                     }

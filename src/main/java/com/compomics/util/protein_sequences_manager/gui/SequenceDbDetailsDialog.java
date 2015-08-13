@@ -5,6 +5,7 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.preferences.LastSelectedFolder;
@@ -326,28 +327,21 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            new String[]{"FASTA Import Error.", "File " + finalFile.getAbsolutePath() + " not found."},
+                            "File " + finalFile.getAbsolutePath() + " not found.",
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
                 } catch (ClassNotFoundException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            new String[]{"FASTA Import Error.", "File index of " + finalFile.getName() + " could not be imported. Please contact the developers."},
+                            "File index of " + finalFile.getName() + " could not be imported. Please contact the developers.",
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
-                } catch (StringIndexOutOfBoundsException e) {
+                } catch (Exception e) {
                     progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            e.getMessage(),
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
-                    e.printStackTrace();
-                    return;
-                } catch (IllegalArgumentException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            e.getMessage(),
+                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "There was an error importing the FASTA file. Please see <a href=\"https://code.google.com/p/searchgui/wiki/DatabaseHelp\">DatabaseHelp</a>."),
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;

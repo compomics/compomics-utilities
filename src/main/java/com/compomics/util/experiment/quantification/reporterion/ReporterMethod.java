@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class ReporterMethod {
+public class ReporterMethod implements Serializable {
 
     /**
      * Map of the reagents. Reagent name &gt; reagent

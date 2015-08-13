@@ -405,15 +405,6 @@ public class ReporterIon extends Ion {
     }
 
     /**
-     * Convenience method returning the mass + the mass of a proton.
-     *
-     * @return the mass + the mass of a proton
-     */
-    public Double getProtonatedMass() {
-        return getTheoreticMass() + ElementaryIon.proton.getTheoreticMass();
-    }
-
-    /**
      * Returns the atomic composition of the reporter ion of the given name.
      *
      * @param reporterIonName the name of the reporter ion of interest

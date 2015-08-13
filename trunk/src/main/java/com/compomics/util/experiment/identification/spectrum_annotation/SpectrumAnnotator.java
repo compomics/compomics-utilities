@@ -722,8 +722,8 @@ public abstract class SpectrumAnnotator {
      * @return a list of all the ion matches
      */
     public static ArrayList<IonMatch> matchReporterIon(Ion theoreticIon, int charge, Spectrum spectrum, double massTolerance) {
-        ArrayList<IonMatch> result = new ArrayList<IonMatch>();
-        double targetMass = (theoreticIon.getTheoreticMass() + charge * ElementaryIon.proton.getTheoreticMass()) / charge;
+        ArrayList<IonMatch> result = new ArrayList<IonMatch>(1);
+        double targetMass = theoreticIon.getTheoreticMz(charge);
         for (double mz : spectrum.getOrderedMzValues()) {
             if (Math.abs(mz - targetMass) <= massTolerance) {
                 result.add(new IonMatch(spectrum.getPeakMap().get(mz), theoreticIon, new Charge(Charge.PLUS, 1)));

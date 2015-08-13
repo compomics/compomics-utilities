@@ -105,7 +105,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<name>" + reagent.getName() + "</name>");
                     writer.newLine();
-                    writer.write(indent + indent + indent + indent + "<monoisotopicMass>" + (reagent.getReporterIon().getTheoreticMass() + ElementaryIon.proton.getTheoreticMass()) + "</monoisotopicMass>");
+                    writer.write(indent + indent + indent + indent + "<monoisotopicMz>" + (reagent.getReporterIon().getTheoreticMz(1)) + "</monoisotopicMz>");
                     writer.newLine();
                     writer.write(indent + indent + indent + indent + "<minus2>" + reagent.getMinus2() + "</minus2>");
                     writer.newLine();
@@ -211,26 +211,35 @@ public class ReporterMethodFactory extends ExperimentObject {
             type = parser.next();
             String reagentName = parser.getText().trim();
             reagent.setName(reagentName);
+            ReporterIon reporterIon = ReporterIon.getReporterIon(reagentName);
 
-            // monoisotopic mass
-            while (type != XmlPullParser.START_TAG || !parser.getName().equals("monoisotopicMass")) {
+            // monoisotopic m/z or minus 2
+            while (type != XmlPullParser.START_TAG || (!parser.getName().equals("monoisotopicMz") && !parser.getName().equals("minus2"))) {
                 type = parser.next();
                 if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
                     throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
                 }
             }
-            type = parser.next();
-            Double monoisotopicMass = new Double(parser.getText().trim());
-            ReporterIon reporterIon = new ReporterIon(reagentName, monoisotopicMass);
+            if (parser.getName().equals("monoisotopicMz")) {
+                type = parser.next();
+                Double monoisotopicMass = new Double(parser.getText().trim());
+                reporterIon = new ReporterIon(reagentName, monoisotopicMass - ElementaryIon.proton.getTheoreticMass());
+
+                // minus 2
+                while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
+                    type = parser.next();
+                    if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
+                        throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
+                    }
+                }
+            } else if (!parser.getName().equals("minus2")) {
+                throw new IllegalArgumentException("Found " + parser.getName() + " start tag where minus2 was expected.");
+            }
+            if (reporterIon == null) {
+                throw new IllegalArgumentException("No mass found for reporter ion " + reagentName + ".");
+            }
             reagent.setReporterIon(reporterIon);
 
-            // minus 2
-            while (type != XmlPullParser.START_TAG || !parser.getName().equals("minus2")) {
-                type = parser.next();
-                if (type == XmlPullParser.END_TAG && parser.getName().equals("reagent")) {
-                    throw new IllegalArgumentException("Unexpected end of reagent details when parsing reagent " + reagentName + " in method " + name + ".");
-                }
-            }
             type = parser.next();
             Double correctionFactor = new Double(parser.getText().trim());
             reagent.setMinus2(correctionFactor);

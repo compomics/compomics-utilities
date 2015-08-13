@@ -411,7 +411,7 @@ public class PTM extends ExperimentObject {
      * standard search engines
      */
     public boolean isStandardSearch() {
-        return pattern.length() == 1;
+        return pattern == null || pattern.length() == 1;
     }
 
     /**

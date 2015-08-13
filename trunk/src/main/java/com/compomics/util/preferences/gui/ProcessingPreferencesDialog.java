@@ -6,7 +6,7 @@ import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.IdMatchValidationPreferences;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.PTMScoringPreferences;
-import com.compomics.util.preferences.ProcessingPreferences;
+import com.compomics.util.preferences.PSProcessingPreferences;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
@@ -25,7 +25,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     /**
      * The processing preferences.
      */
-    private ProcessingPreferences processingPreferences;
+    private PSProcessingPreferences processingPreferences;
     /**
      * The identification parameters
      */
@@ -49,7 +49,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param identificationParameters the identification parameters
      * @param processingPreferences the processing preferences
      */
-    public ProcessingPreferencesDialog(java.awt.Frame parent, boolean editable, IdentificationParameters identificationParameters, ProcessingPreferences processingPreferences) {
+    public ProcessingPreferencesDialog(java.awt.Frame parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingPreferences processingPreferences) {
         super(parent, true);
         initComponents();
         this.processingPreferences = processingPreferences;
@@ -69,7 +69,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param identificationParameters the identification parameters
      * @param processingPreferences the processing preferences
      */
-    public ProcessingPreferencesDialog(JDialog parent, boolean editable, IdentificationParameters identificationParameters, ProcessingPreferences processingPreferences) {
+    public ProcessingPreferencesDialog(JDialog parent, boolean editable, IdentificationParameters identificationParameters, PSProcessingPreferences processingPreferences) {
         super(parent, true);
         initComponents();
         this.processingPreferences = processingPreferences;

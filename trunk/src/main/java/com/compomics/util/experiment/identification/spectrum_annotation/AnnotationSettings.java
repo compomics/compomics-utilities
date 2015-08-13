@@ -4,9 +4,7 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
@@ -25,23 +23,10 @@ import java.util.HashSet;
 public class AnnotationSettings implements Serializable {
 
     /**
-     * Serial version UID for post-serialization compatibility.
-     */
-    static final long serialVersionUID = -524156803097913546L;
-    /**
      * If true, the automatic y-axis zoom excludes background peaks. False
      * includes all peaks in the auto zoom.
      */
     private boolean yAxisZoomExcludesBackgroundPeaks = true;
-    /**
-     * If true, the ion table is shown as an intensity version, false displays
-     * the standard Mascot version.
-     */
-    private boolean intensityIonTable = true; //@TODO: move to another class
-    /**
-     * If true, bars are shown in the bubble plot highlighting the ions.
-     */
-    private boolean showBars = false; //@TODO: move to another class
     /**
      * If true, all peaks are shown, false displays the annotated peaks, and the
      * non-annotated in the background.
@@ -59,7 +44,7 @@ public class AnnotationSettings implements Serializable {
     /**
      * The types of ions to annotate.
      */
-    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>();
+    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<Ion.IonType, HashSet<Integer>>(4);
     /**
      * List of neutral losses to annotate.
      */
@@ -196,13 +181,21 @@ public class AnnotationSettings implements Serializable {
      * interest or not.
      *
      * @return a boolean indicating whether neutral losses are considered only
-     * for amino acids of interest or not.
+     * for amino acids of interest or not
      */
-    public boolean areNeutralLossesSequenceAuto() {
-        if (neutralLossesAuto == null) { // Backward compatibility
-            neutralLossesAuto = true;
-        }
+    public Boolean areNeutralLossesSequenceAuto() {
         return neutralLossesAuto;
+    }
+    
+    /**
+     * Sets whether neutral losses are considered only for amino acids of
+     * interest or not.
+     * 
+     * @param neutralLossesAuto a boolean indicating whether neutral losses are considered only
+     * for amino acids of interest or not
+     */
+    public void setNeutralLossesSequenceAuto(Boolean neutralLossesAuto) {
+        this.neutralLossesAuto = neutralLossesAuto;
     }
 
     /**
@@ -302,12 +295,11 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Sets whether the default PeptideShaker annotation should be used.
+     * Sets whether the annotation settings should be automatically inferred.
      *
-     * @param automaticAnnotation a boolean indicating whether the default
-     * PeptideShaker annotation should be used
+     * @param automaticAnnotation a boolean indicating whether the annotation settings should be automatically inferred
      */
-    public void useAutomaticAnnotation(boolean automaticAnnotation) {
+    public void setAutomaticAnnotation(boolean automaticAnnotation) {
         this.automaticAnnotation = automaticAnnotation;
 
         if (automaticAnnotation) {
@@ -316,12 +308,11 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Returns whether PeptideShaker should automatically set the annotations.
+     * Returns whether the annotation settings should be automatically inferred.
      *
-     * @return a boolean indicating whether PeptideShaker should automatically
-     * set the annotations
+     * @return a boolean indicating whether the annotation settings should be automatically inferred
      */
-    public boolean useAutomaticAnnotation() {
+    public boolean isAutomaticAnnotation() {
         return automaticAnnotation;
     }
 
@@ -383,7 +374,7 @@ public class AnnotationSettings implements Serializable {
      *
      * @param intensityLimit the intensityLimit to set
      */
-    public void setAnnotationLevel(double intensityLimit) {
+    public void setIntensityLimit(double intensityLimit) {
         this.intensityLimit = intensityLimit;
     }
 
@@ -404,45 +395,6 @@ public class AnnotationSettings implements Serializable {
      */
     public void setShowAllPeaks(boolean showAllPeaks) {
         this.showAllPeaks = showAllPeaks;
-    }
-
-    /**
-     * If true, bars are shown in the bubble plot highlighting the ions.
-     *
-     * @return true if bars are to be shown in the bubble plot
-     */
-    public boolean showBars() {
-        return showBars;
-    }
-
-    /**
-     * Set if the bars in the bubble plot are to be shown or not.
-     *
-     * @param showBars if the bars in the bubble plot are to be shown
-     */
-    public void setShowBars(boolean showBars) {
-        this.showBars = showBars;
-    }
-
-    /**
-     * If true, the ion table is shown as an intensity version, false displays
-     * the standard Mascot version.
-     *
-     * @return if true, the ion table is shown as an intensity version, false
-     * displays the standard Mascot version
-     */
-    public boolean useIntensityIonTable() {
-        return intensityIonTable;
-    }
-
-    /**
-     * Set if the intensity or m/z ion table should be shown.
-     *
-     * @param intensityIonTable if the intensity or m/z ion table should be
-     * shown
-     */
-    public void setIntensityIonTable(boolean intensityIonTable) {
-        this.intensityIonTable = intensityIonTable;
     }
 
     /**
@@ -542,5 +494,34 @@ public class AnnotationSettings implements Serializable {
      */
     public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
         this.highResolutionAnnotation = highResolutionAnnotation;
+    }
+    
+    /**
+     * Clones the settings.
+     * 
+     * @return a clone of this object
+     */
+    public AnnotationSettings clone() {
+        AnnotationSettings annotationSettings = new AnnotationSettings();
+        annotationSettings.setYAxisZoomExcludesBackgroundPeaks(yAxisZoomExcludesBackgroundPeaks);
+        annotationSettings.setShowAllPeaks(showAllPeaks);
+        annotationSettings.setIntensityLimit(intensityLimit);
+        annotationSettings.setAutomaticAnnotation(automaticAnnotation);
+        for (Ion.IonType ionType : selectedIonsMap.keySet()) {
+            for (Integer subType : selectedIonsMap.get(ionType)) {
+                annotationSettings.addIonType(ionType, subType);
+            }
+        }
+        for (NeutralLoss neutralLoss : neutralLossesList) {
+            annotationSettings.addNeutralLoss(neutralLoss);
+        }
+        annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
+        annotationSettings.setFragmentIonAccuracy(fragmentIonAccuracy);
+        annotationSettings.setFragmentIonPpm(fragmentIonPpm);
+        annotationSettings.setShowForwardIonDeNovoTags(showForwardIonDeNovoTags);
+        annotationSettings.setShowRewindIonDeNovoTags(showRewindIonDeNovoTags);
+        annotationSettings.setDeNovoCharge(deNovoCharge);
+        annotationSettings.setHighResolutionAnnotation(highResolutionAnnotation);
+        return annotationSettings;
     }
 }

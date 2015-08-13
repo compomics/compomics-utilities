@@ -1912,4 +1912,14 @@ public abstract class Identification extends ExperimentObject {
             ArrayList<UrParameter> peptideParameters, boolean loadPsms, ArrayList<UrParameter> psmParameters, WaitingHandler waitingHandler) {
         return new ProteinMatchesIterator(this, proteinParameters, loadPeptides, peptideParameters, loadPsms, psmParameters, waitingHandler);
     }
+
+    /**
+     * Returns the identification database object used to interact with the back-end database.
+     * 
+     * @return the identification database object used to interact with the back-end database
+     */
+    public IdentificationDB getIdentificationDB() {
+        return identificationDB;
+    }
+    
 }

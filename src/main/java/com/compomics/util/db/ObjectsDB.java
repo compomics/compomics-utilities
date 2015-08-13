@@ -293,11 +293,14 @@ public class ObjectsDB implements Serializable {
             PreparedStatement ps = dbConnection.prepareStatement("INSERT INTO " + tableName + " VALUES (?, ?)");
             ps.setString(1, correctedKey);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
             try {
-                oos.writeObject(object);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                try {
+                    oos.writeObject(object);
+                } finally {
+                    oos.close();
+                }
             } finally {
-                oos.close();
                 bos.close();
             }
             ps.setBytes(2, bos.toByteArray());
@@ -505,11 +508,18 @@ public class ObjectsDB implements Serializable {
                                     tempBlob = results.getBlob(2);
                                 }
 
+                                Object object = null;
                                 BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
-
-                                ObjectInputStream in = new ObjectInputStream(bis);
-                                Object object = in.readObject();
-                                in.close();
+                                try {
+                                    ObjectInputStream in = new ObjectInputStream(bis);
+                                    try {
+                                        object = in.readObject();
+                                    } finally {
+                                        in.close();
+                                    }
+                                } finally {
+                                    bis.close();
+                                }
 
                                 objectsCache.addObject(dbName, tableName, key, object, false);
                             }
@@ -621,13 +631,15 @@ public class ObjectsDB implements Serializable {
                                     }
 
                                     BufferedInputStream bis = new BufferedInputStream(tempBlob.getBinaryStream());
+                                    try {
                                     ObjectInputStream in = new ObjectInputStream(bis);
-
                                     try {
                                         Object object = in.readObject();
                                         objectsCache.addObject(dbName, tableName, key, object, false);
                                     } finally {
                                         in.close();
+                                    }
+                                    } finally {
                                         bis.close();
                                     }
                                     if (waitingHandler != null && displayProgress) {
@@ -884,7 +896,7 @@ public class ObjectsDB implements Serializable {
     }
 
     /**
-     * Indicates whether an object is loaded in the given table.
+     * Indicates whether an object is saved in the given table.
      *
      * @param tableName the table name
      * @param objectKey the object key
@@ -1186,10 +1198,10 @@ public class ObjectsDB implements Serializable {
             insertObject(LONG_KEY_TABLE, LONG_KEY_PREFIX, longKeysMap, false);
         }
     }
-    
+
     /**
      * Indicates whether the connection to the DB is active.
-     * 
+     *
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {

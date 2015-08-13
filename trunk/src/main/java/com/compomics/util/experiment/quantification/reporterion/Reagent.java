@@ -1,13 +1,14 @@
 package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.experiment.biology.ions.ReporterIon;
+import java.io.Serializable;
 
 /**
  * A reporter ion labeling reagent.
  *
  * @author Marc Vaudel
  */
-public class Reagent {
+public class Reagent implements Serializable {
 
     /**
      * The name of the reagent.

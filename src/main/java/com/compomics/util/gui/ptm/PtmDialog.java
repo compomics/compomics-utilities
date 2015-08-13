@@ -1479,7 +1479,7 @@ public class PtmDialog extends javax.swing.JDialog {
                     return "";
                 case 3:
                     reporterIon = reporterIons.get(row);
-                    return reporterIon.getProtonatedMass();
+                    return reporterIon.getTheoreticMz(1);
                 default:
                     return "";
             }

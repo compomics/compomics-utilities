@@ -273,8 +273,8 @@ public class IdentificationParameters implements Serializable {
         if (searchParameters != null) {
             annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
         }
-        annotationPreferences.setAnnotationLevel(0.75);
-        annotationPreferences.useAutomaticAnnotation(true);
+        annotationPreferences.setIntensityLimit(0.75);
+        annotationPreferences.setAutomaticAnnotation(true);
         identificationParameters.setAnnotationPreferences(annotationPreferences);
         PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
@@ -314,8 +314,8 @@ public class IdentificationParameters implements Serializable {
         if (searchParameters != null) {
             annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
         }
-        annotationPreferences.setAnnotationLevel(0.75);
-        annotationPreferences.useAutomaticAnnotation(true);
+        annotationPreferences.setIntensityLimit(0.75);
+        annotationPreferences.setAutomaticAnnotation(true);
         peptideAssumptionFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
             peptideAssumptionFilter.setFilterFromSearchParameters(searchParameters);

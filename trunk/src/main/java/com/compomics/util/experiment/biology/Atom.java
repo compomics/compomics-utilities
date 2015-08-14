@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.atoms.Carbon;
 import com.compomics.util.experiment.biology.atoms.Helium;
 import com.compomics.util.experiment.biology.atoms.Hydrogen;
+import com.compomics.util.experiment.biology.atoms.Iodine;
 import com.compomics.util.experiment.biology.atoms.Lithium;
 import com.compomics.util.experiment.biology.atoms.Nitrogen;
 import com.compomics.util.experiment.biology.atoms.Oxygen;
@@ -61,6 +62,10 @@ public abstract class Atom extends ExperimentObject {
      * The selenium atom.
      */
     public static final Atom Se = new Selenium();
+    /**
+     * The Iodine atom.
+     */
+    public static final Atom I = new Iodine();
     
     /**
      * Returns an array of implemented atoms indicated by their short name.
@@ -70,9 +75,9 @@ public abstract class Atom extends ExperimentObject {
      */
     public static String[] getImplementedAtoms(boolean includeSelect) {
         if (includeSelect) {
-            return new String[] {"- Select -", "H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+            return new String[] {"- Select -", "C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se"};
         } else {
-            return new String[] {"H", "N", "O", "C", "S", "P", "He", "Li", "Na", "Se"};
+            return new String[] {"C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se"};
         }
     }
 
@@ -86,6 +91,8 @@ public abstract class Atom extends ExperimentObject {
     public static Atom getAtom(String shortName) {
         if (shortName.equals("H")) {
             return H;
+        } else if (shortName.equals("I")) {
+            return I;
         } else if (shortName.equals("N")) {
             return N;
         } else if (shortName.equals("O")) {

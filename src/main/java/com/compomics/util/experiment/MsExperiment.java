@@ -29,7 +29,7 @@ public class MsExperiment extends ExperimentObject {
      */
     private HashMap<Sample, SampleAnalysisSet> analysis = new HashMap<Sample, SampleAnalysisSet>();
     /**
-     * The name of the serialized experiment
+     * The name of the serialized experiment.
      */
     public final static String experimentObjectName = "experiment";
 

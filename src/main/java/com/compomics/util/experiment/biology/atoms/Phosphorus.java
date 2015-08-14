@@ -15,7 +15,7 @@ public class Phosphorus extends Atom {
      */
     public Phosphorus() {
         monoisotopicMass = 30.97376163;
-        isotopeMap = new HashMap<Integer, Double>();
+        isotopeMap = new HashMap<Integer, Double>(23);
         isotopeMap.put(-7, 24.03435);
         isotopeMap.put(-6, 25.02026);
         isotopeMap.put(-5, 26.01178);
@@ -39,7 +39,7 @@ public class Phosphorus extends Atom {
         isotopeMap.put(13, 44.01299);
         isotopeMap.put(14, 45.01922);
         isotopeMap.put(15, 46.02738);
-        representativeComposition = new HashMap<Integer, Double>();
+        representativeComposition = new HashMap<Integer, Double>(1);
         representativeComposition.put(0, 1.0);
         this.name = "Phosphorus";
         this.letter = "P";

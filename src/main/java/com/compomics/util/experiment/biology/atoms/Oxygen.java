@@ -15,7 +15,7 @@ public class Oxygen extends Atom {
      */
     public Oxygen() {
         monoisotopicMass = 15.99491461956;
-        isotopeMap = new HashMap<Integer, Double>();
+        isotopeMap = new HashMap<Integer, Double>(13);
         isotopeMap.put(-4, 12.034405);
         isotopeMap.put(-3, 13.024812);
         isotopeMap.put(-2, 14.00859625);
@@ -29,7 +29,7 @@ public class Oxygen extends Atom {
         isotopeMap.put(6, 22.00997);
         isotopeMap.put(7, 23.01569);
         isotopeMap.put(8, 24.02047);
-        representativeComposition = new HashMap<Integer, Double>();
+        representativeComposition = new HashMap<Integer, Double>(3);
         representativeComposition.put(0, 0.99757);
         representativeComposition.put(1, 0.00038);
         representativeComposition.put(2, 0.00205);

@@ -15,7 +15,7 @@ public class Sodium extends Atom {
      */
     public Sodium() {
         monoisotopicMass = 22.9897692809;
-        isotopeMap = new HashMap<Integer, Double>();
+        isotopeMap = new HashMap<Integer, Double>(20);
         isotopeMap.put(-5, 18.02597);
         isotopeMap.put(-4, 19.013877);
         isotopeMap.put(-3, 20.007351);
@@ -36,7 +36,7 @@ public class Sodium extends Atom {
         isotopeMap.put(12, 35.04249);
         isotopeMap.put(13, 36.05148);
         isotopeMap.put(14, 37.05934);
-        representativeComposition = new HashMap<Integer, Double>();
+        representativeComposition = new HashMap<Integer, Double>(1);
         representativeComposition.put(0, 1.0);
         this.name = "Sodium";
         this.letter = "S";

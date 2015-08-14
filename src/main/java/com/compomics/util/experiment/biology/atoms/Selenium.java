@@ -15,7 +15,7 @@ public class Selenium extends Atom {
      */
     public Selenium() {
         monoisotopicMass = 79.9165213;
-        isotopeMap = new HashMap<Integer, Double>();
+        isotopeMap = new HashMap<Integer, Double>(30);
         isotopeMap.put(-15, 64.96466);
         isotopeMap.put(-14, 65.95521);
         isotopeMap.put(-13, 66.95009);
@@ -46,7 +46,7 @@ public class Selenium extends Atom {
         isotopeMap.put(12, 91.94992);
         isotopeMap.put(13, 92.95629);
         isotopeMap.put(14, 93.96049);
-        representativeComposition = new HashMap<Integer, Double>();
+        representativeComposition = new HashMap<Integer, Double>(6);
         representativeComposition.put(-6, 0.0089);
         representativeComposition.put(-4, 0.0937);
         representativeComposition.put(-3, 0.0763);

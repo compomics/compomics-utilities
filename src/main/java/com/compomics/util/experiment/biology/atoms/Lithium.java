@@ -15,7 +15,7 @@ public class Lithium extends Atom {
      */
     public Lithium() {
         monoisotopicMass = 3.030775;
-        isotopeMap = new HashMap<Integer, Double>();
+        isotopeMap = new HashMap<Integer, Double>(10);
         isotopeMap.put(0, monoisotopicMass);
         isotopeMap.put(1, 4.02719);
         isotopeMap.put(2, 5.01254);
@@ -26,7 +26,7 @@ public class Lithium extends Atom {
         isotopeMap.put(7, 10.035481);
         isotopeMap.put(8, 11.043798);
         isotopeMap.put(9, 12.05378);
-        representativeComposition = new HashMap<Integer, Double>();
+        representativeComposition = new HashMap<Integer, Double>(1);
         representativeComposition.put(0, 1.0);
         this.name = "Lithium";
         this.letter = "Li";

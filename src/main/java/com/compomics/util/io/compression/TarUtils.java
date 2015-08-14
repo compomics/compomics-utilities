@@ -53,6 +53,46 @@ public class TarUtils {
     }
 
     /**
+     * Tar the content of a given folder to a file.
+     *
+     * @param folder the original folder to tar
+     * @param destinationFile the destination file
+     * @param waitingHandler a waiting handler used to cancel the process (can
+     * be null)
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
+     * @throws ArchiveException exception thrown whenever an error occurred
+     * while taring
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing files
+     */
+    public static void tarFolderContent(File folder, File destinationFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
+        FileOutputStream fos = new FileOutputStream(destinationFile);
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            try {
+                TarArchiveOutputStream tarOutput = (TarArchiveOutputStream) new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.TAR, bos);
+                try {
+                    tarOutput.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
+                    for (File file : folder.listFiles()) {
+                        if (file.isDirectory()) {
+                            addFolderContent(tarOutput, file, waitingHandler);
+                        } else {
+                            addFile(tarOutput, file, waitingHandler);
+                        }
+                    }
+                } finally {
+                    tarOutput.close();
+                }
+            } finally {
+                bos.close();
+            }
+        } finally {
+            fos.close();
+        }
+    }
+
+    /**
      * Add content to the tar file.
      *
      * @param tarOutput the archive output stream
@@ -91,32 +131,71 @@ public class TarUtils {
             if (file.isDirectory()) {
                 addFolderContent(tarOutput, file, parentFolder, waitingHandler);
             } else {
-                final int BUFFER = 2048;
-                FileInputStream fi = new FileInputStream(file);
-                try {
-                    BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
-                    try {
-                        byte data[] = new byte[BUFFER];
-                        String filePath = file.getAbsolutePath();
-                        String relativePath = filePath.substring(parentFolder.length() + 1);
-                        TarArchiveEntry entry = new TarArchiveEntry(file, relativePath);
-
-                        tarOutput.putArchiveEntry(entry);
-                        int count;
-                        while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                break;
-                            }
-                            tarOutput.write(data, 0, count);
-                        }
-                        tarOutput.closeArchiveEntry();
-                    } finally {
-                        origin.close();
-                    }
-                } finally {
-                    fi.close();
-                }
+                addFile(tarOutput, file, parentFolder, waitingHandler);
             }
+        }
+    }
+
+    /**
+     * Add content to the tar file.
+     *
+     * @param tarOutput the archive output stream
+     * @param file the file to add
+     * @param waitingHandler a waiting handler used to cancel the process (can
+     * be null)
+     *
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing files
+     */
+    private static void addFile(ArchiveOutputStream tarOutput, File file, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+        addFile(tarOutput, file, null, waitingHandler);
+    }
+
+    /**
+     * Add content to the tar file.
+     *
+     * @param tarOutput the archive output stream
+     * @param file the file to add
+     * @param parentFolder the parent folder to remove from the folder path
+     * @param waitingHandler a waiting handler used to cancel the process (can
+     * be null)
+     *
+     * @throws FileNotFoundException exception thrown whenever a file is not
+     * found
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading/writing files
+     */
+    private static void addFile(ArchiveOutputStream tarOutput, File file, String parentFolder, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+        
+        if (parentFolder == null) {
+            parentFolder = file.getParentFile().getAbsolutePath();
+        }
+        final int BUFFER = 2048;
+        FileInputStream fi = new FileInputStream(file);
+        try {
+            BufferedInputStream origin = new BufferedInputStream(fi, BUFFER);
+            try {
+                byte data[] = new byte[BUFFER];
+                String filePath = file.getAbsolutePath();
+                String relativePath = filePath.substring(parentFolder.length() + 1);
+                TarArchiveEntry entry = new TarArchiveEntry(file, relativePath);
+
+                tarOutput.putArchiveEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        break;
+                    }
+                    tarOutput.write(data, 0, count);
+                }
+                tarOutput.closeArchiveEntry();
+            } finally {
+                origin.close();
+            }
+        } finally {
+            fi.close();
         }
     }
 
@@ -209,7 +288,7 @@ public class TarUtils {
                                 waitingHandler.setSecondaryProgressCounter(progress);
                             }
                         } else {
-                            throw new IOException("Folder " + destinationFolder.getAbsolutePath() 
+                            throw new IOException("Folder " + destinationFolder.getAbsolutePath()
                                     + " does not exist and could not be created. "
                                     + "Verify that you have the right to write in this directory.");
                         }

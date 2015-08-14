@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.2.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.0.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -1161,7 +1161,7 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("dihydroxylated residue - site W")) {
             return "Dioxidation of W";
         } else if (pridePtmName.equalsIgnoreCase("diiodinated residue")) {
-            return null; //return "Diiodination of Y"; // @TODO: implement isoleucine as an atom so that Diiodination of Y can be enabled (commented out below)
+            return "Diiodination of Y";
         } else if (pridePtmName.equalsIgnoreCase("hydroxylated lysine")
                 || pridePtmName.equalsIgnoreCase("monohydroxylated lysine")) {
             return "Oxidation of K";
@@ -3196,15 +3196,15 @@ public class PTMFactory implements Serializable {
         ptmMap.put(ptmName, ptm);
 
         // Diiodination of Y
-//        atomChainAdded = new AtomChain(true);
-//        atomChainAdded.append(new AtomImpl(Atom.I, 0), 2); // @TODO: add isoleucine as an atom
-//        atomChainRemoved = new AtomChain(false);
-//        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-//        aminoAcidPattern = new AminoAcidPattern("Y");
-//        ptmName = "Diiodination of Y";
-//        ptm = new PTM(PTM.MODAA, ptmName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-//        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", String.valueOf(ptm.getRoundedMass())));
-//        defaultMods.add(ptmName);
-//        ptmMap.put(ptmName, ptm);
+        atomChainAdded = new AtomChain(true);
+        atomChainAdded.append(new AtomImpl(Atom.I, 0), 2);
+        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = new AminoAcidPattern("Y");
+        ptmName = "Diiodination of Y";
+        ptm = new PTM(PTM.MODAA, ptmName, "diiodo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:130", "Diiodo", String.valueOf(ptm.getRoundedMass())));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
     }
 }

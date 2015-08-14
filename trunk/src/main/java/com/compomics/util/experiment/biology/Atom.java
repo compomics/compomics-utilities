@@ -23,6 +23,10 @@ import java.util.HashMap;
 public abstract class Atom extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility.
+     */
+    static final long serialVersionUID = -3082914933181752632L;
+    /**
      * The hydrogen atom.
      */
     public static final Atom H = new Hydrogen();

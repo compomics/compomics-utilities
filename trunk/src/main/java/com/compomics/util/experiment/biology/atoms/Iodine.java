@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Iodine extends Atom {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Iodine() {
         monoisotopicMass = 126.904473;
@@ -19,7 +19,7 @@ public class Iodine extends Atom {
         isotopeMap.put(0, monoisotopicMass);
         representativeComposition = new HashMap<Integer, Double>(1);
         representativeComposition.put(0, 1.0);
-        
+
         this.name = "Iodine";
         this.letter = "I";
     }

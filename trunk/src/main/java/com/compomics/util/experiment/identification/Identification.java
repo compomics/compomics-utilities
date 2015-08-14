@@ -1073,7 +1073,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public SpectrumMatch getSpectrumMatch(String spectrumKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-            return identificationDB.getSpectrumMatch(spectrumKey, useDB);
+        return identificationDB.getSpectrumMatch(spectrumKey, useDB);
     }
 
     /**
@@ -1115,7 +1115,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public PeptideMatch getPeptideMatch(String peptideKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-            return identificationDB.getPeptideMatch(peptideKey, useDB);
+        return identificationDB.getPeptideMatch(peptideKey, useDB);
     }
 
     /**
@@ -1157,7 +1157,7 @@ public abstract class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public ProteinMatch getProteinMatch(String proteinKey, boolean useDB) throws SQLException, IOException, ClassNotFoundException, InterruptedException {
-            return identificationDB.getProteinMatch(proteinKey, useDB);
+        return identificationDB.getProteinMatch(proteinKey, useDB);
     }
 
     /**
@@ -1914,12 +1914,13 @@ public abstract class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns the identification database object used to interact with the back-end database.
-     * 
-     * @return the identification database object used to interact with the back-end database
+     * Returns the identification database object used to interact with the
+     * back-end database.
+     *
+     * @return the identification database object used to interact with the
+     * back-end database
      */
     public IdentificationDB getIdentificationDB() {
         return identificationDB;
     }
-    
 }

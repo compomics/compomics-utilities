@@ -767,7 +767,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
             // compare accession numbers (excluding  MS:1001460 - unknown modification) and if not equal then compare the delta masses
             if ((modification.getAccession().equals(fixedModification.getAccession()) && !modification.getAccession().equals("MS:1001460"))
-                    || fixedModification.getMassDelta() == modification.getMassDelta()) {
+                    || fixedModification.getMassDelta() == modification.getMassDelta()) { // @TODO: find the closest match..?
 
                 boolean allRules = true;
                 ArrayList<String> specificityRuleCvTerms = fixedModification.getModRuleCvTerms();
@@ -839,7 +839,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         parser.next();
         parser.next();
 
-        if (!parser.getName().equals("ModificationParams")) {
+        if (parser.getName() != null && !parser.getName().equals("ModificationParams")) {
 
             while (parser.getName().equalsIgnoreCase("SearchModification")) {
 

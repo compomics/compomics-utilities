@@ -25,7 +25,7 @@ public abstract class Atom extends ExperimentObject {
     /**
      * The version UID for Serialization/Deserialization compatibility.
      */
-    static final long serialVersionUID = -3082914933181752632L;
+    static final long serialVersionUID = 1059024301538472131L;
     /**
      * The hydrogen atom.
      */

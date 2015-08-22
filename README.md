@@ -111,4 +111,4 @@ Update the version number to latest released version, see the [Maven repository]
 [![](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel.png)
 [![](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel.png)
 
-[Go to top of page](#compomics-utilities.md)
+[Go to top of page](#compomics-utilities)

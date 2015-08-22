@@ -1,25 +1,21 @@
 # compomics-utilities #
 
-  * [What is compomics-utilities?](#What_is_compomics-utilities?.md)
-  * [Projects Using compomics-utilities](#Projects_Using_compomics-utilities.md)
-  * [Using compomics-utilities](#Using_compomics-utilities.md)
-  * [Download](#Download.md)
-  * [Maven Dependency](#Maven_Dependency.md)
-  * [Screenshots](#Screenshots.md)
+  * [What is compomics-utilities?](#what-is-compomics-utilities?)
+  * [Projects Using compomics-utilities](#projects-using-compomics-utilities)
+  * [Using compomics-utilities](#using-compomics-utilities)
+  * [Download](#download)
+  * [Maven Dependency](#maven-dependency)
+  * [Screenshots](#screenshots)
 
   * [Bioinformatics for Proteomics Tutorial](http://compomics.com/bioinformatics-for-proteomics/)
 
-
 ---
-
 
 **compomics-utilities publication:**
-  * [Barsnes et al: BMC Bioinformatics. 2011 Mar 8;12(1):70](http://www.ncbi.nlm.nih.gov/pubmed/21385435)_.
-  * If you use **compomics-utilities** as part of a paper, please include the reference above._
-
+  * [Barsnes et al: BMC Bioinformatics. 2011 Mar 8;12(1):70](http://www.ncbi.nlm.nih.gov/pubmed/21385435).
+  * If you use **compomics-utilities** as part of a paper, please include the reference above.
 
 ---
-
 
 ## What is compomics-utilities? ##
 
@@ -27,11 +23,9 @@ The [Computational Omics and Systems Biology Group](http://www.compomics.com) de
 
 **compomics-utilities** is a library containing code shared by many of our research projects, amongst others containing panels for visualizing spectra and chromatograms and objects for representing peptides and proteins etc. We believe that this library can be of use to other research groups doing computational proteomics, and have therefore made it available as open source.
 
-[Go to top of page](#compomics-utilities.md)
-
+[Go to top of page](#compomics-utilities)
 
 ---
-
 
 ## Projects using compomics-utilities ##
 
@@ -55,11 +49,9 @@ The [Computational Omics and Systems Biology Group](http://www.compomics.com) de
 | [MascotDatfile](http://mascotdatfile.googlecode.com) | _java API for MS/MS search results by Mascot_|_[Helsens et al: Proteomics 2007;7(3):364-6](http://www.ncbi.nlm.nih.gov/pubmed/17203510)_|
 | [DBToolkit](http://dbtoolkit.googlecode.com) | _manipulating fasta sequence databases_|_[Martens et al: Bioinformatics 2005;21(17):3584-5](http://www.ncbi.nlm.nih.gov/pubmed/16030071)_|
 
-[Go to top of page](#compomics-utilities.md)
-
+[Go to top of page](#compomics-utilities)
 
 ---
-
 
 ## Using compomics-utilities ##
 
@@ -67,9 +59,7 @@ For example code and demos showing how the **compomics-utilities** library can b
 
 [Go to top of page](#compomics-utilities.md)
 
-
 ---
-
 
 ## Download ##
 
@@ -81,11 +71,9 @@ See also the [JavaDoc](http://genesis.ugent.be/maven2/com/compomics/utilities/ja
 
 If you for some reason cannot use Maven and need a complete build of compomics-utilities, please let us know and we will send you the latest build as a zip file.
 
-[Go to top of page](#compomics-utilities.md)
-
+[Go to top of page](#compomics-utilities)
 
 ---
-
 
 ## Maven Dependency ##
 
@@ -98,6 +86,7 @@ If you for some reason cannot use Maven and need a complete build of compomics-u
     <version>X.Y.Z</version>
 </dependency>
 ```
+
 ```
 <repository>
     <id>genesis-maven2-repository</id>
@@ -108,20 +97,18 @@ If you for some reason cannot use Maven and need a complete build of compomics-u
 
 Update the version number to latest released version, see the [Maven repository](http://genesis.ugent.be/maven2/com/compomics/utilities/).
 
-[Go to top of page](#compomics-utilities.md)
-
+[Go to top of page](#compomics-utilities)
 
 ---
-
 
 ## Screenshots ##
 
 (Click on figure to see the full size version)
 
-![![](http://compomics-utilities.googlecode.com/svn/wiki/images/WellcomePanel_small.png)](http://compomics-utilities.googlecode.com/svn/wiki/images/WellcomePanel.png)
-![![](http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel_small.png)](http://compomics-utilities.googlecode.com/svn/wiki/images/SpectrumPanel.png)
-![![](http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel_small.png)](http://compomics-utilities.googlecode.com/svn/wiki/images/ChromatogramPanel.png)
-![![](http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel_small.png)](http://compomics-utilities.googlecode.com/svn/wiki/images/IsotopicDistributionPanel.png)
-![![](http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel_small.png)](http://compomics-utilities.googlecode.com/svn/wiki/images/InSilicoDigestionPanel.png)
+[![](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel.png)
+[![](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel.png)
+[![](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel.png)
+[![](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel.png)
+[![](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel.png)
 
 [Go to top of page](#compomics-utilities.md)

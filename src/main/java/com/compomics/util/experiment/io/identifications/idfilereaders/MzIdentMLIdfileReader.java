@@ -765,10 +765,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         // check if the current modification is a fixed modification
         for (SearchModificationCustom fixedModification : fixedModificationsCustomParser) {
 
+            // find the mass difference, needed if the cv term is not provided
+            double massDifference = Math.abs(fixedModification.getMassDelta() - modification.getMassDelta());
+
             // compare accession numbers (excluding  MS:1001460 - unknown modification) and if not equal then compare the delta masses
             if ((modification.getAccession().equals(fixedModification.getAccession()) && !modification.getAccession().equals("MS:1001460"))
-                    || fixedModification.getMassDelta() == modification.getMassDelta()) { // @TODO: find the closest match..?
-
+                    || massDifference < 0.00001) { // @TODO: is there a better way of doing this..?
                 boolean allRules = true;
                 ArrayList<String> specificityRuleCvTerms = fixedModification.getModRuleCvTerms();
                 if (specificityRuleCvTerms != null && !specificityRuleCvTerms.isEmpty()) {

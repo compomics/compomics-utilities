@@ -16,7 +16,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // General parameters
     //////////////////////////////////
-    OUTPUT("out", "The destination Identification Parameters file (.parameters).", true),
+    OUTPUT("out", "The destination Identification Parameters file (.par).", true),
     DB("db", "The sequence database in FASTA format.", true),
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (2), default is '1'.", false),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (2), default is '1'.", false),

@@ -477,9 +477,10 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      */
     public boolean downloadPeptideShaker() {
 
-        int option = JOptionPane.showConfirmDialog(this, "Cannot find PeptideShaker. Do you want to download it now?", "Download PeptideShaker?", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Cannot find PeptideShaker. "
+                    + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download PeptideShaker?", JOptionPane.YES_NO_OPTION);
 
-        if (option == JOptionPane.OK_OPTION) {
+        if (option == JOptionPane.YES_OPTION) {
 
             String installPath = "user.home";
 

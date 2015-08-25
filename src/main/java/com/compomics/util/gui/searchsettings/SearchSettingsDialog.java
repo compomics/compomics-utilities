@@ -2511,12 +2511,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 FileFilter filter = new FileFilter() {
                     @Override
                     public boolean accept(File myFile) {
-                        return myFile.getName().toLowerCase().endsWith(".parameters") || myFile.isDirectory();
+                        return myFile.getName().toLowerCase().endsWith(".par") || myFile.isDirectory();
                     }
 
                     @Override
                     public String getDescription() {
-                        return "SearchGUI settings file (.parameters)";
+                        return "SearchGUI settings file (.par)";
                     }
                 };
                 fc.setFileFilter(filter);
@@ -2527,9 +2527,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     if (lastSelectedFolder != null) {
                         lastSelectedFolder.setLastSelectedFolder(selectedFile.getAbsolutePath());
                     }
-                    // make sure the file is appended with '.parameters'
-                    if (!selectedFile.getName().toLowerCase().endsWith(".parameters")) {
-                        selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".parameters");
+                    // make sure the file is appended with '.par'
+                    if (!selectedFile.getName().toLowerCase().endsWith(".par")) {
+                        selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".par");
                     } else {
                         selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName());
                     }

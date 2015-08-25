@@ -78,8 +78,8 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OUTPUT.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OUTPUT.id);
-            if (!arg.endsWith(".parameters")) {
-                arg += ".parameters";
+            if (!arg.endsWith(".par")) {
+                arg += ".par";
             }
             destinationFile = new File(arg);
         }

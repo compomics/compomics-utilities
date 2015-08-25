@@ -73,7 +73,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
 
         if (utilitiesUserPreferences.getProteoWizardPath() == null) {
             int option = JOptionPane.showConfirmDialog(this, "ProteoWizard is required to convert raw files. "
-                    + "Do you want to download it now? (Click \'No\' if already downloaded.)", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
+                    + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
 
             if (option == JOptionPane.YES_OPTION) {
                 openWebPage();

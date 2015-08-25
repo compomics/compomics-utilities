@@ -475,9 +475,10 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     public boolean downloadSearchGUI() {
 
-        int option = JOptionPane.showConfirmDialog(this, "Cannot find SearchGUI. Do you want to download it now?", "Download SearchGUI?", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Cannot find SearchGUI. "
+                    + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download SearchGUI?", JOptionPane.YES_NO_OPTION);
 
-        if (option == JOptionPane.OK_OPTION) {
+        if (option == JOptionPane.YES_OPTION) {
 
             String installPath = "user.home";
             

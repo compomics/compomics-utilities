@@ -372,10 +372,10 @@ public class ProteinTree {
 
             if (waitingHandler != null && waitingHandler.isReport()) {
                 waitingHandler.appendReport(report, true, true);
-                waitingHandler.appendReport("    See http://code.google.com/p/compomics-utilities/wiki/ProteinInference.", true, true);
+                waitingHandler.appendReport("    See http://compomics.github.io/compomics-utilities/wiki/proteininference.html.", true, true);
             } else {
                 System.out.println(report);
-                System.out.println("    See http://code.google.com/p/compomics-utilities/wiki/ProteinInference.");
+                System.out.println("    See http://compomics.github.io/compomics-utilities/wiki/proteininference.html.");
             }
         }
 

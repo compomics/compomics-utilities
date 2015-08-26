@@ -207,14 +207,14 @@
               <SubComponents>
                 <Component class="javax.swing.JEditorPane" name="infoJEditorPane">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                         <EmptyBorder bottom="20" left="20" right="20" top="20"/>
                       </Border>
                     </Property>
                     <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
-                    <Property name="editable" type="boolean" value="false"/>
-                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xd;&#xa;  &lt;/head&gt;&#xd;&#xa;  &lt;body&gt;&#xd;&#xa;If you encounter any bugs while processing your data, please do one of the following:&#xa;&lt;br&gt;&#xa;&lt;ul&gt;&#xa;  &lt;li&gt;Create an issue on the &lt;a href=&quot;http://code.google.com/p/peptide-shaker/issues/list&quot;&gt;PeptideShaker web page&lt;/a&gt;.&lt;/li&gt;&#xa;  &lt;li&gt;or Send an e-mail to the &lt;a href=&quot;http://groups.google.com/group/peptide-shaker&quot;&gt;PeptideShaker mailing list&lt;/a&gt;.&lt;/li&gt;&#xa;&lt;/ul&gt;&#xa;Please include any relevant information as well as the log message displayed below.&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xd;&#xa;  &lt;/head&gt;&#xd;&#xa;  &lt;body&gt;&#xd;&#xa;If you encounter any bugs while processing your data, please do one of the following:&#xa;&lt;br&gt;&#xa;&lt;ul&gt;&#xa;  &lt;li&gt;Create an issue on the &lt;a href=&quot;https://github.com/compomics/peptide-shaker/issues&quot;&gt;PeptideShaker web page&lt;/a&gt;.&lt;/li&gt;&#xa;  &lt;li&gt;or Send an e-mail to the &lt;a href=&quot;http://groups.google.com/group/peptide-shaker&quot;&gt;PeptideShaker mailing list&lt;/a&gt;.&lt;/li&gt;&#xa;&lt;/ul&gt;&#xa;Please include any relevant information as well as the log message displayed below.&#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;"/>
                   </Properties>
                   <Events>
                     <EventHandler event="hyperlinkUpdate" listener="javax.swing.event.HyperlinkListener" parameters="javax.swing.event.HyperlinkEvent" handler="infoJEditorPaneHyperlinkUpdate"/>

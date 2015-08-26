@@ -341,7 +341,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("Failed to create the Java virtual machine.<br><br>"
                                         + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                        + "Then go to <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java TroubleShooting</a>."),
+                                        + "Then go to <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
@@ -360,7 +360,7 @@ public class CompomicsWrapper {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("An error occurred when starting the tool.<br><br>"
                                         + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
-                                        + "Then go to <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java TroubleShooting</a>."),
+                                        + "Then go to <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java TroubleShooting</a>."),
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
                     }
 
@@ -468,7 +468,7 @@ public class CompomicsWrapper {
             // html content 
             JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
                     + toolName + " works best with Java 64 bit.<br><br>"
-                    + "See <a href=\"http://code.google.com/p/compomics-utilities/wiki/JavaTroubleShooting\">Java Troubleshooting</a> for more details."
+                    + "See <a href=\"http://compomics.github.io/compomics-utilities/wiki/javatroubleshooting.html\">Java Troubleshooting</a> for more details."
                     + "</body></html>");
 
             // handle link events 

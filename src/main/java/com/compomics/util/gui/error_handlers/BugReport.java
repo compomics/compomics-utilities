@@ -31,9 +31,9 @@ public class BugReport extends javax.swing.JDialog {
      */
     private String toolName;
     /**
-     * The Google Code name of the tool, e.g., "peptide-shaker".
+     * The GitHub name of the tool, e.g., "peptide-shaker".
      */
-    private String googleCodeToolName;
+    private String gitHubProjectName;
     /**
      * The version number of the tool the log files belongs to.
      */
@@ -58,7 +58,7 @@ public class BugReport extends javax.swing.JDialog {
      * @param selectionFolder the folder to open in the file selection dialog
      * @param toolName the name of the tool to get the bug report for, e.g.,
      * "PeptideShaker" or "SearchGUI"
-     * @param googleCodeToolName the Google Code name of the tool, e.g.,
+     * @param gitHubProjectName the GitHub project name of the tool, e.g.,
      * "peptide-shaker"
      * @param toolVersion the version number of the tool the log files belongs
      * to
@@ -69,11 +69,11 @@ public class BugReport extends javax.swing.JDialog {
      * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JFrame frame, LastSelectedFolder selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
+    public BugReport(JFrame frame, LastSelectedFolder selectionFolder, String toolName, String gitHubProjectName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(frame, true);
         this.lastSelectedFolder = selectionFolder;
         this.toolName = toolName;
-        this.googleCodeToolName = googleCodeToolName;
+        this.gitHubProjectName = gitHubProjectName;
         this.toolVersion = toolVersion;
         this.googleGroup = googleGroup;
         this.googleGroupName = googleGroupName;
@@ -91,7 +91,7 @@ public class BugReport extends javax.swing.JDialog {
      * @param selectionFolder the folder to open in the file selection dialog
      * @param toolName the name of the tool to get the bug report for, e.g.,
      * PeptideShaker or SearchGUI
-     * @param googleCodeToolName the Google Code name of the tool, e.g.,
+     * @param gitHubProjectName the GitHub project name of the tool, e.g.,
      * "peptide-shaker"
      * @param toolVersion the version number of the tool the log files belongs
      * to
@@ -102,11 +102,11 @@ public class BugReport extends javax.swing.JDialog {
      * Google Group
      * @param logFile the log file to display
      */
-    public BugReport(JDialog dialog, LastSelectedFolder selectionFolder, String toolName, String googleCodeToolName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
+    public BugReport(JDialog dialog, LastSelectedFolder selectionFolder, String toolName, String gitHubProjectName, String toolVersion, String googleGroup, String googleGroupName, File logFile) {
         super(dialog, true);
         this.lastSelectedFolder = selectionFolder;
         this.toolName = toolName;
-        this.googleCodeToolName = googleCodeToolName;
+        this.gitHubProjectName = gitHubProjectName;
         this.toolVersion = toolVersion;
         this.googleGroup = googleGroup;
         this.googleGroupName = googleGroupName;
@@ -135,7 +135,7 @@ public class BugReport extends javax.swing.JDialog {
         infoJEditorPane.setText("<html><head></head><body>"
                 + "If you encounter any bugs while processing your data, please do one of the following:<br>"
                 + "<ul>"
-                + "<li>Create an issue on the <a href=\"http://code.google.com/p/" + googleCodeToolName + "/issues/list\">" + toolName + " web page</a>.</li>"
+                + "<li>Create an issue on the <a href=\"https://github.com/compomics/" + gitHubProjectName + "/issues/\">" + toolName + " web page</a>.</li>"
                 + "<li>Send an e-mail to the <a href=\"http://groups.google.com/group/" + googleGroup + "\">" + googleGroupName + " Google Group</a>.</li>"
                 + "</ul>"
                 + "Please include any relevant information as well as the log message displayed below."
@@ -251,7 +251,7 @@ public class BugReport extends javax.swing.JDialog {
             .addGroup(logJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(logJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+                    .addComponent(logJScrollPane)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, logJPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(saveJButton)
@@ -282,10 +282,10 @@ public class BugReport extends javax.swing.JDialog {
         infoJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Info"));
         infoJPanel.setOpaque(false);
 
-        infoJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        infoJEditorPane.setContentType("text/html");
         infoJEditorPane.setEditable(false);
-        infoJEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\nIf you encounter any bugs while processing your data, please do one of the following:\n<br>\n<ul>\n  <li>Create an issue on the <a href=\"http://code.google.com/p/peptide-shaker/issues/list\">PeptideShaker web page</a>.</li>\n  <li>or Send an e-mail to the <a href=\"http://groups.google.com/group/peptide-shaker\">PeptideShaker mailing list</a>.</li>\n</ul>\nPlease include any relevant information as well as the log message displayed below.\n  </body>\r\n</html>\r\n");
+        infoJEditorPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        infoJEditorPane.setContentType("text/html"); // NOI18N
+        infoJEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n  <body>\r\nIf you encounter any bugs while processing your data, please do one of the following:\n<br>\n<ul>\n  <li>Create an issue on the <a href=\"https://github.com/compomics/peptide-shaker/issues\">PeptideShaker web page</a>.</li>\n  <li>or Send an e-mail to the <a href=\"http://groups.google.com/group/peptide-shaker\">PeptideShaker mailing list</a>.</li>\n</ul>\nPlease include any relevant information as well as the log message displayed below.\n  </body>\r\n</html>\r\n");
         infoJEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 infoJEditorPaneHyperlinkUpdate(evt);

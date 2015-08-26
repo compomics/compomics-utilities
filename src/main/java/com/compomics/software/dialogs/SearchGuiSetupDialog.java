@@ -199,8 +199,8 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
         searchGuiInfoLabel.setFont(searchGuiInfoLabel.getFont().deriveFont(searchGuiInfoLabel.getFont().getStyle() | java.awt.Font.BOLD));
         searchGuiInfoLabel.setText("SearchGUI -  a graphical user interface for proteomics identification search engines");
 
-        searchGuiDownloadLinkLabel.setText("<html>Download here: <a href> http://searchgui.googlecode.com</a></html>");
-        searchGuiDownloadLinkLabel.setToolTipText("Go to http://searchgui.googlecode.com");
+        searchGuiDownloadLinkLabel.setText("<html>Download here: <a href>http://compomics.github.io/projects/searchgui.html</a></html>");
+        searchGuiDownloadLinkLabel.setToolTipText("Go to http://compomics.github.io/projects/searchgui.html");
         searchGuiDownloadLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 searchGuiDownloadLinkLabelMouseClicked(evt);
@@ -214,7 +214,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
         });
 
         searchGuiButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchgui-medium-shadow.png"))); // NOI18N
-        searchGuiButton.setToolTipText("Go to http://searchgui.googlecode.com");
+        searchGuiButton.setToolTipText("Go to http://compomics.github.io/projects/searchgui.html");
         searchGuiButton.setBorderPainted(false);
         searchGuiButton.setContentAreaFilled(false);
         searchGuiButton.setFocusPainted(false);
@@ -455,7 +455,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void openSearchGuiWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://searchgui.googlecode.com");
+        BareBonesBrowserLaunch.openURL("http://compomics.github.io/projects/searchgui.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
 

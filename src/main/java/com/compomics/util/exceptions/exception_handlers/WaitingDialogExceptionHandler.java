@@ -16,7 +16,7 @@ public class WaitingDialogExceptionHandler extends ExceptionHandler {
     private WaitingDialog waitingDialog;
     /**
      * The tool issues page, e.g.,
-     * http://code.google.com/p/peptide-shaker/issues/list.
+     * https://github.com/compomics/peptide-shaker/issues.
      */
     private String toolIssuesPage;
 
@@ -44,7 +44,7 @@ public class WaitingDialogExceptionHandler extends ExceptionHandler {
     protected void notifyUser(Exception e) {
         waitingDialog.appendReport("An error occurred: " + e.getLocalizedMessage(), true, true);
         if (getExceptionType(e).equals("Protein not found")) {
-            waitingDialog.appendReport("Please see the database help page (http://code.google.com/p/peptide-shaker/#Database_Help).", true, true);
+            waitingDialog.appendReport("Please see the database help page (http://compomics.github.io/searchgui/wiki/databasehelp.html).", true, true);
         } else {
             if (toolIssuesPage != null) {
                 waitingDialog.appendReport("Please contact the developers (" + toolIssuesPage + ").", true, true);

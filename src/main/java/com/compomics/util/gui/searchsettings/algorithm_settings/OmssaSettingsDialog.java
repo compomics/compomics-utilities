@@ -1334,7 +1334,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
                 public void run() {
                     JOptionPane.showMessageDialog(OmssaSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
                             "Note that the OMSSA " + (String) omssaOutputFormatComboBox.getSelectedItem()
-                            + " format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            + " format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

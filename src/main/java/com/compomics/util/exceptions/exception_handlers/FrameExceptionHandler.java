@@ -19,7 +19,7 @@ public class FrameExceptionHandler extends ExceptionHandler {
     private JFrame parent = null;
     /**
      * The tool issues page, e.g.,
-     * http://code.google.com/p/peptide-shaker/issues/list.
+     * https://github.com/compomics/peptide-shaker/issues.
      */
     private String toolIssuesPage;
 
@@ -28,7 +28,7 @@ public class FrameExceptionHandler extends ExceptionHandler {
      *
      * @param parent the parent frame used to display feedback
      * @param toolIssuesPage the tool issues page, e.g.,
-     * http://code.google.com/p/peptide-shaker/issues/list
+     * https://github.com/compomics/peptide-shaker/issues
      */
     public FrameExceptionHandler(JFrame parent, String toolIssuesPage) {
         this.parent = parent;
@@ -41,7 +41,7 @@ public class FrameExceptionHandler extends ExceptionHandler {
             if (getExceptionType(e).equals("Protein not found")) {
                 JOptionPane.showMessageDialog(parent, JOptionEditorPane.getJOptionEditorPane(
                         e.getLocalizedMessage() + "<br>"
-                        + "Please see the <a href=\"http://code.google.com/p/peptide-shaker/#Database_Help\">Database help page</a>.<br>"
+                        + "Please see the <a href=\"http://compomics.github.io/searchgui/wiki/databasehelp.html\">Database help page</a>.<br>"
                         + "This message will appear only once."),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else if (getExceptionType(e).equals("Serialization")) {

@@ -210,8 +210,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="reporterDownloadLinkLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt; http://reporter.googlecode.com&lt;/a&gt;&lt;/html&gt;"/>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://reporter.googlecode.com"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt;http://compomics.github.io/projects/reporter.html&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to http://compomics.github.io/projects/reporter.html"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="reporterDownloadLinkLabelMouseClicked"/>
@@ -224,7 +224,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/reporter_logo.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://reporter.googlecode.com"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to http://compomics.github.io/projects/reporter.html"/>
                 <Property name="borderPainted" type="boolean" value="false"/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="focusPainted" type="boolean" value="false"/>

@@ -341,7 +341,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "There was an error importing the FASTA file. Please see <a href=\"https://code.google.com/p/searchgui/wiki/DatabaseHelp\">DatabaseHelp</a>."),
+                            "There was an error importing the FASTA file. Please see <a href=\"http://compomics.github.io/searchgui/wiki/databasehelp.html\">DatabaseHelp</a>."),
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
@@ -928,7 +928,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private void databaseHelpSettingsJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_databaseHelpSettingsJLabelMouseClicked
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://code.google.com/p/searchgui/wiki/DatabaseHelp");
+        BareBonesBrowserLaunch.openURL("http://compomics.github.io/searchgui/wiki/databasehelp.html");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_databaseHelpSettingsJLabelMouseClicked
 

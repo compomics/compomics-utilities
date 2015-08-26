@@ -351,7 +351,7 @@ public class ToolFactory {
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Failed to start " + toolName + ".\n\n"
                     + "Inspect the log file for details: resources/" + toolName + ".log.\n\n"
-                    + "Then go to Troubleshooting at http://peptide-shaker.googlecode.com.",
+                    + "Then go to Troubleshooting at http://compomics.github.io/projects/peptide-shaker.html.",
                     toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
         }
     }

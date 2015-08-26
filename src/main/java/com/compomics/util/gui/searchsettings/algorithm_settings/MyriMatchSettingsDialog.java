@@ -863,7 +863,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     JOptionPane.showMessageDialog(MyriMatchSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "Note that the MyriMatch pepXML format is not compatible with <a href=\"http://www.peptide-shaker.googlecode.com\">PeptideShaker</a>."),
+                            "Note that the MyriMatch pepXML format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
                             "Format Warning", JOptionPane.WARNING_MESSAGE);
                 }
             });

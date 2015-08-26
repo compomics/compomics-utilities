@@ -105,10 +105,9 @@ Update the version number to latest released version, see the [Maven repository]
 
 (Click on figure to see the full size version)
 
-[![](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel.png)
-[![](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel.png)
-[![](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel.png)
-[![](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel.png)
-[![](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel.png)
+|  |  |  |
+|:--:|:--:|:--:|
+| [![](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/WellcomePanel.png) | [![](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/SpectrumPanel.png) | [![](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/ChromatogramPanel.png) |
+| [![](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/IsotopicDistributionPanel.png) | [![](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel_small.png)](https://github.com/compomics/compomics-utilities/wiki/images/InSilicoDigestionPanel.png) | |
 
 [Go to top of page](#compomics-utilities)

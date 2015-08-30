@@ -1,6 +1,6 @@
 package com.compomics.util.waiting;
 
-import no.uib.jsparklines.renderers.util.Util;
+import com.compomics.util.Util;
 
 /**
  * Class used to measure duration of a process.

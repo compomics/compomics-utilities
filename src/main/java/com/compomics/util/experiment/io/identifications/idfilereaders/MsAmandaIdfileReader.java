@@ -105,7 +105,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public String getExtension() {
-        return ".csv";
+        return ".ms-amanda.csv";
     }
 
     @Override

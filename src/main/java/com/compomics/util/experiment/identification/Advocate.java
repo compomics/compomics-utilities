@@ -138,6 +138,10 @@ public class Advocate {
      */
     public static final Advocate tide = new Advocate(28, "Tide", AdvocateType.search_engine, new Color(210, 105, 30));
     /**
+     * The Novor de novo sequencing algorithm.
+     */
+    public static final Advocate novor = new Advocate(29, "Novor", AdvocateType.sequencing_algorithm, new Color(135, 206, 235));
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
@@ -260,7 +264,7 @@ public class Advocate {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[30 + userAdvocates.size()];
+        Advocate[] result = new Advocate[31 + userAdvocates.size()];
         int i = 0;
         result[i] = mascot;
         result[++i] = omssa;
@@ -291,6 +295,7 @@ public class Advocate {
         result[++i] = zCore;
         result[++i] = percolator;
         result[++i] = pNovo;
+        result[++i] = novor;
         result[++i] = genericMzId;
 
         for (Advocate advocate : userAdvocates.values()) {
@@ -401,6 +406,8 @@ public class Advocate {
             return "15858974";
         } else if (this == pNovo) {
             return "23272783";
+        } else if (this == novor) {
+            return "26122521";
         } else if (this == andromeda) {
             return "21254760";
         } else if (this == direcTag) {

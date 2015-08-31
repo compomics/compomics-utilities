@@ -171,7 +171,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
             headerString = headerString.substring(0, headerString.length() - 1);
         }
 
-        // # id, scanNum, RT, mz(data), z, pepMass(denovo), err(data-denovo), ppm(1e6*err/(mz*z)), score, peptide, aaScore, 
         // parse the header line
         String[] headers = headerString.split(", ");
         int idIndex = -1, scanNumberIndex = -1, rtIndex = -1, mzIndex = -1, chargeIndex = -1, pepMassIndex = -1,
@@ -233,6 +232,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 
                 // get the novor e-value
                 //double novorEValue = Math.pow(10, -novorScore); // convert novor score to e-value // @TODO: is this correct?
+
                 // get the name of the spectrum file
                 String spectrumTitle = id + "";
                 if (spectrumFactory.fileLoaded(spectrumFileName)) {
@@ -270,13 +270,13 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             int modStart = i + 1;
                             int modEnd = peptideSequenceWithMods.indexOf(")", i + 1);
                             String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
-                            utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
+                            utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length())); // @TODO: check terminal ptms
                             i = modEnd;
                         } else if (currentChar == '[') {
                             int modStart = i + 1;
                             int modEnd = peptideSequenceWithMods.indexOf("]", i + 1);
                             String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
-                            utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
+                            utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length())); // @TODO: check terminal ptms
                             i = modEnd;
                         } else {
                             peptideSequence += currentChar;

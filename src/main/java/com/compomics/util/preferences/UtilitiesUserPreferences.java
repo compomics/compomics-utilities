@@ -108,6 +108,11 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private String peptideShakerPath = null;
     /**
+     * The path to the DeNovoGUI installation (if any). Set to null if no
+     * path is provided.
+     */
+    private String deNovoGuiPath = null;
+    /**
      * The path to the Reporter installation (if any). Set to null if no path is
      * provided.
      */
@@ -448,6 +453,24 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSearchGuiPath(String searchGuiPath) {
         this.searchGuiPath = searchGuiPath;
+    }
+    
+    /**
+     * Returns the path to the DeNovoGUI installation.
+     *
+     * @return the path to the DeNovoGUI installation
+     */
+    public String getDeNovoGuiPath() {
+        return deNovoGuiPath;
+    }
+
+    /**
+     * Set the path to the DeNovoGUI installation.
+     *
+     * @param deNovoGuiPath the path to the DeNovoGUI installation
+     */
+    public void setDeNovoGuiPath(String deNovoGuiPath) {
+        this.deNovoGuiPath = deNovoGuiPath;
     }
 
     /**

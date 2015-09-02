@@ -312,10 +312,11 @@ public class CompomicsWrapper {
             if (exitValue != 0) {
 
                 firstTry = false;
-                String temp = errorGobbler.getMessages().toLowerCase();
+                String errorMessage = errorGobbler.getMessages().toLowerCase();
+                String inputMessage = inputGobbler.getMessages().toLowerCase();
 
                 // if needed, try re-launching with reduced memory settings
-                if (temp.contains("could not create the java virtual machine")) {
+                if (errorMessage.contains("could not create the java virtual machine") || inputMessage.contains("could not reserve enough space")) {
                     if (userPreferences.getMemoryPreference() > 4 * 1024) {
                         userPreferences.setMemoryPreference(userPreferences.getMemoryPreference() / 2);
                         UtilitiesUserPreferences.saveUserPreferences(userPreferences);
@@ -346,16 +347,16 @@ public class CompomicsWrapper {
 
                         System.exit(0);
                     }
-                } else if (temp.toLowerCase().contains("cgcontextgetctm: invalid context") || temp.toLowerCase().contains("cgcontextsetbasectm: invalid context")) {
-                    System.out.println("Mac OS/Java error (can be ignored): " + temp);
+                } else if (errorMessage.toLowerCase().contains("cgcontextgetctm: invalid context") || errorMessage.toLowerCase().contains("cgcontextsetbasectm: invalid context")) {
+                    System.out.println("Mac OS/Java error (can be ignored): " + errorMessage);
                 } else {
 
-                    if (temp.lastIndexOf("noclassdeffound") != -1) {
+                    if (errorMessage.lastIndexOf("noclassdeffound") != -1) {
                         JOptionPane.showMessageDialog(null,
                                 "Seems like you are trying to start the tool from within a zip file!",
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        System.out.println("Unknown error: " + temp);
+                        System.out.println("Unknown error: " + errorMessage);
 
                         javax.swing.JOptionPane.showMessageDialog(null,
                                 JOptionEditorPane.getJOptionEditorPane("An error occurred when starting the tool.<br><br>"
@@ -365,7 +366,8 @@ public class CompomicsWrapper {
                     }
 
                     if (useStartUpLog) {
-                        bw.write(temp);
+                        bw.write(errorMessage);
+                        bw.write(inputMessage);
                         bw.close();
                     }
 

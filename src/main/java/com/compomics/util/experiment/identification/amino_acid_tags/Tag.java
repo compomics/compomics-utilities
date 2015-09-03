@@ -447,7 +447,7 @@ public class Tag extends ExperimentObject {
             AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) lastComponent;
             String cTerm = "COOH";
             PTMFactory ptmFactory = PTMFactory.getInstance();
-            for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(1)) {
+            for (ModificationMatch modificationMatch : aminoAcidPattern.getModificationsAt(aminoAcidPattern.length())) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
                     cTerm = ptm.getShortName();
@@ -459,7 +459,7 @@ public class Tag extends ExperimentObject {
             AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) lastComponent;
             String cTerm = "COOH";
             PTMFactory ptmFactory = PTMFactory.getInstance();
-            for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(1)) {
+            for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(aminoAcidSequence.length())) {
                 PTM ptm = ptmFactory.getPTM(modificationMatch.getTheoreticPtm());
                 if (ptm.getType() != PTM.MODAA && ptm.getType() != PTM.MODMAX) {
                     cTerm = ptm.getShortName();

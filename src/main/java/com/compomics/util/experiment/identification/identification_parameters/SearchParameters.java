@@ -512,36 +512,44 @@ public class SearchParameters implements Serializable {
     /**
      * Loads the identification parameters from a serialized file.
      *
-     * @param file the file
+     * @param searchParametersFile the search parameter file
      * @return the modification file
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static SearchParameters getIdentificationParameters(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SearchParameters result = (SearchParameters) SerializationUtils.readObject(file);
+    public static SearchParameters getIdentificationParameters(File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        SearchParameters searchParameters = (SearchParameters) SerializationUtils.readObject(searchParametersFile);
 
         // compatibility check
-        if (result.getEnzyme().getName().equals("no enzyme")) {
-            result.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
+        if (searchParameters.getEnzyme().getName().equals("no enzyme")) {
+            searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
         }
+        
+        // check the file location
+        searchParameters.setParametersFile(searchParametersFile);
+        SearchParameters.saveIdentificationParameters(searchParameters, searchParametersFile);
 
-        return result;
+        return searchParameters;
     }
 
     /**
      * Saves the identification parameters to a serialized file.
      *
      * @param identificationParameters the identification parameters
-     * @param file the file
+     * @param searchParametersFile the file
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static void saveIdentificationParameters(SearchParameters identificationParameters, File file) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SerializationUtils.writeObject(identificationParameters, file);
+    public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        
+        // check the file location
+        identificationParameters.setParametersFile(searchParametersFile);
+        
+        SerializationUtils.writeObject(identificationParameters, searchParametersFile);
     }
 
     /**

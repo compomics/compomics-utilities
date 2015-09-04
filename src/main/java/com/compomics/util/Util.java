@@ -100,9 +100,10 @@ public class Util {
      * attempting to delete and returns false.
      *
      * @param dir the directory to delete
+     * 
      * @return rue if all deletions were successful
      */
-    public static boolean deleteDir(File dir) {
+    public static boolean emptyDir(File dir) {
         if (dir.isDirectory()) {
             for (File child : dir.listFiles()) {
                 boolean success = deleteDir(child);
@@ -110,6 +111,22 @@ public class Util {
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    /**
+     * Deletes all files and subdirectories under dir and dir itself. Returns true if all
+     * deletions were successful. If a deletion fails, the method stops
+     * attempting to delete and returns false.
+     *
+     * @param dir the directory to delete
+     * @return rue if all deletions were successful
+     */
+    public static boolean deleteDir(File dir) {
+        boolean empty = emptyDir(dir);
+        if (!empty) {
+            return false;
         }
         return dir.delete();
     }

@@ -19,8 +19,10 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
+import no.uib.jsparklines.data.ArrrayListDataPoints;
 import no.uib.jsparklines.data.XYDataPoint;
 import no.uib.jsparklines.data.StartIndexes;
+import no.uib.jsparklines.renderers.JSparklinesArrayListBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
 import no.uib.jsparklines.renderers.util.AreaRenderer;
 import no.uib.jsparklines.renderers.util.GradientColorCoding;
@@ -46,8 +48,9 @@ import org.jfree.chart.annotations.XYTextAnnotation;
 /**
  * A dialog that makes it straightforward to inspect compare the values of two
  * columns in a table in a XY plot. Currently supported data types for the plots
- * are Integer, Double, XYDataPoint and StartIndexes. For XYDataPoint the x
- * value is used, while for StartIndexes the first index is used.
+ * are Integer, Double, XYDataPoint, StartIndexes and ArrrayListDataPoints. For
+ * XYDataPoint the x value is used, while for StartIndexes the first index is
+ * used. For the ArrrayListDataPoints the ValueDisplayType is used.
  *
  * @author Harald Barsnes
  */
@@ -183,18 +186,40 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * The rows remaining after applying the data filters.
      */
     private ArrayList<Integer> rowsAfterDataFiltering = new ArrayList<Integer>();
+    /**
+     * The plotting dialog types.
+     */
+    public enum PlottingDialogPlotType {
+
+        /**
+         * XY plot.
+         */
+        xyPlot,
+        /**
+         * Histogram.
+         */
+        histogram,
+        /**
+         * Density plot.
+         */
+        densityPlot
+    }
 
     /**
      * Creates a new XYPlottingDialog.
      *
      * @param dialogParent the dialog parent
      * @param table the table to display the xy plot for
+     * @param selectedColumn the column header for the selected column, can be
+     * null
+     * @param plotType the plot type
      * @param tableToolTips the table tooltips
      * @param modal if the dialog is to be modal or not
      * @param normalIcon the normal icon for the parent dialog
      * @param waitingIcon the icon to use when busy
      */
-    public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, ArrayList<String> tableToolTips,
+    public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, String selectedColumn,
+            PlottingDialogPlotType plotType, ArrayList<String> tableToolTips,
             Image normalIcon, Image waitingIcon, boolean modal) {
         super(dialogParent, modal);
         initComponents();
@@ -218,6 +243,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         this.tableToolTips = tableToolTips;
 
         setUpGUI();
+
+        if (selectedColumn != null) {
+            xAxisComboBox.setSelectedItem(selectedColumn);
+        }
+
+        if (plotType == PlottingDialogPlotType.xyPlot) {
+            xyPlotRadioButton.setSelected(true);
+        } else if (plotType == PlottingDialogPlotType.histogram) {
+            histogramRadioButton.setSelected(true);
+        } else if (plotType == PlottingDialogPlotType.densityPlot) {
+            densityPlotRadioButton.setSelected(true);
+        }
+
         updatePlot();
         setLocationRelativeTo(dialogParent);
         backgroundPanelComponentResized(null);
@@ -1652,9 +1690,18 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
                                         values[index] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, xAxisIndex);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            values[index] = arrrayListDataPoints.getSum();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            values[index] = arrrayListDataPoints.getSumExceptLast();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            values[index] = arrrayListDataPoints.getData().get(0);
+                                        }
+                                    }
                                 }
-
-                                // @TODO: what about null values?
                             }
                         }
 
@@ -1806,6 +1853,35 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                             minColorValue = tempColorValue;
                                         }
                                     }
+                                } else if (tableModel.getValueAt(i, colorIndex) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, colorIndex);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            double tempColorValue = arrrayListDataPoints.getSum();
+                                            if (tempColorValue > maxColorValue) {
+                                                maxColorValue = tempColorValue;
+                                            }
+                                            if (tempColorValue < minColorValue) {
+                                                minColorValue = tempColorValue;
+                                            }
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            double tempColorValue = arrrayListDataPoints.getSumExceptLast();
+                                            if (tempColorValue > maxColorValue) {
+                                                maxColorValue = tempColorValue;
+                                            }
+                                            if (tempColorValue < minColorValue) {
+                                                minColorValue = tempColorValue;
+                                            }
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            double tempColorValue = arrrayListDataPoints.getData().get(0);
+                                            if (tempColorValue > maxColorValue) {
+                                                maxColorValue = tempColorValue;
+                                            }
+                                            if (tempColorValue < minColorValue) {
+                                                minColorValue = tempColorValue;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1849,6 +1925,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
                                         tempDataXYZ[0][counter] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
+                                } else if (tableModel.getValueAt(index, xAxisIndex) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, xAxisIndex);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getSum();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getSumExceptLast();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getData().get(0);
+                                        }
+                                    }
                                 }
 
                                 if (tableModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
@@ -1860,6 +1947,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 } else if (tableModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
                                     if (((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
                                         tempDataXYZ[1][counter] = ((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
+                                    }
+                                } else if (tableModel.getValueAt(index, yAxisIndex) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, yAxisIndex);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getSum();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getSumExceptLast();
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getData().get(0);
+                                        }
                                     }
                                 }
 
@@ -1886,6 +1984,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
                                         if (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
                                             tempDataXYZ[2][counter] = (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0));
+                                        } else {
+                                            tempDataXYZ[2][counter] = 0;
+                                        }
+                                    } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof ArrrayListDataPoints) {
+                                        ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, bubbleSizeIndex - 1);
+                                        if (!arrrayListDataPoints.getData().isEmpty()) {
+                                            if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getSum();
+                                            } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getSumExceptLast();
+                                            } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getData().get(0);
+                                            }
                                         } else {
                                             tempDataXYZ[2][counter] = 0;
                                         }
@@ -1924,6 +2035,22 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 if (((StartIndexes) tempObject).getIndexes().size() > 0) {
                                     datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(
                                             ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minColorValue, maxColorValue, colorGradient, false));
+                                } else {
+                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
+                                }
+                            } else if (tempObject instanceof ArrrayListDataPoints) {
+                                ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tempObject;
+                                if (!arrrayListDataPoints.getData().isEmpty()) {
+                                    if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getSum(),
+                                                minColorValue, maxColorValue, colorGradient, false));
+                                    } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getSumExceptLast(),
+                                                minColorValue, maxColorValue, colorGradient, false));
+                                    } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getData().get(0),
+                                                minColorValue, maxColorValue, colorGradient, false));
+                                    }
                                 } else {
                                     datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
                                 }
@@ -2514,7 +2641,26 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() <= value) {
                                         include = false;
                                     }
+                                } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+                                    StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+                                    if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) <= value) {
+                                        include = false;
+                                    }
+                                } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            include = arrrayListDataPoints.getSum() <= value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            include = arrrayListDataPoints.getSumExceptLast() <= value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            include = arrrayListDataPoints.getData().get(0) <= value;
+                                        }
+                                    } else {
+                                        include = false;
+                                    }
                                 }
+
                             } catch (NumberFormatException e) {
                                 filterError = true;
                             }
@@ -2539,6 +2685,24 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     }
                                 } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() >= value) {
+                                        include = false;
+                                    }
+                                } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+                                    StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+                                    if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) >= value) {
+                                        include = false;
+                                    }
+                                } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            include = arrrayListDataPoints.getSum() >= value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            include = arrrayListDataPoints.getSumExceptLast() >= value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            include = arrrayListDataPoints.getData().get(0) >= value;
+                                        }
+                                    } else {
                                         include = false;
                                     }
                                 }
@@ -2571,6 +2735,24 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     }
                                 } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() != value) {
+                                        include = false;
+                                    }
+                                } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+                                    StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+                                    if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) != value) {
+                                        include = false;
+                                    }
+                                } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+                                    ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+                                    if (!arrrayListDataPoints.getData().isEmpty()) {
+                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
+                                            include = arrrayListDataPoints.getSum() != value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
+                                            include = arrrayListDataPoints.getSumExceptLast() != value;
+                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
+                                            include = arrrayListDataPoints.getData().get(0) != value;
+                                        }
+                                    } else {
                                         include = false;
                                     }
                                 }

@@ -7,6 +7,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerDummy;
 import java.awt.Component;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -418,10 +419,12 @@ public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
         proteinTableHeader.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int column = proteinTableHeader.getColumnModel().getColumnIndexAtX(evt.getX());
-                SelfUpdatingTableModel model = (SelfUpdatingTableModel) finalTable.getModel();
-                model.sort(column, progressDialogX);
-                model.unsorted = false;
+                if (evt.getButton() == MouseEvent.BUTTON1) {
+                    int column = proteinTableHeader.getColumnModel().getColumnIndexAtX(evt.getX());
+                    SelfUpdatingTableModel model = (SelfUpdatingTableModel) finalTable.getModel();
+                    model.sort(column, progressDialogX);
+                    model.unsorted = false;
+                }
             }
         });
 

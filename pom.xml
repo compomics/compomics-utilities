@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.0.4</version>
+    <version>4.0.5</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
     <description>Open-source java library for computational proteomics</description>
@@ -435,7 +435,7 @@
         <dependency>
             <groupId>no.uib</groupId>
             <artifactId>jsparklines</artifactId>
-            <version>0.8.0</version>
+            <version>1.0.6</version>
         </dependency>
         
         <dependency>

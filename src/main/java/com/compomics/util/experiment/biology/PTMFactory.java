@@ -136,12 +136,12 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given ptm targetting a single amino acid instead
+     * Returns a clone of the given PTM targeting a single amino acid instead
      * of a pattern.
      *
      * @param modification the modification of interest
      *
-     * @return a clone of the given ptm targetting a single amino acid instead
+     * @return a clone of the given PTM targeting a single amino acid instead
      * of a pattern
      */
     public static PTM getSingleAAPTM(PTM modification) {
@@ -153,12 +153,12 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given ptm targetting a single amino acid instead
+     * Returns a clone of the given PTM targeting a single amino acid instead
      * of a pattern.
      *
      * @param modificationName the name of the modification of interest
      *
-     * @return a clone of the given ptm targetting a single amino acid instead
+     * @return a clone of the given PTM targeting a single amino acid instead
      * of a pattern
      */
     public PTM getSingleAAPTM(String modificationName) {

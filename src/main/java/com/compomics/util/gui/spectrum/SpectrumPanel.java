@@ -1167,7 +1167,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags, boolean mirrored) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                0.9, 1.0, 0.2f, 0.2f, true, mirrored);
+                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored);
     }
 
     /**
@@ -1199,7 +1199,7 @@ public class SpectrumPanel extends GraphicsPanel {
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, true, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored);
     }
 
     /**
@@ -1232,7 +1232,7 @@ public class SpectrumPanel extends GraphicsPanel {
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedPtms, boolean mirrored) {
         addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, excludeFixedPtms, mirrored);
     }
 
     /**
@@ -1260,7 +1260,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags, boolean mirrored) {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                0.9, 1.0, 0.2f, 0.2f, true, mirrored);
+                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored);
     }
 
     /**
@@ -1292,7 +1292,7 @@ public class SpectrumPanel extends GraphicsPanel {
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored) {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, true, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored);
     }
 
     /**
@@ -1316,6 +1316,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * annotation [0-1]
      * @param rewindIonPercentHeight the percent height of the reverse ion
      * annotation [0-1]
+     * @param alphaLevels the individual alpha levels, if set override
+     * forwardIonAlphaLevel and rewindIonAlphaLevel
      * @param excludeFixedPtms are fixed PTMs to be annotated?
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
@@ -1323,9 +1325,9 @@ public class SpectrumPanel extends GraphicsPanel {
             Tag tag, ArrayList<IonMatch> annotations,
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedPtms, boolean mirrored) {
+            double forwardIonPercentHeight, double rewindIonPercentHeight, ArrayList<float[]> alphaLevels, boolean excludeFixedPtms, boolean mirrored) {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, excludeFixedPtms, mirrored);
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedPtms, mirrored);
     }
 
     /**
@@ -1350,6 +1352,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * annotation [0-1]
      * @param forwardIonAlphaLevel alpha level of the forward ions
      * @param rewindIonAlphaLevel alpha level of the reverse ions
+     * @param alphaLevels the individual alpha levels, if set override
+     * forwardIonAlphaLevel and rewindIonAlphaLevel
      * @param excludeFixedPtms are fixed PTMs to be annotated?
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
@@ -1358,7 +1362,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showRewindTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel,
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel, ArrayList<float[]> alphaLevels,
             boolean excludeFixedPtms, boolean mirrored) {
 
         int forwardIon = aForwardIon;
@@ -1399,11 +1403,16 @@ public class SpectrumPanel extends GraphicsPanel {
                     if (modifiedIndexes.contains(currentPeptide.getSequence().length() - i)) {
                         mod = "*";
                     }
+                    
+                    float currentAlphaLevel = rewindIonAlphaLevel;
+                    if (alphaLevels != null) {
+                        currentAlphaLevel = alphaLevels.get(0)[currentPeptide.getSequence().length() - i];
+                    }
 
                     addReferenceAreaXAxis(new ReferenceArea(
                             "r" + i + "_" + mirrored,
                             currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
-                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                             Color.lightGray, 0.2f, rewindIonPercentHeight, !mirrored));
                 }
             }
@@ -1422,11 +1431,16 @@ public class SpectrumPanel extends GraphicsPanel {
                     if (modifiedIndexes.contains(i + 1)) {
                         mod = "*";
                     }
+                    
+                    float currentAlphaLevel = forwardIonAlphaLevel;
+                    if (alphaLevels != null) {
+                        currentAlphaLevel = alphaLevels.get(0)[i];
+                    }
 
                     addReferenceAreaXAxis(new ReferenceArea(
                             "f" + i + "_" + mirrored,
                             currentPeptide.getSequence().substring(i, i + 1) + mod,
-                            forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                            forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                             Color.lightGray, 0.2f, forwardIonPercentHeight, !mirrored));
                 }
             }
@@ -1455,6 +1469,8 @@ public class SpectrumPanel extends GraphicsPanel {
      * annotation [0-1]
      * @param forwardIonAlphaLevel alpha level of the forward ions
      * @param rewindIonAlphaLevel alpha level of the reverse ions
+     * @param alphaLevels the individual alpha levels, if set override
+     * forwardIonAlphaLevel and rewindIonAlphaLevel
      * @param excludeFixedPtms are fixed PTMs to be annotated?
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
@@ -1463,7 +1479,7 @@ public class SpectrumPanel extends GraphicsPanel {
             int aForwardIon, int aRewindIon, int aDeNovoCharge,
             boolean showForwardTags, boolean showReverseTags,
             double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel,
+            float forwardIonAlphaLevel, float rewindIonAlphaLevel, ArrayList<float[]> alphaLevels,
             boolean excludeFixedPtms, boolean mirrored) {
 
         int forwardIon = aForwardIon;
@@ -1487,7 +1503,10 @@ public class SpectrumPanel extends GraphicsPanel {
         }
 
         // add forward annotation
-        for (TagComponent tagComponent : tag.getContent()) {
+        for (int tagCount = 0; tagCount < tag.getContent().size(); tagCount++) {
+
+            TagComponent tagComponent = tag.getContent().get(tagCount);
+
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
 
@@ -1505,10 +1524,16 @@ public class SpectrumPanel extends GraphicsPanel {
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
+
+                            float currentAlphaLevel = forwardIonAlphaLevel;
+                            if (alphaLevels != null) {
+                                currentAlphaLevel = alphaLevels.get(tagCount)[i];
+                            }
+
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "f" + i + "_" + mirrored,
                                     aminoAcidPattern.asSequence(i) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, forwardIonPercentHeight, !mirrored));
                         }
                     }
@@ -1530,10 +1555,16 @@ public class SpectrumPanel extends GraphicsPanel {
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
+
+                            float currentAlphaLevel = forwardIonAlphaLevel;
+                            if (alphaLevels != null) {
+                                currentAlphaLevel = alphaLevels.get(tagCount)[i];
+                            }
+
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "f" + i + "_" + mirrored,
                                     aminoAcidSequence.charAt(i) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, forwardIonAlphaLevel, false, true, annotationColor, true,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, forwardIonPercentHeight, !mirrored));
                         }
                     }
@@ -1549,7 +1580,10 @@ public class SpectrumPanel extends GraphicsPanel {
         Collections.reverse(reversedTag);
 
         // add reverse annotation
-        for (TagComponent tagComponent : reversedTag) {
+        for (int tagCount = 0; tagCount < reversedTag.size(); tagCount++) {
+
+            TagComponent tagComponent = reversedTag.get(tagCount);
+
             if (tagComponent instanceof AminoAcidPattern) {
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
 
@@ -1562,16 +1596,22 @@ public class SpectrumPanel extends GraphicsPanel {
                         IonMatch ionMatch1 = rewindMap.get(i);
                         IonMatch ionMatch2 = rewindMap.get(i + 1);
                         if (ionMatch1 != null && ionMatch2 != null) {
-                            int patternIndex = aminoAcidPattern.length() - i - 1;
+                            int sequenceIndex = aminoAcidPattern.length() - i - 1;
                             String mod = "";
-                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(patternIndex + 1);
+                            ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(sequenceIndex + 1);
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
+                            
+                            float currentAlphaLevel = rewindIonAlphaLevel;
+                            if (alphaLevels != null) {
+                                currentAlphaLevel = alphaLevels.get(tagCount)[sequenceIndex];
+                            }
+                            
                             addReferenceAreaXAxis(new ReferenceArea(
-                                    "r" + patternIndex + "_" + mirrored,
-                                    aminoAcidPattern.asSequence(patternIndex) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                                    "r" + sequenceIndex + "_" + mirrored,
+                                    aminoAcidPattern.asSequence(sequenceIndex) + mod,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, rewindIonPercentHeight, !mirrored));
                         }
                     }
@@ -1594,10 +1634,16 @@ public class SpectrumPanel extends GraphicsPanel {
                             if (!modificationMatches.isEmpty()) {
                                 mod = "*";
                             }
+                            
+                            float currentAlphaLevel = rewindIonAlphaLevel;
+                            if (alphaLevels != null) {
+                                currentAlphaLevel = alphaLevels.get(tagCount)[sequenceIndex];
+                            }
+                            
                             addReferenceAreaXAxis(new ReferenceArea(
                                     "r" + sequenceIndex + "_" + mirrored,
                                     aminoAcidSequence.charAt(sequenceIndex) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, rewindIonAlphaLevel, false, true, annotationColor, true,
+                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
                                     Color.lightGray, 0.2f, rewindIonPercentHeight, !mirrored));
                         }
                     }

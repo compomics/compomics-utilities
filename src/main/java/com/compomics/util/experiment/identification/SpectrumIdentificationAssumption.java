@@ -6,6 +6,7 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 
 /**
  * Spectrum identification assumption made by an identification algorithm.
@@ -42,6 +43,10 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * The raw score as provided by the identification algorithm.
      */
     protected Double rawScore;
+    /**
+     * The individual amino acid scores. Null if not set.
+     */
+    protected ArrayList<double[]> aminoAcidScores = null;
 
     /**
      * Get the identification rank.
@@ -200,5 +205,27 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public void setRawScore(Double rawScore) {
         this.rawScore = rawScore;
+    }
+
+    /**
+     * Returns the amino acid scores. Null of not set. For Peptide objects the
+     * list only contains one element, while for Tag objects the list will be
+     * indexed in identically to the TagComponent list.
+     *
+     * @return the amino acid scores
+     */
+    public ArrayList<double[]> getAminoAcidScores() {
+        return aminoAcidScores;
+    }
+
+    /**
+     * Set the amino acid scores. For Peptide objects the list should only
+     * contain one element, while for Tag objects the list should be indexed in
+     * identical to the TagComponent list.
+     *
+     * @param aminoAcidScores the amino acid scores
+     */
+    public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
+        this.aminoAcidScores = aminoAcidScores;
     }
 }

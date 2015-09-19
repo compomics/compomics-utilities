@@ -232,6 +232,15 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 
                 // get the novor e-value
                 //double novorEValue = Math.pow(10, -novorScore); // convert novor score to e-value // @TODO: is this correct?
+                // amino acids scores
+                String aminoAcidScoresAsString = elements[aaScoreIndex];
+                String[] tempAminoAcidScores = aminoAcidScoresAsString.split("-");
+                double[] aminoAcidScoresAsList = new double[tempAminoAcidScores.length];
+                for (int i = 0; i < tempAminoAcidScores.length; i++) {
+                    aminoAcidScoresAsList[i] = Double.valueOf(tempAminoAcidScores[i]);
+                }
+                ArrayList<double[]> aminoAcidScores = new ArrayList<double[]>(1);
+                aminoAcidScores.add(aminoAcidScoresAsList);
 
                 // get the name of the spectrum file
                 String spectrumTitle = id + "";
@@ -261,10 +270,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 if (peptideSequenceWithMods.contains("(") || peptideSequenceWithMods.contains("[")) {
 
                     peptideSequence = "";
-                    
-                    if (peptideSequenceWithMods.equalsIgnoreCase("[Carbamilation of protein N-term]TAVHQLSEELR")) {
-                        int sdf=0;
-                    }
 
                     for (int i = 0; i < peptideSequenceWithMods.length(); i++) {
 
@@ -304,6 +309,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 }
                 Tag tag = new Tag(0, aminoAcidSequence, 0);
                 TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, peptideCharge, novorScore);
+                tagAssumption.setAminoAcidScores(aminoAcidScores);
                 //tagAssumption.setRawScore(novorScore);
 
                 currentMatch.addHit(Advocate.novor.getIndex(), tagAssumption, true);

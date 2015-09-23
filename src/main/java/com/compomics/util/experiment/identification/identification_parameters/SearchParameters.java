@@ -3,6 +3,19 @@ package com.compomics.util.experiment.identification.identification_parameters;
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PepnovoParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
 import java.io.*;
@@ -110,6 +123,72 @@ public class SearchParameters implements Serializable {
      * Constructor.
      */
     public SearchParameters() {
+        setDefaultAdvancedSettings();
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param searchParameters the search parameter to base the search
+     * parameters on.
+     */
+    public SearchParameters(SearchParameters searchParameters) {
+        setDefaultAdvancedSettings(searchParameters);
+    }
+
+    /**
+     * Set the advanced settings to the default values.
+     */
+    public void setDefaultAdvancedSettings() {
+        setDefaultAdvancedSettings(null);
+    }
+
+    /**
+     * Set the advanced settings to the values in the given search parameters
+     * object or to the default values of the advanced settings are not set for
+     * a given advocate.
+     *
+     * @param searchParameters the search parameter to extract the advanced
+     * settings from
+     */
+    public void setDefaultAdvancedSettings(SearchParameters searchParameters) {
+
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), new OmssaParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), new XtandemParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), new MsgfParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), new MsAmandaParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), new MyriMatchParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), new CometParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.tide.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), new TideParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), new AndromedaParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), new PepnovoParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), new DirecTagParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), new PNovoParameters());
+        }
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), new NovorParameters());
+        }
     }
 
     /**
@@ -527,6 +606,9 @@ public class SearchParameters implements Serializable {
             searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
         }
         
+        // add the advanced settings if not set
+        searchParameters.setDefaultAdvancedSettings(searchParameters);
+
         // check the file location
         searchParameters.setParametersFile(searchParametersFile);
         SearchParameters.saveIdentificationParameters(searchParameters, searchParametersFile);
@@ -545,10 +627,10 @@ public class SearchParameters implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         // check the file location
         identificationParameters.setParametersFile(searchParametersFile);
-        
+
         SerializationUtils.writeObject(identificationParameters, searchParametersFile);
     }
 

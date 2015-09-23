@@ -20,6 +20,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1210,8 +1211,23 @@ public class IdentificationParametersInputBean {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id);
             pNovoParameters.setActicationType(arg);
         }
-
+        
         searchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
+        
+        ///////////////////////////////////
+        // Novor parameters
+        ///////////////////////////////////
+        NovorParameters novorParameters = new NovorParameters();
+        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
+            novorParameters.setFragmentationMethod(arg);
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id);
+            novorParameters.setMassAnalyzer(arg);
+        }
+
+        searchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), pNovoParameters);
     }
 
     /**
@@ -2588,6 +2604,24 @@ public class IdentificationParametersInputBean {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id);
             List<String> supportedInput = Arrays.asList("HCD", "CID", "ETD");
             if (!isInList(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        
+        //*************************
+        // Novor options
+        //*************************
+        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
+            List<String> supportedInput = Arrays.asList("HCD", "CID");
+            if (!isInList(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id);
+            List<String> supportedInput = Arrays.asList("Trap", "TOF", "FT");
+            if (!isInList(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id, arg, supportedInput)) {
                 return false;
             }
         }

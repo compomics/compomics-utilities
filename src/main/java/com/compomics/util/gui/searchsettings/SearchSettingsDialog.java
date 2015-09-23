@@ -23,6 +23,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
@@ -2067,6 +2068,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()));
         } else {
             tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), new PNovoParameters());
+        }
+        if (searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()) != null) {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()));
+        } else {
+            tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), new NovorParameters());
         }
 
         String dbPath = databaseSettingsTxt.getText().trim();

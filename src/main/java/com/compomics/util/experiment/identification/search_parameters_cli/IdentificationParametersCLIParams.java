@@ -262,7 +262,12 @@ public enum IdentificationParametersCLIParams {
     PNOVO_NUMBER_OF_PEPTIDES("pnovo_num_peptides", "pNovo+ number of peptides per spectrum, default is '10'.", false),
     PNOVO_LOWER_PRECURSOR_MASS("pnovo_lower_prec", "pNovo+ minimum precursor mass, default is '300'.", false),
     PNOVO_UPPER_PRECURSOR_MASS("pnovo_upper_prec", "pNovo+ maximum precursor mass, default is '5000'.", false),
-    PNOVO_ACTIVATION_TYPE("pnovo_activation", "pNovo+ actication type (HCD, CID or EDT), default is 'HCD'.", false);
+    PNOVO_ACTIVATION_TYPE("pnovo_activation", "pNovo+ actication type (HCD, CID or EDT), default is 'HCD'.", false),
+    //////////////////////////////////
+    // Novor specific parameters
+    //////////////////////////////////
+    NOVOR_FRAGMENTATION("novor_fragmentation", "Novor fragmentation method, CID or HCD, default is 'HCD'.", false),
+    NOVOR_MASS_ANALYZER("novor_mass_analyzer", "Novor mass analyzer, Trap, TOF, or FT, default is 'FT'.", false);
 
     /**
      * Short Id for the CLI parameter.

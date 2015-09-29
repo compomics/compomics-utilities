@@ -16,7 +16,11 @@ public enum PtmScore {
     /**
      * The PhosphoRS score.
      */
-    PhosphoRS(1, "PhosphoRS");
+    PhosphoRS(1, "PhosphoRS"),
+    /**
+     * No probabilistic score.
+     */
+    None(2, "None");
     /**
      * Score id number.
      */
@@ -35,6 +39,10 @@ public enum PtmScore {
     private PtmScore(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public String toString() {
+        return name;
     }
 
     /**
@@ -64,6 +72,7 @@ public enum PtmScore {
         ArrayList<PtmScore> result = new ArrayList<PtmScore>();
         result.add(AScore);
         result.add(PhosphoRS);
+        result.add(None);
         return result;
     }
 
@@ -79,7 +88,7 @@ public enum PtmScore {
                 return ptmScore;
             }
         }
-        throw new IllegalArgumentException("Ptm score of id " + id + " not recognized.");
+        throw new IllegalArgumentException("PTM score of id " + id + " not recognized.");
     }
 
     /**
@@ -94,7 +103,7 @@ public enum PtmScore {
                 return ptmScore;
             }
         }
-        throw new IllegalArgumentException("Ptm score of name " + name + " not recognized.");
+        throw new IllegalArgumentException("PTM score of name " + name + " not recognized.");
     }
 
     /**
@@ -118,12 +127,12 @@ public enum PtmScore {
      *
      * @return a list containing the names of the implemented scores
      */
-    public static String[] getScoreNames() {
-        ArrayList<PtmScore> scores = getImplementedPtmScores();
-        String[] names = new String[scores.size()];
-        for (int i = 0; i < scores.size(); i++) {
-            names[i] = scores.get(i).getName();
+    public static PtmScore[] getScoresAsList() {
+        ArrayList<PtmScore> tempScores = getImplementedPtmScores();
+        PtmScore[] scores = new PtmScore[tempScores.size()];
+        for (int i = 0; i < tempScores.size(); i++) {
+            scores[i] = tempScores.get(i);
         }
-        return names;
+        return scores;
     }
 }

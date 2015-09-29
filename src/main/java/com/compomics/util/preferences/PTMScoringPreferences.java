@@ -40,7 +40,7 @@ public class PTMScoringPreferences implements Serializable {
      */
     private Boolean probabilisticScoreNeutralLosses = false;
     /**
-     * The preferences to use when matching ptms to amino acid sequences.
+     * The preferences to use when matching PTMs to amino acid sequences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
 

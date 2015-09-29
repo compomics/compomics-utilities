@@ -240,33 +240,30 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="neutralLossesLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="estimateAScoreLabel" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="61" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="probabilisticScoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
-                                          <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
-                                          <Component id="neutralLossesCmb" alignment="1" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="neutralLossesLabel3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="thresholdCmb" min="-2" pref="185" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="thresholdTxt" min="-2" pref="185" max="-2" attributes="0"/>
+                                      <Component id="thresholdAutpoLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace pref="74" max="32767" attributes="0"/>
+                                      <Component id="thresholdAutpoCmb" min="-2" pref="185" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="aScoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="scoreTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="thresholdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
+                                              <Component id="neutralLossesCmb" alignment="1" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Component id="thresholdTxt" alignment="1" min="-2" pref="185" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
@@ -280,27 +277,22 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="estimateAScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="probabilisticScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scoreTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="scoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="neutralLossesLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="neutralLossesLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="thresholdCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdAutpoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdAutpoCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="aScoreLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="thresholdTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -312,44 +304,29 @@
             <Component class="javax.swing.JComboBox" name="scoreCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new DefaultComboBoxModel(PtmScore.getScoreNames())" type="code"/>
+                  <Connection code="new DefaultComboBoxModel(PtmScore.getScoresAsList())" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scoreCmbActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="thresholdTxt">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="aScoreLabel">
+            <Component class="javax.swing.JLabel" name="thresholdLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Threshold"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="probabilisticScoreCmb">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Yes"/>
-                    <StringItem index="1" value="No"/>
-                  </StringArray>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="probabilisticScoreCmbActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="neutralLossesLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Score"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="estimateAScoreLabel">
+            <Component class="javax.swing.JLabel" name="scoreTypeLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Probabilistic Score"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="neutralLossesLabel1">
+            <Component class="javax.swing.JLabel" name="neutralLossesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Account Neutral Losses"/>
               </Properties>
@@ -364,12 +341,12 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="neutralLossesLabel3">
+            <Component class="javax.swing.JLabel" name="thresholdAutpoLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Threshold Auto"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="thresholdCmb">
+            <Component class="javax.swing.JComboBox" name="thresholdAutpoCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -379,7 +356,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="thresholdCmbActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="thresholdAutpoCmbActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

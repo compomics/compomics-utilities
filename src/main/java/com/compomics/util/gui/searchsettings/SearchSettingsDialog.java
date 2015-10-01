@@ -321,7 +321,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         modificationsLayeredPane = new javax.swing.JLayeredPane();
         modificationsPanel = new javax.swing.JPanel();
         modificationTypesSplitPane = new javax.swing.JSplitPane();
-        jPanel8 = new javax.swing.JPanel();
+        fixedModsPanel = new javax.swing.JPanel();
         fixedModificationsLabel = new javax.swing.JLabel();
         addFixedModification = new javax.swing.JButton();
         removeFixedModification = new javax.swing.JButton();
@@ -332,7 +332,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 super.changeSelection(rowIndex, columnIndex, !extend, extend);
             }
         };
-        jPanel9 = new javax.swing.JPanel();
+        variableModsPanel = new javax.swing.JPanel();
         variableModificationsLabel = new javax.swing.JLabel();
         addVariableModification = new javax.swing.JButton();
         removeVariableModification = new javax.swing.JButton();
@@ -370,7 +370,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Search Settings");
-        setMinimumSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(700, 580));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -568,7 +568,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        jPanel8.setOpaque(false);
+        fixedModsPanel.setOpaque(false);
 
         fixedModificationsLabel.setFont(fixedModificationsLabel.getFont().deriveFont((fixedModificationsLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         fixedModificationsLabel.setText("Fixed Modifications");
@@ -629,30 +629,30 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         });
         fixedModsJScrollPane.setViewportView(fixedModsTable);
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
+        javax.swing.GroupLayout fixedModsPanelLayout = new javax.swing.GroupLayout(fixedModsPanel);
+        fixedModsPanel.setLayout(fixedModsPanelLayout);
+        fixedModsPanelLayout.setHorizontalGroup(
+            fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fixedModsPanelLayout.createSequentialGroup()
+                .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(fixedModificationsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                         .addGap(242, 242, 242))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
+                    .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(7, 7, 7)))
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(removeFixedModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addFixedModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
+        fixedModsPanelLayout.setVerticalGroup(
+            fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fixedModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(fixedModificationsLabel)
                 .addGap(6, 6, 6)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(addFixedModification)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeFixedModification)
@@ -660,9 +660,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        modificationTypesSplitPane.setLeftComponent(jPanel8);
+        modificationTypesSplitPane.setLeftComponent(fixedModsPanel);
 
-        jPanel9.setOpaque(false);
+        variableModsPanel.setOpaque(false);
 
         variableModificationsLabel.setFont(variableModificationsLabel.getFont().deriveFont((variableModificationsLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         variableModificationsLabel.setText("Variable Modifications");
@@ -723,27 +723,27 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         });
         variableModsJScrollPane.setViewportView(variableModsTable);
 
-        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout variableModsPanelLayout = new javax.swing.GroupLayout(variableModsPanel);
+        variableModsPanel.setLayout(variableModsPanelLayout);
+        variableModsPanelLayout.setHorizontalGroup(
+            variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(variableModificationsLabel)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, variableModsPanelLayout.createSequentialGroup()
                 .addGap(1, 1, 1)
                 .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(addVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removeVariableModification, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        jPanel9Layout.setVerticalGroup(
-            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel9Layout.createSequentialGroup()
+        variableModsPanelLayout.setVerticalGroup(
+            variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(variableModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(variableModificationsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
+                .addGroup(variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(variableModsPanelLayout.createSequentialGroup()
                         .addComponent(addVariableModification)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeVariableModification)
@@ -751,7 +751,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
-        modificationTypesSplitPane.setRightComponent(jPanel9);
+        modificationTypesSplitPane.setRightComponent(variableModsPanel);
 
         availableModsPanel.setOpaque(false);
 
@@ -1637,14 +1637,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox enzymesCmb;
     private javax.swing.JLabel fixedModificationsLabel;
     private javax.swing.JScrollPane fixedModsJScrollPane;
+    private javax.swing.JPanel fixedModsPanel;
     private javax.swing.JTable fixedModsTable;
     private javax.swing.JComboBox fragmentIon1Cmb;
     private javax.swing.JComboBox fragmentIon2Cmb;
     private javax.swing.JTextField fragmentIonAccuracyTxt;
     private javax.swing.JLabel fragmentIonLbl;
     private javax.swing.JLabel fragmentIonType1Lbl;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JLabel maxMissedCleavagesLabel;
     private javax.swing.JTextField maxMissedCleavagesTxt;
     private javax.swing.JTextField maxPrecursorChargeTxt;
@@ -1668,6 +1667,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton removeVariableModification;
     private javax.swing.JLabel variableModificationsLabel;
     private javax.swing.JScrollPane variableModsJScrollPane;
+    private javax.swing.JPanel variableModsPanel;
     private javax.swing.JTable variableModsTable;
     // End of variables declaration//GEN-END:variables
 

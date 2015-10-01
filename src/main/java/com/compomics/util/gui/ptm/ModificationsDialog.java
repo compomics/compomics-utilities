@@ -301,10 +301,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         modificationsEditorPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         modificationsSplitPane.setBorder(null);
-        modificationsSplitPane.setDividerLocation(400);
+        modificationsSplitPane.setDividerLocation(380);
         modificationsSplitPane.setDividerSize(-1);
         modificationsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        modificationsSplitPane.setResizeWeight(0.7);
+        modificationsSplitPane.setResizeWeight(0.65);
         modificationsSplitPane.setOpaque(false);
 
         defaultModsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Modifications"));
@@ -415,7 +415,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(findJLabel)
@@ -498,7 +498,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(deleteUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

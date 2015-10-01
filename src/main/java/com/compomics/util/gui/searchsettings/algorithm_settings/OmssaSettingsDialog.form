@@ -4,12 +4,17 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="OMSSA Advanced Settings"/>
-    <Property name="resizable" type="boolean" value="false"/>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[600, 500]"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -69,7 +74,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabbedPane" pref="625" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" pref="685" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -242,7 +247,7 @@
                               <Component id="precursorScalingCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="precursorMassScalingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="318" max="32767" attributes="0"/>
+                          <EmptySpace pref="378" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -493,8 +498,42 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Component id="searchSettingsScrollPane" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Component id="searchSettingsScrollPane" pref="621" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Container class="javax.swing.JScrollPane" name="searchSettingsScrollPane">
+                  <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
+                  </Properties>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Container class="javax.swing.JPanel" name="searchSettingsPanel">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="e6" green="e6" red="e6" type="rgb"/>
+                        </Property>
+                      </Properties>
+
+                      <Layout>
+                        <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel" min="-2" pref="370" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="minPrecChargeMultipleChargedFragmentsTxt" pref="180" max="32767" attributes="0"/>
@@ -586,355 +625,355 @@
                                   <Component id="nHitsPerSpectrumPerChargeTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="minPrecChargeMultipleChargedFragmentsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="minPrecChargeMultipleChargedFragmentsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="nIsotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="nIsotopesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="neutronLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="neutronTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="singlyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="singlyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="doublyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="doublyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="singlyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="singlyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="doublyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="doublyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="minAnnotatedMostIntensePeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="minAnnotatedMostIntensePeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="minAnnotatedPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="minAnnotatedPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="maxLaddersLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="maxLaddersTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="maxFragmentChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="maxFragmentChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="searchPositiveIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="searchPositiveIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="forwardIonsFirstLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="forwardIonsFirstCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cTermIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cTermIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="maxFragmentsPerSeriesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="maxFragmentsPerSeriesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="correlationCorrectionScoreLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="correlationCorrectionScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="consecutiveIonProbabilityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="consecutiveIonProbabilityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="nHitsPerSpectrumPerChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="nHitsPerSpectrumPerChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="nIsotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="nIsotopesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="neutronLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="neutronTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="singlyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="singlyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="doublyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="doublyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="singlyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="singlyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="doublyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="doublyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="minAnnotatedMostIntensePeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="minAnnotatedMostIntensePeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="minAnnotatedPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="minAnnotatedPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="maxLaddersLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maxLaddersTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="maxFragmentChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maxFragmentChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="searchPositiveIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="searchPositiveIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="forwardIonsFirstLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="forwardIonsFirstCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cTermIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cTermIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="maxFragmentsPerSeriesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maxFragmentsPerSeriesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="correlationCorrectionScoreLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="correlationCorrectionScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="consecutiveIonProbabilityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="consecutiveIonProbabilityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="nHitsPerSpectrumPerChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="nHitsPerSpectrumPerChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Minimum Precursor Charge for Multiply Charged Fragments"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="minPrecChargeMultipleChargedFragmentsTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPrecChargeMultipleChargedFragmentsTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="nIsotopesLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Number of Isotopes"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="nIsotopesTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nIsotopesTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="neutronLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Mass Threshold to Consider Exact Neutron Mass"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="neutronTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="neutronTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="singlyChargedWindowWidthLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Singly Charged Window Width (Da)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="singlyChargedWindowWidthTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="singlyChargedWindowWidthTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="doublyChargedWindowWidthLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Doubly Charged Window Width (Da)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="doublyChargedWindowWidthTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="doublyChargedWindowWidthTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="singlyChargedNpeaksTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="singlyChargedNpeaksTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="singlyChargedNPeaksLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Number of Peaks in Singly Charged Windows"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="doublyChargedNPeaksLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Number of Peaks in Doubly Charged Windows"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="doublyChargedNpeaksTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="doublyChargedNpeaksTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="minAnnotatedMostIntensePeaksLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Minimum Annotated Peaks Among the Most Intense Ones"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="minAnnotatedMostIntensePeaksTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minAnnotatedMostIntensePeaksTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="minAnnotatedPeaksLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Minimum Number of Annotated Peaks"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="minAnnotatedPeaksTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minAnnotatedPeaksTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="maxLaddersLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Maximum m/z Ladders"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="maxLaddersTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxLaddersTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="maxFragmentChargeTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maxFragmentChargeTxtActionPerformed"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentChargeTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="maxFragmentChargeLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Maximum Fragment Charge"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="searchPositiveIonsLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Search Positive Ions"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="searchPositiveIonsCmb">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="forwardIonsFirstLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Search First Forward Ion (b1)"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="forwardIonsFirstCmb">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="cTermIonsLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Search Rewind (C-terminal) Ions"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cTermIonsCmb">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="maxFragmentsPerSeriesLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Maximum Fragments per Series"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="maxFragmentsPerSeriesTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maxFragmentsPerSeriesTxtActionPerformed"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentsPerSeriesTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="correlationCorrectionScoreCmb">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Yes"/>
-                        <StringItem index="1" value="No"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="correlationCorrectionScoreLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Use Correlation Correction Score"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="consecutiveIonProbabilityTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="consecutiveIonProbabilityTxtActionPerformed"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="consecutiveIonProbabilityTxtKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="consecutiveIonProbabilityLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Consecutive Ion Probability"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="nHitsPerSpectrumPerChargeLbl">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Number of Hits per Spectrum per Charge"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="nHitsPerSpectrumPerChargeTxt">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nHitsPerSpectrumPerChargeTxtActionPerformed"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nHitsPerSpectrumPerChargeTxtKeyReleased"/>
-                  </Events>
-                </Component>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JLabel" name="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Minimum Precursor Charge for Multiply Charged Fragments"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="minPrecChargeMultipleChargedFragmentsTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPrecChargeMultipleChargedFragmentsTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="nIsotopesLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Number of Isotopes"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="nIsotopesTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nIsotopesTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="neutronLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Mass Threshold to Consider Exact Neutron Mass"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="neutronTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="neutronTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="singlyChargedWindowWidthLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Singly Charged Window Width (Da)"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="singlyChargedWindowWidthTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="singlyChargedWindowWidthTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="doublyChargedWindowWidthLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Doubly Charged Window Width (Da)"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="doublyChargedWindowWidthTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="doublyChargedWindowWidthTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="singlyChargedNpeaksTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="singlyChargedNpeaksTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="singlyChargedNPeaksLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Number of Peaks in Singly Charged Windows"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="doublyChargedNPeaksLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Number of Peaks in Doubly Charged Windows"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="doublyChargedNpeaksTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="doublyChargedNpeaksTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="minAnnotatedMostIntensePeaksLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Minimum Annotated Peaks Among the Most Intense Ones"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="minAnnotatedMostIntensePeaksTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minAnnotatedMostIntensePeaksTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="minAnnotatedPeaksLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Minimum Number of Annotated Peaks"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="minAnnotatedPeaksTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minAnnotatedPeaksTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="maxLaddersLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Maximum m/z Ladders"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="maxLaddersTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxLaddersTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="maxFragmentChargeTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maxFragmentChargeTxtActionPerformed"/>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentChargeTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="maxFragmentChargeLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Maximum Fragment Charge"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="searchPositiveIonsLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Search Positive Ions"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="searchPositiveIonsCmb">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Yes"/>
+                                <StringItem index="1" value="No"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="forwardIonsFirstLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Search First Forward Ion (b1)"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="forwardIonsFirstCmb">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Yes"/>
+                                <StringItem index="1" value="No"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="cTermIonsLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Search Rewind (C-terminal) Ions"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="cTermIonsCmb">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Yes"/>
+                                <StringItem index="1" value="No"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="maxFragmentsPerSeriesLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Maximum Fragments per Series"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="maxFragmentsPerSeriesTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maxFragmentsPerSeriesTxtActionPerformed"/>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentsPerSeriesTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="correlationCorrectionScoreCmb">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="2">
+                                <StringItem index="0" value="Yes"/>
+                                <StringItem index="1" value="No"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="correlationCorrectionScoreLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Use Correlation Correction Score"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="consecutiveIonProbabilityTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="consecutiveIonProbabilityTxtActionPerformed"/>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="consecutiveIonProbabilityTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="consecutiveIonProbabilityLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Consecutive Ion Probability"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="nHitsPerSpectrumPerChargeLbl">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Number of Hits per Spectrum per Charge"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="nHitsPerSpectrumPerChargeTxt">
+                          <Properties>
+                            <Property name="horizontalAlignment" type="int" value="0"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nHitsPerSpectrumPerChargeTxtActionPerformed"/>
+                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nHitsPerSpectrumPerChargeTxtKeyReleased"/>
+                          </Events>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="iterativeSearchSettingsPanel">

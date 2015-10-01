@@ -469,6 +469,33 @@ public class PtmDialog extends javax.swing.JDialog {
 
         backgroundPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
+        helpJButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        scrollPane = new javax.swing.JScrollPane();
+        scrollPanePanel = new javax.swing.JPanel();
+        unimodMappingPanel = new javax.swing.JPanel();
+        unimodAccessionJTextField = new javax.swing.JTextField();
+        unimodAccessionLabel = new javax.swing.JLabel();
+        unimodNameLabel = new javax.swing.JLabel();
+        unimodNameJTextField = new javax.swing.JTextField();
+        unimodLinkLabel = new javax.swing.JLabel();
+        cvExampleLabel = new javax.swing.JLabel();
+        reporterIonsPanel = new javax.swing.JPanel();
+        reporterIonsJScrollPane = new javax.swing.JScrollPane();
+        reporterIonsTable = new JTable() {
+            protected JTableHeader createDefaultTableHeader() {
+                return new JTableHeader(columnModel) {
+                    public String getToolTipText(MouseEvent e) {
+                        java.awt.Point p = e.getPoint();
+                        int index = columnModel.getColumnIndexAtX(p.x);
+                        int realIndex = columnModel.getColumn(index).getModelIndex();
+                        return (String) reporterIonTableToolTips.get(realIndex);
+                    }
+                };
+            }
+        };
+        removerReporterIon = new javax.swing.JButton();
+        addReporterIon = new javax.swing.JButton();
         detailsPanel = new javax.swing.JPanel();
         typeCmb = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
@@ -498,35 +525,10 @@ public class PtmDialog extends javax.swing.JDialog {
         };
         addNeutralLoss = new javax.swing.JButton();
         removeNeutralLoss = new javax.swing.JButton();
-        helpJButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        unimodMappingPanel = new javax.swing.JPanel();
-        unimodAccessionJTextField = new javax.swing.JTextField();
-        unimodAccessionLabel = new javax.swing.JLabel();
-        unimodNameLabel = new javax.swing.JLabel();
-        unimodNameJTextField = new javax.swing.JTextField();
-        unimodLinkLabel = new javax.swing.JLabel();
-        cvExampleLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        reporterIonsJScrollPane = new javax.swing.JScrollPane();
-        reporterIonsTable = new JTable() {
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    public String getToolTipText(MouseEvent e) {
-                        java.awt.Point p = e.getPoint();
-                        int index = columnModel.getColumnIndexAtX(p.x);
-                        int realIndex = columnModel.getColumn(index).getModelIndex();
-                        return (String) reporterIonTableToolTips.get(realIndex);
-                    }
-                };
-            }
-        };
-        removerReporterIon = new javax.swing.JButton();
-        addReporterIon = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Modification");
-        setResizable(false);
+        setMinimumSize(new java.awt.Dimension(500, 500));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -537,6 +539,168 @@ public class PtmDialog extends javax.swing.JDialog {
                 okButtonActionPerformed(evt);
             }
         });
+
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        scrollPane.setBorder(null);
+
+        scrollPanePanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod Mapping"));
+        unimodMappingPanel.setOpaque(false);
+
+        unimodAccessionJTextField.setEditable(false);
+        unimodAccessionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        unimodAccessionJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                unimodAccessionJTextFieldKeyReleased(evt);
+            }
+        });
+
+        unimodAccessionLabel.setText("Accession");
+
+        unimodNameLabel.setText("PSI-MS Name");
+
+        unimodNameJTextField.setEditable(false);
+        unimodNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        unimodNameJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                unimodNameJTextFieldKeyReleased(evt);
+            }
+        });
+
+        unimodLinkLabel.setText("<html><a href>See: http://www.unimod.org</a></html>");
+        unimodLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseReleased(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseExited(evt);
+            }
+        });
+
+        cvExampleLabel.setFont(cvExampleLabel.getFont().deriveFont((cvExampleLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
+        cvExampleLabel.setText("Ex.: accession:1, name: Acetyl");
+
+        javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
+        unimodMappingPanel.setLayout(unimodMappingPanelLayout);
+        unimodMappingPanelLayout.setHorizontalGroup(
+            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(unimodNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodAccessionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(unimodAccessionJTextField)
+                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                .addContainerGap())
+        );
+        unimodMappingPanelLayout.setVerticalGroup(
+            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodAccessionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unimodNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        reporterIonsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Reporter Ions"));
+        reporterIonsPanel.setOpaque(false);
+
+        reporterIonsTable.setModel(new ReporterIonsTable());
+        reporterIonsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        reporterIonsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                reporterIonsTableMouseReleased(evt);
+            }
+        });
+        reporterIonsJScrollPane.setViewportView(reporterIonsTable);
+
+        removerReporterIon.setText("Remove");
+        removerReporterIon.setToolTipText("Remove the selected reporter ion");
+        removerReporterIon.setEnabled(false);
+        removerReporterIon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerReporterIonActionPerformed(evt);
+            }
+        });
+
+        addReporterIon.setText("Add");
+        addReporterIon.setToolTipText("Add a reporter ion");
+        addReporterIon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addReporterIonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout reporterIonsPanelLayout = new javax.swing.GroupLayout(reporterIonsPanel);
+        reporterIonsPanel.setLayout(reporterIonsPanelLayout);
+        reporterIonsPanelLayout.setHorizontalGroup(
+            reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(reporterIonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(addReporterIon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removerReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        reporterIonsPanelLayout.setVerticalGroup(
+            reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(reporterIonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(reporterIonsPanelLayout.createSequentialGroup()
+                        .addGap(0, 33, Short.MAX_VALUE)
+                        .addComponent(addReporterIon)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removerReporterIon)))
+                .addContainerGap())
+        );
 
         detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
         detailsPanel.setOpaque(false);
@@ -728,204 +892,59 @@ public class PtmDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        helpJButton.setToolTipText("Help");
-        helpJButton.setBorder(null);
-        helpJButton.setBorderPainted(false);
-        helpJButton.setContentAreaFilled(false);
-        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                helpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                helpJButtonMouseExited(evt);
-            }
-        });
-        helpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                helpJButtonActionPerformed(evt);
-            }
-        });
-
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod Mapping"));
-        unimodMappingPanel.setOpaque(false);
-
-        unimodAccessionJTextField.setEditable(false);
-        unimodAccessionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        unimodAccessionJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                unimodAccessionJTextFieldKeyReleased(evt);
-            }
-        });
-
-        unimodAccessionLabel.setText("Accession");
-
-        unimodNameLabel.setText("PSI-MS Name");
-
-        unimodNameJTextField.setEditable(false);
-        unimodNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        unimodNameJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                unimodNameJTextFieldKeyReleased(evt);
-            }
-        });
-
-        unimodLinkLabel.setText("<html><a href>See: http://www.unimod.org</a></html>");
-        unimodLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                unimodLinkLabelMouseReleased(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                unimodLinkLabelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                unimodLinkLabelMouseExited(evt);
-            }
-        });
-
-        cvExampleLabel.setFont(cvExampleLabel.getFont().deriveFont((cvExampleLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        cvExampleLabel.setText("Ex.: accession:1, name: Acetyl");
-
-        javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
-        unimodMappingPanel.setLayout(unimodMappingPanelLayout);
-        unimodMappingPanelLayout.setHorizontalGroup(
-            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(unimodNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unimodAccessionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(unimodAccessionJTextField)
-                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap())
+        javax.swing.GroupLayout scrollPanePanelLayout = new javax.swing.GroupLayout(scrollPanePanel);
+        scrollPanePanel.setLayout(scrollPanePanelLayout);
+        scrollPanePanelLayout.setHorizontalGroup(
+            scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(unimodMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(reporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        unimodMappingPanelLayout.setVerticalGroup(
-            unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unimodAccessionLabel))
+        scrollPanePanelLayout.setVerticalGroup(
+            scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(scrollPanePanelLayout.createSequentialGroup()
+                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unimodNameLabel))
+                .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(reporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Reporter Ions"));
-        jPanel1.setOpaque(false);
-
-        reporterIonsTable.setModel(new ReporterIonsTable());
-        reporterIonsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        reporterIonsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                reporterIonsTableMouseReleased(evt);
-            }
-        });
-        reporterIonsJScrollPane.setViewportView(reporterIonsTable);
-
-        removerReporterIon.setText("Remove");
-        removerReporterIon.setToolTipText("Remove the selected reporter ion");
-        removerReporterIon.setEnabled(false);
-        removerReporterIon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removerReporterIonActionPerformed(evt);
-            }
-        });
-
-        addReporterIon.setText("Add");
-        addReporterIon.setToolTipText("Add a reporter ion");
-        addReporterIon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addReporterIonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addReporterIon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(removerReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 33, Short.MAX_VALUE)
-                        .addComponent(addReporterIon)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removerReporterIon)))
-                .addContainerGap())
-        );
+        scrollPane.setViewportView(scrollPanePanel);
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
+                        .addGap(20, 20, 20)
                         .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(unimodMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(scrollPane)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scrollPane)
+                .addGap(11, 11, 11)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
-
-        backgroundPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jPanel1, neutralLossesAndReporterIonsPanel});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -935,7 +954,7 @@ public class PtmDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -1296,7 +1315,6 @@ public class PtmDialog extends javax.swing.JDialog {
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel massLabel;
     private javax.swing.JTextField massTxt;
     private javax.swing.JLabel nameLabel;
@@ -1312,7 +1330,10 @@ public class PtmDialog extends javax.swing.JDialog {
     private javax.swing.JButton removeNeutralLoss;
     private javax.swing.JButton removerReporterIon;
     private javax.swing.JScrollPane reporterIonsJScrollPane;
+    private javax.swing.JPanel reporterIonsPanel;
     private javax.swing.JTable reporterIonsTable;
+    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JPanel scrollPanePanel;
     private javax.swing.JComboBox typeCmb;
     private javax.swing.JTextField unimodAccessionJTextField;
     private javax.swing.JLabel unimodAccessionLabel;

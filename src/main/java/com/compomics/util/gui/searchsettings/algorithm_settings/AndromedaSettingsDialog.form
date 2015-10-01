@@ -70,7 +70,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="settingsPanel" pref="429" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" pref="549" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -113,7 +113,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="settingsScrollPane" max="32767" attributes="0"/>
+                      <Component id="settingsScrollPane" pref="504" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>

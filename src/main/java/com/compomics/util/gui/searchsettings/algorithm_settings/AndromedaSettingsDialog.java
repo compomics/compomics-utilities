@@ -516,7 +516,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog {
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsScrollPane)
+                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -578,7 +578,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)

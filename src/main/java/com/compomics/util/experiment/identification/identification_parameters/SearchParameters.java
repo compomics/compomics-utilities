@@ -155,39 +155,73 @@ public class SearchParameters implements Serializable {
 
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), new OmssaParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), new XtandemParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), new MsgfParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msgf.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), new MsAmandaParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), new MyriMatchParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), new CometParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.tide.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), new TideParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.tide.getIndex()));
         }
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), new AndromedaParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), new PepnovoParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), new DirecTagParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), new PNovoParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex()));
         }
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), new NovorParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()));
         }
     }
 
@@ -605,7 +639,7 @@ public class SearchParameters implements Serializable {
         if (searchParameters.getEnzyme().getName().equals("no enzyme")) {
             searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
         }
-        
+
         // add the advanced settings if not set
         searchParameters.setDefaultAdvancedSettings(searchParameters);
 

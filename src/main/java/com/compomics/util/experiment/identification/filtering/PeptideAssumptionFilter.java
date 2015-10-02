@@ -163,7 +163,7 @@ public class PeptideAssumptionFilter implements Serializable {
 
         ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, proteinTree);
 
-        if (accessions.size() > 1) {
+        if (accessions != null && accessions.size() > 1) {
             boolean target = false;
             boolean decoy = false;
             for (String accession : accessions) {

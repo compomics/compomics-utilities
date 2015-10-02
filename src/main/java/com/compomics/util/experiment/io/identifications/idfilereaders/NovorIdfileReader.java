@@ -1,16 +1,15 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -51,6 +50,10 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
      * Map of the tags found indexed by amino acid sequence.
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
+    /**
+     * A map of the peptides found in this file.
+     */
+    private HashMap<String, LinkedList<Peptide>> peptideMap;
     /**
      * The spectrum factory used to retrieve spectrum titles.
      */
@@ -132,11 +135,17 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        int tagMapKeyLength = 0;
+//        int tagMapKeyLength = 0;
+//        if (sequenceMatchingPreferences != null) {
+//            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+//            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+//            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+//        }
+        int peptideMapKeyLength = 0;
         if (sequenceMatchingPreferences != null) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
         }
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
@@ -303,6 +312,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 // set up the charge
                 Charge peptideCharge = new Charge(Charge.PLUS, charge);
 
+                //@TODO: do we want to leave the option of using tags?
                 // create the tag assumption
 //                AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
 //                for (ModificationMatch modificationMatch : utilitiesModifications) {
@@ -351,6 +361,18 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                     currentMatch.addHit(Advocate.novor.getIndex(), peptideAssumption, true);
                 }
 
+                // Store the peptide in a map for batch access
+                if (sequenceMatchingPreferences != null) {
+                    String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
+                    subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
+                    LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
+                    if (peptidesForTag == null) {
+                        peptidesForTag = new LinkedList<Peptide>();
+                        peptideMap.put(subSequence, peptidesForTag);
+                    }
+                    peptidesForTag.add(peptide);
+                }
+
                 if (waitingHandler != null && progressUnit != 0) {
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
                     if (waitingHandler.isRunCanceled()) {
@@ -387,11 +409,17 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return new HashMap<String, LinkedList<Peptide>>();
+        if (peptideMap == null) {
+            return new HashMap<String, LinkedList<Peptide>>();
+        }
+        return peptideMap;
     }
 
     @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
+        if (tagsMap == null) {
+            return new HashMap<String, LinkedList<SpectrumMatch>>();
+        }
         return tagsMap;
     }
 

@@ -925,6 +925,7 @@ public class MgfReader {
                 insideSpectrum = true;
                 spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
+                insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");

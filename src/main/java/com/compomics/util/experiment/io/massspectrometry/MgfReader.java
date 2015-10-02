@@ -50,6 +50,7 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>();
         String scanNumber = "";
         String spectrumTitle = "";
+        boolean insideSpectrum = false;
 
         while ((line = br.readLine()) != null) {
 
@@ -57,6 +58,7 @@ public class MgfReader {
 
             if (line.equals("BEGIN IONS")) {
                 // reset the spectrum details
+                insideSpectrum = true;
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
                 try {
@@ -119,6 +121,7 @@ public class MgfReader {
             } else if (line.startsWith("RAWSCANS")) {
                 // raw scans not implemented
             } else if (line.equals("END IONS")) {
+                insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
                     precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
@@ -130,7 +133,7 @@ public class MgfReader {
                     msnSpectrum.setScanNumber(scanNumber);
                 }
                 return msnSpectrum;
-            } else if (!line.equals("")) {
+            } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
                     Double mz = new Double(values[0]);
@@ -221,12 +224,14 @@ public class MgfReader {
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String line;
+        boolean insideSpectrum = false;
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
+                insideSpectrum = true;
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 spectrumCounter++;
                 peakCount = 0;
@@ -326,13 +331,14 @@ public class MgfReader {
                     throw new IllegalArgumentException("Cannot parse retention time: " + rtInput);
                 }
             } else if (line.equals("END IONS")) {
+                insideSpectrum = false;
                 if (title != null) {
                     if (peakCount > maxPeakCount) {
                         maxPeakCount = peakCount;
                     }
                 }
                 title = null;
-            } else if (!line.equals("")) {
+            } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
                     //Double mz = new Double(values[0]);
@@ -646,9 +652,9 @@ public class MgfReader {
                         boolean peak = true;
                         boolean zero = false;
                         String[] split = line.split(" ");
-                        if (split.length != 2) {
+                        if (split.length != 2 && split.length != 3) {
                             split = line.split("\t");
-                            if (split.length != 2) {
+                            if (split.length != 2 && split.length != 3) {
                                 peak = false;
                             }
                         }
@@ -694,7 +700,7 @@ public class MgfReader {
         boolean fileDeleted = mgfFile.delete();
 
         if (!fileDeleted) {
-            throw new IOException("Failed to delete the original spectrum file.");
+            throw new IOException("Failed to delete the original spectrum file."); // can sometimes happeen of the file is loaded twice in the gui, e.g., once with cancel for zero removal and one with ok
         }
 
         boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
@@ -909,12 +915,14 @@ public class MgfReader {
         String scanNumber = "", spectrumTitle = "";
         HashMap<Double, Peak> spectrum = new HashMap<Double, Peak>();
         String line;
+        boolean insideSpectrum = false;
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
+                insideSpectrum = true;
                 spectrum = new HashMap<Double, Peak>();
             } else if (line.startsWith("TITLE")) {
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
@@ -976,6 +984,7 @@ public class MgfReader {
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.equals("END IONS")) {
+                insideSpectrum = false;
                 Precursor precursor;
                 if (rt1 != -1 && rt2 != -1) {
                     precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
@@ -985,7 +994,7 @@ public class MgfReader {
                 MSnSpectrum msnSpectrum = new MSnSpectrum(2, precursor, spectrumTitle, spectrum, fileName);
                 msnSpectrum.setScanNumber(scanNumber);
                 return msnSpectrum;
-            } else if (!line.equals("")) {
+            } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
                     Double mz = new Double(values[0]);

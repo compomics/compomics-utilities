@@ -146,7 +146,9 @@ public class PTMFactory implements Serializable {
      */
     public static PTM getSingleAAPTM(PTM modification) {
         if (!modification.isStandardSearch()) {
-            return new PTM(modification.getType(), modification.getShortName(), modification.getName() + SINGLE_AA_SUFFIX, modification.getAtomChainAdded(), modification.getAtomChainRemoved(), modification.getPattern().getStandardSearchPattern());
+            return new PTM(modification.getType(), modification.getShortName(), 
+                    modification.getName() + SINGLE_AA_SUFFIX, modification.getAtomChainAdded(), 
+                    modification.getAtomChainRemoved(), modification.getPattern().getStandardSearchPattern());
         } else {
             return modification;
         }

@@ -341,7 +341,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "There was an error importing the FASTA file. Please see <a href=\"http://compomics.github.io/searchgui/wiki/databasehelp.html\">DatabaseHelp</a>."),
+                            "There was an error importing the FASTA file:<br>"
+                            + e.getMessage() + "<br>"
+                            + "See <a href=\"http://compomics.github.io/searchgui/wiki/databasehelp.html\">DatabaseHelp</a> for help."),
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;

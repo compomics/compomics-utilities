@@ -723,10 +723,10 @@ public class Peptide extends ExperimentObject {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         AminoAcidPattern pattern = ptm.getPattern();
-        int patternLength = pattern.length();
 
         switch (ptm.getType()) {
             case PTM.MODAA:
+                int patternLength = pattern.length();
                 int target = pattern.getTarget();
                 if (target >= 0 && patternLength - target <= 1) {
                     return pattern.matchesIn(sequence, sequenceMatchingPreferences);
@@ -760,6 +760,7 @@ public class Peptide extends ExperimentObject {
                     return false;
                 }
             case PTM.MODCPAA:
+                patternLength = pattern.length();
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
                     return pattern.isEnding(sequence, sequenceMatchingPreferences);
@@ -785,6 +786,7 @@ public class Peptide extends ExperimentObject {
                     return false;
                 }
             case PTM.MODNPAA:
+                patternLength = pattern.length();
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
                     return pattern.isStarting(sequence, sequenceMatchingPreferences);

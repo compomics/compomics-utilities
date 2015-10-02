@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
@@ -303,29 +304,51 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 Charge peptideCharge = new Charge(Charge.PLUS, charge);
 
                 // create the tag assumption
-                AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
-                for (ModificationMatch modificationMatch : utilitiesModifications) {
-                    aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
-                }
-                Tag tag = new Tag(0, aminoAcidSequence, 0);
-                TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, peptideCharge, novorScore);
-                tagAssumption.setAminoAcidScores(aminoAcidScores);
-                //tagAssumption.setRawScore(novorScore);
-
-                currentMatch.addHit(Advocate.novor.getIndex(), tagAssumption, true);
-
-                if (sequenceMatchingPreferences != null) {
-                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
-                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-                        for (String key : advocateMap.keySet()) {
-                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
-                            if (tagMatches == null) {
-                                tagMatches = new LinkedList<SpectrumMatch>();
-                                tagsMap.put(key, tagMatches);
-                            }
-                            tagMatches.add(currentMatch);
-                        }
+//                AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
+//                for (ModificationMatch modificationMatch : utilitiesModifications) {
+//                    aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
+//                }
+//                Tag tag = new Tag(0, aminoAcidSequence, 0);
+//                TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, peptideCharge, novorScore);
+//                tagAssumption.setAminoAcidScores(aminoAcidScores);
+////                //tagAssumption.setRawScore(novorScore);
+//
+//                currentMatch.addHit(Advocate.novor.getIndex(), tagAssumption, true);
+//
+//                if (sequenceMatchingPreferences != null) {
+//                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
+//                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
+//                        for (String key : advocateMap.keySet()) {
+//                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+//                            if (tagMatches == null) {
+//                                tagMatches = new LinkedList<SpectrumMatch>();
+//                                tagsMap.put(key, tagMatches);
+//                            }
+//                            tagMatches.add(currentMatch);
+//                        }
+//                    }
+//                }
+                // Create the peptide assumption
+                Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), peptideCharge, novorScore, novorCsvFile.getName());
+                if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+                    ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+                            newModificationMatches = null;
+                    if (previousModificationMatches != null) {
+                        newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                     }
+                    for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                        Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                        if (previousModificationMatches != null) {
+                            for (ModificationMatch modificationMatch : previousModificationMatches) {
+                                newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                            }
+                        }
+                        PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                        currentMatch.addHit(Advocate.novor.getIndex(), newAssumption, true);
+                    }
+                } else {
+                    currentMatch.addHit(Advocate.novor.getIndex(), peptideAssumption, true);
                 }
 
                 if (waitingHandler != null && progressUnit != 0) {

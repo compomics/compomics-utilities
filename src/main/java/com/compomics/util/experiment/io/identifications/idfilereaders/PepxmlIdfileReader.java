@@ -66,14 +66,6 @@ public class PepxmlIdfileReader implements IdfileReader {
      * The sequence matching preferences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences = null;
-    /**
-     * A map of the peptides found in this file.
-     */
-    private HashMap<String, LinkedList<Peptide>> peptideMap;
-    /**
-     * The length of the keys of the peptide map.
-     */
-    private int peptideMapKeyLength = 0;
 
     /**
      * Blank constructor for instantiation purposes.
@@ -111,10 +103,11 @@ public class PepxmlIdfileReader implements IdfileReader {
     private void parseFile(WaitingHandler waitingHandler, boolean expandAaCombinations, boolean overwriteExtension)
             throws XmlPullParserException, FileNotFoundException, IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        if (sequenceMatchingPreferences != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
+        int minimalPeptideSize;
+        try {
+            minimalPeptideSize = SequenceFactory.getInstance().getDefaultProteinTree().getInitialTagSize();
+        } catch (Exception e) {
+            minimalPeptideSize = 3;
         }
 
         // Create the pull parser.
@@ -178,7 +171,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     PeptideAssumption peptideAssumption = parseSearchHit(parser, currentCharge);
                     Peptide peptide = peptideAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
-                    if (peptideSequence.length() > peptideMapKeyLength) {
+                    if (peptideSequence.length() >= minimalPeptideSize) {
                         hasMatch = true;
                         boolean found = false;
                         if (currentMatch.getAllAssumptions() != null) {
@@ -211,16 +204,6 @@ public class PepxmlIdfileReader implements IdfileReader {
                         }
                         if (!found) {
 
-                            if (sequenceMatchingPreferences != null) {
-                                String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
-                                subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-                                LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-                                if (peptidesForTag == null) {
-                                    peptidesForTag = new LinkedList<Peptide>();
-                                    peptideMap.put(subSequence, peptidesForTag);
-                                }
-                                peptidesForTag.add(peptide);
-                            }
                             Advocate advocate = Advocate.getAdvocate(searchEngine);
                             if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
                                 ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
@@ -554,13 +537,8 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return peptideMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
     }
 
     @Override
@@ -569,9 +547,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public void clearPeptidesMap() {
-        if (peptideMap != null) {
-            peptideMap.clear();
-        }
+    public boolean hasDeNovoTags() {
+        return false;
     }
 }

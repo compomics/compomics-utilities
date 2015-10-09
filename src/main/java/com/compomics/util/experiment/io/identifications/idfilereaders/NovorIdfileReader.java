@@ -51,10 +51,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
      */
     private HashMap<String, LinkedList<SpectrumMatch>> tagsMap;
     /**
-     * A map of the peptides found in this file.
-     */
-    private HashMap<String, LinkedList<Peptide>> peptideMap;
-    /**
      * The spectrum factory used to retrieve spectrum titles.
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
@@ -141,12 +137,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
 //            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
 //        }
-        int peptideMapKeyLength = 0;
-        if (sequenceMatchingPreferences != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
-        }
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
 
@@ -361,18 +351,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                     currentMatch.addHit(Advocate.novor.getIndex(), peptideAssumption, true);
                 }
 
-                // Store the peptide in a map for batch access
-                if (sequenceMatchingPreferences != null) {
-                    String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
-                    subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-                    LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-                    if (peptidesForTag == null) {
-                        peptidesForTag = new LinkedList<Peptide>();
-                        peptideMap.put(subSequence, peptidesForTag);
-                    }
-                    peptidesForTag.add(peptide);
-                }
-
                 if (waitingHandler != null && progressUnit != 0) {
                     waitingHandler.setSecondaryProgressCounter((int) (bufferedRandomAccessFile.getFilePointer() / progressUnit));
                     if (waitingHandler.isRunCanceled()) {
@@ -408,17 +386,9 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        if (peptideMap == null) {
-            return new HashMap<String, LinkedList<Peptide>>();
-        }
-        return peptideMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         if (tagsMap == null) {
-            return new HashMap<String, LinkedList<SpectrumMatch>>();
+            return new HashMap<String, LinkedList<SpectrumMatch>>(0);
         }
         return tagsMap;
     }
@@ -431,7 +401,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public void clearPeptidesMap() {
-        // No peptides here
+    public boolean hasDeNovoTags() {
+        return false;
     }
 }

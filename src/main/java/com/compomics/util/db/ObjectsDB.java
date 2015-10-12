@@ -1037,7 +1037,9 @@ public class ObjectsDB implements Serializable {
         }
         Statement stmt = dbConnection.createStatement();
         try {
-            stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'");
+            stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'"); // @TODO: what if the accession contains (') ..? - a single quotation mark is the escape character for a single quotation mark
+        } catch (SQLSyntaxErrorException e) {
+            throw e;
         } finally {
             stmt.close();
         }
@@ -1397,6 +1399,9 @@ public class ObjectsDB implements Serializable {
      */
     public String correctKey(String tableName, String key) {
 
+        // @TODO: escape special characters:
+        //String correctedKey = key.replaceAll("[^\\dA-Za-z ]", "");
+        
         String correctedKey = key;
         if (!correctedKey.startsWith(LONG_KEY_PREFIX)) {
             if (longKeysMap.containsKey(tableName) && longKeysMap.get(tableName).contains(key)) {

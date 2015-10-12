@@ -185,7 +185,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
                             throw new IllegalArgumentException("PTM " + modificationMatch.getTheoreticPtm() + " not loaded in PTM factory.");
                         }
                         for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
-                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings);
+                            ArrayList<Integer> indexes = tag.getPotentialModificationSites(ptm, ptmSequenceMatchingSettings); // @TODO: could end in a null pointer?
                             if (!indexes.isEmpty()) {
                                 Collections.sort(indexes);
                                 modMin = indexes.get(0);

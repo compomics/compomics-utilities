@@ -526,8 +526,8 @@ public class Tag extends ExperimentObject {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
 
         ArrayList<Integer> possibleSites = new ArrayList<Integer>();
-        AminoAcidPattern ptmPattern = ptm.getPattern();
-        int patternLength = ptmPattern.length();
+        AminoAcidPattern ptmPattern = ptm.getPattern(); 
+        int patternLength = ptmPattern.length(); // @TODO: what if pattern is null..?
 
         switch (ptm.getType()) {
             case PTM.MODAA:

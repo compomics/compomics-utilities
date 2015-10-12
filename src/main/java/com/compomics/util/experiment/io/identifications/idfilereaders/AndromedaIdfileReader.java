@@ -42,14 +42,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * The name of the Andromeda result file.
      */
     private String fileName;
-    /**
-     * A map of the peptides found in this file.
-     */
-    private HashMap<String, LinkedList<Peptide>> peptideMap;
-    /**
-     * The length of the keys of the peptide map.
-     */
-    private int peptideMapKeyLength;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -84,12 +76,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
-        if (sequenceMatchingPreferences != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
-        }
 
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
@@ -181,17 +167,6 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
         String sequence = temp[0];
         Peptide peptide = new Peptide(sequence, modMatches);
 
-        if (sequenceMatchingPreferences != null) {
-            String subSequence = sequence.substring(0, peptideMapKeyLength);
-            subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-            LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-            if (peptidesForTag == null) {
-                peptidesForTag = new LinkedList<Peptide>();
-                peptideMap.put(subSequence, peptidesForTag);
-            }
-            peptidesForTag.add(peptide);
-        }
-
         Charge charge = new Charge(Charge.PLUS, new Integer(temp[6]));
         Double score = new Double(temp[1]);
         Double p = FastMath.pow(10, -(score / 10));
@@ -214,13 +189,8 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return peptideMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
     }
 
     @Override
@@ -229,9 +199,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public void clearPeptidesMap() {
-        if (peptideMap != null) {
-            peptideMap.clear();
-        }
+    public boolean hasDeNovoTags() {
+        return false;
     }
 }

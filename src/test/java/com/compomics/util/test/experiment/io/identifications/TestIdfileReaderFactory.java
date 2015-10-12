@@ -40,14 +40,14 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReader tifr = new IdfileReader() {
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
             }
 
             @Override
-            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-                    SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) 
+            public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
+                    SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
@@ -72,12 +72,6 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-                // Does nothing.
-                return null;
-            }
-
-            @Override
             public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
                 // Does nothing.
                 return null;
@@ -89,8 +83,8 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public void clearPeptidesMap() {
-                // Does nothing.
+            public boolean hasDeNovoTags() {
+                return false;
             }
         };
 
@@ -139,13 +133,13 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
                 throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
         }
 
         @Override
-        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences, 
+        public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingPreferences sequenceMatchingPreferences,
                 boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
@@ -171,12 +165,6 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-            // Does nothing.
-            return null;
-        }
-
-        @Override
         public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
             // Does nothing.
             return null;
@@ -188,8 +176,8 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public void clearPeptidesMap() {
-            // Does nothing.
+        public boolean hasDeNovoTags() {
+            return false;
         }
     }
 }

@@ -78,14 +78,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      */
     private ArrayList<SearchModification> fixedModifications;
     /**
-     * A map of the peptides found in this file.
-     */
-    private HashMap<String, LinkedList<Peptide>> peptideMap;
-    /**
-     * The length of the keys of the peptide map.
-     */
-    private int peptideMapKeyLength;
-    /**
      * A temporary peptide map used by the custom parser only. Key: peptide
      * id/ref, element: the peptide object.
      */
@@ -113,6 +105,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * is used.
      */
     private boolean useCustomParser = true;
+    /**
+     * Boolean indicating whether the mzId file contains de novo tags.
+     */
+    private boolean hasDenovoTags = false;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -209,12 +205,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;
-
-        if (sequenceMatchingPreferences != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
-        }
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
 
@@ -389,17 +379,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         // create the peptide
                         Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
 
-                        if (sequenceMatchingPreferences != null) {
-                            String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
-                            subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-                            LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-                            if (peptidesForTag == null) {
-                                peptidesForTag = new LinkedList<Peptide>();
-                                peptideMap.put(subSequence, peptidesForTag);
-                            }
-                            peptidesForTag.add(peptide);
-                        }
-
                         // get the e-value and advocate
                         HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
                         EValueObject tempEValue = getEValue(scoreMap, spectrumIdentItem.getId());
@@ -524,25 +503,18 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return peptideMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
     }
 
     @Override
     public void clearTagsMap() {
-        // No tags here
+        // No tags yet
     }
 
     @Override
-    public void clearPeptidesMap() {
-        if (peptideMap != null) {
-            peptideMap.clear();
-        }
+    public boolean hasDeNovoTags() {
+        return hasDenovoTags;
     }
 
     /**
@@ -1119,17 +1091,6 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 }
             }
             Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches);
-
-            if (sequenceMatchingPreferences != null) {
-                String subSequence = peptide.getSequence().substring(0, peptideMapKeyLength);
-                subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-                LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-                if (peptidesForTag == null) {
-                    peptidesForTag = new LinkedList<Peptide>();
-                    peptideMap.put(subSequence, peptidesForTag);
-                }
-                peptidesForTag.add(peptide);
-            }
 
             // get the charge
             Charge peptideCharge = new Charge(Charge.PLUS, chargeState);

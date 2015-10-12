@@ -411,11 +411,6 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return new HashMap<String, LinkedList<Peptide>>();
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
         return tagsMap;
     }
@@ -428,7 +423,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public void clearPeptidesMap() {
-        // No peptides here
+    public boolean hasDeNovoTags() {
+        return true;
     }
 }

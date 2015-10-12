@@ -58,7 +58,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * Constructor with default settings.
      */
     public PeptideAssumptionFilter() {
-        minPepLength = 4;
+        minPepLength = 8;
         maxPepLength = 30;
         maxMassDeviation = -1;
         isPpm = true;

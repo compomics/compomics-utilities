@@ -45,14 +45,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      * The MS Amanda csv file.
      */
     private File msAmandaCsvFile;
-    /**
-     * A map of the peptides found in this file.
-     */
-    private HashMap<String, LinkedList<Peptide>> peptideMap;
-    /**
-     * The length of the keys of the peptide map.
-     */
-    private int peptideMapKeyLength;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -118,12 +110,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
-        if (sequenceMatchingPreferences != null) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            peptideMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-            peptideMap = new HashMap<String, LinkedList<Peptide>>(1024);
-        }
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
 
@@ -285,17 +271,6 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 // create the peptide
                 Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
 
-                if (sequenceMatchingPreferences != null) {
-                    String subSequence = peptideSequence.substring(0, peptideMapKeyLength);
-                    subSequence = AminoAcid.getMatchingSequence(subSequence, sequenceMatchingPreferences);
-                    LinkedList<Peptide> peptidesForTag = peptideMap.get(subSequence);
-                    if (peptidesForTag == null) {
-                        peptidesForTag = new LinkedList<Peptide>();
-                        peptideMap.put(subSequence, peptidesForTag);
-                    }
-                    peptidesForTag.add(peptide);
-                }
-
                 // set up the charge
                 Charge peptideCharge = new Charge(Charge.PLUS, charge);
 
@@ -359,13 +334,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap() {
-        return peptideMap;
-    }
-
-    @Override
     public HashMap<String, LinkedList<SpectrumMatch>> getTagsMap() {
-        return new HashMap<String, LinkedList<SpectrumMatch>>();
+        return new HashMap<String, LinkedList<SpectrumMatch>>(0);
     }
 
     @Override
@@ -374,9 +344,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public void clearPeptidesMap() {
-        if (peptideMap != null) {
-            peptideMap.clear();
-        }
+    public boolean hasDeNovoTags() {
+        return false;
     }
 }

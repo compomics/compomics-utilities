@@ -99,17 +99,11 @@ public interface IdfileReader {
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException;
 
     /**
-     * Returns a map of all the peptides found in this file in a map indexed by
-     * the beginning of the peptide sequence. The size of the subsequence is the
-     * one of the initial size the protein tree in the sequence factory. The
-     * subsequence is unique according to the given sequence matching
-     * preferences.
-     *
-     * @return a map of all the peptides found in this file in a map indexed by
-     * the beginning of the peptide sequence
+     * Returns a boolean indicating whether the file contains de novo results as tags.
+     * 
+     * @return a boolean indicating whether the file contains de novo results as tags
      */
-    public HashMap<String, LinkedList<Peptide>> getPeptidesMap();
-
+    public boolean hasDeNovoTags();
     /**
      * Returns a map of all simple tags found in this file indexed by the
      * beginning of the amino acid sequence. A simple tag is a triplet
@@ -127,9 +121,4 @@ public interface IdfileReader {
      * Clears the tags map.
      */
     public void clearTagsMap();
-
-    /**
-     * Clears the peptides map.
-     */
-    public void clearPeptidesMap();
 }

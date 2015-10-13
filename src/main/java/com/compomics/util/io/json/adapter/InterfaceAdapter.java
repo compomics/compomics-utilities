@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 
 /**
  * A generic adapter to parse used interfaces in a class
+ *
  * @author Kenneth Verheggen
  */
 public class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
@@ -35,6 +36,8 @@ public class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<
      * @param elem a serialized version of the object as a JsonElement
      * @param interfaceType the class of the interface
      * @param context the deserialization context for the json parser
+     * @throws JsonParseException if the deserialisation failed due to a
+     * corrupted json format
      * @return an object of the interface type
      */
     @Override

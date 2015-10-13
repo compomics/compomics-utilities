@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * This class is intended to convert non specific objects to the json format and vice versa
+ * This class is intended to convert non specific objects to the json format and
+ * vice versa
  * 
 */
 public class JsonMarshaller {
@@ -37,7 +38,7 @@ public class JsonMarshaller {
      */
     public JsonMarshaller() {
         this.builder = new GsonBuilder();
-        builder.registerTypeAdapter(File.class,new FileAdapter());
+        builder.registerTypeAdapter(File.class, new FileAdapter());
         gson = builder.create();
     }
 
@@ -48,7 +49,7 @@ public class JsonMarshaller {
      */
     public JsonMarshaller(Class... interfaces) {
         this.builder = new GsonBuilder();
-        builder.registerTypeAdapter(File.class,new FileAdapter());
+        builder.registerTypeAdapter(File.class, new FileAdapter());
         //register required interfaceAdapters
         for (Class aClass : interfaces) {
             builder.registerTypeAdapter(aClass, new InterfaceAdapter<>());
@@ -69,7 +70,8 @@ public class JsonMarshaller {
      *
      * @param anObject the input object
      * @param jsonFile the target file to which the json will be saved.
-     * @throws IOException
+     * @throws IOException if the object cannot be successfully saved into a
+     * json file
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
         if (!jsonFile.getName().toLowerCase().endsWith(".json")) {
@@ -96,7 +98,8 @@ public class JsonMarshaller {
      * @param objectType The class the object belongs to
      * @param jsonFile a json file
      * @return an instance of the objectType containing the json information
-     * @throws IOException
+     * @throws IOException if the object cannot be successfully read from a json
+     * file
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
         String jsonString = getJsonStringFromFile(jsonFile);
@@ -107,8 +110,9 @@ public class JsonMarshaller {
      *
      * @param jsonFile the input json file
      * @return the string representation of the json content
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if the json file can not be reached
+     * @throws IOException if the object cannot be successfully read from a json
+     * file
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -120,7 +124,4 @@ public class JsonMarshaller {
         return stringBuilder.toString();
     }
 
- 
-    
-    
 }

@@ -19,7 +19,7 @@ public class FileAdapter extends TypeAdapter {
      *
      * @param in the JsonReader
      * @return a File object
-     * @throws IOException
+     * @throws IOException if the JsonReader fails
      */
     @Override
     public File read(final JsonReader in) throws IOException {
@@ -38,7 +38,7 @@ public class FileAdapter extends TypeAdapter {
      *
      * @param writer the JsonWriter for the given object
      * @param t the File object to be written to json
-     * @throws IOException
+     * @throws IOException if the object cannot be imported into the json format
      */
     @Override
     public void write(JsonWriter writer, Object t) throws IOException {

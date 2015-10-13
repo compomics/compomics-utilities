@@ -1380,7 +1380,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void exportSelectedValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSelectedValuesMenuItemActionPerformed
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), false);
+        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), "table_to_file.txt", false);
         final XYPlottingDialog finalRef = this;
 
         if (selectedFile != null) {

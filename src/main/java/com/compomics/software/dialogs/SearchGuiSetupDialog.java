@@ -337,7 +337,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFile(this, ".jar", "SearchGUI jar file (.jar)", "Select SearchGUI Jar File", lastSelectedFolder, true);
+        File selectedFile = Util.getUserSelectedFile(this, ".jar", "SearchGUI jar file (.jar)", "Select SearchGUI Jar File", lastSelectedFolder, null, true);
 
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(".jar")) {

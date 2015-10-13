@@ -247,13 +247,13 @@ public class Util {
      * Generic Format) *.mgf
      * @param aDialogTitle the title for the dialog
      * @param lastSelectedFolder the last selected folder
+     * @param aSuggestedFileName the suggested file name, can be null
      * @param openDialog if true an open dialog is shown, false results in a
      * save dialog
      * @return the file selected by the user, or null if no file was selected
      */
-    public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, boolean openDialog) {
+    public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, String aSuggestedFileName, boolean openDialog) {
 
-        // @TODO: should support multiple file endings, e.g., fasta and fast for example
         final String fileEnding = aFileEnding;
         final String fileFormatDescription = aFileFormatDescription;
         final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
@@ -280,6 +280,9 @@ public class Util {
         if (openDialog) {
             returnVal = fileChooser.showOpenDialog(parent);
         } else {
+            if (aSuggestedFileName != null) {
+                fileChooser.setSelectedFile(new File(lastSelectedFolder, aSuggestedFileName));
+            }
             returnVal = fileChooser.showSaveDialog(parent);
         }
 
@@ -326,6 +329,7 @@ public class Util {
      * Generic Format) *.mgf
      * @param aDialogTitle the title for the dialog
      * @param lastSelectedFolder the last selected folder
+     * @param aSuggestedFileName the suggested file name, can be null
      * @param openDialog if true an open dialog is shown, false results in a
      * save dialog
      * @param formatSelectedByUser if true the user will have to select the
@@ -338,7 +342,7 @@ public class Util {
      * was canceled.
      */
     public static FileAndFileFilter getUserSelectedFile(Component parent, String[] fileEndings, String[] fileFormatDescriptions,
-            String aDialogTitle, String lastSelectedFolder, boolean openDialog, boolean formatSelectedByUser, boolean showAllFilesOption, int defaultFilterIndex) {
+            String aDialogTitle, String lastSelectedFolder, String aSuggestedFileName, boolean openDialog, boolean formatSelectedByUser, boolean showAllFilesOption, int defaultFilterIndex) {
 
         JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
 
@@ -417,6 +421,9 @@ public class Util {
         if (openDialog) {
             returnVal = fileChooser.showOpenDialog(parent);
         } else {
+            if (aSuggestedFileName != null) {
+                fileChooser.setSelectedFile(new File(lastSelectedFolder, aSuggestedFileName));
+            }
             returnVal = fileChooser.showSaveDialog(parent);
         }
 
@@ -566,7 +573,7 @@ public class Util {
                     String tempValue = table.getValueAt(i, j).toString();
 
                     // remove html tags
-                    if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                    if (tempValue.contains("<html>") && removeHtml) {
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
                     }
 
@@ -627,7 +634,7 @@ public class Util {
                     String tempValue = table.getValueAt(i, j).toString();
 
                     // remove html tags
-                    if (tempValue.indexOf("<html>") != -1 && removeHtml) {
+                    if (tempValue.contains("<html>") && removeHtml) {
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
                     }
 

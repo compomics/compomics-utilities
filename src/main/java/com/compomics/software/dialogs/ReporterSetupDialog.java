@@ -272,7 +272,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFile(this, ".jar", "Reporter jar file (.jar)", "Select Reporter Jar File", lastSelectedFolder, true);
+        File selectedFile = Util.getUserSelectedFile(this, ".jar", "Reporter jar file (.jar)", "Select Reporter Jar File", lastSelectedFolder, null, true);
 
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(".jar")) {

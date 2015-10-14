@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.test.io;
 
 import com.compomics.util.experiment.biology.PTMFactory;
@@ -19,8 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Test for the SearchParameterMarshaller.
  *
- * @author Kenneth
+ * @author Kenneth Verheggen
  */
 public class TestSearchParameterMarshaller {
 
@@ -91,5 +87,4 @@ public class TestSearchParameterMarshaller {
         settings.addVariableModification(instance.getPTM("Oxidation of M"));
         return settings;
     }
-
 }

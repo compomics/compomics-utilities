@@ -5,18 +5,16 @@ import com.compomics.util.io.json.JsonMarshaller;
 
 /**
  * This class is a convenience class to have a DefaultJsonConverter with the
- * search parameter interfaces
+ * search parameter interfaces.
  *
  * @author Kenneth Verheggen
  */
 public class PTMFactoryMarshaller extends JsonMarshaller {
 
     /**
-     * PTMFactoryMarshaller constructor
-     *
+     * Constructor.
      */
     public PTMFactoryMarshaller() {
         super(Atom.class);
     }
-
 }

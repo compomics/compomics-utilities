@@ -1,9 +1,5 @@
 package com.compomics.util.io.json;
 
-/**
- *
- * @author Kenneth Verheggen
- */
 import com.compomics.util.io.json.adapter.FileAdapter;
 import com.compomics.util.io.json.adapter.InterfaceAdapter;
 import com.google.gson.Gson;
@@ -17,24 +13,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * This class is intended to convert non specific objects to the json format and
- * vice versa
- * 
-*/
+ * This class is intended to convert non specific objects to the JSON format and
+ * vice versa.
+ *
+ * @author Kenneth Verheggen
+ */
 public class JsonMarshaller {
 
     /**
-     * a GSON parser instance to convert json to java objects and back
+     * GSON parser instance to convert JSON to Java objects and back.
      */
     protected Gson gson = new Gson();
     /**
-     * a GsonBuilder that can be used to append interfaces so the parser knows
-     * how to handle them
+     * GsonBuilder that can be used to append interfaces so the parser knows how
+     * to handle them.
      */
     private final GsonBuilder builder;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public JsonMarshaller() {
         this.builder = new GsonBuilder();
@@ -43,6 +40,7 @@ public class JsonMarshaller {
     }
 
     /**
+     * Constructor.
      *
      * @param interfaces comma separated list of interfaces that this class is
      * using. They will automatically be added using a custom InterfaceAdapter
@@ -58,20 +56,22 @@ public class JsonMarshaller {
     }
 
     /**
+     * Convert an object to JSON.
      *
      * @param anObject the input object
-     * @return the json representation of an object
+     * @return the JSON representation of an object
      */
     public String toJson(Object anObject) {
         return gson.toJson(anObject).replace("}", "}" + System.lineSeparator());
     }
 
     /**
+     * Save an object to JSON.
      *
      * @param anObject the input object
-     * @param jsonFile the target file to which the json will be saved.
+     * @param jsonFile the target file to which the JSON will be saved.
      * @throws IOException if the object cannot be successfully saved into a
-     * json file
+     * JSON file
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
         if (!jsonFile.getName().toLowerCase().endsWith(".json")) {
@@ -84,21 +84,23 @@ public class JsonMarshaller {
     }
 
     /**
+     * Convert from JSON to object.
      *
-     * @param objectType The class the object belongs to
-     * @param jsonString The string representation of the json object
-     * @return an instance of the objectType containing the json information
+     * @param objectType the class the object belongs to
+     * @param jsonString the string representation of the JSON object
+     * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Class objectType, String jsonString) {
         return gson.fromJson(jsonString, objectType);
     }
 
     /**
+     * Convert from JSON to object.
      *
-     * @param objectType The class the object belongs to
-     * @param jsonFile a json file
-     * @return an instance of the objectType containing the json information
-     * @throws IOException if the object cannot be successfully read from a json
+     * @param objectType the class the object belongs to
+     * @param jsonFile a JSON file
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
      * file
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
@@ -107,11 +109,12 @@ public class JsonMarshaller {
     }
 
     /**
-     *
-     * @param jsonFile the input json file
-     * @return the string representation of the json content
-     * @throws FileNotFoundException if the json file can not be reached
-     * @throws IOException if the object cannot be successfully read from a json
+     * Convert JSON string from file.
+     * 
+     * @param jsonFile the input JSON file
+     * @return the string representation of the JSON content
+     * @throws FileNotFoundException if the JSON file can not be reached
+     * @throws IOException if the object cannot be successfully read from a JSON
      * file
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
@@ -123,5 +126,4 @@ public class JsonMarshaller {
         }
         return stringBuilder.toString();
     }
-
 }

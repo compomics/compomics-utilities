@@ -51,10 +51,10 @@ public class TestSearchParameterMarshaller {
         SearchParameterMarshaller instance = new SearchParameterMarshaller();
         //1. Marshall to JSON
         String parametersAsJson = instance.toJson(parameters);
-        System.out.println(parametersAsJson);
+        //System.out.println(parametersAsJson);
         //2. Unmarshall back to a parameters object
         SearchParameters jsonAsParameters = (SearchParameters) instance.fromJson(objectType, parametersAsJson);
-        System.out.println(jsonAsParameters);
+        //System.out.println(jsonAsParameters);
         //3. Compare both
         assertTrue(parameters.equals(jsonAsParameters));
     }

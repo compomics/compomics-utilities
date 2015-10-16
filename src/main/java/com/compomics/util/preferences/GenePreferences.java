@@ -180,7 +180,11 @@ public class GenePreferences implements Serializable {
         String accessionMapping;
 
         if (swissProtMapping) {
-            accessionMapping = "\"uniprot_swissprot\"";
+            if (ensemblType.equalsIgnoreCase("ensembl")) {
+                accessionMapping = "\"uniprot_swissprot\"";
+            } else {
+                accessionMapping = "\"uniprot_swissprot_accession\"";
+            }
         } else {
             accessionMapping = "\"uniprot_sptrembl\"";
         }
@@ -190,10 +194,17 @@ public class GenePreferences implements Serializable {
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + selectedSpecies + "\" interface = \"default\" >"
-                + "<Attribute name = " + accessionMapping + " />"
-                + "<Attribute name = \"goslim_goa_accession\" />"
-                + "<Attribute name = \"goslim_goa_description\" />"
-                + "</Dataset>"
+                + "<Attribute name = " + accessionMapping + " />";
+
+        if (ensemblType.equalsIgnoreCase("ensembl")) {
+            requestXml += "<Attribute name = \"goslim_goa_accession\" />"
+                    + "<Attribute name = \"goslim_goa_description\" />";
+        } else {
+            requestXml += "<Attribute name = \"go_accession\" />"
+                    + "<Attribute name = \"go_name_1006\" />";
+        }
+
+        requestXml += "</Dataset>"
                 + "</Query>";
 
         // @TODO: have to check if goslim_goa_accession and goslim_goa_description is available
@@ -524,7 +535,7 @@ public class GenePreferences implements Serializable {
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
      */
-    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile, 
+    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile,
             File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile, boolean updateEqualVersion) {
 
         if (!getGeneMappingFolder().exists()) {
@@ -960,7 +971,7 @@ public class GenePreferences implements Serializable {
     public boolean loadGeneMappings(String jarFilePath, WaitingHandler waitingHandler) {
         return loadGeneMappings(jarFilePath, false, waitingHandler);
     }
-    
+
     /**
      * Imports the gene mappings.
      *

@@ -48,6 +48,16 @@ public class UnitOfMeasurement implements Serializable {
     }
 
     /**
+     * Constructor.
+     *
+     * @param standardUnit a standard unit
+     */
+    public UnitOfMeasurement(StandardUnit standardUnit) {
+        this.fullName = standardUnit.FULL_NAME;
+        this.abbreviation = standardUnit.ABBREVIATION;
+    }
+
+    /**
      * Returns the full name of the unit.
      *
      * @return the full name of the unit
@@ -80,6 +90,32 @@ public class UnitOfMeasurement implements Serializable {
      * @return the name to display
      */
     public String getDisplayName() {
+        if (metricsPrefix == null) {
+            return abbreviation;
+        }
         return metricsPrefix.SYMBOL + abbreviation;
+    }
+    
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
+
+    /**
+     * Indicates whether the given unit of measurement is the same as another.
+     * 
+     * @param unitOfMeasurement an other unit of measurement
+     * 
+     * @return a boolean indicating whether the given unit of measurement is the same as another
+     */
+    public boolean isSameAs(UnitOfMeasurement unitOfMeasurement) {
+        if (getMetricsPrefix() == null && unitOfMeasurement.getMetricsPrefix() != null
+                || getMetricsPrefix() != null && unitOfMeasurement.getMetricsPrefix() == null) {
+            return false;
+        }
+        if (getMetricsPrefix() != null && unitOfMeasurement.getMetricsPrefix() != null && getMetricsPrefix() != unitOfMeasurement.getMetricsPrefix()) {
+            return false;
+        }
+        return fullName.equals(unitOfMeasurement.getFullName());
     }
 }

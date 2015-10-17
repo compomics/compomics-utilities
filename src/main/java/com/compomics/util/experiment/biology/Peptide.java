@@ -1377,6 +1377,58 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
+     * Returns the peptide modifications as a string.
+     *
+     * @param peptide the peptide
+     * @param variablePtms if true, only variable PTMs are shown, false return
+     * only the fixed PTMs
+     *
+     * @return the peptide modifications as a string
+     */
+    public static String getPeptideModificationsAsString(Peptide peptide, boolean variablePtms) {
+
+        StringBuilder result = new StringBuilder();
+
+        HashMap<String, ArrayList<Integer>> modMap = new HashMap<>();
+        if (peptide.isModified()) {
+            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
+                if ((variablePtms && modificationMatch.isVariable()) || (!variablePtms && !modificationMatch.isVariable())) {
+                    if (!modMap.containsKey(modificationMatch.getTheoreticPtm())) {
+                        modMap.put(modificationMatch.getTheoreticPtm(), new ArrayList<Integer>());
+                    }
+                    modMap.get(modificationMatch.getTheoreticPtm()).add(modificationMatch.getModificationSite());
+                }
+            }
+        }
+
+        boolean first = true, first2;
+        ArrayList<String> mods = new ArrayList<>(modMap.keySet());
+
+        Collections.sort(mods);
+        for (String mod : mods) {
+            if (first) {
+                first = false;
+            } else {
+                result.append(", ");
+            }
+            first2 = true;
+            result.append(mod);
+            result.append(" (");
+            for (int aa : modMap.get(mod)) {
+                if (first2) {
+                    first2 = false;
+                } else {
+                    result.append(", ");
+                }
+                result.append(aa);
+            }
+            result.append(")");
+        }
+
+        return result.toString();
+    }
+
+    /**
      * Returns the indexes of the residues in the peptide that contain at least
      * one variable modification.
      *

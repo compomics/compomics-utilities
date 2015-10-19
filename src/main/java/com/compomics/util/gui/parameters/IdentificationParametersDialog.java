@@ -19,6 +19,7 @@ import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.preferences.ValidationQCPreferences;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +96,10 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      */
     private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
     /**
+     * A parent handling the edition of QC filters.
+     */
+    private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
+    /**
      * The possible neutral losses in a list.
      */
     private ArrayList<NeutralLoss> possibleNeutralLosses;
@@ -114,9 +119,10 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
+     * @param validationQCPreferencesDialogParent a parent handling the edition of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+    public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -383,7 +389,14 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_validationButtonActionPerformed
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
-        // @TODO use dialog
+        ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(parentFrame, validationQCPreferencesDialogParent, validationQCPreferences);
+        if (!validationQCPreferencesDialog.isCanceled()) {
+            ValidationQCPreferences newValidationQCPreferences = validationQCPreferencesDialog.getValidationQCPreferences();
+            if (!validationQCPreferences.isSameAs(newValidationQCPreferences)) {
+                idValidationPreferences.setValidationQCPreferences(newValidationQCPreferences);
+            }
+        }
     }//GEN-LAST:event_qualityControlButtonActionPerformed
 
 

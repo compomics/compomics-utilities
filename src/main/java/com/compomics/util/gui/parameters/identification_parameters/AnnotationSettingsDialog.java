@@ -37,11 +37,11 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     /**
      * Map of the charges selection.
      */
-    private HashMap<Integer, Boolean> chargesMap = new HashMap<Integer, Boolean>();
+    private HashMap<Integer, Boolean> chargesMap;
     /**
      * Map of the neutral losses selection.
      */
-    private HashMap<NeutralLoss, Boolean> neutralLossesMap = new HashMap<NeutralLoss, Boolean>();
+    private HashMap<NeutralLoss, Boolean> neutralLossesMap;
 
     /**
      * Creates a new AnnotationPreferencesDialog.
@@ -54,6 +54,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      */
     public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons) {
         super(parentFrame, true);
+        this.reporterIons = reporterIons;
         initComponents();
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);

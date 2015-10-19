@@ -25,6 +25,14 @@ import javax.swing.SwingConstants;
 public class SpeciesDialog extends javax.swing.JDialog {
 
     /**
+     * The frame parent, if any.
+     */
+    private java.awt.Frame parentFrame = null;
+    /**
+     * Boolean indicating whether the user canceled the editing.
+     */
+    private boolean canceled = false;
+    /**
      * The GO factory.
      */
     private GOFactory goFactory = GOFactory.getInstance();
@@ -36,10 +44,6 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * The progress dialog.
      */
     private ProgressDialogX progressDialog;
-    /**
-     * The frame parent, if any.
-     */
-    private JFrame frameParent = null;
     /**
      * The dialog parent, if any.
      */
@@ -74,15 +78,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param waitingImage the waiting icon
      * @param normalImage the normal icon
      */
-    public SpeciesDialog(JFrame parentFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
+    public SpeciesDialog(java.awt.Frame parentFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentFrame, modal);
-        frameParent = parentFrame;
+        this.parentFrame = parentFrame;
         this.genePreferences = genePreferences;
         initComponents();
         this.waitingImage = waitingImage;
         this.normalImage = normalImage;
         setUpGUI();
-        setLocationRelativeTo(frameParent);
+        setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
 
@@ -99,7 +103,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
     public SpeciesDialog(JDialog parentDialog, JFrame mainFrame, GenePreferences genePreferences, boolean modal, Image waitingImage, Image normalImage) {
         super(parentDialog, modal);
         dialogParent = parentDialog;
-        frameParent = mainFrame;
+        parentFrame = mainFrame;
         this.genePreferences = genePreferences;
         initComponents();
         this.waitingImage = waitingImage;
@@ -208,6 +212,15 @@ public class SpeciesDialog extends javax.swing.JDialog {
             return genePreferences.getAllSpecies().get(currentEnsemblSpeciesType).get(selectedIndex - 1);
         }
         return null;
+    }
+
+    /**
+     * Indicates whether the user canceled the editing.
+     *
+     * @return a boolean indicating whether the user canceled the editing
+     */
+    public boolean isCanceled() {
+        return canceled;
     }
 
     /**
@@ -886,12 +899,12 @@ public class SpeciesDialog extends javax.swing.JDialog {
     private void downloadMappings() {
 
         if (dialogParent == null) {
-            progressDialog = new ProgressDialogX(frameParent,
+            progressDialog = new ProgressDialogX(parentFrame,
                     normalImage,
                     waitingImage,
                     true);
         } else {
-            progressDialog = new ProgressDialogX(dialogParent, frameParent,
+            progressDialog = new ProgressDialogX(dialogParent, parentFrame,
                     normalImage,
                     waitingImage,
                     true);

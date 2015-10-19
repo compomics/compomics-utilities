@@ -18,47 +18,32 @@ import javax.swing.SwingConstants;
 public class MatchesImportFiltersDialog extends javax.swing.JDialog {
 
     /**
+     * The parent frame.
+     */
+    private java.awt.Frame parentFrame;
+    /**
+     * Boolean indicating whether the user canceled the editing.
+     */
+    private boolean canceled = false;
+    /**
      * If true the user can edit the settings.
      */
     private boolean editable;
-    /**
-     * The identification filter set by the user. Null if cancel was pressed.
-     */
-    private PeptideAssumptionFilter userFilter = null;
-    /**
-     * The original filter.
-     */
-    private PeptideAssumptionFilter originalFilter;
 
     /**
      * Creates a new ImportSettingsDialog.
      *
-     * @param parent the parent frame
+     * @param parentFrame the parent frame
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public MatchesImportFiltersDialog(JFrame parent, PeptideAssumptionFilter idFilter, boolean editable) {
-        super(parent, true);
+    public MatchesImportFiltersDialog(java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
+        super(parentFrame, true);
         this.editable = editable;
-        this.originalFilter = idFilter;
+        this.parentFrame = parentFrame;
         setUpGui();
-        setLocationRelativeTo(parent);
-        setVisible(true);
-    }
-
-    /**
-     * Creates a new ImportSettingsDialog.
-     *
-     * @param parent the parent dialog
-     * @param idFilter the identification filter
-     * @param editable boolean indicating whether the parameters can be editable
-     */
-    public MatchesImportFiltersDialog(JDialog parent, PeptideAssumptionFilter idFilter, boolean editable) {
-        super(parent, true);
-        this.editable = editable;
-        this.originalFilter = idFilter;
-        setUpGui();
-        setLocationRelativeTo(parent);
+        populateGUI(idFilter);
+        setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
 
@@ -71,31 +56,40 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
 
         unitCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
-        int intValue = originalFilter.getMinPepLength();
-        if (intValue > 0) {
-            nAAminTxt.setText(originalFilter.getMinPepLength() + "");
-        }
-        intValue = originalFilter.getMaxPepLength();
-        if (intValue > 0) {
-            nAAmaxTxt.setText(originalFilter.getMaxPepLength() + "");
-        }
-        double doubleValue = originalFilter.getMaxMzDeviation();
-        if (doubleValue > 0) {
-            precDevTxt.setText(originalFilter.getMaxMzDeviation() + "");
-        }
-        ptmsCheck.setSelected(originalFilter.removeUnknownPTMs());
-
-        if (originalFilter.isIsPpm()) {
-            unitCmb.setSelectedIndex(0);
-        } else {
-            unitCmb.setSelectedIndex(1);
-        }
-
         nAAminTxt.setEditable(editable);
         nAAmaxTxt.setEditable(editable);
         precDevTxt.setEditable(editable);
         unitCmb.setEnabled(editable);
         cancelButton.setEnabled(editable);
+    }
+
+    /**
+     * Populates the gui with the values from the given filter.
+     *
+     * @param idFilter the filter to display
+     */
+    private void populateGUI(PeptideAssumptionFilter idFilter) {
+
+        int intValue = idFilter.getMinPepLength();
+        if (intValue > 0) {
+            nAAminTxt.setText(idFilter.getMinPepLength() + "");
+        }
+        intValue = idFilter.getMaxPepLength();
+        if (intValue > 0) {
+            nAAmaxTxt.setText(idFilter.getMaxPepLength() + "");
+        }
+        double doubleValue = idFilter.getMaxMzDeviation();
+        if (doubleValue > 0) {
+            precDevTxt.setText(idFilter.getMaxMzDeviation() + "");
+        }
+        ptmsCheck.setSelected(idFilter.removeUnknownPTMs());
+
+        if (idFilter.isIsPpm()) {
+            unitCmb.setSelectedIndex(0);
+        } else {
+            unitCmb.setSelectedIndex(1);
+        }
+
     }
 
     /**
@@ -138,13 +132,46 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the id filter as set by the user. Null if the user canceled the
-     * editing or did not make any change.
+     * Indicates whether the user canceled the editing.
+     *
+     * @return a boolean indicating whether the user canceled the editing
+     */
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    /**
+     * Returns the id filter as set by the user.
      *
      * @return the id filter as set by the user
      */
     public PeptideAssumptionFilter getFilter() {
-        return userFilter;
+        int nAAmin = -1;
+        String input = nAAminTxt.getText();
+        if (!input.equals("")) {
+            nAAmin = new Integer(input);
+        }
+        int nAAmax = -1;
+        input = nAAmaxTxt.getText();
+        if (!input.equals("")) {
+            nAAmax = new Integer(input);
+        }
+        double precDev = -1;
+        input = precDevTxt.getText();
+        if (!input.equals("")) {
+            precDev = new Double(input);
+        }
+        boolean ppm = unitCmb.getSelectedIndex() == 0;
+        boolean removePTM = ptmsCheck.isSelected();
+
+        PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter(
+                nAAmin,
+                nAAmax,
+                precDev,
+                ppm,
+                removePTM);
+
+        return idFilter;
     }
 
     /**
@@ -343,35 +370,6 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (editable) {
             if (validateInput()) {
-                int nAAmin = -1;
-                String input = nAAminTxt.getText();
-                if (!input.equals("")) {
-                    nAAmin = new Integer(input);
-                }
-                int nAAmax = -1;
-                input = nAAmaxTxt.getText();
-                if (!input.equals("")) {
-                    nAAmax = new Integer(input);
-                }
-                double precDev = -1;
-                input = precDevTxt.getText();
-                if (!input.equals("")) {
-                    precDev = new Double(input);
-                }
-                boolean ppm = unitCmb.getSelectedIndex() == 0;
-                boolean removePTM = ptmsCheck.isSelected();
-
-                PeptideAssumptionFilter tempFilter = new PeptideAssumptionFilter(
-                        nAAmin,
-                        nAAmax,
-                        precDev,
-                        ppm,
-                        removePTM);
-
-                if (!tempFilter.equals(originalFilter)) {
-                    userFilter = tempFilter;
-                }
-
                 dispose();
             }
         } else {

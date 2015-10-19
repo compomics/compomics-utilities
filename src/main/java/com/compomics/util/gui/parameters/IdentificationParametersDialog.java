@@ -1,9 +1,11 @@
 package com.compomics.util.gui.parameters;
 
+import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.gui.gene_mapping.SpeciesDialog;
+import com.compomics.util.gui.parameters.identification_parameters.AnnotationSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.MatchesImportFiltersDialog;
 import com.compomics.util.gui.parameters.identification_parameters.PTMLocalizationParametersDialog;
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
@@ -18,6 +20,8 @@ import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.SwingConstants;
 
 /**
@@ -55,9 +59,9 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      */
     private ConfigurationFile configurationFile;
     /**
-     * The peak annotation preferences.
+     * The peak annotation settings.
      */
-    private AnnotationSettings annotationPreferences;
+    private AnnotationSettings annotationSettings;
     /**
      * The parameters used for the spectrum matching.
      */
@@ -90,6 +94,14 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * The identification validation preferences.
      */
     private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
+    /**
+     * The possible neutral losses in a list.
+     */
+    private ArrayList<NeutralLoss> possibleNeutralLosses;
+    /**
+     * List of possible reporter ions.
+     */
+    private ArrayList<Integer> reporterIons;
 
     /**
      * Constructor.
@@ -97,16 +109,18 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
      * @param configurationFile the configuration file containing the PTM usage preferences
+     * @param possibleNeutralLosses the possible neutral losses
+     * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+    public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
-        this.annotationPreferences = identificationParameters.getAnnotationPreferences();
+        this.annotationSettings = identificationParameters.getAnnotationPreferences();
         this.searchParameters = identificationParameters.getSearchParameters();
         this.sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
         this.genePreferences = identificationParameters.getGenePreferences();
@@ -115,6 +129,8 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
         this.ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
         this.proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         this.idValidationPreferences = identificationParameters.getIdValidationPreferences();
+        this.reporterIons = reporterIons;
+        this.possibleNeutralLosses = possibleNeutralLosses;
 
         initComponents();
         setUpGui();
@@ -312,7 +328,13 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        // @TODO Move the dialog to utilities
+        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(parentFrame, annotationSettings, possibleNeutralLosses, reporterIons);
+        if (!annotationSettingsDialog.isCanceled()) {
+            AnnotationSettings newAnnotationSettings = annotationSettingsDialog.getAnnotationSettings();
+            if (!newAnnotationSettings.isSameAs(annotationSettings)) {
+                annotationSettings = newAnnotationSettings;
+            }
+        }
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
@@ -328,12 +350,17 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
 
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
         SpeciesDialog speciesDialog = new SpeciesDialog(null, genePreferences, true, waitingIcon, normalIcon);
-        // @TODO set the gene preferences
+        // @TODO decouple the gene factory from the preferences
     }//GEN-LAST:event_geneMappingButtonActionPerformed
 
     private void matchesFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchesFiltersButtonActionPerformed
-        MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(this, peptideAssumptionFilter, editable);
-        // @TODO set the filter
+        MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(parentFrame, peptideAssumptionFilter, editable);
+        if (!matchesImportFiltersDialog.isCanceled()) {
+            PeptideAssumptionFilter newPeptideAssumptionFilter = matchesImportFiltersDialog.getFilter();
+            if (!newPeptideAssumptionFilter.isSameAs(peptideAssumptionFilter)) {
+                peptideAssumptionFilter = newPeptideAssumptionFilter;
+            }
+        }
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed

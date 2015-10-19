@@ -217,6 +217,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         removeFixedModification.setEnabled(editable);
         addVariableModification.setEnabled(editable);
         removeVariableModification.setEnabled(editable);
+        if (!editable) {
+            editDatabaseDetailsButton.setText("View");
+        }
 
         modificationTypesSplitPane.setDividerLocation(0.5);
 

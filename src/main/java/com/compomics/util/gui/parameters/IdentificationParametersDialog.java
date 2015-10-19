@@ -8,7 +8,11 @@ import com.compomics.util.gui.gene_mapping.SpeciesDialog;
 import com.compomics.util.gui.parameters.identification_parameters.AnnotationSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.MatchesImportFiltersDialog;
 import com.compomics.util.gui.parameters.identification_parameters.PTMLocalizationParametersDialog;
+import com.compomics.util.gui.parameters.identification_parameters.ProteinInferenceSettingsDialog;
+import com.compomics.util.gui.parameters.identification_parameters.PsmScoringSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
+import com.compomics.util.gui.parameters.identification_parameters.SequenceMatchingSettingsDialog;
+import com.compomics.util.gui.parameters.identification_parameters.ValidationSettingsDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.GenePreferences;
@@ -110,16 +114,18 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Constructor.
-     * 
+     *
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
-     * @param configurationFile the configuration file containing the PTM usage preferences
+     * @param configurationFile the configuration file containing the PTM usage
+     * preferences
      * @param possibleNeutralLosses the possible neutral losses
      * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
-     * @param validationQCPreferencesDialogParent a parent handling the edition of QC filters
+     * @param validationQCPreferencesDialogParent a parent handling the edition
+     * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
@@ -336,10 +342,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
         AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(parentFrame, annotationSettings, possibleNeutralLosses, reporterIons);
         if (!annotationSettingsDialog.isCanceled()) {
-            AnnotationSettings newAnnotationSettings = annotationSettingsDialog.getAnnotationSettings();
-            if (!newAnnotationSettings.isSameAs(annotationSettings)) {
-                annotationSettings = newAnnotationSettings;
-            }
+            annotationSettings = annotationSettingsDialog.getAnnotationSettings();
         }
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
@@ -351,7 +354,10 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
     private void sequenceMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceMatchingButtonActionPerformed
-        // @TODO make a dialog
+        SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(parentFrame, sequenceMatchingPreferences);
+        if (!sequenceMatchingSettingsDialog.isCanceled()) {
+            sequenceMatchingPreferences = sequenceMatchingSettingsDialog.getSequenceMatchingPreferences();
+        }
     }//GEN-LAST:event_sequenceMatchingButtonActionPerformed
 
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
@@ -362,15 +368,15 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     private void matchesFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchesFiltersButtonActionPerformed
         MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(parentFrame, peptideAssumptionFilter, editable);
         if (!matchesImportFiltersDialog.isCanceled()) {
-            PeptideAssumptionFilter newPeptideAssumptionFilter = matchesImportFiltersDialog.getFilter();
-            if (!newPeptideAssumptionFilter.isSameAs(peptideAssumptionFilter)) {
-                peptideAssumptionFilter = newPeptideAssumptionFilter;
-            }
+            peptideAssumptionFilter = matchesImportFiltersDialog.getFilter();
         }
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed
-        // @TODO create dialog
+        PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(parentFrame, psmScoringPreferences);
+        if (!psmScoringSettingsDialog.isCanceled()) {
+            psmScoringPreferences = psmScoringSettingsDialog.getPsmScoringPreferences();
+        }
     }//GEN-LAST:event_psmScoringButtonActionPerformed
 
     private void ptmLocalizationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptmLocalizationButtonActionPerformed
@@ -381,21 +387,26 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_ptmLocalizationButtonActionPerformed
 
     private void proteinInferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinInferenceButtonActionPerformed
-        // @TODO create dialog
+        ProteinInferenceSettingsDialog proteinInferenceSettingsDialog = new ProteinInferenceSettingsDialog(parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, lastSelectedFolder, editable);
+        if (!proteinInferenceSettingsDialog.isCanceled()) {
+            proteinInferencePreferences = proteinInferenceSettingsDialog.getProteinInferencePreferences();
+        }
     }//GEN-LAST:event_proteinInferenceButtonActionPerformed
 
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
-        // @TODO create dialog
+        ValidationSettingsDialog validationSettingsDialog = new ValidationSettingsDialog(parentFrame, idValidationPreferences, editable);
+        if (!validationSettingsDialog.isCanceled()) {
+            ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
+            idValidationPreferences = validationSettingsDialog.getIdMatchValidationPreferences();
+            idValidationPreferences.setValidationQCPreferences(validationQCPreferences);
+        }
     }//GEN-LAST:event_validationButtonActionPerformed
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
         ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(parentFrame, validationQCPreferencesDialogParent, validationQCPreferences);
         if (!validationQCPreferencesDialog.isCanceled()) {
-            ValidationQCPreferences newValidationQCPreferences = validationQCPreferencesDialog.getValidationQCPreferences();
-            if (!validationQCPreferences.isSameAs(newValidationQCPreferences)) {
-                idValidationPreferences.setValidationQCPreferences(newValidationQCPreferences);
-            }
+            idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
         }
     }//GEN-LAST:event_qualityControlButtonActionPerformed
 

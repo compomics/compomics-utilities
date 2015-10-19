@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Generic configuration text file.
  * 
- * @TODO: replace with a json file
+ * TODO: replace with a json file
  *
  * @author Marc Vaudel
  */

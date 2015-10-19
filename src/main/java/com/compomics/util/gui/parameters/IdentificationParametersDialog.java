@@ -93,9 +93,14 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Constructor.
-     *
-     * @param parentFrame a parent frame
-     * @param identificationParameters the identification parameters
+     * 
+     * @param parentFrame the parent frame
+     * @param identificationParameters the identification parameters to display
+     * @param configurationFile the configuration file containing the PTM usage preferences
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
+     * @param lastSelectedFolder the last selected folder
+     * @param editable boolean indicating whether the parameters can be edited
      */
     public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
@@ -131,14 +136,6 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      */
     public boolean isCanceled() {
         return canceled;
-    }
-
-    /**
-     * Creates new form IdentificationParametersDialog
-     */
-    public IdentificationParametersDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
     }
 
     /**
@@ -315,7 +312,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        // TODO Move the dialog to utilities
+        // @TODO Move the dialog to utilities
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
@@ -326,7 +323,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
     private void sequenceMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceMatchingButtonActionPerformed
-        // TODO make a dialog
+        // @TODO make a dialog
     }//GEN-LAST:event_sequenceMatchingButtonActionPerformed
 
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
@@ -340,7 +337,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed
-        // TODO create dialog
+        // @TODO create dialog
     }//GEN-LAST:event_psmScoringButtonActionPerformed
 
     private void ptmLocalizationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptmLocalizationButtonActionPerformed
@@ -351,15 +348,15 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_ptmLocalizationButtonActionPerformed
 
     private void proteinInferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinInferenceButtonActionPerformed
-        // TODO create dialog
+        // @TODO create dialog
     }//GEN-LAST:event_proteinInferenceButtonActionPerformed
 
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
-        // TODO create dialog
+        // @TODO create dialog
     }//GEN-LAST:event_validationButtonActionPerformed
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
-        // TODO use dialog
+        // @TODO use dialog
     }//GEN-LAST:event_qualityControlButtonActionPerformed
 
 

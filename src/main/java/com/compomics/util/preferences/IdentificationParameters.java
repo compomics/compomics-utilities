@@ -18,25 +18,13 @@ public class IdentificationParameters implements Serializable {
      */
     static final long serialVersionUID = -5516259326385167746L;
     /**
-     * The parameters used for the spectrum matching.
-     */
-    private SearchParameters searchParameters;
-    /**
      * The peak annotation preferences.
      */
     private AnnotationSettings annotationPreferences;
     /**
-     * The PSM filter.
+     * The parameters used for the spectrum matching.
      */
-    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
-    /**
-     * The PSM scores to use.
-     */
-    private PsmScoringPreferences psmScoringPreferences;
-    /**
-     * The PTM localization scoring preferences.
-     */
-    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
+    private SearchParameters searchParameters;
     /**
      * The peptide to protein matching preferences.
      */
@@ -45,6 +33,18 @@ public class IdentificationParameters implements Serializable {
      * The gene preferences.
      */
     private GenePreferences genePreferences;
+    /**
+     * The PSM scores to use.
+     */
+    private PsmScoringPreferences psmScoringPreferences;
+    /**
+     * The PSM filter.
+     */
+    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
+    /**
+     * The PTM localization scoring preferences.
+     */
+    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
     /**
      * The protein inference preferences.
      */

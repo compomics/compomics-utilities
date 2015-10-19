@@ -1,4 +1,4 @@
-package com.compomics.util.gui.searchsettings.algorithm_settings;
+package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;

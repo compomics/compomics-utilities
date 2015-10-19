@@ -1,4 +1,4 @@
-package com.compomics.util.preferences.gui;
+package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ImportSettingsDialog extends javax.swing.JDialog {
+public class MatchesImportFiltersDialog extends javax.swing.JDialog {
 
     /**
      * If true the user can edit the settings.
@@ -37,7 +37,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JFrame parent, PeptideAssumptionFilter idFilter, boolean editable) {
+    public MatchesImportFiltersDialog(JFrame parent, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parent, true);
         this.editable = editable;
         this.originalFilter = idFilter;
@@ -53,7 +53,7 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
      * @param idFilter the identification filter
      * @param editable boolean indicating whether the parameters can be editable
      */
-    public ImportSettingsDialog(JDialog parent, PeptideAssumptionFilter idFilter, boolean editable) {
+    public MatchesImportFiltersDialog(JDialog parent, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parent, true);
         this.editable = editable;
         this.originalFilter = idFilter;
@@ -283,16 +283,17 @@ public class ImportSettingsDialog extends javax.swing.JDialog {
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(okButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton)
-                .addContainerGap())
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(okButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 /**
  * Generic configuration text file.
+ * 
+ * @TODO: replace with a json file
  *
  * @author Marc Vaudel
  */
@@ -19,6 +21,11 @@ public class ConfigurationFile {
      */
     private File configurationFile;
 
+    /**
+     * Constructor.
+     * 
+     * @param configurationFile a file where to save the configuration
+     */
     public ConfigurationFile(File configurationFile) {
         this.configurationFile = configurationFile;
     }

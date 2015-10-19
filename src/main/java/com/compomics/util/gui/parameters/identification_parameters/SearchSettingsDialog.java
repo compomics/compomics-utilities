@@ -1,4 +1,4 @@
-package com.compomics.util.gui.searchsettings;
+package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
@@ -869,7 +869,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 800, 318);
+        modificationsPanel.setBounds(0, 0, 800, 0);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

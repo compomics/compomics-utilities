@@ -1,4 +1,4 @@
-package com.compomics.util.preferences.gui;
+package com.compomics.util.gui.parameters;
 
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.gui.error_handlers.HelpDialog;

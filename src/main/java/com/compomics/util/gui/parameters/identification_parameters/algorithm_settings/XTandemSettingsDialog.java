@@ -3,11 +3,13 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -31,7 +33,7 @@ import org.jfree.chart.plot.PlotOrientation;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class XTandemSettingsDialog extends javax.swing.JDialog {
+public class XTandemSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The X!Tandem parameters class containing the information to display.
@@ -263,13 +265,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
         updateModificationList();
     }
 
-    /**
-     * Indicates whether the user canceled the process.
-     *
-     * @return true if cancel was pressed
-     */
+    @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+    
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getInput();
     }
 
     /**
@@ -1274,7 +1277,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                .addComponent(tabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)

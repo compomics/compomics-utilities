@@ -86,7 +86,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     /**
      * The dialog parent frame.
      */
-    private JFrame parentFrame;
+    private java.awt.Frame parentFrame;
     /**
      * The normal dialog icon.
      */
@@ -157,7 +157,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @param lastSelectedFolder the last selected folder to use
      * @param editable set if the search settings are to be editable or not
      */
-    public SearchSettingsDialog(JFrame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+    public SearchSettingsDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
             boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, modal);
 

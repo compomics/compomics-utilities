@@ -1,8 +1,10 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -10,7 +12,7 @@ import javax.swing.SwingConstants;
  *
  * @author Harald Barsnes
  */
-public class MsAmandaSettingsDialog extends javax.swing.JDialog {
+public class MsAmandaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The MS Amanda parameters class containing the information to display.
@@ -76,13 +78,14 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog {
         }
     }
 
-    /**
-     * Indicates whether the user canceled the process.
-     *
-     * @return true if cancel was pressed
-     */
+    @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+    
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getInput();
     }
 
     /**

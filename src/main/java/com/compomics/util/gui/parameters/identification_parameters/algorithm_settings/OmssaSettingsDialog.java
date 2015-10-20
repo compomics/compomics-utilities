@@ -1,10 +1,12 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -17,7 +19,7 @@ import javax.swing.SwingUtilities;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class OmssaSettingsDialog extends javax.swing.JDialog {
+public class OmssaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The OMSSA parameters class containing the information to display.
@@ -273,13 +275,14 @@ public class OmssaSettingsDialog extends javax.swing.JDialog {
         }
     }
 
-    /**
-     * Indicates whether the user canceled the process.
-     *
-     * @return true if cancel was pressed
-     */
+    @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+    
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getInput();
     }
 
     /**

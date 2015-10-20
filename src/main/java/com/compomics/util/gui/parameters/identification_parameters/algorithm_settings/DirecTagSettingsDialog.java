@@ -2,9 +2,11 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
@@ -13,7 +15,7 @@ import javax.swing.SwingConstants;
  *
  * @author Harald Barsnes
  */
-public class DirecTagSettingsDialog extends javax.swing.JDialog {
+public class DirecTagSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The search parameters
@@ -31,7 +33,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog {
      * @param searchParameters the search parameters
      * @param modal whether the dialog is modal or not
      */
-    public DirecTagSettingsDialog(JFrame parent, SearchParameters searchParameters, boolean modal) {
+    public DirecTagSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
         super(parent, modal);
         this.searchParameters = searchParameters;
         initComponents();
@@ -847,6 +849,19 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog {
         tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
         tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
 
+        DirecTagParameters direcTagParameters = getDirecTagParameters();
+        
+        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
+
+        return tempSearchParameters;
+    }
+    
+    /**
+     * Returns the DirecTag parameters as set by the user.
+     * 
+     * @return the DirecTag parameters
+     */
+    public DirecTagParameters getDirecTagParameters() {
         DirecTagParameters direcTagParameters = new DirecTagParameters();
         direcTagParameters.setTagLength(Integer.parseInt(tagLengthTextField.getText()));
         direcTagParameters.setMaxDynamicMods(Integer.parseInt(numVariableModsTextField.getText()));
@@ -869,18 +884,17 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog {
         direcTagParameters.setMaxTagCount(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).getMaxTagCount());
         direcTagParameters.setAdjustPrecursorMass(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).isAdjustPrecursorMass());
         direcTagParameters.setUseChargeStateFromMS(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).isUseChargeStateFromMS());
+        
+        return direcTagParameters;
+    }
 
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
-
-        return tempSearchParameters;
+    @Override
+    public boolean isCancelled() {
+        return canceled;
     }
     
-    /**
-     * Returns true if the dialog was canceled by the user.
-     * 
-     * @return the canceled
-     */
-    public boolean isCanceled() {
-        return canceled;
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getDirecTagParameters();
     }
 }

@@ -1,9 +1,11 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -13,7 +15,7 @@ import javax.swing.SwingConstants;
  *
  * @author Harald Barsnes
  */
-public class AndromedaSettingsDialog extends javax.swing.JDialog {
+public class AndromedaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The Andromeda parameters class containing the information to display.
@@ -120,13 +122,14 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog {
         topPeaksWindowTxt.setText(andromedaParameters.getTopPeaksWindow() + "");
     }
 
-    /**
-     * Indicates whether the user canceled the process.
-     *
-     * @return true if cancel was pressed
-     */
+    @Override
     public boolean isCancelled() {
         return cancelled;
+    }
+    
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getInput();
     }
 
     /**
@@ -807,4 +810,5 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox waterLossCombo;
     private javax.swing.JLabel waterLossLabel;
     // End of variables declaration//GEN-END:variables
+
 }

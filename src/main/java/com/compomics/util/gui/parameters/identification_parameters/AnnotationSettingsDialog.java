@@ -606,84 +606,23 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Table model for the charges table.
-     */
-    private class ChargesTableModel extends DefaultTableModel {
-
-        private ArrayList<Integer> charges;
-
-        public ChargesTableModel() {
-            charges = new ArrayList<Integer>(chargesMap.keySet());
-            Collections.sort(charges);
-        }
-
-        @Override
-        public int getRowCount() {
-            return chargesMap.size();
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 3;
-        }
-
-        @Override
-        public String getColumnName(int column) {
-            switch (column) {
-                case 0:
-                    return " ";
-                case 1:
-                    return "Charge";
-                case 2:
-                    return "  ";
-                default:
-                    return "";
-            }
-        }
-
-        @Override
-        public Object getValueAt(int row, int column) {
-            switch (column) {
-                case 0:
-                    return row + 1;
-                case 1:
-                    return charges.get(row) + "+";
-                case 2:
-                    return chargesMap.get(charges.get(row));
-                default:
-                    return "";
-            }
-        }
-
-        @Override
-        public Class getColumnClass(int columnIndex) {
-            for (int i = 0; i < getRowCount(); i++) {
-                if (getValueAt(i, columnIndex) != null) {
-                    return getValueAt(i, columnIndex).getClass();
-                }
-            }
-            return String.class;
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2;
-        }
-
-        @Override
-        public void setValueAt(Object aValue, int row, int column) {
-            chargesMap.put(charges.get(row), !chargesMap.get(charges.get(row)));
-        }
-    }
-
-    /**
      * Table model for the neutral losses table.
      */
     private class NeutralLossesTableModel extends DefaultTableModel {
 
+        /**
+         * Name to neutral loss map
+         */
         private HashMap<String, NeutralLoss> namesMap = new HashMap<String, NeutralLoss>();
+        
+        /**
+         * List of the names of the neutral losses to display
+         */
         private ArrayList<String> namesList = new ArrayList<String>();
 
+        /**
+         * Constructor
+         */
         public NeutralLossesTableModel() {
             for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
                 namesMap.put(neutralLoss.name, neutralLoss);

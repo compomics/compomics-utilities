@@ -2,8 +2,10 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
@@ -12,7 +14,7 @@ import javax.swing.SwingConstants;
  *
  * @author Harald Barsnes
  */
-public class NovorSettingsDialog extends javax.swing.JDialog {
+public class NovorSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The search parameters.
@@ -30,7 +32,7 @@ public class NovorSettingsDialog extends javax.swing.JDialog {
      * @param searchParameters the search parameters
      * @param modal whether the dialog is modal or not
      */
-    public NovorSettingsDialog(JFrame parent, SearchParameters searchParameters, boolean modal) {
+    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
         super(parent, modal);
         this.searchParameters = searchParameters;
         initComponents();
@@ -311,22 +313,35 @@ public class NovorSettingsDialog extends javax.swing.JDialog {
         tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());
         tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
         tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
-
-        NovorParameters novorParameters = new NovorParameters();
-        novorParameters.setFragmentationMethod((String) fragmentationMethodCmb.getSelectedItem());
-        novorParameters.setMassAnalyzer((String) massAnalyzerCmb.getSelectedItem());
+        
+        NovorParameters novorParameters = getNovorParameters();
 
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), novorParameters);
 
         return tempSearchParameters;
     }
-
+    
     /**
-     * Returns true if the dialog was canceled by the user.
+     * Returns the Novor parameters as set by the user.
      * 
-     * @return the canceled
+     * @return the Novor parameters as set by the user
      */
-    public boolean isCanceled() {
+    public NovorParameters getNovorParameters() {
+
+        NovorParameters novorParameters = new NovorParameters();
+        novorParameters.setFragmentationMethod((String) fragmentationMethodCmb.getSelectedItem());
+        novorParameters.setMassAnalyzer((String) massAnalyzerCmb.getSelectedItem());
+        return novorParameters;
+        
+    }
+
+    @Override
+    public boolean isCancelled() {
         return canceled;
+    }
+    
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getNovorParameters();
     }
 }

@@ -2,9 +2,11 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
@@ -13,7 +15,7 @@ import javax.swing.SwingConstants;
  *
  * @author Harald Barsnes
  */
-public class PNovoSettingsDialog extends javax.swing.JDialog {
+public class PNovoSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
      * The search parameters.
@@ -31,7 +33,7 @@ public class PNovoSettingsDialog extends javax.swing.JDialog {
      * @param searchParameters the search parameters
      * @param modal whether the dialog is modal or not
      */
-    public PNovoSettingsDialog(JFrame parent, SearchParameters searchParameters, boolean modal) {
+    public PNovoSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
         super(parent, modal);
         this.searchParameters = searchParameters;
         initComponents();
@@ -364,10 +366,7 @@ public class PNovoSettingsDialog extends javax.swing.JDialog {
         tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
         tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
 
-        PNovoParameters pNovoParameters = new PNovoParameters();
-        pNovoParameters.setLowerPrecursorMass(Integer.parseInt(minPrecursorMassTextField.getText()));
-        pNovoParameters.setUpperPrecursorMass(Integer.parseInt(maxPrecursorMassTextField.getText()));
-        pNovoParameters.setActicationType((String) activationTypeCmb.getSelectedItem());
+        PNovoParameters pNovoParameters = getPNovoParameters();
 
         tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
 
@@ -375,11 +374,26 @@ public class PNovoSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns true if the dialog was canceled by the user.
-     * 
-     * @return the canceled
+     * Returns the pNovo parameters as set by the user.
+     *
+     * @return
      */
-    public boolean isCanceled() {
+    public PNovoParameters getPNovoParameters() {
+
+        PNovoParameters pNovoParameters = new PNovoParameters();
+        pNovoParameters.setLowerPrecursorMass(Integer.parseInt(minPrecursorMassTextField.getText()));
+        pNovoParameters.setUpperPrecursorMass(Integer.parseInt(maxPrecursorMassTextField.getText()));
+        pNovoParameters.setActicationType((String) activationTypeCmb.getSelectedItem());
+        return pNovoParameters;
+    }
+
+    @Override
+    public boolean isCancelled() {
         return canceled;
+    }
+
+    @Override
+    public IdentificationAlgorithmParameter getParameters() {
+        return getPNovoParameters();
     }
 }

@@ -43,11 +43,11 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-        
+
         thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        
+
     }
 
     /**
@@ -56,9 +56,9 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @param spectrumCountingPreferences the PTM scoring preferences to display
      */
     private void populateGUI(PTMScoringPreferences ptmScoringPreferences) {
-        
+
         scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore());
-        
+
         if (ptmScoringPreferences.isProbabilitsticScoreCalculation()) {
             scoreCmb.setEnabled(editable);
             neutralLossesCmb.setEnabled(editable);
@@ -84,7 +84,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
             thresholdTxt.setEnabled(false);
             thresholdTxt.setEditable(false);
         }
-        
+
     }
 
     /**
@@ -146,8 +146,20 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @return the PTM scoring preferences as set by the user
      */
     public PTMScoringPreferences getPtmScoringPreferences() {
+        
         PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
-        // set PTM preferences
+        
+        ptmScoringPreferences.setProbabilitsticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
+        ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());
+        ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
+        
+        if (thresholdAutpoCmb.getSelectedIndex() == 0) {
+            ptmScoringPreferences.setEstimateFlr(true);
+        } else {
+            ptmScoringPreferences.setEstimateFlr(false);
+            ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
+        }
+        
         return ptmScoringPreferences;
     }
 

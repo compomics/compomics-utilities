@@ -10,6 +10,10 @@ import java.io.Serializable;
 public class UnitOfMeasurement implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = 607774099178502699L;
+    /**
      * The full name of the unit.
      */
     private String fullName;

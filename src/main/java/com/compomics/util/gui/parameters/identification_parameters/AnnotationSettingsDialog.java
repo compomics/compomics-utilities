@@ -35,10 +35,6 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      */
     private ArrayList<Integer> reporterIons;
     /**
-     * Map of the charges selection.
-     */
-    private HashMap<Integer, Boolean> chargesMap;
-    /**
      * Map of the neutral losses selection.
      */
     private HashMap<NeutralLoss, Boolean> neutralLossesMap;

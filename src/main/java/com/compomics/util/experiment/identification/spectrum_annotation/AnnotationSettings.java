@@ -23,6 +23,10 @@ import java.util.HashSet;
 public class AnnotationSettings implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -3739182405876385430L;
+    /**
      * If true, the automatic y-axis zoom excludes background peaks. False
      * includes all peaks in the auto zoom.
      */

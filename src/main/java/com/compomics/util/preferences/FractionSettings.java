@@ -1,11 +1,13 @@
 package com.compomics.util.preferences;
 
+import java.io.Serializable;
+
 /**
  * Settings for the handling of fractions.
  *
  * @author Marc Vaudel
  */
-public class FractionSettings {
+public class FractionSettings implements Serializable {
 
     /**
      * The minimum confidence required for a protein to be included in the

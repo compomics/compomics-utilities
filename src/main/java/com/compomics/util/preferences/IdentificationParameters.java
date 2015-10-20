@@ -110,6 +110,10 @@ public class IdentificationParameters implements Serializable {
      * @return the annotation preferences used for identification
      */
     public AnnotationSettings getAnnotationPreferences() {
+        if (annotationSettings == null) { // Backward compatibility
+            annotationSettings = new AnnotationSettings();
+            annotationSettings.setPreferencesFromSearchParameters(searchParameters);
+        }
         return annotationSettings;
     }
 

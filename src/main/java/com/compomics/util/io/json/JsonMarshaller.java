@@ -50,7 +50,7 @@ public class JsonMarshaller {
         builder.registerTypeAdapter(File.class, new FileAdapter());
         //register required interfaceAdapters
         for (Class aClass : interfaces) {
-            builder.registerTypeAdapter(aClass, new InterfaceAdapter<>());
+            builder.registerTypeAdapter(aClass, new InterfaceAdapter());
         }
         gson = builder.create();
     }
@@ -77,9 +77,16 @@ public class JsonMarshaller {
         if (!jsonFile.getName().toLowerCase().endsWith(".json")) {
             jsonFile = new File(jsonFile.getAbsolutePath() + ".json");
         }
-        try (
-                FileWriter out = new FileWriter(jsonFile)) {
+        FileWriter out = null;
+        try {
+            out = new FileWriter(jsonFile);
             out.append(toJson(anObject)).flush();
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            if (out != null) {
+                out.close();
+            }
         }
     }
 
@@ -110,7 +117,7 @@ public class JsonMarshaller {
 
     /**
      * Convert JSON string from file.
-     * 
+     *
      * @param jsonFile the input JSON file
      * @return the string representation of the JSON content
      * @throws FileNotFoundException if the JSON file can not be reached

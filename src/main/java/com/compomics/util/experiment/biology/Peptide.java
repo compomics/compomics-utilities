@@ -1389,7 +1389,7 @@ public class Peptide extends ExperimentObject {
 
         StringBuilder result = new StringBuilder();
 
-        HashMap<String, ArrayList<Integer>> modMap = new HashMap<>();
+        HashMap<String, ArrayList<Integer>> modMap = new HashMap<String, ArrayList<Integer>>();
         if (peptide.isModified()) {
             for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
                 if ((variablePtms && modificationMatch.isVariable()) || (!variablePtms && !modificationMatch.isVariable())) {
@@ -1402,7 +1402,7 @@ public class Peptide extends ExperimentObject {
         }
 
         boolean first = true, first2;
-        ArrayList<String> mods = new ArrayList<>(modMap.keySet());
+        ArrayList<String> mods = new ArrayList<String>(modMap.keySet());
 
         Collections.sort(mods);
         for (String mod : mods) {

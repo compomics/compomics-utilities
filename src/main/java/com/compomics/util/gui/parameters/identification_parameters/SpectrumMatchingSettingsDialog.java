@@ -135,7 +135,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
     private void populateGUI(SearchParameters searchParameters) {
 
         settingsTxt.setText(searchParameters.getParametersFile().getAbsolutePath());
-        algorithmSettingsTable.setModel(new AlgorithmSettingsTable());
+        algorithmSettingsTable.setModel(new AlgorithmSettingsTableModel());
         
 
     }
@@ -210,7 +210,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
         algorithmPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Algorithm Settings"));
         algorithmPanel.setOpaque(false);
 
-        algorithmSettingsTable.setModel(new AlgorithmSettingsTable());
+        algorithmSettingsTable.setModel(new AlgorithmSettingsTableModel());
         algorithmSettingsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 algorithmSettingsTableMouseMoved(evt);
@@ -378,12 +378,12 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
     /**
      * Table model for the neutral losses table.
      */
-    private class AlgorithmSettingsTable extends DefaultTableModel {
+    private class AlgorithmSettingsTableModel extends DefaultTableModel {
 
         /**
          * constructor.
          */
-        public AlgorithmSettingsTable() {
+        public AlgorithmSettingsTableModel() {
             if (algorithmParameters != null) {
                 advocates = new ArrayList<Integer>(algorithmParameters.keySet());
                 Collections.sort(advocates);
@@ -452,7 +452,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2;
+            return false;
         }
     }
 

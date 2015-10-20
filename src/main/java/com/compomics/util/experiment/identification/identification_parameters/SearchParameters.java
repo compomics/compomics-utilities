@@ -626,7 +626,8 @@ public class SearchParameters implements Serializable {
      * Loads the identification parameters from a serialized file.
      *
      * @param searchParametersFile the search parameter file
-     * @return the modification file
+     * 
+     * @return the search parameters
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
@@ -685,6 +686,7 @@ public class SearchParameters implements Serializable {
         fw.close();
     }
 
+    @Override
     public String toString() {
         return toString(false);
     }

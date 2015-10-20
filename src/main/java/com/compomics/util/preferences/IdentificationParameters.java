@@ -1,9 +1,14 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.io.SerializationUtils;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -17,6 +22,14 @@ public class IdentificationParameters implements Serializable {
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -5516259326385167746L;
+    /**
+     * The name of the parameters.
+     */
+    private String name;
+    /**
+     * The description of the parameters.
+     */
+    private String description;
     /**
      * The peak annotation preferences.
      */
@@ -286,6 +299,73 @@ public class IdentificationParameters implements Serializable {
     }
 
     /**
+     * Loads the identification parameters from a file.
+     *
+     * @param identificationParametersFile the file
+     * 
+     * @return the parameters
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     */
+    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        
+        IdentificationParameters identificationParameters = (IdentificationParameters) SerializationUtils.readObject(identificationParametersFile);
+        return identificationParameters;
+    }
+
+    /**
+     * Saves the identification parameters to a file.
+     *
+     * @param identificationParameters the identification parameters
+     * @param searchParametersFile the file
+     *
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     */
+    public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+        SerializationUtils.writeObject(identificationParameters, searchParametersFile);
+    }
+
+    /**
+     * Returns the name of the parameters.
+     * 
+     * @return the name of the parameters
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of the parameters.
+     * 
+     * @param name the name of the parameters
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the description of the parameters.
+     * 
+     * @return the description of the parameters
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description of the parameters.
+     * 
+     * @param description the description of the parameters
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
      * Returns default identification parameters based on given search
      * parameters.
      *
@@ -295,38 +375,7 @@ public class IdentificationParameters implements Serializable {
      */
     public static IdentificationParameters getDefaultIdentificationParameters(SearchParameters searchParameters) {
         IdentificationParameters identificationParameters = new IdentificationParameters();
-        identificationParameters.setSearchParameters(searchParameters);
-        AnnotationSettings annotationPreferences = new AnnotationSettings();
-        annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
-        annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
-        if (searchParameters != null) {
-            annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
-        }
-        annotationPreferences.setIntensityLimit(0.75);
-        annotationPreferences.setAutomaticAnnotation(true);
-        identificationParameters.setAnnotationSettings(annotationPreferences);
-        PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter();
-        if (searchParameters != null) {
-            idFilter.setFilterFromSearchParameters(searchParameters);
-        }
-        identificationParameters.setIdFilter(idFilter);
-        PsmScoringPreferences psmScoringPreferences = new PsmScoringPreferences();
-        identificationParameters.setPsmScoringPreferences(psmScoringPreferences);
-        PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
-        identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
-        if (searchParameters != null) {
-            SequenceMatchingPreferences sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching();
-            identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
-        }
-        GenePreferences genePreferences = new GenePreferences();
-        identificationParameters.setGenePreferences(genePreferences);
-        ProteinInferencePreferences proteinInferencePreferences = new ProteinInferencePreferences();
-        if (searchParameters != null) {
-            proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
-        }
-        identificationParameters.setProteinInferencePreferences(proteinInferencePreferences);
-        IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
-        identificationParameters.setIdValidationPreferences(idValidationPreferences);
+        identificationParameters.setParametersFromSearch(searchParameters);
         return identificationParameters;
     }
 

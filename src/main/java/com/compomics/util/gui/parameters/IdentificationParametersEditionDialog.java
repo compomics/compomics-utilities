@@ -32,7 +32,7 @@ import java.util.ArrayList;
  *
  * @author Marc Vaudel
  */
-public class IdentificationParametersDialog extends javax.swing.JDialog {
+public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     /**
      * The parent frame.
@@ -62,6 +62,14 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * The configuration file containing the modification use.
      */
     private ConfigurationFile configurationFile;
+    /**
+     * The possible neutral losses in a list.
+     */
+    private ArrayList<NeutralLoss> possibleNeutralLosses;
+    /**
+     * List of possible reporter ions.
+     */
+    private ArrayList<Integer> reporterIons;
     /**
      * The peak annotation settings.
      */
@@ -106,14 +114,6 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * A parent handling the edition of QC filters.
      */
     private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
-    /**
-     * The possible neutral losses in a list.
-     */
-    private ArrayList<NeutralLoss> possibleNeutralLosses;
-    /**
-     * List of possible reporter ions.
-     */
-    private ArrayList<Integer> reporterIons;
 
     /**
      * Constructor.
@@ -131,7 +131,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -145,11 +145,18 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
         this.proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         this.idValidationPreferences = identificationParameters.getIdValidationPreferences();
         this.fractionSettings = identificationParameters.getFractionSettings();
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.configurationFile = configurationFile;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+        this.reporterIons = reporterIons;
         this.reporterIons = reporterIons;
         this.possibleNeutralLosses = possibleNeutralLosses;
 
         initComponents();
         setUpGui();
+        populateGUI(identificationParameters);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
@@ -158,7 +165,18 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
+        nameTxt.setEditable(editable);
+        descriptionTxt.setEditable(editable);
+    }
 
+    /**
+     * Populates the GUI using the given identification parameters.
+     *
+     * @param identificationParameters the identification parameters to display
+     */
+    public void populateGUI(IdentificationParameters identificationParameters) {
+        nameTxt.setText(identificationParameters.getName());
+        descriptionTxt.setText(identificationParameters.getDescription());
     }
 
     /**
@@ -202,17 +220,24 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        spectrumMatchingButton = new javax.swing.JButton();
-        matchesFiltersButton = new javax.swing.JButton();
-        sequenceMatchingButton = new javax.swing.JButton();
-        validationButton = new javax.swing.JButton();
+        attributesPanel = new javax.swing.JPanel();
+        decriptionLbl = new javax.swing.JLabel();
+        nameTxt = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        descriptionTxt = new javax.swing.JTextArea();
+        nameLbl = new javax.swing.JLabel();
+        settingsPanel = new javax.swing.JPanel();
         spectrumAnnotationButton = new javax.swing.JButton();
-        psmScoringButton = new javax.swing.JButton();
-        ptmLocalizationButton = new javax.swing.JButton();
-        geneMappingButton = new javax.swing.JButton();
-        proteinInferenceButton = new javax.swing.JButton();
-        qualityControlButton = new javax.swing.JButton();
         fractionsButton = new javax.swing.JButton();
+        psmScoringButton = new javax.swing.JButton();
+        matchesFiltersButton = new javax.swing.JButton();
+        qualityControlButton = new javax.swing.JButton();
+        sequenceMatchingButton = new javax.swing.JButton();
+        spectrumMatchingButton = new javax.swing.JButton();
+        proteinInferenceButton = new javax.swing.JButton();
+        geneMappingButton = new javax.swing.JButton();
+        validationButton = new javax.swing.JButton();
+        ptmLocalizationButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -222,73 +247,56 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
 
         jButton2.setText("OK");
 
-        spectrumMatchingButton.setText("Spectrum Matching");
-        spectrumMatchingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spectrumMatchingButtonActionPerformed(evt);
-            }
-        });
+        attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters Attributes"));
+        attributesPanel.setOpaque(false);
 
-        matchesFiltersButton.setText("Matches Filters");
-        matchesFiltersButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                matchesFiltersButtonActionPerformed(evt);
-            }
-        });
+        decriptionLbl.setText("Description:");
 
-        sequenceMatchingButton.setText("Sequence to Protein Matching");
-        sequenceMatchingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sequenceMatchingButtonActionPerformed(evt);
-            }
-        });
+        descriptionTxt.setColumns(20);
+        descriptionTxt.setRows(5);
+        jScrollPane1.setViewportView(descriptionTxt);
 
-        validationButton.setText("Validation");
-        validationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                validationButtonActionPerformed(evt);
-            }
-        });
+        nameLbl.setText("Name:");
+
+        javax.swing.GroupLayout attributesPanelLayout = new javax.swing.GroupLayout(attributesPanel);
+        attributesPanel.setLayout(attributesPanelLayout);
+        attributesPanelLayout.setHorizontalGroup(
+            attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(attributesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(attributesPanelLayout.createSequentialGroup()
+                        .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(attributesPanelLayout.createSequentialGroup()
+                                .addComponent(nameLbl)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(decriptionLbl))
+                        .addGap(0, 83, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        attributesPanelLayout.setVerticalGroup(
+            attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(attributesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLbl)
+                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(decriptionLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Identification Settings"));
+        settingsPanel.setOpaque(false);
 
         spectrumAnnotationButton.setText("Spectrum Annotation");
         spectrumAnnotationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spectrumAnnotationButtonActionPerformed(evt);
-            }
-        });
-
-        psmScoringButton.setText("PSM Scoring");
-        psmScoringButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                psmScoringButtonActionPerformed(evt);
-            }
-        });
-
-        ptmLocalizationButton.setText("PTM Localization");
-        ptmLocalizationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ptmLocalizationButtonActionPerformed(evt);
-            }
-        });
-
-        geneMappingButton.setText("Protein to Gene Mapping");
-        geneMappingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                geneMappingButtonActionPerformed(evt);
-            }
-        });
-
-        proteinInferenceButton.setText("Protein Inference");
-        proteinInferenceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proteinInferenceButtonActionPerformed(evt);
-            }
-        });
-
-        qualityControlButton.setText("Quality Control");
-        qualityControlButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qualityControlButtonActionPerformed(evt);
             }
         });
 
@@ -299,37 +307,92 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
-        backgroundPanel.setLayout(backgroundPanelLayout);
-        backgroundPanelLayout.setHorizontalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+        psmScoringButton.setText("PSM Scoring");
+        psmScoringButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                psmScoringButtonActionPerformed(evt);
+            }
+        });
+
+        matchesFiltersButton.setText("Matches Filters");
+        matchesFiltersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                matchesFiltersButtonActionPerformed(evt);
+            }
+        });
+
+        qualityControlButton.setText("Quality Control");
+        qualityControlButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qualityControlButtonActionPerformed(evt);
+            }
+        });
+
+        sequenceMatchingButton.setText("Sequence to Protein Matching");
+        sequenceMatchingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sequenceMatchingButtonActionPerformed(evt);
+            }
+        });
+
+        spectrumMatchingButton.setText("Spectrum Matching");
+        spectrumMatchingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spectrumMatchingButtonActionPerformed(evt);
+            }
+        });
+
+        proteinInferenceButton.setText("Protein Inference");
+        proteinInferenceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proteinInferenceButtonActionPerformed(evt);
+            }
+        });
+
+        geneMappingButton.setText("Protein to Gene Mapping");
+        geneMappingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                geneMappingButtonActionPerformed(evt);
+            }
+        });
+
+        validationButton.setText("Validation");
+        validationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                validationButtonActionPerformed(evt);
+            }
+        });
+
+        ptmLocalizationButton.setText("PTM Localization");
+        ptmLocalizationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ptmLocalizationButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
+        settingsPanel.setLayout(settingsPanelLayout);
+        settingsPanelLayout.setHorizontalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 340, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(qualityControlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(matchesFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(validationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(psmScoringButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(geneMappingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(proteinInferenceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fractionsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(fractionsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(validationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(proteinInferenceButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(psmScoringButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(matchesFiltersButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(geneMappingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(qualityControlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        backgroundPanelLayout.setVerticalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+        settingsPanelLayout.setVerticalGroup(
+            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(spectrumMatchingButton)
                 .addGap(18, 18, 18)
@@ -352,7 +415,33 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
                 .addComponent(fractionsButton)
                 .addGap(18, 18, 18)
                 .addComponent(qualityControlButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
+        backgroundPanel.setLayout(backgroundPanelLayout);
+        backgroundPanelLayout.setHorizontalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(attributesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        backgroundPanelLayout.setVerticalGroup(
+            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(attributesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -367,7 +456,7 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -453,17 +542,24 @@ public class IdentificationParametersDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JLabel decriptionLbl;
+    private javax.swing.JTextArea descriptionTxt;
     private javax.swing.JButton fractionsButton;
     private javax.swing.JButton geneMappingButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton matchesFiltersButton;
+    private javax.swing.JLabel nameLbl;
+    private javax.swing.JTextField nameTxt;
     private javax.swing.JButton proteinInferenceButton;
     private javax.swing.JButton psmScoringButton;
     private javax.swing.JButton ptmLocalizationButton;
     private javax.swing.JButton qualityControlButton;
     private javax.swing.JButton sequenceMatchingButton;
+    private javax.swing.JPanel settingsPanel;
     private javax.swing.JButton spectrumAnnotationButton;
     private javax.swing.JButton spectrumMatchingButton;
     private javax.swing.JButton validationButton;

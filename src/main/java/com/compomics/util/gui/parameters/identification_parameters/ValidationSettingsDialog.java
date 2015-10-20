@@ -1,11 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.IdMatchValidationPreferences;
-import com.compomics.util.preferences.PTMScoringPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
 /**
  * Dialog for the edition of the sequence matching settings
@@ -33,6 +29,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param idMatchValidationPreferences the validation preferences to display
+     * @param editable if the settings are editable or not
      */
     public ValidationSettingsDialog(java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
         super(parentFrame, true);

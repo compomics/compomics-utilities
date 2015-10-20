@@ -155,6 +155,22 @@ public class PTM extends ExperimentObject {
     }
 
     /**
+     * Simple constructor for a PTM. This constructor does not set the atomic composition or the cv term.
+     *
+     * @param type type of modification according to static attributes
+     * @param name name of the modification
+     * @param mass the mass of the modification
+     * @param residues list of residues possibly targeted by this modification
+     */
+    public PTM(int type, String name, Double mass, ArrayList<String> residues) {
+        this.type = type;
+        this.name = name;
+        this.mass = mass;
+        this.pattern = new AminoAcidPattern(residues);
+        mass = null;
+    }
+
+    /**
      * Getter for the modification type.
      *
      * @return the modification type

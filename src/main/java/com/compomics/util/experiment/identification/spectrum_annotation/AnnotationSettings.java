@@ -111,8 +111,8 @@ public class AnnotationSettings implements Serializable {
      * @throws SQLException exception thrown whenever an error occurred while
      * interacting with the ProteinTree
      */
-    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences) 
+    public SpecificAnnotationSettings getSpecificAnnotationPreferences(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption,
+            SequenceMatchingPreferences sequenceMatchingPreferences, SequenceMatchingPreferences ptmSequenceMatchingPreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         SpecificAnnotationSettings specificAnnotationPreferences = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);
@@ -186,13 +186,13 @@ public class AnnotationSettings implements Serializable {
     public Boolean areNeutralLossesSequenceAuto() {
         return neutralLossesAuto;
     }
-    
+
     /**
      * Sets whether neutral losses are considered only for amino acids of
      * interest or not.
-     * 
-     * @param neutralLossesAuto a boolean indicating whether neutral losses are considered only
-     * for amino acids of interest or not
+     *
+     * @param neutralLossesAuto a boolean indicating whether neutral losses are
+     * considered only for amino acids of interest or not
      */
     public void setNeutralLossesSequenceAuto(Boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
@@ -297,7 +297,8 @@ public class AnnotationSettings implements Serializable {
     /**
      * Sets whether the annotation settings should be automatically inferred.
      *
-     * @param automaticAnnotation a boolean indicating whether the annotation settings should be automatically inferred
+     * @param automaticAnnotation a boolean indicating whether the annotation
+     * settings should be automatically inferred
      */
     public void setAutomaticAnnotation(boolean automaticAnnotation) {
         this.automaticAnnotation = automaticAnnotation;
@@ -310,7 +311,8 @@ public class AnnotationSettings implements Serializable {
     /**
      * Returns whether the annotation settings should be automatically inferred.
      *
-     * @return a boolean indicating whether the annotation settings should be automatically inferred
+     * @return a boolean indicating whether the annotation settings should be
+     * automatically inferred
      */
     public boolean isAutomaticAnnotation() {
         return automaticAnnotation;
@@ -495,10 +497,10 @@ public class AnnotationSettings implements Serializable {
     public void setHighResolutionAnnotation(boolean highResolutionAnnotation) {
         this.highResolutionAnnotation = highResolutionAnnotation;
     }
-    
+
     /**
      * Clones the settings.
-     * 
+     *
      * @return a clone of this object
      */
     public AnnotationSettings clone() {
@@ -507,21 +509,107 @@ public class AnnotationSettings implements Serializable {
         annotationSettings.setShowAllPeaks(showAllPeaks);
         annotationSettings.setIntensityLimit(intensityLimit);
         annotationSettings.setAutomaticAnnotation(automaticAnnotation);
-        for (Ion.IonType ionType : selectedIonsMap.keySet()) {
-            for (Integer subType : selectedIonsMap.get(ionType)) {
-                annotationSettings.addIonType(ionType, subType);
-            }
-        }
-        for (NeutralLoss neutralLoss : neutralLossesList) {
-            annotationSettings.addNeutralLoss(neutralLoss);
-        }
-        annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
         annotationSettings.setFragmentIonAccuracy(fragmentIonAccuracy);
         annotationSettings.setFragmentIonPpm(fragmentIonPpm);
         annotationSettings.setShowForwardIonDeNovoTags(showForwardIonDeNovoTags);
         annotationSettings.setShowRewindIonDeNovoTags(showRewindIonDeNovoTags);
         annotationSettings.setDeNovoCharge(deNovoCharge);
         annotationSettings.setHighResolutionAnnotation(highResolutionAnnotation);
+        annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
+        for (NeutralLoss neutralLoss : neutralLossesList) {
+            annotationSettings.addNeutralLoss(neutralLoss);
+        }
+        for (Ion.IonType ionType : selectedIonsMap.keySet()) {
+            for (Integer subType : selectedIonsMap.get(ionType)) {
+                annotationSettings.addIonType(ionType, subType);
+            }
+        }
         return annotationSettings;
+    }
+
+    /**
+     * Returns a boolean indicating whether the given annotation settings are the same as these ones.
+     * 
+     * @param annotationSettings the annotation settings to compare to
+     * 
+     * @return a boolean indicating whether the given annotation settings are the same as these ones
+     */
+    public boolean isSameAs(AnnotationSettings annotationSettings) {
+        if (yAxisZoomExcludesBackgroundPeaks != annotationSettings.yAxisZoomExcludesBackgroundPeaks()) {
+            return false;
+        }
+        if (showAllPeaks != annotationSettings.showAllPeaks()) {
+            return false;
+        }
+        if (intensityLimit != annotationSettings.getAnnotationIntensityLimit()) {
+            return false;
+        }
+        if (automaticAnnotation != annotationSettings.isAutomaticAnnotation()) {
+            return false;
+        }
+        if (fragmentIonAccuracy != annotationSettings.getFragmentIonAccuracy()) {
+            return false;
+        }
+        if (fragmentIonPpm != annotationSettings.isFragmentIonPpm()) {
+            return false;
+        }
+        if (showForwardIonDeNovoTags != annotationSettings.showForwardIonDeNovoTags()) {
+            return false;
+        }
+        if (showRewindIonDeNovoTags != annotationSettings.showRewindIonDeNovoTags()) {
+            return false;
+        }
+        if (deNovoCharge != annotationSettings.getDeNovoCharge()) {
+            return false;
+        }
+        if (highResolutionAnnotation != annotationSettings.isHighResolutionAnnotation()) {
+            return false;
+        }
+        if (!neutralLossesAuto.equals(annotationSettings.areNeutralLossesSequenceAuto())) {
+            return false;
+        }
+        ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();
+        if (neutralLossesList.size() != otherNeutralLosses.size()) {
+            return false;
+        }
+        for (NeutralLoss neutralLoss1 : neutralLossesList) {
+            boolean found = false;
+            for (NeutralLoss neutralLoss2 : otherNeutralLosses) {
+                if (neutralLoss1.isSameAs(neutralLoss2)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = annotationSettings.getIonTypes();
+        if (ionTypes.size() != selectedIonsMap.size()) {
+            return false;
+        }
+        for (Ion.IonType ionType : ionTypes.keySet()) {
+            HashSet<Integer> thisSubIons = selectedIonsMap.get(ionType);
+            if (thisSubIons == null) {
+                return false;
+            }
+            HashSet<Integer> otherSubIons = ionTypes.get(ionType);
+            if (thisSubIons.size() != otherSubIons.size()) {
+                return false;
+            }
+            for (Integer subIon1 : thisSubIons) {
+                boolean found = false;
+                for (Integer subIon2 : otherSubIons) {
+                    if (subIon1.equals(subIon2)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

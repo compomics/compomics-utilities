@@ -18,25 +18,13 @@ public class IdentificationParameters implements Serializable {
      */
     static final long serialVersionUID = -5516259326385167746L;
     /**
+     * The peak annotation preferences.
+     */
+    private AnnotationSettings annotationSettings;
+    /**
      * The parameters used for the spectrum matching.
      */
     private SearchParameters searchParameters;
-    /**
-     * The peak annotation preferences.
-     */
-    private AnnotationSettings annotationPreferences;
-    /**
-     * The PSM filter.
-     */
-    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
-    /**
-     * The PSM scores to use.
-     */
-    private PsmScoringPreferences psmScoringPreferences;
-    /**
-     * The PTM localization scoring preferences.
-     */
-    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
     /**
      * The peptide to protein matching preferences.
      */
@@ -45,6 +33,18 @@ public class IdentificationParameters implements Serializable {
      * The gene preferences.
      */
     private GenePreferences genePreferences;
+    /**
+     * The PSM scores to use.
+     */
+    private PsmScoringPreferences psmScoringPreferences;
+    /**
+     * The PSM filter.
+     */
+    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
+    /**
+     * The PTM localization scoring preferences.
+     */
+    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
     /**
      * The protein inference preferences.
      */
@@ -106,17 +106,17 @@ public class IdentificationParameters implements Serializable {
      * @return the annotation preferences used for identification
      */
     public AnnotationSettings getAnnotationPreferences() {
-        return annotationPreferences;
+        return annotationSettings;
     }
 
     /**
      * Sets the annotation preferences used for identification.
      *
-     * @param annotationPreferences the annotation preferences used for
+     * @param annotationSettings the annotation preferences used for
      * identification
      */
-    public void setAnnotationPreferences(AnnotationSettings annotationPreferences) {
-        this.annotationPreferences = annotationPreferences;
+    public void setAnnotationSettings(AnnotationSettings annotationSettings) {
+        this.annotationSettings = annotationSettings;
     }
 
     /**
@@ -275,7 +275,7 @@ public class IdentificationParameters implements Serializable {
         }
         annotationPreferences.setIntensityLimit(0.75);
         annotationPreferences.setAutomaticAnnotation(true);
-        identificationParameters.setAnnotationPreferences(annotationPreferences);
+        identificationParameters.setAnnotationSettings(annotationPreferences);
         PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
             idFilter.setFilterFromSearchParameters(searchParameters);
@@ -308,14 +308,14 @@ public class IdentificationParameters implements Serializable {
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
         setSearchParameters(searchParameters);
-        annotationPreferences = new AnnotationSettings();
-        annotationPreferences.addNeutralLoss(NeutralLoss.H2O);
-        annotationPreferences.addNeutralLoss(NeutralLoss.NH3);
+        annotationSettings = new AnnotationSettings();
+        annotationSettings.addNeutralLoss(NeutralLoss.H2O);
+        annotationSettings.addNeutralLoss(NeutralLoss.NH3);
         if (searchParameters != null) {
-            annotationPreferences.setPreferencesFromSearchParameters(searchParameters);
+            annotationSettings.setPreferencesFromSearchParameters(searchParameters);
         }
-        annotationPreferences.setIntensityLimit(0.75);
-        annotationPreferences.setAutomaticAnnotation(true);
+        annotationSettings.setIntensityLimit(0.75);
+        annotationSettings.setAutomaticAnnotation(true);
         peptideAssumptionFilter = new PeptideAssumptionFilter();
         if (searchParameters != null) {
             peptideAssumptionFilter.setFilterFromSearchParameters(searchParameters);

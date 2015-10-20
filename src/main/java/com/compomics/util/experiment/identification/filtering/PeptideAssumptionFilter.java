@@ -360,7 +360,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param anotherFilter another filter
      * @return a boolean indicating that the filters have the same parameters
      */
-    public boolean equals(PeptideAssumptionFilter anotherFilter) {
+    public boolean isSameAs(PeptideAssumptionFilter anotherFilter) {
         return isPpm == anotherFilter.isPpm
                 && unknownPtm == anotherFilter.removeUnknownPTMs()
                 && minPepLength == anotherFilter.getMinPepLength()

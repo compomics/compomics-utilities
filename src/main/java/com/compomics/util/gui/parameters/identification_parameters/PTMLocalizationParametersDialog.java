@@ -1,7 +1,9 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
+import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.PTMScoringPreferences;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -15,14 +17,20 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the processing and identification parameters
+     * should be edited upon clicking on OK.
+     */
+    private boolean editable;
 
     /**
      * Constructor.
      *
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
+     * @param editable boolean indicating whether the settings can be edited
      */
-    public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences) {
+    public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
         initComponents();
         setUpGui();
@@ -35,8 +43,11 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-        probabilitsticScoreCalculationCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        
     }
 
     /**
@@ -45,19 +56,35 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @param spectrumCountingPreferences the PTM scoring preferences to display
      */
     private void populateGUI(PTMScoringPreferences ptmScoringPreferences) {
-
+        
+        scoreCmb.setSelectedItem(ptmScoringPreferences.getSelectedProbabilisticScore());
+        
         if (ptmScoringPreferences.isProbabilitsticScoreCalculation()) {
-            probabilitsticScoreCalculationCmb.setSelectedIndex(0);
+            scoreCmb.setEnabled(editable);
+            neutralLossesCmb.setEnabled(editable);
+            if (ptmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
+                neutralLossesCmb.setSelectedIndex(0);
+            } else {
+                neutralLossesCmb.setSelectedIndex(1);
+            }
+            thresholdAutpoCmb.setEnabled(editable);
+            if (ptmScoringPreferences.isEstimateFlr()) {
+                thresholdAutpoCmb.setSelectedIndex(0);
+                thresholdTxt.setEnabled(false);
+                thresholdTxt.setEditable(false);
+            } else {
+                thresholdAutpoCmb.setSelectedIndex(1);
+                thresholdTxt.setEnabled(editable);
+                thresholdTxt.setEditable(editable);
+                thresholdTxt.setText(ptmScoringPreferences.getProbabilisticScoreThreshold() + "");
+            }
         } else {
-            probabilitsticScoreCalculationCmb.setSelectedIndex(1);
+            neutralLossesCmb.setEnabled(false);
+            thresholdAutpoCmb.setEnabled(false);
+            thresholdTxt.setEnabled(false);
+            thresholdTxt.setEditable(false);
         }
-        if (ptmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
-            neutralLossesCmb.setSelectedIndex(0);
-        } else {
-            neutralLossesCmb.setSelectedIndex(1);
-        }
-        flrThresholdTxt.setText(ptmScoringPreferences.getFlrThreshold() + "");
-
+        
     }
 
     /**
@@ -76,11 +103,39 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     public boolean validateInput() {
         try {
-            new Double(flrThresholdTxt.getText());
+            if (scoreCmb.getSelectedItem() != PtmScore.None && thresholdAutpoCmb.getSelectedIndex() == 1) {
+                Double temp = new Double(thresholdTxt.getText().trim());
+                if (temp < 0 || temp > 100) {
+                    JOptionPane.showMessageDialog(this, "Please verify the input for the score threshold.",
+                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                    thresholdTxt.requestFocus();
+                    return false;
+                }
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Please verify the input for A-score threshold.",
+            JOptionPane.showMessageDialog(this, "Please verify the input for the score threshold.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
+            thresholdTxt.requestFocus();
             return false;
+        }
+
+        if (scoreCmb.getSelectedItem() == PtmScore.None) {
+            int outcome = JOptionPane.showConfirmDialog(this,
+                    "Disabling the probabilistic score will impair PTM localization and thus distinction\n"
+                    + "between peptides. See help for more details. Continue with this setting?",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            if (outcome == JOptionPane.CANCEL_OPTION || outcome == JOptionPane.CLOSED_OPTION) {
+                return false;
+            }
+        }
+        if (scoreCmb.getSelectedItem() != PtmScore.None && neutralLossesCmb.getSelectedIndex() == 0) {
+            int outcome = JOptionPane.showConfirmDialog(this,
+                    "In our experience probabilistic scores perform poorly when accounting for\n"
+                    + "neutral losses. See help for more details. Continue with this setting?",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            if (outcome == JOptionPane.CANCEL_OPTION || outcome == JOptionPane.CLOSED_OPTION) {
+                return false;
+            }
         }
         return true;
     }
@@ -109,13 +164,15 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-        preferencesPanel = new javax.swing.JPanel();
-        flrLabel = new javax.swing.JLabel();
-        flrThresholdTxt = new javax.swing.JTextField();
+        ptmScoringPanel = new javax.swing.JPanel();
+        scoreCmb = new javax.swing.JComboBox();
+        thresholdTxt = new javax.swing.JTextField();
+        thresholdLabel = new javax.swing.JLabel();
+        scoreTypeLabel = new javax.swing.JLabel();
         neutralLossesLabel = new javax.swing.JLabel();
         neutralLossesCmb = new javax.swing.JComboBox();
-        probalisticScoreCalculationLabel = new javax.swing.JLabel();
-        probabilitsticScoreCalculationCmb = new javax.swing.JComboBox();
+        thresholdAutpoLabel = new javax.swing.JLabel();
+        thresholdAutpoCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -135,62 +192,83 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        preferencesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM Localization"));
-        preferencesPanel.setOpaque(false);
+        ptmScoringPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM Scoring"));
+        ptmScoringPanel.setOpaque(false);
 
-        flrLabel.setText("False Localization Rate");
+        scoreCmb.setModel(new DefaultComboBoxModel(PtmScore.getScoresAsList()));
+        scoreCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scoreCmbActionPerformed(evt);
+            }
+        });
 
-        flrThresholdTxt.setEditable(false);
-        flrThresholdTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        flrThresholdTxt.setText("50");
+        thresholdTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        neutralLossesLabel.setText("Account for Neutral Losses");
+        thresholdLabel.setText("Threshold");
+
+        scoreTypeLabel.setText("Probabilistic Score");
+
+        neutralLossesLabel.setText("Account Neutral Losses");
 
         neutralLossesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        probalisticScoreCalculationLabel.setText("Probabilitstic Score");
+        thresholdAutpoLabel.setText("Threshold Auto");
 
-        probabilitsticScoreCalculationCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        thresholdAutpoCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        thresholdAutpoCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                thresholdAutpoCmbActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout preferencesPanelLayout = new javax.swing.GroupLayout(preferencesPanel);
-        preferencesPanel.setLayout(preferencesPanelLayout);
-        preferencesPanelLayout.setHorizontalGroup(
-            preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(preferencesPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout ptmScoringPanelLayout = new javax.swing.GroupLayout(ptmScoringPanel);
+        ptmScoringPanel.setLayout(ptmScoringPanelLayout);
+        ptmScoringPanelLayout.setHorizontalGroup(
+            ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(preferencesPanelLayout.createSequentialGroup()
-                        .addComponent(flrLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 119, Short.MAX_VALUE)
-                        .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(flrThresholdTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(probabilitsticScoreCalculationCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 100, Short.MAX_VALUE)))
-                    .addGroup(preferencesPanelLayout.createSequentialGroup()
-                        .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(neutralLossesLabel)
-                            .addComponent(probalisticScoreCalculationLabel))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(preferencesPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(neutralLossesLabel)
+                    .addGroup(ptmScoringPanelLayout.createSequentialGroup()
+                        .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
+                                .addComponent(thresholdAutpoLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                                .addComponent(thresholdAutpoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
+                                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(scoreTypeLabel)
+                                    .addComponent(thresholdLabel))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ptmScoringPanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(scoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
+                                        .addComponent(neutralLossesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(thresholdTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(29, 29, 29))))
         );
-        preferencesPanelLayout.setVerticalGroup(
-            preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(preferencesPanelLayout.createSequentialGroup()
+        ptmScoringPanelLayout.setVerticalGroup(
+            ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(probalisticScoreCalculationLabel)
-                    .addComponent(probabilitsticScoreCalculationCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(flrLabel)
-                    .addComponent(flrThresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scoreTypeLabel)
+                    .addComponent(scoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(preferencesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neutralLossesLabel)
                     .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(thresholdAutpoLabel)
+                    .addComponent(thresholdAutpoCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(thresholdLabel)
+                    .addComponent(thresholdTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
@@ -205,15 +283,15 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(preferencesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ptmScoringPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(preferencesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -245,19 +323,50 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    private void scoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreCmbActionPerformed
+        if (scoreCmb.getSelectedItem() != PtmScore.None) {
+            neutralLossesCmb.setEnabled(true);
+            thresholdAutpoCmb.setEnabled(true);
+            if (thresholdAutpoCmb.getSelectedIndex() == 1) {
+                thresholdTxt.setEnabled(true);
+                thresholdTxt.setEditable(true);
+            } else {
+                thresholdTxt.setEnabled(false);
+                thresholdTxt.setEditable(false);
+            }
+        } else {
+            neutralLossesCmb.setEnabled(false);
+            thresholdAutpoCmb.setEnabled(false);
+            thresholdTxt.setEnabled(false);
+            thresholdTxt.setEditable(false);
+        }
+    }//GEN-LAST:event_scoreCmbActionPerformed
+
+    private void thresholdAutpoCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thresholdAutpoCmbActionPerformed
+        if (thresholdAutpoCmb.getSelectedIndex() == 1) {
+            thresholdTxt.setEnabled(true);
+            thresholdTxt.setEditable(true);
+        } else {
+            thresholdTxt.setEnabled(false);
+            thresholdTxt.setEditable(false);
+        }
+    }//GEN-LAST:event_thresholdAutpoCmbActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel flrLabel;
-    private javax.swing.JTextField flrThresholdTxt;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JComboBox neutralLossesCmb;
     private javax.swing.JLabel neutralLossesLabel;
     private javax.swing.JButton okButton;
-    private javax.swing.JPanel preferencesPanel;
-    private javax.swing.JComboBox probabilitsticScoreCalculationCmb;
-    private javax.swing.JLabel probalisticScoreCalculationLabel;
+    private javax.swing.JPanel ptmScoringPanel;
+    private javax.swing.JComboBox scoreCmb;
+    private javax.swing.JLabel scoreTypeLabel;
+    private javax.swing.JComboBox thresholdAutpoCmb;
+    private javax.swing.JLabel thresholdAutpoLabel;
+    private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JTextField thresholdTxt;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -53,6 +53,10 @@ public class IdentificationParameters implements Serializable {
      * The identification validation preferences.
      */
     private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
+    /**
+     * The fraction settings.
+     */
+    private FractionSettings fractionSettings = new FractionSettings();
 
     /**
      * Returns the parameters used for the spectrum matching.
@@ -245,6 +249,27 @@ public class IdentificationParameters implements Serializable {
      */
     public void setGenePreferences(GenePreferences genePreferences) {
         this.genePreferences = genePreferences;
+    }
+
+    /**
+     * Returns the fraction settings.
+     * 
+     * @return the fraction settings
+     */
+    public FractionSettings getFractionSettings() {
+        if (fractionSettings == null) { // Backward compatibility
+            return new FractionSettings();
+        }
+        return fractionSettings;
+    }
+
+    /**
+     * Sets the fraction settings.
+     * 
+     * @param fractionSettings the fraction settings
+     */
+    public void setFractionSettings(FractionSettings fractionSettings) {
+        this.fractionSettings = fractionSettings;
     }
 
     /**

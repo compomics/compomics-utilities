@@ -53,19 +53,18 @@
                           <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="qualityControlButton" max="32767" attributes="0"/>
-                                  <Component id="spectrumMatchingButton" max="32767" attributes="0"/>
-                                  <Component id="matchesFiltersButton" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="validationButton" max="32767" attributes="0"/>
-                                  <Component id="psmScoringButton" max="32767" attributes="0"/>
-                                  <Component id="sequenceMatchingButton" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ptmLocalizationButton" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="geneMappingButton" max="32767" attributes="0"/>
-                                  <Component id="proteinInferenceButton" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="spectrumAnnotationButton" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="spectrumAnnotationButton" max="32767" attributes="0"/>
+                              <Component id="qualityControlButton" max="32767" attributes="0"/>
+                              <Component id="spectrumMatchingButton" max="32767" attributes="0"/>
+                              <Component id="matchesFiltersButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="validationButton" max="32767" attributes="0"/>
+                              <Component id="psmScoringButton" max="32767" attributes="0"/>
+                              <Component id="sequenceMatchingButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ptmLocalizationButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="geneMappingButton" max="32767" attributes="0"/>
+                              <Component id="proteinInferenceButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="fractionsButton" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
@@ -96,8 +95,10 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="validationButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="fractionsButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="qualityControlButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                  <EmptySpace pref="89" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -196,6 +197,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="qualityControlButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="fractionsButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Fractions"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fractionsButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

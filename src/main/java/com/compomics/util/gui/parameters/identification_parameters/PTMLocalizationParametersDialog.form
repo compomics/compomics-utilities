@@ -56,7 +56,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="preferencesPanel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="ptmScoringPanel" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -64,10 +64,10 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="preferencesPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="ptmScoringPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -94,11 +94,11 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JPanel" name="preferencesPanel">
+        <Container class="javax.swing.JPanel" name="ptmScoringPanel">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="PTM Localization"/>
+                <TitledBorder title="PTM Scoring"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -110,27 +110,35 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="flrLabel" min="-2" pref="150" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" pref="119" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="flrThresholdTxt" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="probabilitsticScoreCalculationCmb" alignment="1" pref="100" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="neutralLossesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="probalisticScoreCalculationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="thresholdAutpoLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace pref="92" max="32767" attributes="0"/>
+                                      <Component id="thresholdAutpoCmb" min="-2" pref="185" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="scoreTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="thresholdLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="scoreCmb" alignment="1" pref="185" max="32767" attributes="0"/>
+                                              <Component id="neutralLossesCmb" alignment="1" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Component id="thresholdTxt" alignment="1" min="-2" pref="185" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="neutralLossesCmb" min="-2" pref="100" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -139,40 +147,58 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="probalisticScoreCalculationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="probabilitsticScoreCalculationCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="flrLabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="flrThresholdTxt" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="scoreTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="scoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="thresholdAutpoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdAutpoCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="thresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="thresholdTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="flrLabel">
+            <Component class="javax.swing.JComboBox" name="scoreCmb">
               <Properties>
-                <Property name="text" type="java.lang.String" value="False Localization Rate"/>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultComboBoxModel(PtmScore.getScoresAsList())" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scoreCmbActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="thresholdTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="flrThresholdTxt">
+            <Component class="javax.swing.JLabel" name="thresholdLabel">
               <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="50"/>
+                <Property name="text" type="java.lang.String" value="Threshold"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="scoreTypeLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Probabilistic Score"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="neutralLossesLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Account for Neutral Losses"/>
+                <Property name="text" type="java.lang.String" value="Account Neutral Losses"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="neutralLossesCmb">
@@ -185,12 +211,12 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="probalisticScoreCalculationLabel">
+            <Component class="javax.swing.JLabel" name="thresholdAutpoLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Probabilitstic Score"/>
+                <Property name="text" type="java.lang.String" value="Threshold Auto"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="probabilitsticScoreCalculationCmb">
+            <Component class="javax.swing.JComboBox" name="thresholdAutpoCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">
@@ -199,6 +225,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="thresholdAutpoCmbActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

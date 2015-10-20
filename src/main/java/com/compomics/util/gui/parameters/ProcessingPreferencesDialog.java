@@ -85,6 +85,17 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
 
+        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        proteinFdrTxt.setText(idMatchValidationPreferences.getDefaultProteinFDR() + "");
+        peptideFdrTxt.setText(idMatchValidationPreferences.getDefaultPeptideFDR() + "");
+        psmFdrTxt.setText(idMatchValidationPreferences.getDefaultPsmFDR() + "");
+
+        proteinFdrTxt.setEditable(editable);
+        peptideFdrTxt.setEditable(editable);
+        psmFdrTxt.setEditable(editable);
+        proteinFdrTxt.setEnabled(editable);
+        peptideFdrTxt.setEnabled(editable);
+        psmFdrTxt.setEnabled(editable);
         proteinConfidenceMwTxt.setEnabled(editable);
 
         PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
@@ -130,6 +141,48 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @return a boolean indicating whether the input is correct
      */
     private boolean validateInput() {
+        try {
+            Double temp = new Double(proteinFdrTxt.getText().trim());
+            if (temp < 0 || temp > 100) {
+                JOptionPane.showMessageDialog(this, "Please verify the input for the protein FDR.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                proteinFdrTxt.requestFocus();
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Please verify the input for the protein FDR.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            proteinFdrTxt.requestFocus();
+            return false;
+        }
+        try {
+            Double temp = new Double(peptideFdrTxt.getText().trim());
+            if (temp < 0 || temp > 100) {
+                JOptionPane.showMessageDialog(this, "Please verify the input for the peptide FDR.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                peptideFdrTxt.requestFocus();
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Please verify the input for the peptide FDR.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            peptideFdrTxt.requestFocus();
+            return false;
+        }
+        try {
+            Double temp = new Double(psmFdrTxt.getText().trim());
+            if (temp < 0 || temp > 100) {
+                JOptionPane.showMessageDialog(this, "Please verify the input for the PSM FDR.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                psmFdrTxt.requestFocus();
+                return false;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Please verify the input for the PSM FDR.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            psmFdrTxt.requestFocus();
+            return false;
+        }
         try {
             if (scoreCmb.getSelectedItem() != PtmScore.None && thresholdAutpoCmb.getSelectedIndex() == 1) {
                 Double temp = new Double(thresholdTxt.getText().trim());
@@ -194,6 +247,16 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         neutralLossesLabel2 = new javax.swing.JLabel();
         neutralLossesCmb2 = new javax.swing.JComboBox();
         backgroundPanel = new javax.swing.JPanel();
+        processingParamsPanel = new javax.swing.JPanel();
+        proteinFdrLabel = new javax.swing.JLabel();
+        peptideFdrLabel = new javax.swing.JLabel();
+        psmFdrLabel = new javax.swing.JLabel();
+        psmFdrTxt = new javax.swing.JTextField();
+        percentLabel = new javax.swing.JLabel();
+        peptideFdrTxt = new javax.swing.JTextField();
+        percentLabel2 = new javax.swing.JLabel();
+        proteinFdrTxt = new javax.swing.JTextField();
+        percentLabel3 = new javax.swing.JLabel();
         ptmScoringPanel = new javax.swing.JPanel();
         scoreCmb = new javax.swing.JComboBox();
         thresholdTxt = new javax.swing.JTextField();
@@ -225,6 +288,77 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        processingParamsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Processing Parameters"));
+        processingParamsPanel.setOpaque(false);
+
+        proteinFdrLabel.setText("Protein FDR");
+
+        peptideFdrLabel.setText("Peptide FDR");
+
+        psmFdrLabel.setText("PSM FDR");
+
+        psmFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        psmFdrTxt.setText("1");
+
+        percentLabel.setText("%");
+
+        peptideFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        peptideFdrTxt.setText("1");
+
+        percentLabel2.setText("%");
+
+        proteinFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        proteinFdrTxt.setText("1");
+
+        percentLabel3.setText("%");
+
+        javax.swing.GroupLayout processingParamsPanelLayout = new javax.swing.GroupLayout(processingParamsPanel);
+        processingParamsPanel.setLayout(processingParamsPanelLayout);
+        processingParamsPanelLayout.setHorizontalGroup(
+            processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(processingParamsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(proteinFdrLabel)
+                    .addComponent(peptideFdrLabel)
+                    .addComponent(psmFdrLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
+                        .addComponent(proteinFdrTxt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(percentLabel3))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
+                        .addComponent(peptideFdrTxt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(percentLabel2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
+                        .addComponent(psmFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(percentLabel)))
+                .addContainerGap())
+        );
+        processingParamsPanelLayout.setVerticalGroup(
+            processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(processingParamsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(proteinFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(percentLabel3)
+                    .addComponent(proteinFdrLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peptideFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(percentLabel2)
+                    .addComponent(peptideFdrLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(psmFdrLabel)
+                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(percentLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         ptmScoringPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PTM Scoring"));
         ptmScoringPanel.setOpaque(false);
@@ -389,7 +523,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addComponent(ptmScoringPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fractionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(fractionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(processingParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -398,7 +533,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                .addGap(134, 134, 134)
+                .addContainerGap()
+                .addComponent(processingParamsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fractionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -432,6 +569,10 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (editable && validateInput()) {
 
+            IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+            idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
+            idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
+            idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
 
             PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
             ptmScoringPreferences.setProbabilitsticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
@@ -548,9 +689,19 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     private javax.swing.JLabel neutralLossesLabel;
     private javax.swing.JLabel neutralLossesLabel2;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel peptideFdrLabel;
+    private javax.swing.JTextField peptideFdrTxt;
+    private javax.swing.JLabel percentLabel;
+    private javax.swing.JLabel percentLabel2;
+    private javax.swing.JLabel percentLabel3;
     private javax.swing.JLabel percentLabel4;
+    private javax.swing.JPanel processingParamsPanel;
     private javax.swing.JTextField proteinConfidenceMwTxt;
+    private javax.swing.JLabel proteinFdrLabel;
+    private javax.swing.JTextField proteinFdrTxt;
     private javax.swing.JLabel proteinMwLabel;
+    private javax.swing.JLabel psmFdrLabel;
+    private javax.swing.JTextField psmFdrTxt;
     private javax.swing.JPanel ptmScoringPanel;
     private javax.swing.JComboBox scoreCmb;
     private javax.swing.JLabel scoreTypeLabel;

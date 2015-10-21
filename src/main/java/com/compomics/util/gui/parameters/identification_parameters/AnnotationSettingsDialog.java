@@ -607,17 +607,17 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     private class NeutralLossesTableModel extends DefaultTableModel {
 
         /**
-         * Name to neutral loss map
+         * Name to neutral loss map.
          */
         private HashMap<String, NeutralLoss> namesMap = new HashMap<String, NeutralLoss>();
         
         /**
-         * List of the names of the neutral losses to display
+         * List of the names of the neutral losses to display.
          */
         private ArrayList<String> namesList = new ArrayList<String>();
 
         /**
-         * Constructor
+         * Constructor.
          */
         public NeutralLossesTableModel() {
             for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {

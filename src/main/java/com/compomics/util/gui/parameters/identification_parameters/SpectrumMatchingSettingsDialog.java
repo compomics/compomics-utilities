@@ -1,6 +1,5 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
@@ -26,20 +25,17 @@ import com.compomics.util.gui.parameters.identification_parameters.algorithm_set
 import com.compomics.util.gui.parameters.identification_parameters.algorithm_settings.PNovoSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.algorithm_settings.TideSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.algorithm_settings.XTandemSettingsDialog;
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.LastSelectedFolder;
-import com.compomics.util.preferences.PTMScoringPreferences;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * SpectrumMatchingSettingsDialog.
  *
  * @author Marc Vaudel
  */
@@ -124,7 +120,6 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
         if (!editable) {
             editButton.setText("View");
         }
-
     }
 
     /**
@@ -133,11 +128,8 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      * @param searchParameters the spectrum matching settings to display
      */
     private void populateGUI(SearchParameters searchParameters) {
-
         settingsTxt.setText(searchParameters.getParametersFile().getAbsolutePath());
         algorithmSettingsTable.setModel(new AlgorithmSettingsTableModel());
-        
-
     }
 
     /**
@@ -381,7 +373,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
     private class AlgorithmSettingsTableModel extends DefaultTableModel {
 
         /**
-         * constructor.
+         * Constructor.
          */
         public AlgorithmSettingsTableModel() {
             if (algorithmParameters != null) {
@@ -455,5 +447,4 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
             return false;
         }
     }
-
 }

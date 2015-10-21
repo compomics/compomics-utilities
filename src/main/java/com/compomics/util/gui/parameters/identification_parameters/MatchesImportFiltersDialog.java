@@ -4,8 +4,6 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import java.awt.Toolkit;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -17,10 +15,6 @@ import javax.swing.SwingConstants;
  */
 public class MatchesImportFiltersDialog extends javax.swing.JDialog {
 
-    /**
-     * The parent frame.
-     */
-    private java.awt.Frame parentFrame;
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -40,7 +34,6 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
     public MatchesImportFiltersDialog(java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parentFrame, true);
         this.editable = editable;
-        this.parentFrame = parentFrame;
         setUpGui();
         populateGUI(idFilter);
         setLocationRelativeTo(parentFrame);
@@ -64,7 +57,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Populates the gui with the values from the given filter.
+     * Populates the GUI with the values from the given filter.
      *
      * @param idFilter the filter to display
      */
@@ -89,7 +82,6 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         } else {
             unitCmb.setSelectedIndex(1);
         }
-
     }
 
     /**

@@ -93,7 +93,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="performanceLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="52" max="32767" attributes="0"/>
+                      <EmptySpace pref="56" max="32767" attributes="0"/>
                       <Component id="nThreadsSpinner" min="-2" pref="200" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -115,7 +115,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="performanceLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Number of Threads:"/>
+                <Property name="text" type="java.lang.String" value="Number of Threads"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="nThreadsSpinner">
@@ -163,7 +163,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="processingTypeLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Execution:"/>
+                <Property name="text" type="java.lang.String" value="Execution"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="processingTypeCmb">

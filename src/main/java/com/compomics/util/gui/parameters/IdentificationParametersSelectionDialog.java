@@ -1,17 +1,16 @@
 package com.compomics.util.gui.parameters;
 
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * IdentificationParametersSelectionDialog.
  *
  * @author Marc Vaudel
  */
@@ -34,7 +33,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private Image waitingIcon;
     /**
-     * The last selected folder
+     * The last selected folder.
      */
     private LastSelectedFolder lastSelectedFolder;
     /**

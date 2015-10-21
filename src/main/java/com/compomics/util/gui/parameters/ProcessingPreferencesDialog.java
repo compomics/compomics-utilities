@@ -47,12 +47,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         processingTypeCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-
         processingTypeCmb.setEnabled(editable);
         nThreadsSpinner.setEnabled(editable);
-
     }
 
     /**
@@ -61,10 +58,8 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing preferences to display
      */
     private void populateGUI(ProcessingPreferences processingPreferences) {
-
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
         nThreadsSpinner.setValue(processingPreferences.getnThreads());
-
     }
 
     /**
@@ -123,7 +118,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         performancePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Performance Settings"));
         performancePanel.setOpaque(false);
 
-        performanceLbl.setText("Number of Threads:");
+        performanceLbl.setText("Number of Threads");
 
         nThreadsSpinner.setRequestFocusEnabled(false);
 
@@ -134,7 +129,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             .addGroup(performancePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(performanceLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addComponent(nThreadsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -151,7 +146,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         processingTypePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Processing Type"));
         processingTypePanel.setOpaque(false);
 
-        processingTypeLbl.setText("Execution:");
+        processingTypeLbl.setText("Execution");
 
         processingTypeCmb.setModel(new DefaultComboBoxModel(ProcessingPreferences.ProcessingType.values()));
 

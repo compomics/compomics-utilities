@@ -7,7 +7,6 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
-import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
 /**
@@ -376,10 +375,9 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
     /**
      * Returns the pNovo parameters as set by the user.
      *
-     * @return
+     * @return the pNovo parameters
      */
     public PNovoParameters getPNovoParameters() {
-
         PNovoParameters pNovoParameters = new PNovoParameters();
         pNovoParameters.setLowerPrecursorMass(Integer.parseInt(minPrecursorMassTextField.getText()));
         pNovoParameters.setUpperPrecursorMass(Integer.parseInt(maxPrecursorMassTextField.getText()));

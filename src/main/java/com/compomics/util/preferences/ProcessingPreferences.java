@@ -1,11 +1,12 @@
 package com.compomics.util.preferences;
 
 /**
+ * ProcessingPreferences.
  *
  * @author Marc Vaudel
  */
 public class ProcessingPreferences {
-    
+
     /**
      * The processing type.
      */
@@ -19,12 +20,12 @@ public class ProcessingPreferences {
      * Constructor.
      */
     public ProcessingPreferences() {
-        
+
     }
 
     /**
      * Returns the number or threads to use.
-     * 
+     *
      * @return the number or threads to use
      */
     public int getnThreads() {
@@ -33,7 +34,7 @@ public class ProcessingPreferences {
 
     /**
      * Sets the number or threads to use.
-     * 
+     *
      * @param nThreads the number or threads to use
      */
     public void setnThreads(int nThreads) {
@@ -42,7 +43,7 @@ public class ProcessingPreferences {
 
     /**
      * Returns the processing type.
-     * 
+     *
      * @return the processing type
      */
     public ProcessingType getProcessingType() {
@@ -51,20 +52,19 @@ public class ProcessingPreferences {
 
     /**
      * Sets the processing type.
-     * 
+     *
      * @param processingType the processing type
      */
     public void setProcessingType(ProcessingType processingType) {
         this.processingType = processingType;
     }
-    
-    
+
     /**
      * Class indicating the type of processing.
      */
     public enum ProcessingType {
-        
+
         Local;
-        
+
     }
 }

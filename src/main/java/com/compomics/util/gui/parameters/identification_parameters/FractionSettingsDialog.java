@@ -4,6 +4,7 @@ import com.compomics.util.preferences.FractionSettings;
 import javax.swing.JOptionPane;
 
 /**
+ * FractionSettingsDialog.
  *
  * @author Marc Vaudel
  */
@@ -40,7 +41,6 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         proteinConfidenceMwTxt.setEnabled(editable);
     }
 

@@ -1,17 +1,5 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
-import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
-import com.compomics.util.experiment.identification.Advocate;
-import static com.compomics.util.experiment.identification.IdentificationMatch.MatchType.PTM;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
-import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
-import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.IdentificationParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +20,7 @@ public class IdentificationParametersFactory {
      */
     private static IdentificationParametersFactory instance = null;
     /**
-     * The folder containing the paramters folder.
+     * The folder containing the parameters folder.
      */
     private static String PARENT_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
@@ -165,5 +153,4 @@ public class IdentificationParametersFactory {
             }
         }
     }
-
 }

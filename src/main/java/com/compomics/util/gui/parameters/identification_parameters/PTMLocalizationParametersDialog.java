@@ -43,11 +43,9 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-
     }
 
     /**
@@ -84,7 +82,6 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
             thresholdTxt.setEnabled(false);
             thresholdTxt.setEditable(false);
         }
-
     }
 
     /**

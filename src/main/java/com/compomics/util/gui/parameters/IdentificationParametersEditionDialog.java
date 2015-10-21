@@ -29,6 +29,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 
 /**
+ * IdentificationParametersEditionDialog.
  *
  * @author Marc Vaudel
  */
@@ -218,8 +219,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
         attributesPanel = new javax.swing.JPanel();
         decriptionLbl = new javax.swing.JLabel();
         nameTxt = new javax.swing.JTextField();
@@ -243,20 +244,20 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        jButton1.setText("Cancel");
+        cancelButton.setText("Cancel");
 
-        jButton2.setText("OK");
+        okButton.setText("OK");
 
         attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters Attributes"));
         attributesPanel.setOpaque(false);
 
-        decriptionLbl.setText("Description:");
+        decriptionLbl.setText("Description");
 
         descriptionTxt.setColumns(20);
         descriptionTxt.setRows(5);
         jScrollPane1.setViewportView(descriptionTxt);
 
-        nameLbl.setText("Name:");
+        nameLbl.setText("Name");
 
         javax.swing.GroupLayout attributesPanelLayout = new javax.swing.GroupLayout(attributesPanel);
         attributesPanel.setLayout(attributesPanelLayout);
@@ -273,7 +274,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(decriptionLbl))
-                        .addGap(0, 83, Short.MAX_VALUE)))
+                        .addGap(0, 87, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         attributesPanelLayout.setVerticalGroup(
@@ -427,9 +428,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
+                        .addComponent(cancelButton))
                     .addComponent(attributesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -443,8 +444,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
                 .addContainerGap())
         );
 
@@ -544,16 +545,16 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel decriptionLbl;
     private javax.swing.JTextArea descriptionTxt;
     private javax.swing.JButton fractionsButton;
     private javax.swing.JButton geneMappingButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton matchesFiltersButton;
     private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTxt;
+    private javax.swing.JButton okButton;
     private javax.swing.JButton proteinInferenceButton;
     private javax.swing.JButton psmScoringButton;
     private javax.swing.JButton ptmLocalizationButton;

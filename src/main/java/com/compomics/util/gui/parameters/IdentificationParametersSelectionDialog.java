@@ -2,11 +2,15 @@ package com.compomics.util.gui.parameters;
 
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
+import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialogParent;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
+import java.awt.Component;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -130,12 +134,97 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        parametersPopupMenu = new javax.swing.JPopupMenu();
+        addMenu = new javax.swing.JMenu();
+        addProtocolMenuItem = new javax.swing.JMenuItem();
+        addSearchSettingsMenuItem = new javax.swing.JMenuItem();
+        addDetailsMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        editProtocolMenuItem = new javax.swing.JMenuItem();
+        editSearchSettingsMenuItem = new javax.swing.JMenuItem();
+        editDetailsMenuItem = new javax.swing.JMenuItem();
+        removeMenuItem = new javax.swing.JMenuItem();
+        saveAsMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         tablePanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        parametersTableScrollPane = new javax.swing.JScrollPane();
         parametersTable = new javax.swing.JTable();
+        helpLbl = new javax.swing.JLabel();
+
+        addMenu.setText("Add");
+
+        addProtocolMenuItem.setText("From Protocol");
+        addProtocolMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProtocolMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addProtocolMenuItem);
+
+        addSearchSettingsMenuItem.setText("From Search Settings");
+        addSearchSettingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSearchSettingsMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addSearchSettingsMenuItem);
+
+        addDetailsMenuItem.setText("Advanced");
+        addDetailsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addDetailsMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addDetailsMenuItem);
+
+        parametersPopupMenu.add(addMenu);
+
+        editMenu.setText("jMenu1");
+
+        editProtocolMenuItem.setText("Protocol");
+        editProtocolMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editProtocolMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editProtocolMenuItem);
+
+        editSearchSettingsMenuItem.setText("Search Settings");
+        editSearchSettingsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSearchSettingsMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editSearchSettingsMenuItem);
+
+        editDetailsMenuItem.setText("Advanced");
+        editDetailsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDetailsMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editDetailsMenuItem);
+
+        parametersPopupMenu.add(editMenu);
+
+        removeMenuItem.setText("Delete");
+        removeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeMenuItemActionPerformed(evt);
+            }
+        });
+        parametersPopupMenu.add(removeMenuItem);
+
+        saveAsMenuItem.setText("Save As File");
+        saveAsMenuItem.setToolTipText("");
+        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsMenuItemActionPerformed(evt);
+            }
+        });
+        parametersPopupMenu.add(saveAsMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -148,18 +237,22 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Available Identification Parameters"));
         tablePanel.setOpaque(false);
 
-        parametersTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        parametersTableScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                parametersTableScrollPaneMouseReleased(evt);
             }
-        ));
-        jScrollPane1.setViewportView(parametersTable);
+        });
+
+        parametersTable.setModel(new ParametersTableModel());
+        parametersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                parametersTableMouseReleased(evt);
+            }
+        });
+        parametersTableScrollPane.setViewportView(parametersTable);
+
+        helpLbl.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        helpLbl.setText("Right-click to add, edit, and remove parameters.");
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
         tablePanel.setLayout(tablePanelLayout);
@@ -167,15 +260,21 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(parametersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                    .addGroup(tablePanelLayout.createSequentialGroup()
+                        .addComponent(helpLbl)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         tablePanelLayout.setVerticalGroup(
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(parametersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(helpLbl)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
@@ -219,16 +318,168 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void parametersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMouseReleased
+        parametersTableClicked(evt, parametersTable);
+    }//GEN-LAST:event_parametersTableMouseReleased
+
+    private void parametersTableScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableScrollPaneMouseReleased
+        parametersTableClicked(evt, parametersTableScrollPane);
+    }//GEN-LAST:event_parametersTableScrollPaneMouseReleased
+
+    private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
+        saveAs(getSelectedParametersName());
+    }//GEN-LAST:event_saveAsMenuItemActionPerformed
+
+    private void removeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeMenuItemActionPerformed
+        remove(getSelectedParametersName());
+    }//GEN-LAST:event_removeMenuItemActionPerformed
+
+    private void addProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProtocolMenuItemActionPerformed
+        addFromProtocol();
+    }//GEN-LAST:event_addProtocolMenuItemActionPerformed
+
+    private void addSearchSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSearchSettingsMenuItemActionPerformed
+        addFromSearchSettings();
+    }//GEN-LAST:event_addSearchSettingsMenuItemActionPerformed
+
+    private void addDetailsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDetailsMenuItemActionPerformed
+        addAdvanced();
+    }//GEN-LAST:event_addDetailsMenuItemActionPerformed
+
+    private void editProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProtocolMenuItemActionPerformed
+        editProtocol(getSelectedParametersName());
+    }//GEN-LAST:event_editProtocolMenuItemActionPerformed
+
+    private void editSearchSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSearchSettingsMenuItemActionPerformed
+        editSearchSettings(getSelectedParametersName());
+    }//GEN-LAST:event_editSearchSettingsMenuItemActionPerformed
+
+    private void editDetailsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDetailsMenuItemActionPerformed
+        editAdvanced(getSelectedParametersName());
+    }//GEN-LAST:event_editDetailsMenuItemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addDetailsMenuItem;
+    private javax.swing.JMenu addMenu;
+    private javax.swing.JMenuItem addProtocolMenuItem;
+    private javax.swing.JMenuItem addSearchSettingsMenuItem;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem editDetailsMenuItem;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem editProtocolMenuItem;
+    private javax.swing.JMenuItem editSearchSettingsMenuItem;
+    private javax.swing.JLabel helpLbl;
     private javax.swing.JButton okButton;
+    private javax.swing.JPopupMenu parametersPopupMenu;
     private javax.swing.JTable parametersTable;
+    private javax.swing.JScrollPane parametersTableScrollPane;
+    private javax.swing.JMenuItem removeMenuItem;
+    private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Handles the clicking of the table area.
+     * 
+     * @param evt the click event
+     * @param invoker the component in whose space the popup menu is to appear
+     */
+    private void parametersTableClicked(java.awt.event.MouseEvent evt, Component invoker) {
+        if (evt != null && parametersTable.rowAtPoint(evt.getPoint()) != -1) {
+            int row = parametersTable.rowAtPoint(evt.getPoint());
+            parametersTable.setRowSelectionInterval(row, row);
+        }
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
+            editMenu.setVisible(parametersTable.getSelectedRow() != -1);
+            removeMenuItem.setVisible(parametersTable.getSelectedRow() != -1);
+            saveAsMenuItem.setVisible(parametersTable.getSelectedRow() != -1);
+            parametersPopupMenu.show(invoker, evt.getX(), evt.getY());
+        }
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+            editAdvanced(getSelectedParametersName());
+        }
+    }
+    
+    /**
+     * Returns the name of the parameters selected in the parameters table.
+     * 
+     * @return the name of the parameters selected in the parameters table
+     */
+    private String getSelectedParametersName() {
+        int row = parametersTable.getSelectedRow();
+        if (row < 0 || row >= parametersTable.getRowCount()) {
+            return "";
+        }
+        return parametersTable.getValueAt(row, 1).toString();
+    }
+    
+    /**
+     * Lets the user add parameters from a protocol design.
+     */
+    private void addFromProtocol() {
+        
+    }
+    
+    /**
+     * Lets the user add parameters from search engines.
+     */
+    private void addFromSearchSettings() {
+        
+    }
+    
+    /**
+     * Lets the user add parameters from scratch.
+     */
+    private void addAdvanced() {
+        
+    }
+    
+    /**
+     * Lets the user edit parameters from a protocol.
+     * 
+     * @param parametersName the name of the parameters to edit.
+     */
+    private void editProtocol(String parametersName) {
+        
+    }
+    
+    /**
+     * Lets the user edit parameters from search parameters.
+     * 
+     * @param parametersName the name of the parameters to edit.
+     */
+    private void editSearchSettings(String parametersName) {
+        
+    }
+    
+    /**
+     * Lets the user edit parameters.
+     * 
+     * @param parametersName the name of the parameters to edit.
+     */
+    private void editAdvanced(String parametersName) {
+        
+    }
+    
+    /**
+     * Removes the given parameters.
+     * 
+     * @param parametersName the name of the parameters to remove
+     */
+    private void remove(String parametersName) {
+        
+    }
+    
+    /**
+     * Lets the user save the given parameters to a file.
+     * 
+     * @param parametersName the name of the parameters to save
+     */
+    private void saveAs(String parametersName) {
+        
+    }
 
     /**
      * Table model for the neutral losses table.

@@ -1,4 +1,4 @@
-package com.compomics.util.gui.parameters;
+package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;

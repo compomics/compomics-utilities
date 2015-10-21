@@ -13,6 +13,8 @@ import com.compomics.util.gui.parameters.identification_parameters.ProteinInfere
 import com.compomics.util.gui.parameters.identification_parameters.PsmScoringSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.SequenceMatchingSettingsDialog;
+import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialog;
+import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialogParent;
 import com.compomics.util.gui.parameters.identification_parameters.ValidationSettingsDialog;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.FractionSettings;

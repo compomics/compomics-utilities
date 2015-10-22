@@ -12,10 +12,8 @@ import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -74,7 +72,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * Constructor.
      *
      * @param parentFrame the parent frame
-     * @param identificationParameters the identification parameters to display
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
      * @param possibleNeutralLosses the possible neutral losses

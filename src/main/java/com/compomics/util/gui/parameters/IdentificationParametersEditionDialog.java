@@ -276,7 +276,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(decriptionLbl))
-                        .addGap(0, 87, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         attributesPanelLayout.setVerticalGroup(
@@ -391,7 +391,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                     .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(qualityControlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(213, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -433,8 +433,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(attributesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(attributesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
@@ -473,8 +473,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(null, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, editable);
-        if (editable && !searchSettingsDialog.isCanceled()) {
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, editable);
+        if (!searchSettingsDialog.isCanceled()) {
             searchParameters = searchSettingsDialog.getSearchParameters();
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed

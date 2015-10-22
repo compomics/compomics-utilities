@@ -52,8 +52,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="attributesPanel" alignment="0" max="32767" attributes="0"/>
                       <Component id="settingsPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="attributesPanel" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -113,7 +113,7 @@
                                   </Group>
                                   <Component id="decriptionLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="87" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -195,7 +195,7 @@
                           <Component id="spectrumMatchingButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="qualityControlButton" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="213" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

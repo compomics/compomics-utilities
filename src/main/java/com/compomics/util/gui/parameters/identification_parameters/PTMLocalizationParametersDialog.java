@@ -32,6 +32,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGUI(ptmScoringPreferences);

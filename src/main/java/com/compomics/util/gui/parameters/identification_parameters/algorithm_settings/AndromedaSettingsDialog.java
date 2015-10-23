@@ -18,54 +18,79 @@ import javax.swing.SwingConstants;
 public class AndromedaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The Andromeda parameters class containing the information to display.
-     */
-    private AndromedaParameters andromedaParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new TideSettingsDialog.
      *
      * @param parent the parent frame
      * @param andromedaParameters the Andromeda parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public AndromedaSettingsDialog(java.awt.Frame parent, AndromedaParameters andromedaParameters) {
+    public AndromedaSettingsDialog(java.awt.Frame parent, AndromedaParameters andromedaParameters, boolean editable) {
         super(parent, true);
-        if (andromedaParameters != null) {
-            this.andromedaParameters = andromedaParameters;
-        } else {
-            this.andromedaParameters = new AndromedaParameters();
-        }
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(andromedaParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         neutralLossesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentAllCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        empericalCorrectionCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        empiricalCorrectionCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         higherChargeCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         ammoniaLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         waterLossCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         equalILCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        minPepLengthNoEnzymeTxt.setEditable(editable);
+        minPepLengthNoEnzymeTxt.setEnabled(editable);
+        maxPepLengthNoEnzymeTxt.setEditable(editable);
+        maxPepLengthNoEnzymeTxt.setEnabled(editable);
+        maxPeptideMassTxt.setEditable(editable);
+        maxPeptideMassTxt.setEnabled(editable);
+        numberMatchesTxt.setEditable(editable);
+        numberMatchesTxt.setEnabled(editable);
+        maxPtmsTxt.setEditable(editable);
+        maxPtmsTxt.setEnabled(editable);
+        fragMethodCmb.setEnabled(editable);
+        waterLossCombo.setEnabled(editable);
+        ammoniaLossCmb.setEnabled(editable);
+        neutralLossesCmb.setEnabled(editable);
+        equalILCombo.setEnabled(editable);
+        fragmentAllCmb.setEnabled(editable);
+        empiricalCorrectionCombo.setEnabled(editable);
+        higherChargeCombo.setEnabled(editable);
+        maxCombinationsTxt.setEditable(editable);
+        maxCombinationsTxt.setEnabled(editable);
+        topPeaksTxt.setEditable(editable);
+        topPeaksTxt.setEnabled(editable);
+        topPeaksWindowTxt.setEditable(editable);
+        topPeaksWindowTxt.setEnabled(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the Andromeda settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param andromedaParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(AndromedaParameters andromedaParameters) {
 
         minPepLengthNoEnzymeTxt.setText(andromedaParameters.getMinPeptideLengthNoEnzyme() + "");
         maxPepLengthNoEnzymeTxt.setText(andromedaParameters.getMaxPeptideLengthNoEnzyme() + "");
@@ -107,9 +132,9 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             fragmentAllCmb.setSelectedIndex(1);
         }
         if (andromedaParameters.isEmpiricalCorrection()) {
-            empericalCorrectionCombo.setSelectedIndex(0);
+            empiricalCorrectionCombo.setSelectedIndex(0);
         } else {
-            empericalCorrectionCombo.setSelectedIndex(1);
+            empiricalCorrectionCombo.setSelectedIndex(1);
         }
         if (andromedaParameters.isHigherCharge()) {
             higherChargeCombo.setSelectedIndex(0);
@@ -175,7 +200,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         result.setDependentLosses(neutralLossesCmb.getSelectedIndex() == 0);
         result.setEqualIL(equalILCombo.getSelectedIndex() == 0);
         result.setFragmentAll(fragmentAllCmb.getSelectedIndex() == 0);
-        result.setEmpiricalCorrection(empericalCorrectionCombo.getSelectedIndex() == 0);
+        result.setEmpiricalCorrection(empiricalCorrectionCombo.getSelectedIndex() == 0);
         result.setHigherCharge(higherChargeCombo.getSelectedIndex() == 0);
 
         input = maxCombinationsTxt.getText().trim();
@@ -221,8 +246,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         ammoniaLossCmb = new javax.swing.JComboBox();
         maxPtmsLabel = new javax.swing.JLabel();
         maxPtmsTxt = new javax.swing.JTextField();
-        empericalCorrectionLabel = new javax.swing.JLabel();
-        empericalCorrectionCombo = new javax.swing.JComboBox();
+        empiricalCorrectionLabel = new javax.swing.JLabel();
+        empiricalCorrectionCombo = new javax.swing.JComboBox();
         higherChargeLabel = new javax.swing.JLabel();
         higherChargeCombo = new javax.swing.JComboBox();
         topPeaksLabel = new javax.swing.JLabel();
@@ -317,9 +342,9 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             }
         });
 
-        empericalCorrectionLabel.setText("Emperical Correction");
+        empiricalCorrectionLabel.setText("Empirical Correction");
 
-        empericalCorrectionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        empiricalCorrectionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         higherChargeLabel.setText("Higher Charge");
 
@@ -419,11 +444,11 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fragmentAllLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(empericalCorrectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(empiricalCorrectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(higherChargeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(empericalCorrectionCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(empiricalCorrectionCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(higherChargeCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fragmentAllCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
@@ -483,8 +508,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
                     .addComponent(fragmentAllCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(empericalCorrectionLabel)
-                    .addComponent(empericalCorrectionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(empiricalCorrectionLabel)
+                    .addComponent(empiricalCorrectionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(higherChargeLabel)
@@ -774,8 +799,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
     private javax.swing.JLabel ammoniaLossLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
-    private javax.swing.JComboBox empericalCorrectionCombo;
-    private javax.swing.JLabel empericalCorrectionLabel;
+    private javax.swing.JComboBox empiricalCorrectionCombo;
+    private javax.swing.JLabel empiricalCorrectionLabel;
     private javax.swing.JComboBox equalILCombo;
     private javax.swing.JLabel equalILLabel;
     private javax.swing.JComboBox fragMethodCmb;

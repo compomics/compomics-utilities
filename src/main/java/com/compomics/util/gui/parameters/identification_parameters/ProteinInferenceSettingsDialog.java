@@ -43,9 +43,9 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the search settings are editable.
+     * Boolean indicating whether the settings can be edited by the user.
      */
-    private boolean editable = true;
+    private boolean editable;
 
     /**
      * Constructor.
@@ -56,7 +56,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable set if the search settings are to be editable or not
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public ProteinInferenceSettingsDialog(java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);

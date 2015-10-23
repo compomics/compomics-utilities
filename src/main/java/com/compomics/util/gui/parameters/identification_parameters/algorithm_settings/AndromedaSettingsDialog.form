@@ -192,12 +192,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="fragmentAllLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                                  <Component id="empericalCorrectionLabel" alignment="0" min="-2" pref="200" max="-2" attributes="1"/>
+                                  <Component id="empiricalCorrectionLabel" alignment="0" min="-2" pref="200" max="-2" attributes="1"/>
                                   <Component id="higherChargeLabel" min="-2" pref="200" max="-2" attributes="1"/>
                               </Group>
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="empericalCorrectionCombo" max="32767" attributes="0"/>
+                                  <Component id="empiricalCorrectionCombo" max="32767" attributes="0"/>
                                   <Component id="higherChargeCombo" max="32767" attributes="0"/>
                                   <Component id="fragmentAllCmb" max="32767" attributes="0"/>
                               </Group>
@@ -273,8 +273,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="empericalCorrectionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="empericalCorrectionCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="empiricalCorrectionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="empiricalCorrectionCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -404,12 +404,12 @@
                         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPtmsTxtKeyReleased"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="empericalCorrectionLabel">
+                    <Component class="javax.swing.JLabel" name="empiricalCorrectionLabel">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Emperical Correction"/>
+                        <Property name="text" type="java.lang.String" value="Empirical Correction"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="empericalCorrectionCombo">
+                    <Component class="javax.swing.JComboBox" name="empiricalCorrectionCombo">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="2">

@@ -152,39 +152,28 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="removePrecursorPeakToleranceLbl" pref="373" max="32767" attributes="1"/>
-                                  <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="minPeaksLbl" pref="250" max="32767" attributes="1"/>
-                                          <Component id="minPeakIntensityLbl" pref="250" max="32767" attributes="1"/>
-                                      </Group>
-                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="clearMzRangeLabel" alignment="0" pref="250" max="32767" attributes="0"/>
-                                          <Component id="removePrecursorPeakLabel" alignment="0" pref="250" max="32767" attributes="1"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="clearMzRangeLowerTxt" linkSize="10" min="-2" pref="71" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="clearMzRangeDividerLabel" max="32767" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="clearMzRangeUpperTxt" linkSize="10" min="-2" pref="77" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="removePrecursorPeakToleranceTxt" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="minPeaksTxt" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="minPeakIntensityTxt" alignment="1" pref="209" max="32767" attributes="0"/>
-                                      <Component id="removePrecursorPeakCombo" alignment="1" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="minPeaksLbl" pref="250" max="32767" attributes="1"/>
+                              <Component id="minPeakIntensityLbl" pref="250" max="32767" attributes="1"/>
+                              <Component id="clearMzRangeLabel" alignment="0" pref="250" max="32767" attributes="0"/>
+                              <Component id="removePrecursorPeakLabel" alignment="0" pref="250" max="32767" attributes="1"/>
+                              <Component id="removePrecursorPeakToleranceLbl" max="32767" attributes="1"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="clearMzRangeLowerTxt" linkSize="10" min="-2" pref="71" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="clearMzRangeDividerLabel" pref="35" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="clearMzRangeUpperTxt" linkSize="10" min="-2" pref="77" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="removePrecursorPeakToleranceTxt" alignment="0" max="32767" attributes="0"/>
+                              <Component id="minPeaksTxt" alignment="0" max="32767" attributes="0"/>
+                              <Component id="minPeakIntensityTxt" alignment="1" pref="209" max="32767" attributes="0"/>
+                              <Component id="removePrecursorPeakCombo" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

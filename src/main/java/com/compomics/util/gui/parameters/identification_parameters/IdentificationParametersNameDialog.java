@@ -20,7 +20,7 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the parameters can be edited.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
@@ -29,10 +29,11 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param identificationParameters the identification parameters to display
-     * @param editable boolean indicating whether the settings can be edited
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public IdentificationParametersNameDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -45,8 +46,12 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
+        
         nameTxt.setEditable(editable);
+        nameTxt.setEnabled(editable);
         descriptionTxt.setEditable(editable);
+        descriptionTxt.setEnabled(editable);
+        
     }
 
     /**

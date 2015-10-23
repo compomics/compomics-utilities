@@ -23,16 +23,22 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Constructor.
      *
      * @param parentFrame a parent frame
      * @param sequenceMatchingPreferences the sequence matching preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGUI(sequenceMatchingPreferences);
@@ -46,7 +52,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private void setUpGui() {
         
         matchingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
+        
+        matchingCmb.setEnabled(editable);
+        xTxt.setEditable(editable);
+        xTxt.setEnabled(editable);
         
     }
 
@@ -141,7 +150,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
 
         xLbl.setText("Maximal share of Xs:");
 
-        matchingCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
 
         xTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 

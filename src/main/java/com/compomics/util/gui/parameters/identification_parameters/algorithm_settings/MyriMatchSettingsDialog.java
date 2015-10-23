@@ -19,33 +19,34 @@ import javax.swing.SwingUtilities;
 public class MyriMatchSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The MyriMatch parameters class containing the information to display.
-     */
-    private MyriMatchParameters myriMatchParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates new form MyriMatchSettingsDialog.
      *
      * @param parent the parent frame
      * @param myriMatchParameters the MyriMatch parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public MyriMatchSettingsDialog(java.awt.Frame parent, MyriMatchParameters myriMatchParameters) {
+    public MyriMatchSettingsDialog(java.awt.Frame parent, MyriMatchParameters myriMatchParameters, boolean editable) {
         super(parent, true);
-        this.myriMatchParameters = myriMatchParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(myriMatchParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
         useSmartPlusThreeModelCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -56,10 +57,11 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
     }
 
     /**
-     * Fills the GUI with the information contained in the MyriMatch settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param myriMatchParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(MyriMatchParameters myriMatchParameters) {
 
         if (myriMatchParameters.getMinPeptideLength() != null) {
             minPepLengthTxt.setText(myriMatchParameters.getMinPeptideLength() + "");

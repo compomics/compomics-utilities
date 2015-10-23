@@ -23,16 +23,22 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Constructor.
      *
      * @param parentFrame a parent frame
      * @param psmScoringPreferences the scoring preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences) {
+    public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGUI(psmScoringPreferences);

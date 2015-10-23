@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
@@ -17,39 +18,37 @@ import javax.swing.SwingConstants;
 public class CometSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The Comet parameters class containing the information to display.
-     */
-    private CometParameters cometParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new CometSettingsDialog.
      *
      * @param parent the parent frame
      * @param cometParameters the Comet parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public CometSettingsDialog(java.awt.Frame parent, CometParameters cometParameters) {
+    public CometSettingsDialog(java.awt.Frame parent, CometParameters cometParameters, boolean editable) {
         super(parent, true);
-        if (cometParameters != null) {
-            this.cometParameters = cometParameters;
-        } else {
-            this.cometParameters = new CometParameters();
-        }
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(cometParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         removePrecursorPeakCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         enzymeTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         isotopeCorrectionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -57,13 +56,47 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         correlationScoreTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         requireVariablePtmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        minPeaksTxt.setEditable(editable);
+        minPeaksTxt.setEnabled(editable);
+        minPeakIntensityTxt.setEditable(editable);
+        minPeakIntensityTxt.setEnabled(editable);
+        removePrecursorPeakCombo.setEnabled(editable);
+        removePrecursorPeakToleranceTxt.setEditable(editable);
+        removePrecursorPeakToleranceTxt.setEnabled(editable);
+        clearMzRangeLowerTxt.setEditable(editable);
+        clearMzRangeLowerTxt.setEnabled(editable);
+        clearMzRangeUpperTxt.setEditable(editable);
+        clearMzRangeUpperTxt.setEnabled(editable);
+        enzymeTypeCmb.setEnabled(editable);
+        isotopeCorrectionCmb.setEnabled(editable);
+        minPrecursorMassTxt.setEditable(editable);
+        minPrecursorMassTxt.setEnabled(editable);
+        maxPrecursorMassTxt.setEditable(editable);
+        maxPrecursorMassTxt.setEnabled(editable);
+        numberMatchesTxt.setEditable(editable);
+        numberMatchesTxt.setEnabled(editable);
+        maxFragmentChargeTxt.setEditable(editable);
+        maxFragmentChargeTxt.setEnabled(editable);
+        maxFragmentChargeTxt.setEditable(editable);
+        removeMethionineCmb.setEnabled(editable);
+        batchSizeTxt.setEnabled(editable);
+        batchSizeTxt.setEditable(editable);
+        maxPtmsTxt.setEnabled(editable);
+        maxPtmsTxt.setEditable(editable);
+        requireVariablePtmCmb.setEnabled(editable);
+        correlationScoreTypeCmb.setEnabled(editable);
+        fragmentBinOffsetTxt.setEnabled(editable);
+        fragmentBinOffsetTxt.setEditable(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the Comet settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param cometParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(CometParameters cometParameters) {
 
         if (cometParameters.getNumberOfSpectrumMatches() != null) {
             numberMatchesTxt.setText(cometParameters.getNumberOfSpectrumMatches() + "");
@@ -419,31 +452,25 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
             spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
+                .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(minPeaksLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(minPeakIntensityLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(clearMzRangeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(removePrecursorPeakLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(removePrecursorPeakToleranceLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addComponent(removePrecursorPeakToleranceLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                        .addGap(120, 120, 120))
-                    .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(minPeaksLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                .addComponent(minPeakIntensityLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-                            .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(clearMzRangeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                .addComponent(removePrecursorPeakLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(spectrumProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(spectrumProcessingPanelLayout.createSequentialGroup()
-                                .addComponent(clearMzRangeLowerTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(clearMzRangeDividerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(clearMzRangeUpperTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(removePrecursorPeakToleranceTxt)
-                            .addComponent(minPeaksTxt)
-                            .addComponent(minPeakIntensityTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-                            .addComponent(removePrecursorPeakCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(30, 30, 30))))
+                        .addComponent(clearMzRangeLowerTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(clearMzRangeDividerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(clearMzRangeUpperTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(removePrecursorPeakToleranceTxt)
+                    .addComponent(minPeaksTxt)
+                    .addComponent(minPeakIntensityTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                    .addComponent(removePrecursorPeakCombo, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30))
         );
 
         spectrumProcessingPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {clearMzRangeLowerTxt, clearMzRangeUpperTxt});

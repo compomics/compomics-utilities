@@ -38,6 +38,10 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * Boolean indicating whether the filters have been changed.
      */
     private boolean filtersChanged = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new validation QC preferences dialog.
@@ -46,12 +50,14 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param validationQCPreferencesDialogParent a parent handling the edition
      * of filters
      * @param validationQCPreferences the validation QC preferences
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ValidationQCPreferencesDialog(java.awt.Frame parent, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences) {
+    public ValidationQCPreferencesDialog(java.awt.Frame parent, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
         super(parent, true);
         initComponents();
 
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+        this.editable = editable;
 
         ArrayList<Filter> originalPsmFilters = validationQCPreferences.getPsmFilters();
         if (originalPsmFilters != null) {
@@ -92,6 +98,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param validationQCPreferences the validation QC preferences
      */
     private void setUpGUI(ValidationQCPreferences validationQCPreferences) {
+        
         dbCheck.setSelected(validationQCPreferences.isDbSize());
         nTargetCheck.setSelected(validationQCPreferences.isFirstDecoy());
         confidenceCheck.setSelected(validationQCPreferences.getConfidenceMargin() != 0.0);
@@ -108,6 +115,11 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         proteinTable.getTableHeader().setReorderingAllowed(false);
         peptideTable.getTableHeader().setReorderingAllowed(false);
         psmTable.getTableHeader().setReorderingAllowed(false);
+        
+        dbCheck.setEnabled(editable);
+        nTargetCheck.setEnabled(editable);
+        confidenceCheck.setEnabled(editable);
+        
     }
 
     /**
@@ -523,8 +535,8 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             psmTable.setRowSelectionInterval(row, row);
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editPsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1);
-            removePsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1);
+            editPsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1 && editable);
+            removePsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1 && editable);
             psmPopupMenu.show(psmTable, evt.getX(), evt.getY());
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
@@ -603,8 +615,8 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             peptideTable.setRowSelectionInterval(row, row);
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editPeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1);
-            removePeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1);
+            editPeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1 && editable);
+            removePeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1 && editable);
             peptidePopupMenu.show(peptideTable, evt.getX(), evt.getY());
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
@@ -623,8 +635,8 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             proteinTable.setRowSelectionInterval(row, row);
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1);
-            removeProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1);
+            editProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1 && editable);
+            removeProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1 && editable);
             proteinPopupMenu.show(proteinTable, evt.getX(), evt.getY());
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {

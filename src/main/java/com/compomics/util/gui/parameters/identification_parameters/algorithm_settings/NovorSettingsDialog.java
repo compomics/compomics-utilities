@@ -24,36 +24,48 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new NovorSettingsDialog.
      *
      * @param parent the parent frame
-     * @param searchParameters the search parameters
-     * @param modal whether the dialog is modal or not
+     * @param searchParameters the search parameters 
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
-        super(parent, modal);
+    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(parent, true);
         this.searchParameters = searchParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        insertData();
+        populateGUI(searchParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         massAnalyzerCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        fragmentationMethodCmb.setEnabled(editable);
+        massAnalyzerCmb.setEnabled(editable);
+        
     }
 
     /**
-     * Insert the settings.
+     * Populates the GUI using the given settings.
+     * 
+     * @param searchParameters the parameters to display
      */
-    private void insertData() {
+    private void populateGUI(SearchParameters searchParameters) {
 
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 

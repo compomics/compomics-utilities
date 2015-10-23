@@ -130,9 +130,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the search settings are editable.
+     * Boolean indicating whether the settings can be edited by the user.
      */
-    private boolean editable = true;
+    private boolean editable;
     /**
      * The last selected folder to use.
      */
@@ -155,7 +155,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @param modal if the dialog is to be modal
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable set if the search settings are to be editable or not
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public SearchSettingsDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
             boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {

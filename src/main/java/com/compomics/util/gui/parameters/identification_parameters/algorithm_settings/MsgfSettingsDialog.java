@@ -17,48 +17,71 @@ import javax.swing.SwingConstants;
 public class MsgfSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The MS-GF+ parameters class containing the information to display.
-     */
-    private MsgfParameters msgfParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates new form MsgfSettingsDialog.
      *
      * @param parent the parent frame
      * @param msgfParameters the MS-GF+ parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public MsgfSettingsDialog(java.awt.Frame parent, MsgfParameters msgfParameters) {
+    public MsgfSettingsDialog(java.awt.Frame parent, MsgfParameters msgfParameters, boolean editable) {
         super(parent, true);
-        this.msgfParameters = msgfParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(msgfParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         decoyDatabaseCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         instrumentCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         protocolCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         additionalOutputCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         terminiCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        decoyDatabaseCmb.setEnabled(editable);
+        instrumentCmb.setEnabled(editable);
+        fragmentationMethodCmb.setEnabled(editable);
+        protocolCmb.setEnabled(editable);
+        terminiCmb.setEnabled(editable);
+        minPepLengthTxt.setEditable(editable);
+        minPepLengthTxt.setEnabled(editable);
+        maxPepLengthTxt.setEditable(editable);
+        maxPepLengthTxt.setEnabled(editable);
+        maxPtmsTxt.setEditable(editable);
+        maxPtmsTxt.setEnabled(editable);
+        lowIsotopeErrorRangeTxt.setEditable(editable);
+        lowIsotopeErrorRangeTxt.setEnabled(editable);
+        highIsotopeErrorRangeTxt.setEditable(editable);
+        highIsotopeErrorRangeTxt.setEnabled(editable);
+        numberMatchesTxt.setEditable(editable);
+        numberMatchesTxt.setEnabled(editable);
+        additionalOutputCmb.setEnabled(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the MS-GF+ settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param msgfParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(MsgfParameters msgfParameters) {
 
         if (msgfParameters.searchDecoyDatabase()) {
             decoyDatabaseCmb.setSelectedIndex(0);

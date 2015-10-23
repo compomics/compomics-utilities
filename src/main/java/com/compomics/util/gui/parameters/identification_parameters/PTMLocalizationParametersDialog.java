@@ -18,8 +18,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the processing and identification parameters
-     * should be edited upon clicking on OK.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
@@ -28,7 +27,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
-     * @param editable boolean indicating whether the settings can be edited
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
@@ -44,9 +43,17 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
+        
         thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        scoreCmb.setEnabled(editable);
+        neutralLossesCmb.setEnabled(editable);
+        thresholdAutpoCmb.setEnabled(editable);
+        thresholdTxt.setEditable(editable);
+        thresholdTxt.setEnabled(editable);
+        
     }
 
     /**

@@ -38,6 +38,10 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * Map of the neutral losses selection.
      */
     private HashMap<NeutralLoss, Boolean> neutralLossesMap;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new AnnotationPreferencesDialog.
@@ -47,10 +51,13 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons) {
+    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);
@@ -59,7 +66,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGui() {
 
@@ -79,6 +86,20 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                 null,
                 "Selected", null));
+        
+        aBox.setEnabled(editable);
+        bBox.setEnabled(editable);
+        cBox.setEnabled(editable);
+        xBox.setEnabled(editable);
+        yBox.setEnabled(editable);
+        zBox.setEnabled(editable);
+        precursorBox.setEnabled(editable);
+        immoniumBox.setEnabled(editable);
+        reporterBox.setEnabled(editable);
+        intensitySpinner.setEnabled(editable);
+        accuracySpinner.setEnabled(editable);
+        highResolutionBox.setEnabled(editable);
+        
     }
 
     /**
@@ -680,7 +701,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2;
+            return columnIndex == 2 && editable;
         }
 
         @Override

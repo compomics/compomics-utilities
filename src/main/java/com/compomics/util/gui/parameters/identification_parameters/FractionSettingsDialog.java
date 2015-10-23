@@ -15,8 +15,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the processing and identification parameters
-     * should be edited upon clicking on OK.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
@@ -25,7 +24,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param fractionSettings the fraction settings
-     * @param editable boolean indicating whether the settings can be edited
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public FractionSettingsDialog(java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
         super(parentFrame, true);
@@ -38,7 +37,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGui() {
         proteinConfidenceMwTxt.setEnabled(editable);

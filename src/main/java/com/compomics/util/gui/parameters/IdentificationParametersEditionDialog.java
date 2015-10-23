@@ -156,6 +156,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.reporterIons = reporterIons;
         this.reporterIons = reporterIons;
         this.possibleNeutralLosses = possibleNeutralLosses;
+        this.editable = editable;
 
         initComponents();
         setUpGui();
@@ -168,8 +169,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
+        
         nameTxt.setEditable(editable);
         descriptionTxt.setEditable(editable);
+        
     }
 
     /**
@@ -466,7 +469,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(parentFrame, annotationSettings, possibleNeutralLosses, reporterIons);
+        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(parentFrame, annotationSettings, possibleNeutralLosses, reporterIons, editable);
         if (!annotationSettingsDialog.isCanceled()) {
             annotationSettings = annotationSettingsDialog.getAnnotationSettings();
         }
@@ -480,7 +483,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
     private void sequenceMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceMatchingButtonActionPerformed
-        SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(parentFrame, sequenceMatchingPreferences);
+        SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(parentFrame, sequenceMatchingPreferences, editable);
         if (!sequenceMatchingSettingsDialog.isCanceled()) {
             sequenceMatchingPreferences = sequenceMatchingSettingsDialog.getSequenceMatchingPreferences();
         }
@@ -499,7 +502,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed
-        PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(parentFrame, psmScoringPreferences);
+        PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(parentFrame, psmScoringPreferences, editable);
         if (!psmScoringSettingsDialog.isCanceled()) {
             psmScoringPreferences = psmScoringSettingsDialog.getPsmScoringPreferences();
         }
@@ -530,7 +533,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
-        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(parentFrame, validationQCPreferencesDialogParent, validationQCPreferences);
+        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
         }

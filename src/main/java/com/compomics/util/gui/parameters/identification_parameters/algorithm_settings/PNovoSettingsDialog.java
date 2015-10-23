@@ -24,35 +24,50 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
      * Creates a new PNovoSettingsDialog.
      *
      * @param parent the parent frame
      * @param searchParameters the search parameters
-     * @param modal whether the dialog is modal or not
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public PNovoSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
-        super(parent, modal);
+    public PNovoSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(parent, true);
         this.searchParameters = searchParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        insertData();
+        populateGUI(searchParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         activationTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        activationTypeCmb.setEnabled(editable);
+        minPrecursorMassTextField.setEditable(editable);
+        minPrecursorMassTextField.setEnabled(editable);
+        maxPrecursorMassTextField.setEditable(editable);
+        maxPrecursorMassTextField.setEnabled(editable);
+        
     }
 
     /**
-     * Insert the settings.
+     * Populates the GUI using the given settings.
+     * 
+     * @param searchParameters the parameters to display
      */
-    private void insertData() {
+    private void populateGUI(SearchParameters searchParameters) {
 
         PNovoParameters pNovoParameters = (PNovoParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.pNovo.getIndex());
 

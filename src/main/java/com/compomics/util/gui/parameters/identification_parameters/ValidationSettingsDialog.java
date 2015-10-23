@@ -20,19 +20,21 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the search settings are editable.
+     * Boolean indicating whether the settings can be edited by the user.
      */
-    private boolean editable = true;
+    private boolean editable;
 
     /**
      * Constructor.
      *
      * @param parentFrame a parent frame
      * @param idMatchValidationPreferences the validation preferences to display
-     * @param editable if the settings are editable or not
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public ValidationSettingsDialog(java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGUI(idMatchValidationPreferences);
@@ -46,10 +48,10 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
     private void setUpGui() {
 
         proteinFdrTxt.setEditable(editable);
-        peptideFdrTxt.setEditable(editable);
-        psmFdrTxt.setEditable(editable);
         proteinFdrTxt.setEnabled(editable);
+        peptideFdrTxt.setEditable(editable);
         peptideFdrTxt.setEnabled(editable);
+        psmFdrTxt.setEditable(editable);
         psmFdrTxt.setEnabled(editable);
         
         

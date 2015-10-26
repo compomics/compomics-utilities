@@ -12,8 +12,11 @@ import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -216,7 +219,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
         parametersPopupMenu.add(addMenu);
 
-        editMenu.setText("jMenu1");
+        editMenu.setText("Edit");
 
         editProtocolMenuItem.setText("Protocol (Beta)");
         editProtocolMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -524,6 +527,65 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addFromFile() {
 
+        File startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
+        JFileChooser fc = new JFileChooser(startLocation);
+
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File myFile) {
+
+                return myFile.getName().toLowerCase().endsWith(".par") || myFile.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Identification Settings File (.par)";
+            }
+        };
+        fc.setFileFilter(filter);
+        int result = fc.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            String fileName = file.getName();
+            lastSelectedFolder.setLastSelectedFolder(file.getAbsolutePath());
+
+            if (fileName.endsWith(".par")) {
+
+                try {
+                    SearchParameters searchParameters = SearchParameters.getIdentificationParameters(file);
+
+                    SearchSettingsDialog settingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
+                            normalIcon,
+                            waitingIcon,
+                            false, true, configurationFile, lastSelectedFolder, true);
+                    boolean valid = settingsDialog.validateParametersInput(false);
+
+                    if (!valid) {
+                        settingsDialog.validateParametersInput(true);
+                        settingsDialog.setVisible(true);
+                    }
+
+                    if (!settingsDialog.isCanceled()) {
+                        IdentificationParameters identificationParameters = IdentificationParameters.getDefaultIdentificationParameters(searchParameters);
+                        try {
+                            identificationParametersFactory.addIdentificationParameters(identificationParameters);
+                            updateTable();
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
+                                    "Save Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error occurred while reading " + file + ". Please verify the search paramters.", "File Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a valid search settings file (.par).", "File Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
     /**
@@ -559,7 +621,24 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editSearchSettings(String parametersName) {
+        
+        IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
+        SearchParameters searchParameters = identificationParameters.getSearchParameters();
 
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
+        if (!searchSettingsDialog.isCanceled()) {
+            SearchParameters newSearchParameters = searchSettingsDialog.getSearchParameters();
+            if (!searchParameters.equals(newSearchParameters)) {
+                identificationParameters.setSearchParameters(newSearchParameters);
+                try {
+                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
+                    updateTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
+                            "Save Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
     }
 
     /**
@@ -600,8 +679,10 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         } else {
             IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(this, parentFrame, identificationParameters, editable);
             if (!identificationParametersNameDialog.isCanceled()) {
+                String previousName = identificationParameters.getName();
                 identificationParametersNameDialog.updateParameters(identificationParameters);
                 try {
+                    identificationParametersFactory.removeIdentificationParameters(previousName);
                     identificationParametersFactory.addIdentificationParameters(identificationParameters);
                     updateTable();
                 } catch (Exception e) {
@@ -629,6 +710,38 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void saveAs(String parametersName) {
 
+        File startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
+        JFileChooser fc = new JFileChooser(startLocation);
+
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File myFile) {
+
+                return myFile.getName().toLowerCase().endsWith(".par") || myFile.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Identification Settings File (.par)";
+            }
+        };
+        fc.setFileFilter(filter);
+        int result = fc.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            String fileName = file.getName();
+            if (!fileName.endsWith(".par")) {
+                file = new File(file.getParent(), fileName + ".par");
+            }
+            lastSelectedFolder.setLastSelectedFolder(file.getAbsolutePath());
+            IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
+            try {
+                SearchParameters.saveIdentificationParameters(identificationParameters.getSearchParameters(), file);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the file is not opened by another application.",
+                        "Save Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     /**

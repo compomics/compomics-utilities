@@ -626,7 +626,7 @@ public class SearchParameters implements Serializable {
      * Loads the identification parameters from a serialized file.
      *
      * @param searchParametersFile the search parameter file
-     * 
+     *
      * @return the search parameters
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
@@ -680,10 +680,16 @@ public class SearchParameters implements Serializable {
      */
     public void saveIdentificationParametersAsTextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileWriter fw = new FileWriter(file);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(toString());
-        bw.close();
-        fw.close();
+        try {
+            BufferedWriter bw = new BufferedWriter(fw);
+            try {
+                bw.write(toString());
+            } finally {
+                bw.close();
+            }
+        } finally {
+            fw.close();
+        }
     }
 
     @Override
@@ -709,7 +715,7 @@ public class SearchParameters implements Serializable {
 
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
-        output.append("# General Identification Parameters");
+        output.append("# General Search Parameters");
         output.append(newLine);
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
@@ -860,6 +866,7 @@ public class SearchParameters implements Serializable {
      * Returns true of the search parameter objects have identical settings.
      *
      * @param otherSearchParameters the parameters to compare to
+     *
      * @return true of the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {

@@ -50,7 +50,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="editMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jMenu1"/>
+            <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="editProtocolMenuItem">

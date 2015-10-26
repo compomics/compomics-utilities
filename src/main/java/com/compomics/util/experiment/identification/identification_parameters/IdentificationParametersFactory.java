@@ -88,7 +88,7 @@ public class IdentificationParametersFactory {
      * @param name the name of the parameters to delete
      */
     public void removeIdentificationParameters(String name) {
-        File parametersFile = new File(getParametersFolder(), name + "." + parametersExtension);
+        File parametersFile = new File(getParametersFolder(), name + parametersExtension);
         parametersFile.delete();
     }
 

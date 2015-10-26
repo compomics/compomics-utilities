@@ -2,12 +2,12 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.TideParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -29,7 +29,7 @@ public class TideSettingsDialog extends javax.swing.JDialog implements Algorithm
     private boolean editable;
 
     /**
-     * Creates a new TideSettingsDialog.
+     * Creates a new TideSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param tideParameters the Tide parameters
@@ -43,6 +43,25 @@ public class TideSettingsDialog extends javax.swing.JDialog implements Algorithm
         populateGUI(tideParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new TideSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param tideParameters the Tide parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public TideSettingsDialog(Dialog owner, java.awt.Frame parent, TideParameters tideParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(tideParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

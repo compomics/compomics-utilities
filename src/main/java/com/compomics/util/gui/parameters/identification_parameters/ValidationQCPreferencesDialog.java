@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.preferences.ValidationQCPreferences;
+import java.awt.Dialog;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -44,7 +45,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Creates a new validation QC preferences dialog.
+     * Creates a new ValidationQCPreferencesDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param validationQCPreferencesDialogParent a parent handling the edition
@@ -89,6 +90,56 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         setUpGUI(validationQCPreferences);
 
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new ValidationQCPreferencesDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param validationQCPreferencesDialogParent a parent handling the edition
+     * of filters
+     * @param validationQCPreferences the validation QC preferences
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public ValidationQCPreferencesDialog(Dialog owner, java.awt.Frame parent, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, ValidationQCPreferences validationQCPreferences, boolean editable) {
+        super(owner, true);
+        initComponents();
+
+        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+        this.editable = editable;
+
+        ArrayList<Filter> originalPsmFilters = validationQCPreferences.getPsmFilters();
+        if (originalPsmFilters != null) {
+            for (Filter filter : originalPsmFilters) {
+                psmFilters.add(filter.clone());
+            }
+        } else {
+            psmFilters = new ArrayList<Filter>();
+        }
+
+        ArrayList<Filter> originalPeptidesFilters = validationQCPreferences.getPeptideFilters();
+        if (originalPeptidesFilters != null) {
+            for (Filter filter : originalPeptidesFilters) {
+                peptideFilters.add(filter.clone());
+            }
+        } else {
+            peptideFilters = new ArrayList<Filter>();
+        }
+
+        ArrayList<Filter> originalProteinFilters = validationQCPreferences.getProteinFilters();
+        if (originalProteinFilters != null) {
+            for (Filter filter : originalProteinFilters) {
+                proteinFilters.add(filter.clone());
+            }
+        } else {
+            proteinFilters = new ArrayList<Filter>();
+        }
+
+        setUpGUI(validationQCPreferences);
+
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

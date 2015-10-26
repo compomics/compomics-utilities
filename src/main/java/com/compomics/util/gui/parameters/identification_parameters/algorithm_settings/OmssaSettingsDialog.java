@@ -1,13 +1,13 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.OmssaParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -32,7 +32,7 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
     private boolean editable;
 
     /**
-     * Creates new form OmssaParametersDialog.
+     * Creates new form OmssaParametersDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param omssaParameters the OMSSA parameters
@@ -46,6 +46,25 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         populateGUI(omssaParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates new form OmssaParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param omssaParameters the OMSSA parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public OmssaSettingsDialog(Dialog owner, java.awt.Frame parent, OmssaParameters omssaParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(omssaParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

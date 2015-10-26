@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Creates a new AnnotationPreferencesDialog.
+     * Creates a new AnnotationPreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
@@ -62,6 +63,29 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);
         this.setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new AnnotationPreferencesDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param annotationSettings previous annotation settings
+     * @param possibleNeutralLosses the list of possible neutral losses
+     * @param reporterIons the list of possible reporter ions indexed by their
+     * subtypes
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.reporterIons = reporterIons;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGui(annotationSettings, possibleNeutralLosses);
+        this.setLocationRelativeTo(owner);
         setVisible(true);
     }
 

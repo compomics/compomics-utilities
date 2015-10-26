@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Id
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
+import java.awt.Dialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -24,7 +25,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog implements Algor
     private boolean editable;
 
     /**
-     * Creates new form MsAmandaSettingsDialog.
+     * Creates new form MsAmandaSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param msAmandaParameters the MS Amanda parameters
@@ -38,6 +39,26 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog implements Algor
         populateGUI(msAmandaParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+
+    /**
+     * Creates new form MsAmandaSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param msAmandaParameters the MS Amanda parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public MsAmandaSettingsDialog(Dialog owner, java.awt.Frame parent, MsAmandaParameters msAmandaParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(msAmandaParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

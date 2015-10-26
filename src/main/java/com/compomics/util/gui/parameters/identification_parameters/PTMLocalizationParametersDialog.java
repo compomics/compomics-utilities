@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.PTMScoringPreferences;
+import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -23,7 +24,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new PTMLocalizationParametersDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
@@ -36,6 +37,24 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(ptmScoringPreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new PTMLocalizationParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param ptmScoringPreferences the PTM scoring preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(ptmScoringPreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

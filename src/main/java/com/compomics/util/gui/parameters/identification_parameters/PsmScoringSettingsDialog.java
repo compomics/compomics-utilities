@@ -1,11 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
+import java.awt.Dialog;
 
 /**
  * Dialog for the edition of the PSM scoring settings.
@@ -29,7 +25,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new PsmScoringSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param psmScoringPreferences the scoring preferences to display
@@ -43,6 +39,25 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(psmScoringPreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new PsmScoringSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param psmScoringPreferences the scoring preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public PsmScoringSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(psmScoringPreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

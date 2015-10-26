@@ -501,7 +501,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addFromSearchSettings() {
         SearchParameters defaultParameters = new SearchParameters();
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
             IdentificationParameters identificationParameters = IdentificationParameters.getDefaultIdentificationParameters(searchParameters);
@@ -531,7 +531,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addAdvanced() {
         IdentificationParameters identificationParameters = new IdentificationParameters();
-        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
         if (!identificationParametersEditionDialog.isCanceled()) {
             identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
             try {
@@ -573,7 +573,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
             if (!identificationParametersEditionDialog.isCanceled()) {
                 identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
                 try {
@@ -598,7 +598,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
+            IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(this, parentFrame, identificationParameters, editable);
             if (!identificationParametersNameDialog.isCanceled()) {
                 identificationParametersNameDialog.updateParameters(identificationParameters);
                 try {

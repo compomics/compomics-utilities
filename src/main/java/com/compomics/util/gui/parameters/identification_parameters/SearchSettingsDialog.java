@@ -21,6 +21,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -145,7 +146,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     public static String TITLED_BORDER_HORIZONTAL_PADDING = "";
 
     /**
-     * Creates a new SearchSettingsDialog.
+     * Creates a new SearchSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param searchParameters previous search parameters
@@ -185,6 +186,58 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         setUpGUI();
         formComponentResized(null);
         setLocationRelativeTo(parentFrame);
+
+        if (searchParameters.getParametersFile() != null) {
+            setTitle("Search Settings - " + searchParameters.getParametersFile().getName());
+        }
+
+        if (setVisible) {
+            setVisible(true);
+        }
+    }
+
+    /**
+     * Creates a new SearchSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param searchParameters previous search parameters
+     * @param normalIcon the normal dialog icon
+     * @param waitingIcon the waiting dialog icon
+     * @param setVisible if the dialog is to be visible or not
+     * @param modal if the dialog is to be modal
+     * @param configurationFile a file containing the modification use
+     * @param lastSelectedFolder the last selected folder to use
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public SearchSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
+        super(owner, modal);
+
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.configurationFile = configurationFile;
+        this.editable = editable;
+
+        if (searchParameters == null) {
+            this.searchParameters = new SearchParameters();
+        } else {
+            this.searchParameters = searchParameters;
+        }
+
+        try {
+            loadModificationUse(configurationFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // ignore
+        }
+
+        initComponents();
+        setUpGUI();
+        formComponentResized(null);
+        setLocationRelativeTo(owner);
 
         if (searchParameters.getParametersFile() != null) {
             setTitle("Search Settings - " + searchParameters.getParametersFile().getName());

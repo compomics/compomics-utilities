@@ -6,6 +6,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -26,7 +27,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
     private boolean editable;
 
     /**
-     * Creates new form MsgfSettingsDialog.
+     * Creates new form MsgfSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param msgfParameters the MS-GF+ parameters
@@ -40,6 +41,25 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         populateGUI(msgfParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates new form MsgfSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param msgfParameters the MS-GF+ parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public MsgfSettingsDialog(Dialog owner, java.awt.Frame parent, MsgfParameters msgfParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(msgfParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

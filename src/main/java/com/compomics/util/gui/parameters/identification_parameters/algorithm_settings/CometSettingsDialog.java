@@ -3,10 +3,10 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
-import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MyriMatchParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -27,7 +27,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
     private boolean editable;
 
     /**
-     * Creates a new CometSettingsDialog.
+     * Creates a new CometSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param cometParameters the Comet parameters
@@ -41,6 +41,25 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         populateGUI(cometParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new CometSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param cometParameters the Comet parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public CometSettingsDialog(Dialog owner, java.awt.Frame parent, CometParameters cometParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(cometParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

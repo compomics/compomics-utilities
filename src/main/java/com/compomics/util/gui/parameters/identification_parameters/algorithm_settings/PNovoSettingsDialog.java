@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.PNovoParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
+import java.awt.Dialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -30,7 +31,7 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
     private boolean editable;
 
     /**
-     * Creates a new PNovoSettingsDialog.
+     * Creates a new PNovoSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param searchParameters the search parameters
@@ -44,6 +45,25 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
         setUpGUI();
         populateGUI(searchParameters);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new PNovoSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param searchParameters the search parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public PNovoSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(owner, true);
+        this.searchParameters = searchParameters;
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(searchParameters);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

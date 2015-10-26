@@ -7,6 +7,7 @@ import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -28,7 +29,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
     private boolean editable;
 
     /**
-     * Creates new form MyriMatchSettingsDialog.
+     * Creates new form MyriMatchSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param myriMatchParameters the MyriMatch parameters
@@ -42,6 +43,25 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
         populateGUI(myriMatchParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates new form MyriMatchSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param myriMatchParameters the MyriMatch parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public MyriMatchSettingsDialog(Dialog owner, java.awt.Frame parent, MyriMatchParameters myriMatchParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(myriMatchParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

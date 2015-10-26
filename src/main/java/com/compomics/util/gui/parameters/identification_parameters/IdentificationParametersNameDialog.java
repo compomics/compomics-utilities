@@ -1,9 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.IdentificationParameters;
-import com.compomics.util.preferences.PTMScoringPreferences;
-import javax.swing.SwingConstants;
+import java.awt.Dialog;
 
 /**
  *
@@ -25,7 +23,7 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new IdentificationParametersNameDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param identificationParameters the identification parameters to display
@@ -39,6 +37,25 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(identificationParameters);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new IdentificationParametersNameDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param identificationParameters the identification parameters to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public IdentificationParametersNameDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(identificationParameters);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

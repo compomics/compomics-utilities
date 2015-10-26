@@ -1,8 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -29,7 +28,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new SequenceMatchingSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param sequenceMatchingPreferences the sequence matching preferences to display
@@ -43,6 +42,25 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(sequenceMatchingPreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new SequenceMatchingSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param sequenceMatchingPreferences the sequence matching preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public SequenceMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(sequenceMatchingPreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

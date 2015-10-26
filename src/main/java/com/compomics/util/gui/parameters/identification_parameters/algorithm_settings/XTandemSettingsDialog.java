@@ -11,6 +11,7 @@ import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -71,7 +72,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private boolean editable;
 
     /**
-     * Creates new form XtandemParametersDialog.
+     * Creates new form XtandemParametersDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
@@ -90,6 +91,30 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         setUpGUI();
         populateGUI(xtandemParameters);
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates new form XtandemParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param xtandemParameters the X!Tandem parameters
+     * @param modificationProfile the modification profile of the search
+     * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
+     * spectrometer
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy, boolean editable) {
+        super(owner, true);
+        this.xtandemParameters = xtandemParameters;
+        this.modificationProfile = new PtmSettings(modificationProfile);
+        this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(xtandemParameters);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

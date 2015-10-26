@@ -7,6 +7,7 @@ import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -27,20 +28,39 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
     private boolean editable;
 
     /**
-     * Creates a new TideSettingsDialog.
+     * Creates a new TideSettingsDialog with a frame as owner.
      *
-     * @param parent the parent frame
+     * @param parentFrame the parent frame
      * @param andromedaParameters the Andromeda parameters
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public AndromedaSettingsDialog(java.awt.Frame parent, AndromedaParameters andromedaParameters, boolean editable) {
-        super(parent, true);
+    public AndromedaSettingsDialog(java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
+        super(parentFrame, true);
         this.editable = editable;
         initComponents();
         setUpGUI();
         populateGUI(andromedaParameters);
         validateInput(false);
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new TideSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param andromedaParameters the Andromeda parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public AndromedaSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(andromedaParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

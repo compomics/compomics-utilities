@@ -1,19 +1,15 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.LastSelectedFolder;
-import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.ProteinInferencePreferences;
-import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 
 /**
  * Dialog for the edition of the protein inference settings
@@ -48,7 +44,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new ProteinInferenceSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param proteinInferencePreferences the protein inference settings to
@@ -69,6 +65,32 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(proteinInferencePreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new ProteinInferenceSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param proteinInferencePreferences the protein inference settings to
+     * display
+     * @param normalIcon the normal dialog icon
+     * @param waitingIcon the waiting dialog icon
+     * @param lastSelectedFolder the last selected folder to use
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public ProteinInferenceSettingsDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(proteinInferencePreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

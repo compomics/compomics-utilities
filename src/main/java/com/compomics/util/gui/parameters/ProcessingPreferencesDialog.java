@@ -2,6 +2,7 @@ package com.compomics.util.gui.parameters;
 
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.ProcessingPreferences;
+import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 
@@ -27,7 +28,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new ProcessingPreferencesDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param processingPreferences the processing preferences to display
@@ -40,6 +41,24 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(processingPreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new ProcessingPreferencesDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param processingPreferences the processing preferences to display
+     * @param editable boolean indicating whether the settings can be edited
+     */
+    public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        initComponents();
+        setUpGui();
+        populateGUI(processingPreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 

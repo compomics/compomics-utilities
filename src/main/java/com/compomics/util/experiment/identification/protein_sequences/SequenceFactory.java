@@ -433,13 +433,10 @@ public class SequenceFactory {
      * @return the corresponding header
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
-     * @throws IllegalArgumentException exception thrown whenever a protein is
-     * not found
      * @throws InterruptedException if an InterruptedException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      */
-    public Header getHeader(String accession) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    public Header getHeader(String accession) throws IOException, InterruptedException, ClassNotFoundException {
         return getHeader(accession, true);
     }
 
@@ -447,14 +444,14 @@ public class SequenceFactory {
      * Returns the desired header for the protein in the FASTA file.
      *
      * @param accession accession of the desired protein
+     * 
      * @return the corresponding header
+     * 
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
-     * @throws IllegalArgumentException exception thrown whenever a protein is
-     * not found
      * @throws InterruptedException if an InterruptedException occurs
      */
-    private Header getHeader(String accession, boolean reindex) throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException {
+    private Header getHeader(String accession, boolean reindex) throws IOException, InterruptedException, ClassNotFoundException {
 
         Header result = currentHeaderMap.get(accession);
 

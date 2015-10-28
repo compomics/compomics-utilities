@@ -55,14 +55,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private ConfigurationFile configurationFile;
     /**
-     * The possible neutral losses in a list.
-     */
-    private ArrayList<NeutralLoss> possibleNeutralLosses;
-    /**
-     * List of possible reporter ions.
-     */
-    private ArrayList<Integer> reporterIons;
-    /**
      * A parent handling the edition of QC filters.
      */
     private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
@@ -72,13 +64,26 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();
 
     /**
+     * Constructor. The validation qc preferences cannot be edited.
+     *
+     * @param parentFrame the parent frame
+     * @param configurationFile the configuration file containing the PTM usage
+     * preferences
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
+     * @param lastSelectedFolder the last selected folder
+     * @param editable boolean indicating whether the parameters can be edited
+     */
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+        this(parentFrame, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, null, editable);
+    }
+
+    /**
      * Constructor.
      *
      * @param parentFrame the parent frame
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
-     * @param possibleNeutralLosses the possible neutral losses
-     * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -86,7 +91,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.editable = editable;
@@ -96,8 +101,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
-        this.reporterIons = reporterIons;
-        this.possibleNeutralLosses = possibleNeutralLosses;
 
         initComponents();
         setUpGui();
@@ -593,7 +596,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addAdvanced() {
         IdentificationParameters identificationParameters = new IdentificationParameters();
-        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+        IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
         if (!identificationParametersEditionDialog.isCanceled()) {
             identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
             try {
@@ -652,7 +655,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, possibleNeutralLosses, reporterIons, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
             if (!identificationParametersEditionDialog.isCanceled()) {
                 identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
                 try {

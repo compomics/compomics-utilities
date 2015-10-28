@@ -161,7 +161,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         zBox.setSelected(false);
         precursorBox.setSelected(false);
         immoniumBox.setSelected(false);
-        reporterBox.setSelected(false);
+        reporterBox.setSelected(annotationSettings.getReporterIons());
 
         for (IonType ionType : annotationSettings.getIonTypes().keySet()) {
             if (ionType == IonType.IMMONIUM_ION) {

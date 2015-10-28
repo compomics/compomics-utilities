@@ -1,7 +1,13 @@
 package com.compomics.util.gui.parameters;
 
+import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.gui.gene_mapping.SpeciesDialog;
@@ -30,6 +36,8 @@ import com.compomics.util.preferences.ValidationQCPreferences;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * IdentificationParametersEditionDialog.
@@ -66,14 +74,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * The configuration file containing the modification use.
      */
     private ConfigurationFile configurationFile;
-    /**
-     * The possible neutral losses in a list.
-     */
-    private ArrayList<NeutralLoss> possibleNeutralLosses;
-    /**
-     * List of possible reporter ions.
-     */
-    private ArrayList<Integer> reporterIons;
     /**
      * The peak annotation settings.
      */
@@ -120,14 +120,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
 
     /**
-     * Creates a new IdentificationParametersEditionDialog with a frame as owner.
+     * Creates a new IdentificationParametersEditionDialog with a frame as
+     * owner.
      *
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
-     * @param possibleNeutralLosses the possible neutral losses
-     * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -135,7 +134,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -154,9 +153,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
-        this.reporterIons = reporterIons;
-        this.reporterIons = reporterIons;
-        this.possibleNeutralLosses = possibleNeutralLosses;
         this.editable = editable;
 
         initComponents();
@@ -167,15 +163,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Creates a new IdentificationParametersEditionDialog with a dialog as owner.
+     * Creates a new IdentificationParametersEditionDialog with a dialog as
+     * owner.
      *
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
-     * @param possibleNeutralLosses the possible neutral losses
-     * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -183,7 +178,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
         this.parentFrame = parentFrame;
@@ -202,9 +197,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
-        this.reporterIons = reporterIons;
-        this.reporterIons = reporterIons;
-        this.possibleNeutralLosses = possibleNeutralLosses;
         this.editable = editable;
 
         initComponents();
@@ -218,10 +210,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-        
+
         nameTxt.setEditable(editable);
         descriptionTxt.setEditable(editable);
-        
+
     }
 
     /**
@@ -261,6 +253,25 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         identificationParameters.setIdValidationPreferences(idValidationPreferences);
         identificationParameters.setFractionSettings(fractionSettings);
         return identificationParameters;
+    }
+
+    /**
+     * Updates the identification settings in case the selected ptms have been
+     * changed.
+     */
+    private void selectedPtmsChanged() {
+        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = annotationSettings.getIonTypes();
+        if (annotationSettings.getReporterIons()) {
+            HashSet<Integer> reporterIons = IonFactory.getReporterIons(ptmSettings);
+            ionTypes.put(ReporterIon.IonType.REPORTER_ION, reporterIons);
+        }
+        if (annotationSettings.isAutomaticAnnotation() || annotationSettings.areNeutralLossesSequenceAuto()) {
+            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+            for (NeutralLoss neutralLoss : neutralLosses) {
+                annotationSettings.addNeutralLoss(neutralLoss);
+            }
+        }
     }
 
     /**
@@ -518,7 +529,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(this, parentFrame, annotationSettings, possibleNeutralLosses, reporterIons, editable);
+        ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+        ArrayList<Integer> reporterIons = new ArrayList<Integer>(IonFactory.getReporterIons(searchParameters.getPtmSettings()));
+        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(this, parentFrame, annotationSettings, neutralLosses, reporterIons, editable);
         if (!annotationSettingsDialog.isCanceled()) {
             annotationSettings = annotationSettingsDialog.getAnnotationSettings();
         }
@@ -527,7 +540,12 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
         SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, editable);
         if (!searchSettingsDialog.isCanceled()) {
+            PtmSettings oldPtms = searchParameters.getPtmSettings();
             searchParameters = searchSettingsDialog.getSearchParameters();
+            PtmSettings newPtms = searchParameters.getPtmSettings();
+            if (!oldPtms.equals(newPtms)) {
+                selectedPtmsChanged();
+            }
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
@@ -582,7 +600,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
-        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable);
+        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
         }

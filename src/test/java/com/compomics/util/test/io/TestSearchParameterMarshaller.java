@@ -73,7 +73,6 @@ public class TestSearchParameterMarshaller {
         parameters.setMinChargeSearched(new Charge(1, 1));
         parameters.setPtmSettings(createMockUpPTMSettings());
         parameters.setFastaFile(new File("T:/HIS/IS/A/FAKE/FASTA.FASTA"));
-        parameters.setParametersFile(new File("T:/HIS/IS/JUST/TO/TEST/CAN/BE/COMMENTED/LATER.par"));
         return parameters;
     }
 

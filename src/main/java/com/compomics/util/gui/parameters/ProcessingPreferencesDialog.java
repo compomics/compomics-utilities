@@ -104,7 +104,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      *
      * @return the processing preferences as set by the user
      */
-    public ProcessingPreferences getProcessingPreferenes() {
+    public ProcessingPreferences getProcessingPreferences() {
         ProcessingPreferences processingPreferences = new ProcessingPreferences();
         processingPreferences.setProcessingType((ProcessingPreferences.ProcessingType) processingTypeCmb.getSelectedItem());
         processingPreferences.setnThreads((Integer) nThreadsSpinner.getValue());

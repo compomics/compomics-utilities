@@ -110,7 +110,6 @@ public class IdentificationParametersFactory {
             throw new IllegalArgumentException("Parameters name not set or empty.");
         }
         File parametersFile = new File(getParametersFolder(), identificationParameters.getName() + parametersExtension);
-        identificationParameters.getSearchParameters().setParametersFile(parametersFile);
         IdentificationParameters.saveIdentificationParameters(identificationParameters, parametersFile);
         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
     }

@@ -10,6 +10,7 @@ import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -79,7 +80,49 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     }
 
     /**
-     * Constructor.
+     * Constructor with a dialog as owner.
+     *
+     * @param parentFrame the parent frame
+     * @param owner the owner
+     * @param configurationFile the configuration file containing the PTM usage
+     * preferences
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
+     * @param lastSelectedFolder the last selected folder
+     * @param validationQCPreferencesDialogParent a parent handling the edition
+     * of QC filters
+     * @param editable boolean indicating whether the parameters can be edited
+     */
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+        super(owner, true);
+
+        this.editable = editable;
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.configurationFile = configurationFile;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+
+        initComponents();
+        setUpGui();
+        populateGUI();
+        if (identificationParametersFactory.getParametersList().isEmpty()) {
+            addFromSearchSettings();
+            if (parametersTable.getRowCount() > 0) {
+                parametersTable.setRowSelectionInterval(0, 0);
+            } else {
+                canceled = true;
+            }
+            dispose();
+        } else {
+            setLocationRelativeTo(owner);
+            setVisible(true);
+        }
+    }
+
+    /**
+     * Constructor with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param configurationFile the configuration file containing the PTM usage
@@ -533,7 +576,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addFromSearchSettings() {
         SearchParameters defaultParameters = new SearchParameters();
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, null, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
             IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
@@ -586,7 +629,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                     SearchSettingsDialog settingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
                             normalIcon,
                             waitingIcon,
-                            false, true, configurationFile, lastSelectedFolder, true);
+                            false, true, configurationFile, lastSelectedFolder, fileName, true);
                     boolean valid = settingsDialog.validateParametersInput(false);
 
                     if (!valid) {
@@ -596,6 +639,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
                     if (!settingsDialog.isCanceled()) {
                         IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+                        identificationParameters.setName(fileName);
                         IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
                         if (!identificationParametersNameDialog.isCanceled()) {
                             identificationParametersNameDialog.updateParameters(identificationParameters);
@@ -659,7 +703,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
 
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, parametersName, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters newSearchParameters = searchSettingsDialog.getSearchParameters();
             if (!searchParameters.equals(newSearchParameters)) {

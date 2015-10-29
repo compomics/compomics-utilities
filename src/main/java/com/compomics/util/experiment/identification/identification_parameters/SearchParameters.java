@@ -83,6 +83,8 @@ public class SearchParameters implements Serializable {
     private File fastaFile;
     /**
      * The corresponding file.
+     * 
+     * @deprecated the file is now handled outside the parameters.
      */
     private File parametersFile;
     /**
@@ -277,24 +279,6 @@ public class SearchParameters implements Serializable {
      */
     public void setEnzyme(Enzyme enzyme) {
         this.enzyme = enzyme;
-    }
-
-    /**
-     * Returns the parameters file loaded.
-     *
-     * @return the parameters file loaded
-     */
-    public File getParametersFile() {
-        return parametersFile;
-    }
-
-    /**
-     * Sets the parameter file loaded.
-     *
-     * @param parametersFile the parameter file loaded
-     */
-    public void setParametersFile(File parametersFile) {
-        this.parametersFile = parametersFile;
     }
 
     /**
@@ -644,10 +628,6 @@ public class SearchParameters implements Serializable {
         // add the advanced settings if not set
         searchParameters.setDefaultAdvancedSettings(searchParameters);
 
-        // check the file location
-        searchParameters.setParametersFile(searchParametersFile);
-        SearchParameters.saveIdentificationParameters(searchParameters, searchParametersFile);
-
         return searchParameters;
     }
 
@@ -662,9 +642,6 @@ public class SearchParameters implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-
-        // check the file location
-        identificationParameters.setParametersFile(searchParametersFile);
 
         SerializationUtils.writeObject(identificationParameters, searchParametersFile);
     }
@@ -996,14 +973,6 @@ public class SearchParameters implements Serializable {
         }
         if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() == null)
                 || (this.getEnzyme() == null && otherSearchParameters.getEnzyme() != null)) {
-            return false;
-        }
-        if (this.getParametersFile() != null && otherSearchParameters.getParametersFile() != null
-                && !this.getParametersFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getParametersFile().getAbsolutePath())) {
-            return false;
-        }
-        if ((this.getParametersFile() != null && otherSearchParameters.getParametersFile() == null)
-                || (this.getParametersFile() == null && otherSearchParameters.getParametersFile() != null)) {
             return false;
         }
         if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {

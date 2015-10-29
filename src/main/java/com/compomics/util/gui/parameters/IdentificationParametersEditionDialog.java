@@ -3,8 +3,6 @@ package com.compomics.util.gui.parameters;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
@@ -569,7 +567,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, editable);
+        String name = nameTxt.getText();
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, name, editable);
         if (!searchSettingsDialog.isCanceled()) {
             PtmSettings oldPtms = searchParameters.getPtmSettings();
             searchParameters = searchSettingsDialog.getSearchParameters();

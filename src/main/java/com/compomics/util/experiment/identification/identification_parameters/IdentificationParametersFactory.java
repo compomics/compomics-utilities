@@ -26,7 +26,7 @@ public class IdentificationParametersFactory {
     /**
      * The identification parameters.
      */
-    private static String PARAMETERS_FOLDER = "identification_parameters";
+    public static final String PARAMETERS_FOLDER = "identification_parameters";
     /**
      * The extension for a parameters file.
      */
@@ -140,6 +140,24 @@ public class IdentificationParametersFactory {
      */
     private File getParametersFolder() {
         return new File(PARENT_FOLDER, PARAMETERS_FOLDER);
+    }
+
+    /**
+     * Returns the parent folder.
+     * 
+     * @return the parent folder
+     */
+    public static String getParentFolder() {
+        return PARENT_FOLDER;
+    }
+
+    /**
+     * Set the parent folder.
+     * 
+     * @param PARENT_FOLDER the parent folder
+     */
+    public static void setParentFolder(String PARENT_FOLDER) {
+        IdentificationParametersFactory.PARENT_FOLDER = PARENT_FOLDER;
     }
 
     /**

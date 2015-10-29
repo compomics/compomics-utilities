@@ -31,13 +31,13 @@ public class IdentificationParameters implements Serializable {
      */
     private String description;
     /**
-     * The peak annotation preferences.
-     */
-    private AnnotationSettings annotationSettings;
-    /**
      * The parameters used for the spectrum matching.
      */
     private SearchParameters searchParameters;
+    /**
+     * The peak annotation preferences.
+     */
+    private AnnotationSettings annotationSettings;
     /**
      * The peptide to protein matching preferences.
      */
@@ -53,11 +53,11 @@ public class IdentificationParameters implements Serializable {
     /**
      * The PSM filter.
      */
-    private PeptideAssumptionFilter peptideAssumptionFilter = new PeptideAssumptionFilter();
+    private PeptideAssumptionFilter peptideAssumptionFilter;
     /**
      * The PTM localization scoring preferences.
      */
-    private PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
+    private PTMScoringPreferences ptmScoringPreferences;
     /**
      * The protein inference preferences.
      */
@@ -65,11 +65,58 @@ public class IdentificationParameters implements Serializable {
     /**
      * The identification validation preferences.
      */
-    private IdMatchValidationPreferences idValidationPreferences = new IdMatchValidationPreferences();
+    private IdMatchValidationPreferences idValidationPreferences;
     /**
      * The fraction settings.
      */
-    private FractionSettings fractionSettings = new FractionSettings();
+    private FractionSettings fractionSettings;
+    
+    /**
+     * Creates empty identification parameters.
+     */
+    public IdentificationParameters() {
+    }
+    
+    /**
+     * Creates default identification parameters from the given search parameters.
+     * 
+     * @param searchParameters the search parameters
+     */
+    public IdentificationParameters(SearchParameters searchParameters) {
+        this.searchParameters = searchParameters;
+        setParametersFromSearch(searchParameters);
+    }
+    
+    /**
+     * Constructor.
+     * 
+     * @param name the name of the parameters
+     * @param description the description
+     * @param searchParameters the search parameters
+     * @param annotationSettings the annotation preferences
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param genePreferences the gene preferences
+     * @param psmScoringPreferences the PSM scoring preferences
+     * @param peptideAssumptionFilter the peptide assumption filters
+     * @param ptmScoringPreferences the PTM localization scoring preferences
+     * @param proteinInferencePreferences the protein inference preferences
+     * @param idValidationPreferences the matches validation preferences
+     * @param fractionSettings the fraction settings
+     */
+    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings, SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences, PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences, IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
+        this.name = name;
+        this.description = description;
+        this.searchParameters = searchParameters;
+        this.annotationSettings = annotationSettings;
+        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
+        this.genePreferences = genePreferences;
+        this.psmScoringPreferences = psmScoringPreferences;
+        this.peptideAssumptionFilter = peptideAssumptionFilter;
+        this.ptmScoringPreferences = ptmScoringPreferences;
+        this.proteinInferencePreferences = proteinInferencePreferences;
+        this.idValidationPreferences = idValidationPreferences;
+        this.fractionSettings = fractionSettings;
+    }
 
     /**
      * Returns the parameters used for the spectrum matching.
@@ -290,15 +337,6 @@ public class IdentificationParameters implements Serializable {
     }
 
     /**
-     * Creates blank parameters.
-     *
-     * @return default identification parameters
-     */
-    public static IdentificationParameters getDefaultIdentificationParameters() {
-        return getDefaultIdentificationParameters(null);
-    }
-
-    /**
      * Loads the identification parameters from a file.
      *
      * @param identificationParametersFile the file
@@ -366,20 +404,6 @@ public class IdentificationParameters implements Serializable {
     }
 
     /**
-     * Returns default identification parameters based on given search
-     * parameters.
-     *
-     * @param searchParameters the parameters used for the search
-     *
-     * @return default identification parameters
-     */
-    public static IdentificationParameters getDefaultIdentificationParameters(SearchParameters searchParameters) {
-        IdentificationParameters identificationParameters = new IdentificationParameters();
-        identificationParameters.setParametersFromSearch(searchParameters);
-        return identificationParameters;
-    }
-
-    /**
      * Sets identification parameters based on given search parameters.
      *
      * @param searchParameters the parameters used for the search
@@ -419,5 +443,6 @@ public class IdentificationParameters implements Serializable {
         if (idValidationPreferences == null) {
             idValidationPreferences = new IdMatchValidationPreferences();
         }
+        description = searchParameters.getShortDescription();
     }
 }

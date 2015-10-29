@@ -2,6 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.preferences.IdentificationParameters;
 import java.awt.Dialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -102,6 +103,26 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
         identificationParameters.setName(nameTxt.getText());
         identificationParameters.setDescription(descriptionTxt.getText());
         
+    }
+
+    /**
+     * Validates the user input.
+     *
+     * @return a boolean indicating whether the user input is valid
+     */
+    public boolean validateInput() {
+        
+        String name = nameTxt.getText();
+        for (char character : name.toCharArray()) {
+            String charAsString = character + "";
+            if (charAsString.matches("[^\\dA-Za-z ]")) {
+                JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
+                            "Special Character", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+        }
+        
+        return true;
     }
     
 

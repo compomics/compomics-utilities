@@ -698,6 +698,86 @@ public class SearchParameters implements Serializable {
     }
 
     /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+
+        SearchParameters defaultParameters = new SearchParameters();
+
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+        if (fastaFile != null) {
+            output.append(fastaFile.getName()).append(newLine);
+        }
+
+        if (enzyme != null) {
+            String name = enzyme.getName();
+            if (!name.equals("Trypsin")) {
+                output.append(name).append(newLine);
+            }
+        }
+
+        if (ptmSettings != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getFixedModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append(", ").append(ptm);
+                }
+            }
+            output.append(newLine);
+        }
+
+        if (ptmSettings != null) {
+            ArrayList<String> fixedPtms = ptmSettings.getVariableModifications();
+            boolean first = true;
+            for (String ptm : fixedPtms) {
+                if (first) {
+                    output.append(ptm);
+                    first = false;
+                } else {
+                    output.append(", ").append(ptm);
+                }
+            }
+            output.append(newLine);
+        }
+
+        if (!nMissedCleavages.equals(defaultParameters.getnMissedCleavages())) {
+            output.append("Missed Cleavages: ").append(nMissedCleavages).append(newLine);
+        }
+
+        if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())
+                || !getPrecursorAccuracyType().equals(defaultParameters.getPrecursorAccuracyType())) {
+            output.append("Precursor tolerance: ").append(precursorTolerance).append(newLine);
+        }
+
+        if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())) {
+            output.append("Fragment tolerance: ").append(fragmentIonMZTolerance).append(newLine);
+        }
+
+        if (!forwardIon.equals(defaultParameters.getIonSearched1())
+                || !rewindIon.equals(defaultParameters.getIonSearched2())) {
+            String ion1 = PeptideFragmentIon.getSubTypeAsString(forwardIon);
+            String ion2 = PeptideFragmentIon.getSubTypeAsString(rewindIon);
+            output.append(ion1).append(" and ").append(ion2).append(" ions").append(newLine);
+        }
+
+        if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
+                || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
+            output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(newLine);
+        }
+
+        return output.toString();
+
+    }
+
+    /**
      * Returns the search parameters as a string.
      *
      * @param html use HTML formatting
@@ -705,10 +785,11 @@ public class SearchParameters implements Serializable {
      */
     public String toString(boolean html) {
 
-        String newLine = System.getProperty("line.separator");
-
+        String newLine;
         if (html) {
             newLine = "<br>";
+        } else {
+            newLine = System.getProperty("line.separator");
         }
 
         StringBuilder output = new StringBuilder();

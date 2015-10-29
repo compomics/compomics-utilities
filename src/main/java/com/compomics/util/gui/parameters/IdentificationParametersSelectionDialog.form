@@ -31,7 +31,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="addFile">
               <Properties>
-                <Property name="text" type="java.lang.String" value="From Files"/>
+                <Property name="text" type="java.lang.String" value="Import from File"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
               <Events>
@@ -81,7 +81,7 @@
         </Menu>
         <MenuItem class="javax.swing.JMenuItem" name="renameMenuItem">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Rename"/>
+            <Property name="text" type="java.lang.String" value="Properties"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Events>

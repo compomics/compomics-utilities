@@ -105,7 +105,11 @@ public class IdentificationParametersFactory {
      * occurred while saving the file
      */
     public void addIdentificationParameters(IdentificationParameters identificationParameters) throws IOException, FileNotFoundException, ClassNotFoundException {
-        File parametersFile = new File(getParametersFolder(), identificationParameters.getName() + "." + parametersExtension);
+        String parametersName = identificationParameters.getName();
+        if (parametersName == null || parametersName.length() == 0) {
+            throw new IllegalArgumentException("Parameters name not set or empty.");
+        }
+        File parametersFile = new File(getParametersFolder(), identificationParameters.getName() + parametersExtension);
         identificationParameters.getSearchParameters().setParametersFile(parametersFile);
         IdentificationParameters.saveIdentificationParameters(identificationParameters, parametersFile);
         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);

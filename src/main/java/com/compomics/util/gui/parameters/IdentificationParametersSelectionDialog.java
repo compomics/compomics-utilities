@@ -107,7 +107,11 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         populateGUI();
         if (identificationParametersFactory.getParametersList().isEmpty()) {
             addFromSearchSettings();
-            parametersTable.setRowSelectionInterval(0, 0);
+            if (parametersTable.getRowCount() > 0) {
+                parametersTable.setRowSelectionInterval(0, 0);
+            } else {
+                canceled = true;
+            }
             dispose();
         } else {
             setLocationRelativeTo(parentFrame);
@@ -120,6 +124,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void setUpGui() {
 
+        parametersTable.getColumn(" ").setMaxWidth(30);
+        parametersTable.getColumn("Name").setMaxWidth(100);
+        
     }
 
     /**
@@ -203,7 +210,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         });
         addMenu.add(addSearchSettingsMenuItem);
 
-        addFile.setText("From Files");
+        addFile.setText("Import from File");
         addFile.setToolTipText("");
         addFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -250,7 +257,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
         parametersPopupMenu.add(editMenu);
 
-        renameMenuItem.setText("Rename");
+        renameMenuItem.setText("Properties");
         renameMenuItem.setToolTipText("");
         renameMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -428,6 +435,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     }//GEN-LAST:event_addFileActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        if (getSelectedParametersName() == null) {
+            canceled = true;
+        }
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -461,24 +471,40 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Handles the clicking of the table area.
+     * Handles the clicking of the table.
      *
      * @param evt the click event
      * @param invoker the component in whose space the popup menu is to appear
      */
     private void parametersTableClicked(java.awt.event.MouseEvent evt, Component invoker) {
+        int selectedRow = -1;
         if (evt != null && parametersTable.rowAtPoint(evt.getPoint()) != -1) {
-            int row = parametersTable.rowAtPoint(evt.getPoint());
-            parametersTable.setRowSelectionInterval(row, row);
+            selectedRow = parametersTable.rowAtPoint(evt.getPoint());
+        }
+        if (selectedRow != -1) {
+            parametersTable.setRowSelectionInterval(selectedRow, selectedRow);
+        } else {
+            parametersTable.removeRowSelectionInterval(0, parametersTable.getRowCount() - 1);
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editMenu.setVisible(parametersTable.getSelectedRow() != -1);
-            removeMenuItem.setVisible(parametersTable.getSelectedRow() != -1);
-            saveAsMenuItem.setVisible(parametersTable.getSelectedRow() != -1);
+            // Disable edition menus if no row is selected
+            editMenu.setVisible(selectedRow != -1);
+            renameMenuItem.setVisible(selectedRow != -1);
+            removeMenuItem.setVisible(selectedRow != -1);
+            saveAsMenuItem.setVisible(selectedRow != -1);
+            // Disable not implemented protocol menu items
+            addProtocolMenuItem.setVisible(false);
+            editProtocolMenuItem.setVisible(false);
+            // Show popup menu
             parametersPopupMenu.show(invoker, evt.getX(), evt.getY());
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-            editAdvanced(getSelectedParametersName());
+        if (selectedRow != -1 && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+            int selectedColumn = parametersTable.columnAtPoint(evt.getPoint());
+            if (selectedColumn == 2) {
+                rename(getSelectedParametersName());
+            } else {
+                editAdvanced(getSelectedParametersName());
+            }
         }
     }
 
@@ -490,7 +516,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private String getSelectedParametersName() {
         int row = parametersTable.getSelectedRow();
         if (row < 0 || row >= parametersTable.getRowCount()) {
-            return "";
+            return null;
         }
         return parametersTable.getValueAt(row, 1).toString();
     }
@@ -510,7 +536,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
-            IdentificationParameters identificationParameters = IdentificationParameters.getDefaultIdentificationParameters(searchParameters);
+            IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
             IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
             if (!identificationParametersNameDialog.isCanceled()) {
                 identificationParametersNameDialog.updateParameters(identificationParameters);
@@ -569,13 +595,17 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                     }
 
                     if (!settingsDialog.isCanceled()) {
-                        IdentificationParameters identificationParameters = IdentificationParameters.getDefaultIdentificationParameters(searchParameters);
-                        try {
-                            identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                            updateTable();
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                                    "Save Error", JOptionPane.ERROR_MESSAGE);
+                        IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+                        IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
+                        if (!identificationParametersNameDialog.isCanceled()) {
+                            identificationParametersNameDialog.updateParameters(identificationParameters);
+                            try {
+                                identificationParametersFactory.addIdentificationParameters(identificationParameters);
+                                updateTable();
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
+                                        "Save Error", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                     }
 
@@ -595,7 +625,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * Lets the user add parameters from scratch.
      */
     private void addAdvanced() {
-        IdentificationParameters identificationParameters = new IdentificationParameters();
+        SearchParameters searchParameters = new SearchParameters();
+        IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
         IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
         if (!identificationParametersEditionDialog.isCanceled()) {
             identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
@@ -624,7 +655,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editSearchSettings(String parametersName) {
-        
+
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
 

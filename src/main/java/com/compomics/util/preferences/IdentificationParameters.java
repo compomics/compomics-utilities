@@ -1,6 +1,5 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.biology.NeutralLoss;
@@ -30,6 +29,10 @@ public class IdentificationParameters implements Serializable {
      * The description of the parameters.
      */
     private String description;
+    /**
+     * Indicates whether the description is automatically generated.
+     */
+    private Boolean defaultDescription = true;
     /**
      * The parameters used for the spectrum matching.
      */
@@ -70,26 +73,27 @@ public class IdentificationParameters implements Serializable {
      * The fraction settings.
      */
     private FractionSettings fractionSettings;
-    
+
     /**
      * Creates empty identification parameters.
      */
     public IdentificationParameters() {
     }
-    
+
     /**
-     * Creates default identification parameters from the given search parameters.
-     * 
+     * Creates default identification parameters from the given search
+     * parameters.
+     *
      * @param searchParameters the search parameters
      */
     public IdentificationParameters(SearchParameters searchParameters) {
         this.searchParameters = searchParameters;
         setParametersFromSearch(searchParameters);
     }
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param name the name of the parameters
      * @param description the description
      * @param searchParameters the search parameters
@@ -134,6 +138,9 @@ public class IdentificationParameters implements Serializable {
      */
     public void setSearchParameters(SearchParameters searchParameters) {
         this.searchParameters = searchParameters;
+        if (defaultDescription || description == null || description.length() == 0) {
+            setDescription(searchParameters.getShortDescription(), true);
+        }
     }
 
     /**
@@ -317,7 +324,7 @@ public class IdentificationParameters implements Serializable {
 
     /**
      * Returns the fraction settings.
-     * 
+     *
      * @return the fraction settings
      */
     public FractionSettings getFractionSettings() {
@@ -329,7 +336,7 @@ public class IdentificationParameters implements Serializable {
 
     /**
      * Sets the fraction settings.
-     * 
+     *
      * @param fractionSettings the fraction settings
      */
     public void setFractionSettings(FractionSettings fractionSettings) {
@@ -340,7 +347,7 @@ public class IdentificationParameters implements Serializable {
      * Loads the identification parameters from a file.
      *
      * @param identificationParametersFile the file
-     * 
+     *
      * @return the parameters
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
@@ -348,7 +355,7 @@ public class IdentificationParameters implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        
+
         IdentificationParameters identificationParameters = (IdentificationParameters) SerializationUtils.readObject(identificationParametersFile);
         return identificationParameters;
     }
@@ -369,7 +376,7 @@ public class IdentificationParameters implements Serializable {
 
     /**
      * Returns the name of the parameters.
-     * 
+     *
      * @return the name of the parameters
      */
     public String getName() {
@@ -378,7 +385,7 @@ public class IdentificationParameters implements Serializable {
 
     /**
      * Sets the name of the parameters.
-     * 
+     *
      * @param name the name of the parameters
      */
     public void setName(String name) {
@@ -387,7 +394,7 @@ public class IdentificationParameters implements Serializable {
 
     /**
      * Returns the description of the parameters.
-     * 
+     *
      * @return the description of the parameters
      */
     public String getDescription() {
@@ -395,12 +402,28 @@ public class IdentificationParameters implements Serializable {
     }
 
     /**
-     * Sets the description of the parameters.
-     * 
-     * @param description the description of the parameters
+     * Indicates whether the description is automatically generated.
+     *
+     * @return a boolean indicating whether the description is automatically
+     * generated
      */
-    public void setDescription(String description) {
+    public Boolean getDefaultDescription() {
+        if (defaultDescription == null) {
+            return false;
+        }
+        return defaultDescription;
+    }
+
+    /**
+     * Sets the description of the parameters.
+     *
+     * @param description the description of the parameters
+     * @param automaticallyGenerated boolean indicating whether the description
+     * is automatically generated
+     */
+    public void setDescription(String description, boolean automaticallyGenerated) {
         this.description = description;
+        this.defaultDescription = automaticallyGenerated;
     }
 
     /**
@@ -428,7 +451,7 @@ public class IdentificationParameters implements Serializable {
         if (ptmScoringPreferences == null) {
             ptmScoringPreferences = new PTMScoringPreferences();
         }
-        if (searchParameters != null) {
+        if (sequenceMatchingPreferences == null) {
             sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching();
         }
         if (genePreferences == null) {
@@ -436,13 +459,16 @@ public class IdentificationParameters implements Serializable {
         }
         if (proteinInferencePreferences == null) {
             proteinInferencePreferences = new ProteinInferencePreferences();
-        }
-        if (searchParameters != null) {
-            proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
+            if (searchParameters.getFastaFile() != null) {
+                proteinInferencePreferences.setProteinSequenceDatabase(searchParameters.getFastaFile());
+            }
         }
         if (idValidationPreferences == null) {
             idValidationPreferences = new IdMatchValidationPreferences();
         }
-        description = searchParameters.getShortDescription();
+        if (fractionSettings == null) {
+            fractionSettings = new FractionSettings();
+        }
+        setDescription(searchParameters.getShortDescription(), true);
     }
 }

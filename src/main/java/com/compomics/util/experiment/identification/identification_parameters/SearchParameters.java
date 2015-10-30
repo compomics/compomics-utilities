@@ -83,7 +83,7 @@ public class SearchParameters implements Serializable {
     private File fastaFile;
     /**
      * The corresponding file.
-     * 
+     *
      * @deprecated the file is now handled outside the parameters.
      */
     private File parametersFile;
@@ -644,6 +644,7 @@ public class SearchParameters implements Serializable {
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
 
         SerializationUtils.writeObject(identificationParameters, searchParametersFile);
+        
     }
 
     /**
@@ -698,31 +699,35 @@ public class SearchParameters implements Serializable {
         }
 
         if (ptmSettings != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getFixedModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append(", ").append(ptm);
+            ArrayList<String> ptms = ptmSettings.getFixedModifications();
+            if (!ptms.isEmpty()) {
+                boolean first = true;
+                for (String ptm : ptms) {
+                    if (first) {
+                        output.append(ptm);
+                        first = false;
+                    } else {
+                        output.append(", ").append(ptm);
+                    }
                 }
+                output.append(newLine);
             }
-            output.append(newLine);
         }
 
         if (ptmSettings != null) {
-            ArrayList<String> fixedPtms = ptmSettings.getVariableModifications();
-            boolean first = true;
-            for (String ptm : fixedPtms) {
-                if (first) {
-                    output.append(ptm);
-                    first = false;
-                } else {
-                    output.append(", ").append(ptm);
+            ArrayList<String> ptms = ptmSettings.getVariableModifications();
+            if (!ptms.isEmpty()) {
+                boolean first = true;
+                for (String ptm : ptms) {
+                    if (first) {
+                        output.append(ptm);
+                        first = false;
+                    } else {
+                        output.append(", ").append(ptm);
+                    }
                 }
+                output.append(newLine);
             }
-            output.append(newLine);
         }
 
         if (!nMissedCleavages.equals(defaultParameters.getnMissedCleavages())) {
@@ -735,7 +740,7 @@ public class SearchParameters implements Serializable {
         }
 
         if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())) {
-            output.append("Fragment tolerance: ").append(fragmentIonMZTolerance).append(newLine);
+            output.append("Fragment tolerance: ").append(fragmentIonMZTolerance).append(" Da").append(newLine);
         }
 
         if (!forwardIon.equals(defaultParameters.getIonSearched1())

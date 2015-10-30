@@ -1,6 +1,6 @@
 package com.compomics.util.gui.parameters;
 
-import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.gui.parameters.identification_parameters.IdentificationParametersNameDialog;
@@ -65,25 +65,11 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();
 
     /**
-     * Constructor. The validation qc preferences cannot be edited.
-     *
-     * @param parentFrame the parent frame
-     * @param configurationFile the configuration file containing the PTM usage
-     * preferences
-     * @param normalIcon the normal icon
-     * @param waitingIcon the waiting icon
-     * @param lastSelectedFolder the last selected folder
-     * @param editable boolean indicating whether the parameters can be edited
-     */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
-        this(parentFrame, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, null, editable);
-    }
-
-    /**
      * Constructor with a dialog as owner.
      *
      * @param parentFrame the parent frame
      * @param owner the owner
+     * @param identificationParameters the identification parameters selected
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
      * @param normalIcon the normal icon
@@ -93,7 +79,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
         this.editable = editable;
@@ -107,14 +93,26 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         initComponents();
         setUpGui();
         populateGUI();
-        if (identificationParametersFactory.getParametersList().isEmpty()) {
+        if (identificationParameters != null) {
+            editSearchSettings(identificationParameters);
+            String identificationParametersName = identificationParameters.getName();
+            if (identificationParametersName == null || identificationParametersName.length() == 0) {
+                canceled = true;
+            } else {
+                int row = getRow(identificationParametersName);
+                if (row == -1) {
+                    canceled = true;
+                } else {
+                    parametersTable.setRowSelectionInterval(row, row);
+                }
+            }
+        } else if (identificationParametersFactory.getParametersList().isEmpty()) {
             addFromSearchSettings();
             if (parametersTable.getRowCount() > 0) {
                 parametersTable.setRowSelectionInterval(0, 0);
             } else {
                 canceled = true;
             }
-            dispose();
         } else {
             setLocationRelativeTo(owner);
             setVisible(true);
@@ -125,6 +123,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * Constructor with a frame as owner.
      *
      * @param parentFrame the parent frame
+     * @param identificationParameters the identification parameters selected
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
      * @param normalIcon the normal icon
@@ -134,7 +133,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.editable = editable;
@@ -148,17 +147,77 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         initComponents();
         setUpGui();
         populateGUI();
-        if (identificationParametersFactory.getParametersList().isEmpty()) {
+        if (identificationParameters != null) {
+            editSearchSettings(identificationParameters);
+            String identificationParametersName = identificationParameters.getName();
+            if (identificationParametersName == null || identificationParametersName.length() == 0) {
+                canceled = true;
+            } else {
+                int row = getRow(identificationParametersName);
+                if (row == -1) {
+                    canceled = true;
+                } else {
+                    parametersTable.setRowSelectionInterval(row, row);
+                }
+            }
+        } else if (identificationParametersFactory.getParametersList().isEmpty()) {
             addFromSearchSettings();
             if (parametersTable.getRowCount() > 0) {
                 parametersTable.setRowSelectionInterval(0, 0);
             } else {
                 canceled = true;
             }
-            dispose();
         } else {
             setLocationRelativeTo(parentFrame);
             setVisible(true);
+        }
+    }
+
+    /**
+     * Constructor with a frame as owner allowing the edition and saving from a
+     * search parameters dialog. The given search settings dialog will be
+     * displayed and its settings saved in the factory.
+     *
+     * @param parentFrame the parent frame
+     * @param configurationFile the configuration file containing the PTM usage
+     * preferences
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
+     * @param lastSelectedFolder the last selected folder
+     * @param validationQCPreferencesDialogParent a parent handling the edition
+     * of QC filters
+     * @param searchSettingsDialog a dialog containing the settings to edit and
+     * save
+     */
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, SearchSettingsDialog searchSettingsDialog) {
+        super(parentFrame, true);
+
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.configurationFile = configurationFile;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+
+        initComponents();
+        setUpGui();
+        populateGUI();
+
+        searchSettingsDialog.setVisible(true);
+        if (!searchSettingsDialog.isCanceled()) {
+            SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
+            IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+            IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, true);
+            if (!identificationParametersNameDialog.isCanceled()) {
+                identificationParametersNameDialog.updateParameters(identificationParameters);
+                try {
+                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
+                    updateTable();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
+                            "Save Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 
@@ -169,7 +228,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
         parametersTable.getColumn(" ").setMaxWidth(30);
         parametersTable.getColumn("Name").setMaxWidth(100);
-        
+
     }
 
     /**
@@ -552,6 +611,25 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     }
 
     /**
+     * Returns the row number corresponding to the given parameters name in the
+     * parameters table. -1 if not found.
+     *
+     * @param parameterName the name of the parameters of interest
+     *
+     * @return the row number corresponding to the given parameters name in the
+     * parameters table
+     */
+    private int getRow(String parameterName) {
+        for (int row = 0; row < parametersTable.getRowCount(); row++) {
+            String name = parametersTable.getValueAt(row, 1).toString();
+            if (name.equals(parameterName)) {
+                return row;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Returns the name of the parameters selected in the parameters table.
      *
      * @return the name of the parameters selected in the parameters table
@@ -580,18 +658,51 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
             IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
-            IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
-            if (!identificationParametersNameDialog.isCanceled()) {
-                identificationParametersNameDialog.updateParameters(identificationParameters);
-                try {
-                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                    updateTable();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                            "Save Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            checkNameAndUpdate(identificationParameters);
         }
+    }
+
+    /**
+     * Lets the user check the name and saves the parameters.
+     *
+     * @param identificationParameters the identification parameters
+     */
+    private void checkNameAndUpdate(IdentificationParameters identificationParameters) {
+        String oldName = identificationParameters.getName();
+        IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
+        if (!identificationParametersNameDialog.isCanceled()) {
+            identificationParametersNameDialog.updateParameters(identificationParameters);
+            updateParametersInFactory(identificationParameters, oldName);
+        }
+    }
+
+    /**
+     * Saves the parameters.
+     *
+     * @param identificationParameters the identification parameters
+     */
+    private void updateParametersInFactory(IdentificationParameters identificationParameters) {
+        updateParametersInFactory(identificationParameters, null);
+    }
+
+    /**
+     * Saves the parameters.
+     *
+     * @param identificationParameters the identification parameters
+     * @param oldName the previous name of the identification parameters
+     */
+    private void updateParametersInFactory(IdentificationParameters identificationParameters, String oldName) {
+        try {
+            if (oldName != null && oldName.length() > 0 && !oldName.equals(identificationParameters.getName())) {
+                identificationParametersFactory.removeIdentificationParameters(oldName);
+            }
+            identificationParametersFactory.addIdentificationParameters(identificationParameters);
+            updateTable();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
+                    "Save Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     /**
@@ -639,18 +750,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
                     if (!settingsDialog.isCanceled()) {
                         IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
-                        identificationParameters.setName(fileName);
-                        IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(parentFrame, identificationParameters, editable);
-                        if (!identificationParametersNameDialog.isCanceled()) {
-                            identificationParametersNameDialog.updateParameters(identificationParameters);
-                            try {
-                                identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                                updateTable();
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                                        "Save Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
+                        identificationParameters.setName(Util.removeExtension(fileName));
+                        checkNameAndUpdate(identificationParameters);
                     }
 
                 } catch (Exception e) {
@@ -674,13 +775,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
         if (!identificationParametersEditionDialog.isCanceled()) {
             identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
-            try {
-                identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                updateTable();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                        "Save Error", JOptionPane.ERROR_MESSAGE);
-            }
+            updateParametersInFactory(identificationParameters);
         }
     }
 
@@ -701,20 +796,26 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private void editSearchSettings(String parametersName) {
 
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
-        SearchParameters searchParameters = identificationParameters.getSearchParameters();
+        editSearchSettings(identificationParameters);
 
+    }
+
+    /**
+     * Lets the user edit the search settings in the given identification
+     * parameters.
+     *
+     * @param identificationParameters the identification parameters to edit
+     */
+    private void editSearchSettings(IdentificationParameters identificationParameters) {
+
+        String parametersName = identificationParameters.getName();
+        SearchParameters searchParameters = identificationParameters.getSearchParameters();
         SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, parametersName, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters newSearchParameters = searchSettingsDialog.getSearchParameters();
             if (!searchParameters.equals(newSearchParameters)) {
                 identificationParameters.setSearchParameters(newSearchParameters);
-                try {
-                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                    updateTable();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                            "Save Error", JOptionPane.ERROR_MESSAGE);
-                }
+                checkNameAndUpdate(identificationParameters);
             }
         }
     }
@@ -730,16 +831,11 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
+            String oldName = identificationParameters.getName();
             IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
             if (!identificationParametersEditionDialog.isCanceled()) {
                 identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
-                try {
-                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                    updateTable();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                            "Save Error", JOptionPane.ERROR_MESSAGE);
-                }
+                updateParametersInFactory(identificationParameters, oldName);
             }
         }
     }
@@ -755,19 +851,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            IdentificationParametersNameDialog identificationParametersNameDialog = new IdentificationParametersNameDialog(this, parentFrame, identificationParameters, editable);
-            if (!identificationParametersNameDialog.isCanceled()) {
-                String previousName = identificationParameters.getName();
-                identificationParametersNameDialog.updateParameters(identificationParameters);
-                try {
-                    identificationParametersFactory.removeIdentificationParameters(previousName);
-                    identificationParametersFactory.addIdentificationParameters(identificationParameters);
-                    updateTable();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
-                            "Save Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            checkNameAndUpdate(identificationParameters);
         }
     }
 

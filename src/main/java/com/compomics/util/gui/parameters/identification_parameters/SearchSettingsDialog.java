@@ -2043,7 +2043,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      *
      * @return a SearchParameters instance based on the user input in the GUI
      */
-    private SearchParameters getCurrentSearchParameters() {
+    public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
 
@@ -2422,15 +2422,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     public boolean isCanceled() {
         return canceled;
-    }
-
-    /**
-     * Returns the search parameters object.
-     *
-     * @return the search parameters object
-     */
-    public SearchParameters getSearchParameters() {
-        return searchParameters;
     }
 
     /**

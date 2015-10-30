@@ -7,8 +7,13 @@ package com.compomics.util.pride.prideobjects.webservice.query;
  */
 public enum PrideFilterType {
     speciesFilter,
+    ptmsFilter,
     tissueFilter,
-    instrumentFilter,
     diseaseFilter,
-    submissionTypeFilter,
+    titleFilter,
+    instrumentFilter,
+    experimentTypeFilter,
+    quantificationFilter,
+    projectTagFilter,
+    submissionTypeFilter;
 }

@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * This class groups the user preferences for the initial PeptideShaker
  * processing.
+ * 
+ * @deprecated replaced by utilities processing preferences and fraction preferences
  *
  * @author Marc Vaudel
  */

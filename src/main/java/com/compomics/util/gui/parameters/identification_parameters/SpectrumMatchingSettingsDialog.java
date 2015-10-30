@@ -87,14 +87,16 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      * Creates a new SpectrumMatchingSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
+     * @param settingsName the name of the settings
      * @param searchParameters previous search parameters
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public SpectrumMatchingSettingsDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+    public SpectrumMatchingSettingsDialog(java.awt.Frame parentFrame, String settingsName, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
             ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
 
@@ -109,7 +111,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
 
         initComponents();
         setUpGui();
-        populateGUI(searchParameters);
+        populateGUI(settingsName, searchParameters);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
@@ -119,14 +121,16 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      *
      * @param owner the dialog owner
      * @param parentFrame the parent frame
+     * @param settingsName the name of the settings
      * @param searchParameters previous search parameters
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public SpectrumMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+    public SpectrumMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, String settingsName, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
             ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(owner, true);
 
@@ -141,7 +145,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
 
         initComponents();
         setUpGui();
-        populateGUI(searchParameters);
+        populateGUI(settingsName, searchParameters);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
@@ -150,11 +154,11 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-        
+
         if (!editable) {
             editButton.setText("View");
         }
-        
+
     }
 
     /**
@@ -162,8 +166,12 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      *
      * @param searchParameters the spectrum matching settings to display
      */
-    private void populateGUI(SearchParameters searchParameters) {
-        settingsTxt.setText(searchParameters.getParametersFile().getAbsolutePath());
+    private void populateGUI(String settingsName, SearchParameters searchParameters) {
+        if (settingsName != null && settingsName.length() > 0) {
+            settingsTxt.setText(settingsName);
+        } else {
+            settingsTxt.setText("Default");
+        }
         algorithmSettingsTable.setModel(new AlgorithmSettingsTableModel());
     }
 

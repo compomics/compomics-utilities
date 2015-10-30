@@ -903,7 +903,6 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
         tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
         tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());

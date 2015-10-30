@@ -104,7 +104,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      *
      * @return the processing preferences as set by the user
      */
-    public ProcessingPreferences getProcessingPreferenes() {
+    public ProcessingPreferences getProcessingPreferences() {
         ProcessingPreferences processingPreferences = new ProcessingPreferences();
         processingPreferences.setProcessingType((ProcessingPreferences.ProcessingType) processingTypeCmb.getSelectedItem());
         processingPreferences.setnThreads((Integer) nThreadsSpinner.getValue());
@@ -191,8 +191,18 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         );
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -237,6 +247,15 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        canceled = true;
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_okButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

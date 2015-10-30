@@ -83,12 +83,24 @@ public class IdentificationParametersFactory {
     }
 
     /**
+     * Returns the identification parameters corresponding to the given name.
+     * Null if not found.
+     *
+     * @param name the name of the parameters to return
+     *
+     * @return the identification parameters corresponding to the given name
+     */
+    public static File getIdentificationParametersFile(String name) {
+        return new File(getParametersFolder(), name + parametersExtension);
+    }
+
+    /**
      * Deletes the identification parameters of the given name.
      *
      * @param name the name of the parameters to delete
      */
     public void removeIdentificationParameters(String name) {
-        File parametersFile = new File(getParametersFolder(), name + parametersExtension);
+        File parametersFile = getIdentificationParametersFile(name);
         parametersFile.delete();
     }
 
@@ -109,8 +121,7 @@ public class IdentificationParametersFactory {
         if (parametersName == null || parametersName.length() == 0) {
             throw new IllegalArgumentException("Parameters name not set or empty.");
         }
-        File parametersFile = new File(getParametersFolder(), identificationParameters.getName() + parametersExtension);
-        identificationParameters.getSearchParameters().setParametersFile(parametersFile);
+        File parametersFile = getIdentificationParametersFile(parametersName);
         IdentificationParameters.saveIdentificationParameters(identificationParameters, parametersFile);
         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
     }
@@ -138,13 +149,13 @@ public class IdentificationParametersFactory {
      *
      * @return the parameters folder
      */
-    private File getParametersFolder() {
+    private static File getParametersFolder() {
         return new File(PARENT_FOLDER, PARAMETERS_FOLDER);
     }
 
     /**
      * Returns the parent folder.
-     * 
+     *
      * @return the parent folder
      */
     public static String getParentFolder() {
@@ -153,7 +164,7 @@ public class IdentificationParametersFactory {
 
     /**
      * Set the parent folder.
-     * 
+     *
      * @param PARENT_FOLDER the parent folder
      */
     public static void setParentFolder(String PARENT_FOLDER) {

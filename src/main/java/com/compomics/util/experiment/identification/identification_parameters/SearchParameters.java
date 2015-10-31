@@ -18,6 +18,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.preferences.MarshallableParameter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +31,16 @@ import no.uib.jsparklines.data.XYDataPoint;
  *
  * @author Marc Vaudel
  */
-public class SearchParameters implements Serializable {
+public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2773993307168773763L;
+    /**
+     * Name of the type of marshalled parameter.
+     */
+    private String marshallableParameterType = Type.search_parameters.name();
 
     /**
      * Possible mass accuracy types.
@@ -644,7 +649,7 @@ public class SearchParameters implements Serializable {
     public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
 
         SerializationUtils.writeObject(identificationParameters, searchParametersFile);
-        
+
     }
 
     /**
@@ -1008,5 +1013,13 @@ public class SearchParameters implements Serializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public Type getType() {
+        if (marshallableParameterType == null) {
+            return null;
+        }
+        return Type.valueOf(marshallableParameterType);
     }
 }

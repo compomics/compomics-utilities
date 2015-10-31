@@ -15,12 +15,16 @@ import java.io.Serializable;
  *
  * @author Marc Vaudel
  */
-public class IdentificationParameters implements Serializable {
+public class IdentificationParameters implements Serializable, MarshallableParameter {
 
     /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -5516259326385167746L;
+    /**
+     * Name of the type of marshalled parameter.
+     */
+    private String marshallableParameterType = Type.identification_parameters.name();
     /**
      * The name of the parameters.
      */
@@ -470,5 +474,13 @@ public class IdentificationParameters implements Serializable {
             fractionSettings = new FractionSettings();
         }
         setDescription(searchParameters.getShortDescription(), true);
+    }
+
+    @Override
+    public Type getType() {
+        if (marshallableParameterType == null) {
+            return null;
+        }
+        return Type.valueOf(marshallableParameterType);
     }
 }

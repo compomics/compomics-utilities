@@ -45,8 +45,6 @@ public class TestSearchParameterMarshaller {
      */
     @Test
     public void testMarshallSearchParametersToJson() throws Exception {
-        
-//        System.out.println("Testing JSON Marshalling...");
         Class objectType = SearchParameters.class;
         SearchParameters parameters = createMockUpParameters();
         IdentificationParametersMarshaller instance = new IdentificationParametersMarshaller();

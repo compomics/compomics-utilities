@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
 
 /**
  * This class converts non specific objects to the JSON format and vice versa.
@@ -113,6 +115,60 @@ public class JsonMarshaller {
     }
 
     /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the class the object belongs to
+     * @param jsonURL a JSON URL
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Class objectType, URL jsonURL) throws IOException {
+        return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
+    }
+
+    
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonString the string representation of the JSON object
+     * @return an instance of the objectType containing the JSON information
+     */
+    public Object fromJson(Type objectType, String jsonString) {
+        return gson.fromJson(jsonString, objectType);
+    }
+
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonFile a JSON file
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Type objectType, File jsonFile) throws IOException {
+        String jsonString = getJsonStringFromFile(jsonFile);
+        return gson.fromJson(jsonString, objectType);
+    }
+
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonURL a JSON URL
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Type objectType, URL jsonURL) throws IOException {
+        return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
+    }
+    
+    
+    
+    /**
      * Convert JSON string from file.
      *
      * @param jsonFile the input JSON file
@@ -135,4 +191,5 @@ public class JsonMarshaller {
         }
         return stringBuilder.toString();
     }
+
 }

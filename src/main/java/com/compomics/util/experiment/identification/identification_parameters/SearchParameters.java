@@ -40,7 +40,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * Name of the type of marshalled parameter.
      */
-    private String marshallableParameterType = Type.search_parameters.name();
+    private String marshallableParameterType = null;
 
     /**
      * Possible mass accuracy types.
@@ -1013,6 +1013,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             }
         }
         return true;
+    }
+    
+    @Override
+    public void setType() {
+        marshallableParameterType = Type.search_parameters.name();
     }
 
     @Override

@@ -15,7 +15,12 @@ public interface MarshallableParameter {
     }
     
     /**
-     * Returns the type of marshalled parameter from an unmarshalled object. The type must be written in the file. Null if not a MarshallableParameter.
+     * Sets the parameters type. The type must be set before writing a file but not in the constructor.
+     */
+    public void setType();
+    
+    /**
+     * Returns the type of marshalled parameter from an unmarshalled object. The type must be written in the file but not set in the constructor. Null if not a MarshallableParameter.
      * 
      * @return the type of marshalled parameter from an unmarshalled object
      */

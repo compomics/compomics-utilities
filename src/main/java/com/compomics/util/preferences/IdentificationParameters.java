@@ -24,7 +24,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     /**
      * Name of the type of marshalled parameter.
      */
-    private String marshallableParameterType = Type.identification_parameters.name();
+    private String marshallableParameterType = null;
     /**
      * The name of the parameters.
      */
@@ -474,6 +474,11 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             fractionSettings = new FractionSettings();
         }
         setDescription(searchParameters.getShortDescription(), true);
+    }
+
+    @Override
+    public void setType() {
+        marshallableParameterType = Type.identification_parameters.name();
     }
 
     @Override

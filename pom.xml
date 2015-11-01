@@ -478,6 +478,12 @@
         </dependency>
         
         <dependency>
+            <groupId>uk.ac.ebi.pride.archive</groupId>
+            <artifactId>web-service-model</artifactId>
+            <version>0.2.12</version>
+        </dependency> 
+        
+        <dependency>
             <groupId>umontreal.iro.lecuyer.gof</groupId>
             <artifactId>ssj</artifactId>
             <version>2.5.0</version>

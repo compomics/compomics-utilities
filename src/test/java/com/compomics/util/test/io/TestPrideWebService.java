@@ -1,14 +1,6 @@
 package com.compomics.util.test.io;
 
 import com.compomics.util.pride.PrideWebService;
-import com.compomics.util.pride.prideobjects.webservice.assay.AssayDetail;
-import com.compomics.util.pride.prideobjects.webservice.assay.AssayDetailList;
-import com.compomics.util.pride.prideobjects.webservice.file.FileDetail;
-import com.compomics.util.pride.prideobjects.webservice.file.FileDetailList;
-import com.compomics.util.pride.prideobjects.webservice.peptide.PsmDetailList;
-import com.compomics.util.pride.prideobjects.webservice.project.ProjectDetail;
-import com.compomics.util.pride.prideobjects.webservice.project.projectsummary.ProjectSummaryList;
-import com.compomics.util.pride.prideobjects.webservice.protein.ProteinDetailList;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilter;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilterType;
 import java.io.IOException;
@@ -19,6 +11,14 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import uk.ac.ebi.pride.archive.web.service.model.assay.AssayDetail;
+import uk.ac.ebi.pride.archive.web.service.model.assay.AssayDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.file.FileDetail;
+import uk.ac.ebi.pride.archive.web.service.model.file.FileDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.peptide.PsmDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectDetail;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
+import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 
 /**
  * Test for the pride web service java object

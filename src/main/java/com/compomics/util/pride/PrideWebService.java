@@ -2,16 +2,17 @@ package com.compomics.util.pride;
 
 import com.compomics.util.io.json.marshallers.PrideMarshaller;
 import com.compomics.util.pride.prideobjects.webservice.PrideQuery;
-import com.compomics.util.pride.prideobjects.webservice.assay.AssayDetail;
-import com.compomics.util.pride.prideobjects.webservice.assay.AssayDetailList;
-import com.compomics.util.pride.prideobjects.webservice.file.FileDetailList;
-import com.compomics.util.pride.prideobjects.webservice.peptide.PsmDetailList;
-import com.compomics.util.pride.prideobjects.webservice.project.ProjectDetail;
-import com.compomics.util.pride.prideobjects.webservice.project.projectsummary.ProjectSummaryList;
-import com.compomics.util.pride.prideobjects.webservice.protein.ProteinDetailList;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilter;
+
 import java.io.IOException;
 import java.net.URL;
+import uk.ac.ebi.pride.archive.web.service.model.assay.AssayDetail;
+import uk.ac.ebi.pride.archive.web.service.model.assay.AssayDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.file.FileDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.peptide.PsmDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectDetail;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
+import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 
 /**
  * A java representation of the PRIDE web service

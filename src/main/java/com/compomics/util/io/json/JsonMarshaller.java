@@ -31,15 +31,23 @@ public class JsonMarshaller {
      * GsonBuilder that can be used to append interfaces so the parser knows how
      * to handle them.
      */
-    private final GsonBuilder builder;
+    protected final GsonBuilder builder;
 
     /**
      * Default constructor.
      */
     public JsonMarshaller() {
         this.builder = new GsonBuilder();
-        builder.registerTypeAdapter(File.class, new FileAdapter());
+        init();
         gson = builder.create();
+    }
+
+    /**
+     * Initializes the marshaller with (custom) type adapters and date format
+     *
+     */
+    protected void init() {
+       builder.registerTypeAdapter(File.class, new FileAdapter());
     }
 
     /**
@@ -74,7 +82,7 @@ public class JsonMarshaller {
      *
      * @param anObject the input object
      * @param jsonFile the target file to which the JSON will be saved.
-     * 
+     *
      * @throws IOException if the object cannot be successfully saved into a
      * JSON file
      */
@@ -92,7 +100,7 @@ public class JsonMarshaller {
      *
      * @param objectType the class the object belongs to
      * @param jsonString the string representation of the JSON object
-     * 
+     *
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Class objectType, String jsonString) {
@@ -105,7 +113,7 @@ public class JsonMarshaller {
      * @param objectType the class the object belongs to
      * @param jsonFile a JSON file
      * @return an instance of the objectType containing the JSON information
-     * 
+     *
      * @throws IOException if the object cannot be successfully read from a JSON
      * file
      */
@@ -127,7 +135,6 @@ public class JsonMarshaller {
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
 
-    
     /**
      * Convert from JSON to object.
      *
@@ -165,15 +172,13 @@ public class JsonMarshaller {
     public Object fromJson(Type objectType, URL jsonURL) throws IOException {
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
-    
-    
-    
+
     /**
      * Convert JSON string from file.
      *
      * @param jsonFile the input JSON file
      * @return the string representation of the JSON content
-     * 
+     *
      * @throws FileNotFoundException if the JSON file can not be reached
      * @throws IOException if the object cannot be successfully read from a JSON
      * file

@@ -1,15 +1,15 @@
 package com.compomics.util.io.json.marshallers;
 
 import com.compomics.util.io.json.JsonMarshaller;
-import com.compomics.util.pride.prideobjects.webservice.assay.AssayDetailList;
-import com.compomics.util.pride.prideobjects.webservice.file.FileDetailList;
-import com.compomics.util.pride.prideobjects.webservice.peptide.PsmDetailList;
-import com.compomics.util.pride.prideobjects.webservice.project.ProjectDetail;
-import com.compomics.util.pride.prideobjects.webservice.project.projectsummary.ProjectSummaryList;
-import com.compomics.util.pride.prideobjects.webservice.protein.ProteinDetailList;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import uk.ac.ebi.pride.archive.web.service.model.assay.AssayDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.file.FileDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.peptide.PsmDetailList;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectDetail;
+import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
+import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 
 /**
  * A json marshaller for use with the PRIDE webservice
@@ -23,6 +23,12 @@ public class PrideMarshaller extends JsonMarshaller {
      */
     public PrideMarshaller() {
         super();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        builder.setDateFormat("YYYY-MM-DD");
     }
 
     /**
@@ -84,6 +90,7 @@ public class PrideMarshaller extends JsonMarshaller {
     public ProteinDetailList getProteinDetailList(String jsonURL) throws IOException {
         return (ProteinDetailList) gson.fromJson(new InputStreamReader(new URL(jsonURL).openStream()), ProteinDetailList.class);
     }
+
     /**
      * Convert from JSON to a list of ProteinDetails
      *

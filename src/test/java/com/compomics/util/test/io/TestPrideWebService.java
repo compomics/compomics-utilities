@@ -1,5 +1,6 @@
 package com.compomics.util.test.io;
 
+import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.pride.PrideWebService;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilter;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilterType;

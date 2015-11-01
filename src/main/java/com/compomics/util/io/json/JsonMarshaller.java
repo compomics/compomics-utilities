@@ -39,7 +39,7 @@ public class JsonMarshaller {
     public JsonMarshaller() {
         this.builder = new GsonBuilder();
         init();
-        gson = builder.create();
+        gson = builder.setPrettyPrinting().create();
     }
 
     /**
@@ -47,7 +47,7 @@ public class JsonMarshaller {
      *
      */
     protected void init() {
-       builder.registerTypeAdapter(File.class, new FileAdapter());
+        builder.registerTypeAdapter(File.class, new FileAdapter());
     }
 
     /**
@@ -73,7 +73,6 @@ public class JsonMarshaller {
      * @return the JSON representation of an object
      */
     public String toJson(Object anObject) {
-//        return gson.toJson(anObject).replace("}", "}" + System.lineSeparator()); // @TODO: is the line separator portable between platforms?
         return gson.toJson(anObject);
     }
 

@@ -241,6 +241,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     public IdentificationParameters getIdentificationParameters() {
         IdentificationParameters identificationParameters = new IdentificationParameters();
+        identificationParameters.setName(nameTxt.getText());
+        String description = descriptionTxt.getText();
+        boolean defaultDesciption = description.equals(searchParameters.getShortDescription());
+        identificationParameters.setDescription(description, defaultDesciption);
         identificationParameters.setAnnotationSettings(annotationSettings);
         identificationParameters.setSearchParameters(searchParameters);
         identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
@@ -279,17 +283,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @return a boolean indicating whether the user input is valid
      */
     public boolean validateInput() {
-        
+
         String name = nameTxt.getText();
         for (char character : name.toCharArray()) {
             String charAsString = character + "";
             if (charAsString.matches("[^\\dA-Za-z ]")) {
                 JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
-                            "Special Character", JOptionPane.INFORMATION_MESSAGE);
+                        "Special Character", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
         }
-        
+
         return true;
     }
 

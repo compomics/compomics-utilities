@@ -739,7 +739,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (ptmSettings != null) {
             ArrayList<String> ptms = ptmSettings.getFixedModifications();
             if (!ptms.isEmpty()) {
-                output.append("Fixed:");
+                output.append("Fixed: ");
                 boolean first = true;
                 for (String ptm : ptms) {
                     if (first) {
@@ -756,7 +756,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (ptmSettings != null) {
             ArrayList<String> ptms = ptmSettings.getVariableModifications();
             if (!ptms.isEmpty()) {
-                output.append("Variable:");
+                output.append("Variable: ");
                 boolean first = true;
                 for (String ptm : ptms) {
                     if (first) {

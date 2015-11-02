@@ -68,11 +68,31 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();
 
     /**
+     * The default edition mode to use at startup when opening a new dialog.
+     */
+    public enum StartupMode {
+
+        /**
+         * edits the search parameters.
+         */
+        searchParameters,
+        /**
+         * Displays the advanced edition dialog.
+         */
+        advanced,
+        /**
+         * Displays the main dialog.
+         */
+        none;
+    }
+
+    /**
      * Constructor with a dialog as owner.
      *
      * @param parentFrame the parent frame
      * @param owner the owner
      * @param identificationParameters the identification parameters selected
+     * @param startupMode the edition mode to use at startup
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
      * @param normalIcon the normal icon
@@ -82,7 +102,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters, StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
         this.editable = editable;
@@ -97,7 +117,16 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         setUpGui();
         populateGUI();
         if (identificationParameters != null) {
-            editSearchSettings(identificationParameters);
+            if (startupMode == StartupMode.searchParameters) {
+                editSearchSettings(identificationParameters);
+            } else if (startupMode == StartupMode.advanced) {
+                editAdvanced(identificationParameters);
+            } else if (startupMode == StartupMode.none) {
+                setLocationRelativeTo(owner);
+                setVisible(true);
+            } else {
+                throw new UnsupportedOperationException("Start-up mode " + startupMode + " not implemented.");
+            }
             String identificationParametersName = identificationParameters.getName();
             if (identificationParametersName == null || identificationParametersName.length() == 0) {
                 canceled = true;
@@ -127,6 +156,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      *
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters selected
+     * @param startupMode the edition mode to use at startup
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
      * @param normalIcon the normal icon
@@ -136,7 +166,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.editable = editable;
@@ -151,7 +181,16 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         setUpGui();
         populateGUI();
         if (identificationParameters != null) {
-            editSearchSettings(identificationParameters);
+            if (startupMode == StartupMode.searchParameters) {
+                editSearchSettings(identificationParameters);
+            } else if (startupMode == StartupMode.advanced) {
+                editAdvanced(identificationParameters);
+            } else if (startupMode == StartupMode.none) {
+                setLocationRelativeTo(parentFrame);
+                setVisible(true);
+            } else {
+                throw new UnsupportedOperationException("Start-up mode " + startupMode + " not implemented.");
+            }
             String identificationParametersName = identificationParameters.getName();
             if (identificationParametersName == null || identificationParametersName.length() == 0) {
                 canceled = true;
@@ -702,6 +741,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             identificationParametersFactory.addIdentificationParameters(identificationParameters);
             updateTable();
         } catch (Exception e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "An error occurred while saving the parameters. Please make sure that the tool can write in the user folder or change the Resource Settings.",
                     "Save Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -862,7 +902,19 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editAdvanced(String parametersName) {
+
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
+        editAdvanced(identificationParameters);
+
+    }
+
+    /**
+     * Lets the user edit parameters.
+     *
+     * @param parametersName the name of the parameters to edit.
+     */
+    private void editAdvanced(IdentificationParameters identificationParameters) {
+
         if (identificationParameters == null) {
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);

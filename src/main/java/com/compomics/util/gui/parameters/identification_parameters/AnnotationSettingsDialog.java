@@ -52,7 +52,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
@@ -75,7 +76,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(owner, true);
@@ -110,7 +112,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                 null,
                 "Selected", null));
-        
+
         aBox.setEnabled(editable);
         bBox.setEnabled(editable);
         cBox.setEnabled(editable);
@@ -123,30 +125,27 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         intensitySpinner.setEnabled(editable);
         accuracySpinner.setEnabled(editable);
         highResolutionBox.setEnabled(editable);
-        
+
     }
 
     /**
      * Populates the gui using the given annotation settings.
-     * 
+     *
      * @param annotationSettings the annotation settings to display
      * @param possibleNeutralLosses the possible neutral losses
      */
     private void populateGui(AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
 
+        neutralLossesMap = new HashMap<NeutralLoss, Boolean>(possibleNeutralLosses.size());
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
-
         for (NeutralLoss possibleNeutralLoss : possibleNeutralLosses) {
-
             boolean found = false;
-
             for (NeutralLoss selectedNeutralLoss : selectedNeutralLosses) {
                 if (possibleNeutralLoss.isSameAs(selectedNeutralLoss)) {
                     found = true;
                     break;
                 }
             }
-
             neutralLossesMap.put(possibleNeutralLoss, found);
         }
 
@@ -655,7 +654,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
          * Name to neutral loss map.
          */
         private HashMap<String, NeutralLoss> namesMap = new HashMap<String, NeutralLoss>();
-        
+
         /**
          * List of the names of the neutral losses to display.
          */
@@ -665,11 +664,13 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
          * Constructor.
          */
         public NeutralLossesTableModel() {
-            for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
-                namesMap.put(neutralLoss.name, neutralLoss);
+            if (neutralLossesMap != null) {
+                for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
+                    namesMap.put(neutralLoss.name, neutralLoss);
+                }
+                namesList = new ArrayList<String>(namesMap.keySet());
+                Collections.sort(namesList);
             }
-            namesList = new ArrayList<String>(namesMap.keySet());
-            Collections.sort(namesList);
         }
 
         @Override

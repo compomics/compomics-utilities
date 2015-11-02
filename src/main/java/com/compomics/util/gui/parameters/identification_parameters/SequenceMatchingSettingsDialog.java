@@ -181,10 +181,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(matchingMethodLbl)
                     .addComponent(xLbl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(xTxt)
-                    .addComponent(matchingCmb, 0, 190, Short.MAX_VALUE))
+                    .addComponent(matchingCmb, 0, 250, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sequenceMatchingPanelLayout.setVerticalGroup(

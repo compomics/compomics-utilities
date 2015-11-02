@@ -29,9 +29,9 @@ public class IonFactory {
     private static IonFactory instance = null;
     /**
      * Neutral losses which will be looked for for every peptide independently
-     * from the modifications found.
+     * of the modifications found.
      */
-    private static ArrayList<NeutralLoss> defaultNeutralLosses = new ArrayList<NeutralLoss>();
+    private static ArrayList<NeutralLoss> defaultNeutralLosses = null;
 
     /**
      * Constructor.
@@ -52,38 +52,26 @@ public class IonFactory {
     }
 
     /**
-     * Adds a default neutral loss to the default neutral losses if the
-     * corresponding loss was not here already.
-     *
-     * @param newNeutralLoss the new neutral loss
-     */
-    public void addDefaultNeutralLoss(NeutralLoss newNeutralLoss) {
-        boolean found = false;
-        for (NeutralLoss neutralLoss : defaultNeutralLosses) {
-            if (newNeutralLoss.isSameAs(neutralLoss)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            defaultNeutralLosses.add(newNeutralLoss);
-        }
-    }
-
-    /**
      * Returns the default neutral losses.
      *
      * @return the default neutral losses
      */
     public static ArrayList<NeutralLoss> getDefaultNeutralLosses() {
+        if (defaultNeutralLosses == null) {
+            defaultNeutralLosses = new ArrayList<NeutralLoss>(2);
+            defaultNeutralLosses.add(NeutralLoss.H2O);
+            defaultNeutralLosses.add(NeutralLoss.NH3);
+        }
         return defaultNeutralLosses;
     }
 
     /**
-     * Returns a list containing the default neutral losses and the losses found in the given modifications. Note: modifications must be loaded in the PTM factory.
+     * Returns a list containing the default neutral losses and the losses found
+     * in the given modifications. Note: modifications must be loaded in the PTM
+     * factory.
      *
      * @param ptmSettings the ptm settings
-     * 
+     *
      * @return the neutral losses expected in the dataset
      */
     public static ArrayList<NeutralLoss> getNeutralLosses(PtmSettings ptmSettings) {
@@ -107,25 +95,25 @@ public class IonFactory {
         }
         return neutralLosses;
     }
-    
+
     /**
      * Returns the reporter ions to annotate with the given ptm settings.
-     * 
+     *
      * @param ptmSettings the ptms to annotate
-     * 
+     *
      * @return a hashset of the subtype indexes of the reporter ions to annotate
      */
     public static HashSet<Integer> getReporterIons(PtmSettings ptmSettings) {
-        
-            HashSet<Integer> reporterIons = new HashSet<Integer>();
-            PTMFactory ptmFactory = PTMFactory.getInstance();
-            for (String modification : ptmSettings.getAllModifications()) {
-                PTM currentPtm = ptmFactory.getPTM(modification);
-                for (ReporterIon reporterIon : currentPtm.getReporterIons()) {
-                    reporterIons.add(reporterIon.getSubType());
-                }
+
+        HashSet<Integer> reporterIons = new HashSet<Integer>();
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        for (String modification : ptmSettings.getAllModifications()) {
+            PTM currentPtm = ptmFactory.getPTM(modification);
+            for (ReporterIon reporterIon : currentPtm.getReporterIons()) {
+                reporterIons.add(reporterIon.getSubType());
             }
-            return reporterIons;
+        }
+        return reporterIons;
     }
 
     /**
@@ -166,7 +154,7 @@ public class IonFactory {
         ArrayList<String> processedPtms = null;
         ArrayList<NeutralLoss> possibleNeutralLosses = null;
         if (specificAnnotationSettings == null || !specificAnnotationSettings.getNeutralLossesMap().isEmpty()) {
-            possibleNeutralLosses = new ArrayList<NeutralLoss>(defaultNeutralLosses);
+            possibleNeutralLosses = new ArrayList<NeutralLoss>(getDefaultNeutralLosses());
         }
 
         if (peptide.isModified()) {
@@ -456,7 +444,7 @@ public class IonFactory {
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag) {
 
         HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> result = new HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>();
-        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>(defaultNeutralLosses);
+        ArrayList<NeutralLoss> possibleNeutralLosses = new ArrayList<NeutralLoss>(getDefaultNeutralLosses());
         ArrayList<String> processedPtms = null;
 
         // We will account for up to two neutral losses per ion maximum

@@ -28,6 +28,20 @@ public class SequenceMatchingPreferences implements Serializable {
          * Matches amino acids of indistinguishable masses (I/L).
          */
         indistiguishableAminoAcids;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case string:
+                    return "Characters Sequence";
+                case aminoAcid:
+                    return "Amino Acids";
+                case indistiguishableAminoAcids:
+                    return "Indistinguishable Amino Acids";
+                default:
+                    throw new UnsupportedOperationException("Not implemented for matching type " + this.name() + ".");
+            }
+        }
     }
 
     /**

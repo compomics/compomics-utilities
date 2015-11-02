@@ -2431,7 +2431,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @param newSearchParameters the current search parameters
      * @param searchParametersFile the file where to save the parameters
      * @param lastSelectedFolder the last selected folder
-     * 
+     *
      * @return the file where the new settings were saved, null if not saved
      */
     public static File saveSearchParameters(JDialog parentDialog, SearchParameters newSearchParameters, File searchParametersFile,
@@ -2452,7 +2452,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     userSelectFile = true;
                 } else if (value == JOptionPane.CANCEL_OPTION || value == JOptionPane.CLOSED_OPTION) {
                     return null;
-}
+                }
 
             } else {
                 // no params file > have the user select a file
@@ -2516,11 +2516,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 try {
                     SearchParameters.saveIdentificationParameters(newSearchParameters, searchParametersFile);
                     return searchParametersFile;
-                } catch (ClassNotFoundException e) {
-                    JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
-                            + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                    e.printStackTrace();
-                    return null;
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
                             + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);

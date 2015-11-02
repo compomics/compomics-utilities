@@ -1,10 +1,12 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -348,19 +350,60 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
-     * Loads the identification parameters from a file.
+     * Loads the identification parameters from a file. If the given file is a
+     * search parameters file, default identification parameters are inferred.
      *
      * @param identificationParametersFile the file
      *
      * @return the parameters
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws IOException, ClassNotFoundException {
 
-        IdentificationParameters identificationParameters = (IdentificationParameters) SerializationUtils.readObject(identificationParametersFile);
+        Object savedObject;
+
+        try {
+            // Try as json file
+            IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+            Class expectedObjectType = DummyParameters.class;
+            Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+            DummyParameters dummyParameters = (DummyParameters) object;
+            if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
+                expectedObjectType = SearchParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+            } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+                expectedObjectType = IdentificationParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
+            } else {
+                throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
+            }
+
+        } catch (Exception e1) {
+
+            try {
+                // Try serialized java object
+                savedObject = SerializationUtils.readObject(identificationParametersFile);
+
+            } catch (Exception e2) {
+                e1.printStackTrace();
+                e2.printStackTrace();
+                throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
+            }
+        }
+
+        IdentificationParameters identificationParameters;
+        if (savedObject instanceof SearchParameters) {
+            SearchParameters searchParameters = (SearchParameters) savedObject;
+            identificationParameters = new IdentificationParameters(searchParameters);
+            identificationParameters.setName(Util.removeExtension(identificationParametersFile.getName()));
+        } else if (savedObject instanceof IdentificationParameters) {
+            identificationParameters = (IdentificationParameters) savedObject;
+        } else {
+            throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
+        }
+
         return identificationParameters;
     }
 
@@ -368,14 +411,16 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * Saves the identification parameters to a file.
      *
      * @param identificationParameters the identification parameters
-     * @param searchParametersFile the file
+     * @param identificationParametersFile the file
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SerializationUtils.writeObject(identificationParameters, searchParametersFile);
+    public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File identificationParametersFile) throws IOException {
+
+        IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+        identificationParameters.setType();
+        jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
+
     }
 
     /**

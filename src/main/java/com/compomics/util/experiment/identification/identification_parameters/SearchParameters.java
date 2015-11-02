@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
@@ -18,6 +17,9 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
+import com.compomics.util.preferences.DummyParameters;
+import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.MarshallableParameter;
 import java.io.*;
 import java.util.ArrayList;
@@ -612,26 +614,59 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Loads the identification parameters from a serialized file.
+     * Loads the identification parameters from a file. If the file is an
+     * identification parameters file, the search parameters are extracted.
      *
      * @param searchParametersFile the search parameter file
      *
      * @return the search parameters
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static SearchParameters getIdentificationParameters(File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SearchParameters searchParameters = (SearchParameters) SerializationUtils.readObject(searchParametersFile);
+    public static SearchParameters getIdentificationParameters(File searchParametersFile) throws IOException, ClassNotFoundException {
 
-        // compatibility check
-        if (searchParameters.getEnzyme().getName().equals("no enzyme")) {
-            searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
+        Object savedObject;
+
+        try {
+
+            // Try as json file
+            IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+            Class expectedObjectType = MarshallableParameter.class;
+            Object object = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            DummyParameters dummyParameters = (DummyParameters) object;
+            if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
+                expectedObjectType = SearchParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+                expectedObjectType = IdentificationParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            } else {
+                throw new IllegalArgumentException("Parameters file " + searchParametersFile + " not recognized.");
+            }
+
+        } catch (Exception e1) {
+
+            try {
+                // Try serialized java object
+                savedObject = SerializationUtils.readObject(searchParametersFile);
+
+            } catch (Exception e2) {
+                e1.printStackTrace();
+                e2.printStackTrace();
+                throw new IllegalArgumentException("Parameters file " + searchParametersFile + " not recognized.");
+            }
         }
 
-        // add the advanced settings if not set
-        searchParameters.setDefaultAdvancedSettings(searchParameters);
+        SearchParameters searchParameters;
+        if (savedObject instanceof SearchParameters) {
+            searchParameters = (SearchParameters) savedObject;
+        } else if (savedObject instanceof IdentificationParameters) {
+            IdentificationParameters identificationParameters = (IdentificationParameters) savedObject;
+            searchParameters = identificationParameters.getSearchParameters();
+        } else {
+            throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
+        }
 
         return searchParameters;
     }
@@ -639,16 +674,16 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * Saves the identification parameters to a serialized file.
      *
-     * @param identificationParameters the identification parameters
+     * @param searchParameters the identification parameters
      * @param searchParametersFile the file
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void saveIdentificationParameters(SearchParameters searchParameters, File searchParametersFile) throws IOException {
 
-        SerializationUtils.writeObject(identificationParameters, searchParametersFile);
+        IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+        searchParameters.setType();
+        jsonMarshaller.saveObjectToJson(searchParameters, searchParametersFile);
 
     }
 
@@ -657,11 +692,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      *
      * @param file the file
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public void saveIdentificationParametersAsTextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void saveIdentificationParametersAsTextFile(File file) throws IOException {
         FileWriter fw = new FileWriter(file);
         try {
             BufferedWriter bw = new BufferedWriter(fw);
@@ -693,19 +726,20 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
         StringBuilder output = new StringBuilder();
         if (fastaFile != null) {
-            output.append(fastaFile.getName()).append(newLine);
+            output.append("Fasta: ").append(fastaFile.getName()).append(newLine);
         }
 
         if (enzyme != null) {
             String name = enzyme.getName();
             if (!name.equals("Trypsin")) {
-                output.append(name).append(newLine);
+                output.append("Enzyme: ").append(name).append(newLine);
             }
         }
 
         if (ptmSettings != null) {
             ArrayList<String> ptms = ptmSettings.getFixedModifications();
             if (!ptms.isEmpty()) {
+                output.append("Fixed:");
                 boolean first = true;
                 for (String ptm : ptms) {
                     if (first) {
@@ -722,6 +756,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (ptmSettings != null) {
             ArrayList<String> ptms = ptmSettings.getVariableModifications();
             if (!ptms.isEmpty()) {
+                output.append("Variable:");
                 boolean first = true;
                 for (String ptm : ptms) {
                     if (first) {
@@ -1014,7 +1049,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         }
         return true;
     }
-    
+
     @Override
     public void setType() {
         marshallableParameterType = Type.search_parameters.name();

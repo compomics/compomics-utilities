@@ -7,8 +7,11 @@ import com.compomics.util.gui.parameters.identification_parameters.Identificatio
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.ValidationQCPreferencesDialogParent;
 import com.compomics.util.io.ConfigurationFile;
+import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
+import com.compomics.util.preferences.MarshallableParameter;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Image;
@@ -734,9 +737,44 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
             if (fileName.endsWith(".par")) {
 
-                try {
-                    SearchParameters searchParameters = SearchParameters.getIdentificationParameters(file);
+                Object savedObject;
 
+                try {
+
+                    // Try as json file
+                    IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+                    Class expectedObjectType = MarshallableParameter.class;
+                    Object object = jsonMarshaller.fromJson(expectedObjectType, file);
+                    MarshallableParameter marshallableParameter = (MarshallableParameter) object;
+                    if (marshallableParameter.getType() == MarshallableParameter.Type.search_parameters) {
+                        expectedObjectType = SearchParameters.class;
+                        savedObject = jsonMarshaller.fromJson(expectedObjectType, file);
+
+                    } else if (marshallableParameter.getType() == MarshallableParameter.Type.identification_parameters) {
+                        expectedObjectType = IdentificationParameters.class;
+                        savedObject = jsonMarshaller.fromJson(expectedObjectType, file);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Parameters file " + file + " not recognized. Please verify the search paramters file.", "File Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                } catch (Exception e1) {
+
+                    try {
+                        // Try serialized java object
+                        savedObject = SerializationUtils.readObject(file);
+
+                    } catch (Exception e2) {
+                        e1.printStackTrace();
+                        e2.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Parameters file " + file + " not recognized. Please verify the search paramters file.", "File Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
+                IdentificationParameters identificationParameters = null;
+                if (savedObject instanceof SearchParameters) {
+                    SearchParameters searchParameters = (SearchParameters) savedObject;
                     SearchSettingsDialog settingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
                             normalIcon,
                             waitingIcon,
@@ -747,18 +785,16 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                         settingsDialog.validateParametersInput(true);
                         settingsDialog.setVisible(true);
                     }
-
                     if (!settingsDialog.isCanceled()) {
-                        IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+                        identificationParameters = new IdentificationParameters(searchParameters);
                         identificationParameters.setName(Util.removeExtension(fileName));
-                        checkNameAndUpdate(identificationParameters);
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error occurred while reading " + file + ". Please verify the search paramters.", "File Error", JOptionPane.ERROR_MESSAGE);
-                    return;
+                } else if (savedObject instanceof IdentificationParameters) {
+                    identificationParameters = (IdentificationParameters) savedObject;
+                } else {
+                    throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
                 }
+                checkNameAndUpdate(identificationParameters);
 
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a valid search settings file (.par).", "File Error", JOptionPane.INFORMATION_MESSAGE);

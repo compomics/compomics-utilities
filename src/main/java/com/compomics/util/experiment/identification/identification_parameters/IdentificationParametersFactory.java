@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.MarshallableParameter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -178,8 +180,17 @@ public class IdentificationParametersFactory {
         for (File parameterFile : getParametersFolder().listFiles()) {
             if (parameterFile.getName().endsWith(parametersExtension)) {
                 try {
-                    IdentificationParameters identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
-                    identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
+
+                    // There should be only IdentificationParameters 
+                    IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+                    Class expectedObjectType = IdentificationParameters.class;
+                    Object object = jsonMarshaller.fromJson(expectedObjectType, parameterFile);
+                    IdentificationParameters identificationParameters = (IdentificationParameters) object;
+                    // Avoid incorrectly parsed parameters
+                    if (identificationParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+                        identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
+                    }
+
                 } catch (Exception e) {
                     // Not a valid parameters file
                 }

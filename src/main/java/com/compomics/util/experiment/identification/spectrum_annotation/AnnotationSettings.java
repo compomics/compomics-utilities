@@ -59,6 +59,10 @@ public class AnnotationSettings implements Serializable {
      */
     private Boolean neutralLossesAuto = true;
     /**
+     * If true reporter ions will be annotated by default.
+     */
+    private Boolean reporterIons = true;
+    /**
      * Fragment ion accuracy used for peak matching.
      */
     private double fragmentIonAccuracy;
@@ -200,6 +204,27 @@ public class AnnotationSettings implements Serializable {
      */
     public void setNeutralLossesSequenceAuto(Boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
+    }
+
+    /**
+     * Indicates whether reporter ions should be annotated by default.
+     * 
+     * @return a boolean indicating whether reporter ions should be annotated by default
+     */
+    public Boolean getReporterIons() {
+        if (reporterIons == null) {
+            reporterIons = true;
+        }
+        return reporterIons;
+    }
+
+    /**
+     * Sets whether reporter ions should be annotated by default.
+     * 
+     * @param reporterIons a boolean indicating whether reporter ions should be annotated by default
+     */
+    public void setReporterIons(Boolean reporterIons) {
+        this.reporterIons = reporterIons;
     }
 
     /**
@@ -520,6 +545,7 @@ public class AnnotationSettings implements Serializable {
         annotationSettings.setDeNovoCharge(deNovoCharge);
         annotationSettings.setHighResolutionAnnotation(highResolutionAnnotation);
         annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
+        annotationSettings.setReporterIons(reporterIons);
         for (NeutralLoss neutralLoss : neutralLossesList) {
             annotationSettings.addNeutralLoss(neutralLoss);
         }
@@ -570,6 +596,9 @@ public class AnnotationSettings implements Serializable {
             return false;
         }
         if (!neutralLossesAuto.equals(annotationSettings.areNeutralLossesSequenceAuto())) {
+            return false;
+        }
+        if (!getReporterIons().equals(annotationSettings.getReporterIons())) {
             return false;
         }
         ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();

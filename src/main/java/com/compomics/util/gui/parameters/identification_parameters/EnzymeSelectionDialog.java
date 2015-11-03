@@ -2,6 +2,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
+import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.DefaultComboBoxModel;
@@ -23,20 +24,47 @@ public class EnzymeSelectionDialog extends javax.swing.JDialog {
      * True of the enzyme selection was canceled by the user.
      */
     private boolean selectionCanceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates a new EnzymeSelectionDialog.
+     * Creates a new EnzymeSelectionDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param modal if the dialog is to be modal or not
      * @param enzymeName the PRIDE enzyme name
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public EnzymeSelectionDialog(java.awt.Frame parent, boolean modal, String enzymeName) {
+    public EnzymeSelectionDialog(java.awt.Frame parent, boolean modal, String enzymeName, boolean editable) {
         super(parent, modal);
         initComponents();
         prideEnzymeNameTextField.setText(enzymeName);
         enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        this.editable = editable;
         setLocationRelativeTo(parent);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new EnzymeSelectionDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param modal if the dialog is to be modal or not
+     * @param enzymeName the PRIDE enzyme name
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
+     */
+    public EnzymeSelectionDialog(Dialog owner, java.awt.Frame parent, boolean modal, String enzymeName, boolean editable) {
+        super(owner, modal);
+        initComponents();
+        prideEnzymeNameTextField.setText(enzymeName);
+        enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        this.editable = editable;
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 
@@ -50,10 +78,31 @@ public class EnzymeSelectionDialog extends javax.swing.JDialog {
     public EnzymeSelectionDialog(JDialog parent, boolean modal, String enzymeName) {
         super(parent, modal);
         initComponents();
-        prideEnzymeNameTextField.setText(enzymeName);
-        enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        setUpGui();
+        populateGui(enzymeName);
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
+     */
+    private void setUpGui() {
+
+        enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
+        enzymesCmb.setEnabled(editable);
+
+    }
+
+    /**
+     * Populates the gui using the given annotation settings.
+     *
+     * @param annotationSettings the annotation settings to display
+     * @param possibleNeutralLosses the possible neutral losses
+     */
+    private void populateGui(String enzymeName) {
+        prideEnzymeNameTextField.setText(enzymeName);
     }
 
     /**

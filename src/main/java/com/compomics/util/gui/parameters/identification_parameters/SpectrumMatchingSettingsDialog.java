@@ -27,6 +27,7 @@ import com.compomics.util.gui.parameters.identification_parameters.algorithm_set
 import com.compomics.util.gui.parameters.identification_parameters.algorithm_settings.XTandemSettingsDialog;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.LastSelectedFolder;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,9 +59,9 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      */
     private Image waitingIcon;
     /**
-     * Boolean indicating whether the search settings are editable.
+     * Boolean indicating whether the settings can be edited by the user.
      */
-    private boolean editable = true;
+    private boolean editable;
     /**
      * The last selected folder to use.
      */
@@ -83,17 +84,19 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
     private ArrayList<Integer> advocates = null;
 
     /**
-     * Constructor.
+     * Creates a new SpectrumMatchingSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
+     * @param settingsName the name of the settings
      * @param searchParameters previous search parameters
      * @param normalIcon the normal dialog icon
      * @param waitingIcon the waiting dialog icon
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable set if the search settings are to be editable or not
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public SpectrumMatchingSettingsDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+    public SpectrumMatchingSettingsDialog(java.awt.Frame parentFrame, String settingsName, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
             ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
 
@@ -108,8 +111,42 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
 
         initComponents();
         setUpGui();
-        populateGUI(searchParameters);
+        populateGUI(settingsName, searchParameters);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new SpectrumMatchingSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param settingsName the name of the settings
+     * @param searchParameters previous search parameters
+     * @param normalIcon the normal dialog icon
+     * @param waitingIcon the waiting dialog icon
+     * @param configurationFile a file containing the modification use
+     * @param lastSelectedFolder the last selected folder to use
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
+     */
+    public SpectrumMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, String settingsName, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+            ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
+        super(owner, true);
+
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.configurationFile = configurationFile;
+        this.editable = editable;
+        this.searchParameters = searchParameters;
+        this.algorithmParameters = searchParameters.getAlgorithmSpecificParameters();
+
+        initComponents();
+        setUpGui();
+        populateGUI(settingsName, searchParameters);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 
@@ -117,9 +154,11 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
+
         if (!editable) {
             editButton.setText("View");
         }
+
     }
 
     /**
@@ -127,8 +166,12 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
      *
      * @param searchParameters the spectrum matching settings to display
      */
-    private void populateGUI(SearchParameters searchParameters) {
-        settingsTxt.setText(searchParameters.getParametersFile().getAbsolutePath());
+    private void populateGUI(String settingsName, SearchParameters searchParameters) {
+        if (settingsName != null && settingsName.length() > 0) {
+            settingsTxt.setText(settingsName);
+        } else {
+            settingsTxt.setText("Default");
+        }
         algorithmSettingsTable.setModel(new AlgorithmSettingsTableModel());
     }
 
@@ -291,7 +334,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
         if (row != -1 && column == 1) {
             Integer advocateIndex = advocates.get(row);
             IdentificationAlgorithmParameter identificationAlgorithmParameter = algorithmParameters.get(advocateIndex);
-            AlgorithmSettingsDialog algorithmSettingsDialog = getAlgorithmSettingsDialog(parentFrame, identificationAlgorithmParameter, editable);
+            AlgorithmSettingsDialog algorithmSettingsDialog = getAlgorithmSettingsDialog(identificationAlgorithmParameter);
             if (algorithmSettingsDialog == null) {
                 JOptionPane.showMessageDialog(this, "Dialog not implemented for algorithm of index " + advocateIndex + ".", "File Error", JOptionPane.ERROR_MESSAGE);
             } else if (!algorithmSettingsDialog.isCancelled()) {
@@ -333,36 +376,33 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
     /**
      * Returns the dialog to use to edit the given parameters.
      *
-     * @param parent the parent frame
      * @param identificationAlgorithmParameter the parameters to edit
-     * @param editable boolean indicating whether the parameters can be edited
-     * by the user
      *
      * @return the dialog to use to edit the given parameters
      */
-    public AlgorithmSettingsDialog getAlgorithmSettingsDialog(java.awt.Frame parent, IdentificationAlgorithmParameter identificationAlgorithmParameter, boolean editable) {
+    public AlgorithmSettingsDialog getAlgorithmSettingsDialog(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
         if (identificationAlgorithmParameter instanceof AndromedaParameters) {
-            return new AndromedaSettingsDialog(parent, (AndromedaParameters) identificationAlgorithmParameter);
+            return new AndromedaSettingsDialog(this, parentFrame, (AndromedaParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof CometSettingsDialog) {
-            return new CometSettingsDialog(parent, (CometParameters) identificationAlgorithmParameter);
+            return new CometSettingsDialog(this, parentFrame, (CometParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof DirecTagParameters) {
-            return new DirecTagSettingsDialog(parentFrame, searchParameters, editable);
+            return new DirecTagSettingsDialog(this, parentFrame, searchParameters, editable);
         } else if (identificationAlgorithmParameter instanceof MsAmandaParameters) {
-            return new MsAmandaSettingsDialog(parent, (MsAmandaParameters) identificationAlgorithmParameter);
+            return new MsAmandaSettingsDialog(this, parentFrame, (MsAmandaParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof MsgfParameters) {
-            return new MsgfSettingsDialog(parent, (MsgfParameters) identificationAlgorithmParameter);
+            return new MsgfSettingsDialog(this, parentFrame, (MsgfParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof MyriMatchParameters) {
-            return new MyriMatchSettingsDialog(parent, (MyriMatchParameters) identificationAlgorithmParameter);
+            return new MyriMatchSettingsDialog(this, parentFrame, (MyriMatchParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof NovorParameters) {
-            return new NovorSettingsDialog(parent, searchParameters, true);
+            return new NovorSettingsDialog(this, parentFrame, searchParameters, editable);
         } else if (identificationAlgorithmParameter instanceof OmssaParameters) {
-            return new OmssaSettingsDialog(parent, (OmssaParameters) identificationAlgorithmParameter);
+            return new OmssaSettingsDialog(this, parentFrame, (OmssaParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof PNovoParameters) {
-            return new PNovoSettingsDialog(parent, searchParameters, true);
+            return new PNovoSettingsDialog(this, parentFrame, searchParameters, editable);
         } else if (identificationAlgorithmParameter instanceof TideParameters) {
-            return new TideSettingsDialog(parent, (TideParameters) identificationAlgorithmParameter);
+            return new TideSettingsDialog(this, parentFrame, (TideParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof XtandemParameters) {
-            return new XTandemSettingsDialog(parent, (XtandemParameters) identificationAlgorithmParameter, searchParameters.getPtmSettings(), searchParameters.getFragmentIonAccuracy());
+            return new XTandemSettingsDialog(this, parentFrame, (XtandemParameters) identificationAlgorithmParameter, searchParameters.getPtmSettings(), searchParameters.getFragmentIonAccuracy(), editable);
         }
         return null;
     }

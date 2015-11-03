@@ -1,7 +1,11 @@
 package com.compomics.util.gui.parameters;
 
+import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
+import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.gui.gene_mapping.SpeciesDialog;
@@ -27,8 +31,12 @@ import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.ValidationQCPreferences;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import javax.swing.JOptionPane;
 
 /**
  * IdentificationParametersEditionDialog.
@@ -65,14 +73,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * The configuration file containing the modification use.
      */
     private ConfigurationFile configurationFile;
-    /**
-     * The possible neutral losses in a list.
-     */
-    private ArrayList<NeutralLoss> possibleNeutralLosses;
-    /**
-     * List of possible reporter ions.
-     */
-    private ArrayList<Integer> reporterIons;
     /**
      * The peak annotation settings.
      */
@@ -119,14 +119,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
 
     /**
-     * Constructor.
+     * Creates a new IdentificationParametersEditionDialog with a frame as
+     * owner.
      *
      * @param parentFrame the parent frame
      * @param identificationParameters the identification parameters to display
      * @param configurationFile the configuration file containing the PTM usage
      * preferences
-     * @param possibleNeutralLosses the possible neutral losses
-     * @param reporterIons the possible reporter ions
      * @param normalIcon the normal icon
      * @param waitingIcon the waiting icon
      * @param lastSelectedFolder the last selected folder
@@ -134,7 +133,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -153,9 +152,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         this.configurationFile = configurationFile;
         this.lastSelectedFolder = lastSelectedFolder;
         this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
-        this.reporterIons = reporterIons;
-        this.reporterIons = reporterIons;
-        this.possibleNeutralLosses = possibleNeutralLosses;
+        this.editable = editable;
 
         initComponents();
         setUpGui();
@@ -165,11 +162,57 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }
 
     /**
+     * Creates a new IdentificationParametersEditionDialog with a dialog as
+     * owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param identificationParameters the identification parameters to display
+     * @param configurationFile the configuration file containing the PTM usage
+     * preferences
+     * @param normalIcon the normal icon
+     * @param waitingIcon the waiting icon
+     * @param lastSelectedFolder the last selected folder
+     * @param validationQCPreferencesDialogParent a parent handling the edition
+     * of QC filters
+     * @param editable boolean indicating whether the parameters can be edited
+     */
+    public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+        super(owner, true);
+
+        this.parentFrame = parentFrame;
+        this.annotationSettings = identificationParameters.getAnnotationPreferences();
+        this.searchParameters = identificationParameters.getSearchParameters();
+        this.sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+        this.genePreferences = identificationParameters.getGenePreferences();
+        this.psmScoringPreferences = identificationParameters.getPsmScoringPreferences();
+        this.peptideAssumptionFilter = identificationParameters.getPeptideAssumptionFilter();
+        this.ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+        this.proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+        this.idValidationPreferences = identificationParameters.getIdValidationPreferences();
+        this.fractionSettings = identificationParameters.getFractionSettings();
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.configurationFile = configurationFile;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.validationQCPreferencesDialogParent = validationQCPreferencesDialogParent;
+        this.editable = editable;
+
+        initComponents();
+        setUpGui();
+        populateGUI(identificationParameters);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
      * Set up the GUI.
      */
     private void setUpGui() {
+
         nameTxt.setEditable(editable);
         descriptionTxt.setEditable(editable);
+
     }
 
     /**
@@ -198,6 +241,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     public IdentificationParameters getIdentificationParameters() {
         IdentificationParameters identificationParameters = new IdentificationParameters();
+        identificationParameters.setName(nameTxt.getText());
+        String description = descriptionTxt.getText();
+        boolean defaultDesciption = description.equals(searchParameters.getShortDescription());
+        identificationParameters.setDescription(description, defaultDesciption);
         identificationParameters.setAnnotationSettings(annotationSettings);
         identificationParameters.setSearchParameters(searchParameters);
         identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
@@ -209,6 +256,45 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         identificationParameters.setIdValidationPreferences(idValidationPreferences);
         identificationParameters.setFractionSettings(fractionSettings);
         return identificationParameters;
+    }
+
+    /**
+     * Updates the identification settings in case the selected ptms have been
+     * changed.
+     */
+    private void selectedPtmsChanged() {
+        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = annotationSettings.getIonTypes();
+        if (annotationSettings.getReporterIons()) {
+            HashSet<Integer> reporterIons = IonFactory.getReporterIons(ptmSettings);
+            ionTypes.put(ReporterIon.IonType.REPORTER_ION, reporterIons);
+        }
+        if (annotationSettings.isAutomaticAnnotation() || annotationSettings.areNeutralLossesSequenceAuto()) {
+            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+            for (NeutralLoss neutralLoss : neutralLosses) {
+                annotationSettings.addNeutralLoss(neutralLoss);
+            }
+        }
+    }
+
+    /**
+     * Validates the user input.
+     *
+     * @return a boolean indicating whether the user input is valid
+     */
+    public boolean validateInput() {
+
+        String name = nameTxt.getText();
+        for (char character : name.toCharArray()) {
+            String charAsString = character + "";
+            if (charAsString.matches("[^\\dA-Za-z ]")) {
+                JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
+                        "Special Character", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -247,8 +333,18 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters Attributes"));
         attributesPanel.setOpaque(false);
@@ -466,61 +562,69 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
-        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(parentFrame, annotationSettings, possibleNeutralLosses, reporterIons);
+        ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+        ArrayList<Integer> reporterIons = new ArrayList<Integer>(IonFactory.getReporterIons(searchParameters.getPtmSettings()));
+        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(this, parentFrame, annotationSettings, neutralLosses, reporterIons, editable);
         if (!annotationSettingsDialog.isCanceled()) {
             annotationSettings = annotationSettingsDialog.getAnnotationSettings();
         }
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, editable);
+        String name = nameTxt.getText();
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, name, editable);
         if (!searchSettingsDialog.isCanceled()) {
+            PtmSettings oldPtms = searchParameters.getPtmSettings();
             searchParameters = searchSettingsDialog.getSearchParameters();
+            PtmSettings newPtms = searchParameters.getPtmSettings();
+            if (!oldPtms.equals(newPtms)) {
+                selectedPtmsChanged();
+            }
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
     private void sequenceMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceMatchingButtonActionPerformed
-        SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(parentFrame, sequenceMatchingPreferences);
+        SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(this, parentFrame, sequenceMatchingPreferences, editable);
         if (!sequenceMatchingSettingsDialog.isCanceled()) {
             sequenceMatchingPreferences = sequenceMatchingSettingsDialog.getSequenceMatchingPreferences();
         }
     }//GEN-LAST:event_sequenceMatchingButtonActionPerformed
 
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
-        SpeciesDialog speciesDialog = new SpeciesDialog(null, genePreferences, true, waitingIcon, normalIcon);
+        SpeciesDialog speciesDialog = new SpeciesDialog(this, null, genePreferences, true, waitingIcon, normalIcon);
         // @TODO decouple the gene factory from the preferences
     }//GEN-LAST:event_geneMappingButtonActionPerformed
 
     private void matchesFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchesFiltersButtonActionPerformed
-        MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(parentFrame, peptideAssumptionFilter, editable);
+        MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(this, parentFrame, peptideAssumptionFilter, editable);
         if (!matchesImportFiltersDialog.isCanceled()) {
             peptideAssumptionFilter = matchesImportFiltersDialog.getFilter();
         }
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed
-        PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(parentFrame, psmScoringPreferences);
+        PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(this, parentFrame, psmScoringPreferences, editable);
         if (!psmScoringSettingsDialog.isCanceled()) {
             psmScoringPreferences = psmScoringSettingsDialog.getPsmScoringPreferences();
         }
     }//GEN-LAST:event_psmScoringButtonActionPerformed
 
     private void ptmLocalizationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptmLocalizationButtonActionPerformed
-        PTMLocalizationParametersDialog ptmLocalizationParametersDialog = new PTMLocalizationParametersDialog(parentFrame, ptmScoringPreferences, editable);
+        PTMLocalizationParametersDialog ptmLocalizationParametersDialog = new PTMLocalizationParametersDialog(this, parentFrame, ptmScoringPreferences, editable);
         if (!ptmLocalizationParametersDialog.isCanceled()) {
             ptmScoringPreferences = ptmLocalizationParametersDialog.getPtmScoringPreferences();
         }
     }//GEN-LAST:event_ptmLocalizationButtonActionPerformed
 
     private void proteinInferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinInferenceButtonActionPerformed
-        ProteinInferenceSettingsDialog proteinInferenceSettingsDialog = new ProteinInferenceSettingsDialog(parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, lastSelectedFolder, editable);
+        ProteinInferenceSettingsDialog proteinInferenceSettingsDialog = new ProteinInferenceSettingsDialog(this, parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, lastSelectedFolder, editable);
         if (!proteinInferenceSettingsDialog.isCanceled()) {
             proteinInferencePreferences = proteinInferenceSettingsDialog.getProteinInferencePreferences();
         }
     }//GEN-LAST:event_proteinInferenceButtonActionPerformed
 
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
-        ValidationSettingsDialog validationSettingsDialog = new ValidationSettingsDialog(parentFrame, idValidationPreferences, editable);
+        ValidationSettingsDialog validationSettingsDialog = new ValidationSettingsDialog(this, parentFrame, idValidationPreferences, editable);
         if (!validationSettingsDialog.isCanceled()) {
             ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
             idValidationPreferences = validationSettingsDialog.getIdMatchValidationPreferences();
@@ -530,18 +634,29 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
-        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(parentFrame, validationQCPreferencesDialogParent, validationQCPreferences);
+        ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
         if (!validationQCPreferencesDialog.isCanceled()) {
             idValidationPreferences.setValidationQCPreferences(validationQCPreferencesDialog.getValidationQCPreferences());
         }
     }//GEN-LAST:event_qualityControlButtonActionPerformed
 
     private void fractionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fractionsButtonActionPerformed
-        FractionSettingsDialog fractionSettingsDialog = new FractionSettingsDialog(parentFrame, fractionSettings, editable);
+        FractionSettingsDialog fractionSettingsDialog = new FractionSettingsDialog(this, parentFrame, fractionSettings, editable);
         if (!fractionSettingsDialog.isCanceled()) {
             fractionSettings = fractionSettingsDialog.getFractionSettings();
         }
     }//GEN-LAST:event_fractionsButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        if (validateInput()) {
+            dispose();
+        }
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        canceled = true;
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

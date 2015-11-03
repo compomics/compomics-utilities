@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.1.8</version>
+    <version>4.1.11</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
     <description>Open source java library for computational proteomics</description>
@@ -476,6 +476,12 @@
             <artifactId>braf</artifactId>
             <version>1.0.1</version>
         </dependency>
+        
+        <dependency>
+            <groupId>uk.ac.ebi.pride.archive</groupId>
+            <artifactId>web-service-model</artifactId>
+            <version>0.2.12</version>
+        </dependency> 
         
         <dependency>
             <groupId>umontreal.iro.lecuyer.gof</groupId>

@@ -1,6 +1,7 @@
 package com.compomics.software.settings;
 
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
 import com.compomics.util.preferences.GenePreferences;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
@@ -58,7 +59,11 @@ public class UtilitiesPathPreferences {
         /**
          * Folder containing the pride annotation preferences.
          */
-        prideAnnotationKey("pride_annotation", "Folder containing the PRIDE annotation preferences.", "pride", true);
+        prideAnnotationKey("pride_annotation", "Folder containing the PRIDE annotation preferences.", "pride", true),
+        /**
+         * Folder containing the identification parameters
+         */
+        identificationParametersKey("identification_parameters", "Folder containing the identification parameters.", IdentificationParametersFactory.PARAMETERS_FOLDER, true);
         /**
          * The key used to refer to this path.
          */
@@ -193,6 +198,9 @@ public class UtilitiesPathPreferences {
             case utilitiesPreferencesKey:
                 UtilitiesUserPreferences.setUserPreferencesFolder(path);
                 return;
+            case identificationParametersKey:
+                IdentificationParametersFactory.setParentFolder(path);
+                return;
             default:
                 throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
         }
@@ -217,6 +225,8 @@ public class UtilitiesPathPreferences {
                 return PTMFactory.getSerializationFolder();
             case utilitiesPreferencesKey:
                 return UtilitiesUserPreferences.getUserPreferencesFolder();
+            case identificationParametersKey:
+                return IdentificationParametersFactory.getParentFolder();
             default:
                 throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
         }
@@ -348,6 +358,13 @@ public class UtilitiesPathPreferences {
                 toWrite = UtilitiesUserPreferences.getUserPreferencesFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
+                }
+                bw.write(toWrite);
+                break;
+            case identificationParametersKey:
+                toWrite = IdentificationParametersFactory.getParentFolder();
+                if (toWrite == null) {
+                    toWrite = IdentificationParametersFactory.PARAMETERS_FOLDER;
                 }
                 bw.write(toWrite);
                 break;

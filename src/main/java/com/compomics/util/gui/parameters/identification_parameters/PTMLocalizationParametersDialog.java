@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.preferences.PTMScoringPreferences;
+import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -18,17 +19,16 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the processing and identification parameters
-     * should be edited upon clicking on OK.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new PTMLocalizationParametersDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
-     * @param editable boolean indicating whether the settings can be edited
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
@@ -41,12 +41,38 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
     }
 
     /**
+     * Creates a new PTMLocalizationParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param ptmScoringPreferences the PTM scoring preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(ptmScoringPreferences);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
      * Set up the GUI.
      */
     private void setUpGui() {
+        
         thresholdAutpoCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        scoreCmb.setEnabled(editable);
+        neutralLossesCmb.setEnabled(editable);
+        thresholdAutpoCmb.setEnabled(editable);
+        thresholdTxt.setEditable(editable);
+        thresholdTxt.setEnabled(editable);
+        
     }
 
     /**

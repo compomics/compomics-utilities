@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
 import com.compomics.util.experiment.biology.Enzyme;
-import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
@@ -18,6 +17,10 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
+import com.compomics.util.preferences.DummyParameters;
+import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.MarshallableParameter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +33,16 @@ import no.uib.jsparklines.data.XYDataPoint;
  *
  * @author Marc Vaudel
  */
-public class SearchParameters implements Serializable {
+public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2773993307168773763L;
+    /**
+     * Name of the type of marshalled parameter.
+     */
+    private String marshallableParameterType = null;
 
     /**
      * Possible mass accuracy types.
@@ -83,6 +90,8 @@ public class SearchParameters implements Serializable {
     private File fastaFile;
     /**
      * The corresponding file.
+     *
+     * @deprecated the file is now handled outside the parameters.
      */
     private File parametersFile;
     /**
@@ -277,24 +286,6 @@ public class SearchParameters implements Serializable {
      */
     public void setEnzyme(Enzyme enzyme) {
         this.enzyme = enzyme;
-    }
-
-    /**
-     * Returns the parameters file loaded.
-     *
-     * @return the parameters file loaded
-     */
-    public File getParametersFile() {
-        return parametersFile;
-    }
-
-    /**
-     * Sets the parameter file loaded.
-     *
-     * @param parametersFile the parameter file loaded
-     */
-    public void setParametersFile(File parametersFile) {
-        this.parametersFile = parametersFile;
     }
 
     /**
@@ -623,30 +614,59 @@ public class SearchParameters implements Serializable {
     }
 
     /**
-     * Loads the identification parameters from a serialized file.
+     * Loads the identification parameters from a file. If the file is an
+     * identification parameters file, the search parameters are extracted.
      *
      * @param searchParametersFile the search parameter file
-     * 
+     *
      * @return the search parameters
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static SearchParameters getIdentificationParameters(File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
-        SearchParameters searchParameters = (SearchParameters) SerializationUtils.readObject(searchParametersFile);
+    public static SearchParameters getIdentificationParameters(File searchParametersFile) throws IOException, ClassNotFoundException {
 
-        // compatibility check
-        if (searchParameters.getEnzyme().getName().equals("no enzyme")) {
-            searchParameters.setEnzyme(EnzymeFactory.getInstance().getEnzyme("unspecific"));
+        Object savedObject;
+
+        try {
+
+            // Try as json file
+            IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+            Class expectedObjectType = MarshallableParameter.class;
+            Object object = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            DummyParameters dummyParameters = (DummyParameters) object;
+            if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
+                expectedObjectType = SearchParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            } else if (dummyParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+                expectedObjectType = IdentificationParameters.class;
+                savedObject = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
+            } else {
+                throw new IllegalArgumentException("Parameters file " + searchParametersFile + " not recognized.");
+            }
+
+        } catch (Exception e1) {
+
+            try {
+                // Try serialized java object
+                savedObject = SerializationUtils.readObject(searchParametersFile);
+
+            } catch (Exception e2) {
+                e1.printStackTrace();
+                e2.printStackTrace();
+                throw new IllegalArgumentException("Parameters file " + searchParametersFile + " not recognized.");
+            }
         }
 
-        // add the advanced settings if not set
-        searchParameters.setDefaultAdvancedSettings(searchParameters);
-
-        // check the file location
-        searchParameters.setParametersFile(searchParametersFile);
-        SearchParameters.saveIdentificationParameters(searchParameters, searchParametersFile);
+        SearchParameters searchParameters;
+        if (savedObject instanceof SearchParameters) {
+            searchParameters = (SearchParameters) savedObject;
+        } else if (savedObject instanceof IdentificationParameters) {
+            IdentificationParameters identificationParameters = (IdentificationParameters) savedObject;
+            searchParameters = identificationParameters.getSearchParameters();
+        } else {
+            throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
+        }
 
         return searchParameters;
     }
@@ -654,19 +674,17 @@ public class SearchParameters implements Serializable {
     /**
      * Saves the identification parameters to a serialized file.
      *
-     * @param identificationParameters the identification parameters
+     * @param searchParameters the identification parameters
      * @param searchParametersFile the file
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public static void saveIdentificationParameters(SearchParameters identificationParameters, File searchParametersFile) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static void saveIdentificationParameters(SearchParameters searchParameters, File searchParametersFile) throws IOException {
 
-        // check the file location
-        identificationParameters.setParametersFile(searchParametersFile);
+        IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+        searchParameters.setType();
+        jsonMarshaller.saveObjectToJson(searchParameters, searchParametersFile);
 
-        SerializationUtils.writeObject(identificationParameters, searchParametersFile);
     }
 
     /**
@@ -674,21 +692,111 @@ public class SearchParameters implements Serializable {
      *
      * @param file the file
      *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public void saveIdentificationParametersAsTextFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public void saveIdentificationParametersAsTextFile(File file) throws IOException {
         FileWriter fw = new FileWriter(file);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(toString());
-        bw.close();
-        fw.close();
+        try {
+            BufferedWriter bw = new BufferedWriter(fw);
+            try {
+                bw.write(toString());
+            } finally {
+                bw.close();
+            }
+        } finally {
+            fw.close();
+        }
     }
 
     @Override
     public String toString() {
         return toString(false);
+    }
+
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+
+        SearchParameters defaultParameters = new SearchParameters();
+
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+        if (fastaFile != null) {
+            output.append("Fasta: ").append(fastaFile.getName()).append(newLine);
+        }
+
+        if (enzyme != null) {
+            String name = enzyme.getName();
+            if (!name.equals("Trypsin")) {
+                output.append("Enzyme: ").append(name).append(newLine);
+            }
+        }
+
+        if (ptmSettings != null) {
+            ArrayList<String> ptms = ptmSettings.getFixedModifications();
+            if (!ptms.isEmpty()) {
+                output.append("Fixed: ");
+                boolean first = true;
+                for (String ptm : ptms) {
+                    if (first) {
+                        output.append(ptm);
+                        first = false;
+                    } else {
+                        output.append(", ").append(ptm);
+                    }
+                }
+                output.append(newLine);
+            }
+        }
+
+        if (ptmSettings != null) {
+            ArrayList<String> ptms = ptmSettings.getVariableModifications();
+            if (!ptms.isEmpty()) {
+                output.append("Variable: ");
+                boolean first = true;
+                for (String ptm : ptms) {
+                    if (first) {
+                        output.append(ptm);
+                        first = false;
+                    } else {
+                        output.append(", ").append(ptm);
+                    }
+                }
+                output.append(newLine);
+            }
+        }
+
+        if (!nMissedCleavages.equals(defaultParameters.getnMissedCleavages())) {
+            output.append("Missed Cleavages: ").append(nMissedCleavages).append(newLine);
+        }
+
+        if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())
+                || !getPrecursorAccuracyType().equals(defaultParameters.getPrecursorAccuracyType())) {
+            output.append("Precursor tolerance: ").append(precursorTolerance).append(newLine);
+        }
+
+        if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())) {
+            output.append("Fragment tolerance: ").append(fragmentIonMZTolerance).append(" Da").append(newLine);
+        }
+
+        if (!forwardIon.equals(defaultParameters.getIonSearched1())
+                || !rewindIon.equals(defaultParameters.getIonSearched2())) {
+            String ion1 = PeptideFragmentIon.getSubTypeAsString(forwardIon);
+            String ion2 = PeptideFragmentIon.getSubTypeAsString(rewindIon);
+            output.append(ion1).append(" and ").append(ion2).append(" ions").append(newLine);
+        }
+
+        if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
+                || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
+            output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(newLine);
+        }
+
+        return output.toString();
+
     }
 
     /**
@@ -699,17 +807,18 @@ public class SearchParameters implements Serializable {
      */
     public String toString(boolean html) {
 
-        String newLine = System.getProperty("line.separator");
-
+        String newLine;
         if (html) {
             newLine = "<br>";
+        } else {
+            newLine = System.getProperty("line.separator");
         }
 
         StringBuilder output = new StringBuilder();
 
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
-        output.append("# General Identification Parameters");
+        output.append("# General Search Parameters");
         output.append(newLine);
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
@@ -860,6 +969,7 @@ public class SearchParameters implements Serializable {
      * Returns true of the search parameter objects have identical settings.
      *
      * @param otherSearchParameters the parameters to compare to
+     *
      * @return true of the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {
@@ -910,14 +1020,6 @@ public class SearchParameters implements Serializable {
                 || (this.getEnzyme() == null && otherSearchParameters.getEnzyme() != null)) {
             return false;
         }
-        if (this.getParametersFile() != null && otherSearchParameters.getParametersFile() != null
-                && !this.getParametersFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getParametersFile().getAbsolutePath())) {
-            return false;
-        }
-        if ((this.getParametersFile() != null && otherSearchParameters.getParametersFile() == null)
-                || (this.getParametersFile() == null && otherSearchParameters.getParametersFile() != null)) {
-            return false;
-        }
         if (!this.getPtmSettings().equals(otherSearchParameters.getPtmSettings())) {
             return false;
         }
@@ -946,5 +1048,18 @@ public class SearchParameters implements Serializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public void setType() {
+        marshallableParameterType = Type.search_parameters.name();
+    }
+
+    @Override
+    public Type getType() {
+        if (marshallableParameterType == null) {
+            return null;
+        }
+        return Type.valueOf(marshallableParameterType);
     }
 }

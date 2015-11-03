@@ -11,6 +11,7 @@ import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -65,32 +66,63 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * not if the end result is different or not.
      */
     private boolean modProfileChanged = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates new form XtandemParametersDialog.
+     * Creates new form XtandemParametersDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
      * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
      * spectrometer
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy) {
+    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy, boolean editable) {
         super(parent, true);
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = new PtmSettings(modificationProfile);
         this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(xtandemParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Creates new form XtandemParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param xtandemParameters the X!Tandem parameters
+     * @param modificationProfile the modification profile of the search
+     * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
+     * spectrometer
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy, boolean editable) {
+        super(owner, true);
+        this.xtandemParameters = xtandemParameters;
+        this.modificationProfile = new PtmSettings(modificationProfile);
+        this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(xtandemParameters);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         noiseSuppressionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         quickAcetylCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         quickPyroCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -118,10 +150,43 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         modificationsTable.getTableHeader().setReorderingAllowed(false);
 
         setAllModificationTableProperties();
+        
+        dynamicRangeTxt.setEditable(editable);
+        dynamicRangeTxt.setEnabled(editable);
+        nPeaksTxt.setEditable(editable);
+        nPeaksTxt.setEnabled(editable);
+        minFragmentMzTxt.setEditable(editable);
+        minFragmentMzTxt.setEnabled(editable);
+        minPeaksTxt.setEditable(editable);
+        minPeaksTxt.setEnabled(editable);
+        noiseSuppressionCmb.setEnabled(editable);
+        minPrecMassTxt.setEditable(editable);
+        minPrecMassTxt.setEnabled(editable);
+        quickAcetylCmb.setEnabled(editable);
+        quickPyroCmb.setEnabled(editable);
+        stpBiasCmb.setEnabled(editable);
+        eValueTxt.setEditable(editable);
+        eValueTxt.setEnabled(editable);
+        outputProteinsCmb.setEnabled(editable);
+        outputSequencesCmb.setEnabled(editable);
+        outputSpectraCmb.setEnabled(editable);
+        outputHistogramsCmb.setEnabled(editable);
+        skylineTxt.setEditable(editable);
+        skylineTxt.setEnabled(editable);
+        refinementCmb.setEnabled(editable);
+        maxEValueRefineTxt.setEditable(editable);
+        maxEValueRefineTxt.setEnabled(editable);
+        unanticipatedCleavageCmb.setEnabled(editable);
+        semiEnzymaticCmb.setEnabled(editable);
+        potentialModificationsCmb.setEnabled(editable);
+        pointMutationsCmb.setEnabled(editable);
+        snapsCmb.setEnabled(editable);
+        spectrumSynthesisCmb.setEnabled(editable);
+        
     }
 
     /**
-     * Set the properties of the all modification table.
+     * Sets the properties of the all modification table.
      */
     private void setAllModificationTableProperties() {
         modificationsTable.getColumn(" ").setCellRenderer(new JSparklinesColorTableCellRenderer());
@@ -138,10 +203,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     }
 
     /**
-     * Fills the GUI with the information contained in the X!Tandem settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param xtandemParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(XtandemParameters xtandemParameters) {
         if (xtandemParameters.getDynamicRange() != null) {
             dynamicRangeTxt.setText(xtandemParameters.getDynamicRange() + "");
         }
@@ -2383,7 +2449,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
+                return canEdit[columnIndex] && editable;
             }
         });
 

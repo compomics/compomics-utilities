@@ -5,18 +5,21 @@ import com.compomics.util.io.json.adapter.InterfaceAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
 
 /**
- * This class is intended to convert non specific objects to the JSON format and
- * vice versa.
+ * This class converts non specific objects to the JSON format and vice versa.
  *
  * @author Kenneth Verheggen
+ * @author Marc Vaudel
  */
 public class JsonMarshaller {
 
@@ -28,15 +31,23 @@ public class JsonMarshaller {
      * GsonBuilder that can be used to append interfaces so the parser knows how
      * to handle them.
      */
-    private final GsonBuilder builder;
+    protected final GsonBuilder builder;
 
     /**
      * Default constructor.
      */
     public JsonMarshaller() {
         this.builder = new GsonBuilder();
+        init();
+        gson = builder.setPrettyPrinting().create();
+    }
+
+    /**
+     * Initializes the marshaller with (custom) type adapters and date format
+     *
+     */
+    protected void init() {
         builder.registerTypeAdapter(File.class, new FileAdapter());
-        gson = builder.create();
     }
 
     /**
@@ -62,7 +73,7 @@ public class JsonMarshaller {
      * @return the JSON representation of an object
      */
     public String toJson(Object anObject) {
-        return gson.toJson(anObject).replace("}", "}" + System.lineSeparator());
+        return gson.toJson(anObject);
     }
 
     /**
@@ -70,23 +81,16 @@ public class JsonMarshaller {
      *
      * @param anObject the input object
      * @param jsonFile the target file to which the JSON will be saved.
+     *
      * @throws IOException if the object cannot be successfully saved into a
      * JSON file
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
-        if (!jsonFile.getName().toLowerCase().endsWith(".json")) {
-            jsonFile = new File(jsonFile.getAbsolutePath() + ".json");
-        }
-        FileWriter out = null;
+        BufferedWriter out = new BufferedWriter(new FileWriter(jsonFile));
         try {
-            out = new FileWriter(jsonFile);
             out.append(toJson(anObject)).flush();
-        } catch (IOException e) {
-            throw e;
         } finally {
-            if (out != null) {
-                out.close();
-            }
+            out.close();
         }
     }
 
@@ -95,6 +99,7 @@ public class JsonMarshaller {
      *
      * @param objectType the class the object belongs to
      * @param jsonString the string representation of the JSON object
+     *
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Class objectType, String jsonString) {
@@ -107,6 +112,7 @@ public class JsonMarshaller {
      * @param objectType the class the object belongs to
      * @param jsonFile a JSON file
      * @return an instance of the objectType containing the JSON information
+     *
      * @throws IOException if the object cannot be successfully read from a JSON
      * file
      */
@@ -116,10 +122,62 @@ public class JsonMarshaller {
     }
 
     /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the class the object belongs to
+     * @param jsonURL a JSON URL
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Class objectType, URL jsonURL) throws IOException {
+        return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
+    }
+
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonString the string representation of the JSON object
+     * @return an instance of the objectType containing the JSON information
+     */
+    public Object fromJson(Type objectType, String jsonString) {
+        return gson.fromJson(jsonString, objectType);
+    }
+
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonFile a JSON file
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Type objectType, File jsonFile) throws IOException {
+        String jsonString = getJsonStringFromFile(jsonFile);
+        return gson.fromJson(jsonString, objectType);
+    }
+
+    /**
+     * Convert from JSON to object.
+     *
+     * @param objectType the typetoken the object belongs to
+     * @param jsonURL a JSON URL
+     * @return an instance of the objectType containing the JSON information
+     * @throws IOException if the object cannot be successfully read from a JSON
+     * file
+     */
+    public Object fromJson(Type objectType, URL jsonURL) throws IOException {
+        return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
+    }
+
+    /**
      * Convert JSON string from file.
      *
      * @param jsonFile the input JSON file
      * @return the string representation of the JSON content
+     *
      * @throws FileNotFoundException if the JSON file can not be reached
      * @throws IOException if the object cannot be successfully read from a JSON
      * file
@@ -127,10 +185,15 @@ public class JsonMarshaller {
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));
-        String line;
-        while ((line = in.readLine()) != null) {
-            stringBuilder.append(line);
+        try {
+            String line;
+            while ((line = in.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } finally {
+            in.close();
         }
         return stringBuilder.toString();
     }
+
 }

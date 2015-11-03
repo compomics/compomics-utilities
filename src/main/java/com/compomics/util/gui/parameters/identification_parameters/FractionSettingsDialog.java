@@ -1,6 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.preferences.FractionSettings;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,17 +16,16 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the processing and identification parameters
-     * should be edited upon clicking on OK.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new FractionSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param fractionSettings the fraction settings
-     * @param editable boolean indicating whether the settings can be edited
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public FractionSettingsDialog(java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
         super(parentFrame, true);
@@ -38,7 +38,25 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set up the GUI.
+     * Creates a new FractionSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param fractionSettings the fraction settings
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public FractionSettingsDialog(Dialog owner, java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(fractionSettings);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGui() {
         proteinConfidenceMwTxt.setEnabled(editable);

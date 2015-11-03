@@ -1,8 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
-import com.compomics.util.gui.renderers.AlignedListCellRenderer;
-import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -23,20 +22,45 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Constructor.
+     * Creates a new SequenceMatchingSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
      * @param sequenceMatchingPreferences the sequence matching preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGUI(sequenceMatchingPreferences);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new SequenceMatchingSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame a parent frame
+     * @param sequenceMatchingPreferences the sequence matching preferences to display
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public SequenceMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(sequenceMatchingPreferences);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 
@@ -46,7 +70,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private void setUpGui() {
         
         matchingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
+        
+        matchingCmb.setEnabled(editable);
+        xTxt.setEditable(editable);
+        xTxt.setEnabled(editable);
         
     }
 
@@ -141,7 +168,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
 
         xLbl.setText("Maximal share of Xs:");
 
-        matchingCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
 
         xTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
@@ -154,10 +181,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(matchingMethodLbl)
                     .addComponent(xLbl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(xTxt)
-                    .addComponent(matchingCmb, 0, 190, Short.MAX_VALUE))
+                    .addComponent(matchingCmb, 0, 250, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sequenceMatchingPanelLayout.setVerticalGroup(

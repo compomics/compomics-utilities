@@ -6,16 +6,17 @@ import com.compomics.util.io.json.JsonMarshaller;
 
 /**
  * This class is a convenience class to have a DefaultJsonConverter with the
- * search parameter interfaces.
+ * identification parameters interfaces.
  *
  * @author Kenneth Verheggen
+ * @author Marc Vaudel
  */
-public class SearchParameterMarshaller extends JsonMarshaller {
+public class IdentificationParametersMarshaller extends JsonMarshaller {
 
     /**
      * Constructor.
      */
-    public SearchParameterMarshaller() {
+    public IdentificationParametersMarshaller() {
         super(IdentificationAlgorithmParameter.class, Atom.class);
     }
 }

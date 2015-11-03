@@ -7,6 +7,7 @@ import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
+import java.awt.Dialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -19,39 +20,56 @@ import javax.swing.SwingUtilities;
 public class TideSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The Tide parameters class containing the information to display.
-     */
-    private TideParameters tideParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates a new TideSettingsDialog.
+     * Creates a new TideSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param tideParameters the Tide parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public TideSettingsDialog(java.awt.Frame parent, TideParameters tideParameters) {
+    public TideSettingsDialog(java.awt.Frame parent, TideParameters tideParameters, boolean editable) {
         super(parent, true);
-        if (tideParameters != null) {
-            this.tideParameters = tideParameters;
-        } else {
-            this.tideParameters = new TideParameters();
-        }
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(tideParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Creates a new TideSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param tideParameters the Tide parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public TideSettingsDialog(Dialog owner, java.awt.Frame parent, TideParameters tideParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(tideParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         removePrecursorPeakCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         enzymeTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useFlankingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -67,13 +85,58 @@ public class TideSettingsDialog extends javax.swing.JDialog implements Algorithm
         useNeutralLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputFormatCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeTempFoldersCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        minPepLengthTxt.setEditable(editable);
+        minPepLengthTxt.setEnabled(editable);
+        maxPepLengthTxt.setEditable(editable);
+        maxPepLengthTxt.setEnabled(editable);
+        minPrecursorMassTxt.setEditable(editable);
+        minPrecursorMassTxt.setEnabled(editable);
+        maxPrecursorMassTxt.setEditable(editable);
+        maxPrecursorMassTxt.setEnabled(editable);
+        monoPrecursorCmb.setEnabled(editable);
+        removeMethionineCmb.setEnabled(editable);
+        maxPtmsTxt.setEditable(editable);
+        maxPtmsTxt.setEnabled(editable);
+        maxVariablePtmsPerTypeTxt.setEditable(editable);
+        maxVariablePtmsPerTypeTxt.setEnabled(editable);
+        enzymeTypeCmb.setEnabled(editable);
+        peptideListCmb.setEnabled(editable);
+        decoyFormatCombo.setEnabled(editable);
+        keepTerminalAaCombo.setEnabled(editable);
+        decoySeedTxt.setEditable(editable);
+        decoySeedTxt.setEnabled(editable);
+        removeTempFoldersCmb.setEnabled(editable);
+        exactPvalueCombo.setEnabled(editable);
+        spScoreCombo.setEnabled(editable);
+        minSpectrumMzTxt.setEditable(editable);
+        minSpectrumMzTxt.setEnabled(editable);
+        maxSpectrumMzTxt.setEditable(editable);
+        maxSpectrumMzTxt.setEnabled(editable);
+        minPeaksTxt.setEditable(editable);
+        minPeaksTxt.setEnabled(editable);
+        chargesCombo.setEnabled(editable);
+        removePrecursorPeakCombo.setEnabled(editable);
+        removePrecursorPeakToleranceTxt.setEditable(editable);
+        removePrecursorPeakToleranceTxt.setEnabled(editable);
+        useFlankingCmb.setEnabled(editable);
+        useNeutralLossCmb.setEnabled(editable);
+        mzBinWidthTxt.setEditable(editable);
+        mzBinWidthTxt.setEnabled(editable);
+        mzBinOffsetTxt.setEditable(editable);
+        mzBinOffsetTxt.setEnabled(editable);
+        numberMatchesTxt.setEditable(editable);
+        numberMatchesTxt.setEnabled(editable);
+        outputFormatCombo.setEnabled(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the Tide settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param tideParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(TideParameters tideParameters) {
 
         if (tideParameters.getMinPeptideLength() != null) {
             minPepLengthTxt.setText(tideParameters.getMinPeptideLength() + "");

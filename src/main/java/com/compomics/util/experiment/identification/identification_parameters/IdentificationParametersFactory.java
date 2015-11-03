@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.identification.identification_parameters;
 
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.MarshallableParameter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class IdentificationParametersFactory {
     /**
      * The identification parameters.
      */
-    private static String PARAMETERS_FOLDER = "identification_parameters";
+    public static final String PARAMETERS_FOLDER = "identification_parameters";
     /**
      * The extension for a parameters file.
      */
@@ -83,12 +85,24 @@ public class IdentificationParametersFactory {
     }
 
     /**
+     * Returns the identification parameters corresponding to the given name.
+     * Null if not found.
+     *
+     * @param name the name of the parameters to return
+     *
+     * @return the identification parameters corresponding to the given name
+     */
+    public static File getIdentificationParametersFile(String name) {
+        return new File(getParametersFolder(), name + parametersExtension);
+    }
+
+    /**
      * Deletes the identification parameters of the given name.
      *
      * @param name the name of the parameters to delete
      */
     public void removeIdentificationParameters(String name) {
-        File parametersFile = new File(getParametersFolder(), name + "." + parametersExtension);
+        File parametersFile = getIdentificationParametersFile(name);
         parametersFile.delete();
     }
 
@@ -105,8 +119,11 @@ public class IdentificationParametersFactory {
      * occurred while saving the file
      */
     public void addIdentificationParameters(IdentificationParameters identificationParameters) throws IOException, FileNotFoundException, ClassNotFoundException {
-        File parametersFile = new File(getParametersFolder(), identificationParameters.getName() + "." + parametersExtension);
-        identificationParameters.getSearchParameters().setParametersFile(parametersFile);
+        String parametersName = identificationParameters.getName();
+        if (parametersName == null || parametersName.length() == 0) {
+            throw new IllegalArgumentException("Parameters name not set or empty.");
+        }
+        File parametersFile = getIdentificationParametersFile(parametersName);
         IdentificationParameters.saveIdentificationParameters(identificationParameters, parametersFile);
         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
     }
@@ -134,8 +151,26 @@ public class IdentificationParametersFactory {
      *
      * @return the parameters folder
      */
-    private File getParametersFolder() {
+    private static File getParametersFolder() {
         return new File(PARENT_FOLDER, PARAMETERS_FOLDER);
+    }
+
+    /**
+     * Returns the parent folder.
+     *
+     * @return the parent folder
+     */
+    public static String getParentFolder() {
+        return PARENT_FOLDER;
+    }
+
+    /**
+     * Set the parent folder.
+     *
+     * @param PARENT_FOLDER the parent folder
+     */
+    public static void setParentFolder(String PARENT_FOLDER) {
+        IdentificationParametersFactory.PARENT_FOLDER = PARENT_FOLDER;
     }
 
     /**
@@ -145,8 +180,17 @@ public class IdentificationParametersFactory {
         for (File parameterFile : getParametersFolder().listFiles()) {
             if (parameterFile.getName().endsWith(parametersExtension)) {
                 try {
-                    IdentificationParameters identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
-                    identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
+
+                    // There should be only IdentificationParameters 
+                    IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
+                    Class expectedObjectType = IdentificationParameters.class;
+                    Object object = jsonMarshaller.fromJson(expectedObjectType, parameterFile);
+                    IdentificationParameters identificationParameters = (IdentificationParameters) object;
+                    // Avoid incorrectly parsed parameters
+                    if (identificationParameters.getType() == MarshallableParameter.Type.identification_parameters) {
+                        identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
+                    }
+
                 } catch (Exception e) {
                     // Not a valid parameters file
                 }

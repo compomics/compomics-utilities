@@ -21,6 +21,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -71,10 +72,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * The post translational modifications factory.
      */
     private PTMFactory ptmFactory = PTMFactory.getInstance();
-    /**
-     * The parameter file.
-     */
-    private File parametersFile = null;
     /*
      * The search parameters.
      */
@@ -130,9 +127,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the search settings are editable.
+     * Boolean indicating whether the settings can be edited by the user.
      */
-    private boolean editable = true;
+    private boolean editable;
     /**
      * The last selected folder to use.
      */
@@ -145,7 +142,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     public static String TITLED_BORDER_HORIZONTAL_PADDING = "";
 
     /**
-     * Creates a new SearchSettingsDialog.
+     * Creates a new SearchSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param searchParameters previous search parameters
@@ -155,10 +152,12 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @param modal if the dialog is to be modal
      * @param configurationFile a file containing the modification use
      * @param lastSelectedFolder the last selected folder to use
-     * @param editable set if the search settings are to be editable or not
+     * @param settingsName the name of the settings
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public SearchSettingsDialog(java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
-            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, boolean editable) {
+            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
         super(parentFrame, modal);
 
         this.parentFrame = parentFrame;
@@ -186,9 +185,67 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         formComponentResized(null);
         setLocationRelativeTo(parentFrame);
 
-        if (searchParameters.getParametersFile() != null) {
-            setTitle("Search Settings - " + searchParameters.getParametersFile().getName());
+        String dialogTitle = "Search Settings";
+        if (settingsName != null && settingsName.length() > 0) {
+            dialogTitle += " - " + settingsName;
         }
+        setTitle(dialogTitle);
+
+        if (setVisible) {
+            setVisible(true);
+        }
+    }
+
+    /**
+     * Creates a new SearchSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param searchParameters previous search parameters
+     * @param normalIcon the normal dialog icon
+     * @param waitingIcon the waiting dialog icon
+     * @param setVisible if the dialog is to be visible or not
+     * @param modal if the dialog is to be modal
+     * @param configurationFile a file containing the modification use
+     * @param lastSelectedFolder the last selected folder to use
+     * @param settingsName the name of the settings
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
+     */
+    public SearchSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SearchParameters searchParameters, Image normalIcon, Image waitingIcon,
+            boolean setVisible, boolean modal, ConfigurationFile configurationFile, LastSelectedFolder lastSelectedFolder, String settingsName, boolean editable) {
+        super(owner, modal);
+
+        this.parentFrame = parentFrame;
+        this.normalIcon = normalIcon;
+        this.waitingIcon = waitingIcon;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.configurationFile = configurationFile;
+        this.editable = editable;
+
+        if (searchParameters == null) {
+            this.searchParameters = new SearchParameters();
+        } else {
+            this.searchParameters = searchParameters;
+        }
+
+        try {
+            loadModificationUse(configurationFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // ignore
+        }
+
+        initComponents();
+        setUpGUI();
+        formComponentResized(null);
+        setLocationRelativeTo(owner);
+
+        String dialogTitle = "Search Settings";
+        if (settingsName != null && settingsName.length() > 0) {
+            dialogTitle += " - " + settingsName;
+        }
+        setTitle(dialogTitle);
 
         if (setVisible) {
             setVisible(true);
@@ -1250,21 +1307,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        if (editable) {
-            // get the parameters from the GUI
-            SearchParameters currentSearchParameters = getCurrentSearchParameters();
-
-            // see if there are changes to the parameters and ask the user if these are to be saved
-            if (!searchParameters.equals(currentSearchParameters)) {
-                SearchParameters tempSearchParameters = SearchSettingsDialog.saveSearchParameters(this, currentSearchParameters, null, null, lastSelectedFolder);
-                if (tempSearchParameters != null) {
-                    searchParameters = tempSearchParameters;
-                    close();
-                }
-            } else {
-                close();
-            }
-        }
+        dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -1706,10 +1749,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     private void setScreenProps() {
 
-        if (searchParameters.getParametersFile() != null) {
-            parametersFile = searchParameters.getParametersFile();
-        }
-
         File fastaFile = searchParameters.getFastaFile();
         if (fastaFile != null) {
             String fastaPath = fastaFile.getAbsolutePath();
@@ -2004,7 +2043,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      *
      * @return a SearchParameters instance based on the user input in the GUI
      */
-    private SearchParameters getCurrentSearchParameters() {
+    public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
 
@@ -2059,10 +2098,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         tempSearchParameters.setMinChargeSearched(new Charge(Charge.PLUS, charge));
         charge = new Integer(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, charge));
-
-        if (searchParameters.getParametersFile() != null && searchParameters.getParametersFile().exists()) {
-            tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
-        }
 
         // Adapt X!Tandem options
         XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex());
@@ -2390,27 +2425,17 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the search parameters object.
-     *
-     * @return the search parameters object
-     */
-    public SearchParameters getSearchParameters() {
-        return searchParameters;
-    }
-
-    /**
      * Saves the search parameters to a file of the users choice.
      *
      * @param parentDialog the parent dialog
-     * @param tempSearchParameters the current search parameters
-     * @param advocate the advocate of the algorithm, can be null
-     * @param identificationAlgorithmParameter the algorithm parameters, can be
-     * null
+     * @param newSearchParameters the current search parameters
+     * @param searchParametersFile the file where to save the parameters
      * @param lastSelectedFolder the last selected folder
-     * @return the saved settings, or null of not saved
+     *
+     * @return the file where the new settings were saved, null if not saved
      */
-    public static SearchParameters saveSearchParameters(JDialog parentDialog, SearchParameters tempSearchParameters,
-            Advocate advocate, IdentificationAlgorithmParameter identificationAlgorithmParameter, LastSelectedFolder lastSelectedFolder) {
+    public static File saveSearchParameters(JDialog parentDialog, SearchParameters newSearchParameters, File searchParametersFile,
+            LastSelectedFolder lastSelectedFolder) {
 
         int value = JOptionPane.showConfirmDialog(parentDialog, "The search parameters have changed."
                 + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -2420,7 +2445,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             boolean userSelectFile = false;
 
             // see if the user wants to overwrite the current settings file
-            if (tempSearchParameters.getParametersFile() != null) {
+            if (searchParametersFile != null) {
                 value = JOptionPane.showConfirmDialog(parentDialog, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
 
                 if (value == JOptionPane.NO_OPTION) {
@@ -2440,8 +2465,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
                 }
 
-                if (tempSearchParameters.getParametersFile() != null) {
-                    startLocation = tempSearchParameters.getParametersFile();
+                if (searchParametersFile != null) {
+                    startLocation = searchParametersFile;
                 }
 
                 File selectedFile;
@@ -2481,27 +2506,16 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                         }
                     }
 
-                    tempSearchParameters.setParametersFile(selectedFile);
                 } else {
                     return null;
                 }
             }
 
-            if (tempSearchParameters.getParametersFile() != null) {
-
-                // set the algorithm specific parameters
-                if (identificationAlgorithmParameter != null && advocate != null) {
-                    tempSearchParameters.setIdentificationAlgorithmParameter(advocate.getIndex(), identificationAlgorithmParameter);
-                }
+            if (searchParametersFile != null) {
 
                 try {
-                    SearchParameters.saveIdentificationParameters(tempSearchParameters, tempSearchParameters.getParametersFile());
-                    return tempSearchParameters;
-                } catch (ClassNotFoundException e) {
-                    JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
-                            + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
-                    e.printStackTrace();
-                    return null;
+                    SearchParameters.saveIdentificationParameters(newSearchParameters, searchParametersFile);
+                    return searchParametersFile;
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
                             + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
@@ -2510,7 +2524,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 }
             }
         } else if (value == JOptionPane.NO_OPTION) {
-            return tempSearchParameters;
+            return searchParametersFile;
         } else {
             return null; // canceled by the user
         }

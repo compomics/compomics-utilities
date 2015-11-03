@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -20,16 +21,16 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * If true the user can edit the settings.
+     * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
 
     /**
-     * Creates a new ImportSettingsDialog.
+     * Creates a new ImportSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param idFilter the identification filter
-     * @param editable boolean indicating whether the parameters can be editable
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
     public MatchesImportFiltersDialog(java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parentFrame, true);
@@ -37,6 +38,23 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         setUpGui();
         populateGUI(idFilter);
         setLocationRelativeTo(parentFrame);
+        setVisible(true);
+    }
+
+    /**
+     * Creates a new ImportSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param idFilter the identification filter
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public MatchesImportFiltersDialog(Dialog owner, java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        setUpGui();
+        populateGUI(idFilter);
+        setLocationRelativeTo(owner);
         setVisible(true);
     }
 
@@ -50,10 +68,15 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         unitCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
 
         nAAminTxt.setEditable(editable);
+        nAAminTxt.setEnabled(editable);
         nAAmaxTxt.setEditable(editable);
+        nAAmaxTxt.setEnabled(editable);
         precDevTxt.setEditable(editable);
+        precDevTxt.setEnabled(editable);
         unitCmb.setEnabled(editable);
-        cancelButton.setEnabled(editable);
+        unitCmb.setEnabled(editable);
+        ptmsCheck.setEnabled(editable);
+        
     }
 
     /**

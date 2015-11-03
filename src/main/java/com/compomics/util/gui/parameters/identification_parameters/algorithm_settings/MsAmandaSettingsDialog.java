@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Id
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
+import java.awt.Dialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -15,46 +16,77 @@ import javax.swing.SwingConstants;
 public class MsAmandaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The MS Amanda parameters class containing the information to display.
-     */
-    private MsAmandaParameters msAmandaParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates new form MsAmandaSettingsDialog.
+     * Creates new form MsAmandaSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param msAmandaParameters the MS Amanda parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public MsAmandaSettingsDialog(java.awt.Frame parent, MsAmandaParameters msAmandaParameters) {
+    public MsAmandaSettingsDialog(java.awt.Frame parent, MsAmandaParameters msAmandaParameters, boolean editable) {
         super(parent, true);
-        this.msAmandaParameters = msAmandaParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        fillGUI();
+        populateGUI(msAmandaParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
+
     /**
-     * Set up the GUI.
+     * Creates new form MsAmandaSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param msAmandaParameters the MS Amanda parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public MsAmandaSettingsDialog(Dialog owner, java.awt.Frame parent, MsAmandaParameters msAmandaParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(msAmandaParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGUI() {
+        
         decoyDatabaseCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         instrumentCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         monoIsotopicCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         lowMemoryModeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        decoyDatabaseCmb.setEnabled(editable);
+        instrumentCmb.setEnabled(editable);
+        monoIsotopicCmb.setEnabled(editable);
+        maxRankTxt.setEditable(editable);
+        maxRankTxt.setEnabled(editable);
+        lowMemoryModeCmb.setEnabled(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the MS Amanda settings
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param msAmandaParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(MsAmandaParameters msAmandaParameters) {
 
         if (msAmandaParameters.generateDecoy()) {
             decoyDatabaseCmb.setSelectedIndex(0);

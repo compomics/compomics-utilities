@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,19 +39,27 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * Map of the neutral losses selection.
      */
     private HashMap<NeutralLoss, Boolean> neutralLossesMap;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates a new AnnotationPreferencesDialog.
+     * Creates a new AnnotationPreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons) {
+    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
+        this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
+        this.editable = editable;
         initComponents();
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);
@@ -59,7 +68,31 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Set up the GUI.
+     * Creates a new AnnotationPreferencesDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parentFrame the parent frame
+     * @param annotationSettings previous annotation settings
+     * @param possibleNeutralLosses the list of possible neutral losses
+     * @param reporterIons the list of possible reporter ions indexed by their
+     * subtypes
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
+     */
+    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+        super(owner, true);
+        this.parentFrame = parentFrame;
+        this.reporterIons = reporterIons;
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGui(annotationSettings, possibleNeutralLosses);
+        this.setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGui() {
 
@@ -79,29 +112,40 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                 null,
                 "Selected", null));
+
+        aBox.setEnabled(editable);
+        bBox.setEnabled(editable);
+        cBox.setEnabled(editable);
+        xBox.setEnabled(editable);
+        yBox.setEnabled(editable);
+        zBox.setEnabled(editable);
+        precursorBox.setEnabled(editable);
+        immoniumBox.setEnabled(editable);
+        reporterBox.setEnabled(editable);
+        intensitySpinner.setEnabled(editable);
+        accuracySpinner.setEnabled(editable);
+        highResolutionBox.setEnabled(editable);
+
     }
 
     /**
      * Populates the gui using the given annotation settings.
-     * 
+     *
      * @param annotationSettings the annotation settings to display
      * @param possibleNeutralLosses the possible neutral losses
      */
     private void populateGui(AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
 
+        neutralLossesMap = new HashMap<NeutralLoss, Boolean>(possibleNeutralLosses.size());
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
-
         for (NeutralLoss possibleNeutralLoss : possibleNeutralLosses) {
-
             boolean found = false;
-
             for (NeutralLoss selectedNeutralLoss : selectedNeutralLosses) {
                 if (possibleNeutralLoss.isSameAs(selectedNeutralLoss)) {
                     found = true;
                     break;
                 }
             }
-
             neutralLossesMap.put(possibleNeutralLoss, found);
         }
 
@@ -116,7 +160,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         zBox.setSelected(false);
         precursorBox.setSelected(false);
         immoniumBox.setSelected(false);
-        reporterBox.setSelected(false);
+        reporterBox.setSelected(annotationSettings.getReporterIons());
 
         for (IonType ionType : annotationSettings.getIonTypes().keySet()) {
             if (ionType == IonType.IMMONIUM_ION) {
@@ -610,7 +654,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
          * Name to neutral loss map.
          */
         private HashMap<String, NeutralLoss> namesMap = new HashMap<String, NeutralLoss>();
-        
+
         /**
          * List of the names of the neutral losses to display.
          */
@@ -620,11 +664,13 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
          * Constructor.
          */
         public NeutralLossesTableModel() {
-            for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
-                namesMap.put(neutralLoss.name, neutralLoss);
+            if (neutralLossesMap != null) {
+                for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
+                    namesMap.put(neutralLoss.name, neutralLoss);
+                }
+                namesList = new ArrayList<String>(namesMap.keySet());
+                Collections.sort(namesList);
             }
-            namesList = new ArrayList<String>(namesMap.keySet());
-            Collections.sort(namesList);
         }
 
         @Override
@@ -680,7 +726,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2;
+            return columnIndex == 2 && editable;
         }
 
         @Override

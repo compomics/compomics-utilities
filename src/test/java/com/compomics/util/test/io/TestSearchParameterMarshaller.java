@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
-import com.compomics.util.io.json.marshallers.SearchParameterMarshaller;
+import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,10 +45,9 @@ public class TestSearchParameterMarshaller {
      */
     @Test
     public void testMarshallSearchParametersToJson() throws Exception {
-        System.out.println("Testing JSON Marshalling...");
         Class objectType = SearchParameters.class;
         SearchParameters parameters = createMockUpParameters();
-        SearchParameterMarshaller instance = new SearchParameterMarshaller();
+        IdentificationParametersMarshaller instance = new IdentificationParametersMarshaller();
         //1. Marshall to JSON
         String parametersAsJson = instance.toJson(parameters);
         //System.out.println(parametersAsJson);
@@ -73,7 +72,6 @@ public class TestSearchParameterMarshaller {
         parameters.setMinChargeSearched(new Charge(1, 1));
         parameters.setPtmSettings(createMockUpPTMSettings());
         parameters.setFastaFile(new File("T:/HIS/IS/A/FAKE/FASTA.FASTA"));
-        parameters.setParametersFile(new File("T:/HIS/IS/JUST/TO/TEST/CAN/BE/COMMENTED/LATER.par"));
         return parameters;
     }
 

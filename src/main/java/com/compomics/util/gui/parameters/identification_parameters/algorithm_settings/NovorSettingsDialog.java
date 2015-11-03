@@ -6,7 +6,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Id
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
-import javax.swing.JFrame;
+import java.awt.Dialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -24,36 +24,67 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates a new NovorSettingsDialog.
+     * Creates a new NovorSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
-     * @param searchParameters the search parameters
-     * @param modal whether the dialog is modal or not
+     * @param searchParameters the search parameters 
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
-        super(parent, modal);
+    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(parent, true);
         this.searchParameters = searchParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        insertData();
+        populateGUI(searchParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Creates a new NovorSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param searchParameters the search parameters 
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    private void setUpGUI() {
-        fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        massAnalyzerCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+    public NovorSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(owner, true);
+        this.searchParameters = searchParameters;
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(searchParameters);
+        setLocationRelativeTo(owner);
+        setVisible(true);
     }
 
     /**
-     * Insert the settings.
+     * Sets up the GUI.
      */
-    private void insertData() {
+    private void setUpGUI() {
+        
+        fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        massAnalyzerCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        fragmentationMethodCmb.setEnabled(editable);
+        massAnalyzerCmb.setEnabled(editable);
+        
+    }
+
+    /**
+     * Populates the GUI using the given settings.
+     * 
+     * @param searchParameters the parameters to display
+     */
+    private void populateGUI(SearchParameters searchParameters) {
 
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
@@ -307,7 +338,6 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
         tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
         tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());

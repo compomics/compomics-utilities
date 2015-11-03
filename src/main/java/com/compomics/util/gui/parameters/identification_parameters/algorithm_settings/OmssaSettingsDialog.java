@@ -7,6 +7,7 @@ import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
+import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -22,35 +23,56 @@ import javax.swing.SwingUtilities;
 public class OmssaSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The OMSSA parameters class containing the information to display.
-     */
-    private OmssaParameters omssaParameters;
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates new form OmssaParametersDialog.
+     * Creates new form OmssaParametersDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param omssaParameters the OMSSA parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public OmssaSettingsDialog(java.awt.Frame parent, OmssaParameters omssaParameters) {
+    public OmssaSettingsDialog(java.awt.Frame parent, OmssaParameters omssaParameters, boolean editable) {
         super(parent, true);
-        this.omssaParameters = omssaParameters;
+        this.editable = editable;
         initComponents();
         setUpGui();
-        fillGUI();
+        populateGUI(omssaParameters);
         validateInput(false);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Creates new form OmssaParametersDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param omssaParameters the OMSSA parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
+     */
+    public OmssaSettingsDialog(Dialog owner, java.awt.Frame parent, OmssaParameters omssaParameters, boolean editable) {
+        super(owner, true);
+        this.editable = editable;
+        initComponents();
+        setUpGui();
+        populateGUI(omssaParameters);
+        validateInput(false);
+        setLocationRelativeTo(owner);
+        setVisible(true);
+    }
+
+    /**
+     * Sets up the GUI.
      */
     private void setUpGui() {
+        
         eliminatePrecursorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         chargeEstimationCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         plusOneChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -62,13 +84,78 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         cTermIonsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         correlationCorrectionScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         omssaOutputFormatComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        lowIntensityTxt.setEditable(editable);
+        lowIntensityTxt.setEnabled(editable);
+        highIntensityTxt.setEditable(editable);
+        highIntensityTxt.setEnabled(editable);
+        intensityIncrementTxt.setEditable(editable);
+        intensityIncrementTxt.setEnabled(editable);
+        nPeaksTxt.setEditable(editable);
+        nPeaksTxt.setEnabled(editable);
+        eliminatePrecursorCombo.setEnabled(editable);
+        chargeEstimationCombo.setEnabled(editable);
+        plusOneChargeCmb.setEnabled(editable);
+        fractionChargeTxt.setEditable(editable);
+        fractionChargeTxt.setEnabled(editable);
+        minPrecPerSpectrumTxt.setEditable(editable);
+        minPrecPerSpectrumTxt.setEnabled(editable);
+        precursorScalingCombo.setEnabled(editable);
+        sequenceMappingCmb.setEnabled(editable);
+        cleaveNterminalMethionineCmb.setEnabled(editable);
+        minPrecChargeMultipleChargedFragmentsTxt.setEditable(editable);
+        minPrecChargeMultipleChargedFragmentsTxt.setEnabled(editable);
+        nIsotopesTxt.setEditable(editable);
+        nIsotopesTxt.setEnabled(editable);
+        neutronTxt.setEditable(editable);
+        neutronTxt.setEnabled(editable);
+        singlyChargedWindowWidthTxt.setEditable(editable);
+        singlyChargedWindowWidthTxt.setEnabled(editable);
+        doublyChargedWindowWidthTxt.setEditable(editable);
+        doublyChargedWindowWidthTxt.setEnabled(editable);
+        singlyChargedNpeaksTxt.setEditable(editable);
+        singlyChargedNpeaksTxt.setEnabled(editable);
+        doublyChargedNpeaksTxt.setEditable(editable);
+        doublyChargedNpeaksTxt.setEnabled(editable);
+        minAnnotatedPeaksTxt.setEditable(editable);
+        minAnnotatedPeaksTxt.setEnabled(editable);
+        maxLaddersTxt.setEditable(editable);
+        maxLaddersTxt.setEnabled(editable);
+        maxFragmentChargeTxt.setEditable(editable);
+        maxFragmentChargeTxt.setEnabled(editable);
+        searchPositiveIonsCmb.setEnabled(editable);
+        cTermIonsCmb.setEnabled(editable);
+        maxFragmentsPerSeriesTxt.setEditable(editable);
+        maxFragmentsPerSeriesTxt.setEnabled(editable);
+        correlationCorrectionScoreCmb.setEnabled(editable);
+        consecutiveIonProbabilityTxt.setEditable(editable);
+        consecutiveIonProbabilityTxt.setEnabled(editable);
+        nHitsPerSpectrumPerChargeTxt.setEditable(editable);
+        nHitsPerSpectrumPerChargeTxt.setEnabled(editable);
+        iterativeSequenceEvalueTxt.setEditable(editable);
+        iterativeSequenceEvalueTxt.setEnabled(editable);
+        iterativeSpectraEvalueTxt.setEditable(editable);
+        iterativeSpectraEvalueTxt.setEnabled(editable);
+        iterativeReplaceEvalueTxt.setEditable(editable);
+        iterativeReplaceEvalueTxt.setEnabled(editable);
+        minPepLengthTxt.setEditable(editable);
+        minPepLengthTxt.setEnabled(editable);
+        maxPepLengthTxt.setEditable(editable);
+        maxPepLengthTxt.setEnabled(editable);
+        maxEvalueTxt.setEditable(editable);
+        maxEvalueTxt.setEnabled(editable);
+        hitlistTxt.setEditable(editable);
+        hitlistTxt.setEnabled(editable);
+        omssaOutputFormatComboBox.setEnabled(editable);
+        
     }
 
     /**
-     * Fills the GUI with the information contained in the OMSSA parameters
-     * object.
+     * Populates the GUI using the given settings.
+     * 
+     * @param omssaParameters the parameters to display
      */
-    private void fillGUI() {
+    private void populateGUI(OmssaParameters omssaParameters) {
 
         if (omssaParameters.getLowIntensityCutOff() != null) {
             lowIntensityTxt.setText(omssaParameters.getLowIntensityCutOff() + "");

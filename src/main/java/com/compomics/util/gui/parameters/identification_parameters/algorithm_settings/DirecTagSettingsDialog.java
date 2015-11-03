@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
-import javax.swing.JFrame;
+import java.awt.Dialog;
 import javax.swing.SwingConstants;
 
 /**
@@ -25,35 +25,95 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
+    /**
+     * Boolean indicating whether the settings can be edited by the user.
+     */
+    private boolean editable;
 
     /**
-     * Creates a new DirecTagSettingsDialog.
+     * Creates a new DirecTagSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
      * @param searchParameters the search parameters
-     * @param modal whether the dialog is modal or not
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public DirecTagSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean modal) {
-        super(parent, modal);
+    public DirecTagSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(parent, true);
         this.searchParameters = searchParameters;
+        this.editable = editable;
         initComponents();
         setUpGUI();
-        insertData();
+        populateGUI(searchParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Set up the GUI.
+     * Creates a new DirecTagSettingsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param searchParameters the search parameters
+     * @param editable boolean indicating whether the settings can be edited by the user
      */
-    private void setUpGUI() {
-        duplicateSpectraPerChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+    public DirecTagSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+        super(owner, true);
+        this.searchParameters = searchParameters;
+        this.editable = editable;
+        initComponents();
+        setUpGUI();
+        populateGUI(searchParameters);
+        setLocationRelativeTo(owner);
+        setVisible(true);
     }
 
     /**
-     * Insert the settings.
+     * Sets up the GUI.
      */
-    private void insertData() {
+    private void setUpGUI() {
+        
+        duplicateSpectraPerChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        
+        tagLengthTextField.setEditable(editable);
+        tagLengthTextField.setEnabled(editable);
+        numVariableModsTextField.setEditable(editable);
+        numVariableModsTextField.setEnabled(editable);
+        numberOfChargeStatesTextField.setEditable(editable);
+        numberOfChargeStatesTextField.setEnabled(editable);
+        duplicateSpectraPerChargeCmb.setEnabled(editable);
+        isotopeToleranceTextField.setEditable(editable);
+        isotopeToleranceTextField.setEnabled(editable);
+        deisptopingModeTextField.setEditable(editable);
+        deisptopingModeTextField.setEnabled(editable);
+        numberOfIntensityClassesTextField.setEditable(editable);
+        numberOfIntensityClassesTextField.setEnabled(editable);
+        outputSuffixTextField.setEditable(editable);
+        outputSuffixTextField.setEnabled(editable);
+        ticCutoffTextField.setEditable(editable);
+        ticCutoffTextField.setEnabled(editable);
+        complementToleranceTextField.setEditable(editable);
+        complementToleranceTextField.setEnabled(editable);
+        precursorAdjustmentStepTextField.setEditable(editable);
+        precursorAdjustmentStepTextField.setEnabled(editable);
+        minPrecursorAdjustmentTextField.setEditable(editable);
+        minPrecursorAdjustmentTextField.setEnabled(editable);
+        maxPrecursorAdjustmentTextField.setEditable(editable);
+        maxPrecursorAdjustmentTextField.setEnabled(editable);
+        intensityScoreWeightTextField.setEditable(editable);
+        intensityScoreWeightTextField.setEnabled(editable);
+        mzFidelityScoreWeightTextField.setEditable(editable);
+        mzFidelityScoreWeightTextField.setEnabled(editable);
+        complementScoreWeightTextField.setEditable(editable);
+        complementScoreWeightTextField.setEnabled(editable);
+        
+    }
+
+    /**
+     * Populates the GUI using the given settings.
+     * 
+     * @param searchParameters the search parameters
+     */
+    private void populateGUI(SearchParameters searchParameters) {
 
         DirecTagParameters direcTagParameters = (DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex());
 
@@ -79,6 +139,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         intensityScoreWeightTextField.setText(String.valueOf(direcTagParameters.getIntensityScoreWeight()));
         mzFidelityScoreWeightTextField.setText(String.valueOf(direcTagParameters.getMzFidelityScoreWeight()));
         complementScoreWeightTextField.setText(String.valueOf(direcTagParameters.getComplementScoreWeight()));
+        
     }
 
     /**
@@ -842,7 +903,6 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
         tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setParametersFile(searchParameters.getParametersFile());
         tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
         tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());
@@ -862,6 +922,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      * @return the DirecTag parameters
      */
     public DirecTagParameters getDirecTagParameters() {
+        
         DirecTagParameters direcTagParameters = new DirecTagParameters();
         direcTagParameters.setTagLength(Integer.parseInt(tagLengthTextField.getText()));
         direcTagParameters.setMaxDynamicMods(Integer.parseInt(numVariableModsTextField.getText()));

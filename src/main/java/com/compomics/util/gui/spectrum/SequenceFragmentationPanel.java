@@ -227,8 +227,8 @@ public class SequenceFragmentationPanel extends JPanel {
      * Paints the SequenceFragmentationPanel.
      *
      * Based on the given ModifiedSequence Components and Fragmentions, a
-     * visualisation (inspired by X!Tandem) is drawn on a Graphics object. Next
-     * to every possible fragmentation site of the peptide a bar is drawn wether
+     * visualization (inspired by X!Tandem) is drawn on a Graphics object. Next
+     * to every possible fragmentation site of the peptide a bar is drawn whether
      * b or y ions were found originating from this fragmentation side.
      *
      * @param g the specified Graphics window
@@ -261,7 +261,7 @@ public class SequenceFragmentationPanel extends JPanel {
             String modification = "";
 
             // check if it's a modified sequence
-            boolean modified = residue.indexOf("<") != -1;
+            boolean modified = residue.contains("<");
 
             // remove the modification from the residue
             if (modified && iHighlightModifications) {
@@ -450,12 +450,9 @@ public class SequenceFragmentationPanel extends JPanel {
         ArrayList<String> unmodifiedString = new ArrayList<String>();
 
         // remove the ptms, e.g., <oxidation>, as these will not be shown anyway
-        for (int i = 0; i < iSequenceComponents.length; i++) {
-
-            String residue = iSequenceComponents[i];
-
+        for (String residue : iSequenceComponents) {
             // check if it's a modified sequence
-            boolean modified = residue.indexOf("<") != -1;
+            boolean modified = residue.contains("<");
 
             // remove the modification from the residue
             if (modified) {
@@ -465,9 +462,9 @@ public class SequenceFragmentationPanel extends JPanel {
             unmodifiedString.add(residue);
         }
 
-        for (int i = 0; i < unmodifiedString.size(); i++) {
+        for (String temp : unmodifiedString) {
             // Move X for a text component.
-            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(unmodifiedString.get(i)) + iHorizontalSpace;
+            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(temp) + iHorizontalSpace;
             // Move the XLocation forwards with the component's length and the horizontal spacer.
             lEstimateX += iBarWidth + iHorizontalSpace;
         }

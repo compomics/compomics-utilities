@@ -75,8 +75,8 @@ public class MassErrorPlot extends JPanel {
             // find the most intense annotated peak
             double maxAnnotatedIntensity = 0.0;
 
-            for (int i = 0; i < annotations.size(); i++) {
-                IonMatch ionMatch = (IonMatch) annotations.get(i);
+            for (IonMatch annotation : annotations) {
+                IonMatch ionMatch = (IonMatch) annotation;
                 if (ionMatch.peak.intensity > maxAnnotatedIntensity) {
                     maxAnnotatedIntensity = ionMatch.peak.intensity;
                 }
@@ -85,10 +85,9 @@ public class MassErrorPlot extends JPanel {
             double totalIntensity = currentSpectrum.getTotalIntensity();
             double maxError = 0.0;
 
-            for (int i = 0; i < annotations.size(); i++) {
-
+            for (IonMatch annotation : annotations) {
                 double[][] dataXY = new double[2][1];
-                IonMatch ionMatch = (IonMatch) annotations.get(i);
+                IonMatch ionMatch = (IonMatch) annotation;
                 dataXY[0][0] = ionMatch.peak.mz;
 
                 if (useRelativeError) {

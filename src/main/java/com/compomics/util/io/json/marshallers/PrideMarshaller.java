@@ -12,14 +12,14 @@ import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
 import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 
 /**
- * A json marshaller for use with the PRIDE webservice
+ * A json marshaller for use with the PRIDE webservice.
  *
  * @author Kenneth Verheggen
  */
 public class PrideMarshaller extends JsonMarshaller {
 
     /**
-     * Create a PRIDE marshaller
+     * Create a PRIDE marshaller.
      */
     public PrideMarshaller() {
         super();
@@ -32,7 +32,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of ProjectDetails
+     * Convert from JSON to a list of ProjectDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -44,7 +44,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of ProjectDetails
+     * Convert from JSON to a list of ProjectDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -56,7 +56,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of AssaytDetails
+     * Convert from JSON to a list of AssaytDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -68,7 +68,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of FileDetails
+     * Convert from JSON to a list of FileDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -80,7 +80,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of ProteinDetails
+     * Convert from JSON to a list of ProteinDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -92,7 +92,7 @@ public class PrideMarshaller extends JsonMarshaller {
     }
 
     /**
-     * Convert from JSON to a list of ProteinDetails
+     * Convert from JSON to a list of ProteinDetails.
      *
      * @param jsonURL the URL for the JSON object
      * @return an instance of the objectType containing the JSON information
@@ -102,5 +102,4 @@ public class PrideMarshaller extends JsonMarshaller {
     public PsmDetailList getPeptideDetailList(String jsonURL) throws IOException {
         return (PsmDetailList) gson.fromJson(new InputStreamReader(new URL(jsonURL).openStream()), PsmDetailList.class);
     }
-
 }

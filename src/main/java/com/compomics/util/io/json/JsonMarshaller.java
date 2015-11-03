@@ -195,5 +195,4 @@ public class JsonMarshaller {
         }
         return stringBuilder.toString();
     }
-
 }

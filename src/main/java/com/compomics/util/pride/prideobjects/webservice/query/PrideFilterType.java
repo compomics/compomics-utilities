@@ -1,7 +1,7 @@
 package com.compomics.util.pride.prideobjects.webservice.query;
 
 /**
- * An enum of the possible filters for the PRIDE Filter options
+ * An enum of the possible filters for the PRIDE Filter options.
  *
  * @author Kenneth Verheggen
  */

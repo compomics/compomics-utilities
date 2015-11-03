@@ -70,12 +70,10 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         nameTxt.setEditable(editable);
         nameTxt.setEnabled(editable);
         descriptionTxt.setEditable(editable);
         descriptionTxt.setEnabled(editable);
-
     }
 
     /**
@@ -84,11 +82,9 @@ public class IdentificationParametersNameDialog extends javax.swing.JDialog {
      * @param identificationParameters the identification parameters to display
      */
     private void populateGUI(IdentificationParameters identificationParameters) {
-
         nameTxt.setText(identificationParameters.getName());
         originalDescription = identificationParameters.getDescription();
         descriptionTxt.setText(originalDescription);
-
     }
 
     /**

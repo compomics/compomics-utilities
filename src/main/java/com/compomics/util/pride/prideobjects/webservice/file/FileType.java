@@ -1,7 +1,7 @@
 package com.compomics.util.pride.prideobjects.webservice.file;
 
 /**
- * An enum of the possible file types for the PRIDE file type options
+ * An enum of the possible file types for the PRIDE file type options.
  *
  * @author Kenneth Verheggen
  */

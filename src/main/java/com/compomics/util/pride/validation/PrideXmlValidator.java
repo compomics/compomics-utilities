@@ -53,7 +53,8 @@ public class PrideXmlValidator {
      * Set up a PrideXmlValidator using the default schema.
      *
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     public PrideXmlValidator() throws IOException, VerifierConfigurationException, SAXException {
@@ -65,7 +66,8 @@ public class PrideXmlValidator {
      *
      * @param schemaUrl the URL to the schema
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     public PrideXmlValidator(URL schemaUrl) throws IOException, VerifierConfigurationException, SAXException {
@@ -77,7 +79,8 @@ public class PrideXmlValidator {
      *
      * @param schemaUrl the schema to set
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     public void setSchema(URL schemaUrl) throws IOException, VerifierConfigurationException, SAXException {
@@ -92,7 +95,8 @@ public class PrideXmlValidator {
      * @return an XMLValidationErrorHandler object with the error details, if
      * any
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     private XMLValidationErrorHandler validate(Reader reader, Schema schema) throws IOException, VerifierConfigurationException, SAXException {
@@ -117,7 +121,8 @@ public class PrideXmlValidator {
      * @return an XMLValidationErrorHandler object with the error details, if
      * any
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     private XMLValidationErrorHandler validate(Reader reader) throws IOException, VerifierConfigurationException, SAXException {
@@ -134,7 +139,8 @@ public class PrideXmlValidator {
      * @return true of the given PRIDE XML file is valid
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
-     * @throws VerifierConfigurationException if a VerifierConfigurationException occurs
+     * @throws VerifierConfigurationException if a
+     * VerifierConfigurationException occurs
      * @throws SAXException if a SAXException occurs
      */
     public boolean validate(File prideXmlFile) throws FileNotFoundException, IOException, VerifierConfigurationException, SAXException {

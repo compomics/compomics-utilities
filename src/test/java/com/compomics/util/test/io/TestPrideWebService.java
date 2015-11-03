@@ -1,6 +1,5 @@
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.pride.PrideWebService;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilter;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilterType;
@@ -22,7 +21,7 @@ import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
 import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 
 /**
- * Test for the pride web service java object
+ * Test for the PRIDE web service Java object.
  *
  * @author Kenneth Verheggen
  */
@@ -294,5 +293,4 @@ public class TestPrideWebService {
         int result = PrideWebService.getPSMCountByAssayAndSequence(assayAccession, sequence);
         assertEquals(1, result);
     }
-
 }

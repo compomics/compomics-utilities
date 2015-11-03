@@ -134,7 +134,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the theoretic m/z
      */
     public Double getTheoreticMz() {
-        return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * (identificationCharge.value - 1)) / identificationCharge.value;
+        return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge.value) / identificationCharge.value;
     }
 
     /**

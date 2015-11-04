@@ -65,10 +65,11 @@ public class ReporterIonQuantification extends Quantification {
     }
 
     /**
-     * This method returns the reporter ion name associated to the given sample. Null if not found.
+     * This method returns the reporter ion name associated to the given sample.
+     * Null if not found.
      *
      * @param aSample the sample
-     * 
+     *
      * @return the static index of the associated ion
      */
     public String getReporterIndex(Sample aSample) {
@@ -81,7 +82,7 @@ public class ReporterIonQuantification extends Quantification {
     }
 
     /**
-     * returns the reporter method used.
+     * Returns the reporter method used.
      *
      * @return the method used
      */
@@ -139,7 +140,7 @@ public class ReporterIonQuantification extends Quantification {
 
     /**
      * Returns the normalization factors.
-     * 
+     *
      * @return the normalization factors
      */
     public NormalizationFactors getNormalizationFactors() {
@@ -148,11 +149,10 @@ public class ReporterIonQuantification extends Quantification {
 
     /**
      * Sets the normalization factors.
-     * 
+     *
      * @param normalizationFactors the normalization factors
      */
     public void setNormalizationFactors(NormalizationFactors normalizationFactors) {
         this.normalizationFactors = normalizationFactors;
     }
-    
 }

@@ -3,41 +3,41 @@ package com.compomics.util.experiment.normalization;
 import java.util.HashMap;
 
 /**
- * Class grouping the normalization factors used to normalize quantification results.
+ * Class grouping the normalization factors used to normalize quantification
+ * results.
  *
  * @author Marc Vaudel
  */
 public class NormalizationFactors {
-    
+
     /**
-     * List of protein level normalization factors. The key should be the same as for the
-     * sample assignment.
+     * List of protein level normalization factors. The key should be the same
+     * as for the sample assignment.
      */
     private HashMap<String, Double> proteinNormalizationFactors = new HashMap<String, Double>();
-    
     /**
-     * List of peptide level normalization factors. The key should be the same as for the
-     * sample assignment.
+     * List of peptide level normalization factors. The key should be the same
+     * as for the sample assignment.
      */
     private HashMap<String, Double> peptideNormalizationFactors = new HashMap<String, Double>();
-    
     /**
-     * List of PSM level normalization factors. The key should be the same as for the
-     * sample assignment.
+     * List of PSM level normalization factors. The key should be the same as
+     * for the sample assignment.
      */
     private HashMap<String, Double> psmNormalizationFactors = new HashMap<String, Double>();
-    
+
     /**
      * Constructor.
      */
     public NormalizationFactors() {
-        
+
     }
-    
+
     /**
      * Indicates whether normalization factors are set.
-     * 
-     * @return a boolean indicating whether the protein normalization factors are set
+     *
+     * @return a boolean indicating whether the protein normalization factors
+     * are set
      */
     public boolean hasNormalizationFactors() {
         return hasProteinNormalisationFactors() || hasPeptideNormalisationFactors() || hasPsmNormalisationFactors();
@@ -46,7 +46,8 @@ public class NormalizationFactors {
     /**
      * Indicates whether the protein normalization factors are set.
      *
-     * @return a boolean indicating whether the protein normalization factors are set
+     * @return a boolean indicating whether the protein normalization factors
+     * are set
      */
     public boolean hasProteinNormalisationFactors() {
         return !proteinNormalizationFactors.isEmpty();
@@ -55,7 +56,8 @@ public class NormalizationFactors {
     /**
      * Indicates whether the peptide normalization factors are set.
      *
-     * @return a boolean indicating whether the peptide normalization factors are set
+     * @return a boolean indicating whether the peptide normalization factors
+     * are set
      */
     public boolean hasPeptideNormalisationFactors() {
         return !peptideNormalizationFactors.isEmpty();
@@ -64,7 +66,8 @@ public class NormalizationFactors {
     /**
      * Indicates whether the PSM normalization factors are set.
      *
-     * @return a boolean indicating whether the PSM normalization factors are set
+     * @return a boolean indicating whether the PSM normalization factors are
+     * set
      */
     public boolean hasPsmNormalisationFactors() {
         return !psmNormalizationFactors.isEmpty();
@@ -122,7 +125,8 @@ public class NormalizationFactors {
     }
 
     /**
-     * Returns the protein normalization factor for the given sample, 1.0 if not set.
+     * Returns the protein normalization factor for the given sample, 1.0 if not
+     * set.
      *
      * @param sampleName the index of the sample
      *
@@ -137,7 +141,8 @@ public class NormalizationFactors {
     }
 
     /**
-     * Returns the peptide normalization factor for the given sample, 1.0 if not set.
+     * Returns the peptide normalization factor for the given sample, 1.0 if not
+     * set.
      *
      * @param sampleName the index of the sample
      *
@@ -152,7 +157,8 @@ public class NormalizationFactors {
     }
 
     /**
-     * Returns the PSM normalization factor for the given sample, 1.0 if not set.
+     * Returns the PSM normalization factor for the given sample, 1.0 if not
+     * set.
      *
      * @param sampleName the index of the sample
      *
@@ -165,5 +171,4 @@ public class NormalizationFactors {
         }
         return normalisationFactor;
     }
-
 }

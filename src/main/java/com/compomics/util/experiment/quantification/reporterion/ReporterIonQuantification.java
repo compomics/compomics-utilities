@@ -2,6 +2,7 @@ package com.compomics.util.experiment.quantification.reporterion;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Sample;
+import com.compomics.util.experiment.normalization.NormalizationFactors;
 import com.compomics.util.experiment.quantification.Quantification;
 import java.util.ArrayList;
 
@@ -25,14 +26,13 @@ public class ReporterIonQuantification extends Quantification {
      */
     private ArrayList<String> controlSamples;
     /**
-     * List of normalization factors. The key should be the same as for the
-     * sample assignment.
-     */
-    private HashMap<String, Double> normalizationFactors = new HashMap<String, Double>();
-    /**
      * The reporter method.
      */
     private ReporterMethod reporterMethod;
+    /**
+     * The normalization factors.
+     */
+    private NormalizationFactors normalizationFactors;
 
     /**
      * Constructor for the reporter ion quantification.
@@ -41,6 +41,7 @@ public class ReporterIonQuantification extends Quantification {
      */
     public ReporterIonQuantification(QuantificationMethod methodUsed) {
         this.methodUsed = methodUsed;
+        normalizationFactors = new NormalizationFactors();
     }
 
     /**
@@ -128,47 +129,6 @@ public class ReporterIonQuantification extends Quantification {
     }
 
     /**
-     * Indicates whether the normalization factors are set.
-     *
-     * @return a boolean indicating whether the normalization factors are set
-     */
-    public boolean hasNormalisationFactors() {
-        return !normalizationFactors.isEmpty();
-    }
-
-    /**
-     * Resets the normalization factors.
-     */
-    public void resetNormalisationFactors() {
-        normalizationFactors.clear();
-    }
-
-    /**
-     * Adds a normalization factor.
-     *
-     * @param reporterIonName the index of the sample
-     * @param normalisationFactor the normalization factor
-     */
-    public void addNormalisationFactor(String reporterIonName, double normalisationFactor) {
-        normalizationFactors.put(reporterIonName, normalisationFactor);
-    }
-
-    /**
-     * Returns the normalization factor for the given sample.
-     *
-     * @param reporterIonName the index of the sample
-     *
-     * @return the normalization factor, 1.0 if not set.
-     */
-    public double getNormalisationFactor(String reporterIonName) {
-        Double normalisationFactor = normalizationFactors.get(reporterIonName);
-        if (normalisationFactor == null) {
-            return 1.0;
-        }
-        return normalisationFactor;
-    }
-
-    /**
      * Returns a set containing the indexes of every sample.
      *
      * @return a set containing the indexes of every sample
@@ -176,4 +136,23 @@ public class ReporterIonQuantification extends Quantification {
     public Set<String> getSampleIndexes() {
         return sampleAssignement.keySet();
     }
+
+    /**
+     * Returns the normalization factors.
+     * 
+     * @return the normalization factors
+     */
+    public NormalizationFactors getNormalizationFactors() {
+        return normalizationFactors;
+    }
+
+    /**
+     * Sets the normalization factors.
+     * 
+     * @param normalizationFactors the normalization factors
+     */
+    public void setNormalizationFactors(NormalizationFactors normalizationFactors) {
+        this.normalizationFactors = normalizationFactors;
+    }
+    
 }

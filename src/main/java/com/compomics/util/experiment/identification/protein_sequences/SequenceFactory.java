@@ -532,6 +532,7 @@ public class SequenceFactory {
      *
      * @param fastaFile the FASTA file to load
      * @param waitingHandler a waitingHandler showing the progress
+     * 
      * @throws FileNotFoundException exception thrown if the file was not found
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file

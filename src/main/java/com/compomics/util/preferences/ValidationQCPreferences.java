@@ -14,6 +14,10 @@ import java.util.ArrayList;
 public class ValidationQCPreferences implements Serializable {
 
     /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -1840980039375035577L;
+    /**
      * Indicates whether the database size should be checked.
      */
     private boolean dbSize = true;

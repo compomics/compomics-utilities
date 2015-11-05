@@ -12,6 +12,10 @@ import java.io.Serializable;
 public class SequenceMatchingPreferences implements Serializable {
 
     /**
+     * Serialization number for backward compatibility.
+     */
+    static final long serialVersionUID = 228961121369106450L;
+    /**
      * The different types of amino acid matching.
      */
     public static enum MatchingType {
@@ -43,11 +47,6 @@ public class SequenceMatchingPreferences implements Serializable {
             }
         }
     }
-
-    /**
-     * Serialization number for backward compatibility.
-     */
-    static final long serialVersionUID = 228961121369106450L;
     /**
      * The amino acid matching type.
      */

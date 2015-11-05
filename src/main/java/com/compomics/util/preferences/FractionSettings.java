@@ -11,6 +11,10 @@ import java.io.Serializable;
 public class FractionSettings implements Serializable {
 
     /**
+     * Serial version UID for backward compatibility.
+     */
+    static final long serialVersionUID = -3455093073502201047L;
+    /**
      * The minimum confidence required for a protein to be included in the
      * calculation of the average molecular weight plot in the Fractions tab of
      * PeptideShaker.

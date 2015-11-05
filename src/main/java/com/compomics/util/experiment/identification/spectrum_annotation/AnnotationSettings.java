@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -208,8 +209,9 @@ public class AnnotationSettings implements Serializable {
 
     /**
      * Indicates whether reporter ions should be annotated by default.
-     * 
-     * @return a boolean indicating whether reporter ions should be annotated by default
+     *
+     * @return a boolean indicating whether reporter ions should be annotated by
+     * default
      */
     public Boolean getReporterIons() {
         if (reporterIons == null) {
@@ -220,8 +222,9 @@ public class AnnotationSettings implements Serializable {
 
     /**
      * Sets whether reporter ions should be annotated by default.
-     * 
-     * @param reporterIons a boolean indicating whether reporter ions should be annotated by default
+     *
+     * @param reporterIons a boolean indicating whether reporter ions should be
+     * annotated by default
      */
     public void setReporterIons(Boolean reporterIons) {
         this.reporterIons = reporterIons;
@@ -558,11 +561,13 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether the given annotation settings are the same as these ones.
-     * 
+     * Returns a boolean indicating whether the given annotation settings are
+     * the same as these ones.
+     *
      * @param annotationSettings the annotation settings to compare to
-     * 
-     * @return a boolean indicating whether the given annotation settings are the same as these ones
+     *
+     * @return a boolean indicating whether the given annotation settings are
+     * the same as these ones
      */
     public boolean isSameAs(AnnotationSettings annotationSettings) {
         if (yAxisZoomExcludesBackgroundPeaks != annotationSettings.yAxisZoomExcludesBackgroundPeaks()) {
@@ -644,5 +649,101 @@ public class AnnotationSettings implements Serializable {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+
+        if (!selectedIonsMap.isEmpty()) {
+            output.append("Ion Types: ");
+            String ionTypes = "";
+
+            for (Ion.IonType ionType : selectedIonsMap.keySet()) {
+                if (ionType == Ion.IonType.IMMONIUM_ION) {
+                    if (!ionTypes.isEmpty()) {
+                        ionTypes += ", ";
+                    }
+                    ionTypes += "immonium ions";
+                } else if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                    for (int subType : selectedIonsMap.get(ionType)) {
+                        if (subType == PeptideFragmentIon.A_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "a ions";
+                        } else if (subType == PeptideFragmentIon.B_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "b ions";
+                        } else if (subType == PeptideFragmentIon.C_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "x ions";
+                        } else if (subType == PeptideFragmentIon.X_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "x ions";
+                        } else if (subType == PeptideFragmentIon.Y_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "y ions";
+                        } else if (subType == PeptideFragmentIon.Z_ION) {
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "z ions";
+                        }
+                    }
+                } else if (ionType == Ion.IonType.PRECURSOR_ION) {
+                    if (!ionTypes.isEmpty()) {
+                        ionTypes += ", ";
+                    }
+                    ionTypes += "precursor ions";
+                } else if (ionType == Ion.IonType.REPORTER_ION) {
+                    if (!ionTypes.isEmpty()) {
+                        ionTypes += ", ";
+                    }
+                    ionTypes += "reporter ions";
+                }
+            }
+            
+            output.append(ionTypes).append(".").append(newLine);
+        }
+
+        ArrayList<NeutralLoss> selectedNeutralLosses = getNeutralLosses();
+
+        if (!selectedNeutralLosses.isEmpty()) {
+            output.append("Neutral Losses: ");
+            String neutralLosses = "";
+
+            for (NeutralLoss selectedNeutralLoss : selectedNeutralLosses) {
+                if (!neutralLosses.isEmpty()) {
+                    neutralLosses += ", ";
+                }
+                neutralLosses += selectedNeutralLoss.name;
+            }
+
+            output.append(neutralLosses).append(".").append(newLine);
+        }
+
+        output.append("Intensity Limit: ").append(intensityLimit * 100).append(".").append(newLine);
+
+        output.append("Fragment Ion Accuracy: ").append(fragmentIonAccuracy).append(".").append(newLine);
+
+        output.append("High Resolution Annotation: ").append(highResolutionAnnotation).append(".").append(newLine);
+
+        return output.toString();
     }
 }

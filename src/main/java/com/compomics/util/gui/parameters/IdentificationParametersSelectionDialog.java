@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
  * IdentificationParametersSelectionDialog.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IdentificationParametersSelectionDialog extends javax.swing.JDialog {
 
@@ -73,7 +74,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     public enum StartupMode {
 
         /**
-         * edits the search parameters.
+         * Edits the search parameters.
          */
         searchParameters,
         /**
@@ -102,7 +103,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters, StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, Dialog owner, IdentificationParameters identificationParameters,
+            StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
         this.editable = editable;
@@ -135,13 +138,13 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                 if (row == -1) {
                     canceled = true;
                 } else {
-                    parametersTable.setRowSelectionInterval(row, row);
+                    settingsTable.setRowSelectionInterval(row, row);
                 }
             }
         } else if (identificationParametersFactory.getParametersList().isEmpty()) {
             addFromSearchSettings();
-            if (parametersTable.getRowCount() > 0) {
-                parametersTable.setRowSelectionInterval(0, 0);
+            if (settingsTable.getRowCount() > 0) {
+                settingsTable.setRowSelectionInterval(0, 0);
             } else {
                 canceled = true;
             }
@@ -166,7 +169,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
+            StartupMode startupMode, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon,
+            LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.editable = editable;
@@ -199,13 +204,13 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                 if (row == -1) {
                     canceled = true;
                 } else {
-                    parametersTable.setRowSelectionInterval(row, row);
+                    settingsTable.setRowSelectionInterval(row, row);
                 }
             }
         } else if (identificationParametersFactory.getParametersList().isEmpty()) {
             addFromSearchSettings();
-            if (parametersTable.getRowCount() > 0) {
-                parametersTable.setRowSelectionInterval(0, 0);
+            if (settingsTable.getRowCount() > 0) {
+                settingsTable.setRowSelectionInterval(0, 0);
             } else {
                 canceled = true;
             }
@@ -231,7 +236,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param searchSettingsDialog a dialog containing the settings to edit and
      * save
      */
-    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, SearchSettingsDialog searchSettingsDialog) {
+    public IdentificationParametersSelectionDialog(java.awt.Frame parentFrame, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon,
+            LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, SearchSettingsDialog searchSettingsDialog) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -267,24 +273,28 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * Set up the GUI.
      */
     private void setUpGui() {
-
-        parametersTable.getColumn(" ").setMaxWidth(30);
-        parametersTable.getColumn("Name").setMaxWidth(100);
-
+        settingsTable.getColumn(" ").setMinWidth(30);
+        settingsTable.getColumn(" ").setMaxWidth(30);
+        settingsTable.getTableHeader().setReorderingAllowed(false);
+        settingsTableScrollPane.getViewport().setOpaque(false);
     }
 
     /**
      * Populates the GUI using the given identification parameters.
      */
     public void populateGUI() {
-        parametersTable.setModel(new ParametersTableModel());
+        settingsTable.setModel(new SettingsTableModel());
+        settingsTable.getColumn(" ").setMinWidth(30);
+        settingsTable.getColumn(" ").setMaxWidth(30);
     }
 
     /**
      * Updates the parameters table.
      */
     public void updateTable() {
-        ((DefaultTableModel) parametersTable.getModel()).fireTableDataChanged();
+        ((DefaultTableModel) settingsTable.getModel()).fireTableDataChanged();
+        settingsTable.getColumn(" ").setMinWidth(50);
+        settingsTable.getColumn(" ").setMaxWidth(50);
     }
 
     /**
@@ -332,8 +342,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         tablePanel = new javax.swing.JPanel();
-        parametersTableScrollPane = new javax.swing.JScrollPane();
-        parametersTable = new javax.swing.JTable();
+        settingsTableScrollPane = new javax.swing.JScrollPane();
+        settingsTable = new javax.swing.JTable();
         helpLbl = new javax.swing.JLabel();
 
         addMenu.setText("Add");
@@ -418,7 +428,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         });
         parametersPopupMenu.add(removeMenuItem);
 
-        saveAsMenuItem.setText("Save As File");
+        saveAsMenuItem.setText("Save as File");
         saveAsMenuItem.setToolTipText("");
         saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -428,6 +438,12 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         parametersPopupMenu.add(saveAsMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Identification Settings");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -445,26 +461,26 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             }
         });
 
-        tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Available Identification Parameters"));
+        tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Identification Settings List"));
         tablePanel.setOpaque(false);
 
-        parametersTableScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
+        settingsTableScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                parametersTableScrollPaneMouseReleased(evt);
+                settingsTableScrollPaneMouseReleased(evt);
             }
         });
 
-        parametersTable.setModel(new ParametersTableModel());
-        parametersTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        parametersTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        settingsTable.setModel(new SettingsTableModel());
+        settingsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        settingsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                parametersTableMouseReleased(evt);
+                settingsTableMouseReleased(evt);
             }
         });
-        parametersTableScrollPane.setViewportView(parametersTable);
+        settingsTableScrollPane.setViewportView(settingsTable);
 
         helpLbl.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
-        helpLbl.setText("Right-click to add, edit, and remove parameters.");
+        helpLbl.setText("Right-click to edit the table.");
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
         tablePanel.setLayout(tablePanelLayout);
@@ -473,8 +489,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(parametersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                    .addComponent(settingsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
                     .addGroup(tablePanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(helpLbl)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -483,7 +500,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             tablePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tablePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(parametersTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                .addComponent(settingsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(helpLbl)
                 .addContainerGap())
@@ -509,7 +526,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -530,54 +547,119 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void parametersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableMouseReleased
-        parametersTableClicked(evt, parametersTable);
-    }//GEN-LAST:event_parametersTableMouseReleased
+    /**
+     * Handles clicking in the settings table.
+     * 
+     * @param evt 
+     */
+    private void settingsTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTableMouseReleased
+        parametersTableClicked(evt, settingsTable);
+    }//GEN-LAST:event_settingsTableMouseReleased
 
-    private void parametersTableScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametersTableScrollPaneMouseReleased
-        parametersTableClicked(evt, parametersTableScrollPane);
-    }//GEN-LAST:event_parametersTableScrollPaneMouseReleased
+    /**
+     * Handles clicking in the settings table scroll pane.
+     * 
+     * @param evt 
+     */
+    private void settingsTableScrollPaneMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_settingsTableScrollPaneMouseReleased
+        parametersTableClicked(evt, settingsTableScrollPane);
+    }//GEN-LAST:event_settingsTableScrollPaneMouseReleased
 
+    /**
+     * Save the parameter.
+     * 
+     * @param evt 
+     */
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
         saveAs(getSelectedParametersName());
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
+    /**
+     * Remove the selected parameter.
+     * 
+     * @param evt 
+     */
     private void removeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeMenuItemActionPerformed
         remove(getSelectedParametersName());
     }//GEN-LAST:event_removeMenuItemActionPerformed
 
+    /**
+     * Add from protocol.
+     * 
+     * @param evt 
+     */
     private void addProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProtocolMenuItemActionPerformed
         addFromProtocol();
     }//GEN-LAST:event_addProtocolMenuItemActionPerformed
 
+    /**
+     * Add from search settings.
+     * 
+     * @param evt 
+     */
     private void addSearchSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSearchSettingsMenuItemActionPerformed
         addFromSearchSettings();
     }//GEN-LAST:event_addSearchSettingsMenuItemActionPerformed
 
+    /**
+     * Add advanced.
+     * 
+     * @param evt 
+     */
     private void addDetailsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDetailsMenuItemActionPerformed
         addAdvanced();
     }//GEN-LAST:event_addDetailsMenuItemActionPerformed
 
+    /**
+     * Edit protocol.
+     * 
+     * @param evt 
+     */
     private void editProtocolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProtocolMenuItemActionPerformed
         editProtocol(getSelectedParametersName());
     }//GEN-LAST:event_editProtocolMenuItemActionPerformed
 
+    /**
+     * Edit search settings.
+     * 
+     * @param evt 
+     */
     private void editSearchSettingsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSearchSettingsMenuItemActionPerformed
         editSearchSettings(getSelectedParametersName());
     }//GEN-LAST:event_editSearchSettingsMenuItemActionPerformed
 
+    /**
+     * Edit advanced.
+     * 
+     * @param evt 
+     */
     private void editDetailsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDetailsMenuItemActionPerformed
         editAdvanced(getSelectedParametersName());
     }//GEN-LAST:event_editDetailsMenuItemActionPerformed
 
+    /**
+     * Rename parameters.
+     * 
+     * @param evt 
+     */
     private void renameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renameMenuItemActionPerformed
         rename(getSelectedParametersName());
     }//GEN-LAST:event_renameMenuItemActionPerformed
 
+    /**
+     * Add from file.
+     * 
+     * @param evt 
+     */
     private void addFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFileActionPerformed
         addFromFile();
     }//GEN-LAST:event_addFileActionPerformed
 
+    /**
+     * Close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (getSelectedParametersName() == null) {
             canceled = true;
@@ -585,11 +667,24 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addDetailsMenuItem;
@@ -606,11 +701,11 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     private javax.swing.JLabel helpLbl;
     private javax.swing.JButton okButton;
     private javax.swing.JPopupMenu parametersPopupMenu;
-    private javax.swing.JTable parametersTable;
-    private javax.swing.JScrollPane parametersTableScrollPane;
     private javax.swing.JMenuItem removeMenuItem;
     private javax.swing.JMenuItem renameMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JTable settingsTable;
+    private javax.swing.JScrollPane settingsTableScrollPane;
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables
 
@@ -622,13 +717,13 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void parametersTableClicked(java.awt.event.MouseEvent evt, Component invoker) {
         int selectedRow = -1;
-        if (evt != null && parametersTable.rowAtPoint(evt.getPoint()) != -1) {
-            selectedRow = parametersTable.rowAtPoint(evt.getPoint());
+        if (evt != null && settingsTable.rowAtPoint(evt.getPoint()) != -1) {
+            selectedRow = settingsTable.rowAtPoint(evt.getPoint());
         }
         if (selectedRow != -1) {
-            parametersTable.setRowSelectionInterval(selectedRow, selectedRow);
+            settingsTable.setRowSelectionInterval(selectedRow, selectedRow);
         } else {
-            parametersTable.removeRowSelectionInterval(0, parametersTable.getRowCount() - 1);
+            settingsTable.removeRowSelectionInterval(0, settingsTable.getRowCount() - 1);
         }
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
             // Disable edition menus if no row is selected
@@ -643,7 +738,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             parametersPopupMenu.show(invoker, evt.getX(), evt.getY());
         }
         if (selectedRow != -1 && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-            int selectedColumn = parametersTable.columnAtPoint(evt.getPoint());
+            int selectedColumn = settingsTable.columnAtPoint(evt.getPoint());
             if (selectedColumn == 2) {
                 rename(getSelectedParametersName());
             } else {
@@ -662,8 +757,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * parameters table
      */
     private int getRow(String parameterName) {
-        for (int row = 0; row < parametersTable.getRowCount(); row++) {
-            String name = parametersTable.getValueAt(row, 1).toString();
+        for (int row = 0; row < settingsTable.getRowCount(); row++) {
+            String name = settingsTable.getValueAt(row, 1).toString();
             if (name.equals(parameterName)) {
                 return row;
             }
@@ -677,11 +772,11 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @return the name of the parameters selected in the parameters table
      */
     private String getSelectedParametersName() {
-        int row = parametersTable.getSelectedRow();
-        if (row < 0 || row >= parametersTable.getRowCount()) {
+        int row = settingsTable.getSelectedRow();
+        if (row < 0 || row >= settingsTable.getRowCount()) {
             return null;
         }
-        return parametersTable.getValueAt(row, 1).toString();
+        return settingsTable.getValueAt(row, 1).toString();
     }
 
     /**
@@ -696,7 +791,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      */
     private void addFromSearchSettings() {
         SearchParameters defaultParameters = new SearchParameters();
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, null, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, defaultParameters,
+                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, null, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters searchParameters = searchSettingsDialog.getSearchParameters();
             IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
@@ -769,7 +865,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
             }
         };
         fc.setFileFilter(filter);
+
         int result = fc.showOpenDialog(this);
+
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             String fileName = file.getName();
@@ -780,8 +878,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                 Object savedObject;
 
                 try {
-
-                    // Try as json file
+                    // try as json file
                     IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
                     Class expectedObjectType = MarshallableParameter.class;
                     Object object = jsonMarshaller.fromJson(expectedObjectType, file);
@@ -797,11 +894,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                         JOptionPane.showMessageDialog(null, "Parameters file " + file + " not recognized. Please verify the search paramters file.", "File Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-
                 } catch (Exception e1) {
-
                     try {
-                        // Try serialized java object
+                        // try serialized java object
                         savedObject = SerializationUtils.readObject(file);
 
                     } catch (Exception e2) {
@@ -834,6 +929,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                 } else {
                     throw new UnsupportedOperationException("Parameters of type " + savedObject.getClass() + " not supported.");
                 }
+
                 checkNameAndUpdate(identificationParameters);
 
             } else {
@@ -870,10 +966,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editSearchSettings(String parametersName) {
-
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
         editSearchSettings(identificationParameters);
-
     }
 
     /**
@@ -883,10 +977,10 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param identificationParameters the identification parameters to edit
      */
     private void editSearchSettings(IdentificationParameters identificationParameters) {
-
         String parametersName = identificationParameters.getName();
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, parametersName, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, 
+                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, parametersName, editable);
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters newSearchParameters = searchSettingsDialog.getSearchParameters();
             if (!searchParameters.equals(newSearchParameters)) {
@@ -902,10 +996,8 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editAdvanced(String parametersName) {
-
         IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parametersName);
         editAdvanced(identificationParameters);
-
     }
 
     /**
@@ -914,13 +1006,13 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
      * @param parametersName the name of the parameters to edit.
      */
     private void editAdvanced(IdentificationParameters identificationParameters) {
-
         if (identificationParameters == null) {
             JOptionPane.showMessageDialog(this, "An error occurred while reading the parameters.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             String oldName = identificationParameters.getName();
-            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
+            IdentificationParametersEditionDialog identificationParametersEditionDialog = new IdentificationParametersEditionDialog(
+                    this, parentFrame, identificationParameters, configurationFile, normalIcon, waitingIcon, lastSelectedFolder, validationQCPreferencesDialogParent, editable);
             if (!identificationParametersEditionDialog.isCanceled()) {
                 identificationParameters = identificationParametersEditionDialog.getIdentificationParameters();
                 updateParametersInFactory(identificationParameters, oldName);
@@ -997,7 +1089,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
     /**
      * Table model for the neutral losses table.
      */
-    private class ParametersTableModel extends DefaultTableModel {
+    private class SettingsTableModel extends DefaultTableModel {
 
         /**
          * List of parameters available.
@@ -1005,9 +1097,9 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
         private ArrayList<String> parametersNames;
 
         /**
-         * constructor.
+         * Constructor.
          */
-        public ParametersTableModel() {
+        public SettingsTableModel() {
         }
 
         @Override
@@ -1021,7 +1113,7 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -1031,8 +1123,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                     return " ";
                 case 1:
                     return "Name";
-                case 2:
-                    return "Description";
                 default:
                     return "";
             }
@@ -1047,10 +1137,6 @@ public class IdentificationParametersSelectionDialog extends javax.swing.JDialog
                     String parameterName = parametersNames.get(row);
                     IdentificationParameters identificationParameters = identificationParametersFactory.getIdentificationParameters(parameterName);
                     return identificationParameters.getName();
-                case 2:
-                    parameterName = parametersNames.get(row);
-                    identificationParameters = identificationParametersFactory.getIdentificationParameters(parameterName);
-                    return identificationParameters.getDescription();
                 default:
                     return "";
             }

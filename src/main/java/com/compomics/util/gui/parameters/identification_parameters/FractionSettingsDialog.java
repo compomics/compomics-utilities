@@ -2,12 +2,12 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.preferences.FractionSettings;
 import java.awt.Dialog;
-import javax.swing.JOptionPane;
 
 /**
  * FractionSettingsDialog.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FractionSettingsDialog extends javax.swing.JDialog {
 
@@ -25,7 +25,8 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param fractionSettings the fraction settings
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public FractionSettingsDialog(java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
         super(parentFrame, true);
@@ -43,7 +44,8 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame a parent frame
      * @param fractionSettings the fraction settings
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public FractionSettingsDialog(Dialog owner, java.awt.Frame parentFrame, FractionSettings fractionSettings, boolean editable) {
         super(owner, true);
@@ -59,7 +61,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * Sets up the GUI.
      */
     private void setUpGui() {
-        proteinConfidenceMwTxt.setEnabled(editable);
+        proteinMwSpinner.setEnabled(editable);
     }
 
     /**
@@ -68,9 +70,7 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
      * @param fractionSettings the fraction settings to display
      */
     private void populateGUI(FractionSettings fractionSettings) {
-
-        proteinConfidenceMwTxt.setText(fractionSettings.getProteinConfidenceMwPlots() + "");
-
+        proteinMwSpinner.setValue(fractionSettings.getProteinConfidenceMwPlots());
     }
 
     /**
@@ -83,36 +83,13 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Validates the user input.
-     *
-     * @return a boolean indicating whether the user input is valid
-     */
-    public boolean validateInput() {
-        try {
-            Double temp = new Double(proteinConfidenceMwTxt.getText().trim());
-            if (temp < 0 || temp > 100) {
-                JOptionPane.showMessageDialog(this, "Please verify the input for the Protein Confidence MW.",
-                        "Input Error", JOptionPane.ERROR_MESSAGE);
-                proteinConfidenceMwTxt.requestFocus();
-                return false;
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Please verify the input for the Protein Confidence MW.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
-            proteinConfidenceMwTxt.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Returns the fraction settings as set by the user.
      *
      * @return the fraction settings as set by the user
      */
     public FractionSettings getFractionSettings() {
         FractionSettings fractionSettings = new FractionSettings();
-        fractionSettings.setProteinConfidenceMwPlots(new Double(proteinConfidenceMwTxt.getText().trim()));
+        fractionSettings.setProteinConfidenceMwPlots((Double) proteinMwSpinner.getValue());
         return fractionSettings;
     }
 
@@ -128,24 +105,27 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
         backgrounPanel = new javax.swing.JPanel();
         fractionsPanel = new javax.swing.JPanel();
         proteinMwLabel = new javax.swing.JLabel();
-        proteinConfidenceMwTxt = new javax.swing.JTextField();
-        percentLabel4 = new javax.swing.JLabel();
+        proteinMwSpinner = new javax.swing.JSpinner();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Fraction Settings");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        backgrounPanel.setBackground(new java.awt.Color(230, 230, 230));
 
         fractionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Fractions (Beta)"));
         fractionsPanel.setOpaque(false);
 
-        proteinMwLabel.setText("Protein Confidence MW");
+        proteinMwLabel.setText("Protein Confidence MW (%)");
         proteinMwLabel.setToolTipText("<html>\nThe minium protein confidence required to be included in the<br>\naverage molecular weight analysis in the Fractions tab.\n</html>");
 
-        proteinConfidenceMwTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        proteinConfidenceMwTxt.setText("95");
-        proteinConfidenceMwTxt.setToolTipText("<html>\nThe minium protein confidence required to be included in the<br>\naverage molecular weight analysis in the Fractions tab.\n</html>");
-
-        percentLabel4.setText("%");
+        proteinMwSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 100.0d, 1.0d));
 
         javax.swing.GroupLayout fractionsPanelLayout = new javax.swing.GroupLayout(fractionsPanel);
         fractionsPanel.setLayout(fractionsPanelLayout);
@@ -154,10 +134,8 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
             .addGroup(fractionsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(proteinMwLabel)
-                .addGap(30, 30, 30)
-                .addComponent(proteinConfidenceMwTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(percentLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(proteinMwSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addContainerGap())
         );
         fractionsPanelLayout.setVerticalGroup(
@@ -165,10 +143,9 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
             .addGroup(fractionsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(fractionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(proteinConfidenceMwTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(percentLabel4)
-                    .addComponent(proteinMwLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(proteinMwLabel)
+                    .addComponent(proteinMwSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         cancelButton.setText("Cancel");
@@ -226,24 +203,41 @@ public class FractionSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgrounPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel fractionsPanel;
     private javax.swing.JButton okButton;
-    private javax.swing.JLabel percentLabel4;
-    private javax.swing.JTextField proteinConfidenceMwTxt;
     private javax.swing.JLabel proteinMwLabel;
+    private javax.swing.JSpinner proteinMwSpinner;
     // End of variables declaration//GEN-END:variables
 
 }

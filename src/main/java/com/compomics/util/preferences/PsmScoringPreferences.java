@@ -112,4 +112,22 @@ public class PsmScoringPreferences implements Serializable {
         }
         return false;
     }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        
+        StringBuilder output = new StringBuilder();
+        
+        //output.append(" : ").append("").append(".").append(newLine);
+
+        output.append("(not yet available)").append(newLine); // @TODO: implement me!
+
+        return output.toString();
+    }
 }

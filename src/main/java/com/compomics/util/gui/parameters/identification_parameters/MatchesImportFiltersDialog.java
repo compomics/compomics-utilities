@@ -215,6 +215,11 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Import Filters");
         setBackground(new java.awt.Color(230, 230, 230));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -374,6 +379,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -423,6 +429,16 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                 "Import Filters - Help", 500, 10); // @TODO: reduce height??
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonActionPerformed
+
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;

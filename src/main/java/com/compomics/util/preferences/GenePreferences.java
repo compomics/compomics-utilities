@@ -1267,4 +1267,18 @@ public class GenePreferences implements Serializable {
     public static File getGoMappingFile(String speciesName) {
         return new File(getGeneMappingFolder(), speciesName + GO_MAPPING_FILE_SUFFIX);
     }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        StringBuilder output = new StringBuilder();
+        output.append("Species: ").append(currentSpecies).append(" (").append(currentSpecies).append(")").append(".").append(newLine);
+
+        return output.toString();
+    }
 }

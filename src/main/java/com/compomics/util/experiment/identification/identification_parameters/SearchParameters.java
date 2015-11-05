@@ -32,6 +32,7 @@ import no.uib.jsparklines.data.XYDataPoint;
  * This class groups the parameters used for identification.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SearchParameters implements Serializable, MarshallableParameter {
 
@@ -680,11 +681,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @throws IOException if an IOException occurs
      */
     public static void saveIdentificationParameters(SearchParameters searchParameters, File searchParametersFile) throws IOException {
-
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         searchParameters.setType();
         jsonMarshaller.saveObjectToJson(searchParameters, searchParametersFile);
-
     }
 
     /**
@@ -725,14 +724,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
 
         StringBuilder output = new StringBuilder();
-        if (fastaFile != null) {
-            output.append("Fasta: ").append(fastaFile.getName()).append(newLine);
-        }
-
+        
         if (enzyme != null) {
             String name = enzyme.getName();
             if (!name.equals("Trypsin")) {
-                output.append("Enzyme: ").append(name).append(newLine);
+                output.append("Enzyme: ").append(name).append(".").append(newLine);
             }
         }
 
@@ -749,7 +745,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                         output.append(", ").append(ptm);
                     }
                 }
-                output.append(newLine);
+                output.append(".").append(newLine);
             }
         }
 
@@ -766,37 +762,40 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                         output.append(", ").append(ptm);
                     }
                 }
-                output.append(newLine);
+                output.append(".").append(newLine);
             }
         }
 
         if (!nMissedCleavages.equals(defaultParameters.getnMissedCleavages())) {
-            output.append("Missed Cleavages: ").append(nMissedCleavages).append(newLine);
+            output.append("Missed Cleavages: ").append(nMissedCleavages).append(".").append(newLine);
         }
 
         if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())
                 || !getPrecursorAccuracyType().equals(defaultParameters.getPrecursorAccuracyType())) {
-            output.append("Precursor tolerance: ").append(precursorTolerance).append(newLine);
+            output.append("Precursor Tolerance: ").append(precursorTolerance).append(".").append(newLine);
         }
 
         if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())) {
-            output.append("Fragment tolerance: ").append(fragmentIonMZTolerance).append(" Da").append(newLine);
+            output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" Da").append(".").append(newLine);
         }
 
         if (!forwardIon.equals(defaultParameters.getIonSearched1())
                 || !rewindIon.equals(defaultParameters.getIonSearched2())) {
             String ion1 = PeptideFragmentIon.getSubTypeAsString(forwardIon);
             String ion2 = PeptideFragmentIon.getSubTypeAsString(rewindIon);
-            output.append(ion1).append(" and ").append(ion2).append(" ions").append(newLine);
+            output.append(ion1).append(" and ").append(ion2).append(" ions").append(".").append(newLine);
         }
 
         if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
                 || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
-            output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(newLine);
+            output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(".").append(newLine);
+        }
+        
+        if (fastaFile != null) {
+            output.append("DB: ").append(fastaFile.getName()).append(".").append(newLine);
         }
 
         return output.toString();
-
     }
 
     /**

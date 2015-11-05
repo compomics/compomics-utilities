@@ -11,11 +11,6 @@ import java.awt.Dialog;
 public class PsmScoringSettingsDialog extends javax.swing.JDialog {
 
     /**
-     * The parent frame.
-     */
-    private java.awt.Frame parentFrame;
-
-    /**
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
@@ -33,7 +28,6 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringSettingsDialog(java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
         super(parentFrame, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -52,7 +46,6 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringSettingsDialog(Dialog owner, java.awt.Frame parentFrame, PsmScoringPreferences psmScoringPreferences, boolean editable) {
         super(owner, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -110,8 +103,14 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
+        backgroundPanel.setToolTipText("PSM Scoring");
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -162,15 +161,33 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;

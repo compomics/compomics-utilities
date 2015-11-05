@@ -12,11 +12,6 @@ import javax.swing.SwingConstants;
  * @author Marc Vaudel
  */
 public class ProcessingPreferencesDialog extends javax.swing.JDialog {
-
-    /**
-     * The parent frame.
-     */
-    private java.awt.Frame parentFrame;
     /**
      * Boolean indicating whether the user canceled the editing.
      */
@@ -36,7 +31,6 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     public ProcessingPreferencesDialog(java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
         super(parentFrame, true);
-        this.parentFrame = parentFrame;
         initComponents();
         setUpGui();
         populateGUI(processingPreferences);
@@ -54,7 +48,6 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
         super(owner, true);
-        this.parentFrame = parentFrame;
         initComponents();
         setUpGui();
         populateGUI(processingPreferences);
@@ -131,6 +124,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Processing Preferences");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -225,9 +219,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(processingTypePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(performancePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -242,21 +236,30 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;

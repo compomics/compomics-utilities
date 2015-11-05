@@ -1,13 +1,13 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.mutations.MutationMatrix;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import java.io.Serializable;
 
 /**
  * The sequence matching options.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SequenceMatchingPreferences implements Serializable {
 
@@ -53,7 +53,7 @@ public class SequenceMatchingPreferences implements Serializable {
      */
     private MatchingType sequenceMatchingType;
     /**
-     * Limit the share of Xs a match can contain.
+     * Limit the share of X's a match can contain, range [0.0-1.0].
      */
     private Double limitX = null;
     /**
@@ -119,27 +119,28 @@ public class SequenceMatchingPreferences implements Serializable {
     }
 
     /**
-     * Returns the maximal share of Xs a match can contain. Null if not set.
+     * Returns the maximal share of X's a match can contain, range [0.0-1.0].
+     * Null if not set.
      *
-     * @return the maximal share of Xs a match can contain
+     * @return the maximal share of X's a match can contain
      */
     public Double getLimitX() {
         return limitX;
     }
 
     /**
-     * Indicates whether the share of Xs should be limited.
+     * Indicates whether the share of X's should be limited.
      *
-     * @return whether the share of Xs should be limited
+     * @return whether the share of X's should be limited
      */
     public boolean hasLimitX() {
         return limitX != null && limitX >= 0;
     }
 
     /**
-     * Sets the maximal share of Xs a match can contain.
+     * Sets the maximal share of X's a match can contain, range [0.0-1.0].
      *
-     * @param limitX the maximal share of Xs a match can contain
+     * @param limitX the maximal share of X's a match can contain
      */
     public void setLimitX(Double limitX) {
         this.limitX = limitX;
@@ -228,5 +229,22 @@ public class SequenceMatchingPreferences implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Method: ").append(sequenceMatchingType).append(".").append(newLine);
+        output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
+
+        return output.toString();
     }
 }

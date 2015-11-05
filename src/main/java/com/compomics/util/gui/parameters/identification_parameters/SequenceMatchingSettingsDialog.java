@@ -3,20 +3,15 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 /**
- * Dialog for the edition of the sequence matching settings
+ * Dialog for the edition of the sequence matching settings.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
-
-    /**
-     * The parent frame.
-     */
-    private java.awt.Frame parentFrame;
 
     /**
      * Boolean indicating whether the user canceled the editing.
@@ -31,12 +26,13 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * Creates a new SequenceMatchingSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame
-     * @param sequenceMatchingPreferences the sequence matching preferences to display
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * display
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public SequenceMatchingSettingsDialog(java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
         super(parentFrame, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -50,12 +46,13 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      *
      * @param owner the dialog owner
      * @param parentFrame a parent frame
-     * @param sequenceMatchingPreferences the sequence matching preferences to display
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * display
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public SequenceMatchingSettingsDialog(Dialog owner, java.awt.Frame parentFrame, SequenceMatchingPreferences sequenceMatchingPreferences, boolean editable) {
         super(owner, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -68,24 +65,21 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-        
         matchingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        
         matchingCmb.setEnabled(editable);
-        xTxt.setEditable(editable);
-        xTxt.setEnabled(editable);
-        
+        xSpinner.setEnabled(editable);
     }
 
     /**
      * Fills the GUI with the given settings.
      *
-     * @param sequenceMatchingPreferences the sequence matching preferences to display
+     * @param sequenceMatchingPreferences the sequence matching preferences to
+     * display
      */
     private void populateGUI(SequenceMatchingPreferences sequenceMatchingPreferences) {
         SequenceMatchingPreferences.MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
         matchingCmb.setSelectedItem(matchingType);
-        xTxt.setText(sequenceMatchingPreferences.getLimitX() + "");
+        xSpinner.setValue(sequenceMatchingPreferences.getLimitX());
     }
 
     /**
@@ -96,16 +90,16 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     public boolean isCanceled() {
         return canceled;
     }
-    
+
     /**
      * Returns the sequence matching settings as set by the user.
-     * 
+     *
      * @return the sequence matching settings as set by the user
      */
     public SequenceMatchingPreferences getSequenceMatchingPreferences() {
-        SequenceMatchingPreferences  sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType((SequenceMatchingPreferences.MatchingType) matchingCmb.getSelectedItem());
-        sequenceMatchingPreferences.setLimitX(new Double(xTxt.getText()));
+        sequenceMatchingPreferences.setLimitX((Double) xSpinner.getValue());
         return sequenceMatchingPreferences;
     }
 
@@ -115,20 +109,13 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      * @return a boolean indicating whether the user input is valid
      */
     public boolean validateInput() {
-        try {
-            new Double(xTxt.getText());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Please verify the input for .",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
         return true;
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -141,9 +128,15 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         matchingMethodLbl = new javax.swing.JLabel();
         xLbl = new javax.swing.JLabel();
         matchingCmb = new javax.swing.JComboBox();
-        xTxt = new javax.swing.JTextField();
+        xSpinner = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Sequence Matching");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -161,16 +154,16 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        sequenceMatchingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Sequence Matching"));
+        sequenceMatchingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
         sequenceMatchingPanel.setOpaque(false);
 
-        matchingMethodLbl.setText("Matching Method:");
+        matchingMethodLbl.setText("Matching Method");
 
-        xLbl.setText("Maximal share of Xs:");
+        xLbl.setText("Maximum Share of X's");
 
         matchingCmb.setModel(new DefaultComboBoxModel(SequenceMatchingPreferences.MatchingType.values()));
 
-        xTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        xSpinner.setModel(new javax.swing.SpinnerNumberModel(0.25d, 0.0d, 1.0d, 0.1d));
 
         javax.swing.GroupLayout sequenceMatchingPanelLayout = new javax.swing.GroupLayout(sequenceMatchingPanel);
         sequenceMatchingPanel.setLayout(sequenceMatchingPanelLayout);
@@ -181,10 +174,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(matchingMethodLbl)
                     .addComponent(xLbl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(xTxt)
-                    .addComponent(matchingCmb, 0, 250, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(matchingCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(xSpinner))
                 .addContainerGap())
         );
         sequenceMatchingPanelLayout.setVerticalGroup(
@@ -197,7 +190,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(xLbl)
-                    .addComponent(xTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(xSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -205,27 +198,27 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 313, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton))
-                    .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cancelButton)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -236,23 +229,41 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Save the settings and close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Close the dialog without saving.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Close the dialog without saving.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
@@ -262,7 +273,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JPanel sequenceMatchingPanel;
     private javax.swing.JLabel xLbl;
-    private javax.swing.JTextField xTxt;
+    private javax.swing.JSpinner xSpinner;
     // End of variables declaration//GEN-END:variables
 
 }

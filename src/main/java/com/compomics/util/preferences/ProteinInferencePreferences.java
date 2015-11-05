@@ -36,4 +36,18 @@ public class ProteinInferencePreferences implements Serializable {
     public void setProteinSequenceDatabase(File proteinSequenceDatabase) {
         this.proteinSequenceDatabase = proteinSequenceDatabase;
     }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        StringBuilder output = new StringBuilder();
+        output.append("DB: ").append(proteinSequenceDatabase.getName()).append(".").append(newLine);
+
+        return output.toString();
+    }
 }

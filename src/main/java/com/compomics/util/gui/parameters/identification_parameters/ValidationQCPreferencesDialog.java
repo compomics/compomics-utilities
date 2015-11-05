@@ -746,7 +746,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        cancelButtonActionPerformed(null);
+        canceled = true;
     }//GEN-LAST:event_formWindowClosing
 
     /**

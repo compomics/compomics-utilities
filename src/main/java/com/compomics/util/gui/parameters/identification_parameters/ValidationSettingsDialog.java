@@ -3,18 +3,15 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.preferences.IdMatchValidationPreferences;
 import java.awt.Dialog;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 
 /**
  * Dialog for the edition of the sequence matching settings
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ValidationSettingsDialog extends javax.swing.JDialog {
-
-    /**
-     * The parent frame.
-     */
-    private java.awt.Frame parentFrame;
 
     /**
      * Boolean indicating whether the user canceled the editing.
@@ -35,7 +32,6 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      */
     public ValidationSettingsDialog(java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
         super(parentFrame, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -55,7 +51,6 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      */
     public ValidationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, IdMatchValidationPreferences idMatchValidationPreferences, boolean editable) {
         super(owner, true);
-        this.parentFrame = parentFrame;
         this.editable = editable;
         initComponents();
         setUpGui();
@@ -68,14 +63,14 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         proteinFdrTxt.setEditable(editable);
         proteinFdrTxt.setEnabled(editable);
         peptideFdrTxt.setEditable(editable);
         peptideFdrTxt.setEnabled(editable);
         psmFdrTxt.setEditable(editable);
         psmFdrTxt.setEnabled(editable);
-
+        groupsComboBox.setEnabled(editable);
+        groupsComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
     }
 
     /**
@@ -87,6 +82,11 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         proteinFdrTxt.setText(idMatchValidationPreferences.getDefaultProteinFDR() + "");
         peptideFdrTxt.setText(idMatchValidationPreferences.getDefaultPeptideFDR() + "");
         psmFdrTxt.setText(idMatchValidationPreferences.getDefaultPsmFDR() + "");
+        if (idMatchValidationPreferences.getGroupSmallSubgroups()) {
+            groupsComboBox.setSelectedIndex(0);
+        } else {
+            groupsComboBox.setSelectedIndex(1);
+        }
     }
 
     /**
@@ -104,13 +104,12 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
      * @return the validation settings as set by the user
      */
     public IdMatchValidationPreferences getIdMatchValidationPreferences() {
-
         IdMatchValidationPreferences idMatchValidationPreferences = new IdMatchValidationPreferences();
         idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
+        idMatchValidationPreferences.setGroupSmallSubgroups(groupsComboBox.getSelectedIndex() == 0);
         return idMatchValidationPreferences;
-
     }
 
     /**
@@ -181,13 +180,19 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         peptideFdrLabel = new javax.swing.JLabel();
         psmFdrLabel = new javax.swing.JLabel();
         psmFdrTxt = new javax.swing.JTextField();
-        percentLabel = new javax.swing.JLabel();
         peptideFdrTxt = new javax.swing.JTextField();
-        percentLabel2 = new javax.swing.JLabel();
         proteinFdrTxt = new javax.swing.JTextField();
-        percentLabel3 = new javax.swing.JLabel();
+        groupsPanel = new javax.swing.JPanel();
+        groupsLabel = new javax.swing.JLabel();
+        groupsComboBox = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Validation Settings");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -208,26 +213,20 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         processingParamsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Default FDR Levels"));
         processingParamsPanel.setOpaque(false);
 
-        proteinFdrLabel.setText("Protein");
+        proteinFdrLabel.setText("Protein FDR (%)");
 
-        peptideFdrLabel.setText("Peptide");
+        peptideFdrLabel.setText("Peptide FDR (%)");
 
-        psmFdrLabel.setText("PSM");
+        psmFdrLabel.setText("PSM FDR (%)");
 
         psmFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         psmFdrTxt.setText("1");
 
-        percentLabel.setText("%");
-
         peptideFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         peptideFdrTxt.setText("1");
 
-        percentLabel2.setText("%");
-
         proteinFdrTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         proteinFdrTxt.setText("1");
-
-        percentLabel3.setText("%");
 
         javax.swing.GroupLayout processingParamsPanelLayout = new javax.swing.GroupLayout(processingParamsPanel);
         processingParamsPanel.setLayout(processingParamsPanelLayout);
@@ -236,23 +235,14 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
             .addGroup(processingParamsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(proteinFdrLabel)
-                    .addComponent(peptideFdrLabel)
-                    .addComponent(psmFdrLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
-                        .addComponent(proteinFdrTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(percentLabel3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
-                        .addComponent(peptideFdrTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(percentLabel2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, processingParamsPanelLayout.createSequentialGroup()
-                        .addComponent(psmFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(percentLabel)))
+                    .addComponent(proteinFdrLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideFdrLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(psmFdrLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(peptideFdrTxt)
+                    .addComponent(proteinFdrTxt, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         processingParamsPanelLayout.setVerticalGroup(
@@ -261,18 +251,43 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(proteinFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(percentLabel3)
                     .addComponent(proteinFdrLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(peptideFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(percentLabel2)
                     .addComponent(peptideFdrLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(processingParamsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(psmFdrLabel)
-                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(percentLabel))
+                    .addComponent(psmFdrTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        groupsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Groups"));
+        groupsPanel.setOpaque(false);
+
+        groupsLabel.setText("Group Small Subgroups");
+
+        groupsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        javax.swing.GroupLayout groupsPanelLayout = new javax.swing.GroupLayout(groupsPanel);
+        groupsPanel.setLayout(groupsPanelLayout);
+        groupsPanelLayout.setHorizontalGroup(
+            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(groupsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(groupsComboBox, 0, 201, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        groupsPanelLayout.setVerticalGroup(
+            groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(groupsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(groupsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(groupsLabel)
+                    .addComponent(groupsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -280,23 +295,26 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 244, Short.MAX_VALUE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(groupsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
-                    .addComponent(processingParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(processingParamsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(processingParamsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                .addComponent(processingParamsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(groupsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -317,27 +335,45 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox groupsComboBox;
+    private javax.swing.JLabel groupsLabel;
+    private javax.swing.JPanel groupsPanel;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel peptideFdrLabel;
     private javax.swing.JTextField peptideFdrTxt;
-    private javax.swing.JLabel percentLabel;
-    private javax.swing.JLabel percentLabel2;
-    private javax.swing.JLabel percentLabel3;
     private javax.swing.JPanel processingParamsPanel;
     private javax.swing.JLabel proteinFdrLabel;
     private javax.swing.JTextField proteinFdrTxt;

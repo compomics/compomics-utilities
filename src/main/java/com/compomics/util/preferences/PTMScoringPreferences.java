@@ -7,6 +7,7 @@ import java.io.Serializable;
  * This class contains the PTM localization scoring preferences.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PTMScoringPreferences implements Serializable {
 
@@ -15,13 +16,13 @@ public class PTMScoringPreferences implements Serializable {
      */
     static final long serialVersionUID = -6656074270981104708L;
     /**
-     * The FLR threshold in percent
+     * The FLR threshold in percent.
      */
     private double flr = 1.0;
     /**
-     * Boolean indicating whether a probabilitstic score is to be calculated.
+     * Boolean indicating whether a probabilistic score is to be calculated.
      */
-    private Boolean probabilitsticScoreCalculation = true;
+    private Boolean probabilitsticScoreCalculation = true; // @TODO: typo: probabilistic
     /**
      * The probabilistic score selected.
      */
@@ -58,7 +59,7 @@ public class PTMScoringPreferences implements Serializable {
      * @return a boolean indicating whether a probabilistic PTM score is
      * required
      */
-    public Boolean isProbabilitsticScoreCalculation() {
+    public Boolean isProbabilitsticScoreCalculation() {  // @TODO: typo: probabilistic
         return probabilitsticScoreCalculation;
     }
 
@@ -68,7 +69,7 @@ public class PTMScoringPreferences implements Serializable {
      * @param probabilitsticScoreCalculation a boolean indicating whether a
      * probabilistic PTM score is required
      */
-    public void setProbabilitsticScoreCalculation(boolean probabilitsticScoreCalculation) {
+    public void setProbabilitsticScoreCalculation(boolean probabilitsticScoreCalculation) { // @TODO: typo: probabilistic
         this.probabilitsticScoreCalculation = probabilitsticScoreCalculation;
     }
 
@@ -195,5 +196,24 @@ public class PTMScoringPreferences implements Serializable {
      */
     public void setFlrThreshold(double flr) {
         this.flr = flr;
+    }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Score: ").append(selectedProbabilisticScore).append(".").append(newLine);
+        output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
+        output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
+        output.append("Estimate FLR: ").append(estimateFlr).append(".").append(newLine);
+
+        return output.toString();
     }
 }

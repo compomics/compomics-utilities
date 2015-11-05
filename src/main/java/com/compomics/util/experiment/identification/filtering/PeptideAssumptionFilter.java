@@ -367,4 +367,23 @@ public class PeptideAssumptionFilter implements Serializable {
                 && maxPepLength == anotherFilter.getMaxPepLength()
                 && maxMassDeviation == anotherFilter.getMaxMzDeviation();
     }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Peptide Length: ").append(minPepLength).append("-").append(maxPepLength).append(".").append(newLine);
+        output.append("Max Mass Deviation: ").append(maxMassDeviation).append(".").append(newLine);
+        output.append("PPM Mass Deviation: ").append(isPpm).append(".").append(newLine);
+        output.append("Ignore Unknown PTMs: ").append(unknownPtm).append(".").append(newLine);
+
+        return output.toString();
+    }
 }

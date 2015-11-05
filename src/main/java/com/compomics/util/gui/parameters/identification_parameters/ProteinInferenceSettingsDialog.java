@@ -54,7 +54,8 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param lastSelectedFolder the last selected folder to use
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ProteinInferenceSettingsDialog(java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+    public ProteinInferenceSettingsDialog(java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, 
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
@@ -80,7 +81,8 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @param lastSelectedFolder the last selected folder to use
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public ProteinInferenceSettingsDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
+    public ProteinInferenceSettingsDialog(Dialog owner, java.awt.Frame parentFrame, ProteinInferencePreferences proteinInferencePreferences, 
+            Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.normalIcon = normalIcon;
@@ -101,7 +103,6 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         if (!editable) {
             editDatabaseDetailsButton.setText("View");
         }
-
     }
 
     /**
@@ -152,6 +153,12 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         editDatabaseDetailsButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Protein Inference Settings");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -226,8 +233,8 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
+                .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -248,15 +255,30 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Close the dialog.
+     * 
+     * @param evt 
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Edit the database.
+     * 
+     * @param evt 
+     */
     private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
 
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
@@ -284,9 +306,16 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         if (sequenceFactory.getCurrentFastaFile() != null) {
             databaseSettingsTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
         }
-
     }//GEN-LAST:event_editDatabaseDetailsButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     * 
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;

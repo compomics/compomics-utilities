@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * matches.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ValidationQCPreferences implements Serializable {
 
@@ -189,7 +190,7 @@ public class ValidationQCPreferences implements Serializable {
 
     /**
      * Returns true if the two ValidationQCPreferences are the same.
-     * 
+     *
      * @param validationQCPreferences the ValidationQCPreferences to compare to
      * @return true if the two ValidationQCPreferences are the same
      */
@@ -250,5 +251,62 @@ public class ValidationQCPreferences implements Serializable {
         }
 
         return true;
+    }
+
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+
+        output.append("DB Size Check: ").append(dbSize).append(".").append(newLine);
+        output.append("First Target Check: ").append(firstDecoy).append(".").append(newLine);
+        output.append("Confidence Check: ").append(confidenceMargin != 0.0).append(".").append(newLine); // @TODO: double value hidden as a boolean..?
+
+        if (proteinFilters != null && !proteinFilters.isEmpty()) {
+            output.append("Protein Filters: ").append(newLine);
+            String tempProteinFilters = "";
+            for (Filter tempFilter : proteinFilters) {
+                if (!tempProteinFilters.isEmpty()) {
+                    tempProteinFilters += ", ";
+                }
+                tempProteinFilters += tempFilter.getName();
+            }
+
+            output.append(tempProteinFilters).append(".").append(newLine);
+        }
+
+        if (peptideFilters != null && !peptideFilters.isEmpty()) {
+            output.append("Peptide Filters: ").append(newLine);
+            String tempProteinFilters = "";
+            for (Filter tempFilter : peptideFilters) {
+                if (!tempProteinFilters.isEmpty()) {
+                    tempProteinFilters += ", ";
+                }
+                tempProteinFilters += tempFilter.getName();
+            }
+
+            output.append(tempProteinFilters).append(".").append(newLine);
+        }
+
+        if (psmFilters != null && !psmFilters.isEmpty()) {
+            output.append("PSM Filters: ").append(newLine);
+            String tempProteinFilters = "";
+            for (Filter tempFilter : psmFilters) {
+                if (!tempProteinFilters.isEmpty()) {
+                    tempProteinFilters += ", ";
+                }
+                tempProteinFilters += tempFilter.getName();
+            }
+
+            output.append(tempProteinFilters).append(".").append(newLine);
+        }
+
+        return output.toString();
     }
 }

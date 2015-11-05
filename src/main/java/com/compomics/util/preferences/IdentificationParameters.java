@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.identification_parameters.Se
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -151,10 +150,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
 
     /**
      * Returns the relative tolerance in ppm corresponding to the absolute
-     * tolerance in dalton at the given reference mass.
+     * tolerance in Dalton at the given reference mass.
      *
-     * @param daltonTolerance the absolute tolerance in dalton
-     * @param refMass the reference mass in dalton
+     * @param daltonTolerance the absolute tolerance in Dalton
+     * @param refMass the reference mass in Dalton
      *
      * @return the relative tolerance in ppm
      */
@@ -164,11 +163,11 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
-     * Returns the absolute tolerance in dalton corresponding to the relative
+     * Returns the absolute tolerance in Dalton corresponding to the relative
      * tolerance in ppm at the given reference mass.
      *
      * @param ppmTolerance the absolute tolerance in ppm
-     * @param refMass the reference mass in dalton
+     * @param refMass the reference mass in Dalton
      *
      * @return the relative tolerance in ppm
      */

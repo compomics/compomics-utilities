@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Settings for the handling of fractions.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FractionSettings implements Serializable {
 
@@ -24,19 +25,19 @@ public class FractionSettings implements Serializable {
     }
 
     /**
-     * Returns the protein confidence for inclusion in mw plots.
+     * Returns the protein confidence for inclusion in MW plots.
      *
-     * @return the protein confidence for inclusion in mw plots
+     * @return the protein confidence for inclusion in MW plots
      */
     public Double getProteinConfidenceMwPlots() {
         return proteinConfidenceMwPlots;
     }
 
     /**
-     * Sets the protein confidence for inclusion in mw plots.
+     * Sets the protein confidence for inclusion in MW plots.
      *
      * @param proteinConfidenceMwPlots the protein confidence for inclusion in
-     * mw plots
+     * MW plots
      */
     public void setProteinConfidenceMwPlots(Double proteinConfidenceMwPlots) {
         this.proteinConfidenceMwPlots = proteinConfidenceMwPlots;
@@ -56,5 +57,19 @@ public class FractionSettings implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        StringBuilder output = new StringBuilder();
+        output.append("Protein Confidence MW Plots: ").append(proteinConfidenceMwPlots).append(".").append(newLine);
+
+        return output.toString();
     }
 }

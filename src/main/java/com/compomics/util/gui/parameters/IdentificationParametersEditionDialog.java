@@ -42,6 +42,7 @@ import javax.swing.JOptionPane;
  * IdentificationParametersEditionDialog.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
@@ -133,7 +134,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
+            ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(parentFrame, true);
 
         this.parentFrame = parentFrame;
@@ -177,7 +180,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * of QC filters
      * @param editable boolean indicating whether the parameters can be edited
      */
-    public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters, ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder, ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
+    public IdentificationParametersEditionDialog(Dialog owner, java.awt.Frame parentFrame, IdentificationParameters identificationParameters,
+            ConfigurationFile configurationFile, Image normalIcon, Image waitingIcon, LastSelectedFolder lastSelectedFolder,
+            ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent, boolean editable) {
         super(owner, true);
 
         this.parentFrame = parentFrame;
@@ -209,10 +214,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGui() {
-
         nameTxt.setEditable(editable);
-        descriptionTxt.setEditable(editable);
-
     }
 
     /**
@@ -222,7 +224,57 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     public void populateGUI(IdentificationParameters identificationParameters) {
         nameTxt.setText(identificationParameters.getName());
-        descriptionTxt.setText(identificationParameters.getDescription());
+
+        // show the parameter details
+        int columnWidth = 150;
+        int maxDescriptionLength = 150;
+
+        spectrumMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + spectrumMatchingButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(searchParameters.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        spectrumAnnotationButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + spectrumAnnotationButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(annotationSettings.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        sequenceMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + sequenceMatchingButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        geneMappingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + geneMappingButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(genePreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        matchesFiltersButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + matchesFiltersButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(peptideAssumptionFilter.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        psmScoringButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + psmScoringButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(psmScoringPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        ptmLocalizationButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + ptmLocalizationButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(ptmScoringPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        proteinInferenceButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + proteinInferenceButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(proteinInferencePreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        validationButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + validationButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(idValidationPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        fractionsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + fractionsButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(fractionSettings.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+
+        qualityControlButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>" + qualityControlButton.getText() + "</b></td>"
+                + "<td><font size=2>" + formatDescription(idValidationPreferences.getValidationQCPreferences().getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+    }
+
+    /**
+     * Make sure that the parameter description is not too long.
+     *
+     * @param description original description
+     * @param maxDescriptionLength max number of characters
+     * @return the new description
+     */
+    private String formatDescription(String description, int maxDescriptionLength) {
+        if (description.length() > maxDescriptionLength) {
+            description = description.substring(0, maxDescriptionLength) + "...";
+        }
+        return description;
     }
 
     /**
@@ -242,9 +294,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     public IdentificationParameters getIdentificationParameters() {
         IdentificationParameters identificationParameters = new IdentificationParameters();
         identificationParameters.setName(nameTxt.getText());
-        String description = descriptionTxt.getText();
-        boolean defaultDesciption = description.equals(searchParameters.getShortDescription());
-        identificationParameters.setDescription(description, defaultDesciption);
+        identificationParameters.setDescription(searchParameters.getShortDescription(), true);
         identificationParameters.setAnnotationSettings(annotationSettings);
         identificationParameters.setSearchParameters(searchParameters);
         identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
@@ -259,7 +309,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the identification settings in case the selected ptms have been
+     * Updates the identification settings in case the selected PTMs have been
      * changed.
      */
     private void selectedPtmsChanged() {
@@ -310,25 +360,22 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         attributesPanel = new javax.swing.JPanel();
-        decriptionLbl = new javax.swing.JLabel();
         nameTxt = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        descriptionTxt = new javax.swing.JTextArea();
-        nameLbl = new javax.swing.JLabel();
         settingsPanel = new javax.swing.JPanel();
-        spectrumAnnotationButton = new javax.swing.JButton();
-        fractionsButton = new javax.swing.JButton();
-        psmScoringButton = new javax.swing.JButton();
-        matchesFiltersButton = new javax.swing.JButton();
-        qualityControlButton = new javax.swing.JButton();
-        sequenceMatchingButton = new javax.swing.JButton();
         spectrumMatchingButton = new javax.swing.JButton();
-        proteinInferenceButton = new javax.swing.JButton();
+        spectrumAnnotationButton = new javax.swing.JButton();
+        sequenceMatchingButton = new javax.swing.JButton();
         geneMappingButton = new javax.swing.JButton();
-        validationButton = new javax.swing.JButton();
+        matchesFiltersButton = new javax.swing.JButton();
+        psmScoringButton = new javax.swing.JButton();
         ptmLocalizationButton = new javax.swing.JButton();
+        proteinInferenceButton = new javax.swing.JButton();
+        validationButton = new javax.swing.JButton();
+        fractionsButton = new javax.swing.JButton();
+        qualityControlButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Identification Settings");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -346,126 +393,149 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
-        attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters Attributes"));
+        attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
         attributesPanel.setOpaque(false);
 
-        decriptionLbl.setText("Description");
-
-        descriptionTxt.setColumns(20);
-        descriptionTxt.setRows(5);
-        jScrollPane1.setViewportView(descriptionTxt);
-
-        nameLbl.setText("Name");
+        nameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout attributesPanelLayout = new javax.swing.GroupLayout(attributesPanel);
         attributesPanel.setLayout(attributesPanelLayout);
         attributesPanelLayout.setHorizontalGroup(
             attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(attributesPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, attributesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(attributesPanelLayout.createSequentialGroup()
-                        .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(attributesPanelLayout.createSequentialGroup()
-                                .addComponent(nameLbl)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(decriptionLbl))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(nameTxt)
                 .addContainerGap())
         );
         attributesPanelLayout.setVerticalGroup(
             attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(attributesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameLbl)
-                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(decriptionLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Identification Settings"));
         settingsPanel.setOpaque(false);
 
-        spectrumAnnotationButton.setText("Spectrum Annotation");
-        spectrumAnnotationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spectrumAnnotationButtonActionPerformed(evt);
-            }
-        });
-
-        fractionsButton.setText("Fractions");
-        fractionsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fractionsButtonActionPerformed(evt);
-            }
-        });
-
-        psmScoringButton.setText("PSM Scoring");
-        psmScoringButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                psmScoringButtonActionPerformed(evt);
-            }
-        });
-
-        matchesFiltersButton.setText("Matches Filters");
-        matchesFiltersButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                matchesFiltersButtonActionPerformed(evt);
-            }
-        });
-
-        qualityControlButton.setText("Quality Control");
-        qualityControlButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qualityControlButtonActionPerformed(evt);
-            }
-        });
-
-        sequenceMatchingButton.setText("Sequence to Protein Matching");
-        sequenceMatchingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sequenceMatchingButtonActionPerformed(evt);
-            }
-        });
-
+        spectrumMatchingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
         spectrumMatchingButton.setText("Spectrum Matching");
+        spectrumMatchingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        spectrumMatchingButton.setIconTextGap(15);
+        spectrumMatchingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         spectrumMatchingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spectrumMatchingButtonActionPerformed(evt);
             }
         });
 
-        proteinInferenceButton.setText("Protein Inference");
-        proteinInferenceButton.addActionListener(new java.awt.event.ActionListener() {
+        spectrumAnnotationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        spectrumAnnotationButton.setText("Spectrum Annotation");
+        spectrumAnnotationButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        spectrumAnnotationButton.setIconTextGap(15);
+        spectrumAnnotationButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        spectrumAnnotationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proteinInferenceButtonActionPerformed(evt);
+                spectrumAnnotationButtonActionPerformed(evt);
             }
         });
 
-        geneMappingButton.setText("Protein to Gene Mapping");
+        sequenceMatchingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        sequenceMatchingButton.setText("Sequence Matching");
+        sequenceMatchingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        sequenceMatchingButton.setIconTextGap(15);
+        sequenceMatchingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        sequenceMatchingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sequenceMatchingButtonActionPerformed(evt);
+            }
+        });
+
+        geneMappingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        geneMappingButton.setText("Gene Annotation");
+        geneMappingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        geneMappingButton.setIconTextGap(15);
+        geneMappingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         geneMappingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 geneMappingButtonActionPerformed(evt);
             }
         });
 
-        validationButton.setText("Validation");
+        matchesFiltersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        matchesFiltersButton.setText("Import Filters");
+        matchesFiltersButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        matchesFiltersButton.setIconTextGap(15);
+        matchesFiltersButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        matchesFiltersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                matchesFiltersButtonActionPerformed(evt);
+            }
+        });
+
+        psmScoringButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        psmScoringButton.setText("PSM Scoring");
+        psmScoringButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        psmScoringButton.setIconTextGap(15);
+        psmScoringButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        psmScoringButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                psmScoringButtonActionPerformed(evt);
+            }
+        });
+
+        ptmLocalizationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        ptmLocalizationButton.setText("PTM Localization");
+        ptmLocalizationButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        ptmLocalizationButton.setIconTextGap(15);
+        ptmLocalizationButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        ptmLocalizationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ptmLocalizationButtonActionPerformed(evt);
+            }
+        });
+
+        proteinInferenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        proteinInferenceButton.setText("Protein Inference");
+        proteinInferenceButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        proteinInferenceButton.setIconTextGap(15);
+        proteinInferenceButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        proteinInferenceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proteinInferenceButtonActionPerformed(evt);
+            }
+        });
+
+        validationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        validationButton.setText("Validation Levels");
+        validationButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        validationButton.setIconTextGap(15);
+        validationButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
         validationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 validationButtonActionPerformed(evt);
             }
         });
 
-        ptmLocalizationButton.setText("PTM Localization");
-        ptmLocalizationButton.addActionListener(new java.awt.event.ActionListener() {
+        fractionsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        fractionsButton.setText("Fraction Analysis");
+        fractionsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        fractionsButton.setIconTextGap(15);
+        fractionsButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        fractionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ptmLocalizationButtonActionPerformed(evt);
+                fractionsButtonActionPerformed(evt);
+            }
+        });
+
+        qualityControlButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        qualityControlButton.setText("Quality Control");
+        qualityControlButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        qualityControlButton.setIconTextGap(15);
+        qualityControlButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        qualityControlButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qualityControlButtonActionPerformed(evt);
             }
         });
 
@@ -475,46 +545,46 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(fractionsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(validationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(proteinInferenceButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(psmScoringButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(matchesFiltersButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(geneMappingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(qualityControlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fractionsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(validationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(proteinInferenceButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(psmScoringButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(matchesFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(geneMappingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(qualityControlButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+                    .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(spectrumMatchingButton)
-                .addGap(18, 18, 18)
-                .addComponent(spectrumAnnotationButton)
-                .addGap(18, 18, 18)
-                .addComponent(sequenceMatchingButton)
-                .addGap(18, 18, 18)
-                .addComponent(geneMappingButton)
-                .addGap(18, 18, 18)
-                .addComponent(matchesFiltersButton)
-                .addGap(18, 18, 18)
-                .addComponent(psmScoringButton)
-                .addGap(18, 18, 18)
-                .addComponent(ptmLocalizationButton)
-                .addGap(18, 18, 18)
-                .addComponent(proteinInferenceButton)
-                .addGap(18, 18, 18)
-                .addComponent(validationButton)
-                .addGap(18, 18, 18)
-                .addComponent(fractionsButton)
-                .addGap(18, 18, 18)
-                .addComponent(qualityControlButton)
-                .addContainerGap())
+                .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(matchesFiltersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(psmScoringButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(proteinInferenceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(validationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
@@ -538,13 +608,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(attributesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -561,6 +631,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Open the AnnotationSettingsDialog.
+     *
+     * @param evt
+     */
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
         ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
         ArrayList<Integer> reporterIons = new ArrayList<Integer>(IonFactory.getReporterIons(searchParameters.getPtmSettings()));
@@ -570,9 +645,15 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_spectrumAnnotationButtonActionPerformed
 
+    /**
+     * Open the SearchSettingsDialog.
+     *
+     * @param evt
+     */
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
         String name = nameTxt.getText();
-        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters, normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, name, editable);
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
+                normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, name, editable);
         if (!searchSettingsDialog.isCanceled()) {
             PtmSettings oldPtms = searchParameters.getPtmSettings();
             searchParameters = searchSettingsDialog.getSearchParameters();
@@ -583,6 +664,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
+    /**
+     * Open the SequenceMatchingSettingsDialog.
+     *
+     * @param evt
+     */
     private void sequenceMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sequenceMatchingButtonActionPerformed
         SequenceMatchingSettingsDialog sequenceMatchingSettingsDialog = new SequenceMatchingSettingsDialog(this, parentFrame, sequenceMatchingPreferences, editable);
         if (!sequenceMatchingSettingsDialog.isCanceled()) {
@@ -590,11 +676,21 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_sequenceMatchingButtonActionPerformed
 
+    /**
+     * Open the SpeciesDialog.
+     *
+     * @param evt
+     */
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
         SpeciesDialog speciesDialog = new SpeciesDialog(this, null, genePreferences, true, waitingIcon, normalIcon);
         // @TODO decouple the gene factory from the preferences
     }//GEN-LAST:event_geneMappingButtonActionPerformed
 
+    /**
+     * Open the MatchesImportFiltersDialog.
+     *
+     * @param evt
+     */
     private void matchesFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matchesFiltersButtonActionPerformed
         MatchesImportFiltersDialog matchesImportFiltersDialog = new MatchesImportFiltersDialog(this, parentFrame, peptideAssumptionFilter, editable);
         if (!matchesImportFiltersDialog.isCanceled()) {
@@ -602,6 +698,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_matchesFiltersButtonActionPerformed
 
+    /**
+     * Open the PsmScoringSettingsDialog.
+     *
+     * @param evt
+     */
     private void psmScoringButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psmScoringButtonActionPerformed
         PsmScoringSettingsDialog psmScoringSettingsDialog = new PsmScoringSettingsDialog(this, parentFrame, psmScoringPreferences, editable);
         if (!psmScoringSettingsDialog.isCanceled()) {
@@ -609,6 +710,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_psmScoringButtonActionPerformed
 
+    /**
+     * Open the PTMLocalizationParametersDialog.
+     *
+     * @param evt
+     */
     private void ptmLocalizationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptmLocalizationButtonActionPerformed
         PTMLocalizationParametersDialog ptmLocalizationParametersDialog = new PTMLocalizationParametersDialog(this, parentFrame, ptmScoringPreferences, editable);
         if (!ptmLocalizationParametersDialog.isCanceled()) {
@@ -616,6 +722,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_ptmLocalizationButtonActionPerformed
 
+    /**
+     * Open the ProteinInferenceSettingsDialog.
+     *
+     * @param evt
+     */
     private void proteinInferenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinInferenceButtonActionPerformed
         ProteinInferenceSettingsDialog proteinInferenceSettingsDialog = new ProteinInferenceSettingsDialog(this, parentFrame, proteinInferencePreferences, normalIcon, waitingIcon, lastSelectedFolder, editable);
         if (!proteinInferenceSettingsDialog.isCanceled()) {
@@ -623,6 +734,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_proteinInferenceButtonActionPerformed
 
+    /**
+     * Open the ValidationSettingsDialog.
+     *
+     * @param evt
+     */
     private void validationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validationButtonActionPerformed
         ValidationSettingsDialog validationSettingsDialog = new ValidationSettingsDialog(this, parentFrame, idValidationPreferences, editable);
         if (!validationSettingsDialog.isCanceled()) {
@@ -632,6 +748,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_validationButtonActionPerformed
 
+    /**
+     * Open the ValidationQCPreferencesDialog.
+     *
+     * @param evt
+     */
     private void qualityControlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qualityControlButtonActionPerformed
         ValidationQCPreferences validationQCPreferences = idValidationPreferences.getValidationQCPreferences();
         ValidationQCPreferencesDialog validationQCPreferencesDialog = new ValidationQCPreferencesDialog(this, parentFrame, validationQCPreferencesDialogParent, validationQCPreferences, editable && validationQCPreferencesDialogParent != null);
@@ -640,6 +761,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_qualityControlButtonActionPerformed
 
+    /**
+     * Open the FractionSettingsDialog.
+     *
+     * @param evt
+     */
     private void fractionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fractionsButtonActionPerformed
         FractionSettingsDialog fractionSettingsDialog = new FractionSettingsDialog(this, parentFrame, fractionSettings, editable);
         if (!fractionSettingsDialog.isCanceled()) {
@@ -647,29 +773,34 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_fractionsButtonActionPerformed
 
+    /**
+     * Close the dialog.
+     *
+     * @param evt
+     */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel decriptionLbl;
-    private javax.swing.JTextArea descriptionTxt;
     private javax.swing.JButton fractionsButton;
     private javax.swing.JButton geneMappingButton;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton matchesFiltersButton;
-    private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JButton proteinInferenceButton;

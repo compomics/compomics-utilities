@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Generic class grouping the identification matches validation preferences.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IdMatchValidationPreferences implements Serializable {
 
@@ -26,7 +27,7 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     private double defaultPsmFDR = 1.0;
     /**
-     * If true groups of matches of small size will be grouped.
+     * If true, groups of matches of small size will be grouped.
      */
     private Boolean groupSmallSubgroups = true;
     /**
@@ -123,5 +124,24 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     public void setGroupSmallSubgroups(Boolean groupSmallSubgroups) {
         this.groupSmallSubgroups = groupSmallSubgroups;
+    }
+    
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        
+        String newLine = System.getProperty("line.separator");
+        
+        StringBuilder output = new StringBuilder();
+        
+        output.append("Protein FDR: ").append(defaultProteinFDR).append(".").append(newLine);
+        output.append("Peptide FDR: ").append(defaultPeptideFDR).append(".").append(newLine);
+        output.append("PSM FDR: ").append(defaultPsmFDR).append(".").append(newLine);
+        output.append("Group Small Subgroups: ").append(groupSmallSubgroups).append(".").append(newLine);
+
+        return output.toString();
     }
 }

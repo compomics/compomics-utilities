@@ -29,7 +29,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="backgroundPanel" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -48,7 +48,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="521" max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="65" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -63,16 +63,16 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="attributesPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="settingsPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -145,20 +145,25 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="spectrumMatchingButton" max="32767" attributes="0"/>
-                          <Component id="fractionsButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="validationButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="proteinInferenceButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="ptmLocalizationButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="psmScoringButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="matchesFiltersButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="geneMappingButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="sequenceMatchingButton" alignment="0" pref="619" max="32767" attributes="0"/>
-                          <Component id="qualityControlButton" alignment="1" pref="619" max="32767" attributes="0"/>
+                          <Component id="fractionsButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="validationButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="proteinInferenceButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="ptmLocalizationButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="psmScoringButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="matchesFiltersButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="geneMappingButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="sequenceMatchingButton" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="qualityControlButton" alignment="1" pref="625" max="32767" attributes="0"/>
                           <Component id="spectrumAnnotationButton" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -189,6 +194,8 @@
                       <Component id="fractionsButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="qualityControlButton" min="-2" pref="45" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -369,6 +376,16 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="qualityControlButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="advancedSettingsLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;Hide Advanced Settings&lt;/a&gt;&lt;/html&gt;"/>
+              </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseEntered"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseExited"/>
+                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseReleased"/>
               </Events>
             </Component>
           </SubComponents>

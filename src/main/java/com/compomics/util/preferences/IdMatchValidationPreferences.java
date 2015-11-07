@@ -26,7 +26,15 @@ public class IdMatchValidationPreferences implements Serializable {
      * The default PSM FDR.
      */
     private double defaultPsmFDR = 1.0;
+    /**
+     * Boolean indicating whether Peptides should be grouped according to their
+     * modification status.
+     */
     private Boolean separatePeptides = true;
+    /**
+     * Boolean indicating whether PSMs should be grouped according to their
+     * modification status.
+     */
     private Boolean separatePsms = true;
     /**
      * If true, groups of matches of small size will be grouped.
@@ -132,9 +140,11 @@ public class IdMatchValidationPreferences implements Serializable {
     }
 
     /**
-     * Returns a boolean indicating whether Peptides should be grouped according to their modification status.
-     * 
-     * @return a boolean indicating whether Peptides should be grouped according to their modification status
+     * Returns a boolean indicating whether Peptides should be grouped according
+     * to their modification status.
+     *
+     * @return a boolean indicating whether Peptides should be grouped according
+     * to their modification status
      */
     public Boolean getSeparatePeptides() {
         if (separatePeptides == null) {
@@ -144,18 +154,22 @@ public class IdMatchValidationPreferences implements Serializable {
     }
 
     /**
-     * Sets whether Peptides should be grouped according to their modification status.
-     * 
-     * @param separatePeptides a boolean indicating whether Peptides should be grouped according to their modification status
+     * Sets whether Peptides should be grouped according to their modification
+     * status.
+     *
+     * @param separatePeptides a boolean indicating whether Peptides should be
+     * grouped according to their modification status
      */
     public void setSeparatePeptides(Boolean separatePeptides) {
         this.separatePeptides = separatePeptides;
     }
 
     /**
-     * Returns a boolean indicating whether PSMs should be grouped according to their modification status.
-     * 
-     * @return a boolean indicating whether PSMs should be grouped according to their modification status
+     * Returns a boolean indicating whether PSMs should be grouped according to
+     * their modification status.
+     *
+     * @return a boolean indicating whether PSMs should be grouped according to
+     * their modification status
      */
     public Boolean getSeparatePsms() {
         if (separatePsms == null) {
@@ -165,25 +179,27 @@ public class IdMatchValidationPreferences implements Serializable {
     }
 
     /**
-     * Sets whether PSMs should be grouped according to their modification status.
-     * 
-     * @param separatePsms a boolean indicating whether PSMs should be grouped according to their modification status
+     * Sets whether PSMs should be grouped according to their modification
+     * status.
+     *
+     * @param separatePsms a boolean indicating whether PSMs should be grouped
+     * according to their modification status
      */
     public void setSeparatePsms(Boolean separatePsms) {
         this.separatePsms = separatePsms;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
-        
+
         StringBuilder output = new StringBuilder();
-        
+
         output.append("Protein FDR: ").append(defaultProteinFDR).append(".").append(newLine);
         output.append("Peptide FDR: ").append(defaultPeptideFDR).append(".").append(newLine);
         output.append("PSM FDR: ").append(defaultPsmFDR).append(".").append(newLine);

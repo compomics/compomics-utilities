@@ -118,6 +118,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * A parent handling the edition of QC filters.
      */
     private ValidationQCPreferencesDialogParent validationQCPreferencesDialogParent;
+    /**
+     * If yes, the advanced settings are shown.
+     */
+    private boolean showAdvancedSettings = true;
 
     /**
      * Creates a new IdentificationParametersEditionDialog with a frame as
@@ -373,6 +377,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton = new javax.swing.JButton();
         fractionsButton = new javax.swing.JButton();
         qualityControlButton = new javax.swing.JButton();
+        advancedSettingsLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Identification Settings");
@@ -539,6 +544,19 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
+        advancedSettingsLabel.setText("<html><a href>Hide Advanced Settings</a></html>");
+        advancedSettingsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                advancedSettingsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                advancedSettingsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                advancedSettingsLabelMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
@@ -547,16 +565,20 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fractionsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(validationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(proteinInferenceButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(psmScoringButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(matchesFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(geneMappingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(qualityControlButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
-                    .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(fractionsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(validationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(proteinInferenceButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(psmScoringButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(matchesFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(geneMappingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(qualityControlButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -584,6 +606,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -595,7 +619,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 521, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
@@ -609,12 +633,12 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(attributesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -625,7 +649,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -794,7 +818,55 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    /**
+     * Change the icon into a hand icon.
+     * 
+     * @param evt 
+     */
+    private void advancedSettingsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advancedSettingsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_advancedSettingsLabelMouseEntered
+
+    /**
+     * Change the icon back to the default icon.
+     * 
+     * @param evt 
+     */
+    private void advancedSettingsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advancedSettingsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_advancedSettingsLabelMouseExited
+
+    /**
+     * Show/hide the advanced settings.
+     * 
+     * @param evt 
+     */
+    private void advancedSettingsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advancedSettingsLabelMouseReleased
+        
+        showAdvancedSettings = !showAdvancedSettings;
+        
+        spectrumAnnotationButton.setVisible(showAdvancedSettings);
+        sequenceMatchingButton.setVisible(showAdvancedSettings);
+        matchesFiltersButton.setVisible(showAdvancedSettings);
+        psmScoringButton.setVisible(showAdvancedSettings);
+        ptmLocalizationButton.setVisible(showAdvancedSettings);
+        proteinInferenceButton.setVisible(showAdvancedSettings);
+        validationButton.setVisible(showAdvancedSettings);
+        fractionsButton.setVisible(showAdvancedSettings);
+        qualityControlButton.setVisible(showAdvancedSettings);
+        
+        repaint();
+        
+        if (showAdvancedSettings) {
+            advancedSettingsLabel.setText("<html><a href>Hide Advanced Settings</a></html>");
+        } else {
+            advancedSettingsLabel.setText("<html><a href>Show Advanced Settings</a></html>");
+        }
+        
+    }//GEN-LAST:event_advancedSettingsLabelMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel advancedSettingsLabel;
     private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;

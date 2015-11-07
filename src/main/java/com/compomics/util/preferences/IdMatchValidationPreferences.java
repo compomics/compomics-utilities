@@ -26,6 +26,8 @@ public class IdMatchValidationPreferences implements Serializable {
      * The default PSM FDR.
      */
     private double defaultPsmFDR = 1.0;
+    private Boolean separatePeptides = true;
+    private Boolean separatePsms = true;
     /**
      * If true, groups of matches of small size will be grouped.
      */
@@ -113,6 +115,9 @@ public class IdMatchValidationPreferences implements Serializable {
      * @return true if small subgroups of matches should be grouped together
      */
     public Boolean getGroupSmallSubgroups() {
+        if (groupSmallSubgroups == null) {
+            groupSmallSubgroups = true;
+        }
         return groupSmallSubgroups;
     }
 
@@ -124,6 +129,48 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     public void setGroupSmallSubgroups(Boolean groupSmallSubgroups) {
         this.groupSmallSubgroups = groupSmallSubgroups;
+    }
+
+    /**
+     * Returns a boolean indicating whether Peptides should be grouped according to their modification status.
+     * 
+     * @return a boolean indicating whether Peptides should be grouped according to their modification status
+     */
+    public Boolean getSeparatePeptides() {
+        if (separatePeptides == null) {
+            separatePeptides = true;
+        }
+        return separatePeptides;
+    }
+
+    /**
+     * Sets whether Peptides should be grouped according to their modification status.
+     * 
+     * @param separatePeptides a boolean indicating whether Peptides should be grouped according to their modification status
+     */
+    public void setSeparatePeptides(Boolean separatePeptides) {
+        this.separatePeptides = separatePeptides;
+    }
+
+    /**
+     * Returns a boolean indicating whether PSMs should be grouped according to their modification status.
+     * 
+     * @return a boolean indicating whether PSMs should be grouped according to their modification status
+     */
+    public Boolean getSeparatePsms() {
+        if (separatePsms == null) {
+            separatePsms = true;
+        }
+        return separatePsms;
+    }
+
+    /**
+     * Sets whether PSMs should be grouped according to their modification status.
+     * 
+     * @param separatePsms a boolean indicating whether PSMs should be grouped according to their modification status
+     */
+    public void setSeparatePsms(Boolean separatePsms) {
+        this.separatePsms = separatePsms;
     }
     
     /**

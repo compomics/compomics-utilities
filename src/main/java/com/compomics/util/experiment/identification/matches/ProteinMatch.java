@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import java.util.List;
 
@@ -42,6 +44,18 @@ public class ProteinMatch extends IdentificationMatch {
      * The splitter in the key between protein accessions.
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
+    /**
+     * Map of the most complex groups: key | proteins
+     */
+    private static HashMap<String, String[]> proteinGroupCache = new HashMap<String, String[]>(1000);
+    /**
+     * Size of the protein groups cache
+     */
+    private static int cacheSize = 1000;
+    /**
+     * The minimal group size to include a protein in the cache
+     */
+    private static int sizeOfProteinsInCache = 10;
 
     /**
      * Constructor for the protein match.
@@ -201,14 +215,14 @@ public class ProteinMatch extends IdentificationMatch {
     @Override
     public String getKey() {
         Collections.sort(theoreticProtein);
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (String accession : theoreticProtein) {
-            if (!result.equals("")) {
-                result += PROTEIN_KEY_SPLITTER;
+            if (result.length() != 0) {
+                result.append(PROTEIN_KEY_SPLITTER);
             }
-            result += accession;
+            result.append(accession);
         }
-        return result;
+        return result.toString();
     }
 
     /**
@@ -275,11 +289,27 @@ public class ProteinMatch extends IdentificationMatch {
      * of matches.
      */
     public static boolean contains(String sharedKey, String uniqueKey) {
-        if (sharedKey.equals(uniqueKey)) {
-            return false;
-        }
         List<String> sharedAccessions = Arrays.asList(getAccessions(sharedKey));
         for (String uniqueAccession : getAccessions(uniqueKey)) {
+            if (!sharedAccessions.contains(uniqueAccession)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns a boolean indicating whether a protein match contains another set
+     * of matches.
+     *
+     * @param sharedAccessions the accessions of the shared protein match
+     * @param uniqueKeys the keys of the unique protein match
+     * 
+     * @return a boolean indicating whether a protein match contains another set
+     * of matches.
+     */
+    public static boolean contains(HashSet<String> sharedAccessions, ArrayList<String> uniqueKeys) {
+        for (String uniqueAccession : uniqueKeys) {
             if (!sharedAccessions.contains(uniqueAccession)) {
                 return false;
             }
@@ -363,11 +393,32 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * Returns a list of accessions from the given key.
      *
-     * @param key the given key
+     * @param groupKey the given key
+     * 
      * @return the corresponding list of accessions
      */
-    public static String[] getAccessions(String key) {
-        return key.split(PROTEIN_KEY_SPLITTER);
+    public static String[] getAccessions(String groupKey) {
+        String[] result = proteinGroupCache.get(groupKey);
+        if (result == null) {
+            result = groupKey.split(PROTEIN_KEY_SPLITTER);
+            if (result.length > sizeOfProteinsInCache) {
+                proteinGroupCache.put(groupKey, result);
+                if (proteinGroupCache.size() > cacheSize) {
+                    int smallestSize = sizeOfProteinsInCache;
+                    String smallestGroup = null;
+                    for (String key : proteinGroupCache.keySet()) {
+                        String[] group = proteinGroupCache.get(key);
+                        if (smallestGroup == null || group.length < smallestSize) {
+                            smallestGroup = key;
+                            smallestSize = group.length;
+                        }
+                    }
+                    proteinGroupCache.remove(smallestGroup);
+                    sizeOfProteinsInCache = smallestSize;
+                }
+            }
+        }
+        return result;
     }
 
     /**

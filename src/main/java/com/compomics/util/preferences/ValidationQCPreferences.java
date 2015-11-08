@@ -16,7 +16,7 @@ public class ValidationQCPreferences implements Serializable {
     /**
      * Serial number for backward compatibility.
      */
-    static final long serialVersionUID = -1840980039375035577L;
+    static final long serialVersionUID = -3984640691136489708L;
     /**
      * Indicates whether the database size should be checked.
      */

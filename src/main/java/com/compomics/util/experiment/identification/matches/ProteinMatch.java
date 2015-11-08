@@ -45,15 +45,15 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public static final String PROTEIN_KEY_SPLITTER = "_cus_";
     /**
-     * Map of the most complex groups: key | proteins
+     * Map of the most complex groups: key | proteins.
      */
     private static HashMap<String, String[]> proteinGroupCache = new HashMap<String, String[]>(1000);
     /**
-     * Size of the protein groups cache
+     * Size of the protein groups cache.
      */
     private static int cacheSize = 1000;
     /**
-     * The minimal group size to include a protein in the cache
+     * The minimal group size to include a protein in the cache.
      */
     private static int sizeOfProteinsInCache = 10;
 

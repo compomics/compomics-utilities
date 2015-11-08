@@ -420,6 +420,14 @@ public class ProteinMatch extends IdentificationMatch {
         }
         return result;
     }
+    
+    /**
+     * Clears the cache.
+     */
+    public static void clearCache() {
+        proteinGroupCache.clear();
+        sizeOfProteinsInCache = 10;
+    }
 
     /**
      * Indicates whether the protein group has an enzymatic peptide when

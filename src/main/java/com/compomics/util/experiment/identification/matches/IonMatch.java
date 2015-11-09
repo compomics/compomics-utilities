@@ -48,68 +48,76 @@ public class IonMatch extends ExperimentObject {
     /**
      * Get the absolute matching error in Da.
      *
-     * @param subtractIsotope indicates whether the isotope number shall be
-     * subtracted
      * @return the absolute matching error
      */
-    public double getAbsoluteError(boolean subtractIsotope) {
+    public double getAbsoluteError() {
         double theoreticMass = ion.getTheoreticMass();
-        if (subtractIsotope) {
-            theoreticMass -= getIsotopeNumber() * Atom.C.getDifferenceToMonoisotopic(1);
-        }
         return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
     }
 
     /**
-     * Get the absolute matching error in Da without isotope removal.
+     * Get the absolute matching error in Da after isotope removal.
      *
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
+     * 
      * @return the absolute matching error
      */
-    public double getAbsoluteError() {
-        return getAbsoluteError(false);
+    public double getAbsoluteError(int minIsotope, int maxIsotope) {
+        double theoreticMass = ion.getTheoreticMass();
+            theoreticMass -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1);
+        return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
     }
 
     /**
      * Get the relative m/z matching error in ppm.
      *
-     * @param subtractIsotope indicates whether the isotope number shall be
-     * subtracted
      * @return the relative matching error
      */
-    public double getRelativeError(boolean subtractIsotope) {
+    public double getRelativeError() {
         if (charge != null && charge.value != 0) {
             double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
             double measuredMz = peak.mz;
-            if (subtractIsotope) {
-                measuredMz -= getIsotopeNumber() * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
-            }
-            return ((measuredMz - theoreticMz) / theoreticMz) * 1000000;
+            return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
         } else {
             return Double.MAX_VALUE;
         }
     }
 
     /**
-     * Get the relative m/z matching error in ppm without isotope removal.
+     * Get the relative m/z matching error in ppm after isotope removal.
+     *
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
      *
      * @return the relative matching error
      */
-    public double getRelativeError() {
-        return getRelativeError(false);
+    public double getRelativeError(int minIsotope, int maxIsotope) {
+        if (charge != null && charge.value != 0) {
+            double theoreticMz = (ion.getTheoreticMass() + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value;
+            double measuredMz = peak.mz;
+            measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge.value;
+            return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
+        } else {
+            return Double.MAX_VALUE;
+        }
     }
 
     /**
      * Returns the distance in number of neutrons between the experimental mass
      * and theoretic mass, image of the isotope number: 1 typically indicates
-     * C13 isotope. Up to 4 isotopes are allowed.
+     * C13 isotope.
+     *
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
      *
      * @return the distance in number of neutrons between the experimental mass
      * and theoretic mass
      */
-    public int getIsotopeNumber() {
+    public int getIsotopeNumber(int minIsotope, int maxIsotope) {
         double experimentalMass = peak.mz * charge.value - charge.value * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
-        return Math.min(Math.max((int) Math.round(result), 0), 4);
+        return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
     }
 
     /**
@@ -117,15 +125,32 @@ public class IonMatch extends ExperimentObject {
      *
      * @param isPpm a boolean indicating whether the error should be retrieved
      * in ppm (true) or in Dalton (false)
-     * @param subtractIsotope indicates whether the isotope number shall be
-     * subtracted
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
+     * 
      * @return the match m/z error
      */
-    public double getError(boolean isPpm, boolean subtractIsotope) {
+    public double getError(boolean isPpm, int minIsotope, int maxIsotope) {
         if (isPpm) {
-            return getRelativeError(subtractIsotope);
+            return getRelativeError(minIsotope, maxIsotope);
         } else {
-            return getAbsoluteError(subtractIsotope);
+            return getAbsoluteError(minIsotope, maxIsotope);
+        }
+    }
+
+    /**
+     * Returns the error.
+     *
+     * @param isPpm a boolean indicating whether the error should be retrieved
+     * in ppm (true) or in Dalton (false)
+     * 
+     * @return the match m/z error
+     */
+    public double getError(boolean isPpm) {
+        if (isPpm) {
+            return getRelativeError();
+        } else {
+            return getAbsoluteError();
         }
     }
 
@@ -327,11 +352,14 @@ public class IonMatch extends ExperimentObject {
 
     /**
      * Returns the pride CV term for the ion match error.
+     * 
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
      *
      * @return the pride CV term for the ion match error
      */
-    public CvTerm getIonMassErrorPrideCvTerm() {
-        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError(true) + "");
+    public CvTerm getIonMassErrorPrideCvTerm(int minIsotope, int maxIsotope) {
+        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError(minIsotope, maxIsotope) + "");
     }
 
     /**

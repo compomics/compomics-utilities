@@ -102,15 +102,17 @@ public enum PsmScores {
     private static PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
 
     /**
-     * Scores the match between the given peptide and spectrum using the given score. The score is forced to decrease with the
-     * quality of the match by taking the opposite value when relevant.
+     * Scores the match between the given peptide and spectrum using the given
+     * score. The score is forced to decrease with the quality of the match by
+     * taking the opposite value when relevant.
      *
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this psm
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
@@ -125,14 +127,16 @@ public enum PsmScores {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using the given score.
+     * Scores the match between the given peptide and spectrum using the given
+     * score.
      *
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this psm
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
@@ -143,14 +147,16 @@ public enum PsmScores {
     }
 
     /**
-     * Scores the match between the given peptide and spectrum using the given score.
+     * Scores the match between the given peptide and spectrum using the given
+     * score.
      *
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this psm
      * @param psmScore the score to use
      *
      * @return the score of the match
@@ -160,7 +166,7 @@ public enum PsmScores {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm());
+                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
             case ms2_mz_fidelity:
                 return MS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:
@@ -175,5 +181,5 @@ public enum PsmScores {
                 throw new UnsupportedOperationException("Score not implemented.");
         }
     }
-       
+
 }

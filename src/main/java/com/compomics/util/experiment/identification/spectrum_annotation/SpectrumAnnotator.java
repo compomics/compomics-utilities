@@ -83,10 +83,17 @@ public abstract class SpectrumAnnotator {
      */
     protected boolean isPpm;
     /**
-     * Boolean indicating whether the isotopic number shall be removed from the
-     * theoretic mass when matching an ion. False by default for ms2 ions.
+     * Minimal isotopic correction when matching an ion.
      */
     protected static final boolean subtractIsotope = false;
+    /**
+     * The minimal isotope correction. By default only the monoisotopic peak is annotated (min=0).
+     */
+    protected static final Integer minIsotopicCorrection = 0;
+    /**
+     * The maximal isotope correction. By default only the monoisotopic peak is annotated (max=0).
+     */
+    protected static final Integer maxIsotopicCorrection = 0;
     /**
      * m/z shift applied to all theoretic peaks.
      */
@@ -116,12 +123,13 @@ public abstract class SpectrumAnnotator {
      * be read by the SpectrumPanel.
      *
      * @param ionMatches list of ion matches
+     * 
      * @return vector of default spectrum annotations
      */
     public static Vector<SpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
         Vector<SpectrumAnnotation> currentAnnotations = new Vector();
         for (IonMatch ionMatch : ionMatches) {
-            currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(subtractIsotope),
+            currentAnnotations.add(new DefaultSpectrumAnnotation(ionMatch.peak.mz, ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
                     SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true), ionMatch.getPeakAnnotation()));
         }
         return currentAnnotations;
@@ -163,7 +171,7 @@ public abstract class SpectrumAnnotator {
                 tempPeak.setMz(mz.get(i));
                 tempMatch.peak = tempPeak;
 
-                if (Math.abs(tempMatch.getError(isPpm, subtractIsotope)) <= mzTolerance) {
+                if (Math.abs(tempMatch.getError(isPpm, minIsotopicCorrection, maxIsotopicCorrection)) <= mzTolerance) {
 
                     Peak currentPeak = peakMap.get(mz.get(i));
 
@@ -648,7 +656,7 @@ public abstract class SpectrumAnnotator {
                                 if (chargeValidated(ion, charge, specificAnnotationSettings.getPrecursorCharge())
                                         && lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
                                     IonMatch ionMatch = new IonMatch(peak, ion, new Charge(Charge.PLUS, charge));
-                                    if (Math.abs(ionMatch.getError(specificAnnotationSettings.isFragmentIonPpm(), subtractIsotope)) <= specificAnnotationSettings.getFragmentIonAccuracy()) {
+                                    if (Math.abs(ionMatch.getError(specificAnnotationSettings.isFragmentIonPpm(), minIsotopicCorrection, maxIsotopicCorrection)) <= specificAnnotationSettings.getFragmentIonAccuracy()) {
                                         result.add(ionMatch);
                                     }
                                 }

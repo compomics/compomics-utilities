@@ -250,16 +250,18 @@ public class PeptideAssumptionFilter implements Serializable {
      * @param assumption the considered peptide assumption
      * @param spectrumKey the key of the spectrum used to get the precursor the
      * precursor should be accessible via the spectrum factory
-     *
      * @param spectrumFactory the spectrum factory
+     * @param searchParameters the search parameters
+     * 
      * @return a boolean indicating whether the given assumption passes the
      * filter
-     * @throws IOException if an IOException occurs
-     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
+     * 
+     * @throws IOException if an error occurs while reading the spectrum
+     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs reading while the spectrum
      */
-    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory) throws IOException, MzMLUnmarshallerException {
+    public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException {
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
-        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursorMz, isPpm)) <= maxMassDeviation);
+        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursorMz, isPpm, searchParameters.getMinIsotopicCorrection(), searchParameters.getMinIsotopicCorrection())) <= maxMassDeviation);
     }
 
     /**

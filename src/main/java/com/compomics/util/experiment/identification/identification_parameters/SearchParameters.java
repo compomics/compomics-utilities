@@ -125,6 +125,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     private static String[] rewindIons = {"x", "y", "z"};
     /**
+     * The minimal isotope correction.
+     */
+    private Integer minIsotopicCorrection = 0;
+    /**
+     * The maximal isotope correction.
+     */
+    private Integer maxIsotopicCorrection = 4;
+    /**
      * The algorithm specific parameters.
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
@@ -615,6 +623,48 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
+     * Returns the minimal isotopic correction.
+     * 
+     * @return the minimal isotopic correction
+     */
+    public Integer getMinIsotopicCorrection() {
+        if (minIsotopicCorrection == null) {
+            minIsotopicCorrection = 0;
+        }
+        return minIsotopicCorrection;
+    }
+
+    /**
+     * Sets the minimal isotopic correction.
+     * 
+     * @param minIsotopicCorrection the minimal isotopic correction
+     */
+    public void setMinIsotopicCorrection(Integer minIsotopicCorrection) {
+        this.minIsotopicCorrection = minIsotopicCorrection;
+    }
+
+    /**
+     * Returns the maximal isotopic correction.
+     * 
+     * @return the maximal isotopic correction
+     */
+    public Integer getMaxIsotopicCorrection() {
+        if (maxIsotopicCorrection == null) {
+            maxIsotopicCorrection = 4;
+        }
+        return maxIsotopicCorrection;
+    }
+
+    /**
+     * Sets the maximal isotopic correction.
+     * 
+     * @param maxIsotopicCorrection the maximal isotopic correction
+     */
+    public void setMaxIsotopicCorrection(Integer maxIsotopicCorrection) {
+        this.maxIsotopicCorrection = maxIsotopicCorrection;
+    }
+    
+    /**
      * Loads the identification parameters from a file. If the file is an
      * identification parameters file, the search parameters are extracted.
      *
@@ -790,6 +840,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
             output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(".").append(newLine);
         }
+
+        if (!minIsotopicCorrection.equals(defaultParameters.getMinIsotopicCorrection())
+                || !maxIsotopicCorrection.equals(defaultParameters.getMaxIsotopicCorrection())) {
+            output.append("Isotopic Correction ").append(minIsotopicCorrection).append(" to ").append(maxIsotopicCorrection).append(".").append(newLine);
+        }
         
         if (fastaFile != null) {
             output.append("DB: ").append(fastaFile.getName()).append(".").append(newLine);
@@ -955,6 +1010,14 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(maxChargeSearched);
         output.append(newLine);
 
+        output.append("ISOTOPIC_CORRECTION_LOWER_BOUND=");
+        output.append(minIsotopicCorrection);
+        output.append(newLine);
+
+        output.append("ISOTOPIC_CORRECTION_UPPER_BOUND=");
+        output.append(maxIsotopicCorrection);
+        output.append(newLine);
+
         for (int index : algorithmParameters.keySet()) {
             output.append(newLine);
             output.append(newLine);
@@ -979,15 +1042,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         if (this.getPrecursorAccuracyType() != otherSearchParameters.getPrecursorAccuracyType()) {
             return false;
         }
-        double diff = Math.abs(this.getPrecursorAccuracy().doubleValue() - otherSearchParameters.getPrecursorAccuracy().doubleValue());
-        if (diff > 0.0000000000001) {
+        if (!this.getPrecursorAccuracy().equals(otherSearchParameters.getPrecursorAccuracy())) {
             return false;
         }
-        diff = Math.abs(this.getFragmentIonAccuracy().doubleValue() - otherSearchParameters.getFragmentIonAccuracy().doubleValue());
-        if (diff > 0.0000000000001) {
+        if (!this.getFragmentIonAccuracy().equals(otherSearchParameters.getFragmentIonAccuracy())) {
             return false;
         }
-        if (this.getnMissedCleavages().intValue() != otherSearchParameters.getnMissedCleavages().intValue()) {
+        if (!this.getnMissedCleavages().equals(otherSearchParameters.getnMissedCleavages())) {
             return false;
         }
         if ((this.getFastaFile() == null && otherSearchParameters.getFastaFile() != null)
@@ -999,16 +1060,22 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 return false;
             }
         }
-        if (this.getIonSearched1().intValue() != otherSearchParameters.getIonSearched1().intValue()) {
+        if (!this.getIonSearched1().equals(otherSearchParameters.getIonSearched1())) {
             return false;
         }
-        if (this.getIonSearched2().intValue() != otherSearchParameters.getIonSearched2().intValue()) {
+        if (!this.getIonSearched2().equals(otherSearchParameters.getIonSearched2())) {
             return false;
         }
         if (!this.getMinChargeSearched().equals(otherSearchParameters.getMinChargeSearched())) {
             return false;
         }
         if (!this.getMaxChargeSearched().equals(otherSearchParameters.getMaxChargeSearched())) {
+            return false;
+        }
+        if (!this.getMinIsotopicCorrection().equals(otherSearchParameters.getMinIsotopicCorrection())) {
+            return false;
+        }
+        if (!this.getMaxIsotopicCorrection().equals(otherSearchParameters.getMaxIsotopicCorrection())) {
             return false;
         }
         if ((this.getEnzyme() != null && otherSearchParameters.getEnzyme() != null)

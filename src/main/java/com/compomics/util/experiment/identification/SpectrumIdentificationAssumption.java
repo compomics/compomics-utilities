@@ -146,37 +146,26 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param measuredMZ the precursor m/z
      * @param ppm if true the error is returns in ppm, false returns the error
      * in Da
-     * @param subtractIsotope if true the isotope number will be subtracted from
-     * the theoretic mass
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
+     * 
      * @return the precursor mass error (in ppm or Da)
      */
-    public Double getDeltaMass(double measuredMZ, boolean ppm, boolean subtractIsotope) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, subtractIsotope);
-    }
-
-    /**
-     * Returns the precursor mass error (in ppm or Da). Note that the value is
-     * returns as (experimental mass - theoretical mass) and that negative
-     * values thus can occur. The isotopic error is subtracted and can be
-     * retrieved by the function getIsotopeNumber().
-     *
-     * @param measuredMZ the precursor m/z
-     * @param ppm if true the error is returns in ppm, false returns the error
-     * in Da
-     * @return the precursor mass error (in ppm or Da)
-     */
-    public Double getDeltaMass(double measuredMZ, boolean ppm) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, true);
+    public Double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
     }
 
     /**
      * Returns the precursor isotope number according to the number of protons.
      *
      * @param measuredMZ the measured m/z value
+     * @param minIsotope the minimal isotope
+     * @param maxIsotope the maximal isotope
+     * 
      * @return the precursor isotope number according to the number of protons
      */
-    public int getIsotopeNumber(double measuredMZ) {
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber();
+    public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) {
+        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber(minIsotope, maxIsotope);
     }
 
     /**

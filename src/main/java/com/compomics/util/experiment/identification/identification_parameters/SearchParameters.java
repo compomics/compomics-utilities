@@ -841,8 +841,8 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(".").append(newLine);
         }
 
-        if (!minIsotopicCorrection.equals(defaultParameters.getMinIsotopicCorrection())
-                || !maxIsotopicCorrection.equals(defaultParameters.getMaxIsotopicCorrection())) {
+        if (!getMinIsotopicCorrection().equals(defaultParameters.getMinIsotopicCorrection())
+                || !getMaxIsotopicCorrection().equals(defaultParameters.getMaxIsotopicCorrection())) {
             output.append("Isotopic Correction ").append(minIsotopicCorrection).append(" to ").append(maxIsotopicCorrection).append(".").append(newLine);
         }
         
@@ -1011,11 +1011,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(newLine);
 
         output.append("ISOTOPIC_CORRECTION_LOWER_BOUND=");
-        output.append(minIsotopicCorrection);
+        output.append(getMinIsotopicCorrection());
         output.append(newLine);
 
         output.append("ISOTOPIC_CORRECTION_UPPER_BOUND=");
-        output.append(maxIsotopicCorrection);
+        output.append(getMaxIsotopicCorrection());
         output.append(newLine);
 
         for (int index : algorithmParameters.keySet()) {

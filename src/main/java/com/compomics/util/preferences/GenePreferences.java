@@ -1277,7 +1277,11 @@ public class GenePreferences implements Serializable {
         
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        output.append("Species: ").append(currentSpecies).append(" (").append(currentSpecies).append(")").append(".").append(newLine);
+        if (currentSpecies != null) {
+            output.append("Species: ").append(currentSpecies).append(" (").append(currentSpecies).append(")").append(".").append(newLine);
+        } else {
+            output.append("Species: ").append("(not selected)").append(newLine);
+        }
 
         return output.toString();
     }

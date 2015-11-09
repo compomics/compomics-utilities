@@ -21,7 +21,7 @@
    ==============================
 
    For updated information about the Compomics-Utilities please visit:
-   http://compomics-utilities.googlecode.com
+   hhttp://compomics.github.io/projects/compomics-utilities.html
 
 
 
@@ -31,7 +31,7 @@
 
    Compomics-Utilities demos are available by double clicking the jar 
    file (from command line 'java -jar utilities-X.Y.Z.jar'). For more 
-   details see: http://compomics-utilities.googlecode.com
+   details see: http://compomics.github.io/projects/compomics-utilities.html
 
 
 

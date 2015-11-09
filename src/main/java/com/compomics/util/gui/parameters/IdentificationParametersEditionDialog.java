@@ -121,7 +121,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     /**
      * If yes, the advanced settings are shown.
      */
-    private boolean showAdvancedSettings = true;
+    private boolean showAdvancedSettings = false;
 
     /**
      * Creates a new IdentificationParametersEditionDialog with a frame as
@@ -219,6 +219,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
         nameTxt.setEditable(editable);
+        updateAdvancedSettings();
     }
 
     /**
@@ -367,9 +368,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         nameTxt = new javax.swing.JTextField();
         settingsPanel = new javax.swing.JPanel();
         spectrumMatchingButton = new javax.swing.JButton();
+        geneMappingButton = new javax.swing.JButton();
         spectrumAnnotationButton = new javax.swing.JButton();
         sequenceMatchingButton = new javax.swing.JButton();
-        geneMappingButton = new javax.swing.JButton();
         matchesFiltersButton = new javax.swing.JButton();
         psmScoringButton = new javax.swing.JButton();
         ptmLocalizationButton = new javax.swing.JButton();
@@ -434,6 +435,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
+        geneMappingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        geneMappingButton.setText("Gene Annotation");
+        geneMappingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        geneMappingButton.setIconTextGap(15);
+        geneMappingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        geneMappingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                geneMappingButtonActionPerformed(evt);
+            }
+        });
+
         spectrumAnnotationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
         spectrumAnnotationButton.setText("Spectrum Annotation");
         spectrumAnnotationButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -453,17 +465,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         sequenceMatchingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sequenceMatchingButtonActionPerformed(evt);
-            }
-        });
-
-        geneMappingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
-        geneMappingButton.setText("Gene Annotation");
-        geneMappingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        geneMappingButton.setIconTextGap(15);
-        geneMappingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
-        geneMappingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                geneMappingButtonActionPerformed(evt);
             }
         });
 
@@ -571,14 +572,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                     .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addComponent(psmScoringButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addComponent(matchesFiltersButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(geneMappingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addComponent(qualityControlButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                     .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(geneMappingButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(settingsPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -587,11 +588,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
+                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(matchesFiltersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -606,9 +609,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
@@ -842,9 +843,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt 
      */
     private void advancedSettingsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advancedSettingsLabelMouseReleased
-        
         showAdvancedSettings = !showAdvancedSettings;
-        
+        updateAdvancedSettings();        
+    }//GEN-LAST:event_advancedSettingsLabelMouseReleased
+
+    /**
+     * Show/hide the advanced settings.
+     */
+    private void updateAdvancedSettings() {
         spectrumAnnotationButton.setVisible(showAdvancedSettings);
         sequenceMatchingButton.setVisible(showAdvancedSettings);
         matchesFiltersButton.setVisible(showAdvancedSettings);
@@ -862,9 +868,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         } else {
             advancedSettingsLabel.setText("<html><a href>Show Advanced Settings</a></html>");
         }
-        
-    }//GEN-LAST:event_advancedSettingsLabelMouseReleased
-
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel advancedSettingsLabel;
     private javax.swing.JPanel attributesPanel;

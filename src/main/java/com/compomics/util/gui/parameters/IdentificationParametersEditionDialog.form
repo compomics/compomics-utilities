@@ -155,14 +155,14 @@
                           <Component id="ptmLocalizationButton" alignment="0" pref="625" max="32767" attributes="0"/>
                           <Component id="psmScoringButton" alignment="0" pref="625" max="32767" attributes="0"/>
                           <Component id="matchesFiltersButton" alignment="0" pref="625" max="32767" attributes="0"/>
-                          <Component id="geneMappingButton" alignment="0" pref="625" max="32767" attributes="0"/>
                           <Component id="sequenceMatchingButton" alignment="0" pref="625" max="32767" attributes="0"/>
                           <Component id="qualityControlButton" alignment="1" pref="625" max="32767" attributes="0"/>
                           <Component id="spectrumAnnotationButton" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="geneMappingButton" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -175,11 +175,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="spectrumMatchingButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="geneMappingButton" min="-2" pref="45" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="spectrumAnnotationButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="sequenceMatchingButton" min="-2" pref="45" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="geneMappingButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="matchesFiltersButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -195,8 +197,6 @@
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="qualityControlButton" min="-2" pref="45" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -216,6 +216,22 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spectrumMatchingButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="geneMappingButton">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/edit_gray.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Gene Annotation"/>
+                <Property name="horizontalAlignment" type="int" value="2"/>
+                <Property name="iconTextGap" type="int" value="15"/>
+                <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icons/edit.png"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="geneMappingButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="spectrumAnnotationButton">
@@ -248,22 +264,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sequenceMatchingButtonActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="geneMappingButton">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/icons/edit_gray.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Gene Annotation"/>
-                <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/icons/edit.png"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="geneMappingButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="matchesFiltersButton">

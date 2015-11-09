@@ -1,12 +1,22 @@
 package com.compomics.util.experiment.massspectrometry;
 
+import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
+import com.compomics.util.experiment.biology.ions.ReporterIon;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.IonMatch;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
+import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
+import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class models a spectrum.
@@ -70,7 +80,8 @@ public abstract class Spectrum extends ExperimentObject {
      */
     private double[] intensityValuesAsArray = null;
     /**
-     * The intensity values as array normalized against the most intense peak. Null until set by the getter.
+     * The intensity values as array normalized against the most intense peak.
+     * Null until set by the getter.
      */
     private double[] intensityValuesNormaizedAsArray = null;
     /**
@@ -99,7 +110,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param spectrumFile The spectrum file
      * @param spectrumTitle The spectrum title
-     * 
+     *
      * @return the corresponding spectrum key
      */
     public static String getSpectrumKey(String spectrumFile, String spectrumTitle) {
@@ -510,26 +521,30 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Returns the intensity limit.
+     * Returns the intensity limit in intensity from a given percentile.
      *
-     * @param intensityLimit the intensity limit in percent, e.g., 0.75
+     * @param intensityFraction the fraction of the intensity to use as limit,
+     * e.g., 0.75 for the 75% most intense peaks.
+     *
      * @return the intensity limit
      */
-    public double getIntensityLimit(double intensityLimit) {
+    public double getIntensityLimit(double intensityFraction) {
 
         ArrayList<Double> intensities = new ArrayList<Double>(peakList.size());
 
         for (Peak peak : peakList.values()) {
-            intensities.add(peak.intensity);
+            double mz = peak.mz;
+            // Skip the low mass region of the spectrum @TODO: skip precursor as well
+            if (mz > 200) { 
+                intensities.add(peak.intensity);
+            }
         }
 
         if (intensities.isEmpty()) {
             return 0;
         }
 
-        Collections.sort(intensities);
-        int index = (int) ((intensities.size() - 1) * intensityLimit);
-        return intensities.get(index); // @TODO: could this be stored?
+        return BasicMathFunctions.percentile(intensities, intensityFraction);
     }
 
     /**
@@ -537,7 +552,7 @@ public abstract class Spectrum extends ExperimentObject {
      *
      * @param mzCorrections the m/z corrections to apply
      * @return the recalibrated list of peaks indexed by m/z
-     * @throws IllegalArgumentException if an IllegalArgumentException occurs 
+     * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) throws IllegalArgumentException {
 

@@ -70,8 +70,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * PTMFactory.
      *
      * @param tag the tag of interest
-     * @param ptmSequenceMatchingSettings the sequence matching settings
-     * for PTM to peptide mapping
+     * @param ptmSequenceMatchingSettings the sequence matching settings for PTM
+     * to peptide mapping
      *
      * @return the expected possible neutral losses
      *

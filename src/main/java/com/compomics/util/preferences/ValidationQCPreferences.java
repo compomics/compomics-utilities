@@ -20,7 +20,7 @@ public class ValidationQCPreferences implements Serializable {
     /**
      * Indicates whether the database size should be checked.
      */
-    private boolean dbSize = true;
+    private boolean dbSize = false;
     /**
      * Indicates whether the number of hits before the first decoy should be
      * checked.

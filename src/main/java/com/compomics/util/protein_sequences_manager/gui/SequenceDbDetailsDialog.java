@@ -101,7 +101,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
         if (fastaIndex != null) {
             fileTxt.setText(sequenceFactory.getCurrentFastaFile().getAbsolutePath());
-            utilitiesUserPreferences.setDbFolder(sequenceFactory.getCurrentFastaFile());
+            File folder = sequenceFactory.getCurrentFastaFile().getParentFile();
+            utilitiesUserPreferences.setDbFolder(folder);
             dbNameTxt.setText(fastaIndex.getName());
 
             // show the database type information

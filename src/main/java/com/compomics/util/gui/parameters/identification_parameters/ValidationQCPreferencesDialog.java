@@ -822,7 +822,7 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         if (!confidenceCheck.isSelected()) {
             validationQCPreferences.setConfidenceMargin(0.0);
         } else {
-            validationQCPreferences.setConfidenceMargin(1.0); // @TODO: let the user change this
+            validationQCPreferences.setConfidenceMargin(1.0);
         }
         validationQCPreferences.setPsmFilters(psmFilters);
         validationQCPreferences.setPeptideFilters(peptideFilters);

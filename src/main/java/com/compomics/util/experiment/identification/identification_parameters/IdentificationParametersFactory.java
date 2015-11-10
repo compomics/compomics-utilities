@@ -192,6 +192,7 @@ public class IdentificationParametersFactory {
                     }
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     // Not a valid parameters file
                 }
             }

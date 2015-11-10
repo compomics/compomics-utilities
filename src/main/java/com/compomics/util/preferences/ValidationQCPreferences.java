@@ -208,49 +208,70 @@ public class ValidationQCPreferences implements Serializable {
         if (!getConfidenceMargin().equals(validationQCPreferences.getConfidenceMargin())) {
             return false;
         }
-        if (psmFilters.size() != validationQCPreferences.getPsmFilters().size()) {
+        if ((psmFilters != null && validationQCPreferences.getPsmFilters() == null)
+                || (psmFilters == null && validationQCPreferences.getPsmFilters() != null)) {
             return false;
         }
-        if (peptideFilters.size() != validationQCPreferences.getPeptideFilters().size()) {
+        if (psmFilters != null && validationQCPreferences.getPsmFilters() != null
+                && psmFilters.size() != validationQCPreferences.getPsmFilters().size()) {
             return false;
         }
-        if (proteinFilters.size() != validationQCPreferences.getProteinFilters().size()) {
+        if ((peptideFilters != null && validationQCPreferences.getPeptideFilters() == null)
+                || (peptideFilters == null && validationQCPreferences.getPeptideFilters() != null)) {
             return false;
         }
-        for (Filter psmFilter : psmFilters) {
-            boolean found = false;
-            for (Filter newFilter : validationQCPreferences.getPsmFilters()) {
-                if (newFilter.isSameAs(psmFilter)) {
-                    found = true;
-                    break;
+        if (peptideFilters != null && validationQCPreferences.getPeptideFilters() != null
+                && peptideFilters.size() != validationQCPreferences.getPeptideFilters().size()) {
+            return false;
+        }
+        if ((proteinFilters != null && validationQCPreferences.getProteinFilters() == null)
+                || (proteinFilters == null && validationQCPreferences.getProteinFilters() != null)) {
+            return false;
+        }
+        if (proteinFilters != null && validationQCPreferences.getProteinFilters()!= null
+                && proteinFilters.size() != validationQCPreferences.getProteinFilters().size()) {
+            return false;
+        }
+        if (psmFilters != null) {
+            for (Filter psmFilter : psmFilters) {
+                boolean found = false;
+                for (Filter newFilter : validationQCPreferences.getPsmFilters()) {
+                    if (newFilter.isSameAs(psmFilter)) {
+                        found = true;
+                        break;
+                    }
                 }
-            }
-            if (!found) {
-                return false;
+                if (!found) {
+                    return false;
+                }
             }
         }
-        for (Filter psmFilter : peptideFilters) {
-            boolean found = false;
-            for (Filter newFilter : validationQCPreferences.getPeptideFilters()) {
-                if (newFilter.isSameAs(psmFilter)) {
-                    found = true;
-                    break;
+        if (peptideFilters != null) {
+            for (Filter psmFilter : peptideFilters) {
+                boolean found = false;
+                for (Filter newFilter : validationQCPreferences.getPeptideFilters()) {
+                    if (newFilter.isSameAs(psmFilter)) {
+                        found = true;
+                        break;
+                    }
                 }
-            }
-            if (!found) {
-                return false;
+                if (!found) {
+                    return false;
+                }
             }
         }
-        for (Filter psmFilter : proteinFilters) {
-            boolean found = false;
-            for (Filter newFilter : validationQCPreferences.getProteinFilters()) {
-                if (newFilter.isSameAs(psmFilter)) {
-                    found = true;
-                    break;
+        if (proteinFilters != null) {
+            for (Filter psmFilter : proteinFilters) {
+                boolean found = false;
+                for (Filter newFilter : validationQCPreferences.getProteinFilters()) {
+                    if (newFilter.isSameAs(psmFilter)) {
+                        found = true;
+                        break;
+                    }
                 }
-            }
-            if (!found) {
-                return false;
+                if (!found) {
+                    return false;
+                }
             }
         }
 

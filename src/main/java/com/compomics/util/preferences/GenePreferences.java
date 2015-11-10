@@ -1285,4 +1285,38 @@ public class GenePreferences implements Serializable {
 
         return output.toString();
     }
+    
+    /**
+     * Returns true if the gene preferences objects have identical settings.
+     *
+     * @param otherGenePreferences the gene preferences to compare to
+     *
+     * @return true if the gene preferences objects have identical settings
+     */
+    public boolean equals(GenePreferences otherGenePreferences) {
+
+        if (otherGenePreferences == null) {
+            return false;
+        }
+
+        if ((currentSpecies != null && otherGenePreferences.getCurrentSpecies() == null)
+                || (currentSpecies == null && otherGenePreferences.getCurrentSpecies() != null)) {
+            return false;
+        }
+        
+        if (currentSpecies != null && !currentSpecies.equalsIgnoreCase(otherGenePreferences.getCurrentSpecies())) {
+            return false;
+        }
+        
+        if ((currentSpeciesType != null && otherGenePreferences.getCurrentSpeciesType()== null)
+                || (currentSpeciesType == null && otherGenePreferences.getCurrentSpeciesType() != null)) {
+            return false;
+        }
+        
+        if (currentSpeciesType != null && !currentSpeciesType.equalsIgnoreCase(otherGenePreferences.getCurrentSpeciesType())) {
+            return false;
+        }
+        
+        return true;
+    }
 }

@@ -179,7 +179,7 @@ public class PTMScoringPreferences implements Serializable {
     public void setSequenceMatchingPreferences(SequenceMatchingPreferences sequenceMatchingPreferences) {
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
     }
-    
+
     /**
      * Returns the FLR threshold.
      *
@@ -197,23 +197,69 @@ public class PTMScoringPreferences implements Serializable {
     public void setFlrThreshold(double flr) {
         this.flr = flr;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
-        
+
         StringBuilder output = new StringBuilder();
-        
+
         output.append("Score: ").append(selectedProbabilisticScore).append(".").append(newLine);
         output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
         output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
         output.append("Estimate FLR: ").append(estimateFlr).append(".").append(newLine);
 
         return output.toString();
+    }
+
+    /**
+     * Returns true if the objects have identical settings.
+     *
+     * @param otherPtmScoringPreferences the PTMScoringPreferences to compare to
+     *
+     * @return true if the objects have identical settings
+     */
+    public boolean equals(PTMScoringPreferences otherPtmScoringPreferences) {
+
+        if (otherPtmScoringPreferences == null) {
+            return false;
+        }
+
+        double diff = Math.abs(flr - otherPtmScoringPreferences.getFlrThreshold());
+        if (diff > 0.0000000000001) {
+            return false;
+        }
+
+        if (probabilitsticScoreCalculation.booleanValue() != otherPtmScoringPreferences.isProbabilitsticScoreCalculation()) {
+            return false;
+        }
+
+        if (selectedProbabilisticScore != otherPtmScoringPreferences.getSelectedProbabilisticScore()) {
+            return false;
+        }
+
+        if (estimateFlr != otherPtmScoringPreferences.isEstimateFlr()) {
+            return false;
+        }
+
+        diff = Math.abs(probabilisticScoreThreshold - otherPtmScoringPreferences.getProbabilisticScoreThreshold());
+        if (diff > 0.0000000000001) {
+            return false;
+        }
+
+        if (probabilisticScoreNeutralLosses.booleanValue() != otherPtmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
+            return false;
+        }
+
+        if (!sequenceMatchingPreferences.isSameAs(otherPtmScoringPreferences.getSequenceMatchingPreferences())) {
+            return false;
+        }
+
+        return true;
     }
 }

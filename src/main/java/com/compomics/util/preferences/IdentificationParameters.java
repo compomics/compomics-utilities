@@ -15,6 +15,7 @@ import java.io.Serializable;
  * Generic class grouping the parameters used for protein identification.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IdentificationParameters implements Serializable, MarshallableParameter {
 
@@ -112,7 +113,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param idValidationPreferences the matches validation preferences
      * @param fractionSettings the fraction settings
      */
-    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings, SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences, PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences, IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
+    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings, 
+            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences, 
+            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences, 
+            IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
         this.name = name;
         this.description = description;
         this.searchParameters = searchParameters;
@@ -415,11 +419,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @throws IOException if an IOException occurs
      */
     public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File identificationParametersFile) throws IOException {
-
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
-
     }
 
     /**
@@ -531,5 +533,52 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             return null;
         }
         return Type.valueOf(marshallableParameterType);
+    }
+
+    /**
+     * Returns true of the identification parameter objects have identical settings.
+     *
+     * @param otherIdentificationParameters the parameters to compare to
+     *
+     * @return true of the identification parameter objects have identical settings
+     */
+    public boolean equals(IdentificationParameters otherIdentificationParameters) {
+        
+        if (otherIdentificationParameters == null) {
+            return false;
+        }
+
+        if (!searchParameters.equals(otherIdentificationParameters.getSearchParameters())) {
+            return false;
+        }
+        if (!annotationSettings.isSameAs(otherIdentificationParameters.getAnnotationPreferences())) {
+            return false;
+        }
+        if (!sequenceMatchingPreferences.isSameAs(otherIdentificationParameters.getSequenceMatchingPreferences())) {
+            return false;
+        }
+        if (!genePreferences.equals(otherIdentificationParameters.getGenePreferences())) {
+            return false;
+        }
+        if (!psmScoringPreferences.equals(otherIdentificationParameters.getPsmScoringPreferences())) {
+            return false;
+        }
+        if (!peptideAssumptionFilter.isSameAs(otherIdentificationParameters.getPeptideAssumptionFilter())) {
+            return false;
+        }
+        if (!ptmScoringPreferences.equals(otherIdentificationParameters.getPtmScoringPreferences())) {
+            return false;
+        }
+        if (!proteinInferencePreferences.equals(otherIdentificationParameters.getProteinInferencePreferences())) {
+            return false;
+        }
+        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
+            return false;
+        }
+        if (!fractionSettings.isSameAs(otherIdentificationParameters.getFractionSettings())) {
+            return false;
+        }
+        
+        return true;
     }
 }

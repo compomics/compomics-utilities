@@ -1028,11 +1028,11 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Returns true of the search parameter objects have identical settings.
+     * Returns true if the search parameter objects have identical settings.
      *
      * @param otherSearchParameters the parameters to compare to
      *
-     * @return true of the search parameter objects have identical settings
+     * @return true if the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {
 

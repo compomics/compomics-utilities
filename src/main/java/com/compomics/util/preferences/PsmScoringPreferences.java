@@ -130,4 +130,22 @@ public class PsmScoringPreferences implements Serializable {
 
         return output.toString();
     }
+    
+    /**
+     * Returns true if the objects have identical settings.
+     *
+     * @param otherPsmScoringPreferences the PsmScoringPreferences to compare to
+     *
+     * @return true if the objects have identical settings
+     */
+    public boolean equals(PsmScoringPreferences otherPsmScoringPreferences) {
+
+        if (otherPsmScoringPreferences == null) {
+            return false;
+        }
+
+        // @TODO: implement me!!
+        
+        return true;
+    }
 }

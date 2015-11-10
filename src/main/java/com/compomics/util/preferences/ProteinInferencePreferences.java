@@ -7,6 +7,7 @@ import java.io.Serializable;
  * Generic class grouping the protein inference preferences.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ProteinInferencePreferences implements Serializable {
 
@@ -36,18 +37,44 @@ public class ProteinInferencePreferences implements Serializable {
     public void setProteinSequenceDatabase(File proteinSequenceDatabase) {
         this.proteinSequenceDatabase = proteinSequenceDatabase;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         output.append("DB: ").append(proteinSequenceDatabase.getName()).append(".").append(newLine);
 
         return output.toString();
+    }
+
+    /**
+     * Returns true if the objects have identical settings.
+     *
+     * @param otherProteinInferencePreferences the ProteinInferencePreferences
+     * to compare to
+     *
+     * @return true if the objects have identical settings
+     */
+    public boolean equals(ProteinInferencePreferences otherProteinInferencePreferences) {
+
+        if (otherProteinInferencePreferences == null) {
+            return false;
+        }
+
+        if ((proteinSequenceDatabase != null && otherProteinInferencePreferences.getProteinSequenceDatabase() == null)
+                || (proteinSequenceDatabase == null && otherProteinInferencePreferences.getProteinSequenceDatabase() != null)) {
+            return false;
+        }
+
+        if (proteinSequenceDatabase != null && !proteinSequenceDatabase.equals(otherProteinInferencePreferences.getProteinSequenceDatabase())) {
+            return false;
+        }
+
+        return true;
     }
 }

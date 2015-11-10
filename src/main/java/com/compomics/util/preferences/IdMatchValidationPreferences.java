@@ -207,4 +207,52 @@ public class IdMatchValidationPreferences implements Serializable {
 
         return output.toString();
     }
+    
+    /**
+     * Returns true if the objects have identical settings.
+     *
+     * @param otherIdMatchValidationPreferences the IdMatchValidationPreferences
+     * to compare to
+     *
+     * @return true if the objects have identical settings
+     */
+    public boolean equals(IdMatchValidationPreferences otherIdMatchValidationPreferences) {
+
+        if (otherIdMatchValidationPreferences == null) {
+            return false;
+        }
+
+        double diff = Math.abs(defaultProteinFDR - otherIdMatchValidationPreferences.getDefaultProteinFDR());
+        if (diff > 0.0000000000001) {
+            return false;
+        }
+        
+        diff = Math.abs(defaultPeptideFDR - otherIdMatchValidationPreferences.getDefaultPeptideFDR());
+        if (diff > 0.0000000000001) {
+            return false;
+        }
+        
+        diff = Math.abs(defaultPsmFDR - otherIdMatchValidationPreferences.getDefaultPsmFDR());
+        if (diff > 0.0000000000001) {
+            return false;
+        }
+        
+        if (separatePeptides.booleanValue() != otherIdMatchValidationPreferences.getSeparatePeptides()) {
+            return false;
+        }
+        
+        if (separatePsms.booleanValue() != otherIdMatchValidationPreferences.getSeparatePsms()) {
+            return false;
+        }
+        
+        if (groupSmallSubgroups.booleanValue() != otherIdMatchValidationPreferences.getGroupSmallSubgroups()) {
+            return false;
+        }
+        
+        if (!validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCPreferences())) {
+            return false;
+        }
+
+        return true;
+    }
 }

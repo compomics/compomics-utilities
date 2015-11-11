@@ -32,7 +32,7 @@ public class IdentificationParametersFactory {
     /**
      * The extension for a parameters file.
      */
-    public static final String parametersExtension = ".par";
+    public static final String PARAMETERS_EXTENSION = ".par";
     /**
      * A map of the parsed parameters indexed by their name.
      */
@@ -93,7 +93,7 @@ public class IdentificationParametersFactory {
      * @return the identification parameters corresponding to the given name
      */
     public static File getIdentificationParametersFile(String name) {
-        return new File(getParametersFolder(), name + parametersExtension);
+        return new File(getParametersFolder(), name + PARAMETERS_EXTENSION);
     }
 
     /**
@@ -178,15 +178,15 @@ public class IdentificationParametersFactory {
      */
     private void parseFolder() {
         for (File parameterFile : getParametersFolder().listFiles()) {
-            if (parameterFile.getName().endsWith(parametersExtension)) {
+            if (parameterFile.getName().endsWith(PARAMETERS_EXTENSION)) {
                 try {
-
-                    // There should be only IdentificationParameters 
+                    // there should be only IdentificationParameters 
                     IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
                     Class expectedObjectType = IdentificationParameters.class;
                     Object object = jsonMarshaller.fromJson(expectedObjectType, parameterFile);
                     IdentificationParameters identificationParameters = (IdentificationParameters) object;
-                    // Avoid incorrectly parsed parameters
+
+                    // avoid incorrectly parsed parameters
                     if (identificationParameters.getType() == MarshallableParameter.Type.identification_parameters) {
                         identificationParametersMap.put(identificationParameters.getName(), identificationParameters);
                     }

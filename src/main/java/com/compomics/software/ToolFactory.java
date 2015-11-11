@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
  * This class can be used to start compomics tools.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ToolFactory {
 
@@ -40,7 +41,7 @@ public class ToolFactory {
     /**
      * The command line argument for a parameters file for SearchGUI.
      */
-    public static final String searchGuiParametersFileOption = "-search_parameters";
+    public static final String searchGuiParametersFileOption = "-identification_parameters";
     /**
      * The command line argument for an output folder.
      */

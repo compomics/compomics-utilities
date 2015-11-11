@@ -307,7 +307,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton.setEnabled(true);
         fractionsButton.setEnabled(true);
         qualityControlButton.setEnabled(true);
-        
+
         if (getIdentificationParameters().equals(oldIdentificationParameters)) {
             saveButton.setText("OK");
         } else {
@@ -440,17 +440,31 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     public boolean validateInput() {
 
-        String name = nameTxt.getText();
-        for (char character : name.toCharArray()) {
-            String charAsString = character + "";
-            if (charAsString.matches("[^\\dA-Za-z _]")) {
-                JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
-                        "Special Character", JOptionPane.INFORMATION_MESSAGE);
-                return false;
+        boolean valid = true;
+
+        if (nameTxt.getText().isEmpty()) {
+            valid = false;
+        }
+
+        if (valid) {
+            String name = nameTxt.getText();
+            for (char character : name.toCharArray()) {
+                String charAsString = character + "";
+                if (charAsString.matches("[^\\dA-Za-z _]")) {
+                    JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
+                            "Special Character", JOptionPane.INFORMATION_MESSAGE);
+                    valid = false;
+                }
             }
         }
 
-        return true;
+        if (valid) {
+            valid = validateParametersInput(false);
+        }
+
+        saveButton.setEnabled(valid);
+
+        return valid;
     }
 
     /**
@@ -841,7 +855,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void spectrumMatchingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumMatchingButtonActionPerformed
         String name = nameTxt.getText();
         SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
-                normalIcon, waitingIcon, editable, editable, configurationFile, lastSelectedFolder, name, editable);
+                normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, name, editable);
         if (!searchSettingsDialog.isCanceled()) {
             if (searchParameters != null) {
                 PtmSettings oldPtms = searchParameters.getPtmSettings();
@@ -862,6 +876,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
 
             updateGUI();
+            validateInput();
         }
     }//GEN-LAST:event_spectrumMatchingButtonActionPerformed
 
@@ -994,9 +1009,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         if (validateInput()) {
 
             IdentificationParameters newParameters = getIdentificationParameters();
-            
+
             if (oldIdentificationParameters == null || !newParameters.equals(oldIdentificationParameters)) {
-                
+
                 // check if the file already exists
                 if (oldIdentificationParameters != null && newParameters.getName().equals(oldIdentificationParameters.getName())) {
                     int value = JOptionPane.showConfirmDialog(this, "A settings file with the same name already exists. Overwrite file?", "Overwrite File?", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -1062,11 +1077,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void nameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTxtKeyReleased
-        if (!nameTxt.getText().isEmpty() && searchParameters != null) {
-            saveButton.setEnabled(true);
+        if (oldIdentificationParameters == null || !getIdentificationParameters().getName().equals(oldIdentificationParameters.getName())) {
+            saveButton.setText("Save");
         } else {
-            saveButton.setEnabled(false);
+            saveButton.setText("OK");
         }
+        
+        validateInput();
     }//GEN-LAST:event_nameTxtKeyReleased
 
     /**
@@ -1089,11 +1106,15 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 nameTxt.setText(identificationParameters.getName());
                 saveButton.setEnabled(true);
                 updateGUI();
+
+                validateParametersInput(true);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error occurred while reading " + selectedFile + ". Please verify the file.", "File Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+
+        validateInput();
     }//GEN-LAST:event_browseButtonActionPerformed
 
     /**
@@ -1117,8 +1138,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         canceled = true;
@@ -1172,4 +1193,46 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private javax.swing.JButton validationButton;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Inspects the search parameter validity.
+     *
+     * @param showMessage if true an error message is shown to the users
+     * @return a boolean indicating if the parameters are valid
+     */
+    public boolean validateParametersInput(boolean showMessage) {
+
+        if (searchParameters == null) {
+            return false;
+        }
+
+        String name = nameTxt.getText();
+        SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
+                normalIcon, waitingIcon, false, true, configurationFile, lastSelectedFolder, name, editable);
+
+        boolean valid = searchSettingsDialog.validateParametersInput(false);
+        int columnWidth = 150;
+        int maxDescriptionLength = 150;
+
+        if (!valid) {
+            spectrumMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b><font color=\"red\">Spectrum Matching</font></b></td>"
+                    + "<td><font size=2>" + formatDescription(searchParameters.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+            spectrumMatchingButton.setToolTipText("Please check the search settings");
+
+            if (showMessage) {
+                searchSettingsDialog.validateParametersInput(true);
+                searchSettingsDialog.setVisible(true);
+                
+                if (!searchSettingsDialog.isCanceled()) {
+                    searchParameters = searchSettingsDialog.getSearchParameters();
+                }
+            }
+        } else {
+            spectrumMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Spectrum Matching</b></td>"
+                    + "<td><font size=2>" + formatDescription(searchParameters.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+            spectrumMatchingButton.setToolTipText("Please check the search settings");
+            spectrumMatchingButton.setToolTipText(null);
+        }
+
+        return valid;
+    }
 }

@@ -224,7 +224,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="groupsLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Group Small Subgroups"/>
+                <Property name="text" type="java.lang.String" value="Merge Small Subgroups"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="groupsComboBox">

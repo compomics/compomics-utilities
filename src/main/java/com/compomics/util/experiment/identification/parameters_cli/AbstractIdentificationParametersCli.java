@@ -1,9 +1,9 @@
-package com.compomics.util.experiment.identification.search_parameters_cli;
+package com.compomics.util.experiment.identification.parameters_cli;
 
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.preferences.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
@@ -103,8 +103,8 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 printModifications();
             } else {
                 File outputFile = input.getDestinationFile();
-                SearchParameters searchParameters = input.getSearchParameters();
-                SearchParameters.saveIdentificationParameters(searchParameters, outputFile);
+                IdentificationParameters identificationParameters = input.getIdentificationParameters();
+                IdentificationParameters.saveIdentificationParameters(identificationParameters, outputFile);
                 System.out.println(System.getProperty("line.separator") + "Identification parameters file created: " + outputFile.getAbsolutePath() + System.getProperty("line.separator"));
             }
         } catch (Exception e) {

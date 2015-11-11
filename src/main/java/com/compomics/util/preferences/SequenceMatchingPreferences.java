@@ -15,6 +15,7 @@ public class SequenceMatchingPreferences implements Serializable {
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = 228961121369106450L;
+
     /**
      * The different types of amino acid matching.
      */
@@ -23,29 +24,74 @@ public class SequenceMatchingPreferences implements Serializable {
         /**
          * Matches character strings only.
          */
-        string,
+        string(0, "Character Sequence"),
         /**
          * Matches amino acids.
          */
-        aminoAcid,
+        aminoAcid(1, "Amino Acids"),
         /**
          * Matches amino acids of indistinguishable masses (I/L).
          */
-        indistiguishableAminoAcids;
+        indistiguishableAminoAcids(2, "Indistinguishable Amino Acids");
+
+        /**
+         * The index of the type as integer.
+         */
+        public final int index;
+
+        /**
+         * The description.
+         */
+        public final String description;
+
+        /**
+         * Constructor.
+         *
+         * @param index the index
+         * @param description the description
+         */
+        private MatchingType(int index, String description) {
+            this.index = index;
+            this.description = description;
+        }
 
         @Override
         public String toString() {
-            switch (this) {
-                case string:
-                    return "Characters Sequence";
-                case aminoAcid:
-                    return "Amino Acids";
-                case indistiguishableAminoAcids:
-                    return "Indistinguishable Amino Acids";
-                default:
-                    throw new UnsupportedOperationException("Not implemented for matching type " + this.name() + ".");
-            }
+            return description;
         }
+        
+        /**
+         * Returns the different matching types as command line options description.
+         * 
+         * @return the different matching types as command line options description
+         */
+        public static String getCommandLineOptions() {
+            StringBuilder optionsStringBuilder = new StringBuilder();
+            for (MatchingType matchingType : values()) {
+                if (optionsStringBuilder.length() == 0) {
+                    optionsStringBuilder.append(", ");
+                }
+                optionsStringBuilder.append(matchingType.index).append(": ").append(matchingType.description);
+            }
+            return optionsStringBuilder.toString();
+        }
+        
+        /**
+         * Returns the matching type corresponding to the given index.
+         * 
+         * @param index the index of the matching type
+         * 
+         * @return the matching type
+         */
+        public static MatchingType getMatchingType(int index) {
+            for (MatchingType matchingType : values()) {
+                if (matchingType.index == index) {
+                    return matchingType;
+                }
+            }
+            throw new IllegalArgumentException("No matching type found for index " + index  + ".");
+        }
+
     }
     /**
      * The amino acid matching type.
@@ -229,18 +275,18 @@ public class SequenceMatchingPreferences implements Serializable {
         }
         return true;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
-        
+
         StringBuilder output = new StringBuilder();
-        
+
         output.append("Method: ").append(sequenceMatchingType).append(".").append(newLine);
         output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
 

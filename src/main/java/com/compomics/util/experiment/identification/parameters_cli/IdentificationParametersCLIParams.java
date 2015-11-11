@@ -1,4 +1,7 @@
-package com.compomics.util.experiment.identification.search_parameters_cli;
+package com.compomics.util.experiment.identification.parameters_cli;
+
+import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 /**
  * Enum class specifying the SearchParameter command line option parameters to
@@ -13,28 +16,34 @@ public enum IdentificationParametersCLIParams {
     // IMPORTANT: Any change here must be reported in the wiki: 
     // https://github.com/compomics/compomics-utilities/wiki/IdentificationParametersCLI
     //////////////////////////////////////////////////////////////////////////////////////////
+    
     //////////////////////////////////
     // General parameters
     //////////////////////////////////
-    OUTPUT("out", "The destination Identification Parameters file (.par).", true),
-    DB("db", "The sequence database in FASTA format.", true),
+    DESCRIPTION("description", "The description of the search parameters, short summary by default.", false),
+    USAGE("usage", "Lists the available options.", false),
+    USAGE_2("h", "Lists the available options.", false),
+    USAGE_3("help", "Lists the available options.", false),
+    MODS("mods", "Lists the available modifications.", false),
+    IDENTIFICATION_PARAMETERS("id_params", "An identification parameters file to modify. Generated using the GUI or via IdentificationParametersCLI.", false),
+    OUT("out", "The destination Identification Parameters file (.par).", true),
+    //////////////////////////////////
+    // Search Parameters
+    //////////////////////////////////
+    DB("db", "The sequence database to use for searching spectra in FASTA format.", true),
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (2), default is '1'.", false),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (2), default is '1'.", false),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false),
     PREC_TOL_DA("prec_tol", "Precursor ion mass tolerance in Dalton, default is 0.5 Da.", false), // For tools which do not have the ppm option
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Dalton, default is '0.5' Da.", false),
     ENZYME("enzyme", "Enzyme, default is 'Trypsin'. Available enzymes are listed in the GUI. (Note: case sensitive.)", false), // @TODO: list supported enzymes per search engine on a web page!
-    FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"oxidation of m, phosphorylation of s\"", false),
-    VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"oxidation of m, phosphorylation of s\"", false),
+    FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false),
+    VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false),
     MIN_CHARGE("min_charge", "Minimal charge to search for, default is '2'.", false),
     MAX_CHARGE("max_charge", "Maximal charge to search for, default is '4'.", false),
     MC("mc", "Number of allowed missed cleavages, default is '2'.", false),
     FI("fi", "Type of forward ion searched, default is 'b'.", false),
     RI("ri", "Type of rewind ion searched, default is 'y'.", false),
-    MODS("mods", "Lists the available modifications.", false),
-    USAGE("usage", "Lists the available options.", false),
-    USAGE_2("h", "Lists the available options.", false),
-    USAGE_3("help", "Lists the available options.", false),
     //////////////////////////////////
     // OMSSA specific parameters
     //////////////////////////////////
@@ -267,7 +276,55 @@ public enum IdentificationParametersCLIParams {
     // Novor specific parameters
     //////////////////////////////////
     NOVOR_FRAGMENTATION("novor_fragmentation", "Novor fragmentation method, CID or HCD, default is 'HCD'.", false),
-    NOVOR_MASS_ANALYZER("novor_mass_analyzer", "Novor mass analyzer, Trap, TOF, or FT, default is 'FT'.", false);
+    NOVOR_MASS_ANALYZER("novor_mass_analyzer", "Novor mass analyzer, Trap, TOF, or FT, default is 'FT'.", false),
+    //////////////////////////////////
+    // Gene mapping preferences
+    //////////////////////////////////
+    SPECIES_TYPE("species_type", "The species type to use for the gene annotation (UniProt databases only). Supported species types are listed in the GUI. Inferred from the database if not set.", false),
+    SPECIES("species", "The species to use for the gene annotation (UniProt databases only). Supported species are listed in the GUI. Inferred from the database if not set.", false),
+    //////////////////////////////////
+    // Spectrum annotation
+    //////////////////////////////////
+    ANNOTATION_LEVEL("annotation_level", "The intensity percentile to consider for annotation, e.g. 0.75 means that the 25% most intense peaks will be annotated, default is 0.75.", false),
+    ANNOTATION_MZ_TOLERANCE("annotation_mz_tolerance", "The m/z tolerance to annotate peaks, default is equal to the search settings MS2 tolerance.", false),
+    ANNOTATION_HIGH_RESOLUTION("annotation_high_resolution", "If true the most accurate peak will be selected within the m/z tolerance. (1: true, 0: false, default is '1')", false),
+    //////////////////////////////////
+    // Sequence Matching
+    //////////////////////////////////
+    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids + ")", false),
+    SEQUENCE_MATCHING_X("sequence_matching_x", "The maximal share of Xs in a sequence, 0.25 means 25% of Xs, default is 0.25.", false),
+    //////////////////////////////////
+    // Import Filters
+    //////////////////////////////////
+    IMPORT_PEPTIDE_LENGTH_MIN("import_peptide_length_min", "The minimal peptide length to consider when importing identification files, default is 8.", false),
+    IMPORT_PEPTIDE_LENGTH_MAX("import_peptide_length_max", "The maximal peptide length to consider when importing identification files, default is 30.", false),
+    IMPORT_PRECURSOR_MZ("import_precurosor_mz", "The maximal precursor precursor deviation to allow when importing identification files, none by default.", false),
+    IMPORT_PRECURSOR_MZ_PPM("import_precurosor_mz_ppm", "Import precursor ion tolerance unit: ppm (1) or Da (2), default is '1'.", false),
+    EXCLUDE_UNKNOWN_PTMs("exclude_unknown_ptms", "If true peptides presenting unrecognized PTMs will be excluded. (1: true, 0: false, default is '1')", false),
+    //////////////////////////////////
+    // PTM localization parameters
+    //////////////////////////////////
+    PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + PtmScore.getCommandLineOptions() + ", default is '1').", false),
+    PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false),
+    SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false),
+    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.aminoAcid + ")", false),
+    //////////////////////////////////
+    // Protein inference parameters
+    //////////////////////////////////
+    DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", true),
+    //////////////////////////////////
+    // Validation parameters
+    //////////////////////////////////
+    PSM_FDR("psm_fdr", "FDR at the PSM level in percent, default is 1.", false),
+    PEPTIDE_FDR("peptide_fdr", "FDR at the peptide level in percent, default is 1.", false),
+    PROTEIN_FDR("protein_fdr", "FDR at the protein level in percent, default is 1.", false),
+    SEPARATE_PSMs("group_psms", "Group PSMs by charge for scoring and validation, 1: yes, 0: no, default is 1.", false),
+    SEPARATE_PEPTIDES("group_peptides", "Group peptides by modification status for scoring and validation, 1: yes, 0: no, default is 1.", false),
+    MERGE_SUBGROUPS("merge_subgroups", "Merge small PSM and peptide groups for scoring and validation, 1: yes, 0: no, default is 1.", false),
+    //////////////////////////////////
+    // Fraction parameters
+    //////////////////////////////////
+    PROTEIN_FRACTION_MW_CONFIDENCE("protein_fraction_mw_confidence", "Minimum confidence required for a protein in the fraction MW plot (default 95%: '95.0').", false);
 
     /**
      * Short Id for the CLI parameter.
@@ -294,5 +351,37 @@ public enum IdentificationParametersCLIParams {
         this.id = id;
         this.description = description;
         this.mandatory = mandatory;
+    }
+
+    /**
+     * Returns the options as a string.
+     *
+     * @return the options as a string
+     */
+    public static String getOptionsAsString() {
+
+        String output = "";
+        String formatter = "%-25s";
+
+        output += "Mandatory parameters:\n\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.OUT.id) + IdentificationParametersCLIParams.OUT.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.PREC_PPM.id) + IdentificationParametersCLIParams.PREC_PPM.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.PREC_TOL.id) + IdentificationParametersCLIParams.PREC_TOL.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FRAG_TOL.id) + IdentificationParametersCLIParams.FRAG_TOL.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.ENZYME.id) + IdentificationParametersCLIParams.ENZYME.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FIXED_MODS.id) + IdentificationParametersCLIParams.FIXED_MODS.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.VARIABLE_MODS.id) + IdentificationParametersCLIParams.VARIABLE_MODS.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MIN_CHARGE.id) + IdentificationParametersCLIParams.MIN_CHARGE.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MAX_CHARGE.id) + IdentificationParametersCLIParams.MAX_CHARGE.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MC.id) + IdentificationParametersCLIParams.MC.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FI.id) + IdentificationParametersCLIParams.FI.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.RI.id) + IdentificationParametersCLIParams.RI.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.DB.id) + IdentificationParametersCLIParams.DB.description + "\n";
+
+        output += "\n\nHelp:\n\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MODS.id) + IdentificationParametersCLIParams.MODS.description + "\n";
+        output += "-" + String.format(formatter, IdentificationParametersCLIParams.USAGE.id) + IdentificationParametersCLIParams.USAGE.description + "\n";
+
+        return output;
     }
 }

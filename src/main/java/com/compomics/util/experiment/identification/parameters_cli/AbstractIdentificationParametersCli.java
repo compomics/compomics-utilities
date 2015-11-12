@@ -59,7 +59,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 line = parser.parse(lOptions, args);
 
                 // see if the usage option was run
-                if (line.hasOption("h") || line.hasOption("help") || line.hasOption("usage")) {
+                if (line.getOptions().length == 0 || line.hasOption("h") || line.hasOption("help") || line.hasOption("usage")) {
                     PrintWriter lPrintWriter = new PrintWriter(System.out);
                     lPrintWriter.print(System.getProperty("line.separator") + "============================" + System.getProperty("line.separator"));
                     lPrintWriter.print("IdentificationParametersCLI" + System.getProperty("line.separator"));

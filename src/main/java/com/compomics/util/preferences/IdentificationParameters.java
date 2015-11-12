@@ -113,9 +113,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param idValidationPreferences the matches validation preferences
      * @param fractionSettings the fraction settings
      */
-    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences, 
-            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences, 
+    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings,
+            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences,
+            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences,
             IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
         this.name = name;
         this.description = description;
@@ -368,6 +368,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         Object savedObject;
 
         try {
+
             // Try as json file
             IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
             Class expectedObjectType = DummyParameters.class;
@@ -419,9 +420,21 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @throws IOException if an IOException occurs
      */
     public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File identificationParametersFile) throws IOException {
+
+        // Temporary fix for the parameters not in utilities
+        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        if (idMatchValidationPreferences != null) {
+            ValidationQCPreferences validationQCPreferences = idMatchValidationPreferences.getValidationQCPreferences();
+            if (validationQCPreferences != null) {
+                idMatchValidationPreferences.setValidationQCPreferences(null);
+            }
+        }
+
+        // Save to json file
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
+
     }
 
     /**
@@ -536,14 +549,16 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
-     * Returns true of the identification parameter objects have identical settings.
+     * Returns true of the identification parameter objects have identical
+     * settings.
      *
      * @param otherIdentificationParameters the parameters to compare to
      *
-     * @return true of the identification parameter objects have identical settings
+     * @return true of the identification parameter objects have identical
+     * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
-        
+
         if (otherIdentificationParameters == null) {
             return false;
         }
@@ -578,7 +593,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (!fractionSettings.isSameAs(otherIdentificationParameters.getFractionSettings())) {
             return false;
         }
-        
+
         return true;
     }
 }

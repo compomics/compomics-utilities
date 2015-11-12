@@ -1022,10 +1022,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
                 try {
                     identificationParametersFactory.addIdentificationParameters(newParameters);
-                    JOptionPane.showMessageDialog(null, "Identification settings saved.", "Settings Saved", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Identification settings saved.", "Settings Saved", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error occurred while saving " + newParameters.getName() + ". Please verify the settings.", "File Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error occurred while saving " + newParameters.getName() + ". Please verify the settings.", "File Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
 

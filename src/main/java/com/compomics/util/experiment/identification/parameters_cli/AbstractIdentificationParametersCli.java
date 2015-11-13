@@ -1,9 +1,9 @@
-package com.compomics.util.experiment.identification.search_parameters_cli;
+package com.compomics.util.experiment.identification.parameters_cli;
 
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.preferences.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.concurrent.Callable;
@@ -59,7 +59,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 line = parser.parse(lOptions, args);
 
                 // see if the usage option was run
-                if (line.hasOption("h") || line.hasOption("help") || line.hasOption("usage")) {
+                if (line.getOptions().length == 0 || line.hasOption("h") || line.hasOption("help") || line.hasOption("usage")) {
                     PrintWriter lPrintWriter = new PrintWriter(System.out);
                     lPrintWriter.print(System.getProperty("line.separator") + "============================" + System.getProperty("line.separator"));
                     lPrintWriter.print("IdentificationParametersCLI" + System.getProperty("line.separator"));
@@ -103,8 +103,8 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 printModifications();
             } else {
                 File outputFile = input.getDestinationFile();
-                SearchParameters searchParameters = input.getSearchParameters();
-                SearchParameters.saveIdentificationParameters(searchParameters, outputFile);
+                IdentificationParameters identificationParameters = input.getIdentificationParameters();
+                IdentificationParameters.saveIdentificationParameters(identificationParameters, outputFile);
                 System.out.println(System.getProperty("line.separator") + "Identification parameters file created: " + outputFile.getAbsolutePath() + System.getProperty("line.separator"));
             }
         } catch (Exception e) {

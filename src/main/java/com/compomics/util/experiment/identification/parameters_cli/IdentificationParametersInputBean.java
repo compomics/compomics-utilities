@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.search_parameters_cli;
+package com.compomics.util.experiment.identification.parameters_cli;
 
 import com.compomics.software.CommandLineUtils;
 import com.compomics.util.experiment.biology.Enzyme;
@@ -6,6 +6,8 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.IdentificationMatch;
+import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
@@ -21,7 +23,16 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.experiment.identification.ptm.PtmScore;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
+import com.compomics.util.preferences.FractionSettings;
+import com.compomics.util.preferences.GenePreferences;
+import com.compomics.util.preferences.IdMatchValidationPreferences;
+import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.PTMScoringPreferences;
+import com.compomics.util.preferences.ProteinInferencePreferences;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,11 +51,15 @@ import org.apache.commons.cli.CommandLine;
 public class IdentificationParametersInputBean {
 
     /**
-     * The search parameters.
+     * The identification parameters.
      */
-    private SearchParameters searchParameters;
+    private IdentificationParameters identificationParameters;
     /**
-     * The file where to save the parameters
+     * An input file.
+     */
+    private File inputFile;
+    /**
+     * The file where to save the parameters.
      */
     private File destinationFile;
     /**
@@ -59,11 +74,16 @@ public class IdentificationParametersInputBean {
      * The enzyme factory.
      */
     private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
+    /**
+     * The command line
+     */
+    private CommandLine commandLine;
 
     /**
      * Takes all the arguments from a command line.
      *
      * @param aLine the command line
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if aClassNotFoundException
@@ -71,33 +91,62 @@ public class IdentificationParametersInputBean {
      */
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
 
+        this.commandLine = aLine;
+        
         ///////////////////////////////////
         // General parameters
         ///////////////////////////////////
-        if (aLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
             listMods = true;
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OUTPUT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OUTPUT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id);
+            inputFile = new File(arg);
+            identificationParameters = IdentificationParameters.getIdentificationParameters(inputFile);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OUT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OUT.id);
             if (!arg.endsWith(".par")) {
                 arg += ".par";
             }
             destinationFile = new File(arg);
         }
 
-        searchParameters = new SearchParameters();
+    }
+    
+    /**
+     * Updates the identification parameters according to the command line.
+     * 
+     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     * @throws ClassNotFoundException if aClassNotFoundException
+     * ClassNotFoundException occurs
+     */
+    public void updateIdentificationParameters() throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        if (aLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PREC_PPM.id);
+        ///////////////////////////////////
+        // General search parameters
+        ///////////////////////////////////
+        SearchParameters searchParameters = null;
+        if (identificationParameters != null) {
+            searchParameters = identificationParameters.getSearchParameters();
+        }
+        if (searchParameters == null) {
+            searchParameters = new SearchParameters();
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PREC_PPM.id);
             Integer option = new Integer(arg);
             if (option == 1) {
                 searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
-            } else {
+            } else if (option == 0) {
                 searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.FRAG_PPM.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FRAG_PPM.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FRAG_PPM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FRAG_PPM.id);
             Integer option = new Integer(arg);
             if (option == 1) {
                 searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
@@ -105,65 +154,65 @@ public class IdentificationParametersInputBean {
                 searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PREC_TOL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PREC_TOL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PREC_TOL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PREC_TOL.id);
             Double option = new Double(arg);
             searchParameters.setPrecursorAccuracy(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.FRAG_TOL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FRAG_TOL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FRAG_TOL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FRAG_TOL.id);
             Double option = new Double(arg);
             searchParameters.setFragmentIonAccuracy(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ENZYME.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
             Enzyme option = enzymeFactory.getEnzyme(arg);
             searchParameters.setEnzyme(option);
         } else {
             Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to Trypsin
             searchParameters.setEnzyme(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
             searchParameters.setFastaFile(fastaFile);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
             Integer option = new Integer(arg);
             searchParameters.setnMissedCleavages(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
             searchParameters.setIonSearched1(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.RI.id);
             searchParameters.setIonSearched2(arg);
         }
 
-        if (aLine.hasOption(IdentificationParametersCLIParams.MIN_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MIN_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MIN_CHARGE.id);
             Integer option = new Integer(arg);
             searchParameters.setMinChargeSearched(new Charge(Charge.PLUS, option));
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MAX_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MAX_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MAX_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MAX_CHARGE.id);
             Integer option = new Integer(arg);
             searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, option));
         }
 
         PtmSettings modificationProfile = new PtmSettings();
-        if (aLine.hasOption(IdentificationParametersCLIParams.FIXED_MODS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FIXED_MODS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FIXED_MODS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FIXED_MODS.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
                 PTM modification = ptmFactory.getPTM(ptmName);
                 modificationProfile.addFixedModification(modification);
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.VARIABLE_MODS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.VARIABLE_MODS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.VARIABLE_MODS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.VARIABLE_MODS.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
                 PTM modification = ptmFactory.getPTM(ptmName);
@@ -176,188 +225,188 @@ public class IdentificationParametersInputBean {
         // OMSSA parameters
         ///////////////////////////////////
         OmssaParameters omssaParameters = new OmssaParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
             Integer option = new Integer(arg);
             omssaParameters.setRemovePrecursor(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SCALE_PREC.id);
             Integer option = new Integer(arg);
             omssaParameters.setScalePrecursor(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ESTIMATE_CHARGE.id);
             Integer option = new Integer(arg);
             omssaParameters.setEstimateCharge(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id);
             Double option = new Double(arg);
             omssaParameters.setMaxEValue(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id);
             Integer option = new Integer(arg);
             omssaParameters.setHitListLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             omssaParameters.setMinPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             omssaParameters.setMaxPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORMAT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORMAT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORMAT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORMAT.id);
             Integer option = new Integer(arg);
             omssaParameters.setSelectedOutput(OmssaParameters.getOmssaOutputTypes()[option]);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
             Integer option = new Integer(arg);
             omssaParameters.setMemoryMappedSequenceLibraries(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
             Integer option = new Integer(arg);
             omssaParameters.setNumberOfItotopicPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
             Double option = new Double(arg);
             omssaParameters.setNeutronThreshold(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id);
             Double option = new Double(arg);
             omssaParameters.setLowIntensityCutOff(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HIGH_INTENSITY.id);
             Double option = new Double(arg);
             omssaParameters.setHighIntensityCutOff(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_INTENSITY_INCREMENT.id);
             Double option = new Double(arg);
             omssaParameters.setIntensityCutOffIncrement(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_WIDTH.id);
             Integer option = new Integer(arg);
             omssaParameters.setSingleChargeWindow(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_WIDTH.id);
             Integer option = new Integer(arg);
             omssaParameters.setDoubleChargeWindow(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SINGLE_WINDOW_PEAKS.id);
             Integer option = new Integer(arg);
             omssaParameters.setnPeaksInSingleChargeWindow(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_DOUBLE_WINDOW_PEAKS.id);
             Integer option = new Integer(arg);
             omssaParameters.setnPeaksInDoubleChargeWindow(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_INTENSE_PEAKS.id);
             Integer option = new Integer(arg);
             omssaParameters.setnAnnotatedMostIntensePeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_ANNOTATED_PEAKS.id);
             Integer option = new Integer(arg);
             omssaParameters.setMinAnnotatedPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MIN_PEAKS.id);
             Integer option = new Integer(arg);
             omssaParameters.setMinPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_METHIONINE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_METHIONINE.id);
             Integer option = new Integer(arg);
             omssaParameters.setCleaveNterMethionine(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_LADDERS.id);
             Integer option = new Integer(arg);
             omssaParameters.setMaxMzLadders(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_CHARGE.id);
             Integer option = new Integer(arg);
             omssaParameters.setMaxFragmentCharge(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRACTION.id);
             Double option = new Double(arg);
             omssaParameters.setFractionOfPeaksForChargeEstimation(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PLUS_ONE.id);
             Integer option = new Integer(arg);
             omssaParameters.setDetermineChargePlusOneAlgorithmically(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_POSITIVE_IONS.id);
             Integer option = new Integer(arg);
             omssaParameters.setSearchPositiveIons(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_PREC_PER_SPECTRUM.id);
             Integer option = new Integer(arg);
             omssaParameters.setMinPrecPerSpectrum(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_FORWARD_IONS.id);
             Integer option = new Integer(arg);
             omssaParameters.setSearchForwardFragmentFirst(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REWIND_IONS.id);
             Integer option = new Integer(arg);
             omssaParameters.setSearchRewindFragments(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_MAX_FRAG_SERIES.id);
             Integer option = new Integer(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CORRELATION_CORRECTION.id);
             Integer option = new Integer(arg);
             omssaParameters.setUseCorrelationCorrectionScore(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_CONSECUTIVE_ION_PROBABILITY.id);
             Double option = new Double(arg);
             omssaParameters.setConsecutiveIonProbability(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SEQUENCE_EVALUE.id);
             Double option = new Double(arg);
             omssaParameters.setIterativeSequenceEvalue(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_SPECTRUM_EVALUE.id);
             Double option = new Double(arg);
             omssaParameters.setIterativeSpectrumEvalue(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id);
             Double option = new Double(arg);
             omssaParameters.setIterativeReplaceEvalue(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH_CHARGE.id);
             Integer option = new Integer(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
@@ -367,113 +416,113 @@ public class IdentificationParametersInputBean {
         // X!Tandem parameters
         ///////////////////////////////////
         XtandemParameters xtandemParameters = new XtandemParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
             Double option = new Double(arg);
             xtandemParameters.setDynamicRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_NPEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_NPEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_NPEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_NPEAKS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setnPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_FRAG_MZ.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_FRAG_MZ.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_FRAG_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_FRAG_MZ.id);
             Double option = new Double(arg);
             xtandemParameters.setMinFragmentMz(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PEAKS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setMinPeaksPerSpectrum(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_NOISE_SUPPRESSION.id);
             Integer option = new Integer(arg);
             xtandemParameters.setUseNoiseSuppression(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_MIN_PREC_MASS.id);
             Double option = new Double(arg);
             xtandemParameters.setMinPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_ACETYL.id);
             Integer option = new Integer(arg);
             xtandemParameters.setProteinQuickAcetyl(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_QUICK_PYRO.id);
             Integer option = new Integer(arg);
             xtandemParameters.setQuickPyrolidone(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setStpBias(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefine(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_EVALUE.id);
             Double option = new Double(arg);
             xtandemParameters.setMaximumExpectationValueRefinement(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_UNANTICIPATED_CLEAVAGE.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefineUnanticipatedCleavages(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SEMI.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefineSemi(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT.id);
             Integer option = new Integer(arg);
             xtandemParameters.setPotentialModificationsForFullRefinment(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_POINT_MUTATIONS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefinePointMutations(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SNAPS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefineSnaps(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE_SPECTRUM_SYNTHESIS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setRefineSpectrumSynthesis(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_EVALUE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_EVALUE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_EVALUE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_EVALUE.id);
             Double option = new Double(arg);
             xtandemParameters.setMaxEValue(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setOutputProteins(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id);
             Integer option = new Integer(arg);
             xtandemParameters.setOutputSequences(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id);
             Integer option = new Integer(arg);
             xtandemParameters.setOutputSpectra(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);
             xtandemParameters.setSkylinePath(arg);
         }
         searchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), xtandemParameters);
@@ -482,63 +531,63 @@ public class IdentificationParametersInputBean {
         // MS-GF+ parameters
         ///////////////////////////////////
         MsgfParameters msgfParameters = new MsgfParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             Integer option = new Integer(arg);
             msgfParameters.setSearchDecoyDatabase(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_INSTRUMENT.id);
             Integer instrumentID = new Integer(arg);
             msgfParameters.setInstrumentID(instrumentID); // @TODO: check for valid index!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id);
             Integer option = new Integer(arg);
             msgfParameters.setFragmentationType(option); // @TODO: check for valid index!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_PROTOCOL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PROTOCOL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PROTOCOL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PROTOCOL.id);
             Integer option = new Integer(arg);
             msgfParameters.setProtocol(option); // @TODO: check for valid index!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             msgfParameters.setMinPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             msgfParameters.setMaxPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfSpectrumMarches(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ADDITIONAL.id);
             Integer option = new Integer(arg);
             msgfParameters.setAdditionalOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
             Integer option = new Integer(arg);
             msgfParameters.setLowerIsotopeErrorRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id);
             Integer option = new Integer(arg);
             msgfParameters.setUpperIsotopeErrorRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberTolerableTermini(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfPtmsPerPeptide(option);
         }
@@ -549,92 +598,92 @@ public class IdentificationParametersInputBean {
         ///////////////////////////////////
         MyriMatchParameters myriMatchParameters = new MyriMatchParameters();
 
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMinPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMaxPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PREC_MASS.id);
             Double option = new Double(arg);
             myriMatchParameters.setMinPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id);
             Double option = new Double(arg);
             myriMatchParameters.setMaxPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setLowerIsotopeCorrectionRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setUpperIsotopeCorrectionRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setNumberOfSpectrumMatches(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_PTMS.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMaxDynamicMods(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_FRAGMENTATION.id);
             myriMatchParameters.setFragmentationRule(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMinTerminiCleavages(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_SMART_PLUS_THREE.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setUseSmartPlusThreeModel(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_XCORR.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setComputeXCorr(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TIC_CUTOFF.id);
             Double option = new Double(arg);
             myriMatchParameters.setTicCutoffPercentage(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_INTENSTITY_CLASSES.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setNumIntensityClasses(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_CLASS_MULTIPLIER.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setClassSizeMultiplier(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_BATCHES.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setNumberOfBatches(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PEAK_COUNT.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMaxPeakCount(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_OUTPUT_FORMAT.id);
             myriMatchParameters.setOutputFormat(arg);
         }
 
@@ -644,27 +693,27 @@ public class IdentificationParametersInputBean {
         // MS Amanda parameters
         ///////////////////////////////////
         MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setGenerateDecoyDatabase(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
             msAmandaParameters.setInstrumentID(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setMaxRank(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MONOISOTOPIC.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setMonoIsotopic(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOW_MEM_MODE.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setLowMemoryMode(option == 1);
         }
@@ -675,93 +724,93 @@ public class IdentificationParametersInputBean {
         // Comet parameters
         ///////////////////////////////////
         CometParameters cometParameters = new CometParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
             Integer option = new Integer(arg);
             cometParameters.setNumberOfSpectrumMatches(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_PTMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_PTMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_PTMS.id);
             Integer option = new Integer(arg);
             cometParameters.setMaxVariableMods(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REQ_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REQ_PTMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_REQ_PTMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_REQ_PTMS.id);
             Integer option = new Integer(arg);
             cometParameters.setRequireVariableMods(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
             Integer option = new Integer(arg);
             cometParameters.setMinPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id);
             Double option = new Double(arg);
             cometParameters.setMinPeakIntensity(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id);
             Integer option = new Integer(arg);
             cometParameters.setRemovePrecursor(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR_TOLERANCE.id);
             Double option = new Double(arg);
             cometParameters.setRemovePrecursorTolerance(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_LOWER.id);
             Double option = new Double(arg);
             cometParameters.setLowerClearMzRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_CLEAR_MZ_RANGE_UPPER.id);
             Double option = new Double(arg);
             cometParameters.setUpperClearMzRange(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ENZYME_TYPE.id);
             Integer option = new Integer(arg);
             cometParameters.setEnzymeType(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
             Integer option = new Integer(arg);
             cometParameters.setIsotopeCorrection(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id);
             Double option = new Double(arg);
             cometParameters.setMinPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id);
             Double option = new Double(arg);
             cometParameters.setMaxPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id);
             Integer option = new Integer(arg);
             cometParameters.setMaxFragmentCharge(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_METH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_METH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_REMOVE_METH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_REMOVE_METH.id);
             Integer option = new Integer(arg);
             cometParameters.setRemoveMethionine(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_BATCH_SIZE.id);
             Integer option = new Integer(arg);
             cometParameters.setBatchSize(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id);
             Integer option = new Integer(arg);
             cometParameters.setTheoreticalFragmentIonsSumOnly(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id);
             Double option = new Double(arg);
             cometParameters.setFragmentBinOffset(option);
         }
@@ -773,182 +822,182 @@ public class IdentificationParametersInputBean {
         ///////////////////////////////////
         TideParameters tideParameters = new TideParameters();
 
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
             Integer option = new Integer(arg);
             tideParameters.setMaxVariablePtmsPerPeptide(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id);
             Integer option = new Integer(arg);
             tideParameters.setMaxVariablePtmsPerTypePerPeptide(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             tideParameters.setMinPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             tideParameters.setMaxPeptideLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id);
             Double option = new Double(arg);
             tideParameters.setMinPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id);
             Double option = new Double(arg);
             tideParameters.setMaxPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id);
             tideParameters.setDecoyFormat(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id);
             tideParameters.setKeepTerminalAminoAcids(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DECOY_SEED.id);
             Integer option = new Integer(arg);
             tideParameters.setDecoySeed(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id);
             tideParameters.setOutputFolderName(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id);
             Integer option = new Integer(arg);
             tideParameters.setPrintPeptides(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_VERBOSITY.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_VERBOSITY.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_VERBOSITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_VERBOSITY.id);
             Integer option = new Integer(arg);
             tideParameters.setVerbosity(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id);
             Integer option = new Integer(arg);
             tideParameters.setMonoisotopicPrecursor(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id);
             Integer option = new Integer(arg);
             tideParameters.setClipNtermMethionine(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id);
             tideParameters.setDigestionType(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id);
             Integer option = new Integer(arg);
             tideParameters.setComputeSpScore(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PSMS.id);
             Integer option = new Integer(arg);
             tideParameters.setNumberOfSpectrumMatches(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_COMPUTE_P.id);
             Integer option = new Integer(arg);
             tideParameters.setComputeExactPValues(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id);
             Double option = new Double(arg);
             tideParameters.setMinSpectrumMz(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id);
             Double option = new Double(arg);
             tideParameters.setMaxSpectrumMz(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id);
             Integer option = new Integer(arg);
             tideParameters.setMinSpectrumPeaks(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id);
             tideParameters.setSpectrumCharges(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id);
             Integer option = new Integer(arg);
             tideParameters.setRemovePrecursor(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id);
             Double option = new Double(arg);
             tideParameters.setRemovePrecursorTolerance(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id);
             Integer option = new Integer(arg);
             tideParameters.setPrintProgressIndicatorSize(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_FLANKING.id);
             Integer option = new Integer(arg);
             tideParameters.setUseFlankingPeaks(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id);
             Integer option = new Integer(arg);
             tideParameters.setUseNeutralLossPeaks(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id);
             Double option = new Double(arg);
             tideParameters.setMzBinWidth(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id);
             Double option = new Double(arg);
             tideParameters.setMzBinOffset(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_CONCAT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CONCAT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_CONCAT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_CONCAT.id);
             Integer option = new Integer(arg);
             tideParameters.setConcatenatTargetDecoy(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id);
             tideParameters.setStoreSpectraFileName(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id);
             Integer option = new Integer(arg);
             tideParameters.setTextOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id);
             Integer option = new Integer(arg);
             tideParameters.setSqtOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id);
             Integer option = new Integer(arg);
             tideParameters.setPepXmlOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id);
             Integer option = new Integer(arg);
             tideParameters.setMzidOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id);
             Integer option = new Integer(arg);
             tideParameters.setPinOutput(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id);
             Integer option = new Integer(arg);
             tideParameters.setRemoveTempFolders(option == 1);
         }
@@ -959,53 +1008,53 @@ public class IdentificationParametersInputBean {
         // Andromeda parameters
         ///////////////////////////////////
         AndromedaParameters andromedaParameters = new AndromedaParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
             Double option = new Double(arg);
             andromedaParameters.setMaxPeptideMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id);
             Integer option = new Integer(arg);
             andromedaParameters.setMaxCombinations(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_TOP_PEAKS_WINDOW.id);
             Integer option = new Integer(arg);
             andromedaParameters.setTopPeaksWindow(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_WATER.id);
             Integer option = new Integer(arg);
             andromedaParameters.setIncludeWater(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_INCL_AMMONIA.id);
             Integer option = new Integer(arg);
             andromedaParameters.setIncludeAmmonia(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_NEUTRAL_LOSSES.id);
             Integer option = new Integer(arg);
             andromedaParameters.setDependentLosses(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAGMENT_ALL.id);
             Integer option = new Integer(arg);
             andromedaParameters.setFragmentAll(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EMP_CORRECTION.id);
             Integer option = new Integer(arg);
             andromedaParameters.setEmpiricalCorrection(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_HIGHER_CHARGE.id);
             Integer option = new Integer(arg);
             andromedaParameters.setHigherCharge(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_FRAG_METHOD.id);
             if (arg.equalsIgnoreCase("CID")) {
                 andromedaParameters.setFragmentationMethod(FragmentationMethod.CID);
             } else if (arg.equalsIgnoreCase("HCD")) {
@@ -1014,28 +1063,28 @@ public class IdentificationParametersInputBean {
                 andromedaParameters.setFragmentationMethod(FragmentationMethod.ETD);
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_MODS.id);
             Integer option = new Integer(arg);
             andromedaParameters.setMaxNumberOfModifications(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             andromedaParameters.setMinPeptideLengthNoEnzyme(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEP_LENGTH.id);
             Integer option = new Integer(arg);
             andromedaParameters.setMaxPeptideLengthNoEnzyme(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id);
             Integer option = new Integer(arg);
             andromedaParameters.setEqualIL(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
             Integer option = new Integer(arg);
             andromedaParameters.setNumberOfCandidates(option);
         }
@@ -1046,37 +1095,37 @@ public class IdentificationParametersInputBean {
         // PepNovo+ parameters
         ///////////////////////////////////
         PepnovoParameters pepnovoParameters = new PepnovoParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setHitListLength(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setEstimateCharge(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setCorrectPrecursorMass(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setDiscardLowQualitySpectra(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setDiscardLowQualitySpectra(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id);
             pepnovoParameters.setFragmentationModel(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setGenerateQuery(option == 1);
         }
@@ -1086,102 +1135,102 @@ public class IdentificationParametersInputBean {
         // DirecTag parameters
         ///////////////////////////////////
         DirecTagParameters direcTagParameters = new DirecTagParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
             Integer option = new Integer(arg);
             direcTagParameters.setTicCutoffPercentage(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id);
             Integer option = new Integer(arg);
             direcTagParameters.setMaxPeakCount(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id);
             Integer option = new Integer(arg);
             direcTagParameters.setNumIntensityClasses(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
             Integer option = new Integer(arg);
             direcTagParameters.setAdjustPrecursorMass(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
             Double option = new Double(arg);
             direcTagParameters.setMinPrecursorAdjustment(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
             Double option = new Double(arg);
             direcTagParameters.setMaxPrecursorAdjustment(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
             Double option = new Double(arg);
             direcTagParameters.setPrecursorAdjustmentStep(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id);
             Integer option = new Integer(arg);
             direcTagParameters.setNumChargeStates(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id);
             direcTagParameters.setOutputSuffix(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
             Integer option = new Integer(arg);
             direcTagParameters.setUseChargeStateFromMS(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
             Integer option = new Integer(arg);
             direcTagParameters.setDuplicateSpectra(option == 1);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
             Integer option = new Integer(arg);
             direcTagParameters.setDeisotopingMode(option); // @TODO: check for valid values!!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id);
             Double option = new Double(arg);
             direcTagParameters.setIsotopeMzTolerance(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id);
             Double option = new Double(arg);
             direcTagParameters.setComplementMzTolerance(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id);
             Integer option = new Integer(arg);
             direcTagParameters.setTagLength(option); // @TODO: check for valid values!!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id);
             Integer option = new Integer(arg);
             direcTagParameters.setMaxDynamicMods(option); // @TODO: check for valid values!!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id);
             Integer option = new Integer(arg);
             direcTagParameters.setMaxTagCount(option); // @TODO: check for valid values!!!
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id);
             Double option = new Double(arg);
             direcTagParameters.setIntensityScoreWeight(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id);
             Double option = new Double(arg);
             direcTagParameters.setMzFidelityScoreWeight(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id);
             Double option = new Double(arg);
             direcTagParameters.setComplementScoreWeight(option);
         }
@@ -1192,51 +1241,318 @@ public class IdentificationParametersInputBean {
         // pNovo+ parameters
         ///////////////////////////////////
         PNovoParameters pNovoParameters = new PNovoParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
             Integer option = new Integer(arg);
             pNovoParameters.setNumberOfPeptides(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id);
             Integer option = new Integer(arg);
             pNovoParameters.setLowerPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id);
             Integer option = new Integer(arg);
             pNovoParameters.setUpperPrecursorMass(option);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id);
             pNovoParameters.setActicationType(arg);
         }
-        
+
         searchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
-        
+
         ///////////////////////////////////
         // Novor parameters
         ///////////////////////////////////
         NovorParameters novorParameters = new NovorParameters();
-        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
             novorParameters.setFragmentationMethod(arg);
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id);
             novorParameters.setMassAnalyzer(arg);
         }
 
         searchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), pNovoParameters);
+
+        if (identificationParameters != null) {
+            identificationParameters.setSearchParameters(searchParameters);
+        } else {
+            identificationParameters = new IdentificationParameters(searchParameters);
+        }
+
+        //////////////////////////////////
+        // Gene mapping preferences
+        //////////////////////////////////
+        GenePreferences genePreferences = identificationParameters.getGenePreferences();
+        if (genePreferences == null) {
+            genePreferences = new GenePreferences();
+            identificationParameters.setGenePreferences(genePreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIES_TYPE.id)) {
+            String speciesType = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIES_TYPE.id); // @TODO: check that it's a valid species type??
+            genePreferences.setCurrentSpeciesType(speciesType);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIES.id)) {
+            String species = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIES.id); // @TODO: check that it's a valid species??
+            genePreferences.setCurrentSpecies(species);
+        }
+
+        //////////////////////////////////
+        // Spectrum annotation
+        //////////////////////////////////
+        AnnotationSettings annotationSettings = identificationParameters.getAnnotationPreferences();
+        if (annotationSettings == null) {
+            annotationSettings = new AnnotationSettings(searchParameters);
+            identificationParameters.setAnnotationSettings(annotationSettings);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id);
+            Double value = new Double(arg);
+            annotationSettings.setIntensityLimit(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id);
+            Double value = new Double(arg);
+            annotationSettings.setFragmentIonAccuracy(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            annotationSettings.setHighResolutionAnnotation(value);
+        }
+
+        //////////////////////////////////
+        // Sequence Matching
+        //////////////////////////////////
+        SequenceMatchingPreferences sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+        if (sequenceMatchingPreferences == null) {
+            sequenceMatchingPreferences = new SequenceMatchingPreferences();
+            identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id);
+            Integer intValue = new Integer(arg);
+            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
+            sequenceMatchingPreferences.setSequenceMatchingType(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id);
+            Double value = new Double(arg);
+            sequenceMatchingPreferences.setLimitX(value);
+        }
+
+        //////////////////////////////////
+        // Import Filters
+        //////////////////////////////////
+        PeptideAssumptionFilter peptideAssumptionFilter = identificationParameters.getPeptideAssumptionFilter();
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id);
+            Integer value = new Integer(arg);
+            peptideAssumptionFilter.setMinPepLength(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id);
+            Integer value = new Integer(arg);
+            peptideAssumptionFilter.setMaxPepLength(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id);
+            Integer value = new Integer(arg);
+            peptideAssumptionFilter.setMaxMzDeviation(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id);
+            Integer option = new Integer(arg);
+            if (option == 1) {
+                peptideAssumptionFilter.setIsPpm(true);
+            } else if (option == 0) {
+                peptideAssumptionFilter.setIsPpm(false);
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            peptideAssumptionFilter.setRemoveUnknownPTMs(value);
+        }
+
+        //////////////////////////////////
+        // PTM localization parameters
+        //////////////////////////////////
+        PTMScoringPreferences ptmScoringPreferences = identificationParameters.getPtmScoringPreferences();
+        if (ptmScoringPreferences == null) {
+            ptmScoringPreferences = new PTMScoringPreferences();
+            identificationParameters.setPtmScoringPreferences(ptmScoringPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_SCORE.id);
+            Integer intValue = new Integer(arg);
+            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
+            sequenceMatchingPreferences.setSequenceMatchingType(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_THRESHOLD.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_THRESHOLD.id);
+            Double value = new Double(arg);
+            ptmScoringPreferences.setEstimateFlr(false);
+            ptmScoringPreferences.setProbabilisticScoreThreshold(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            ptmScoringPreferences.setProbabilisticScoreNeutralLosses(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id);
+            Integer intValue = new Integer(arg);
+            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences = new SequenceMatchingPreferences();
+            ptmSequenceMatchingPreferences.setLimitX(sequenceMatchingPreferences.getLimitX());
+            ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
+            ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
+        }
+
+        //////////////////////////////////
+        // Protein inference parameters
+        //////////////////////////////////
+        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
+            File fastaFile = new File(arg);
+            proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
+        }
+
+        //////////////////////////////////
+        // Validation parameters
+        //////////////////////////////////
+        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        if (idMatchValidationPreferences == null) {
+            idMatchValidationPreferences = new IdMatchValidationPreferences();
+            identificationParameters.setIdValidationPreferences(idMatchValidationPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PSM_FDR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PSM_FDR.id);
+            Double value = new Double(arg);
+            idMatchValidationPreferences.setDefaultPsmFDR(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPTIDE_FDR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPTIDE_FDR.id);
+            Double value = new Double(arg);
+            idMatchValidationPreferences.setDefaultPeptideFDR(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FDR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FDR.id);
+            Double value = new Double(arg);
+            idMatchValidationPreferences.setDefaultProteinFDR(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PSMs.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PSMs.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PSMs.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            idMatchValidationPreferences.setSeparatePsms(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            idMatchValidationPreferences.setSeparatePeptides(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            idMatchValidationPreferences.setGroupSmallSubgroups(value);
+        }
+
+        //////////////////////////////////
+        // Fraction parameters
+        //////////////////////////////////
+        FractionSettings fractionSettings = identificationParameters.getFractionSettings();
+        if (fractionSettings == null) {
+            fractionSettings = new FractionSettings();
+            identificationParameters.setFractionSettings(fractionSettings);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id);
+            Double value = new Double(arg);
+            fractionSettings.setProteinConfidenceMwPlots(value);
+        }
+    }
+    
+    /**
+     * Sets the identification parameters.
+     * 
+     * @param identificationParameters the identification parameters
+     */
+    public void setIdentificationParameters(IdentificationParameters identificationParameters) {
+        this.identificationParameters = identificationParameters;
     }
 
     /**
-     * Returns the search parameters.
+     * Returns the identification parameters.
      *
-     * @return the search parameters
+     * @return the identification parameters
      */
-    public SearchParameters getSearchParameters() {
-        return searchParameters;
+    public IdentificationParameters getIdentificationParameters() {
+        return identificationParameters;
+    }
+
+    /**
+     * Returns the input parameters file.
+     * 
+     * @return the input parameters file
+     */
+    public File getInputFile() {
+        return inputFile;
     }
 
     /**
@@ -1320,9 +1636,9 @@ public class IdentificationParametersInputBean {
             return false;
         }
 
-        //*************************
-        // Default options
-        //*************************
+        //////////////////////////////////
+        // General parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
             return true;
         }
@@ -1362,7 +1678,26 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (!aLine.hasOption(IdentificationParametersCLIParams.OUTPUT.id) || aLine.getOptionValue(IdentificationParametersCLIParams.OUTPUT.id).equals("")) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id);
+            if (arg.equals("")) {
+                System.out.println(System.getProperty("line.separator")
+                        + "No input file specified!"
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+            File fileIn = new File(arg);
+            try {
+                IdentificationParameters.getIdentificationParameters(fileIn);
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator")
+                        + "An error occurred while importing the parameters file " + fileIn + " (see below)."
+                        + System.getProperty("line.separator"));
+                e.printStackTrace();
+                return false;
+            }
+        }
+        if (!aLine.hasOption(IdentificationParametersCLIParams.OUT.id) || aLine.getOptionValue(IdentificationParametersCLIParams.OUT.id).equals("")) {
             System.out.println(System.getProperty("line.separator")
                     + "No output file specified!"
                     + System.getProperty("line.separator"));
@@ -1402,9 +1737,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // OMSSA options
-        //*************************
+        //////////////////////////////////
+        // OMSSA specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id, arg)) {
@@ -1629,9 +1964,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // X!Tandem options
-        //*************************
+        //////////////////////////////////
+        // X!Tandem specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
             if (!isPositiveDouble(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id, arg, false)) {
@@ -1759,50 +2094,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // PepNovo+ options
-        //*************************
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
-            if (!inIntegerRange(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id, arg, 1, 20)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id);
-            List<String> supportedInput = Arrays.asList("CID_IT_TRYP"); // @TODO: support more models??
-            if (!isInList(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id, arg, supportedInput)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id, arg)) {
-                return false;
-            }
-        }
-
-        //*************************
-        // MS-GF+ options
-        //*************************
+        //////////////////////////////////
+        // MS-GF+ specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.MSGF_DECOY.id, arg)) {
@@ -1880,9 +2174,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // MS Amanda options
-        //*************************
+        //////////////////////////////////
+        // MS Amanda specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id, arg)) {
@@ -1911,131 +2205,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // DirecTag options
-        //*************************
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
-            if (!inIntegerRange(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id, arg, 0, 100)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
-            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
-            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
-            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id)) {
-            // @TODO: add test?
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
-            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
-            List<String> supportedInput = Arrays.asList("0", "1", "2");
-            if (!isInList(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id, arg, supportedInput)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id, arg, false)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id, arg, false)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id, arg, false)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id, arg, false)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id, arg, true)) {
-                return false;
-            }
-        }
-
-        //*************************
-        // MyriMatch options
-        //*************************
+        //////////////////////////////////
+        // MyriMatch specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id, arg, false)) {
@@ -2138,9 +2310,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // Comet options
-        //*************************
+        //////////////////////////////////
+        // Comet specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id, arg, false)) {
@@ -2253,9 +2425,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // Tide options
-        //*************************
+        //////////////////////////////////
+        // Tide specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.TIDE_PTMS.id, arg, true)) {
@@ -2478,9 +2650,9 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // Andromeda options
-        //*************************
+        //////////////////////////////////
+        // Andromeda specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
             if (!isPositiveDouble(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id, arg, true)) {
@@ -2579,9 +2751,172 @@ public class IdentificationParametersInputBean {
             }
         }
 
-        //*************************
-        // PNovo+ options
-        //*************************
+        //////////////////////////////////
+        // PepNovo+ specific parameters
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
+            if (!inIntegerRange(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id, arg, 1, 20)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id);
+            List<String> supportedInput = Arrays.asList("CID_IT_TRYP"); // @TODO: support more models??
+            if (!isInList(IdentificationParametersCLIParams.PEPNOVO_FRAGMENTATION_MODEL.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id, arg)) {
+                return false;
+            }
+        }
+
+        //////////////////////////////////
+        // DirecTag specific parameters
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
+            if (!inIntegerRange(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id, arg, 0, 100)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_PEAK_COUNT.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_NUM_INTENSITY_CLASSES.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
+            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
+            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
+            if (!isDouble(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_NUM_CHARGE_STATES.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_OUTPUT_SUFFIX.id)) {
+            // @TODO: add test?
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.DIRECTAG_DUPLICATE_SPECTRA.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id);
+            List<String> supportedInput = Arrays.asList("0", "1", "2");
+            if (!isInList(IdentificationParametersCLIParams.DIRECTAG_DEISOTOPING_MODE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_ISOTOPE_MZ_TOLERANCE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id, arg, true)) {
+                return false;
+            }
+        }
+
+        //////////////////////////////////
+        // pNovo+ specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id, arg, false)) {
@@ -2607,10 +2942,10 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
-        //*************************
-        // Novor options
-        //*************************
+
+        //////////////////////////////////
+        // Novor specific parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
             List<String> supportedInput = Arrays.asList("HCD", "CID");
@@ -2625,6 +2960,203 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+
+        //////////////////////////////////
+        // Gene mapping preferences
+        //////////////////////////////////
+        //@TODO: implement me once the gene preferences are cut into two
+        
+        //////////////////////////////////
+        // Spectrum annotation
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id, arg, 0.0, 1.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+
+        //////////////////////////////////
+        // Sequence Matching
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id);
+            if (!isSequenceMatchingType(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id, arg, 0.0, 1.0)) {
+                return false;
+            }
+        }
+
+        //////////////////////////////////
+        // Import Filters
+        //////////////////////////////////
+        Integer min = null;
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id, arg, false)) {
+                return false;
+            }
+            min = new Integer(arg);
+        }
+        Integer max = null;
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id, arg, false)) {
+                return false;
+            }
+            max = new Integer(arg);
+        }
+        if (min != null && max != null && max <= min) {
+            System.out.println(System.getProperty("line.separator")
+                    + IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id + " <= " + IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id
+                    + System.getProperty("line.separator"));
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id);
+            List<String> supportedInput = Arrays.asList("1", "2");
+            if (!isInList(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+
+        //////////////////////////////////
+        // PTM localization parameters
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_SCORE.id);
+            try {
+                int scoreId = new Integer(arg);
+                PtmScore.getScore(scoreId);
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator")
+                        + "Error when parsing " + IdentificationParametersCLIParams.PTM_SCORE.id + ". Option found: " + arg + "."
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PTM_THRESHOLD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_THRESHOLD.id);
+            if (!isPositiveDouble(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id);
+            if (!isSequenceMatchingType(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id, arg)) {
+                return false;
+            }
+        }
+        
+        //////////////////////////////////
+        // Protein inference parameters
+        //////////////////////////////////
+        if (!aLine.hasOption(IdentificationParametersCLIParams.DB_PI.id) || aLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id).equals("")) {
+            System.out.println(System.getProperty("line.separator")
+                    + "No database specified!"
+                    + System.getProperty("line.separator"));
+            return false;
+        } else {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
+            File fastaFile = new File(arg);
+            if (!fastaFile.exists()) {
+                System.out.println(System.getProperty("line.separator")
+                        + "Database not found."
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        
+        //////////////////////////////////
+        // Validation parameters
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.PSM_FDR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PSM_FDR.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.PSM_FDR.id, arg, 0.0, 100.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPTIDE_FDR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTIDE_FDR.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.PSM_FDR.id, arg, 0.0, 100.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FDR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FDR.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.PSM_FDR.id, arg, 0.0, 100.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PSMs.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PSMs.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SEPARATE_PSMs.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SEPARATE_PSMs.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        
+        //////////////////////////////////
+        // Validation parameters
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id);
+            if (!inDoubleRange(IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id, arg, 0.0, 100.0)) {
+                return false;
+            }
+        }
+        
 
         return true;
     }
@@ -2830,6 +3362,23 @@ public class IdentificationParametersInputBean {
         }
 
         return valid;
+    }
+
+    /**
+     * Returns true of the input is in the provided list.
+     *
+     * @param argType the name of the argument
+     * @param arg the content of the argument
+     * @param supportedInput the list of supported input
+     * @return true of the input is in the list
+     */
+    private static boolean isSequenceMatchingType(String argType, String arg) {
+
+        List<String> supportedInput = new ArrayList<String>(IdentificationMatch.MatchType.values().length);
+        for (IdentificationMatch.MatchType matchType : IdentificationMatch.MatchType.values()) {
+            supportedInput.add(matchType.toString());
+        }
+        return isInList(argType, arg, supportedInput);
     }
 
     /**

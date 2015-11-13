@@ -266,7 +266,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         groupsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Groups"));
         groupsPanel.setOpaque(false);
 
-        groupsLabel.setText("Group Small Subgroups");
+        groupsLabel.setText("Merge Small Subgroups");
 
         groupsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 

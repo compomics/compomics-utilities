@@ -368,6 +368,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         Object savedObject;
 
         try {
+
             // Try as json file
             IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
             Class expectedObjectType = DummyParameters.class;
@@ -419,9 +420,21 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @throws IOException if an IOException occurs
      */
     public static void saveIdentificationParameters(IdentificationParameters identificationParameters, File identificationParametersFile) throws IOException {
+
+        // Temporary fix for the parameters not in utilities
+        IdMatchValidationPreferences idMatchValidationPreferences = identificationParameters.getIdValidationPreferences();
+        if (idMatchValidationPreferences != null) {
+            ValidationQCPreferences validationQCPreferences = idMatchValidationPreferences.getValidationQCPreferences();
+            if (validationQCPreferences != null) {
+                idMatchValidationPreferences.setValidationQCPreferences(null);
+            }
+        }
+
+        // Save to json file
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
+
     }
 
     /**

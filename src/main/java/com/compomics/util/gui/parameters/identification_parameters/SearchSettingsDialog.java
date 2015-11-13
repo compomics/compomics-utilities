@@ -18,6 +18,7 @@ import com.compomics.util.protein_sequences_manager.gui.SequenceDbDetailsDialog;
 import com.compomics.util.gui.ptm.ModificationsDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.io.ConfigurationFile;
+import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
 import java.awt.Color;
 import java.awt.Dialog;
@@ -2424,16 +2425,16 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Saves the search parameters to a file of the users choice.
+     * Saves the search parameters to a file of the users choice. //@TODO: take this method outside the dialog?
      *
      * @param parentDialog the parent dialog
-     * @param newSearchParameters the current search parameters
-     * @param searchParametersFile the file where to save the parameters
+     * @param identificationParameters the current identification parameters
+     * @param identificationParametersFile the file where to save the parameters
      * @param lastSelectedFolder the last selected folder
      *
      * @return the file where the new settings were saved, null if not saved
      */
-    public static File saveSearchParameters(JDialog parentDialog, SearchParameters newSearchParameters, File searchParametersFile,
+    public static File saveIdentificationParameters(JDialog parentDialog, IdentificationParameters identificationParameters, File identificationParametersFile,
             LastSelectedFolder lastSelectedFolder) {
 
         int value = JOptionPane.showConfirmDialog(parentDialog, "The search parameters have changed."
@@ -2444,7 +2445,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             boolean userSelectFile = false;
 
             // see if the user wants to overwrite the current settings file
-            if (searchParametersFile != null) {
+            if (identificationParametersFile != null) {
                 value = JOptionPane.showConfirmDialog(parentDialog, "Overwrite current settings file?", "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
 
                 if (value == JOptionPane.NO_OPTION) {
@@ -2464,8 +2465,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     startLocation = new File(lastSelectedFolder.getLastSelectedFolder());
                 }
 
-                if (searchParametersFile != null) {
-                    startLocation = searchParametersFile;
+                if (identificationParametersFile != null) {
+                    startLocation = identificationParametersFile;
                 }
 
                 File selectedFile;
@@ -2510,11 +2511,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 }
             }
 
-            if (searchParametersFile != null) {
+            if (identificationParametersFile != null) {
 
                 try {
-                    SearchParameters.saveIdentificationParameters(newSearchParameters, searchParametersFile);
-                    return searchParametersFile;
+                    IdentificationParameters.saveIdentificationParameters(identificationParameters, identificationParametersFile);
+                    return identificationParametersFile;
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(parentDialog, "An error occurred when saving the search parameter:\n"
                             + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
@@ -2523,7 +2524,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 }
             }
         } else if (value == JOptionPane.NO_OPTION) {
-            return searchParametersFile;
+            return identificationParametersFile;
         } else {
             return null; // canceled by the user
         }

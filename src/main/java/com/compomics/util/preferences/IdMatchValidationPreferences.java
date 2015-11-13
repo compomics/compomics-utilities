@@ -249,7 +249,13 @@ public class IdMatchValidationPreferences implements Serializable {
             return false;
         }
         
-        if (!validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCPreferences())) {
+        if ((validationQCPreferences == null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null)
+                || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() == null)) {
+            return false;
+        }
+        
+        if (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null
+                && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCPreferences())) {
             return false;
         }
 

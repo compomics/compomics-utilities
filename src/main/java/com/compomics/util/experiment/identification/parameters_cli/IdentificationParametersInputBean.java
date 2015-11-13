@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
+import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
@@ -83,7 +84,7 @@ public class IdentificationParametersInputBean {
      * Takes all the arguments from a command line.
      *
      * @param aLine the command line
-     * 
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if aClassNotFoundException
@@ -92,7 +93,7 @@ public class IdentificationParametersInputBean {
     public IdentificationParametersInputBean(CommandLine aLine) throws FileNotFoundException, IOException, ClassNotFoundException {
 
         this.commandLine = aLine;
-        
+
         ///////////////////////////////////
         // General parameters
         ///////////////////////////////////
@@ -113,10 +114,10 @@ public class IdentificationParametersInputBean {
         }
 
     }
-    
+
     /**
      * Updates the identification parameters according to the command line.
-     * 
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if aClassNotFoundException
@@ -202,29 +203,42 @@ public class IdentificationParametersInputBean {
             searchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, option));
         }
 
-        PtmSettings modificationProfile = new PtmSettings();
+        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        if (ptmSettings == null) {
+            ptmSettings = new PtmSettings();
+            searchParameters.setPtmSettings(ptmSettings);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FIXED_MODS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FIXED_MODS.id);
+            ptmSettings.clearFixedModifications();
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
                 PTM modification = ptmFactory.getPTM(ptmName);
-                modificationProfile.addFixedModification(modification);
+                ptmSettings.addFixedModification(modification);
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.VARIABLE_MODS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.VARIABLE_MODS.id);
+            ptmSettings.clearVariableModifications();
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
             for (String ptmName : args) {
                 PTM modification = ptmFactory.getPTM(ptmName);
-                modificationProfile.addVariableModification(modification);
+                ptmSettings.addVariableModification(modification);
             }
         }
-        searchParameters.setPtmSettings(modificationProfile);
 
         ///////////////////////////////////
         // OMSSA parameters
         ///////////////////////////////////
-        OmssaParameters omssaParameters = new OmssaParameters();
+        OmssaParameters omssaParameters;
+        Integer algorithmIndex = Advocate.omssa.getIndex();
+        IdentificationAlgorithmParameter identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            omssaParameters = new OmssaParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, omssaParameters);
+        } else {
+            omssaParameters = (OmssaParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
             Integer option = new Integer(arg);
@@ -410,12 +424,19 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             omssaParameters.setMaxFragmentPerSeries(option);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), omssaParameters);
 
         ///////////////////////////////////
         // X!Tandem parameters
         ///////////////////////////////////
-        XtandemParameters xtandemParameters = new XtandemParameters();
+        XtandemParameters xtandemParameters;
+        algorithmIndex = Advocate.xtandem.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            xtandemParameters = new XtandemParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, xtandemParameters);
+        } else {
+            xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
             Double option = new Double(arg);
@@ -525,12 +546,19 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);
             xtandemParameters.setSkylinePath(arg);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.xtandem.getIndex(), xtandemParameters);
 
         ///////////////////////////////////
         // MS-GF+ parameters
         ///////////////////////////////////
-        MsgfParameters msgfParameters = new MsgfParameters();
+        MsgfParameters msgfParameters;
+        algorithmIndex = Advocate.msgf.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            msgfParameters = new MsgfParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, msgfParameters);
+        } else {
+            msgfParameters = (MsgfParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             Integer option = new Integer(arg);
@@ -591,13 +619,19 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfPtmsPerPeptide(option);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.msgf.getIndex(), msgfParameters);
 
         ///////////////////////////////////
         // MyriMatch parameters
         ///////////////////////////////////
-        MyriMatchParameters myriMatchParameters = new MyriMatchParameters();
-
+        MyriMatchParameters myriMatchParameters;
+        algorithmIndex = Advocate.myriMatch.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            myriMatchParameters = new MyriMatchParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, myriMatchParameters);
+        } else {
+            myriMatchParameters = (MyriMatchParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
             Integer option = new Integer(arg);
@@ -687,12 +721,18 @@ public class IdentificationParametersInputBean {
             myriMatchParameters.setOutputFormat(arg);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.myriMatch.getIndex(), myriMatchParameters);
-
         ///////////////////////////////////
         // MS Amanda parameters
         ///////////////////////////////////
-        MsAmandaParameters msAmandaParameters = new MsAmandaParameters();
+        MsAmandaParameters msAmandaParameters;
+        algorithmIndex = Advocate.msAmanda.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            msAmandaParameters = new MsAmandaParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, msAmandaParameters);
+        } else {
+            msAmandaParameters = (MsAmandaParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             Integer option = new Integer(arg);
@@ -718,12 +758,18 @@ public class IdentificationParametersInputBean {
             msAmandaParameters.setLowMemoryMode(option == 1);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.msAmanda.getIndex(), msAmandaParameters);
-
         ///////////////////////////////////
         // Comet parameters
         ///////////////////////////////////
-        CometParameters cometParameters = new CometParameters();
+        CometParameters cometParameters;
+        algorithmIndex = Advocate.comet.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            cometParameters = new CometParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, cometParameters);
+        } else {
+            cometParameters = (CometParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
             Integer option = new Integer(arg);
@@ -815,13 +861,18 @@ public class IdentificationParametersInputBean {
             cometParameters.setFragmentBinOffset(option);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.comet.getIndex(), cometParameters);
-
         ///////////////////////////////////
         // Tide parameters
         ///////////////////////////////////
-        TideParameters tideParameters = new TideParameters();
-
+        TideParameters tideParameters;
+        algorithmIndex = Advocate.tide.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            tideParameters = new TideParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, tideParameters);
+        } else {
+            tideParameters = (TideParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
             Integer option = new Integer(arg);
@@ -1002,12 +1053,18 @@ public class IdentificationParametersInputBean {
             tideParameters.setRemoveTempFolders(option == 1);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), tideParameters);
-
         ///////////////////////////////////
         // Andromeda parameters
         ///////////////////////////////////
-        AndromedaParameters andromedaParameters = new AndromedaParameters();
+        AndromedaParameters andromedaParameters;
+        algorithmIndex = Advocate.andromeda.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            andromedaParameters = new AndromedaParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, andromedaParameters);
+        } else {
+            andromedaParameters = (AndromedaParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
             Double option = new Double(arg);
@@ -1089,12 +1146,18 @@ public class IdentificationParametersInputBean {
             andromedaParameters.setNumberOfCandidates(option);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), andromedaParameters);
-
         ///////////////////////////////////
         // PepNovo+ parameters
         ///////////////////////////////////
-        PepnovoParameters pepnovoParameters = new PepnovoParameters();
+        PepnovoParameters pepnovoParameters;
+        algorithmIndex = Advocate.pepnovo.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            pepnovoParameters = new PepnovoParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, pepnovoParameters);
+        } else {
+            pepnovoParameters = (PepnovoParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
             Integer option = new Integer(arg);
@@ -1129,12 +1192,19 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             pepnovoParameters.setGenerateQuery(option == 1);
         }
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex(), pepnovoParameters);
 
         ///////////////////////////////////
         // DirecTag parameters
         ///////////////////////////////////
-        DirecTagParameters direcTagParameters = new DirecTagParameters();
+        DirecTagParameters direcTagParameters;
+        algorithmIndex = Advocate.direcTag.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            direcTagParameters = new DirecTagParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, direcTagParameters);
+        } else {
+            direcTagParameters = (DirecTagParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
             Integer option = new Integer(arg);
@@ -1235,12 +1305,18 @@ public class IdentificationParametersInputBean {
             direcTagParameters.setComplementScoreWeight(option);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
-
         ///////////////////////////////////
         // pNovo+ parameters
         ///////////////////////////////////
-        PNovoParameters pNovoParameters = new PNovoParameters();
+        PNovoParameters pNovoParameters;
+        algorithmIndex = Advocate.pNovo.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            pNovoParameters = new PNovoParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, pNovoParameters);
+        } else {
+            pNovoParameters = (PNovoParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
             Integer option = new Integer(arg);
@@ -1261,12 +1337,18 @@ public class IdentificationParametersInputBean {
             pNovoParameters.setActicationType(arg);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.pNovo.getIndex(), pNovoParameters);
-
         ///////////////////////////////////
         // Novor parameters
         ///////////////////////////////////
-        NovorParameters novorParameters = new NovorParameters();
+        NovorParameters novorParameters;
+        algorithmIndex = Advocate.novor.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            novorParameters = new NovorParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, novorParameters);
+        } else {
+            novorParameters = (NovorParameters) identificationAlgorithmParameter;
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
             novorParameters.setFragmentationMethod(arg);
@@ -1276,8 +1358,7 @@ public class IdentificationParametersInputBean {
             novorParameters.setMassAnalyzer(arg);
         }
 
-        searchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), pNovoParameters);
-
+        // Set the parameters in the identification parameters
         if (identificationParameters != null) {
             identificationParameters.setSearchParameters(searchParameters);
         } else {
@@ -1527,10 +1608,10 @@ public class IdentificationParametersInputBean {
             fractionSettings.setProteinConfidenceMwPlots(value);
         }
     }
-    
+
     /**
      * Sets the identification parameters.
-     * 
+     *
      * @param identificationParameters the identification parameters
      */
     public void setIdentificationParameters(IdentificationParameters identificationParameters) {
@@ -1548,7 +1629,7 @@ public class IdentificationParametersInputBean {
 
     /**
      * Returns the input parameters file.
-     * 
+     *
      * @return the input parameters file
      */
     public File getInputFile() {
@@ -2965,7 +3046,6 @@ public class IdentificationParametersInputBean {
         // Gene mapping preferences
         //////////////////////////////////
         //@TODO: implement me once the gene preferences are cut into two
-        
         //////////////////////////////////
         // Spectrum annotation
         //////////////////////////////////
@@ -3084,7 +3164,7 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
+
         //////////////////////////////////
         // Protein inference parameters
         //////////////////////////////////
@@ -3103,7 +3183,7 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
+
         //////////////////////////////////
         // Validation parameters
         //////////////////////////////////
@@ -3146,7 +3226,7 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
+
         //////////////////////////////////
         // Validation parameters
         //////////////////////////////////
@@ -3156,7 +3236,6 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
 
         return true;
     }

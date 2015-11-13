@@ -96,6 +96,27 @@ public class PtmSettings implements Serializable {
     }
 
     /**
+     * Clears variable modifications.
+     */
+    public void clearVariableModifications() {
+        variableModifications.clear();
+    }
+
+    /**
+     * Clears fixed modifications.
+     */
+    public void clearFixedModifications() {
+        fixedModifications.clear();
+    }
+
+    /**
+     * Clears refinement modifications.
+     */
+    public void clearRefinementModifications() {
+        refinementVariableModifications.clear();
+    }
+
+    /**
      * Return the refinement fixed modifications used for the second pass
      * search.
      *

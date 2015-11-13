@@ -341,6 +341,26 @@ public class PTM extends ExperimentObject {
      * @return true if the PTM is the same as the other one
      */
     public boolean isSameAs(PTM anotherPTM) {
+        if (type != anotherPTM.getType()) {
+//            System.out.println("type difference");
+//            System.out.println("local: " + type);
+//            System.out.println("parameters: " + anotherPTM.getType());
+            return false;
+        }
+        if (!isSamePattern(anotherPTM)) {
+//            System.out.println("pattern difference");
+//            System.out.println("local: " + pattern);
+//            System.out.println("parameters: " + anotherPTM.getPattern());
+            return false;
+        }
+        if (!isSameAtomicComposition(anotherPTM)) {
+//            System.out.println("composition difference");
+//            System.out.println("local added: " + atomChainAdded);
+//            System.out.println("local removed: " + atomChainRemoved);
+//            System.out.println("parameters added: " + anotherPTM.getAtomChainAdded());
+//            System.out.println("parameters removed: " + anotherPTM.getAtomChainRemoved());
+            return false;
+        }
         return type == anotherPTM.getType() && isSamePattern(anotherPTM) && isSameAtomicComposition(anotherPTM);
     }
 

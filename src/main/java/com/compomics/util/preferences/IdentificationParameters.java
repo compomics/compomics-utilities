@@ -426,7 +426,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (idMatchValidationPreferences != null) {
             ValidationQCPreferences validationQCPreferences = idMatchValidationPreferences.getValidationQCPreferences();
             if (validationQCPreferences != null) {
-                idMatchValidationPreferences.setValidationQCPreferences(null);
+                idMatchValidationPreferences.setValidationQCPreferences(new ValidationQCPreferences());
             }
         }
 

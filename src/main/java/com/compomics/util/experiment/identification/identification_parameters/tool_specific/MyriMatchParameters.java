@@ -600,7 +600,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      */
     public static String enzymeMapping(Enzyme enzyme) {
 
-        String myriMatchEnzymeAsString = null;
+        String myriMatchEnzymeAsString;
 
         String enzymeName = enzyme.getName();
         if (enzyme.isUnspecific()) { // "No Enzyme"  or "Unspecific"
@@ -615,7 +615,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
             myriMatchEnzymeAsString = "Lys-C/P";
         } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
-                || enzymeName.equalsIgnoreCase("Glu-C") // again, bit really the same enzyme...
+                || enzymeName.equalsIgnoreCase("Glu-C") // again not structly, but really the same enzyme...
                 || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
             myriMatchEnzymeAsString = "glutamyl endopeptidase";
         } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
@@ -639,9 +639,12 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             myriMatchEnzymeAsString = "Trypsin/P";
         } else if (enzymeName.equalsIgnoreCase("Asp-N (DE)")) {
             myriMatchEnzymeAsString = "Asp-N";
+        } else {
+            // use custum cleavage format
+            myriMatchEnzymeAsString = enzyme.getMyriMatchFormat();
         }
 
-        // enzymes not supported: Trypsin + CNBr, Asp-N + Glu-C, Lys-N (K), Thermolysin, no P rule
+        // enzymes not supported: Asp-N + Glu-C
         return myriMatchEnzymeAsString;
     }
 }

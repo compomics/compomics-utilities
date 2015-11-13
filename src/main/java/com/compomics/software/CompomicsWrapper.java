@@ -786,7 +786,7 @@ public class CompomicsWrapper {
                 while (currentOption != null) {
                     if (currentOption.startsWith("-Xmx")) {
                         if (firstTry) {
-                            currentOption = currentOption.substring(4, currentOption.length() - 1);
+                            currentOption = currentOption.substring(4, currentOption.length() - 1); // @TODO: what about GB, e.g., 6G..?
                             boolean input = false;
                             for (char c : currentOption.toCharArray()) {
                                 if (c != '*') {
@@ -846,7 +846,7 @@ public class CompomicsWrapper {
                 b.close();
                 f.close();
 
-                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M"); // @TODO: should also support GB
+                options.add("-Xmx" + userPreferences.getMemoryPreference() + "M"); // @TODO: should also support GB?
 
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();

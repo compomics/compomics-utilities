@@ -549,15 +549,37 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
-     * Returns true of the identification parameter objects have identical
+     * Returns true if the identification parameter objects have identical
      * settings.
      *
      * @param otherIdentificationParameters the parameters to compare to
      *
-     * @return true of the identification parameter objects have identical
+     * @return true if the identification parameter objects have identical
      * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
+
+        if (otherIdentificationParameters == null) {
+            return false;
+        }
+
+        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
+            return false;
+        }
+
+        return equalsExceptValidationPreferences(otherIdentificationParameters);
+    }
+
+    /**
+     * Returns true if the identification parameter objects have identical
+     * settings except for the validation preferences.
+     *
+     * @param otherIdentificationParameters the parameters to compare to
+     *
+     * @return true if the identification parameter objects have identical
+     * settings except for the validation preferences
+     */
+    public boolean equalsExceptValidationPreferences(IdentificationParameters otherIdentificationParameters) {
 
         if (otherIdentificationParameters == null) {
             return false;
@@ -585,9 +607,6 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             return false;
         }
         if (!proteinInferencePreferences.equals(otherIdentificationParameters.getProteinInferencePreferences())) {
-            return false;
-        }
-        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
             return false;
         }
         if (!fractionSettings.isSameAs(otherIdentificationParameters.getFractionSettings())) {

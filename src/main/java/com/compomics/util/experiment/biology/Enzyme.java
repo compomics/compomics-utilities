@@ -188,6 +188,70 @@ public class Enzyme extends ExperimentObject {
     }
 
     /**
+     * Get the MyriMatch enzyme format.
+     *
+     * @return the enzyme MyriMatch format as String
+     */
+    public String getMyriMatchFormat() {
+
+        // example: trypsin corresponds to "[|R|K . . ]"
+        // details: http://www.mc.vanderbilt.edu/root/vumc.php?site=msrc/bioinformatics&doc=27121
+        String result = "[";
+
+        if (aminoAcidBefore.size() > 0) {
+            for (Character aa : aminoAcidBefore) {
+                result += "|" + aa;
+            }
+            result += " ";
+        } else {
+            result += " ";
+        }
+
+        if (restrictionAfter.size() > 0) {
+            String temp = "";
+            for (Character aa : AminoAcid.getUniqueAminoAcids()) {
+                if (!restrictionAfter.contains(aa)) {
+                    if (!temp.isEmpty()) {
+                        temp += "|";
+                    }
+                    temp += aa;
+                }
+            }
+            result += temp + " ";
+        } else {
+            result += ". ";
+        }
+
+        if (restrictionBefore.size() > 0) {
+            String temp = "";
+            for (Character aa : AminoAcid.getUniqueAminoAcids()) {
+                if (!restrictionBefore.contains(aa)) {
+                    if (!temp.isEmpty()) {
+                        temp += "|";
+                    }
+                    temp += aa;
+                }
+            }
+            result += temp + " ";
+        } else {
+            result += ". ";
+        }
+
+        if (aminoAcidAfter.size() > 0) {
+            String temp = "";
+            for (Character aa : aminoAcidAfter) {
+                if (!temp.isEmpty()) {
+                    temp += "|";
+                }
+                temp += aa;
+            }
+            result += temp + "|";
+        }
+
+        return result + "]";
+    }
+
+    /**
      * Getter for the amino acids potentially following the cleavage.
      *
      * @return the amino acids potentially following the cleavage
@@ -253,12 +317,12 @@ public class Enzyme extends ExperimentObject {
         for (Character aa1 : aminoAcidBefore) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaBefore);
             for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
-                if (possibleAaBefore == aa1.charValue()) {
+                if (possibleAaBefore == aa1) {
                     boolean restriction = false;
                     for (Character aa2 : restrictionAfter) {
                         aminoAcid = AminoAcid.getAminoAcid(aaAfter);
                         for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
-                            if (possibleAaAfter == aa2.charValue()) {
+                            if (possibleAaAfter == aa2) {
                                 restriction = true;
                                 break;
                             }
@@ -277,12 +341,12 @@ public class Enzyme extends ExperimentObject {
         for (Character aa1 : aminoAcidAfter) {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaAfter);
             for (char possibleAaAfter : aminoAcid.getSubAminoAcids()) {
-                if (possibleAaAfter == aa1.charValue()) {
+                if (possibleAaAfter == aa1) {
                     boolean restriction = false;
                     for (Character aa2 : restrictionBefore) {
                         aminoAcid = AminoAcid.getAminoAcid(aaAfter);
                         for (char possibleAaBefore : aminoAcid.getSubAminoAcids()) {
-                            if (possibleAaBefore == aa2.charValue()) {
+                            if (possibleAaBefore == aa2) {
                                 restriction = true;
                                 break;
                             }

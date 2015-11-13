@@ -170,7 +170,6 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
         dbCheck.setEnabled(editable);
         nTargetCheck.setEnabled(editable);
         confidenceCheck.setEnabled(editable);
-        
     }
 
     /**
@@ -585,12 +584,12 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             int row = psmTable.rowAtPoint(evt.getPoint());
             psmTable.setRowSelectionInterval(row, row);
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editPsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1 && editable);
-            removePsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1 && editable);
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON3 && editable) {
+            editPsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1);
+            removePsmFilterMenuItem.setVisible(psmTable.getSelectedRow() != -1);
             psmPopupMenu.show(psmTable, evt.getX(), evt.getY());
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && editable) {
             editPsmFilterMenuItemActionPerformed(null);
         }
     }//GEN-LAST:event_psmTableMouseReleased
@@ -665,12 +664,12 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             int row = peptideTable.rowAtPoint(evt.getPoint());
             peptideTable.setRowSelectionInterval(row, row);
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editPeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1 && editable);
-            removePeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1 && editable);
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON3 && editable) {
+            editPeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1);
+            removePeptideFilterMenuItem.setVisible(peptideTable.getSelectedRow() != -1);
             peptidePopupMenu.show(peptideTable, evt.getX(), evt.getY());
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && editable) {
             editPeptideFilterMenuItemActionPerformed(null);
         }
     }//GEN-LAST:event_peptideTableMouseReleased
@@ -685,12 +684,12 @@ public class ValidationQCPreferencesDialog extends javax.swing.JDialog {
             int row = proteinTable.rowAtPoint(evt.getPoint());
             proteinTable.setRowSelectionInterval(row, row);
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
-            editProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1 && editable);
-            removeProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1 && editable);
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON3 && editable) {
+            editProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1);
+            removeProteinFilterMenuItem.setVisible(proteinTable.getSelectedRow() != -1);
             proteinPopupMenu.show(proteinTable, evt.getX(), evt.getY());
         }
-        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+        if (evt != null && evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && editable) {
             editProteinFilterMenuItemActionPerformed(null);
         }
     }//GEN-LAST:event_proteinTableMouseReleased

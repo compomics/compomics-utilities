@@ -426,7 +426,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (idMatchValidationPreferences != null) {
             ValidationQCPreferences validationQCPreferences = idMatchValidationPreferences.getValidationQCPreferences();
             if (validationQCPreferences != null) {
+                idMatchValidationPreferences = new IdMatchValidationPreferences(idMatchValidationPreferences);
                 idMatchValidationPreferences.setValidationQCPreferences(new ValidationQCPreferences());
+                identificationParameters = new IdentificationParameters(identificationParameters.getName(), identificationParameters.getDescription(), identificationParameters.getSearchParameters(), identificationParameters.getAnnotationPreferences(), identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getGenePreferences(), identificationParameters.getPsmScoringPreferences(), identificationParameters.getPeptideAssumptionFilter(), identificationParameters.ptmScoringPreferences, identificationParameters.getProteinInferencePreferences(), idMatchValidationPreferences, identificationParameters.getFractionSettings());
             }
         }
 

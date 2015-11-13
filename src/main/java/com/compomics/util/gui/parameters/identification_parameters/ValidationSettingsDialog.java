@@ -82,7 +82,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         proteinFdrTxt.setText(idMatchValidationPreferences.getDefaultProteinFDR() + "");
         peptideFdrTxt.setText(idMatchValidationPreferences.getDefaultPeptideFDR() + "");
         psmFdrTxt.setText(idMatchValidationPreferences.getDefaultPsmFDR() + "");
-        if (idMatchValidationPreferences.getGroupSmallSubgroups()) {
+        if (idMatchValidationPreferences.getMergeSmallSubgroups()) {
             groupsComboBox.setSelectedIndex(0);
         } else {
             groupsComboBox.setSelectedIndex(1);
@@ -108,7 +108,7 @@ public class ValidationSettingsDialog extends javax.swing.JDialog {
         idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
         idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
-        idMatchValidationPreferences.setGroupSmallSubgroups(groupsComboBox.getSelectedIndex() == 0);
+        idMatchValidationPreferences.setMergeSmallSubgroups(groupsComboBox.getSelectedIndex() == 0);
         return idMatchValidationPreferences;
     }
 

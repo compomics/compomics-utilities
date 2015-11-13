@@ -1591,7 +1591,7 @@ public class IdentificationParametersInputBean {
             } else {
                 throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.id + ": " + arg + ". 0 or 1 expected.");
             }
-            idMatchValidationPreferences.setGroupSmallSubgroups(value);
+            idMatchValidationPreferences.setMergeSmallSubgroups(value);
         }
 
         //////////////////////////////////

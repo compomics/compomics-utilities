@@ -37,13 +37,37 @@ public class IdMatchValidationPreferences implements Serializable {
      */
     private Boolean separatePsms = true;
     /**
-     * If true, groups of matches of small size will be grouped.
+     * If true, groups of matches of small size will be merged.
      */
-    private Boolean groupSmallSubgroups = true;
+    private Boolean mergeSmallSubgroups = true;
     /**
      * The validation quality control preferences.
      */
     private ValidationQCPreferences validationQCPreferences = new ValidationQCPreferences();
+
+    /**
+     * Constructor for default settings.
+     */
+    public IdMatchValidationPreferences() {
+
+    }
+
+    /**
+     * Creates a new IdMatchValidationPreferences based on the values of the
+     * given IdMatchValidationPreferences.
+     *
+     * @param idMatchValidationPreferences an IdMatchValidationPreferences to
+     * take default values from.
+     */
+    public IdMatchValidationPreferences(IdMatchValidationPreferences idMatchValidationPreferences) {
+        defaultProteinFDR = idMatchValidationPreferences.getDefaultProteinFDR();
+        defaultPeptideFDR = idMatchValidationPreferences.getDefaultPeptideFDR();
+        defaultPsmFDR = idMatchValidationPreferences.getDefaultPsmFDR();
+        separatePeptides = idMatchValidationPreferences.getSeparatePeptides();
+        separatePsms = idMatchValidationPreferences.getSeparatePsms();
+        mergeSmallSubgroups = idMatchValidationPreferences.getMergeSmallSubgroups();
+        validationQCPreferences = new ValidationQCPreferences(idMatchValidationPreferences.getValidationQCPreferences());
+    }
 
     /**
      * Returns the default protein FDR.
@@ -118,25 +142,25 @@ public class IdMatchValidationPreferences implements Serializable {
     }
 
     /**
-     * Indicates whether small subgroups of matches should be grouped together.
+     * Indicates whether small subgroups of matches should be merged.
      *
-     * @return true if small subgroups of matches should be grouped together
+     * @return true if small subgroups of matches should be merged
      */
-    public Boolean getGroupSmallSubgroups() {
-        if (groupSmallSubgroups == null) {
-            groupSmallSubgroups = true;
+    public Boolean getMergeSmallSubgroups() {
+        if (mergeSmallSubgroups == null) {
+            mergeSmallSubgroups = true;
         }
-        return groupSmallSubgroups;
+        return mergeSmallSubgroups;
     }
 
     /**
-     * Sets whether small subgroups of matches should be grouped together.
+     * Sets whether small subgroups of matches should be merged.
      *
-     * @param groupSmallSubgroups a boolean indicating whether small subgroups
-     * of matches should be grouped together
+     * @param mergeSmallSubgroups a boolean indicating whether small subgroups
+     * of matches should be merged
      */
-    public void setGroupSmallSubgroups(Boolean groupSmallSubgroups) {
-        this.groupSmallSubgroups = groupSmallSubgroups;
+    public void setMergeSmallSubgroups(Boolean mergeSmallSubgroups) {
+        this.mergeSmallSubgroups = mergeSmallSubgroups;
     }
 
     /**
@@ -203,11 +227,11 @@ public class IdMatchValidationPreferences implements Serializable {
         output.append("Protein FDR: ").append(defaultProteinFDR).append(".").append(newLine);
         output.append("Peptide FDR: ").append(defaultPeptideFDR).append(".").append(newLine);
         output.append("PSM FDR: ").append(defaultPsmFDR).append(".").append(newLine);
-        output.append("Group Small Subgroups: ").append(groupSmallSubgroups).append(".").append(newLine);
+        output.append("Group Small Subgroups: ").append(mergeSmallSubgroups).append(".").append(newLine);
 
         return output.toString();
     }
-    
+
     /**
      * Returns true if the objects have identical settings.
      *
@@ -226,34 +250,34 @@ public class IdMatchValidationPreferences implements Serializable {
         if (diff > 0.0000000000001) {
             return false;
         }
-        
+
         diff = Math.abs(defaultPeptideFDR - otherIdMatchValidationPreferences.getDefaultPeptideFDR());
         if (diff > 0.0000000000001) {
             return false;
         }
-        
+
         diff = Math.abs(defaultPsmFDR - otherIdMatchValidationPreferences.getDefaultPsmFDR());
         if (diff > 0.0000000000001) {
             return false;
         }
-        
+
         if (separatePeptides.booleanValue() != otherIdMatchValidationPreferences.getSeparatePeptides()) {
             return false;
         }
-        
+
         if (separatePsms.booleanValue() != otherIdMatchValidationPreferences.getSeparatePsms()) {
             return false;
         }
-        
-        if (groupSmallSubgroups.booleanValue() != otherIdMatchValidationPreferences.getGroupSmallSubgroups()) {
+
+        if (mergeSmallSubgroups.booleanValue() != otherIdMatchValidationPreferences.getMergeSmallSubgroups()) {
             return false;
         }
-        
+
         if ((validationQCPreferences == null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null)
                 || (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() == null)) {
             return false;
         }
-        
+
         if (validationQCPreferences != null && otherIdMatchValidationPreferences.getValidationQCPreferences() != null
                 && !validationQCPreferences.isSameAs(otherIdMatchValidationPreferences.getValidationQCPreferences())) {
             return false;

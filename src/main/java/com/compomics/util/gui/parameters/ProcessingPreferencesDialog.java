@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
  * Dialog to edit the processing preferences.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     /**
@@ -32,6 +33,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     public ProcessingPreferencesDialog(java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
         super(parentFrame, true);
         initComponents();
+        this.editable = editable;
         setUpGui();
         populateGUI(processingPreferences);
         setLocationRelativeTo(parentFrame);
@@ -49,6 +51,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
     public ProcessingPreferencesDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingPreferences processingPreferences, boolean editable) {
         super(owner, true);
         initComponents();
+        this.editable = editable;
         setUpGui();
         populateGUI(processingPreferences);
         setLocationRelativeTo(owner);
@@ -60,7 +63,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
         processingTypeCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        processingTypeCmb.setEnabled(editable);
+        //processingTypeCmb.setEnabled(editable);
         nThreadsSpinner.setEnabled(editable);
     }
 
@@ -71,7 +74,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
      */
     private void populateGUI(ProcessingPreferences processingPreferences) {
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
-        nThreadsSpinner.setValue(processingPreferences.getnThreads());
+        nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(processingPreferences.getnThreads(), 1, Runtime.getRuntime().availableProcessors(), 1));
     }
 
     /**
@@ -131,8 +134,9 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         performancePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Performance Settings"));
         performancePanel.setOpaque(false);
 
-        performanceLbl.setText("Number of Threads");
+        performanceLbl.setText("Number of Cores");
 
+        nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
         nThreadsSpinner.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout performancePanelLayout = new javax.swing.GroupLayout(performancePanel);
@@ -142,7 +146,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
             .addGroup(performancePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(performanceLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(nThreadsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -162,6 +166,7 @@ public class ProcessingPreferencesDialog extends javax.swing.JDialog {
         processingTypeLbl.setText("Execution");
 
         processingTypeCmb.setModel(new DefaultComboBoxModel(ProcessingPreferences.ProcessingType.values()));
+        processingTypeCmb.setEnabled(false);
 
         javax.swing.GroupLayout processingTypePanelLayout = new javax.swing.GroupLayout(processingTypePanel);
         processingTypePanel.setLayout(processingTypePanelLayout);

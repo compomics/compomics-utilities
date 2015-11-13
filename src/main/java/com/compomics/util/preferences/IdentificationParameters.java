@@ -113,9 +113,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param idValidationPreferences the matches validation preferences
      * @param fractionSettings the fraction settings
      */
-    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings, 
-            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences, 
-            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences, 
+    public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings,
+            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences,
+            PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences,
             IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
         this.name = name;
         this.description = description;
@@ -536,14 +536,38 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
-     * Returns true of the identification parameter objects have identical settings.
+     * Returns true if the identification parameter objects have identical
+     * settings.
      *
      * @param otherIdentificationParameters the parameters to compare to
      *
-     * @return true of the identification parameter objects have identical settings
+     * @return true if the identification parameter objects have identical
+     * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
-        
+
+        if (otherIdentificationParameters == null) {
+            return false;
+        }
+
+        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
+            return false;
+        }
+
+        return equalsExceptValidationPreferences(otherIdentificationParameters);
+    }
+
+    /**
+     * Returns true if the identification parameter objects have identical
+     * settings except for the validation preferences.
+     *
+     * @param otherIdentificationParameters the parameters to compare to
+     *
+     * @return true if the identification parameter objects have identical
+     * settings except for the validation preferences
+     */
+    public boolean equalsExceptValidationPreferences(IdentificationParameters otherIdentificationParameters) {
+
         if (otherIdentificationParameters == null) {
             return false;
         }
@@ -572,13 +596,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (!proteinInferencePreferences.equals(otherIdentificationParameters.getProteinInferencePreferences())) {
             return false;
         }
-        if (!idValidationPreferences.equals(otherIdentificationParameters.getIdValidationPreferences())) {
-            return false;
-        }
         if (!fractionSettings.isSameAs(otherIdentificationParameters.getFractionSettings())) {
             return false;
         }
-        
+
         return true;
     }
 }

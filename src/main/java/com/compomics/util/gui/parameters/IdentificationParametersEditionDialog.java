@@ -33,6 +33,7 @@ import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.ValidationQCPreferences;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.io.File;
@@ -171,8 +172,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         initComponents();
         setUpGui();
         if (identificationParameters != null) {
-            updateGUI();
             nameTxt.setText(identificationParameters.getName());
+            updateGUI();
         } else {
             clearGUI();
             saveButton.setEnabled(false);
@@ -219,8 +220,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         initComponents();
         setUpGui();
         if (identificationParameters != null) {
-            updateGUI();
             nameTxt.setText(identificationParameters.getName());
+            updateGUI();
         } else {
             clearGUI();
             saveButton.setEnabled(false);
@@ -301,18 +302,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         spectrumAnnotationButton.setEnabled(true);
         sequenceMatchingButton.setEnabled(true);
         matchesFiltersButton.setEnabled(true);
-        psmScoringButton.setEnabled(true);
+        //psmScoringButton.setEnabled(true); // @TODO: enable when implemented
         ptmLocalizationButton.setEnabled(true);
         proteinInferenceButton.setEnabled(true);
         validationButton.setEnabled(true);
         fractionsButton.setEnabled(true);
         qualityControlButton.setEnabled(true);
 
-        if (getIdentificationParameters().equals(oldIdentificationParameters)) {
-            saveButton.setText("OK");
-        } else {
-            saveButton.setText("Save");
-        }
+        validateInput();
     }
 
     /**
@@ -340,7 +337,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 + "<td><font size=2></font></td></tr></table></html>");
 
         psmScoringButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>PSM Scoring</b></td>"
-                + "<td><font size=2></font></td></tr></table></html>");
+                + "<td><font size=2>" + "(not yet available)" + "</font></td></tr></table></html>"); // @TODO: remove when the psm scoring settings are added!
 
         ptmLocalizationButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>PTM Localization</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
@@ -367,6 +364,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton.setEnabled(false);
         fractionsButton.setEnabled(false);
         qualityControlButton.setEnabled(false);
+
+        validateInput();
     }
 
     /**
@@ -459,10 +458,32 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
 
         if (valid) {
+            nameLabel.setForeground(Color.BLACK);
+            nameLabel.setToolTipText(null);
+            nameTxt.setToolTipText(null);
+        } else {
+            nameLabel.setForeground(Color.RED);
+            nameLabel.setToolTipText("Please provide a settings file name");
+            nameTxt.setToolTipText("Please provide a settings file name");
+        }
+
+        if (valid) {
             valid = validateParametersInput(false);
         }
 
         saveButton.setEnabled(valid);
+
+        if (searchParameters != null) {
+            IdentificationParameters currentParameters = getIdentificationParameters();
+
+            if (!identificationParametersFactory.getParametersList().contains(currentParameters.getName())
+                    || (identificationParametersFactory.getParametersList().contains(currentParameters.getName())
+                    && !identificationParametersFactory.getIdentificationParameters(currentParameters.getName()).equals(currentParameters))) {
+                saveButton.setText("Save");
+            } else {
+                saveButton.setText("OK");
+            }
+        }
 
         return valid;
     }
@@ -483,8 +504,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         settingsOuterPanel = new javax.swing.JPanel();
         attributesPanel = new javax.swing.JPanel();
         nameTxt = new javax.swing.JTextField();
-        browseButton = new javax.swing.JButton();
-        exportButton = new javax.swing.JButton();
+        nameLabel = new javax.swing.JLabel();
         settingsPanel = new javax.swing.JPanel();
         validationButton = new javax.swing.JButton();
         qualityControlButton = new javax.swing.JButton();
@@ -498,6 +518,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         proteinInferenceButton = new javax.swing.JButton();
         matchesFiltersButton = new javax.swing.JButton();
         fractionsButton = new javax.swing.JButton();
+        exportLabel = new javax.swing.JLabel();
+        importLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Identification Settings");
@@ -527,7 +549,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         settingsOuterPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings File"));
+        attributesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings Description"));
         attributesPanel.setOpaque(false);
 
         nameTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -537,45 +559,27 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
-        browseButton.setText("Browse");
-        browseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseButtonActionPerformed(evt);
-            }
-        });
-
-        exportButton.setText("Export");
-        exportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportButtonActionPerformed(evt);
-            }
-        });
+        nameLabel.setText("Name");
 
         javax.swing.GroupLayout attributesPanelLayout = new javax.swing.GroupLayout(attributesPanel);
         attributesPanel.setLayout(attributesPanelLayout);
         attributesPanelLayout.setHorizontalGroup(
             attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(attributesPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, attributesPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(nameLabel)
+                .addGap(18, 18, 18)
                 .addComponent(nameTxt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(browseButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exportButton)
                 .addContainerGap())
         );
-
-        attributesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {browseButton, exportButton});
-
         attributesPanelLayout.setVerticalGroup(
             attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(attributesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(attributesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseButton)
-                    .addComponent(exportButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(nameLabel))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Identification Settings"));
@@ -627,6 +631,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         psmScoringButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
         psmScoringButton.setText("PSM Scoring");
+        psmScoringButton.setEnabled(false);
         psmScoringButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         psmScoringButton.setIconTextGap(15);
         psmScoringButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
@@ -792,12 +797,44 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         scrollPane.setViewportView(settingsOuterPanel);
 
+        exportLabel.setText("<html> <a href>Export to File</a> </html>");
+        exportLabel.setToolTipText("Export the identification settings to a file");
+        exportLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exportLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exportLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exportLabelMouseReleased(evt);
+            }
+        });
+
+        importLabel.setText("<html> <a href>Import from File</a> </html>");
+        importLabel.setToolTipText("Import identification settings from a file");
+        importLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                importLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                importLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                importLabelMouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addComponent(exportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(importLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -814,7 +851,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(saveButton))
+                    .addComponent(saveButton)
+                    .addComponent(exportLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(importLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1010,26 +1049,27 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
             IdentificationParameters newParameters = getIdentificationParameters();
 
-            if (oldIdentificationParameters == null || !newParameters.equals(oldIdentificationParameters)) {
+            try {
+                // check if the file already exists and the settings are not the same
+                if (identificationParametersFactory.getParametersList().contains(newParameters.getName())
+                        && !identificationParametersFactory.getIdentificationParameters(newParameters.getName()).equals(newParameters)) {
 
-                // check if the file already exists
-                if (oldIdentificationParameters != null && newParameters.getName().equals(oldIdentificationParameters.getName())) {
                     int value = JOptionPane.showConfirmDialog(this, "A settings file with the same name already exists. Overwrite file?", "Overwrite File?", JOptionPane.YES_NO_CANCEL_OPTION);
                     if (value != JOptionPane.YES_OPTION) {
                         return;
                     }
-                }
 
-                try {
                     identificationParametersFactory.addIdentificationParameters(newParameters);
-                    JOptionPane.showMessageDialog(null, "Identification settings saved.", "Settings Saved", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error occurred while saving " + newParameters.getName() + ". Please verify the settings.", "File Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+                    dispose();
 
-            dispose();
+                } else {
+                    identificationParametersFactory.addIdentificationParameters(newParameters);
+                    dispose();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error occurred while saving " + newParameters.getName() + ". Please verify the settings.", "File Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -1077,29 +1117,87 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void nameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTxtKeyReleased
-        if (oldIdentificationParameters == null || !getIdentificationParameters().getName().equals(oldIdentificationParameters.getName())) {
-            saveButton.setText("Save");
-        } else {
-            saveButton.setText("OK");
-        }
-        
         validateInput();
     }//GEN-LAST:event_nameTxtKeyReleased
+
+    /**
+     * Cancel the dialog.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        canceled = true;
+    }//GEN-LAST:event_formWindowClosing
+
+    /**
+     * Change the icon to a hand icon.
+     *
+     * @param evt
+     */
+    private void exportLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_exportLabelMouseEntered
+
+    /**
+     * Change the icon to the default icon.
+     *
+     * @param evt
+     */
+    private void exportLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_exportLabelMouseExited
+
+    /**
+     * Save the settings to file.
+     *
+     * @param evt
+     */
+    private void exportLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportLabelMouseReleased
+        File selectedFile = Util.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Export Identification Settings", lastSelectedFolder.getLastSelectedFolder(), null, false);
+
+        if (selectedFile != null) {
+            try {
+                IdentificationParameters.saveIdentificationParameters(getIdentificationParameters(), selectedFile);
+                JOptionPane.showMessageDialog(null, "Identification settings saved to " + selectedFile.getAbsolutePath() + ".", "Settings Saved", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error occurred while saving " + selectedFile + ". Please verify the file.", "File Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_exportLabelMouseReleased
+
+    /**
+     * Change the icon to a hand icon.
+     *
+     * @param evt
+     */
+    private void importLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_importLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_importLabelMouseEntered
+
+    /**
+     * Change the icon to the default icon.
+     *
+     * @param evt
+     */
+    private void importLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_importLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_importLabelMouseExited
 
     /**
      * Open a file chooser to select a settings file.
      *
      * @param evt
      */
-    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-
-        File selectedFile = Util.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Select Identification Settings File", lastSelectedFolder.getLastSelectedFolder(), null, true);
+    private void importLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_importLabelMouseReleased
+        File selectedFile = Util.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Import Identification Settings File", lastSelectedFolder.getLastSelectedFolder(), null, true);
 
         if (selectedFile != null) {
 
             lastSelectedFolder.setLastSelectedFolder(selectedFile.getAbsolutePath());
 
             try {
+                oldIdentificationParameters = null;
                 IdentificationParameters identificationParameters = IdentificationParameters.getIdentificationParameters(selectedFile);
                 extractParameters(identificationParameters);
                 selectedPtmsChanged();
@@ -1115,35 +1213,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
 
         validateInput();
-    }//GEN-LAST:event_browseButtonActionPerformed
-
-    /**
-     * Save the settings to file.
-     *
-     * @param evt
-     */
-    private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-        File selectedFile = Util.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Save Identification Settings", lastSelectedFolder.getLastSelectedFolder(), null, false);
-
-        if (selectedFile != null) {
-            try {
-                IdentificationParameters.saveIdentificationParameters(getIdentificationParameters(), selectedFile);
-                JOptionPane.showMessageDialog(null, "Identification settings saved to " + selectedFile.getAbsolutePath() + ".", "Settings Saved", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Error occurred while saving " + selectedFile + ". Please verify the file.", "File Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_exportButtonActionPerformed
-
-    /**
-     * Cancel the dialog.
-     *
-     * @param evt
-     */
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        canceled = true;
-    }//GEN-LAST:event_formWindowClosing
+    }//GEN-LAST:event_importLabelMouseReleased
 
     /**
      * Show/hide the advanced settings.
@@ -1172,12 +1242,13 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private javax.swing.JLabel advancedSettingsLabel;
     private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
-    private javax.swing.JButton browseButton;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton exportButton;
+    private javax.swing.JLabel exportLabel;
     private javax.swing.JButton fractionsButton;
     private javax.swing.JButton geneMappingButton;
+    private javax.swing.JLabel importLabel;
     private javax.swing.JButton matchesFiltersButton;
+    private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTxt;
     private javax.swing.JButton proteinInferenceButton;
     private javax.swing.JButton psmScoringButton;
@@ -1221,7 +1292,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             if (showMessage) {
                 searchSettingsDialog.validateParametersInput(true);
                 searchSettingsDialog.setVisible(true);
-                
+
                 if (!searchSettingsDialog.isCanceled()) {
                     searchParameters = searchSettingsDialog.getSearchParameters();
                 }

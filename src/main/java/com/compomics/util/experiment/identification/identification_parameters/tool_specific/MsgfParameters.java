@@ -399,42 +399,4 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     public void setNumberOfPtmsPerPeptide(Integer numberOfPtmsPerPeptide) {
         this.numberOfPtmsPerPeptide = numberOfPtmsPerPeptide;
     }
-
-    /**
-     * Tries to map the utilities enzyme to the enzymes supported by MS-GF+.
-     *
-     * @param enzyme the utilities enzyme
-     * @return the index of the MS-GF+ enzyme as a string, or null of no mapping
-     * is found
-     */
-    public static String enzymeMapping(Enzyme enzyme) {
-
-        String msgfEnzymeIndex = null;
-
-        String enzymeName = enzyme.getName();
-        if (enzyme.isUnspecific()) { // "No Enzyme"  or "Unspecific"
-            msgfEnzymeIndex = "0";
-        } else if (enzymeName.equalsIgnoreCase("Trypsin")) {
-            msgfEnzymeIndex = "1";
-        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)")) {
-            msgfEnzymeIndex = "2";
-        } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
-            msgfEnzymeIndex = "3";
-        } else if (enzymeName.equalsIgnoreCase("Lys-N (K)")) {
-            msgfEnzymeIndex = "4";
-        } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")) {
-            msgfEnzymeIndex = "5";
-        } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
-            msgfEnzymeIndex = "6";
-        } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
-            msgfEnzymeIndex = "7";
-        } // else if (enzymeName.equalsIgnoreCase("alphaLP")) { // alphaLP: Alpha-lytic protease (aLP) is an alternative specificity protease for proteomics applications.
-        //      msgfEnzymeIndex = "8";                        //          cleaves after T, A, S, and V residues. It generates peptides of similar average length as trypsin.
-        // }
-        else if (enzymeName.equalsIgnoreCase("Top-Down") || enzymeName.equalsIgnoreCase("Whole Protein")) {
-            msgfEnzymeIndex = "9";
-        }
-
-        return msgfEnzymeIndex;
-    }
 }

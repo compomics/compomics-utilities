@@ -60,17 +60,23 @@ public class ValidationQCPreferences implements Serializable {
         this.dbSize = validationQCPreferences.isDbSize();
         this.firstDecoy = validationQCPreferences.isFirstDecoy();
         this.confidenceMargin = validationQCPreferences.getConfidenceMargin();
-        psmFilters = new ArrayList<Filter>(validationQCPreferences.getPsmFilters().size());
-        for (Filter filter : validationQCPreferences.getPsmFilters()) {
-            psmFilters.add(filter.clone());
+        if (validationQCPreferences.getPsmFilters() != null) {
+            psmFilters = new ArrayList<Filter>(validationQCPreferences.getPsmFilters().size());
+            for (Filter filter : validationQCPreferences.getPsmFilters()) {
+                psmFilters.add(filter.clone());
+            }
         }
-        peptideFilters = new ArrayList<Filter>(validationQCPreferences.getPeptideFilters().size());
-        for (Filter filter : validationQCPreferences.getPeptideFilters()) {
-            peptideFilters.add(filter.clone());
+        if (validationQCPreferences.getPeptideFilters() != null) {
+            peptideFilters = new ArrayList<Filter>(validationQCPreferences.getPeptideFilters().size());
+            for (Filter filter : validationQCPreferences.getPeptideFilters()) {
+                peptideFilters.add(filter.clone());
+            }
         }
-        proteinFilters = new ArrayList<Filter>(validationQCPreferences.getProteinFilters().size());
-        for (Filter filter : validationQCPreferences.getProteinFilters()) {
-            proteinFilters.add(filter.clone());
+        if (validationQCPreferences.getProteinFilters() != null) {
+            proteinFilters = new ArrayList<Filter>(validationQCPreferences.getProteinFilters().size());
+            for (Filter filter : validationQCPreferences.getProteinFilters()) {
+                proteinFilters.add(filter.clone());
+            }
         }
     }
 
@@ -228,7 +234,7 @@ public class ValidationQCPreferences implements Serializable {
                 || (proteinFilters == null && validationQCPreferences.getProteinFilters() != null)) {
             return false;
         }
-        if (proteinFilters != null && validationQCPreferences.getProteinFilters()!= null
+        if (proteinFilters != null && validationQCPreferences.getProteinFilters() != null
                 && proteinFilters.size() != validationQCPreferences.getProteinFilters().size()) {
             return false;
         }

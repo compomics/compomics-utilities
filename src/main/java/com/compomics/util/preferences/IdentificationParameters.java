@@ -368,8 +368,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         Object savedObject;
 
         try {
-
-            // Try as json file
+            // try as json file
             IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
             Class expectedObjectType = DummyParameters.class;
             Object object = jsonMarshaller.fromJson(expectedObjectType, identificationParametersFile);
@@ -383,13 +382,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             } else {
                 throw new IllegalArgumentException("Parameters file " + identificationParametersFile + " not recognized.");
             }
-
         } catch (Exception e1) {
-
             try {
-                // Try serialized java object
+                // try serialized java object
                 savedObject = SerializationUtils.readObject(identificationParametersFile);
-
             } catch (Exception e2) {
                 e1.printStackTrace();
                 e2.printStackTrace();

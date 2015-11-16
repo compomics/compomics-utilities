@@ -449,7 +449,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             String name = nameTxt.getText();
             for (char character : name.toCharArray()) {
                 String charAsString = character + "";
-                if (charAsString.matches("[^\\dA-Za-z _]")) {
+                if (charAsString.matches("[^\\dA-Za-z _-]")) {
                     JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
                             "Special Character", JOptionPane.INFORMATION_MESSAGE);
                     valid = false;

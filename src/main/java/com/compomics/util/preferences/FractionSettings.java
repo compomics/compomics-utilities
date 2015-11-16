@@ -13,7 +13,7 @@ public class FractionSettings implements Serializable {
     /**
      * Serial version UID for backward compatibility.
      */
-    static final long serialVersionUID = -3455093073502201047L;
+    static final long serialVersionUID = 5193356878844799148L;
     /**
      * The minimum confidence required for a protein to be included in the
      * calculation of the average molecular weight plot in the Fractions tab of

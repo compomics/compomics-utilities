@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.protein_sequences;
 import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
@@ -444,9 +445,9 @@ public class SequenceFactory {
      * Returns the desired header for the protein in the FASTA file.
      *
      * @param accession accession of the desired protein
-     * 
+     *
      * @return the corresponding header
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
      * @throws InterruptedException if an InterruptedException occurs
@@ -532,7 +533,7 @@ public class SequenceFactory {
      *
      * @param fastaFile the FASTA file to load
      * @param waitingHandler a waitingHandler showing the progress
-     * 
+     *
      * @throws FileNotFoundException exception thrown if the file was not found
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file
@@ -743,9 +744,13 @@ public class SequenceFactory {
         // a map of the database header types
         HashMap<Header.DatabaseType, Integer> databaseTypes = new HashMap<Header.DatabaseType, Integer>();
 
+        // a map of the species
+        HashMap<String, Integer> species = new HashMap<String, Integer>();
+
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
 
             if (line.startsWith(">")) {
+
                 Header fastaHeader = Header.parseFromFASTA(line);
                 String accession = fastaHeader.getAccessionOrRest();
 
@@ -771,6 +776,18 @@ public class SequenceFactory {
                         databaseTypes.put(tempDatabaseType, 1);
                     } else {
                         databaseTypes.put(tempDatabaseType, typeCounter + 1);
+                    }
+
+                    // get the species
+                    String taxonomy = fastaHeader.getTaxonomy();
+                    if (taxonomy == null || taxonomy.equals("")) {
+                        taxonomy = SpeciesFactory.unknown;
+                    }
+                    Integer occurrence = species.get(taxonomy);
+                    if (occurrence == null) {
+                        species.put(taxonomy, 1);
+                    } else {
+                        species.put(taxonomy, occurrence + 1);
                     }
 
                 } else {
@@ -824,7 +841,7 @@ public class SequenceFactory {
             }
         }
 
-        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, mainDatabaseType, databaseTypes, decoyTag, version);
+        return new FastaIndex(indexes, decoyAccessions, fileName, name, decoy, defaultReversed, nTarget, lastModified, mainDatabaseType, databaseTypes, decoyTag, version, species);
     }
 
     /**
@@ -832,7 +849,7 @@ public class SequenceFactory {
      *
      * @param fastaIndex the index of the FASTA file
      * @param directory the directory where to write the file
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * writing the file
      */

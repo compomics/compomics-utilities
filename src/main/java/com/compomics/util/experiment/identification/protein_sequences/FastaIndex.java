@@ -73,9 +73,9 @@ public class FastaIndex extends ExperimentObject {
      */
     private String decoyTag;
     /**
-     * The species included in the database.
+     * The species occurrence in the database.
      */
-    private ArrayList<String> species;
+    private HashMap<String, Integer> speciesOccurrence;
 
     /**
      * Constructor.
@@ -95,10 +95,11 @@ public class FastaIndex extends ExperimentObject {
      * occur
      * @param decoyTag the decoy tag
      * @param version the database version
+     * @param speciesOccurrence the species occurrence in the database
      */
     public FastaIndex(HashMap<String, Long> indexes, HashSet<String> decoyAccessions, String fileName, String name,
             boolean concatenatedTargetDecoy, boolean isDefaultReversed, int nTarget, long lastModified,
-            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, String version) {
+            DatabaseType mainDatabaseType, HashMap<Header.DatabaseType, Integer> databaseTypes, String decoyTag, String version, HashMap<String, Integer> speciesOccurrence) {
         this.indexes = indexes;
         this.decoyAccessions = decoyAccessions;
         this.fileName = fileName;
@@ -111,6 +112,7 @@ public class FastaIndex extends ExperimentObject {
         this.databaseTypes = databaseTypes;
         this.decoyTag = decoyTag;
         this.version = version;
+        this.speciesOccurrence = speciesOccurrence;
     }
 
     /**
@@ -368,8 +370,8 @@ public class FastaIndex extends ExperimentObject {
      *
      * @return the species targeted by this database
      */
-    public ArrayList<String> getSpecies() {
-        return species;
+    public HashMap<String, Integer> getSpecies() {
+        return speciesOccurrence;
     }
 
     /**
@@ -377,7 +379,7 @@ public class FastaIndex extends ExperimentObject {
      *
      * @param species the species targeted by this database
      */
-    public void setSpecies(ArrayList<String> species) {
-        this.species = species;
+    public void setSpecies(HashMap<String, Integer> species) {
+        this.speciesOccurrence = species;
     }
 }

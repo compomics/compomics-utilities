@@ -1082,7 +1082,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             }
         }
 
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
+        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(this, parentFrame, lastSelectedFolder, editable, normalIcon, waitingIcon);
 
         boolean success = sequenceDbDetailsDialog.selectDB(true);
         if (success) {

@@ -3,6 +3,7 @@ package com.compomics.util.protein_sequences_manager.gui;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.Protein;
+import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.JOptionEditorPane;
@@ -12,6 +13,7 @@ import com.compomics.util.preferences.LastSelectedFolder;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Header.DatabaseType;
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Image;
 import java.io.File;
@@ -72,6 +74,29 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     public static final String lastFolderKey = "fastaFile";
 
     /**
+     * Creates a new SequenceDbDetailsDialog with a dialog as owner.
+     *
+     * @param owner the dialog owner
+     * @param parent the parent frame
+     * @param lastSelectedFolder the last selected folder
+     * @param dbEditable if the database is editable
+     * @param normalImange the normal icon
+     * @param waitingImage the waiting icon
+     */
+    public SequenceDbDetailsDialog(Dialog owner, Frame parent, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+        super(owner, true);
+        initComponents();
+        this.parentFrame = parent;
+        this.lastSelectedFolder = lastSelectedFolder;
+        this.dbEditable = dbEditable;
+        this.waitingImage = waitingImage;
+        this.normalImange = normalImange;
+        loadUserPreferences();
+        setUpGUI();
+        setLocationRelativeTo(owner);
+    }
+
+    /**
      * Creates a new SequenceDbDetailsDialog.
      *
      * @param parent the parent frame
@@ -104,6 +129,9 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             File folder = sequenceFactory.getCurrentFastaFile().getParentFile();
             utilitiesUserPreferences.setDbFolder(folder);
             dbNameTxt.setText(fastaIndex.getName());
+
+            // Show the species present in the database
+            speciesJTextField.setText(SpeciesFactory.getSpeciesDescription(fastaIndex.getSpecies()));
 
             // show the database type information
             if (fastaIndex.getDatabaseTypes().size() == 1) {
@@ -543,6 +571,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         fileLabel = new javax.swing.JLabel();
         advancedButton = new javax.swing.JButton();
         typeJTextField = new javax.swing.JTextField();
+        speciesJTextField = new javax.swing.JTextField();
+        speciesLabel = new javax.swing.JLabel();
         previewPanel = new javax.swing.JPanel();
         proteinYxtScrollPane = new javax.swing.JScrollPane();
         proteinTxt = new javax.swing.JTextArea();
@@ -637,6 +667,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         typeJTextField.setEditable(false);
         typeJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
+        speciesJTextField.setEditable(false);
+        speciesJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        speciesLabel.setText("Species");
+
         javax.swing.GroupLayout databaseInformationPanelLayout = new javax.swing.GroupLayout(databaseInformationPanel);
         databaseInformationPanel.setLayout(databaseInformationPanelLayout);
         databaseInformationPanelLayout.setHorizontalGroup(
@@ -677,7 +712,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     .addGroup(databaseInformationPanelLayout.createSequentialGroup()
                         .addComponent(lastModifiedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lastModifiedTxt)))
+                        .addComponent(lastModifiedTxt))
+                    .addGroup(databaseInformationPanelLayout.createSequentialGroup()
+                        .addComponent(speciesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(speciesJTextField)))
                 .addContainerGap())
         );
 
@@ -699,6 +738,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameLabel)
                     .addComponent(dbNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(speciesLabel)
+                    .addComponent(speciesJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(databaseInformationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(typeLabel)
@@ -996,6 +1039,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane proteinYxtScrollPane;
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JTextField sizeTxt;
+    private javax.swing.JTextField speciesJTextField;
+    private javax.swing.JLabel speciesLabel;
     private javax.swing.JLabel targetDecoyTxt;
     private javax.swing.JTextField typeJTextField;
     private javax.swing.JLabel typeLabel;

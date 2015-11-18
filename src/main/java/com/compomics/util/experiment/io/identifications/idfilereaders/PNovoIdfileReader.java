@@ -2,7 +2,6 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
@@ -158,6 +157,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
         for (String title : index.keySet()) {
 
+            // remove any html from the title
             String decodedTitle = URLDecoder.decode(title, "utf-8");
             SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle));
 

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -262,6 +263,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                     for (CvParam cvParam : spectrumIdentResult.getCvParam()) {
                         if (cvParam.getAccession().equalsIgnoreCase("MS:1000796") || cvParam.getName().equalsIgnoreCase("spectrum title")) {
                             spectrumTitle = cvParam.getValue();
+                            // remove any html from the title
+                            spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                         }
                     }
 
@@ -1147,6 +1150,8 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             if (accession != null && name != null && value != null) {
                 if (accession.equalsIgnoreCase("MS:1000796") || name.equalsIgnoreCase("spectrum title")) {
                     spectrumTitle = value;
+                    // remove any html from the title
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 }
             }
 

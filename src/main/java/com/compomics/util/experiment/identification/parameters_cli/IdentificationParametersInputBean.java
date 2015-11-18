@@ -76,7 +76,7 @@ public class IdentificationParametersInputBean {
      */
     private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();
     /**
-     * The command line
+     * The command line.
      */
     private CommandLine commandLine;
 
@@ -112,7 +112,6 @@ public class IdentificationParametersInputBean {
             }
             destinationFile = new File(arg);
         }
-
     }
 
     /**
@@ -170,13 +169,19 @@ public class IdentificationParametersInputBean {
             Enzyme option = enzymeFactory.getEnzyme(arg);
             searchParameters.setEnzyme(option);
         } else {
-            Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to Trypsin
+            Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
             searchParameters.setEnzyme(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
             searchParameters.setFastaFile(fastaFile);
+
+            // also update the protein inference database if that option is not set
+            if (identificationParameters != null && !commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
+                ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
+                proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MC.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MC.id);
@@ -1708,10 +1713,12 @@ public class IdentificationParametersInputBean {
      * Verifies the command line start parameters.
      *
      * @param aLine the command line to validate
+     * @param checkMandatoryParameters if true, check if mandatory parameters
+     * are included
      * @return true if the startup was valid
      * @throws IOException if an IOException occurs
      */
-    public static boolean isValidStartup(CommandLine aLine) throws IOException {
+    public static boolean isValidStartup(CommandLine aLine, boolean checkMandatoryParameters) throws IOException {
 
         if (aLine.getOptions().length == 0) {
             return false;
@@ -1778,18 +1785,20 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (!aLine.hasOption(IdentificationParametersCLIParams.OUT.id) || aLine.getOptionValue(IdentificationParametersCLIParams.OUT.id).equals("")) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.OUT.id)) {
+            if (aLine.getOptionValue(IdentificationParametersCLIParams.OUT.id).equals("")) {
+                System.out.println(System.getProperty("line.separator")
+                        + "No output file specified!"
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+        } else if (checkMandatoryParameters) {
             System.out.println(System.getProperty("line.separator")
                     + "No output file specified!"
                     + System.getProperty("line.separator"));
             return false;
         }
-        if (!aLine.hasOption(IdentificationParametersCLIParams.DB.id) || aLine.getOptionValue(IdentificationParametersCLIParams.DB.id).equals("")) {
-            System.out.println(System.getProperty("line.separator")
-                    + "No database specified!"
-                    + System.getProperty("line.separator"));
-            return false;
-        } else {
+        if (aLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
             if (!fastaFile.exists()) {
@@ -3168,17 +3177,12 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Protein inference parameters
         //////////////////////////////////
-        if (!aLine.hasOption(IdentificationParametersCLIParams.DB_PI.id) || aLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id).equals("")) {
-            System.out.println(System.getProperty("line.separator")
-                    + "No database specified!"
-                    + System.getProperty("line.separator"));
-            return false;
-        } else {
+        if (aLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
             File fastaFile = new File(arg);
             if (!fastaFile.exists()) {
                 System.out.println(System.getProperty("line.separator")
-                        + "Database not found."
+                        + "Protein inference database not found."
                         + System.getProperty("line.separator"));
                 return false;
             }
@@ -3261,13 +3265,11 @@ public class IdentificationParametersInputBean {
                             + System.getProperty("line.separator"));
                     valid = false;
                 }
-            } else {
-                if (value <= 0) {
-                    System.out.println(System.getProperty("line.separator")
-                            + "Error parsing the " + argType + " option: Negative or zero value found."
-                            + System.getProperty("line.separator"));
-                    valid = false;
-                }
+            } else if (value <= 0) {
+                System.out.println(System.getProperty("line.separator")
+                        + "Error parsing the " + argType + " option: Negative or zero value found."
+                        + System.getProperty("line.separator"));
+                valid = false;
             }
         } catch (NumberFormatException e) {
             System.out.println(System.getProperty("line.separator")
@@ -3304,12 +3306,10 @@ public class IdentificationParametersInputBean {
                             + System.getProperty("line.separator"));
                     valid = false;
                 }
-            } else {
-                if (value <= 0) {
-                    System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative or zero value found."
-                            + System.getProperty("line.separator"));
-                    valid = false;
-                }
+            } else if (value <= 0) {
+                System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative or zero value found."
+                        + System.getProperty("line.separator"));
+                valid = false;
             }
         } catch (NumberFormatException e) {
             System.out.println(System.getProperty("line.separator")

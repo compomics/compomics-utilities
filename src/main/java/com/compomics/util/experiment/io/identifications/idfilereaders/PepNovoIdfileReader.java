@@ -188,6 +188,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
         for (String title : index.keySet()) {
 
+            // remove any html from the title
             String decodedTitle = URLDecoder.decode(title, "utf-8");
             SpectrumMatch currentMatch = new SpectrumMatch(Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle));
 

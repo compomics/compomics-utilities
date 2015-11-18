@@ -1,13 +1,10 @@
 package com.compomics.util.gui.genes;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
-import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

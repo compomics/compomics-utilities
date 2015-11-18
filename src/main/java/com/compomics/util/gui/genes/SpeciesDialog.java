@@ -3,7 +3,7 @@ package com.compomics.util.gui.genes;
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
-import com.compomics.util.experiment.biology.taxonomy.EnsemblSpecies;
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;

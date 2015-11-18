@@ -101,7 +101,7 @@ public class GeneMapping {
      * @return the Ensembl accession for a given gene
      */
     public String getEnsemblAccession(String geneName) {
-        return geneNameToChromosome.get(geneName);
+        return geneNameToAccession.get(geneName);
     }
 
     /**

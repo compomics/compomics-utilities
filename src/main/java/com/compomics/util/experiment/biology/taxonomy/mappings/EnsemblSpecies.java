@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.biology.taxonomy;
+package com.compomics.util.experiment.biology.taxonomy.mappings;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +15,10 @@ import java.util.HashMap;
  */
 public class EnsemblSpecies {
 
+    /**
+     * The separator used to separate line contents.
+     */
+    public final static String separator = "\t";
     /**
      * Species Latin name to type map.
      */
@@ -103,7 +107,7 @@ public class EnsemblSpecies {
 
                         } else {
 
-                            String[] elements = line.split("\\t");
+                            String[] elements = line.split(separator);
                             String currentSpeciesLatinName = elements[0].trim();
                             String currentEnsemblDatabaseName = elements[1].trim();
 

@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotSpecies;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
@@ -431,12 +432,13 @@ public class SequenceFactory {
      * Returns the desired header for the protein in the FASTA file.
      *
      * @param accession accession of the desired protein
-     * 
+     *
      * @return the corresponding header
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
-     * @throws java.lang.InterruptedException exception thrown whenever an error occurred while waiting for the connection to the fasta file to recover.
+     * @throws java.lang.InterruptedException exception thrown whenever an error
+     * occurred while waiting for the connection to the fasta file to recover.
      */
     public Header getHeader(String accession) throws IOException, InterruptedException {
         return getHeader(accession, true);
@@ -451,7 +453,8 @@ public class SequenceFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
-     * @throws java.lang.InterruptedException exception thrown whenever an error occurred while waiting for the connection to the fasta file to recover.
+     * @throws java.lang.InterruptedException exception thrown whenever an error
+     * occurred while waiting for the connection to the fasta file to recover.
      */
     private Header getHeader(String accession, boolean reindex) throws IOException, InterruptedException {
 
@@ -484,12 +487,13 @@ public class SequenceFactory {
      *
      * @param index the index where to look at
      * @param nTries the number of tries already made
-     * 
+     *
      * @return the header indexed by the given index
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
-     * @throws java.lang.InterruptedException exception thrown whenever an error occurred while waiting for the connection to the fasta file to recover.
+     * @throws java.lang.InterruptedException exception thrown whenever an error
+     * occurred while waiting for the connection to the fasta file to recover.
      */
     private synchronized Header getHeader(long index, int nTries) throws InterruptedException, IOException {
 
@@ -581,9 +585,9 @@ public class SequenceFactory {
      * Returns the file index of a FASTA file.
      *
      * @param fastaFile the FASTA file
-     * 
+     *
      * @return the index of the FASTA file
-     * 
+     *
      * @throws IOException exception thrown if an error occurred while reading
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
@@ -983,7 +987,7 @@ public class SequenceFactory {
      * Appends decoy sequences to the desired file.
      *
      * @param destinationFile the destination file
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      * @throws InterruptedException if an InterruptedException occurs
@@ -998,7 +1002,7 @@ public class SequenceFactory {
      *
      * @param destinationFile the destination file
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading or writing a file
      * @throws InterruptedException if an InterruptedException occurs
@@ -1141,9 +1145,9 @@ public class SequenceFactory {
      * Returns the occurrence of every amino acid in the database.
      *
      * @param progressBar a progress bar, can be null
-     * 
+     *
      * @return a map containing all amino acid occurrence in the database
-     * 
+     *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the database
      * @throws InterruptedException if an InterruptedException occurs
@@ -1293,7 +1297,7 @@ public class SequenceFactory {
      * getDefaultDecoyAccession(String targetAccession).
      *
      * @param decoyAccession the decoy accession
-     * 
+     *
      * @return the target accession
      */
     public static String getDefaultTargetAccession(String decoyAccession) {
@@ -1468,9 +1472,9 @@ public class SequenceFactory {
      *
      * @param targetOnly boolean indicating whether only target accessions shall
      * be iterated
-     * 
+     *
      * @return a protein iterator
-     * 
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public ProteinIterator getProteinIterator(boolean targetOnly) throws FileNotFoundException {

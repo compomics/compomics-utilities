@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.biology.taxonomy;
 
 import com.compomics.util.Util;
+import static com.compomics.util.experiment.biology.genes.GeneFactory.getGeneMappingFolder;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,9 +15,43 @@ import java.util.HashMap;
 public class SpeciesFactory {
 
     /**
+     * The instance of the factory.
+     */
+    private static SpeciesFactory instance = null;
+
+    /**
      * Tag for unknown species.
      */
     public static final String unknown = "Unknown";
+    /**
+     * The subfolder relative to the jar file where gene mapping files are
+     * stored in tools.
+     */
+    private final static String TOOL_GENE_MAPPING_SUBFOLDER = "resources/conf/gene_mappings/";
+    /**
+     * The name of the taxonomy file.
+     */
+    private static final String TAXONOMY_FILENAME = "taxonomy";
+
+    /**
+     * Static method returning the instance of the factory.
+     *
+     * @return the instance of the factory
+     */
+    public static SpeciesFactory getInstance() {
+        if (instance == null) {
+            instance = new SpeciesFactory();
+        }
+        return instance;
+    }
+
+    /**
+     * Constructor.
+     */
+    private SpeciesFactory() {
+    }
+    
+    
 
     /**
      * Returns a listing of the species occurrence map provided.
@@ -68,6 +104,17 @@ public class SpeciesFactory {
         }
 
         return description.toString();
+    }
+
+    /**
+     * Returns the Uniprot species file.
+     *
+     * @param jarFilePath the path to the jar file
+     * 
+     * @return the Uniprot species file
+     */
+    public static File getSpeciesFile(String jarFilePath) {
+        return new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + TAXONOMY_FILENAME);
     }
 
 }

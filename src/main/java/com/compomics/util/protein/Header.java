@@ -1592,4 +1592,28 @@ public class Header implements Cloneable, Serializable {
             header.iDescriptionProteinName = tempShortHeader.substring(0, tempShortHeader.indexOf(" "));
         }
     }
+
+    /**
+     * Return the Uniprot protein evidence type as text.
+     *
+     * @param type the type of evidence
+     * @return the protein evidence type as text
+     */
+    public static String getProteinEvidencAsString(Integer type) {
+
+        switch (type) {
+            case 1:
+                return "Protein";
+            case 2:
+                return "Transcript";
+            case 3:
+                return "Homology";
+            case 4:
+                return "Predicted";
+            case 5:
+                return "Uncertain";
+            default:
+                return null;
+        }
+    }
 }

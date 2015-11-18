@@ -280,8 +280,8 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Gene mapping preferences
     //////////////////////////////////
-    SPECIES_TYPE("species_type", "The species type to use for the gene annotation (UniProt databases only). Supported species types are listed in the GUI. Inferred from the database if not set.", false, true),
-    SPECIES("species", "The species to use for the gene annotation (UniProt databases only). Supported species are listed in the GUI. Inferred from the database if not set.", false, true),
+    USE_GENE_MAPPING("useGeneMapping", "If true gene mappings will be used and saved along with the project. Default is true.", false, true),
+    UPDATE_GENE_MAPPING("updateGeneMapping", "If true gene mappings will be updated automatically from Ensembl (UniProt databases only). Default is true.", false, true),
     //////////////////////////////////
     // Spectrum annotation
     //////////////////////////////////

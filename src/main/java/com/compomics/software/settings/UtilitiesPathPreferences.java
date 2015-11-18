@@ -1,9 +1,9 @@
 package com.compomics.software.settings;
 
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTreeComponentsFactory;
-import com.compomics.util.preferences.GenePreferences;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.pride.PrideObjectsFactory;
 import java.io.BufferedReader;
@@ -187,7 +187,7 @@ public class UtilitiesPathPreferences {
                 ProteinTreeComponentsFactory.setDefaultDbFolderPath(path);
                 return;
             case geneMappingKey:
-                GenePreferences.setGeneMappingFolder(path);
+                GeneFactory.setGeneMappingFolder(path);
                 return;
             case prideAnnotationKey:
                 PrideObjectsFactory.setPrideFolder(path);
@@ -218,7 +218,7 @@ public class UtilitiesPathPreferences {
             case fastaIndexesKey:
                 return ProteinTreeComponentsFactory.getDefaultDbFolderPath();
             case geneMappingKey:
-                return GenePreferences.getGeneMappingFolder().getAbsolutePath();
+                return GeneFactory.getGeneMappingFolder().getAbsolutePath();
             case prideAnnotationKey:
                 return PrideObjectsFactory.getPrideFolder();
             case ptmFactoryKey:
@@ -334,7 +334,7 @@ public class UtilitiesPathPreferences {
                 bw.write(toWrite);
                 break;
             case geneMappingKey:
-                toWrite = GenePreferences.getGeneMappingFolder().getAbsolutePath();
+                toWrite = GeneFactory.getGeneMappingFolder().getAbsolutePath();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathPreferences.defaultPath;
                 }

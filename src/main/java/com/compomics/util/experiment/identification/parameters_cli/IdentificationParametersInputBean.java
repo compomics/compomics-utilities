@@ -1373,13 +1373,31 @@ public class IdentificationParametersInputBean {
             genePreferences = new GenePreferences();
             identificationParameters.setGenePreferences(genePreferences);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIES_TYPE.id)) {
-            String speciesType = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIES_TYPE.id); // @TODO: check that it's a valid species type??
-            genePreferences.setCurrentSpeciesType(speciesType);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.USE_GENE_MAPPING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.USE_GENE_MAPPING.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.USE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            genePreferences.setUseGeneMapping(value);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SPECIES.id)) {
-            String species = commandLine.getOptionValue(IdentificationParametersCLIParams.SPECIES.id); // @TODO: check that it's a valid species??
-            genePreferences.setCurrentSpecies(species);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            if (intValue == 1) {
+                value = true;
+            } else if (intValue == 0) {
+                value = false;
+            } else {
+                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            genePreferences.setAutoUpdate(value);
         }
 
         //////////////////////////////////

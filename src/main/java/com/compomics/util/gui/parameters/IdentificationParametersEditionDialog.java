@@ -10,7 +10,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Id
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.gui.gene_mapping.SpeciesDialog;
+import com.compomics.util.gui.genes.SpeciesDialog;
 import com.compomics.util.gui.parameters.identification_parameters.AnnotationSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.FractionSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.MatchesImportFiltersDialog;
@@ -938,8 +938,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
-        SpeciesDialog speciesDialog = new SpeciesDialog(this, null, genePreferences, true, waitingIcon, normalIcon);
-        // @TODO decouple the gene factory from the preferences
+        SpeciesDialog speciesDialog = new SpeciesDialog(this, null, true, waitingIcon, normalIcon);
+        // @TODO use a gene preferences dialog
         if (!speciesDialog.isCanceled()) {
             updateGUI();
         }

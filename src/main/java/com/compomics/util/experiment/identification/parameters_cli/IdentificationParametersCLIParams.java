@@ -30,7 +30,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Search Parameters
     //////////////////////////////////
-    DB("db", "The sequence database to use for searching spectra in FASTA format.", true, true),
+    DB("db", "The sequence database to use for searching spectra in FASTA format.", false, true),
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (2, true), default is '1'.", false, true),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (2, true), default is '1'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false, true),
@@ -311,7 +311,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Protein inference parameters
     //////////////////////////////////
-    DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", true, true),
+    DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", false, true),
     //////////////////////////////////
     // Validation parameters
     //////////////////////////////////
@@ -357,37 +357,5 @@ public enum IdentificationParametersCLIParams {
         this.description = description;
         this.mandatory = mandatory;
         this.hasArgument = hasArgument;
-    }
-
-    /**
-     * Returns the options as a string.
-     *
-     * @return the options as a string
-     */
-    public static String getOptionsAsString() {
-
-        String output = "";
-        String formatter = "%-25s";
-
-        output += "Mandatory parameters:\n\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.OUT.id) + IdentificationParametersCLIParams.OUT.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.PREC_PPM.id) + IdentificationParametersCLIParams.PREC_PPM.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.PREC_TOL.id) + IdentificationParametersCLIParams.PREC_TOL.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FRAG_TOL.id) + IdentificationParametersCLIParams.FRAG_TOL.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.ENZYME.id) + IdentificationParametersCLIParams.ENZYME.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FIXED_MODS.id) + IdentificationParametersCLIParams.FIXED_MODS.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.VARIABLE_MODS.id) + IdentificationParametersCLIParams.VARIABLE_MODS.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MIN_CHARGE.id) + IdentificationParametersCLIParams.MIN_CHARGE.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MAX_CHARGE.id) + IdentificationParametersCLIParams.MAX_CHARGE.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MC.id) + IdentificationParametersCLIParams.MC.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.FI.id) + IdentificationParametersCLIParams.FI.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.RI.id) + IdentificationParametersCLIParams.RI.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.DB.id) + IdentificationParametersCLIParams.DB.description + "\n";
-
-        output += "\n\nHelp:\n\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.MODS.id) + IdentificationParametersCLIParams.MODS.description + "\n";
-        output += "-" + String.format(formatter, IdentificationParametersCLIParams.USAGE.id) + IdentificationParametersCLIParams.USAGE.description + "\n";
-
-        return output;
     }
 }

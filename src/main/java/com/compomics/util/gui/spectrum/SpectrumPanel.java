@@ -1329,6 +1329,41 @@ public class SpectrumPanel extends GraphicsPanel {
         addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
                 forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedPtms, mirrored);
     }
+    
+    /**
+     * Add reference areas annotating the de novo tags.
+     *
+     * @param currentPeptide the current peptide sequence
+     * @param annotations the current fragment ion annotations
+     * @param aForwardIon the forward de novo sequencing fragment ion type,
+     * i.e., PeptideFragmentIon.A_ION, PeptideFragmentIon.B_ION or
+     * PeptideFragmentIon.C_ION
+     * @param aRewindIon the reverse de novo sequencing fragment ion type, i.e.,
+     * PeptideFragmentIon.X_ION, PeptideFragmentIon.Y_ION or
+     * PeptideFragmentIon.Z_ION
+     * @param aDeNovoCharge the de novo sequencing charge
+     * @param showForwardTags if true, the forward de novo sequencing tags are
+     * displayed
+     * @param showRewindTags if true, the reverse de novo sequencing tags are
+     * displayed
+     * @param forwardIonPercentHeight the percent height of the forward ion
+     * annotation [0-1]
+     * @param rewindIonPercentHeight the percent height of the reverse ion
+     * annotation [0-1]
+     * @param alphaLevels the individual alpha levels, if set override
+     * forwardIonAlphaLevel and rewindIonAlphaLevel
+     * @param excludeFixedPtms are fixed PTMs to be annotated?
+     * @param mirrored if true the annotation is for the mirrored spectrum
+     */
+    public void addAutomaticDeNovoSequencing(
+            Peptide currentPeptide, ArrayList<IonMatch> annotations,
+            int aForwardIon, int aRewindIon, int aDeNovoCharge,
+            boolean showForwardTags, boolean showRewindTags,
+            double forwardIonPercentHeight, double rewindIonPercentHeight,
+            ArrayList<float[]> alphaLevels, boolean excludeFixedPtms, boolean mirrored) {
+        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
+                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedPtms, mirrored);
+    }
 
     /**
      * Add reference areas annotating the de novo tags.

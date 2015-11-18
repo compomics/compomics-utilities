@@ -72,7 +72,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 }
 
                 // check if the parameters are valid
-                if (!IdentificationParametersInputBean.isValidStartup(line)) {
+                if (!IdentificationParametersInputBean.isValidStartup(line, true)) {
                     System.out.println(System.getProperty("line.separator") + "Run -usage to see the list of supported options and their input.");
                     System.exit(0);
                 }

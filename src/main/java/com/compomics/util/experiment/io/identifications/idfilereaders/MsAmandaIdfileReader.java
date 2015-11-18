@@ -1,13 +1,11 @@
 package com.compomics.util.experiment.io.identifications.idfilereaders;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
-import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
@@ -19,6 +17,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,6 +212,9 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
                 //double rt = Util.readDoubleAsString(rtAsText); // @TODO: should escape retention times such as PT2700.460000S
                 String fileName = elements[filenameIndex];
+                
+                // remove any html from the title
+                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
 
                 // set up the yet empty spectrum match, or add to the current match
                 if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

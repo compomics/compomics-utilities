@@ -265,9 +265,9 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 String peptideSequence;
 
                 // extract the modifications
-                if (peptideSequenceWithMods.contains("(") || peptideSequenceWithMods.contains("[")) { 
+                if (peptideSequenceWithMods.contains("(") || peptideSequenceWithMods.contains("[")) {
 
-                    // @TODO: update!! (N-term Acetyl)S(Phospho)EQUENCE(C-term Amidated) represents a peptide SEQUENCE with Acetyl on N-terminus, Phospho on the side chain of S and Amidated on C-terminus.
+                    // example: (N-term|Acetyl)S(Phospho)EQUENCES(Phospho)(C-term|Amidated)
 
                     peptideSequence = "";
 
@@ -279,17 +279,17 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             int modStart = i + 1;
                             int modEnd = peptideSequenceWithMods.indexOf(")", i + 1);
                             String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
-                            utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
-                            i = modEnd;
-                        } else if (currentChar == '[') {
-                            int modStart = i + 1;
-                            int modEnd = peptideSequenceWithMods.indexOf("]", i + 1);
-                            String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
-                            if (peptideSequence.isEmpty()) {
+                            
+                            if (currentMod.toLowerCase().startsWith("n-term|")) {
+                                currentMod = currentMod.substring("n-term|".length());
                                 utilitiesModifications.add(new ModificationMatch(currentMod, true, 1));
+                            } else if (currentMod.toLowerCase().startsWith("c-term|")) {
+                                currentMod = currentMod.substring("c-term|".length());
+                                utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             } else {
                                 utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             }
+
                             i = modEnd;
                         } else {
                             peptideSequence += currentChar;
@@ -331,6 +331,8 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 // Create the peptide assumption
                 Peptide peptide = new Peptide(peptideSequence, utilitiesModifications);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), peptideCharge, novorScore, novorCsvFile.getName());
+                peptideAssumption.setAminoAcidScores(aminoAcidScores);
+                //peptideAssumption.setRawScore(novorScore);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
                             newModificationMatches = null;

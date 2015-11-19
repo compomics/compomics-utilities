@@ -47,6 +47,9 @@ public class GenePreferences implements Serializable {
      * @return a boolean indicating whether gene mappings should be used
      */
     public Boolean getUseGeneMapping() {
+        if (useGeneMapping == null) {
+            useGeneMapping = true;
+        }
         return useGeneMapping;
     }
 

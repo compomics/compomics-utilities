@@ -18,7 +18,7 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The minimum peptide length.
      */
-    private Integer minPeptideLength = 6;
+    private Integer minPeptideLength = 8; // note that for MyriMath default is 6
     /**
      * The maximal peptide length.
      */

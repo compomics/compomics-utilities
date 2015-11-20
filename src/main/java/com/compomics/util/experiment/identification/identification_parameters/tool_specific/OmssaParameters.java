@@ -41,7 +41,7 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     /**
      * The minimum peptide length (for semi and non tryptic searches).
      */
-    private Integer minPeptideLength = 6;
+    private Integer minPeptideLength = 8;
     /**
      * The maximal peptide length (for semi and non tryptic searches).
      */

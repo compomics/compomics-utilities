@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.identification_parameters.t
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
+import java.util.HashMap;
 
 /**
  * Novor specific parameters.
@@ -22,6 +23,11 @@ public class NovorParameters implements IdentificationAlgorithmParameter {
      * The mass analyzer.
      */
     private String massAnalyzer = "FT"; // Trap, TOF, or FT
+    /**
+     * A map from the Novor PTM short name to the utilities PTM names. Novor PTM
+     * short name &gt; utilities PTM name.
+     */
+    private HashMap<String, String> novorPtmMap; 
 
     /**
      * Constructor.
@@ -113,5 +119,38 @@ public class NovorParameters implements IdentificationAlgorithmParameter {
      */
     public void setMassAnalyzer(String massAnalyzer) {
         this.massAnalyzer = massAnalyzer;
+    }
+    
+    /**
+     * Returns the Novor to utilities PTM map. Null if not set.
+     *
+     * @return the Novor to utilities PTM map, null if not set
+     */
+    public HashMap<String, String> getNovorPtmMap() {
+        return novorPtmMap;
+    }
+    
+    /**
+     * Set the Novor to utilities PTM map.
+     *
+     * @param novorPtmMap the novorPtmMap to set
+     */
+    public void setNovorPtmMap(HashMap<String, String> novorPtmMap) {
+        this.novorPtmMap = novorPtmMap;
+    }
+    
+    /**
+     * Returns the utilities PTM name corresponding to the given Novor PTM
+     * short name. Null if not found.
+     *
+     * @param novorPtmShortName the Novor PTM short name
+     *
+     * @return the utilities PTM name
+     */
+    public String getUtilitiesPtmName(String novorPtmShortName) {
+        if (novorPtmMap == null) {
+            return null;
+        }
+        return novorPtmMap.get(novorPtmShortName);
     }
 }

@@ -37,7 +37,7 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     /**
      * The minimum peptide length.
      */
-    private Integer minPeptideLength = 6;
+    private Integer minPeptideLength = 8;
     /**
      * The maximal peptide length.
      */

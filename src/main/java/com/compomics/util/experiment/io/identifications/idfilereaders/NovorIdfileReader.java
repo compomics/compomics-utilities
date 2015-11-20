@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -135,6 +136,8 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
 //            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
 //        }
+
+        NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
 
@@ -282,11 +285,20 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             
                             if (currentMod.toLowerCase().startsWith("n-term|")) {
                                 currentMod = currentMod.substring("n-term|".length());
+                                if (novorParameters.getNovorPtmMap() != null) {
+                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                }
                                 utilitiesModifications.add(new ModificationMatch(currentMod, true, 1));
                             } else if (currentMod.toLowerCase().startsWith("c-term|")) {
                                 currentMod = currentMod.substring("c-term|".length());
+                                if (novorParameters.getNovorPtmMap() != null) {
+                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                }
                                 utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             } else {
+                                if (novorParameters.getNovorPtmMap() != null) {
+                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                }
                                 utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             }
 

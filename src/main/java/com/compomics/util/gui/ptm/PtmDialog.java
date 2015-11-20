@@ -306,7 +306,7 @@ public class PtmDialog extends javax.swing.JDialog {
             nameLabel.setToolTipText("Please provide a modification name");
             nameTxt.setToolTipText("Please provide a modification name");
         }
-        
+
         // check if name contains '|'
         if (name.lastIndexOf("|") != -1) {
             if (showMessage && !error) {
@@ -316,6 +316,17 @@ public class PtmDialog extends javax.swing.JDialog {
             nameLabel.setForeground(Color.RED);
             nameLabel.setToolTipText("Modification names cannot contain \'|\'");
             nameTxt.setToolTipText("Modification names cannot contain \'|\'");
+        }
+
+        // check if name contains ','
+        if (name.lastIndexOf("|") != -1) {
+            if (showMessage && !error) {
+                JOptionPane.showMessageDialog(this, "Modification names cannot contain \',\'.");
+            }
+            error = true;
+            nameLabel.setForeground(Color.RED);
+            nameLabel.setToolTipText("Modification names cannot contain \',\'");
+            nameTxt.setToolTipText("Modification names cannot contain \',\'");
         }
 
         // check if name contains the modification separator

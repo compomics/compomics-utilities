@@ -1,2 +1,4 @@
 /target/
 derby.log
+/.idea/
+*.iml

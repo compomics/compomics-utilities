@@ -85,7 +85,7 @@ public class Header implements Cloneable, Serializable {
      */
     public enum DatabaseType {
 
-        UniProt("UniProtKB", "14681372"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"),
+        UniProt("UniProtKB", "14681372"), EnsemblGenomes("Ensembl Genomes", "26578574"), SGD("Saccharomyces Genome Database (SGD)", "9399804"), Arabidopsis_thaliana_TAIR("The Arabidopsis Information Resource (TAIR)", "12519987"),
         PSB_Arabidopsis_thaliana("PSB Arabidopsis thaliana", null), Drosophile("Drosophile", null), Flybase("Flybase", null), NCBI("NCBI Reference Sequences (RefSeq)", "22121212"),
         M_Tuberculosis("TBDatabase (TBDB)", "18835847"), H_Invitation("H_Invitation", null), Halobacterium("Halobacterium", null), H_Influenza("H_Influenza", null),
         C_Trachomatis("C_Trachomatis", null), GenomeTranslation("Genome Translation", null), Listeria("Listeria", null), GAFFA("GAFFA", null),
@@ -660,9 +660,32 @@ public class Header implements Cloneable, Serializable {
 
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
+                }  else if (aFASTAHeader.matches("^en\\|[^|]*\\|.*")) {
+                        // Ensembl Genomes header
+                        // Is formatted something like this:
+                        //  >en|CCF76815|pCol1B9_SL1344:3971-4420 conserved hypothetical plasmid protein
+                        String tempHeader = aFASTAHeader.substring(3);
+                        result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
+                        // See if there is location information.
+                        if (result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
+                            int openBracket = result.iAccession.indexOf("(");
+                            result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf(" ", openBracket)).trim());
+                            result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                            result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                        } else if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                            int openBracket = result.iAccession.indexOf("(");
+                            result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
+                            result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
+                            result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                        }
+                        result.databaseType = DatabaseType.EnsemblGenomes;
+                        result.iID = "en";
+                        result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+
+                        // try to get the gene name and taxonomy
+                        parseUniProtDescription(result);
 
                 } else if (aFASTAHeader.startsWith("nxp|NX_") && aFASTAHeader.split("\\|").length == 5) { // @TODO: replace by regular expression?
-
                     // header should look like this:
                     // >nxp|NX_P02768-1|ALB|Serum albumin|Iso 1
                     result.databaseType = DatabaseType.NextProt;
@@ -1168,7 +1191,8 @@ public class Header implements Cloneable, Serializable {
                 if (this.databaseType == DatabaseType.UniProt
                         || this.databaseType == DatabaseType.IPI
                         || this.databaseType == DatabaseType.Listeria
-                        || this.databaseType == DatabaseType.NextProt) {
+                        || this.databaseType == DatabaseType.NextProt
+                        || this.databaseType == DatabaseType.EnsemblGenomes) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|").append(this.iDescription);
                 } else if (this.databaseType == DatabaseType.NCBI) {
@@ -1281,6 +1305,8 @@ public class Header implements Cloneable, Serializable {
             } else {
                 score = 1;
             }
+        } else if (this.iID.equalsIgnoreCase("en")) {
+            score = 3;
         }
         return score;
     }

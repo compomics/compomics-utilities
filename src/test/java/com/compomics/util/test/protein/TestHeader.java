@@ -74,6 +74,7 @@ public class TestHeader extends TestCase {
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
+        final String ensemblGenomes = ">en|CBW20588|Chromosome:4847047-4849455 fimbrial usher protein";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
         final String nextProt = ">nxp|NX_P02768-1|ALB|Serum albumin|Iso 1";
         final String uniRef = ">UniRef100_U3PVA8 Protein IroK n=22 Tax=Escherichia coli RepID=IROK_ECOL";
@@ -332,6 +333,16 @@ public class TestHeader extends TestCase {
         Assert.assertTrue(h.getForeignID() == null);
         Assert.assertTrue(h.getRest() == null);
 
+        // Ensembl Genomes FASTA header.
+        h = Header.parseFromFASTA(ensemblGenomes);
+        Assert.assertEquals("en", h.getID());
+        Assert.assertEquals("CBW20588", h.getAccession());
+        Assert.assertEquals("Chromosome:4847047-4849455 fimbrial usher protein", h.getDescription());
+        Assert.assertTrue(h.getForeignAccession() == null);
+        Assert.assertTrue(h.getForeignDescription() == null);
+        Assert.assertTrue(h.getForeignID() == null);
+        Assert.assertTrue(h.getRest() == null);
+
         // Flybase header.
         h = Header.parseFromFASTA(flybase);
         Assert.assertEquals("", h.getID());
@@ -439,6 +450,7 @@ public class TestHeader extends TestCase {
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
+        final String ensemblGenomes = ">en|CBW20588|Chromosome:4847047-4849455 fimbrial usher protein";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
 
         Assert.assertEquals(0, Header.parseFromFASTA(unknown).getScore());
@@ -465,6 +477,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(0, Header.parseFromFASTA(generic).getScore());
         Assert.assertEquals(4, Header.parseFromFASTA(spSep2008).getScore());
         Assert.assertEquals(2, Header.parseFromFASTA(trSep2008).getScore());
+        Assert.assertEquals(3, Header.parseFromFASTA(ensemblGenomes).getScore());
         Assert.assertEquals(0, Header.parseFromFASTA(flybase).getScore());
     }
 
@@ -493,6 +506,7 @@ public class TestHeader extends TestCase {
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
+        final String ensemblGenomes = ">en|CBW20588|Chromosome:4847047-4849455 fimbrial usher protein";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
 
         Assert.assertEquals(unknown.substring(1), Header.parseFromFASTA(unknown).getCoreHeader());
@@ -516,6 +530,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals("L. monocytogenes EGD-e|LMO02333", Header.parseFromFASTA(listeria).getCoreHeader());
         Assert.assertEquals("sp|A7GKH8", Header.parseFromFASTA(spSep2008).getCoreHeader());
         Assert.assertEquals("tr|Q8KFF3", Header.parseFromFASTA(trSep2008).getCoreHeader());
+        Assert.assertEquals("en|CBW20588", Header.parseFromFASTA(ensemblGenomes).getCoreHeader());
         Assert.assertEquals("FBpp0071678", Header.parseFromFASTA(flybase).getCoreHeader());
     }
 
@@ -543,6 +558,7 @@ public class TestHeader extends TestCase {
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
+        final String ensemblGenomes = ">en|CBW20588|Chromosome:4847047-4849455 fimbrial usher protein";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
 
         // First the absence of addenda.
@@ -566,7 +582,8 @@ public class TestHeader extends TestCase {
         Header h17 = Header.parseFromFASTA(listeria);
         Header h18 = Header.parseFromFASTA(spSep2008);
         Header h19 = Header.parseFromFASTA(trSep2008);
-        Header h20 = Header.parseFromFASTA(flybase);
+        Header h20 = Header.parseFromFASTA(ensemblGenomes);
+        Header h21 = Header.parseFromFASTA(flybase);
 
         Assert.assertFalse(h1.hasAddenda());
         Assert.assertFalse(h2.hasAddenda());
@@ -589,6 +606,7 @@ public class TestHeader extends TestCase {
         Assert.assertFalse(h18.hasAddenda());
         Assert.assertFalse(h19.hasAddenda());
         Assert.assertFalse(h20.hasAddenda());
+        Assert.assertFalse(h21.hasAddenda());
 
         Assert.assertTrue(h1.getAddenda() == null);
         Assert.assertTrue(h2.getAddenda() == null);
@@ -612,6 +630,7 @@ public class TestHeader extends TestCase {
         Assert.assertTrue(h18.getAddenda() == null);
         Assert.assertTrue(h19.getAddenda() == null);
         Assert.assertTrue(h20.getAddenda() == null);
+        Assert.assertTrue(h21.getAddenda() == null);
 
         Assert.assertEquals(h1.toString(), h1.getFullHeaderWithAddenda());
         Assert.assertEquals(h2.toString(), h2.getFullHeaderWithAddenda());
@@ -634,6 +653,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(h18.toString(), h18.getFullHeaderWithAddenda());
         Assert.assertEquals(h19.toString(), h19.getFullHeaderWithAddenda());
         Assert.assertEquals(h20.toString(), h20.getFullHeaderWithAddenda());
+        Assert.assertEquals(h21.toString(), h21.getFullHeaderWithAddenda());
 
         Assert.assertEquals(h1.getAbbreviatedFASTAHeader(), h1.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h2.getAbbreviatedFASTAHeader(), h2.getAbbreviatedFASTAHeaderWithAddenda());
@@ -656,6 +676,7 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(h18.getAbbreviatedFASTAHeader(), h18.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h19.getAbbreviatedFASTAHeader(), h19.getAbbreviatedFASTAHeaderWithAddenda());
         Assert.assertEquals(h20.getAbbreviatedFASTAHeader(), h20.getAbbreviatedFASTAHeaderWithAddenda());
+        Assert.assertEquals(h21.getAbbreviatedFASTAHeader(), h21.getAbbreviatedFASTAHeaderWithAddenda());
 
         // Next add some addenda.
         h2.addAddendum(h3.getCoreHeader());
@@ -759,6 +780,10 @@ public class TestHeader extends TestCase {
         Assert.assertTrue(h20.hasAddenda());
         Assert.assertEquals(h20.toString() + "^A" + h3.getCoreHeader() + "^A" + h20.getCoreHeader(), h20.getFullHeaderWithAddenda());
 
+        h21.addAddendum(h3.getCoreHeader());
+        h21.addAddendum(h21.getCoreHeader());
+        Assert.assertTrue(h21.hasAddenda());
+        Assert.assertEquals(h21.toString() + "^A" + h3.getCoreHeader() + "^A" + h21.getCoreHeader(), h21.getFullHeaderWithAddenda());
 
 
         // Now see if we parse addenda from a FASTA header with addenda correctly.
@@ -1050,6 +1075,21 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(h20.getRest(), parsed.getRest());
         Assert.assertEquals(h20.getScore(), parsed.getScore());
         Assert.assertEquals(h20.getStartLocation(), parsed.getStartLocation());
+
+        parsed = Header.parseFromFASTA(h21.getFullHeaderWithAddenda());
+        Assert.assertEquals(h21.getAddenda(), parsed.getAddenda());
+        Assert.assertEquals(h21.getAccession(), parsed.getAccession());
+        Assert.assertEquals(h21.getCoreHeader(), parsed.getCoreHeader());
+        Assert.assertEquals(h21.getEndLocation(), parsed.getEndLocation());
+        Assert.assertEquals(h21.getStartLocation(), parsed.getStartLocation());
+        Assert.assertEquals(h21.getForeignAccession(), parsed.getForeignAccession());
+        Assert.assertEquals(h21.getForeignDescription(), parsed.getForeignDescription());
+        Assert.assertEquals(h21.getForeignID(), parsed.getForeignID());
+        Assert.assertEquals(h21.getID(), parsed.getID());
+        Assert.assertEquals(h21.getRest(), parsed.getRest());
+        Assert.assertEquals(h21.getDescription(), parsed.getDescription());
+        Assert.assertEquals(h21.getScore(), parsed.getScore());
+        Assert.assertEquals(h21.getStartLocation(), parsed.getStartLocation());
     }
 
     /**
@@ -1076,6 +1116,7 @@ public class TestHeader extends TestCase {
         final String listeria = ">L. monocytogenes EGD-e|LMO02333|'comK: 158 aa - competence transcription factor (C-terminal part)";
         final String spSep2008 = ">sp|A7GKH8|PURL_BACCN Phosphoribosylformylglycinamidine synthase 2 OS=Bacillus cereus subsp. cytotoxis (strain NVH 391-98) GN=purL PE=3 SV=1";
         final String trSep2008 = ">tr|Q8KFF3|Q8KFF3_CHLTE SugE protein OS=Chlorobium tepidum GN=sugE PE=3 SV=1";
+        final String ensemblGenomes = ">en|CBW20588|Chromosome:4847047-4849455 fimbrial usher protein";
         final String flybase = ">FBpp0071678 type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;";
 
 
@@ -1100,7 +1141,8 @@ public class TestHeader extends TestCase {
         Header h17 = Header.parseFromFASTA(listeria);
         Header h18 = Header.parseFromFASTA(spSep2008);
         Header h19 = Header.parseFromFASTA(trSep2008);
-        Header h20 = Header.parseFromFASTA(flybase);
+        Header h20 = Header.parseFromFASTA(ensemblGenomes);
+        Header h21 = Header.parseFromFASTA(flybase);
 
         h1.setLocation(10, 15);
         Assert.assertEquals("Unknown header type. (10-15)", h1.getCoreHeader());
@@ -1251,11 +1293,18 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(49, h19.getEndLocation());
 
         h20.setLocation(42, 49);
-        Assert.assertEquals("FBpp0071678 (42-49)", h20.getCoreHeader());
-        Assert.assertEquals(">FBpp0071678 (42-49) type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;", h20.getAbbreviatedFASTAHeader());
-        Assert.assertEquals(">FBpp0071678 (42-49) type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;", h20.toString());
+        Assert.assertEquals("en|CBW20588 (42-49)", h20.getCoreHeader());
+        Assert.assertEquals(">en|CBW20588 (42-49)|Chromosome:4847047-4849455 fimbrial usher protein", h20.getAbbreviatedFASTAHeader());
+        Assert.assertEquals(">en|CBW20588 (42-49)|Chromosome:4847047-4849455 fimbrial usher protein", h20.toString());
         Assert.assertEquals(42, h20.getStartLocation());
         Assert.assertEquals(49, h20.getEndLocation());
+
+        h21.setLocation(42, 49);
+        Assert.assertEquals("FBpp0071678 (42-49)", h21.getCoreHeader());
+        Assert.assertEquals(">FBpp0071678 (42-49) type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;", h21.getAbbreviatedFASTAHeader());
+        Assert.assertEquals(">FBpp0071678 (42-49) type=protein; loc=2R:join(18050425..18051199,18052282..18052494,18056749..18058222,18058283..18059490,18059587..18059757,18059821..18059938,18060002..18060032); ID=FBpp0071678; name=a-PB; parent=FBgn0000008,FBtr0071764; dbxref=FlyBase_Annotation_IDs:CG6741-PB,FlyBase:FBpp0071678,GB_protein:AAF46809.2,GB_protein:AAF46809,REFSEQ:NP_524641; MD5=9eb6e9e4c12ec62fdeb31cca5b0683b6; length=1329; release=r5.13; species=Dmel;", h21.toString());
+        Assert.assertEquals(42, h21.getStartLocation());
+        Assert.assertEquals(49, h21.getEndLocation());
 
 
         // Finally, test the creation of a header with location information present.
@@ -1375,11 +1424,17 @@ public class TestHeader extends TestCase {
         Assert.assertEquals(h19.getEndLocation(), h5.getEndLocation());
         Assert.assertEquals(h19.toString(), h5.toString());
 
-        // Next Flybase
+        // Next Ensembl Genomes
         h5 = Header.parseFromFASTA(h20.toString());
         Assert.assertEquals(h20.getStartLocation(), h5.getStartLocation());
         Assert.assertEquals(h20.getEndLocation(), h5.getEndLocation());
         Assert.assertEquals(h20.toString(), h5.toString());
+
+        // Next Flybase
+        h5 = Header.parseFromFASTA(h21.toString());
+        Assert.assertEquals(h21.getStartLocation(), h5.getStartLocation());
+        Assert.assertEquals(h21.getEndLocation(), h5.getEndLocation());
+        Assert.assertEquals(h21.toString(), h5.toString());
 
 
         // Now make it harder: insert '()' somewhere.

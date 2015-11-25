@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.biology.genes.ensembl;
 
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
+
 /**
  * Class for the handling of Ensembl versions.
  *
@@ -11,17 +13,14 @@ public class EnsemblVersion {
     /**
      * Returns the current Ensembl version number. Null if not found.
      *
-     * @param ensemblType the Ensembl type, e.g., ensembl or plants
+     * @param ensemblGenomeDivision the Ensembl genome division, null if not Ensembl genome
      * 
      * @return the current Ensembl version number
      */
-    public static Integer getCurrentEnsemblVersion(String ensemblType) {
+    public static Integer getCurrentEnsemblVersion(EnsemblGenomeDivision ensemblGenomeDivision) {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
-        if (ensemblType.equalsIgnoreCase("fungi")
-                || ensemblType.equalsIgnoreCase("plants")
-                || ensemblType.equalsIgnoreCase("protists")
-                || ensemblType.equalsIgnoreCase("metazoa")) {
+        if (ensemblGenomeDivision != null) {
             return 29;
         } else {
             return 82;
@@ -70,27 +69,28 @@ public class EnsemblVersion {
     }
 
     /**
-     * Returns the name of the Ensembl database for BioMart queries.
+     * Returns the name of the Ensembl schema for BioMart queries.
      *
-     * @param speciesTypeIndex the species type index: 1: fungi, 2: plants, 3:
-     * protist, 4: metazoa or 5: default.
-     * @return the name of the Ensembl database for BioMart queries
+     * @param ensemblGenomeDivision the Ensembl genome division
+     * 
+     * @return the name of the Ensembl schema for BioMart queries
      */
-    public static String getEnsemblDbName(int speciesTypeIndex) {
+    public static String getEnsemblSchemaName(EnsemblGenomeDivision ensemblGenomeDivision) {
 
-        switch (speciesTypeIndex) {
-            case 1:
-                return "fungi_mart_" + getCurrentEnsemblVersion("fungi");
-            case 2:
-                return "plants_mart_" + getCurrentEnsemblVersion("plants");
-            case 3:
-                return "protists_mart_" + getCurrentEnsemblVersion("protists");
-            case 4:
-                return "metazoa_mart_" + getCurrentEnsemblVersion("metazoa");
-            case 5:
+        if (ensemblGenomeDivision == null) {
+            return "default";
+        }
+        switch (ensemblGenomeDivision) {
+            case fungi:
+                return "fungi_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+            case plants:
+                return "plants_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+            case protists:
+                return "protists_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+            case metazoa:
+                return "metazoa_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+            default:
                 return "default";
         }
-
-        return "unknown"; // should not happen!!!
     }
 }

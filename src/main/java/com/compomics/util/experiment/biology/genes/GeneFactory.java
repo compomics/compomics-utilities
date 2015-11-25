@@ -4,9 +4,8 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotSpecies;
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
@@ -62,10 +61,6 @@ public class GeneFactory {
      */
     private static final String GO_DOMAINS = "go_domains";
     /**
-     * The name of the species file.
-     */
-    private static final String ENSEMBL_SPECIES_FILENAME = "species";
-    /**
      * The suffix to use for files containing gene mappings.
      */
     public final static String GENE_MAPPING_FILE_SUFFIX = "_gene_mappings";
@@ -73,10 +68,6 @@ public class GeneFactory {
      * The suffix to use for files containing GO mappings.
      */
     public final static String GO_MAPPING_FILE_SUFFIX = "_go_mappings";
-    /**
-     * The Ensembl species mapping.
-     */
-    private EnsemblSpecies ensemblSpecies;
     /**
      * The Ensembl versions for each species.
      */
@@ -101,7 +92,8 @@ public class GeneFactory {
     }
 
     /**
-     * Initializes the factory.
+     * Initializes the factory. Note: the species factory must be initialized
+     * first.
      *
      * @param jarFilePath the path to the jar file
      *
@@ -116,28 +108,18 @@ public class GeneFactory {
             loadEnsemblSpeciesVersions(ensemblVersionsFile);
         }
 
-        ensemblSpecies = new EnsemblSpecies();
-        File speciesFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_SPECIES_FILENAME);
-        ensemblSpecies.loadMapping(speciesFile);
-
         createDefaultGeneMappingFiles(
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_VERSIONS),
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + GO_DOMAINS),
-                new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_SPECIES_FILENAME),
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + "hsapiens_gene_ensembl_go_mappings"),
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + "hsapiens_gene_ensembl_gene_mappings"),
                 true);
-
-        ensemblSpecies = new EnsemblSpecies();
-        speciesFile = new File(GENE_MAPPING_FOLDER, ENSEMBL_SPECIES_FILENAME);
-        ensemblSpecies.loadMapping(speciesFile);
     }
 
     /**
      * Returns the gene maps for the fasta file loaded in the factory.
      *
      * @param genePreferences the gene preferences
-     * @param uniprotSpecies a Uniprot species to utilities map
      * @param waitingHandler waiting handler displaying progress for the
      * download and allowing canceling of the progress.
      *
@@ -146,8 +128,9 @@ public class GeneFactory {
      * @throws java.io.IOException thrown whenever an error occurs while
      * iterating the proteins in the fasta database.
      */
-    public GeneMaps getGeneMaps(GenePreferences genePreferences, UniprotSpecies uniprotSpecies, WaitingHandler waitingHandler) throws IOException {
+    public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException {
 
+        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
         HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
@@ -159,64 +142,61 @@ public class GeneFactory {
 
             if (!uniprotTaxonomy.equals(SpeciesFactory.unknown)) {
 
-                String speciesName = null;
-                if (uniprotSpecies != null) {
-                    speciesName = uniprotSpecies.getUtilitiesName(uniprotTaxonomy);
-                }
-                if (speciesName == null) {
-                    speciesName = uniprotTaxonomy;
-                }
+                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy);
 
-                String ensemblDbName = ensemblSpecies.getDatabaseName(speciesName);
+                if (taxon != null) {
 
-                if (ensemblDbName != null) {
-                    File geneMappingFile = getGeneMappingFile(ensemblDbName);
-                    File goMappingFile = getGoMappingFile(ensemblDbName);
+                    String speciesName = speciesFactory.getName(taxon);
+                    String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
 
-                    if (genePreferences.getAutoUpdate()) {
-                        boolean success = true;
-                        try {
-                            String speciesType = ensemblSpecies.getSpeciesType(speciesName);
-                            if (!geneMappingFile.exists() || !goMappingFile.exists() || newVersionExists(speciesName)) {
-                                success = downloadMappings(waitingHandler, speciesType, speciesName);
+                    if (ensemblDatasetName != null) {
+                        File geneMappingFile = getGeneMappingFile(ensemblDatasetName);
+                        File goMappingFile = getGoMappingFile(ensemblDatasetName);
+
+                        if (genePreferences.getAutoUpdate()) {
+                            boolean success = true;
+                            try {
+                                if (!geneMappingFile.exists() || !goMappingFile.exists() || newVersionExists(taxon)) {
+                                    success = downloadMappings(waitingHandler, taxon);
+                                }
+                                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                                    return null;
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                success = false;
                             }
-                            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                                return null;
+                            if (!success) {
+                                waitingHandler.appendReport("Update of Gene information for species " + speciesName + " failed. A previous version will be used if available.", true, true);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            success = false;
                         }
-                        if (!success) {
-                            waitingHandler.appendReport("Update of Gene information for species " + speciesName + " failed. A previous version will be used if available.", true, true);
-                        }
-                    }
 
-                    if (geneMappingFile.exists()) {
-                        GeneMapping geneMapping = new GeneMapping();
-                        try {
-                            geneMapping.importFromFile(geneMappingFile, waitingHandler);
-                            geneMappings.put(speciesName, geneMapping);
-                        } catch (Exception e) {
-                            waitingHandler.appendReport("Import of the gene mapping for " + speciesName + " failed. Gene information for this species will not be available.", true, true);
+                        if (geneMappingFile.exists()) {
+                            GeneMapping geneMapping = new GeneMapping();
+                            try {
+                                geneMapping.importFromFile(geneMappingFile, waitingHandler);
+                                geneMappings.put(speciesName, geneMapping);
+                            } catch (Exception e) {
+                                waitingHandler.appendReport("Import of the gene mapping for " + speciesName + " failed. Gene information for this species will not be available.", true, true);
+                            }
+                        } else {
+                            waitingHandler.appendReport("Gene mapping for " + speciesName + " not available. Gene information for this species will not be available.", true, true);
+                        }
+
+                        if (goMappingFile.exists()) {
+                            GoMapping goMapping = new GoMapping();
+                            try {
+                                goMapping.laodMappingFromFile(goMappingFile, waitingHandler);
+                                goMappings.put(speciesName, goMapping);
+                            } catch (Exception e) {
+                                waitingHandler.appendReport("Import of the GO mapping for " + speciesName + " failed. GO annotatoin for this species will not be available.", true, true);
+                            }
+                        } else {
+                            waitingHandler.appendReport("GO mapping for " + speciesName + " not available. GO annotatoin for this species will not be available.", true, true);
                         }
                     } else {
-                        waitingHandler.appendReport("Gene mapping for " + speciesName + " not available. Gene information for this species will not be available.", true, true);
+                        waitingHandler.appendReport(speciesName + " not available in Ensembl. Gene and GO annotatoin for this species will not be available.", true, true);
                     }
-
-                    if (goMappingFile.exists()) {
-                        GoMapping goMapping = new GoMapping();
-                        try {
-                            goMapping.laodMappingFromFile(goMappingFile, waitingHandler);
-                            goMappings.put(speciesName, goMapping);
-                        } catch (Exception e) {
-                            waitingHandler.appendReport("Import of the GO mapping for " + speciesName + " failed. GO annotatoin for this species will not be available.", true, true);
-                        }
-                    } else {
-                        waitingHandler.appendReport("GO mapping for " + speciesName + " not available. GO annotatoin for this species will not be available.", true, true);
-                    }
-                } else {
-                    waitingHandler.appendReport(speciesName + " not available in Ensembl. Gene and GO annotatoin for this species will not be available.", true, true);
                 }
             }
         }
@@ -238,52 +218,51 @@ public class GeneFactory {
 
             if (uniprotTaxonomy != null && !uniprotTaxonomy.equals("")) {
 
-                String speciesName = null;
-                if (uniprotSpecies != null) {
-                    speciesName = uniprotSpecies.getUtilitiesName(uniprotTaxonomy);
-                }
-                if (speciesName == null) {
-                    speciesName = uniprotTaxonomy;
-                }
+                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy);
 
-                String geneName = header.getGeneName();
-                if (geneName != null) {
-                    GeneMapping geneMapping = geneMappings.get(speciesName);
-                    if (geneMapping != null) {
-                        String chromosome = geneMapping.getChromosome(geneName);
-                        if (chromosome != null) {
-                            geneNameToChromosomeMap.put(geneName, chromosome);
-                        }
-                        String ensemblId = geneMapping.getEnsemblAccession(geneName);
-                        if (ensemblId != null) {
-                            geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                if (taxon != null) {
+
+                    String speciesName = speciesFactory.getName(taxon);
+
+                    String geneName = header.getGeneName();
+                    if (geneName != null) {
+                        GeneMapping geneMapping = geneMappings.get(speciesName);
+                        if (geneMapping != null) {
+                            String chromosome = geneMapping.getChromosome(geneName);
+                            if (chromosome != null) {
+                                geneNameToChromosomeMap.put(geneName, chromosome);
+                            }
+                            String ensemblId = geneMapping.getEnsemblAccession(geneName);
+                            if (ensemblId != null) {
+                                geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                            }
                         }
                     }
-                }
 
-                GoMapping goMapping = goMappings.get(speciesName);
-                if (goMapping != null) {
-                    String accession = header.getAccession();
-                    HashSet<String> goTerms = proteinToGoMap.get(accession);
-                    if (goTerms == null) {
-                        goTerms = new HashSet<String>();
-                        proteinToGoMap.put(accession, goTerms);
-                    }
-                    HashSet<String> newTerms = goMapping.getGoAccessions(accession);
-                    if (newTerms != null) {
-                        goTerms.addAll(newTerms);
-                        for (String goTerm : newTerms) {
-                            String goName = goMapping.getTermName(goTerm);
-                            if (goName != null) {
-                                goNamesMap.put(goTerm, goName);
-                            }
+                    GoMapping goMapping = goMappings.get(speciesName);
+                    if (goMapping != null) {
+                        String accession = header.getAccession();
+                        HashSet<String> goTerms = proteinToGoMap.get(accession);
+                        if (goTerms == null) {
+                            goTerms = new HashSet<String>();
+                            proteinToGoMap.put(accession, goTerms);
+                        }
+                        HashSet<String> newTerms = goMapping.getGoAccessions(accession);
+                        if (newTerms != null) {
+                            goTerms.addAll(newTerms);
+                            for (String goTerm : newTerms) {
+                                String goName = goMapping.getTermName(goTerm);
+                                if (goName != null) {
+                                    goNamesMap.put(goTerm, goName);
+                                }
 
-                            HashSet<String> proteins = goToProteinMap.get(goTerm);
-                            if (proteins == null) {
-                                proteins = new HashSet<String>();
-                                goToProteinMap.put(goTerm, proteins);
+                                HashSet<String> proteins = goToProteinMap.get(goTerm);
+                                if (proteins == null) {
+                                    proteins = new HashSet<String>();
+                                    goToProteinMap.put(goTerm, proteins);
+                                }
+                                proteins.add(accession);
                             }
-                            proteins.add(accession);
                         }
                     }
                 }
@@ -542,7 +521,7 @@ public class GeneFactory {
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
-     * @param ensemblDbName the Ensembl database name of the selected species
+     * @param ensemblDatasetName the Ensembl dataset name of the selected species
      * @param ensemblVersion the Ensembl version
      * @param waitingHandler the waiting handler
      *
@@ -550,7 +529,7 @@ public class GeneFactory {
      * @throws IOException if an IOException occurs
      * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String ensemblDbName, String ensemblVersion,
+    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String ensemblDatasetName, String ensemblVersion,
             WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // fix needed to support both default and custom ensembl species
@@ -565,7 +544,7 @@ public class GeneFactory {
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
-                + "<Dataset name = \"" + ensemblDbName + "\" interface = \"default\" >"
+                + "<Dataset name = \"" + ensemblDatasetName + "\" interface = \"default\" >"
                 + "<Attribute name = \"ensembl_gene_id\" />"
                 + externalReference
                 + "<Attribute name = \"chromosome_name\" />"
@@ -593,7 +572,7 @@ public class GeneFactory {
 
                     int counter = 0;
 
-                    File tempFile = getGeneMappingFile(ensemblDbName);
+                    File tempFile = getGeneMappingFile(ensemblDatasetName);
                     boolean fileCreated = tempFile.createNewFile();
 
                     if (fileCreated) {
@@ -629,7 +608,7 @@ public class GeneFactory {
                         }
 
                         if (!waitingHandler.isRunCanceled()) {
-                            updateEnsemblVersion(ensemblDbName, "Ensembl " + ensemblVersion);
+                            updateEnsemblVersion(ensemblDatasetName, "Ensembl " + ensemblVersion);
                         }
 
                     } else {
@@ -662,20 +641,19 @@ public class GeneFactory {
     }
 
     /**
-     * Copies teh given gene mapping files to the gene mappings folder. If newer
+     * Copies the given gene mapping files to the gene mappings folder. If newer
      * versions of the mapping exists they will be overwritten according to
      * updateEqualVersion.
      *
      * @param aEnsemblVersionsFile the Ensembl versions file
      * @param aGoDomainsFile the GO domains file
-     * @param aSpeciesFile the species file
      * @param aDefaultSpeciesGoMappingsFile the default species GO mappings file
      * @param aDefaultSpeciesGeneMappingFile the default species gene mappings
      * file
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
      */
-    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile, File aSpeciesFile,
+    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile,
             File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile, boolean updateEqualVersion) {
 
         if (!getGeneMappingFolder().exists()) {
@@ -686,24 +664,10 @@ public class GeneFactory {
             }
         }
 
-        File speciesFile = getSpeciesFile();
         File ensemblVersionsFile = getEnsemblVersionsFile();
         File goDomainsFile = getGoDomainsFile();
         File defaultSpeciesGoMappingsFile = new File(getGeneMappingFolder(), aDefaultSpeciesGoMappingsFile.getName());
         File defaultSpeciesGeneMappingFile = new File(getGeneMappingFolder(), aDefaultSpeciesGeneMappingFile.getName());
-
-        try {
-            if (!speciesFile.exists()) {
-                boolean fileCreated = speciesFile.createNewFile();
-                if (!fileCreated) {
-                    throw new IllegalArgumentException("Could not create the species file!");
-                }
-            }
-            Util.copyFile(aSpeciesFile, speciesFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Could not create the species file!");
-        }
 
         boolean updateHumanEnsembl = false;
 
@@ -789,18 +753,18 @@ public class GeneFactory {
      * Update the Ensembl version for the given species in the local map and in
      * the Ensembl versions file.
      *
-     * @param databaseName the database name of the species to update, e.g.,
+     * @param ensemblDatasetName the dataset name of the species to update, e.g.,
      * hsapiens_gene_ensembl
      * @param ensemblVersion the new Ensembl version
      *
      * @throws IOException if an IOException occurs
      */
-    public void updateEnsemblVersion(String databaseName, String ensemblVersion) throws IOException {
+    public void updateEnsemblVersion(String ensemblDatasetName, String ensemblVersion) throws IOException {
 
         if (ensemblVersionsMap == null) {
             ensemblVersionsMap = new HashMap<String, String>();
         }
-        ensemblVersionsMap.put(databaseName, ensemblVersion);
+        ensemblVersionsMap.put(ensemblDatasetName, ensemblVersion);
 
         FileWriter w = new FileWriter(getEnsemblVersionsFile());
         try {
@@ -913,46 +877,50 @@ public class GeneFactory {
      * species.
      *
      * @param waitingHandler the waiting handler
-     * @param currentEnsemblSpeciesType the species type
-     * @param selectedSpecies the species
+     * @param taxon the NCBI taxon of the species
      *
      * @return true if the download was successful
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
      * while reading the mapping files
      */
-    public boolean downloadMappings(WaitingHandler waitingHandler, String currentEnsemblSpeciesType, String selectedSpecies) throws IOException {
+    public boolean downloadMappings(WaitingHandler waitingHandler, Integer taxon) throws IOException {
 
-        if (waitingHandler.isReport()) {
-            waitingHandler.appendReport("Downloading GO and gene mappings for species " + selectedSpecies + ".", true, true);
+        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+
+        String latinName = speciesFactory.getLatinName(taxon);
+        if (latinName == null) {
+            latinName = taxon.toString();
         }
 
-        String selectedDb = ensemblSpecies.getDatabaseName(selectedSpecies);
+        if (waitingHandler.isReport()) {
+            waitingHandler.appendReport("Downloading GO and gene mappings for species " + latinName + ".", true, true);
+        }
+
+        EnsemblGenomeDivision ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(taxon);
+
         String ensemblType = "ensembl";
+        if (ensemblGenomeDivision != null) {
+            ensemblType = ensemblGenomeDivision.ensemblType;
+        }
 
-        int speciesTypeIndex = 5;
+        String schemaName = EnsemblVersion.getEnsemblSchemaName(ensemblGenomeDivision);
+        if (schemaName == null) {
+            return false;
+        }
 
-        if (currentEnsemblSpeciesType.equalsIgnoreCase("fungi")) {
-            speciesTypeIndex = 1;
-            ensemblType = "fungi";
-        } else if (currentEnsemblSpeciesType.equalsIgnoreCase("plants")) {
-            speciesTypeIndex = 2;
-            ensemblType = "plants";
-        } else if (currentEnsemblSpeciesType.equalsIgnoreCase("protists")) {
-            speciesTypeIndex = 3;
-            ensemblType = "protists";
-        } else if (currentEnsemblSpeciesType.equalsIgnoreCase("metazoa")) {
-            speciesTypeIndex = 4;
-            ensemblType = "metazoa";
+        String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
+        if (ensemblDatasetName == null) {
+            return false;
         }
 
         if (!waitingHandler.isRunCanceled()) {
 
-            boolean goMappingsDownloaded = downloadGoMappings(ensemblType, EnsemblVersion.getEnsemblDbName(speciesTypeIndex), selectedDb, true, waitingHandler);
+            boolean goMappingsDownloaded = downloadGoMappings(ensemblType, schemaName, ensemblDatasetName, true, waitingHandler);
 
             // swiss prot mapping not found, try trembl
             if (!goMappingsDownloaded) {
-                goMappingsDownloaded = downloadGoMappings(ensemblType, EnsemblVersion.getEnsemblDbName(speciesTypeIndex), selectedDb, false, waitingHandler);
+                goMappingsDownloaded = downloadGoMappings(ensemblType, schemaName, ensemblDatasetName, false, waitingHandler);
             }
 
             if (!goMappingsDownloaded) {
@@ -965,8 +933,8 @@ public class GeneFactory {
             }
         }
         if (!waitingHandler.isRunCanceled()) {
-            downloadGeneMappings(ensemblType, EnsemblVersion.getEnsemblDbName(speciesTypeIndex), selectedDb,
-                    EnsemblVersion.getCurrentEnsemblVersion(ensemblType).toString(), waitingHandler);
+            downloadGeneMappings(ensemblType, schemaName, ensemblDatasetName,
+                    EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision).toString(), waitingHandler);
 
             if (!waitingHandler.isRunCanceled()) {
                 waitingHandler.setWaitingText("Gene Mappings Downloaded.");
@@ -983,22 +951,23 @@ public class GeneFactory {
     /**
      * Returns the gene mapping file.
      *
-     * @param ensemblDatabaseName the species name
+     * @param ensemblDatasetName the Ensembl dataset name
      *
      * @return the gene mapping file
      */
-    public static File getGeneMappingFile(String ensemblDatabaseName) {
-        return new File(getGeneMappingFolder(), ensemblDatabaseName + GENE_MAPPING_FILE_SUFFIX);
+    public static File getGeneMappingFile(String ensemblDatasetName) {
+        return new File(getGeneMappingFolder(), ensemblDatasetName + GENE_MAPPING_FILE_SUFFIX);
     }
 
     /**
      * Returns the GO mapping file.
      *
-     * @param ensemblDatabaseName the species name
+     * @param ensemblDatasetName the Ensembl dataset name
+     * 
      * @return the GO mapping file
      */
-    public static File getGoMappingFile(String ensemblDatabaseName) {
-        return new File(getGeneMappingFolder(), ensemblDatabaseName + GO_MAPPING_FILE_SUFFIX);
+    public static File getGoMappingFile(String ensemblDatasetName) {
+        return new File(getGeneMappingFolder(), ensemblDatasetName + GO_MAPPING_FILE_SUFFIX);
     }
 
     /**
@@ -1011,15 +980,6 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the species file.
-     *
-     * @return the species file
-     */
-    public static File getSpeciesFile() {
-        return new File(getGeneMappingFolder(), ENSEMBL_SPECIES_FILENAME);
-    }
-
-    /**
      * Returns the GO domains file.
      *
      * @return the GO domains file
@@ -1029,42 +989,35 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the Ensembl species.
-     *
-     * @return the Ensembl species
-     */
-    public EnsemblSpecies getEnsemblSpecies() {
-        return ensemblSpecies;
-    }
-
-    /**
      * Returns the Ensembl version for a given species.
      *
-     * @param speciesName the species of interest
+     * @param taxon the NCBI taxon of the species
      *
      * @return the Ensembl version for a given species.
      */
-    public String getEnsemblVersion(String speciesName) {
-        String selectedDb = ensemblSpecies.getDatabaseName(speciesName);
+    public String getEnsemblVersion(Integer taxon) {
+        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+        String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
         if (ensemblVersionsMap == null) {
             return null;
         }
-        return ensemblVersionsMap.get(selectedDb);
+        return ensemblVersionsMap.get(ensemblDatasetName);
 
     }
 
     /**
      * Returns true if a newer version of the species mapping exists in Ensembl.
      *
-     * @param speciesName the name of the species of interest
+     * @param taxon the NCBI taxon of the species
      *
      * @return rue if a newer version of the species mapping exists in Ensemble
      */
-    public boolean newVersionExists(String speciesName) {
+    public boolean newVersionExists(Integer taxon) {
 
-        String ensemblType = ensemblSpecies.getSpeciesType(speciesName);
-        Integer latestEnsemblVersion = EnsemblVersion.getCurrentEnsemblVersion(ensemblType);
-        String currentEnsemblVersionAsString = getEnsemblVersion(speciesName);
+        EnsemblGenomeDivision ensemblGenomeDivision = SpeciesFactory.getInstance().getEnsemblGenomesSpecies().getDivision(taxon);
+
+        Integer latestEnsemblVersion = EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision);
+        String currentEnsemblVersionAsString = getEnsemblVersion(taxon);
 
         if (currentEnsemblVersionAsString != null) {
 

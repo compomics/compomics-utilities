@@ -4,7 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotSpecies;
+import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotTaxonomy;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;

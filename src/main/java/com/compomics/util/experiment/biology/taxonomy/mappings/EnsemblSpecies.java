@@ -4,12 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
- * This class provides information about the species mapping in Ensembl.
+ * Mapping of the Ensembl species.
  *
  * @author Marc Vaudel
  */
@@ -18,62 +17,32 @@ public class EnsemblSpecies {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String separator = "\",\"";
     /**
-     * Species Latin name to type map.
+     * NCBI ID to scientific name.
      */
-    private HashMap<String, String> speciesToTypeMap;
+    private HashMap<Integer, String> idToNameMap;
     /**
-     * Species type to Latin name map.
+     * NCBI ID to common name.
      */
-    private HashMap<String, ArrayList<String>> typeToSpeciesMap;
+    private HashMap<Integer, String> idToCommonNameMap;
     /**
-     * Species Latin name to type map.
+     * NCBI ID to Ensembl assembly.
      */
-    private HashMap<String, String> speciesToDatabaseMap;
+    private HashMap<Integer, String> idToAssemblyMap;
 
     /**
      * Constructor.
      */
     public EnsemblSpecies() {
-
+        idToNameMap = new HashMap<Integer, String>();
+        idToCommonNameMap = new HashMap<Integer, String>();
+        idToAssemblyMap = new HashMap<Integer, String>();
     }
 
     /**
-     * Returns the species for the given type as Latin names.
-     *
-     * @param speciesType the Ensembl species type
-     *
-     * @return the list of species for the given type
-     */
-    public ArrayList<String> getSpecies(String speciesType) {
-        return typeToSpeciesMap.get(speciesType);
-    }
-
-    /**
-     * Returns the Ensembl species type for the given species.
-     *
-     * @param speciesName the Latin name of the species of interest
-     *
-     * @return the Ensembl species type
-     */
-    public String getSpeciesType(String speciesName) {
-        return speciesToTypeMap.get(speciesName);
-    }
-
-    /**
-     * Returns the database name corresponding to the given species.
-     *
-     * @param speciesName the Latin name of the species of interest
-     *
-     * @return the Ensembl database name
-     */
-    public String getDatabaseName(String speciesName) {
-        return speciesToDatabaseMap.get(speciesName);
-    }
-
-    /**
-     * Loads the species mapping from a file.
+     * Loads the species mapping from a file. Previous mapping will be
+     * overwritten.
      *
      * @param speciesFile the species file
      *
@@ -82,10 +51,6 @@ public class EnsemblSpecies {
      */
     public void loadMapping(File speciesFile) throws IOException {
 
-        speciesToDatabaseMap = new HashMap<String, String>();
-        speciesToTypeMap = new HashMap<String, String>();
-        typeToSpeciesMap = new HashMap<String, ArrayList<String>>();
-        
         // read the species list
         FileReader r = new FileReader(speciesFile);
         try {
@@ -93,7 +58,6 @@ public class EnsemblSpecies {
             try {
 
                 String line = br.readLine();
-                String currentSpeciesType = line.substring(1);
 
                 while ((line = br.readLine()) != null) {
 
@@ -101,26 +65,26 @@ public class EnsemblSpecies {
 
                     if (line.length() > 0) {
 
-                        if (line.startsWith(">")) {
+                        line = line.substring(1, line.length() - 1);
+                        String[] elements = line.split(separator);
+                        String id = elements[2].trim();
+                        String scientificName = elements[1].trim();
+                        String commonName = elements[0].trim();
+                        String assembly = elements[3].trim();
 
-                            currentSpeciesType = line.substring(1);
-
-                        } else {
-
-                            String[] elements = line.split(separator);
-                            String currentSpeciesLatinName = elements[0].trim();
-                            String currentEnsemblDatabaseName = elements[1].trim();
-
-                            speciesToTypeMap.put(currentSpeciesLatinName, currentSpeciesType);
-                            speciesToDatabaseMap.put(currentSpeciesLatinName, currentEnsemblDatabaseName);
-
-                            ArrayList<String> speciesForType = typeToSpeciesMap.get(currentSpeciesType);
-                            if (speciesForType == null) {
-                                speciesForType = new ArrayList<String>();
-                                typeToSpeciesMap.put(currentSpeciesType, speciesForType);
+                        if (!id.equals("") && !id.equals("-")) {
+                            Integer taxon = new Integer(id);
+                            if (!scientificName.equals("-")) {
+                                idToNameMap.put(taxon, scientificName);
                             }
-                            speciesForType.add(currentSpeciesLatinName);
+                            if (!commonName.equals("-")) {
+                                idToCommonNameMap.put(taxon, commonName);
+                            }
+                            if (!assembly.equals("-")) {
+                                idToAssemblyMap.put(taxon, assembly);
+                            }
                         }
+
                     }
                 }
 
@@ -130,12 +94,47 @@ public class EnsemblSpecies {
         } finally {
             r.close();
         }
-        
-        // Make sure species are always listed in the same order
-        for (ArrayList<String> speciesList : typeToSpeciesMap.values()) {
-            Collections.sort(speciesList);
-        }
-
     }
 
+    /**
+     * Returns the scientific name corresponding to the given NCBI taxon.
+     *
+     * @param id the NCBI taxon
+     *
+     * @return the scientific name
+     */
+    public String getScientificName(Integer id) {
+        return idToNameMap.get(id);
+    }
+
+    /**
+     * Returns the common name corresponding to the given NCBI taxon.
+     *
+     * @param id the NCBI taxon
+     *
+     * @return the common name
+     */
+    public String getCommonName(Integer id) {
+        return idToCommonNameMap.get(id);
+    }
+
+    /**
+     * Returns the Ensembl assembly corresponding to the given NCBI taxon.
+     *
+     * @param id the NCBI taxon
+     *
+     * @return the Ensembl assembly
+     */
+    public String getAssembly(Integer id) {
+        return idToAssemblyMap.get(id);
+    }
+
+    /**
+     * Returns the taxons in this map.
+     *
+     * @return the taxons in this map
+     */
+    public HashSet<Integer> getTaxons() {
+        return new HashSet<Integer>(idToAssemblyMap.keySet());
+    }
 }

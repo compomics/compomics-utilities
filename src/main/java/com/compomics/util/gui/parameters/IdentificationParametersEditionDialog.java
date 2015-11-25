@@ -938,9 +938,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void geneMappingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geneMappingButtonActionPerformed
-        SpeciesDialog speciesDialog = new SpeciesDialog(this, null, true, waitingIcon, normalIcon);
-        // @TODO use a gene preferences dialog
+        SpeciesDialog speciesDialog = new SpeciesDialog(this, null, true, waitingIcon, normalIcon, genePreferences.getSelectedBackgroundSpecies());
+        // @TODO let the user disable use of gene annotation and auto update?
         if (!speciesDialog.isCanceled()) {
+            genePreferences.setSelectedBackgroundSpecies(speciesDialog.getSelectedSpecies());
             updateGUI();
         }
     }//GEN-LAST:event_geneMappingButtonActionPerformed

@@ -1,5 +1,7 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.experiment.biology.genes.GeneFactory;
+import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +26,10 @@ public class GenePreferences implements Serializable {
      * If true the gene mappings will be used.
      */
     private Boolean useGeneMapping;
+    /**
+     * The taxon of the species selected as background for the GO analysis.
+     */
+    private Integer selectedBackgroundSpecies;
 
     /**
      * Create a new GenePreferences object.
@@ -93,6 +99,24 @@ public class GenePreferences implements Serializable {
     public boolean equals(GenePreferences genePreferences) {
         return getAutoUpdate().equals(genePreferences.getAutoUpdate());
     }
+
+    /**
+     * Returns the taxon of the species selected as background species.
+     * 
+     * @return the taxon of the species selected as background species
+     */
+    public Integer getSelectedBackgroundSpecies() {
+        return selectedBackgroundSpecies;
+    }
+
+    /**
+     * Sets the taxon of the species selected as background species.
+     * 
+     * @param selectedBackgroundSpecies the taxon of the species selected as background species
+     */
+    public void setSelectedBackgroundSpecies(Integer selectedBackgroundSpecies) {
+        this.selectedBackgroundSpecies = selectedBackgroundSpecies;
+    }
     
     /**
      * Returns a short description of the parameters.
@@ -103,8 +127,12 @@ public class GenePreferences implements Serializable {
         
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        if (currentSpecies != null) {
-            output.append("Species: ").append(currentSpecies).append(".").append(newLine);
+        output.append("Use gene mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
+        output.append("Automaticall update gene mappings: ").append(getAutoUpdate()).append(".").append(newLine);
+        if (selectedBackgroundSpecies != null) {
+            SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+            String speciesName = speciesFactory.getName(selectedBackgroundSpecies);
+            output.append("Species: ").append(speciesName).append(".").append(newLine);
         } else {
             output.append("Species: ").append("(not selected)").append(newLine);
         }

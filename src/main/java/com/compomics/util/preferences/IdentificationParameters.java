@@ -517,6 +517,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         }
         if (genePreferences == null) {
             genePreferences = new GenePreferences();
+            genePreferences.setPeferencesFromSequenceFactory();
         }
         if (proteinInferencePreferences == null) {
             proteinInferencePreferences = new ProteinInferencePreferences();

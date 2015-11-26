@@ -2,9 +2,14 @@ package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
+import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.commons.httpclient.URIException;
 
 /**
  * Contains methods for downloading gene and GO mappings.
@@ -17,7 +22,7 @@ public class GenePreferences implements Serializable {
      * The serial number for serialization compatibility.
      */
     static final long serialVersionUID = -1286840382594446279L;
-    
+
     /**
      * If true the gene mappings will auto update.
      */
@@ -49,7 +54,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Returns a boolean indicating whether gene mappings should be used.
-     * 
+     *
      * @return a boolean indicating whether gene mappings should be used
      */
     public Boolean getUseGeneMapping() {
@@ -61,8 +66,9 @@ public class GenePreferences implements Serializable {
 
     /**
      * Sets whether gene mappings should be used.
-     * 
-     * @param useGeneMapping a boolean indicating whether gene mappings should be used
+     *
+     * @param useGeneMapping a boolean indicating whether gene mappings should
+     * be used
      */
     public void setUseGeneMapping(Boolean useGeneMapping) {
         this.useGeneMapping = useGeneMapping;
@@ -70,8 +76,9 @@ public class GenePreferences implements Serializable {
 
     /**
      * Indicates whether the gene mappings should be automatically updated.
-     * 
-     * @return a boolean indicating whether the gene mappings should be automatically updated
+     *
+     * @return a boolean indicating whether the gene mappings should be
+     * automatically updated
      */
     public Boolean getAutoUpdate() {
         if (autoUpdate == null) {
@@ -82,19 +89,21 @@ public class GenePreferences implements Serializable {
 
     /**
      * Sets whether the gene mappings should be automatically updated.
-     * 
-     * @param autoUpdate a boolean indicating whether the gene mappings should be automatically updated
+     *
+     * @param autoUpdate a boolean indicating whether the gene mappings should
+     * be automatically updated
      */
     public void setAutoUpdate(Boolean autoUpdate) {
         this.autoUpdate = autoUpdate;
     }
-    
+
     /**
      * Compares these preferences to other preferences.
-     * 
+     *
      * @param genePreferences other preferences to compare to.
-     * 
-     * @return a boolean indicating whether the other preferences are the same as these ones.
+     *
+     * @return a boolean indicating whether the other preferences are the same
+     * as these ones.
      */
     public boolean equals(GenePreferences genePreferences) {
         return getAutoUpdate().equals(genePreferences.getAutoUpdate());
@@ -102,7 +111,7 @@ public class GenePreferences implements Serializable {
 
     /**
      * Returns the taxon of the species selected as background species.
-     * 
+     *
      * @return the taxon of the species selected as background species
      */
     public Integer getSelectedBackgroundSpecies() {
@@ -111,20 +120,54 @@ public class GenePreferences implements Serializable {
 
     /**
      * Sets the taxon of the species selected as background species.
-     * 
-     * @param selectedBackgroundSpecies the taxon of the species selected as background species
+     *
+     * @param selectedBackgroundSpecies the taxon of the species selected as
+     * background species
      */
     public void setSelectedBackgroundSpecies(Integer selectedBackgroundSpecies) {
         this.selectedBackgroundSpecies = selectedBackgroundSpecies;
     }
-    
+
+    /**
+     * Sets the background species from the fasta file loaded in the sequence
+     * factory.
+     */
+    public void setPeferencesFromSequenceFactory() {
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+        FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
+        HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
+        Integer occurrenceMax = null;
+
+        // Select the background species based on occurrence in the factory
+        for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+
+            if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+                Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
+
+                if (occurrenceMax == null || occurrence > occurrenceMax) {
+                    occurrenceMax = occurrence;
+                    try {
+                        Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                        if (taxon != null) {
+                            setSelectedBackgroundSpecies(taxon);
+                        }
+                    } catch (Exception e) {
+                        // Taxon not available, ignore
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         output.append("Use gene mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
@@ -139,8 +182,6 @@ public class GenePreferences implements Serializable {
 
         return output.toString();
     }
-    
-    
 
     //////////////////////////////////
     // Deprecated code, kept for backward compatibility with parameters files of utilities version older than 4.2.0.

@@ -58,9 +58,9 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * @param geneMaps the gene maps
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the fasta file.
+     * while reading the FASTA file.
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover.
      */
     public GeneDetailsDialog(java.awt.Frame parent, String proteinMatchKey, GeneMaps geneMaps) throws IOException, InterruptedException {
         super(parent, true);

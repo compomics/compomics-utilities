@@ -63,7 +63,7 @@ public class JsonMarshaller {
         for (Class aClass : interfaces) {
             builder.registerTypeAdapter(aClass, new InterfaceAdapter());
         }
-        gson = builder.create();
+        gson = builder.setPrettyPrinting().create();
     }
 
     /**

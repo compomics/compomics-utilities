@@ -125,21 +125,16 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param selectedSpecies the taxon of the selected species
      */
     private void setUpGUI(Integer selectedSpecies) {
-        
+
         ensemblCategoryJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         speciesJComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        
+        EnsemblGenomesSpecies.EnsemblGenomeDivision ensemblGenomeDivision = null;
         if (selectedSpecies != null) {
-            EnsemblGenomesSpecies.EnsemblGenomeDivision ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(selectedSpecies);
-            String type;
-            if (ensemblGenomeDivision == null) {
-                type = "vertebrate";
-            } else {
-                type = ensemblGenomeDivision.ensemblType;
-            }
+            ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(selectedSpecies);
+            String type = getTypeForGenomeDivision(ensemblGenomeDivision);
             ensemblCategoryJComboBox.setSelectedItem(type);
         }
-        updateSpeciesList(selectedSpecies);
+        updateSpeciesList(ensemblGenomeDivision, selectedSpecies);
     }
 
     /**
@@ -150,15 +145,20 @@ public class SpeciesDialog extends javax.swing.JDialog {
      *
      * @return the list to display in the combo box
      */
-    private void updateSpeciesList(Integer selectedSpeciesTaxon) {
+    private void updateSpeciesList(EnsemblGenomesSpecies.EnsemblGenomeDivision ensemblGenomeDivision, Integer selectedSpeciesTaxon) {
 
-        String currentEnsemblSpeciesType = (String) ensemblCategoryJComboBox.getSelectedItem();
         speciesJComboBox.setEnabled(ensemblCategoryJComboBox.getSelectedIndex() > 0);
 
         if (ensemblCategoryJComboBox.getSelectedIndex() > 0) {
 
             HashMap<String, HashSet<Integer>> ensemblSpecies = speciesFactory.getEnsembleSpecies();
-            HashSet<Integer> taxons = ensemblSpecies.get(currentEnsemblSpeciesType);
+
+            HashSet<Integer> taxons;
+            if (ensemblGenomeDivision != null) {
+                taxons = ensemblSpecies.get(ensemblGenomeDivision.name());
+            } else {
+                taxons = ensemblSpecies.get("vertebrates");
+            }
 
             if (taxons != null && !taxons.isEmpty()) {
 
@@ -232,6 +232,33 @@ public class SpeciesDialog extends javax.swing.JDialog {
      */
     public boolean isCanceled() {
         return canceled;
+    }
+
+    /**
+     * Returns the display name of an Ensembl genome division.
+     *
+     * @param ensemblGenomeDivision the Ensembl genome division
+     *
+     * @return the display name
+     */
+    public String getTypeForGenomeDivision(EnsemblGenomesSpecies.EnsemblGenomeDivision ensemblGenomeDivision) {
+        if (ensemblGenomeDivision == null) {
+            return "Vertebrates";
+        }
+        switch (ensemblGenomeDivision) {
+            case bacteria:
+                return "Bacteria";
+            case fungi:
+                return "Fungi";
+            case metazoa:
+                return "Metazoa";
+            case plants:
+                return "Plants";
+            case protists:
+                return "Protists";
+            default:
+                return "Vertebrates";
+        }
     }
 
     /**
@@ -706,7 +733,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void ensemblCategoryJComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ensemblCategoryJComboBoxActionPerformed
-        updateSpeciesList(null);
+        updateSpeciesList(null, null);
     }//GEN-LAST:event_ensemblCategoryJComboBoxActionPerformed
 
     /**
@@ -932,7 +959,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
 
                     if (success) {
                         int selectedIndex = speciesJComboBox.getSelectedIndex();
-                        updateSpeciesList(null);
+                        updateSpeciesList(null, null);
                         JOptionPane.showMessageDialog(finalRef, "Gene mappings downloaded.", "Gene Mappings", JOptionPane.INFORMATION_MESSAGE);
                         speciesJComboBox.setSelectedIndex(selectedIndex);
                         speciesJComboBoxActionPerformed(null);

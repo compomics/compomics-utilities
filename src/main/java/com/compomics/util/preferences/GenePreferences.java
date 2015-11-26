@@ -2,8 +2,10 @@ package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -129,34 +131,44 @@ public class GenePreferences implements Serializable {
     }
 
     /**
-     * Sets the background species from the fasta file loaded in the sequence
-     * factory.
+     * Sets the preferences from the given search parameters.
+     *
+     * @param searchParameters the search parameters
      */
-    public void setPeferencesFromSequenceFactory() {
-        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-        FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
-        HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
-        Integer occurrenceMax = null;
+    public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
 
-        // Select the background species based on occurrence in the factory
-        for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+        File fastaFile = searchParameters.getFastaFile();
 
-            if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
-                Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
+        if (fastaFile != null) {
+            SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+            try {
+                FastaIndex fastaIndex = SequenceFactory.getFastaIndex(fastaFile, true, null);
+                HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
+                Integer occurrenceMax = null;
 
-                if (occurrenceMax == null || occurrence > occurrenceMax) {
-                    occurrenceMax = occurrence;
-                    try {
-                        Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
-                        if (taxon != null) {
-                            setSelectedBackgroundSpecies(taxon);
+                // Select the background species based on occurrence in the factory
+                for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
+
+                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+                        Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
+
+                        if (occurrenceMax == null || occurrence > occurrenceMax) {
+                            occurrenceMax = occurrence;
+                            try {
+                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                                if (taxon != null) {
+                                    setSelectedBackgroundSpecies(taxon);
+                                }
+                            } catch (Exception e) {
+                                // Taxon not available, ignore
+                                e.printStackTrace();
+                            }
                         }
-                    } catch (Exception e) {
-                        // Taxon not available, ignore
-                        e.printStackTrace();
                     }
                 }
+            } catch (Exception e) {
+                // Not able to read the species, ignore
+                e.printStackTrace();
             }
         }
     }

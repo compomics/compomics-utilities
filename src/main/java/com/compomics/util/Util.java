@@ -100,7 +100,7 @@ public class Util {
      * attempting to delete and returns false.
      *
      * @param dir the directory to delete
-     * 
+     *
      * @return rue if all deletions were successful
      */
     public static boolean emptyDir(File dir) {
@@ -116,9 +116,9 @@ public class Util {
     }
 
     /**
-     * Deletes all files and subdirectories under dir and dir itself. Returns true if all
-     * deletions were successful. If a deletion fails, the method stops
-     * attempting to delete and returns false.
+     * Deletes all files and subdirectories under dir and dir itself. Returns
+     * true if all deletions were successful. If a deletion fails, the method
+     * stops attempting to delete and returns false.
      *
      * @param dir the directory to delete
      * @return rue if all deletions were successful
@@ -649,7 +649,7 @@ public class Util {
     }
 
     /**
-     * Copy the content of one file to another.
+     * Copy the content of a file to another.
      *
      * @param in the file to copy from
      * @param out the file to copy to
@@ -657,10 +657,43 @@ public class Util {
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void copyFile(File in, File out) throws IOException {
+        copyFile(in, out, true);
+    }
+
+    /**
+     * Appends the content of a file to another.
+     *
+     * @param in the file to copy from
+     * @param out the file to copy to
+     *
+     * @throws IOException if a problem occurs when writing to the file
+     */
+    public static void append(File in, File out) throws IOException {
+        copyFile(in, out, false);
+    }
+
+    /**
+     * Copy the content of one file to another.
+     *
+     * @param in the file to copy from
+     * @param out the file to copy to
+     * @param overwrite boolean indicating whether out should be overwritten
+     *
+     * @throws IOException if a problem occurs when writing to the file
+     */
+    public static void copyFile(File in, File out, boolean overwrite) throws IOException {
+        long start = 0;
+        if (out.exists() && out.length() > 0) {
+            if (overwrite) {
+                out.delete();
+            } else {
+                start = out.length();
+            }
+        }
         FileChannel inChannel = new FileInputStream(in).getChannel();
         FileChannel outChannel = new FileOutputStream(out).getChannel();
         try {
-            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inChannel.transferTo(start, inChannel.size(), outChannel);
         } finally {
             if (inChannel != null) {
                 inChannel.close();

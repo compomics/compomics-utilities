@@ -11,16 +11,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Class parsing biomart protein go mappings and storing them in maps.
+ * Class parsing BioMart protein go mappings and storing them in maps.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GoMapping {
 
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
      * Protein accession to go terms map.
      */
@@ -54,7 +55,7 @@ public class GoMapping {
 
     /**
      * Reads go mappings from a BioMart file. The structure of the file should
-     * be protein accession go accession go name
+     * be protein accession go accession go name.
      *
      * Previous mappings are silently overwritten.
      *
@@ -64,21 +65,22 @@ public class GoMapping {
      *
      * @throws IOException if an exception occurs while reading the file
      */
-    public void laodMappingFromFile(File file, WaitingHandler waitingHandler) throws IOException {
+    public void laodMappingFromFile(File file, WaitingHandler waitingHandler) throws IOException { // @TODO: typo...
 
         sortedTermNames = null;
-        
+
         // read the species list
         FileReader r = new FileReader(file);
+
         try {
             BufferedReader br = new BufferedReader(r);
-            try {
 
+            try {
                 String line;
 
                 while ((line = br.readLine()) != null) {
 
-                    String[] splittedLine = line.split(separator);
+                    String[] splittedLine = line.split(SEPARATOR);
 
                     if (splittedLine.length == 3 && !splittedLine[0].equals("") && !splittedLine[1].equals("")) {
 
@@ -92,13 +94,13 @@ public class GoMapping {
                             proteinToGoMap.put(proteinAccession, goTerms);
                         }
                         goTerms.add(goTermAccession);
-                        
+
                         HashSet<String> proteinAccessions = goToProteinMap.get(goTermAccession);
                         if (proteinAccessions == null) {
                             proteinAccessions = new HashSet<String>();
                             goToProteinMap.put(goTermAccession, proteinAccessions);
                         }
-                        proteinAccessions.add(goTermAccession);
+                        proteinAccessions.add(proteinAccession);
 
                         goAccessionsToNamesMap.put(goTermAccession, goTermName);
                         goNamesToAccessionsMap.put(goTermName, goTermAccession);
@@ -117,7 +119,8 @@ public class GoMapping {
     }
 
     /**
-     * Returns the GO accessions linked to a given protein accession. Null if not found.
+     * Returns the GO accessions linked to a given protein accession. Null if
+     * not found.
      *
      * @param proteinAccession the accession of the protein of interest
      *
@@ -129,7 +132,8 @@ public class GoMapping {
     }
 
     /**
-     * Returns the protein accessions linked to a given GO term. Null if not found.
+     * Returns the protein accessions linked to a given GO term. Null if not
+     * found.
      *
      * @param goTermAccession the accession of the GO term
      *
@@ -211,5 +215,4 @@ public class GoMapping {
         }
         return sortedTermNames;
     }
-
 }

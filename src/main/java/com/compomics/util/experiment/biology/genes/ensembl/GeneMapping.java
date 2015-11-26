@@ -11,15 +11,16 @@ import java.util.HashMap;
  * Class for the handling of gene mappings.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GeneMapping {
 
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
-     * Gene Name to chromosome map.
+     * Gene name to chromosome map.
      */
     private HashMap<String, String> geneNameToChromosome;
     /**
@@ -37,7 +38,7 @@ public class GeneMapping {
 
     /**
      * Reads go mappings from a BioMart file. The structure of the file should
-     * be Ensembl Accession Gene name Chromosome name
+     * be Ensembl Accession Gene name Chromosome name.
      *
      * Previous mappings are silently overwritten.
      *
@@ -59,7 +60,7 @@ public class GeneMapping {
 
                 while ((line = br.readLine()) != null) {
 
-                    String[] splittedLine = line.split(separator);
+                    String[] splittedLine = line.split(SEPARATOR);
 
                     if (splittedLine.length == 3 && !splittedLine[0].equals("") && !splittedLine[1].equals("")) {
 
@@ -86,7 +87,7 @@ public class GeneMapping {
      * Returns the chromosome for a given gene.
      *
      * @param geneName the gene name
-     * 
+     *
      * @return the chromosome for a given gene
      */
     public String getChromosome(String geneName) {
@@ -97,7 +98,7 @@ public class GeneMapping {
      * Returns the Ensembl accession for a given gene.
      *
      * @param geneName the gene name
-     * 
+     *
      * @return the Ensembl accession for a given gene
      */
     public String getEnsemblAccession(String geneName) {
@@ -106,7 +107,7 @@ public class GeneMapping {
 
     /**
      * Returns the gene name to chromosome map.
-     * 
+     *
      * @return the gene name to chromosome map
      */
     public HashMap<String, String> getGeneNameToChromosome() {
@@ -115,7 +116,7 @@ public class GeneMapping {
 
     /**
      * Returns the gene name to protein accession map.
-     * 
+     *
      * @return the gene name to protein accession map
      */
     public HashMap<String, String> getGeneNameToAccession() {

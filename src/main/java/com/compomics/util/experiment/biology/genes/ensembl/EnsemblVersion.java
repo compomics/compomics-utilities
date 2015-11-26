@@ -6,15 +6,16 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpe
  * Class for the handling of Ensembl versions.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class EnsemblVersion {
-
 
     /**
      * Returns the current Ensembl version number. Null if not found.
      *
-     * @param ensemblGenomeDivision the Ensembl genome division, null if not Ensembl genome
-     * 
+     * @param ensemblGenomeDivision the Ensembl genome division, null if not
+     * Ensembl genome
+     *
      * @return the current Ensembl version number
      */
     public static Integer getCurrentEnsemblVersion(EnsemblGenomeDivision ensemblGenomeDivision) {
@@ -72,7 +73,7 @@ public class EnsemblVersion {
      * Returns the name of the Ensembl schema for BioMart queries.
      *
      * @param ensemblGenomeDivision the Ensembl genome division
-     * 
+     *
      * @return the name of the Ensembl schema for BioMart queries
      */
     public static String getEnsemblSchemaName(EnsemblGenomeDivision ensemblGenomeDivision) {

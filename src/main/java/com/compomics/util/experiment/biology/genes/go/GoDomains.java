@@ -13,13 +13,14 @@ import java.util.HashMap;
  * Class parsing go domains and storing them in a map.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GoDomains {
 
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
      * Go term accession to domain map.
      */
@@ -49,15 +50,17 @@ public class GoDomains {
 
         // read the species list
         FileReader r = new FileReader(file);
-        try {
-            BufferedReader br = new BufferedReader(r);
-            try {
 
+        try {
+
+            BufferedReader br = new BufferedReader(r);
+
+            try {
                 String line;
 
                 while ((line = br.readLine()) != null) {
 
-                    String[] splittedLine = line.split(separator);
+                    String[] splittedLine = line.split(SEPARATOR);
 
                     if (splittedLine.length == 3 && !splittedLine[0].equals("") && !splittedLine[1].equals("")) {
 
@@ -102,10 +105,11 @@ public class GoDomains {
 
     /**
      * Saves the mapping to the given file.
-     * 
+     *
      * @param destinationFile the destination file
-     * 
-     * @throws IOException exception thrown whenever an error occurred while writing the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * writing the file
      */
     public void saveMapping(File destinationFile) throws IOException {
 
@@ -116,7 +120,7 @@ public class GoDomains {
             try {
                 for (String goAccession : goAccessionToDomainMap.keySet()) {
                     String goDomain = goAccessionToDomainMap.get(goAccession);
-                    bw.write(goAccession + separator + goDomain);
+                    bw.write(goAccession + SEPARATOR + goDomain);
                     bw.newLine();
                 }
             } finally {
@@ -126,5 +130,4 @@ public class GoDomains {
             fw.close();
         }
     }
-
 }

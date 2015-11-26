@@ -18,7 +18,7 @@ public class EnsemblGenomesSpecies {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
      * NCBI ID to name.
      */
@@ -47,7 +47,7 @@ public class EnsemblGenomesSpecies {
          */
         public final String ensemblName;
         /**
-         * The schema name for xml queries.
+         * The schema name for XML queries.
          */
         public final String ensemblType;
 
@@ -55,7 +55,7 @@ public class EnsemblGenomesSpecies {
          * Constructor.
          *
          * @param ensemblName the name in the Ensembl mapping file
-         * @param ensemblType the ensembl type for xml queries
+         * @param ensemblType the Ensembl type for XML queries
          */
         private EnsemblGenomeDivision(String ensemblName, String ensemblType) {
             this.ensemblName = ensemblName;
@@ -112,8 +112,7 @@ public class EnsemblGenomesSpecies {
                     line = line.trim();
 
                     if (line.length() > 0) {
-
-                        String[] elements = line.split(separator);
+                        String[] elements = line.split(SEPARATOR);
                         Integer id = new Integer(elements[3].trim());
                         String name = elements[0].trim();
                         String division = elements[2].trim();
@@ -122,10 +121,8 @@ public class EnsemblGenomesSpecies {
                         idToNameMap.put(id, name);
                         idToDivisionMap.put(id, division);
                         idToAssemblyMap.put(id, assembly);
-
                     }
                 }
-
             } finally {
                 br.close();
             }
@@ -179,5 +176,4 @@ public class EnsemblGenomesSpecies {
     public HashSet<Integer> getTaxons() {
         return new HashSet<Integer>(idToAssemblyMap.keySet());
     }
-
 }

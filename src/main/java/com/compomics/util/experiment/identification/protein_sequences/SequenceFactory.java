@@ -778,7 +778,7 @@ public class SequenceFactory {
                     // get the species
                     String taxonomy = fastaHeader.getTaxonomy();
                     if (taxonomy == null || taxonomy.equals("")) {
-                        taxonomy = SpeciesFactory.unknown;
+                        taxonomy = SpeciesFactory.UNKNOWN;
                     }
                     Integer occurrence = species.get(taxonomy);
                     if (occurrence == null) {

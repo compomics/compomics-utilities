@@ -17,7 +17,7 @@ public class EnsemblSpecies {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\",\"";
+    public final static String SEPARATOR = "\",\"";
     /**
      * NCBI ID to scientific name.
      */
@@ -53,10 +53,11 @@ public class EnsemblSpecies {
 
         // read the species list
         FileReader r = new FileReader(speciesFile);
+
         try {
             BufferedReader br = new BufferedReader(r);
-            try {
 
+            try {
                 String line = br.readLine();
 
                 while ((line = br.readLine()) != null) {
@@ -66,7 +67,7 @@ public class EnsemblSpecies {
                     if (line.length() > 0) {
 
                         line = line.substring(1, line.length() - 1);
-                        String[] elements = line.split(separator);
+                        String[] elements = line.split(SEPARATOR);
                         String id = elements[2].trim();
                         String scientificName = elements[1].trim();
                         String commonName = elements[0].trim();
@@ -84,10 +85,8 @@ public class EnsemblSpecies {
                                 idToAssemblyMap.put(taxon, assembly);
                             }
                         }
-
                     }
                 }
-
             } finally {
                 br.close();
             }

@@ -31,6 +31,7 @@ import java.util.HashSet;
  * Class used to map proteins to gene information.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GeneFactory {
 
@@ -38,7 +39,6 @@ public class GeneFactory {
      * The instance of the factory.
      */
     private static GeneFactory instance = null;
-
     /**
      * The separator used to separate line contents.
      */
@@ -117,16 +117,16 @@ public class GeneFactory {
     }
 
     /**
-     * Returns the gene maps for the fasta file loaded in the factory.
+     * Returns the gene maps for the FASTA file loaded in the factory.
      *
      * @param genePreferences the gene preferences
      * @param waitingHandler waiting handler displaying progress for the
      * download and allowing canceling of the progress.
      *
-     * @return the gene maps for the fasta file loaded in the factory
+     * @return the gene maps for the FASTA file loaded in the factory
      *
      * @throws java.io.IOException thrown whenever an error occurs while
-     * iterating the proteins in the fasta database.
+     * iterating the proteins in the FASTA database.
      */
     public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException {
 
@@ -140,7 +140,7 @@ public class GeneFactory {
         // Download/Update species mapping, put them in maps per species
         for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
 
-            if (!uniprotTaxonomy.equals(SpeciesFactory.unknown)) {
+            if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
 
                 Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy);
 
@@ -281,7 +281,7 @@ public class GeneFactory {
     /**
      * Download the gene sequences mappings.
      *
-     * @param destinationFile The destination file where to save the gene
+     * @param destinationFile the destination file where to save the gene
      * sequences
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
@@ -521,7 +521,8 @@ public class GeneFactory {
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
      * plants_mart_18
-     * @param ensemblDatasetName the Ensembl dataset name of the selected species
+     * @param ensemblDatasetName the Ensembl dataset name of the selected
+     * species
      * @param ensemblVersion the Ensembl version
      * @param waitingHandler the waiting handler
      *
@@ -540,7 +541,7 @@ public class GeneFactory {
             externalReference = "<Attribute name = \"external_gene_id\" />";
         }
 
-        // Construct data
+        // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
@@ -562,7 +563,6 @@ public class GeneFactory {
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
             try {
-
                 wr.write(requestXml);
                 wr.flush();
 
@@ -753,8 +753,8 @@ public class GeneFactory {
      * Update the Ensembl version for the given species in the local map and in
      * the Ensembl versions file.
      *
-     * @param ensemblDatasetName the dataset name of the species to update, e.g.,
-     * hsapiens_gene_ensembl
+     * @param ensemblDatasetName the dataset name of the species to update,
+     * e.g., hsapiens_gene_ensembl
      * @param ensemblVersion the new Ensembl version
      *
      * @throws IOException if an IOException occurs
@@ -963,7 +963,7 @@ public class GeneFactory {
      * Returns the GO mapping file.
      *
      * @param ensemblDatasetName the Ensembl dataset name
-     * 
+     *
      * @return the GO mapping file
      */
     public static File getGoMappingFile(String ensemblDatasetName) {
@@ -1036,5 +1036,4 @@ public class GeneFactory {
 
         return true;
     }
-
 }

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Mapping of the species to biomart dataset.
+ * Mapping of the species to BioMart dataset.
  *
  * @author Marc Vaudel
  */
@@ -16,9 +16,9 @@ public class BiomartMapping {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
-     * Ensembl assembly to biomart dataset.
+     * Ensembl assembly to BioMart dataset.
      */
     private HashMap<String, String> assemblyToDataset;
 
@@ -33,8 +33,8 @@ public class BiomartMapping {
      * Loads the species mapping from a file. Previous mapping will be
      * overwritten.
      *
-     * @param ensemblFile the ensembl biomart file
-     * @param ensemblGenomeFile the ensembl genome biomart file
+     * @param ensemblFile the Ensembl BioMart file
+     * @param ensemblGenomeFile the Ensembl genome BioMart file
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file.
@@ -42,10 +42,11 @@ public class BiomartMapping {
     public void loadMapping(File ensemblFile, File ensemblGenomeFile) throws IOException {
 
         FileReader r = new FileReader(ensemblFile);
+
         try {
             BufferedReader br = new BufferedReader(r);
-            try {
 
+            try {
                 String line;
 
                 while ((line = br.readLine()) != null) {
@@ -54,16 +55,14 @@ public class BiomartMapping {
 
                     if (line.length() > 0) {
 
-                        String[] elements = line.split(separator);
+                        String[] elements = line.split(SEPARATOR);
                         String dataset = elements[0].trim();
                         String assembly = elements[1].trim();
                         if (!assembly.equals("") && !dataset.equals("")) {
                             assemblyToDataset.put(assembly, dataset);
                         }
-
                     }
                 }
-
             } finally {
                 br.close();
             }
@@ -72,10 +71,11 @@ public class BiomartMapping {
         }
 
         r = new FileReader(ensemblGenomeFile);
+
         try {
             BufferedReader br = new BufferedReader(r);
-            try {
 
+            try {
                 String line;
 
                 while ((line = br.readLine()) != null) {
@@ -84,7 +84,7 @@ public class BiomartMapping {
 
                     if (line.length() > 0) {
 
-                        String[] elements = line.split(separator);
+                        String[] elements = line.split(SEPARATOR);
                         String dataset = elements[0].trim();
                         String version = elements[1].trim();
                         elements = version.split(" ");
@@ -92,10 +92,8 @@ public class BiomartMapping {
                         if (!assembly.equals("") && !dataset.equals("")) {
                             assemblyToDataset.put(assembly, dataset);
                         }
-
                     }
                 }
-
             } finally {
                 br.close();
             }
@@ -114,5 +112,4 @@ public class BiomartMapping {
     public String getDataset(String assembly) {
         return assemblyToDataset.get(assembly);
     }
-
 }

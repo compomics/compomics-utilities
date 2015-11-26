@@ -13,6 +13,7 @@ import java.util.HashSet;
  * The gene maps for a given project.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GeneMaps implements Serializable {
 
@@ -164,7 +165,7 @@ public class GeneMaps implements Serializable {
 
     /**
      * Returns the GO to protein accession map.
-     * 
+     *
      * @return the GO to protein accession map
      */
     public HashMap<String, HashSet<String>> getGoAccessionToProteinMap() {
@@ -173,7 +174,7 @@ public class GeneMaps implements Serializable {
 
     /**
      * Sets the GO to protein accession map.
-     * 
+     *
      * @param goAccessionToProteinMap the GO to protein accession map
      */
     public void setGoAccessionToProteinMap(HashMap<String, HashSet<String>> goAccessionToProteinMap) {
@@ -252,8 +253,7 @@ public class GeneMaps implements Serializable {
     }
 
     /**
-     * Returns the protein accessions for a GO accession. Null if not
-     * found.
+     * Returns the protein accessions for a GO accession. Null if not found.
      *
      * @param goAccession a GO term accession
      *
@@ -273,12 +273,13 @@ public class GeneMaps implements Serializable {
     public String getNameForGoTerm(String goAccession) {
         return goNamesMap.get(goAccession);
     }
-    
+
     /**
-     * Returns the GO Term accession corresponding to the given name. Null if not found.
-     * 
+     * Returns the GO Term accession corresponding to the given name. Null if
+     * not found.
+     *
      * @param goName the GO name
-     * 
+     *
      * @return the corresponding accession
      */
     public String getGoAccession(String goName) {
@@ -298,9 +299,9 @@ public class GeneMaps implements Serializable {
      * @return the go terms names
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the fasta file.
+     * while reading the FASTA file.
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover.
      */
     public HashSet<String> getGoNamesForProtein(String proteinAccession) throws IOException, InterruptedException {
         HashSet<String> goTerms = getGoTermsForProtein(proteinAccession);
@@ -316,14 +317,13 @@ public class GeneMaps implements Serializable {
         }
         return null;
     }
-    
+
     /**
      * Indicates whether the GO maps are populated.
-     * 
+     *
      * @return a boolean indicating whether the GO maps are populated
      */
     public boolean hasGoMappings() {
         return !goNamesMap.isEmpty() && !proteinToGoMap.isEmpty();
     }
-
 }

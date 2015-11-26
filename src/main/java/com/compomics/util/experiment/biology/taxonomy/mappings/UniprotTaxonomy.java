@@ -12,7 +12,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 /**
- * Mapping of the uniprot taxonomy.
+ * Mapping of the UniProt taxonomy.
  *
  * @author Marc Vaudel
  */
@@ -21,9 +21,9 @@ public class UniprotTaxonomy {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
-     * Uniprot species name to NCBI ID.
+     * UniProt species name to NCBI ID.
      */
     private HashMap<String, Integer> nameToIdMap;
     /**
@@ -57,10 +57,11 @@ public class UniprotTaxonomy {
 
         // read the species list
         FileReader r = new FileReader(speciesFile);
+
         try {
             BufferedReader br = new BufferedReader(r);
+            
             try {
-
                 String line = br.readLine();
 
                 while ((line = br.readLine()) != null) {
@@ -69,7 +70,7 @@ public class UniprotTaxonomy {
 
                     if (line.length() > 0) {
 
-                        String[] elements = line.split(separator);
+                        String[] elements = line.split(SEPARATOR);
                         Integer id = new Integer(elements[0].trim());
                         String latinName = elements[2].trim();
                         String commonName = elements[3].trim();
@@ -79,10 +80,8 @@ public class UniprotTaxonomy {
                         if (!commonName.equals("")) {
                             idToCommonNameMap.put(id, commonName);
                         }
-
                     }
                 }
-
             } finally {
                 br.close();
             }
@@ -126,11 +125,12 @@ public class UniprotTaxonomy {
     }
 
     /**
-     * Downloads the uniprot taxonomy mapping to the given file.
-     * 
+     * Downloads the UniProt taxonomy mapping to the given file.
+     *
      * @param destinationFile the file where to write the taxonomy file
-     * 
-     * @throws IOException Exception thrown whenever an error occurred while reading or writing data.
+     *
+     * @throws IOException Exception thrown whenever an error occurred while
+     * reading or writing data.
      */
     public static void downloadTaxonomyFile(File destinationFile) throws IOException {
 
@@ -156,5 +156,4 @@ public class UniprotTaxonomy {
             br.close();
         }
     }
-
 }

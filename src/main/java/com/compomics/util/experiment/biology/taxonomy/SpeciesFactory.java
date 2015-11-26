@@ -14,9 +14,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Class related to the handling of species
+ * Class related to the handling of species.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SpeciesFactory {
 
@@ -24,18 +25,17 @@ public class SpeciesFactory {
      * The instance of the factory.
      */
     private static SpeciesFactory instance = null;
-
     /**
      * Tag for unknown species.
      */
-    public static final String unknown = "Unknown";
+    public static final String UNKNOWN = "Unknown";
     /**
      * The subfolder relative to the jar file where gene mapping files are
      * stored in tools.
      */
     private final static String TOOL_SPECIES_MAPPING_SUBFOLDER = "resources/conf/taxonomy/";
     /**
-     * The name of the Uniprot taxonomy file.
+     * The name of the UniProt taxonomy file.
      */
     public static final String UNIPROT_TAXONOMY_FILENAME = "uniprot_taxonomy";
     /**
@@ -47,11 +47,11 @@ public class SpeciesFactory {
      */
     public static final String ENSEMBL_GENOME_SPECIES = "ensembl-genome_species";
     /**
-     * The name of the Esnembl Biomart datasets file.
+     * The name of the Ensembl BioMart datasets file.
      */
     public static final String BIOMART_ENSEMBL_FILENAME = "ensembl_biomart";
     /**
-     * The name of the Esnembl Genome Biomart datasets file.
+     * The name of the Ensembl Genome BioMart datasets file.
      */
     public static final String BIOMART_ENSEMBL_GENOME_FILENAME = "ensembl-genome_biomart";
     /**
@@ -63,11 +63,11 @@ public class SpeciesFactory {
      */
     private EnsemblGenomesSpecies ensemblGenomesSpecies;
     /**
-     * The Uniprot taxonomy.
+     * The UniProt taxonomy.
      */
     private UniprotTaxonomy uniprotTaxonomy;
     /**
-     * The Biomart mapping.
+     * The BioMart mapping.
      */
     private BiomartMapping biomartMapping;
 
@@ -98,7 +98,6 @@ public class SpeciesFactory {
      * reading a mapping file.
      */
     public void initiate(String jarFilePath) throws IOException {
-
         ensemblSpecies = new EnsemblSpecies();
         ensemblSpecies.loadMapping(getEnsemblSpeciesFile(jarFilePath));
         ensemblGenomesSpecies = new EnsemblGenomesSpecies();
@@ -107,7 +106,6 @@ public class SpeciesFactory {
         uniprotTaxonomy.loadMapping(getUniprotTaxonomyFile(jarFilePath));
         biomartMapping = new BiomartMapping();
         biomartMapping.loadMapping(getBiomartEnsemblMappingFile(jarFilePath), getBiomartEnsemblGenomeMappingFile(jarFilePath));
-        
     }
 
     /**
@@ -186,33 +184,33 @@ public class SpeciesFactory {
     }
 
     /**
-     * Returns the Uniprot taxonomy file.
+     * Returns the UniProt taxonomy file.
      *
      * @param jarFilePath the path to the jar file
      *
-     * @return the Uniprot taxonomy species file
+     * @return the UniProt taxonomy species file
      */
     public static File getUniprotTaxonomyFile(String jarFilePath) {
         return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + UNIPROT_TAXONOMY_FILENAME);
     }
 
     /**
-     * Returns the Ensembl Biomart file.
+     * Returns the Ensembl BioMart file.
      *
      * @param jarFilePath the path to the jar file
      *
-     * @return the Ensembl Biomart file
+     * @return the Ensembl BioMart file
      */
     public static File getBiomartEnsemblMappingFile(String jarFilePath) {
         return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_FILENAME);
     }
 
     /**
-     * Returns the Ensembl Genome Biomart file.
+     * Returns the Ensembl Genome BioMart file.
      *
      * @param jarFilePath the path to the jar file
      *
-     * @return the Ensembl Genome Biomart file
+     * @return the Ensembl Genome BioMart file
      */
     public static File getBiomartEnsemblGenomeMappingFile(String jarFilePath) {
         return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_GENOME_FILENAME);
@@ -220,7 +218,7 @@ public class SpeciesFactory {
 
     /**
      * Returns the Latin name of the species corresponding to the given taxon
-     * according to the Uniprot mapping. Null if not found.
+     * according to the UniProt mapping. Null if not found.
      *
      * @param taxon the NCBI taxon ID
      *
@@ -232,10 +230,10 @@ public class SpeciesFactory {
 
     /**
      * Returns the name of the species corresponding to the given taxon
-     * according to the Uniprot mapping. Null if not found. For species mapping
+     * according to the UniProt mapping. Null if not found. For species mapping
      * to plants in the Ensembl genome mapping, the name is Latin name (common
      * name); common name (Latin Name) for the other species. If no common name
-     * is present the latin name is used.
+     * is present the Latin name is used.
      *
      * @param taxon the NCBI taxon ID
      *
@@ -323,18 +321,18 @@ public class SpeciesFactory {
     }
 
     /**
-     * Returns the Uniprot taxonomy mapping.
+     * Returns the UniProt taxonomy mapping.
      *
-     * @return the Uniprot taxonomy mapping
+     * @return the UniProt taxonomy mapping
      */
     public UniprotTaxonomy getUniprotTaxonomy() {
         return uniprotTaxonomy;
     }
 
     /**
-     * Returns the Biomart mapping.
-     * 
-     * @return the Biomart mapping
+     * Returns the BioMart mapping.
+     *
+     * @return the BioMart mapping
      */
     public BiomartMapping getBiomartMapping() {
         return biomartMapping;
@@ -359,5 +357,4 @@ public class SpeciesFactory {
         speciesMap.put("vertebrates", ensemblSpecies.getTaxons());
         return speciesMap;
     }
-
 }

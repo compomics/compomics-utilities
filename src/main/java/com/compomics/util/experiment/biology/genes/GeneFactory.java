@@ -578,47 +578,39 @@ public class GeneFactory {
                     int counter = 0;
 
                     File tempFile = getGeneMappingFile(ensemblDatasetName);
-                    boolean fileCreated = tempFile.createNewFile();
 
-                    if (fileCreated) {
-
-                        // Get the response
-                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    // Get the response
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    try {
+                        FileWriter w = new FileWriter(tempFile);
                         try {
-                            FileWriter w = new FileWriter(tempFile);
+                            BufferedWriter bw = new BufferedWriter(w);
                             try {
-                                BufferedWriter bw = new BufferedWriter(w);
-                                try {
-                                    String rowLine = br.readLine();
+                                String rowLine = br.readLine();
 
-                                    if (rowLine != null && rowLine.startsWith("Query ERROR")) {
-                                        throw new IllegalArgumentException("Query error on line: " + rowLine);
-                                    } else {
-                                        while (rowLine != null && !waitingHandler.isRunCanceled()) {
-                                            if (waitingHandler instanceof ProgressDialogX) {
-                                                waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
-                                            }
-                                            bw.write(rowLine + System.getProperty("line.separator"));
-                                            rowLine = br.readLine();
+                                if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+                                    throw new IllegalArgumentException("Query error on line: " + rowLine);
+                                } else {
+                                    while (rowLine != null && !waitingHandler.isRunCanceled()) {
+                                        if (waitingHandler instanceof ProgressDialogX) {
+                                            waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                         }
+                                        bw.write(rowLine + System.getProperty("line.separator"));
+                                        rowLine = br.readLine();
                                     }
-                                } finally {
-                                    bw.close();
                                 }
                             } finally {
-                                w.close();
+                                bw.close();
                             }
                         } finally {
-                            br.close();
+                            w.close();
                         }
+                    } finally {
+                        br.close();
+                    }
 
-                        if (!waitingHandler.isRunCanceled()) {
-                            updateEnsemblVersion(ensemblDatasetName, "Ensembl " + ensemblVersion);
-                        }
-
-                    } else {
-                        waitingHandler.setRunCanceled();
-                        throw new IllegalArgumentException("The mapping file could not be created.");
+                    if (!waitingHandler.isRunCanceled()) {
+                        updateEnsemblVersion(ensemblDatasetName, "Ensembl " + ensemblVersion);
                     }
                 }
             } finally {
@@ -899,7 +891,7 @@ public class GeneFactory {
         }
 
         if (waitingHandler.isReport()) {
-            waitingHandler.appendReport("Downloading GO and gene mappings for species " + latinName + ".", true, true);
+            waitingHandler.appendReport("Downloading GO and gene mappings for species " + latinName + ".", true, true); // @TODO: use the waiting handler..?
         }
 
         EnsemblGenomeDivision ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(taxon);
@@ -937,6 +929,7 @@ public class GeneFactory {
                 }
             }
         }
+
         if (!waitingHandler.isRunCanceled()) {
             downloadGeneMappings(ensemblType, schemaName, ensemblDatasetName,
                     EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision).toString(), waitingHandler);

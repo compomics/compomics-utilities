@@ -1,22 +1,19 @@
 package com.compomics.util.preferences;
 
-import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.FastaIndex;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.apache.commons.httpclient.URIException;
 
 /**
  * Contains methods for downloading gene and GO mappings.
  *
  * @author Harald Barsnes
+ * @author Marc Vaudel
  */
 public class GenePreferences implements Serializable {
 
@@ -24,7 +21,6 @@ public class GenePreferences implements Serializable {
      * The serial number for serialization compatibility.
      */
     static final long serialVersionUID = -1286840382594446279L;
-
     /**
      * If true the gene mappings will auto update.
      */
@@ -142,7 +138,7 @@ public class GenePreferences implements Serializable {
         if (fastaFile != null) {
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
             try {
-                FastaIndex fastaIndex = SequenceFactory.getFastaIndex(fastaFile, true, null);
+                FastaIndex fastaIndex = SequenceFactory.getFastaIndex(fastaFile, false, null);
                 HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
                 Integer occurrenceMax = null;
 
@@ -182,8 +178,8 @@ public class GenePreferences implements Serializable {
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        output.append("Use gene mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
-        output.append("Update gene mappings: ").append(getAutoUpdate()).append(".").append(newLine);
+        output.append("Use Gene Mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
+        output.append("Update Gene Mappings: ").append(getAutoUpdate()).append(".").append(newLine);
         if (selectedBackgroundSpecies != null) {
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
             String speciesName = speciesFactory.getName(selectedBackgroundSpecies);

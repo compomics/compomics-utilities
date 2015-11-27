@@ -65,7 +65,7 @@ public class GoMapping {
      *
      * @throws IOException if an exception occurs while reading the file
      */
-    public void laodMappingFromFile(File file, WaitingHandler waitingHandler) throws IOException { // @TODO: typo...
+    public void loadMappingsFromFile(File file, WaitingHandler waitingHandler) throws IOException {
 
         sortedTermNames = null;
 

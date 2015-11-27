@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.genes.GeneFactory;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies;
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
@@ -24,6 +23,8 @@ import javax.swing.SwingConstants;
  * A dialog for choosing the species.
  *
  * @author Harald Barsnes
+ * 
+ * @deprecated use the GenePreferencesDialog instead
  */
 public class SpeciesDialog extends javax.swing.JDialog {
 

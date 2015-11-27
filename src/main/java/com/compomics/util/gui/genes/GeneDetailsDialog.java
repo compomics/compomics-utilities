@@ -67,8 +67,12 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         initComponents();
         this.geneMaps = geneMaps;
         proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
-        goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
-        Collections.sort(goTermDescriptions);
+        if (geneMaps != null) {
+            goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
+            Collections.sort(goTermDescriptions);
+        } else {
+            goTermDescriptions = new ArrayList<String>(0);
+        }
         setUpGUI();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -76,7 +80,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
      * Set up the GUI.
-     * 
+     *
      * @throws java.io.IOException exception thrown whenever an error occurred
      * while reading the fasta file.
      * @throws java.lang.InterruptedException exception thrown whenever an error
@@ -453,7 +457,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
                     try {
                         String goAccession = geneMaps.getGoAccession(goTermDescriptions.get(row));
                         if (goAccession != null) {
-                        return addGoLink(goAccession);
+                            return addGoLink(goAccession);
                         } else {
                             return "";
                         }

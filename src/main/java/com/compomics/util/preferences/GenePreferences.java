@@ -183,7 +183,7 @@ public class GenePreferences implements Serializable {
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         output.append("Use gene mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
-        output.append("Automaticall update gene mappings: ").append(getAutoUpdate()).append(".").append(newLine);
+        output.append("Update gene mappings: ").append(getAutoUpdate()).append(".").append(newLine);
         if (selectedBackgroundSpecies != null) {
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
             String speciesName = speciesFactory.getName(selectedBackgroundSpecies);

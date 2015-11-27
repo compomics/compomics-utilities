@@ -4,8 +4,6 @@ import com.compomics.util.pride.PrideWebService;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilter;
 import com.compomics.util.pride.prideobjects.webservice.query.PrideFilterType;
 import java.io.IOException;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +17,8 @@ import uk.ac.ebi.pride.archive.web.service.model.peptide.PsmDetailList;
 import uk.ac.ebi.pride.archive.web.service.model.project.ProjectDetail;
 import uk.ac.ebi.pride.archive.web.service.model.project.ProjectSummaryList;
 import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Test for the PRIDE web service Java object.
@@ -30,7 +30,7 @@ public class TestPrideWebService {
     /**
      * In offline mode the test will be skipped.
      */
-    public static final boolean offlineMode = true;
+    public static final boolean OFFLINE_MODE = false;
 
     public TestPrideWebService() {
     }
@@ -56,7 +56,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProjectSummaryList() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String query = "PRD000001";
             ProjectSummaryList projectSummaryList = PrideWebService.getProjectSummaryList(query);
             assertTrue(projectSummaryList.getList().size() == 1);
@@ -68,7 +68,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProjectDetails() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String query = "PXD000001";
             ProjectDetail result = PrideWebService.getProjectDetail(query);
             assertTrue(result.getAccession().equals("PXD000001"));
@@ -80,7 +80,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProjectCount() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String query = "";
             PrideFilter filter = new PrideFilter(PrideFilterType.speciesFilter, "tyrannosaurus");
             int expResult = 1;
@@ -94,7 +94,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetAssayDetails() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             AssayDetailList result = PrideWebService.getAssayDetails(projectAccession);
             assertTrue(result.getList().size() == 5);
@@ -106,7 +106,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetAssayDetailsCount() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             int expResult = 5;
             int result = PrideWebService.getAssayCount(projectAccession);
@@ -119,7 +119,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetAssayDetail() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             AssayDetail result = PrideWebService.getAssayDetail(assayAccession);
             assertEquals(result.getAssayAccession(), assayAccession);
@@ -132,7 +132,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProjectFileDetails() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             int expResult = 5;
             FileDetailList result = PrideWebService.getProjectFileDetails(projectAccession);
@@ -145,7 +145,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProjectFileDetailsCount() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             int expResult = 5;
             int result = PrideWebService.getProjectFileCount(projectAccession);
@@ -158,7 +158,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetAssayFileDetails() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             FileDetailList result = PrideWebService.getAssayFileDetails(assayAccession);
             FileDetail detail = result.getList().get(0);
@@ -172,7 +172,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetAssayFileDetailsCount() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             int expResult = 1;
             int result = PrideWebService.getAssayFileCount(assayAccession);
@@ -185,7 +185,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProteinsByProject() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             ProteinDetailList result = PrideWebService.getProteinIdentificationByProject(projectAccession);
             assertEquals(496, result.getList().size());
@@ -197,7 +197,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProteinsCountByProject() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             int expResult = 496;
             int result = PrideWebService.getProteinIdentificationCountByProject(projectAccession);
@@ -210,7 +210,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testgetProteinIdentificationsByProjectAndProtein() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             String proteinAccesion = "DECOY_ECA2118";
             ProteinDetailList result = PrideWebService.getProteinIdentificationsByProjectAndProtein(projectAccession, proteinAccesion);
@@ -223,7 +223,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProteinIdentificationsCountByProjectAndProtein() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             String proteinAccesion = "DECOY_ECA2118";
             int result = PrideWebService.getProteinIdentificationsCountByProjectAndProtein(projectAccession, proteinAccesion);
@@ -236,7 +236,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetProteinCountByAssay() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             int expResult = 345;
             int result = PrideWebService.getProteinIdentificationCountByAssay(assayAccession);
@@ -249,7 +249,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMsByProject() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             PsmDetailList result = PrideWebService.getPSMsByProject(projectAccession);
             assertEquals(6758, result.getList().size());
@@ -261,7 +261,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMCountByProject() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PRD000001";
             int result = PrideWebService.getPSMCountByProject(projectAccession);
             assertEquals(6758, result);
@@ -273,7 +273,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMCountByProjectAndSequence() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             String sequence = "SVEELNTELLGLLR";
             int result = PrideWebService.getPSMCountByProjectAndSequence(projectAccession, sequence);
@@ -286,7 +286,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMsProjectAndSequence() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String projectAccession = "PXD000001";
             String sequence = "SVEELNTELLGLLR";
             PsmDetailList result = PrideWebService.getPSMsByProjectAndSequence(projectAccession, sequence);
@@ -300,7 +300,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMsByAssay() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             PsmDetailList result = PrideWebService.getPSMsByAssay(assayAccession);
             assertEquals(result.getList().size(), 1958);
@@ -312,7 +312,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMCountByAssay() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             int result = PrideWebService.getPSMCountByAssay(assayAccession);
             assertEquals(1958, result);
@@ -324,7 +324,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMsByAssayAndSequence() throws IOException {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             String sequence = "AAAAAAAAAAAAR";
             PsmDetailList result = PrideWebService.getPSMsByAssayAndSequence(assayAccession, sequence);
@@ -337,7 +337,7 @@ public class TestPrideWebService {
      */
     @Test
     public void testGetPSMCountByAssayAndSequence() throws Exception {
-        if (!offlineMode) {
+        if (!OFFLINE_MODE) {
             String assayAccession = "3";
             String sequence = "AAAAAAAAAAAAR";
             int result = PrideWebService.getPSMCountByAssayAndSequence(assayAccession, sequence);

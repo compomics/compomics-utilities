@@ -530,6 +530,7 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="nameShortTxt">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="horizontalAlignment" type="int" value="0"/>
                         <Property name="toolTipText" type="java.lang.String" value="The modification name"/>
                       </Properties>

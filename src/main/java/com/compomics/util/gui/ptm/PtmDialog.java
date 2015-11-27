@@ -188,6 +188,7 @@ public class PtmDialog extends javax.swing.JDialog {
 
         typeCmb.setEnabled(editable);
         nameTxt.setEditable(editable);
+        nameShortTxt.setEditable(editable);
         addNeutralLoss.setEnabled(editable);
         removeNeutralLoss.setEnabled(editable);
         addReporterIon.setEnabled(editable);
@@ -776,6 +777,7 @@ public class PtmDialog extends javax.swing.JDialog {
         nameShortLabel.setText("Short Name");
         nameShortLabel.setToolTipText("The modification name");
 
+        nameShortTxt.setEditable(false);
         nameShortTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         nameShortTxt.setToolTipText("The modification name");
         nameShortTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1001,49 +1003,50 @@ public class PtmDialog extends javax.swing.JDialog {
 
         if (validateInput(true)) {
 
-            // check if the unimod cv term mapping is provided
-            boolean cvTermOk = true;
-            if (!unimodNameJTextField.getText().trim().isEmpty()) {
-                try {
-                    new Integer(unimodAccessionJTextField.getText().trim());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
-                    cvTermOk = false;
-                    unimodAccessionLabel.setForeground(Color.RED);
-                    unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
-                    unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
-                }
-            } else {
-                cvTermOk = false;
-
-                int option = JOptionPane.showConfirmDialog(this,
-                        "Adding a controlled vocabulary mapping is strongly recommended. This\n"
-                        + "is for example mandatory when exporting the data to mzIdentML.\n\n"
-                        + "Continue without such a mapping?", "Modification Controlled Vocabulary",
-                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                if (option != JOptionPane.YES_OPTION) {
-                    return;
-                }
-            }
-
-            // create the unimod cv term
-            CvTerm cvTerm = null;
-            if (cvTermOk) {
-                int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
-                cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-                Double mass = atomChainAdded.getMass() + atomChainRemoved.getMass();
-                cvTerm.setValue(mass + "");
-            }
-
-            PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
-                    nameTxt.getText().trim(),
-                    nameShortTxt.getText().trim().toLowerCase(),
-                    atomChainAdded, atomChainRemoved, pattern, cvTerm);
-            newPTM.setNeutralLosses(neutralLosses);
-            newPTM.setReporterIons(reporterIons);
-
             if (editable) {
+
+                // check if the unimod cv term mapping is provided
+                boolean cvTermOk = true;
+                if (!unimodNameJTextField.getText().trim().isEmpty()) {
+                    try {
+                        new Integer(unimodAccessionJTextField.getText().trim());
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
+                        cvTermOk = false;
+                        unimodAccessionLabel.setForeground(Color.RED);
+                        unimodAccessionLabel.setToolTipText("Please provide the Unimod accession number as an integer");
+                        unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
+                    }
+                } else {
+                    cvTermOk = false;
+
+                    int option = JOptionPane.showConfirmDialog(this,
+                            "Adding a controlled vocabulary mapping is strongly recommended. This\n"
+                            + "is for example mandatory when exporting the data to mzIdentML.\n\n"
+                            + "Continue without such a mapping?", "Modification Controlled Vocabulary",
+                            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                    if (option != JOptionPane.YES_OPTION) {
+                        return;
+                    }
+                }
+
+                // create the unimod cv term
+                CvTerm cvTerm = null;
+                if (cvTermOk) {
+                    int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
+                    cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+                    Double mass = atomChainAdded.getMass() + atomChainRemoved.getMass();
+                    cvTerm.setValue(mass + "");
+                }
+
+                PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
+                        nameTxt.getText().trim(),
+                        nameShortTxt.getText().trim().toLowerCase(),
+                        atomChainAdded, atomChainRemoved, pattern, cvTerm);
+                newPTM.setNeutralLosses(neutralLosses);
+                newPTM.setReporterIons(reporterIons);
+
                 for (String ptm : ptmFactory.getPTMs()) {
                     if (currentPtm == null || !ptm.equals(currentPtm.getName())) {
                         PTM otherPTM = ptmFactory.getPTM(ptm);

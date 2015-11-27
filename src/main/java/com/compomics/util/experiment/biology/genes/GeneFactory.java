@@ -72,6 +72,10 @@ public class GeneFactory {
      * The Ensembl versions for each species.
      */
     private HashMap<String, String> ensemblVersionsMap;
+    /**
+     * The horizontal padding to use when printing to the waiting dialog.
+     */
+    private final String PADDING = "    ";
 
     /**
      * Static method returning the instance of the factory.
@@ -137,13 +141,12 @@ public class GeneFactory {
         HashMap<String, GeneMapping> geneMappings = new HashMap<String, GeneMapping>(speciesOccurrence.size());
         HashMap<String, GoMapping> goMappings = new HashMap<String, GoMapping>(speciesOccurrence.size());
 
-        // Download/Update species mapping, put them in maps per species
+        // download/update species mapping, put them in maps per species
         for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
 
             if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
 
                 try {
-
                     Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
 
                     if (taxon != null) {
@@ -169,7 +172,7 @@ public class GeneFactory {
                                     success = false;
                                 }
                                 if (!success) {
-                                    waitingHandler.appendReport("Update of Gene information for species " + speciesName + " failed. A previous version will be used if available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Update of gene information for species " + speciesName + " failed. A previous version will be used if available.", true, true);
                                 }
                             }
 
@@ -179,34 +182,34 @@ public class GeneFactory {
                                     geneMapping.importFromFile(geneMappingFile, waitingHandler);
                                     geneMappings.put(speciesName, geneMapping);
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport("Import of the gene mapping for " + speciesName + " failed. Gene information for this species will not be available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of the gene mapping for " + speciesName + " failed. Gene information for this species will not be available.", true, true);
                                 }
                             } else {
-                                waitingHandler.appendReport("Gene mapping for " + speciesName + " not available. Gene information for this species will not be available.", true, true);
+                                waitingHandler.appendReport(PADDING + "Gene mapping for " + speciesName + " not available. Gene information for this species will not be available.", true, true);
                             }
 
                             if (goMappingFile.exists()) {
                                 GoMapping goMapping = new GoMapping();
                                 try {
-                                    goMapping.laodMappingFromFile(goMappingFile, waitingHandler);
+                                    goMapping.loadMappingsFromFile(goMappingFile, waitingHandler);
                                     goMappings.put(speciesName, goMapping);
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport("Import of the GO mapping for " + speciesName + " failed. GO annotatoin for this species will not be available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for " + speciesName + " failed. GO annotation for this species will not be available.", true, true);
                                 }
                             } else {
-                                waitingHandler.appendReport("GO mapping for " + speciesName + " not available. GO annotatoin for this species will not be available.", true, true);
+                                waitingHandler.appendReport(PADDING + "GO mapping for " + speciesName + " not available. GO annotation for this species will not be available.", true, true);
                             }
                         } else {
-                            waitingHandler.appendReport(speciesName + " not available in Ensembl. Gene and GO annotatoin for this species will not be available.", true, true);
+                            waitingHandler.appendReport(PADDING + speciesName + " not available in Ensembl. Gene and GO annotation for this species will not be available.", true, true);
                         }
                     }
                 } catch (Exception e) {
-                    waitingHandler.appendReport("No taxonomy found for " + uniprotTaxonomy + ". Gene annotatoin for this species will not be available.", true, true);
+                    waitingHandler.appendReport(PADDING + "No taxonomy found for " + uniprotTaxonomy + ". Gene annotation for this species will not be available.", true, true);
                 }
             }
         }
 
-        // Get the mappings for the proteins in the sequence factory
+        // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
         HashMap<String, String> ensemblVersionsUsed = new HashMap<String, String>(ensemblVersionsMap);
         HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<String, String>();
@@ -273,6 +276,7 @@ public class GeneFactory {
                 }
             }
         }
+
         geneMaps.setEnsemblVersionsMap(ensemblVersionsUsed);
         geneMaps.setGeneNameToEnsemblIdMap(geneNameToEnsemblIdMap);
         geneMaps.setGeneNameToChromosomeMap(geneNameToChromosomeMap);
@@ -891,7 +895,7 @@ public class GeneFactory {
         }
 
         if (waitingHandler.isReport()) {
-            waitingHandler.appendReport("Downloading GO and gene mappings for species " + latinName + ".", true, true); // @TODO: use the waiting handler..?
+            waitingHandler.appendReport(PADDING + "Downloading GO and gene mappings for species " + latinName + ".", true, true);
         }
 
         EnsemblGenomeDivision ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(taxon);
@@ -921,11 +925,11 @@ public class GeneFactory {
             }
 
             if (!goMappingsDownloaded) {
-                waitingHandler.appendReport("Gene ontology mappings not available. Downloading gene mappings only.", true, true);
+                waitingHandler.appendReport(PADDING + "Gene ontology mappings not available. Downloading gene mappings only.", true, true);
             } else {
-                waitingHandler.setWaitingText("GO Mappings Downloaded.");
+                waitingHandler.setWaitingText(PADDING + "GO mappings downloaded.");
                 if (waitingHandler.isReport()) {
-                    waitingHandler.appendReport("GO mappings downloaded.", true, true);
+                    waitingHandler.appendReport(PADDING + "GO mappings downloaded.", true, true);
                 }
             }
         }
@@ -935,9 +939,9 @@ public class GeneFactory {
                     EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision).toString(), waitingHandler);
 
             if (!waitingHandler.isRunCanceled()) {
-                waitingHandler.setWaitingText("Gene Mappings Downloaded.");
+                waitingHandler.setWaitingText(PADDING + "Gene mappings downloaded.");
                 if (waitingHandler.isReport()) {
-                    waitingHandler.appendReport("Gene mappings downloaded.", true, true);
+                    waitingHandler.appendReport(PADDING + "Gene mappings downloaded.", true, true);
                 }
             }
         }

@@ -46,7 +46,7 @@
         <developer>
             <name>Harald Barsnes</name>
             <id>harald</id>
-            <email>harald.barsnes AT biomed.uib.no</email>
+            <email>harald.barsnes AT uib.no</email>
             <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
@@ -55,7 +55,7 @@
         <developer>
             <name>Marc Vaudel</name>
             <id>marc</id>
-            <email>marc.vaudel AT biomed.uib.no</email>
+            <email>marc.vaudel AT uib.no</email>
             <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>

@@ -922,9 +922,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             if (includeDate) {
                 Date date = new Date();
                 if (addNewLine) {
-                    reportTextArea.append(date + tabNonHtml + report + System.getProperty("line.separator"));
+                    reportTextArea.append(date + TAB_NON_HTML + report + System.getProperty("line.separator"));
                 } else {
-                    reportTextArea.append(date + tabNonHtml + report);
+                    reportTextArea.append(date + TAB_NON_HTML + report);
                 }
             } else {
                 if (addNewLine) {
@@ -941,7 +941,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public synchronized void appendReportNewLineNoDate() {
         if (displayProgress) {
-            reportTextArea.append(tabNonHtml);
+            reportTextArea.append(TAB_NON_HTML);
         }
     }
 
@@ -1154,7 +1154,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 + "# " + toolName + " " + toolVersion + " Report File" + System.getProperty("line.separator")
                 + "#" + System.getProperty("line.separator")
                 + "# Originally saved by: " + System.getProperty("user.name") + host + System.getProperty("line.separator")
-                + "#                  on: " + sdf.format(new Date()) + System.getProperty("line.separator"));
+                + "#                  on: " + SIMPLE_DATA_FORMAT.format(new Date()) + System.getProperty("line.separator"));
         if (aFile != null) {
             output.append("#                  as: " + aFile.getName() + System.getProperty("line.separator"));
         }

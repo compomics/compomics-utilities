@@ -13,15 +13,15 @@ public interface WaitingHandler {
     /**
      * Convenience date format.
      */
-    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, HH:mm");
+    public static final SimpleDateFormat SIMPLE_DATA_FORMAT = new SimpleDateFormat("dd MMM yyyy, HH:mm");
     /**
      * The tab space to add when using HTML.
      */
-    public static final String tabHtml = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    public static final String TAB_HTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
     /**
      * The tab space to add when not using HTML.
      */
-    public static final String tabNonHtml = "        ";
+    public static final String TAB_NON_HTML = "        ";
 
     /**
      * Sets whether the primary progress counter is indeterminate or not.

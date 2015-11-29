@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotTaxonomy;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
@@ -603,7 +602,7 @@ public class SequenceFactory {
      * will be automatically overwritten and the stacktrace printed.
      *
      * @param overwrite boolean indicating whether the index .cui file shall be
-     * overwritten if present.
+     * overwritten if present, even if the file has not been changed
      * @param waitingHandler a waitingHandler showing the progress
      *
      * @return the index of the FASTA file
@@ -620,13 +619,13 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the file index of the given fasta file. If a problem occurs while
+     * Returns the file index of the given FASTA file. If a problem occurs while
      * reading an older index the file will be automatically overwritten and the
      * stacktrace printed.
      *
-     * @param fastaFile the fast file to index
+     * @param fastaFile the FASTA file to index
      * @param overwrite boolean indicating whether the index .cui file shall be
-     * overwritten if present.
+     * overwritten if present, even if the file has not been changed
      * @param waitingHandler a waitingHandler showing the progress
      *
      * @return the index of the FASTA file

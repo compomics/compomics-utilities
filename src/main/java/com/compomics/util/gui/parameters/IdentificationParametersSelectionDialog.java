@@ -28,6 +28,8 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
+ * 
+ * @deprecated no longer used
  */
 public class IdentificationParametersSelectionDialog extends javax.swing.JDialog {
 

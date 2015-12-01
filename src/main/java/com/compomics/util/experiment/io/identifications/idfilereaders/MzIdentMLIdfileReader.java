@@ -153,19 +153,23 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
                 Param softwareNameObject = software.getSoftwareName();
 
-                String name = softwareNameObject.getCvParam().getName();
-                if (name == null) {
-                    name = softwareNameObject.getUserParam().getName();
+                String softwareName = softwareNameObject.getCvParam().getName();
+                if (softwareName == null) {
+                    softwareName = softwareNameObject.getUserParam().getName();
                 }
+
                 String version = software.getVersion();
-                if (name != null && version != null) {
-                    ArrayList<String> versions = tempSoftwareVersions.get(name);
-                    if (versions == null) {
-                        versions = new ArrayList<String>();
-                        versions.add(version);
-                        tempSoftwareVersions.put(name, versions);
-                    } else if (!versions.contains(version)) {
-                        versions.add(version);
+                if (softwareName != null && version != null) {
+                    // only keep known software
+                    if (Advocate.getAdvocate(softwareName) != null) {
+                        ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
+                        if (versions == null) {
+                            versions = new ArrayList<String>();
+                            versions.add(version);
+                            tempSoftwareVersions.put(softwareName, versions);
+                        } else if (!versions.contains(version)) {
+                            versions.add(version);
+                        }
                     }
                 }
             }
@@ -705,18 +709,22 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         }
 
         if (softwareName != null && softwareVersion != null) {
+            
+            // only keep known software
+            if (Advocate.getAdvocate(softwareName) != null) {
 
-            ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
+                ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
 
-            if (versions == null) {
-                versions = new ArrayList<String>();
-                versions.add(softwareVersion);
-                tempSoftwareVersions.put(softwareName, versions);
-            } else if (!versions.contains(softwareVersion)) {
-                versions.add(softwareVersion);
+                if (versions == null) {
+                    versions = new ArrayList<String>();
+                    versions.add(softwareVersion);
+                    tempSoftwareVersions.put(softwareName, versions);
+                } else if (!versions.contains(softwareVersion)) {
+                    versions.add(softwareVersion);
+                }
+
+                softwareVersions.put(softwareName, versions);
             }
-
-            softwareVersions.put(softwareName, versions);
         }
 
         softwareVersions.putAll(tempSoftwareVersions);

@@ -102,6 +102,7 @@ public class IdentificationParametersFactory {
      * @param name the name of the parameters to delete
      */
     public void removeIdentificationParameters(String name) {
+        identificationParametersMap.remove(name);
         File parametersFile = getIdentificationParametersFile(name);
         parametersFile.delete();
     }

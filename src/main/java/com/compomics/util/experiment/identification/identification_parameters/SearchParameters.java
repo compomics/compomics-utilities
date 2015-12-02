@@ -683,7 +683,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
             // Try as json file
             IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
-            Class expectedObjectType = MarshallableParameter.class;
+            Class expectedObjectType = DummyParameters.class;
             Object object = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
             DummyParameters dummyParameters = (DummyParameters) object;
             if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {

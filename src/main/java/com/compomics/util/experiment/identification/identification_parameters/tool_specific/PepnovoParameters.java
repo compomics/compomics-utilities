@@ -70,20 +70,20 @@ public class PepnovoParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Indicates whether the precursor charge shall be estimated for OMSSA.
+     * Indicates whether the precursor charge shall be estimated for PepNovo.
      *
      * @return a boolean indicating whether the precursor charge shall be
-     * estimated for OMSSA
+     * estimated for PepNovo
      */
     public Boolean isEstimateCharge() {
         return estimateCharge;
     }
 
     /**
-     * Sets whether the precursor charge shall be estimated for OMSSA.
+     * Sets whether the precursor charge shall be estimated for PepNovo.
      *
      * @param estimateCharge a boolean indicating whether the precursor charge
-     * shall be estimated for OMSSA
+     * shall be estimated for PepNovo
      */
     public void setEstimateCharge(Boolean estimateCharge) {
         this.estimateCharge = estimateCharge;

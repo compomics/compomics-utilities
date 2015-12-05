@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -317,25 +318,25 @@ public class PepxmlIdfileReader implements IdfileReader {
                         || attributeName.equals("mod_cterm_mass")) {
 
                     String value = parser.getAttributeValue(i).trim();
-                    Double modifiedAaMass = null;
+                    Double terminalMass = null;
                     try {
-                        modifiedAaMass = new Double(value);
+                        terminalMass = new Double(value);
                     } catch (Exception e) {
-                        throw new IllegalArgumentException("An error occurred while parsing modification mass " + value + ". Number expected.");
+                        throw new IllegalArgumentException("An error occurred while parsing modification terminal mass " + value + ". Number expected.");
                     }
 
                     int site;
                     if (attributeName.equals("mod_nterm_mass")) {
                         site = 1;
+                        terminalMass -= Atom.H.getMonoisotopicMass();
                     } else { // c-term
                         site = sequence.length();
+                        terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
                     }
 
                     char aa = sequence.charAt(site - 1);
-                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                    double modificationMass = modifiedAaMass - aminoAcid.getMonoisotopicMass();
-                    modificationMass = Util.roundDouble(modificationMass, 2);
-                    String tempModificationName = modificationMass + "@" + aa;
+                    terminalMass = Util.roundDouble(terminalMass, 2);
+                    String tempModificationName = terminalMass + "@" + aa;
                     ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
                     modificationMatches.add(modificationMatch);
                 }

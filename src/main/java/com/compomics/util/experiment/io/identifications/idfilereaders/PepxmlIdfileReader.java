@@ -293,7 +293,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         String tagName = parser.getName();
         if (tagName.equals("modification_info")) {
 
-            // The peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
+            // the peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
             ArrayList<Integer> variableModificationSites = new ArrayList<Integer>();
 
             for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -313,6 +313,31 @@ public class PepxmlIdfileReader implements IdfileReader {
                             aa++;
                         }
                     }
+                } else if (attributeName.equals("mod_nterm_mass")
+                        || attributeName.equals("mod_cterm_mass")) {
+
+                    String value = parser.getAttributeValue(i).trim();
+                    Double modifiedAaMass = null;
+                    try {
+                        modifiedAaMass = new Double(value);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("An error occurred while parsing modification mass " + value + ". Number expected.");
+                    }
+
+                    int site;
+                    if (attributeName.equals("mod_nterm_mass")) {
+                        site = 1;
+                    } else { // c-term
+                        site = sequence.length();
+                    }
+
+                    char aa = sequence.charAt(site - 1);
+                    AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+                    double modificationMass = modifiedAaMass - aminoAcid.getMonoisotopicMass();
+                    modificationMass = Util.roundDouble(modificationMass, 2);
+                    String tempModificationName = modificationMass + "@" + aa;
+                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
+                    modificationMatches.add(modificationMatch);
                 }
             }
 

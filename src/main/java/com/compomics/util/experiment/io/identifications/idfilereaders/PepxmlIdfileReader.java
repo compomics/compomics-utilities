@@ -332,6 +332,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     } else { // c-term
                         site = sequence.length();
                         terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
+                        terminalMass -= Atom.H.getMonoisotopicMass(); // @TODO: remove when Comet fixes its export!
                     }
 
                     char aa = sequence.charAt(site - 1);

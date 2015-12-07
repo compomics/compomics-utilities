@@ -30,6 +30,10 @@ public class MgfFileIterator {
      * The rank of the spectrum.
      */
     private int rank;
+    /**
+     * Boolean indicating whether the stream was closed.
+     */
+    private boolean streamClosed = false;
 
     /**
      * Constructor.
@@ -70,10 +74,17 @@ public class MgfFileIterator {
     public synchronized MSnSpectrum next() throws IOException {
 
         MSnSpectrum currentSpectrum = nextSpectrum;
-        nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+        if (!streamClosed) {
+            nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);
+        } else {
+            nextSpectrum = null;
+        }
 
         if (nextSpectrum == null) {
-            br.close();
+            if (!streamClosed) {
+                br.close();
+                streamClosed = true;
+            }
         } else if (nextSpectrum.getScanNumber() == null) {
             nextSpectrum.setScanNumber(++rank + "");
         } else {

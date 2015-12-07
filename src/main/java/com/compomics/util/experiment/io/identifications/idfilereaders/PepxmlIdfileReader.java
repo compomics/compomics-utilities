@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.identifications.idfilereaders;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
+import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -293,7 +294,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         String tagName = parser.getName();
         if (tagName.equals("modification_info")) {
 
-            // The peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
+            // the peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
             ArrayList<Integer> variableModificationSites = new ArrayList<Integer>();
 
             for (int i = 0; i < parser.getAttributeCount(); i++) {
@@ -313,6 +314,32 @@ public class PepxmlIdfileReader implements IdfileReader {
                             aa++;
                         }
                     }
+                } else if (attributeName.equals("mod_nterm_mass")
+                        || attributeName.equals("mod_cterm_mass")) {
+
+                    String value = parser.getAttributeValue(i).trim();
+                    Double terminalMass = null;
+                    try {
+                        terminalMass = new Double(value);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("An error occurred while parsing modification terminal mass " + value + ". Number expected.");
+                    }
+
+                    int site;
+                    if (attributeName.equals("mod_nterm_mass")) {
+                        site = 1;
+                        terminalMass -= Atom.H.getMonoisotopicMass();
+                    } else { // c-term
+                        site = sequence.length();
+                        terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
+                        terminalMass -= Atom.H.getMonoisotopicMass(); // @TODO: remove when Comet fixes its export!
+                    }
+
+                    char aa = sequence.charAt(site - 1);
+                    terminalMass = Util.roundDouble(terminalMass, 2);
+                    String tempModificationName = terminalMass + "@" + aa;
+                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
+                    modificationMatches.add(modificationMatch);
                 }
             }
 

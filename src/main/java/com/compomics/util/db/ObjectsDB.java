@@ -1441,4 +1441,13 @@ public class ObjectsDB implements Serializable {
             throw new IllegalArgumentException("An error occurred when getting the original key of " + correctedKey + ".");
         }
     }
+
+    /**
+     * Returns the path to the database.
+     * 
+     * @return the path to the database
+     */
+    public String getPath() {
+        return path;
+    }
 }

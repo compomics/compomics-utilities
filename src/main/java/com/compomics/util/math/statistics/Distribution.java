@@ -49,6 +49,18 @@ public interface Distribution extends Serializable {
     public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException;
 
     /**
+     * Returns the cumulative density function value at a given position, starting from the low values if before the median, from the high otherwise.
+     *
+     * @param x the position of interest
+     * @param mathContext the math context to use for calculation
+     * 
+     * @return the value of the density function at the give position
+     * 
+     * @throws MathException if a MathException occurs
+     */
+    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException;
+
+    /**
      * The value after which the density function will be smaller than p.
      *
      * @param p the probability of interest

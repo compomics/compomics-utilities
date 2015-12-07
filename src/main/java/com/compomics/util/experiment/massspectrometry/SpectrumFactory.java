@@ -48,10 +48,14 @@ public class SpectrumFactory {
      */
     private LinkedBlockingDeque<String> loadedSpectra = new LinkedBlockingDeque<String>();
     /**
+     * Map to the different files.
+     */
+    private HashMap<String, File> filesMap = new HashMap<String, File>();
+    /**
      * Map of the random access files of the loaded mgf files (filename &gt;
      * random access file).
      */
-    private HashMap<String, BufferedRandomAccessFile> mgfFilesMap = new HashMap<String, BufferedRandomAccessFile>();
+    private HashMap<String, BufferedRandomAccessFile> mgfRandomAccessFilesMap = new HashMap<String, BufferedRandomAccessFile>();
     /**
      * Map of the mgf indexes (fileName &gt; mgf index).
      */
@@ -110,7 +114,8 @@ public class SpectrumFactory {
         currentSpectrumMap.clear();
         loadedPrecursorsMap.clear();
         loadedSpectra.clear();
-        mgfFilesMap.clear();
+        filesMap.clear();
+        mgfRandomAccessFilesMap.clear();
         mgfIndexesMap.clear();
         mzMLUnmarshallers.clear();
         idToSpectrumName.clear();
@@ -165,6 +170,7 @@ public class SpectrumFactory {
      *
      * @param spectrumFile The spectrum file, can be mgf or mzML
      * @param waitingHandler the waiting handler
+     *
      * @throws FileNotFoundException Exception thrown whenever the file was not
      * found
      * @throws IOException Exception thrown whenever an error occurred while
@@ -175,6 +181,7 @@ public class SpectrumFactory {
     public void addSpectra(File spectrumFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, IllegalArgumentException {
 
         String fileName = spectrumFile.getName();
+        filesMap.put(fileName, spectrumFile);
 
         if (fileName.toLowerCase().endsWith(".mgf")) {
 
@@ -214,7 +221,7 @@ public class SpectrumFactory {
                 throw new IllegalArgumentException("An error occurred while indexing " + spectrumFile.getAbsolutePath());
             }
 
-            mgfFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
+            mgfRandomAccessFilesMap.put(fileName, new BufferedRandomAccessFile(spectrumFile, "r", 1024 * 100));
             mgfIndexesMap.put(fileName, mgfIndex);
 
         } else if (fileName.toLowerCase().endsWith(".mzml")) {
@@ -302,8 +309,8 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the precursor mz of the desired spectrum. The value will be saved in
-     * cache.
+     * Returns the precursor mz of the desired spectrum. The value will be saved
+     * in cache.
      *
      * @param spectrumKey the key of the spectrum
      * @return the corresponding precursor mz
@@ -626,7 +633,7 @@ public class SpectrumFactory {
                 throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + fileName + "\' not found.");
             }
             try {
-                currentPrecursor = MgfReader.getPrecursor(mgfFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
+                currentPrecursor = MgfReader.getPrecursor(mgfRandomAccessFilesMap.get(fileName), mgfIndexesMap.get(fileName).getIndex(spectrumTitle), fileName);
             } catch (Exception e) {
                 if (waitingTime < timeOut) {
                     try {
@@ -779,7 +786,7 @@ public class SpectrumFactory {
                 throw new IOException("Spectrum \'" + spectrumTitle + "\' in mgf file \'" + spectrumFile + "\' not found!");
             }
             try {
-                currentSpectrum = MgfReader.getSpectrum(mgfFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
+                currentSpectrum = MgfReader.getSpectrum(mgfRandomAccessFilesMap.get(spectrumFile), mgfIndexesMap.get(spectrumFile).getIndex(spectrumTitle), spectrumFile);
             } catch (Exception e) {
                 if (waitingTime < timeOut) {
                     try {
@@ -914,7 +921,7 @@ public class SpectrumFactory {
      * closing the files
      */
     public void closeFiles() throws IOException {
-        for (BufferedRandomAccessFile randomAccessFile : mgfFilesMap.values()) {
+        for (BufferedRandomAccessFile randomAccessFile : mgfRandomAccessFilesMap.values()) {
             randomAccessFile.close();
         }
     }
@@ -925,7 +932,7 @@ public class SpectrumFactory {
      * @return a list of loaded mgf files
      */
     public ArrayList<String> getMgfFileNames() {
-        return new ArrayList<String>(mgfFilesMap.keySet());
+        return new ArrayList<String>(mgfRandomAccessFilesMap.keySet());
     }
 
     /**
@@ -1032,5 +1039,16 @@ public class SpectrumFactory {
      */
     public File getSpectrumFileFromIdName(String idName) {
         return idToSpectrumName.get(idName);
+    }
+
+    /**
+     * Returns the file associated to the given name.
+     * 
+     * @param fileName the name of the file
+     * 
+     * @return the file
+     */
+    public File getMgfFileFromName(String fileName) {
+        return filesMap.get(fileName);
     }
 }

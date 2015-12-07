@@ -14,7 +14,7 @@ public class AtomImpl implements Serializable {
      */
     private Atom atom;
     /**
-     * The isotope.
+     * The isotope, 0 for monoisotope.
      */
     private Integer isotope;
 
@@ -22,7 +22,7 @@ public class AtomImpl implements Serializable {
      * Constructor.
      *
      * @param atom the reference atom
-     * @param isotope the isotope
+     * @param isotope the isotope, 0 for monoisotope
      */
     public AtomImpl(Atom atom, Integer isotope) {
         this.atom = atom;
@@ -68,7 +68,7 @@ public class AtomImpl implements Serializable {
     }
 
     /**
-     * Returns the isotope.
+     * Returns the isotope, 0 for monoisotope.
      *
      * @return the isotope
      */

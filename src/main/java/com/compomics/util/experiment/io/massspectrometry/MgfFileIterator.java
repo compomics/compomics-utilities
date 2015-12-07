@@ -67,7 +67,7 @@ public class MgfFileIterator {
      *
      * @throws IOException if an IOException occurs
      */
-    public MSnSpectrum next() throws IOException {
+    public synchronized MSnSpectrum next() throws IOException {
 
         MSnSpectrum currentSpectrum = nextSpectrum;
         nextSpectrum = MgfReader.getSpectrum(br, mgfFileName);

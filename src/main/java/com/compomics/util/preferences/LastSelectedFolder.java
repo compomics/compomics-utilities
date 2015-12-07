@@ -83,7 +83,11 @@ public class LastSelectedFolder implements Serializable {
         if (useCase == null) {
             useCase = defaultUseCase;
         }
-        return lastSelectedFolder.get(useCase);
+        String result = lastSelectedFolder.get(useCase);
+        if (result == null && !useCase.equals(defaultUseCase)) {
+            result = lastSelectedFolder.get(defaultUseCase);
+        }
+        return result;
     }
 
     /**

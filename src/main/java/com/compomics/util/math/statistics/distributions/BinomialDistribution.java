@@ -205,6 +205,11 @@ public class BinomialDistribution implements Distribution {
     }
 
     @Override
+    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public BigDecimal getMaxValueForProbability(double p, MathContext mathContext) {
         throw new UnsupportedOperationException("Not supported.");
     }

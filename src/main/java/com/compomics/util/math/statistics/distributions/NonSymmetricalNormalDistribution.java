@@ -130,6 +130,25 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
+    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+        if (x > mean) {
+            return distributionUp.getDescendingCumulativeProbabilityAt(x, mathContext);
+        } else {
+            return distributionDown.getDescendingCumulativeProbabilityAt(x, mathContext);
+        }
+    }
+
+    @Override
+    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+        if (x > mean) {
+            return getDescendingCumulativeProbabilityAt(x, mathContext);
+        } else {
+            getCumulativeProbabilityAt(x, mathContext);
+        }
+        return new BigDecimal(0.5);
+    }
+
+    @Override
     public BigDecimal getMaxValueForProbability(double p, MathContext mathContext) {
         return distributionUp.getMaxValueForProbability(p, mathContext);
     }
@@ -145,15 +164,6 @@ public class NonSymmetricalNormalDistribution implements Distribution {
             return distributionDown.getValueAtCumulativeProbability(p, mathContext);
         } else {
             return distributionUp.getValueAtCumulativeProbability(p, mathContext);
-        }
-    }
-
-    @Override
-    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
-        if (x > mean) {
-            return distributionUp.getDescendingCumulativeProbabilityAt(x, mathContext);
-        } else {
-            return distributionDown.getDescendingCumulativeProbabilityAt(x, mathContext);
         }
     }
 

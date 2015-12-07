@@ -179,6 +179,16 @@ public class NormalDistribution implements Distribution {
     }
 
     @Override
+    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+        if (x > mean) {
+            return getDescendingCumulativeProbabilityAt(x, mathContext);
+        } else {
+            getCumulativeProbabilityAt(x, mathContext);
+        }
+        return new BigDecimal(0.5);
+    }
+
+    @Override
     public BigDecimal getValueAtDescendingCumulativeProbability(double p, MathContext mathContext) throws MathException {
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case

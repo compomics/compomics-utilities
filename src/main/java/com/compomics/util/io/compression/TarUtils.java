@@ -2,6 +2,8 @@ package com.compomics.util.io.compression;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -57,6 +59,7 @@ public class TarUtils {
      *
      * @param folder the original folder to tar
      * @param destinationFile the destination file
+     * @param exceptionsPaths a list of paths to files or folders which should be excluded from taring
      * @param waitingHandler a waiting handler used to cancel the process (can
      * be null)
      * @throws FileNotFoundException exception thrown whenever a file is not
@@ -66,7 +69,7 @@ public class TarUtils {
      * @throws IOException exception thrown whenever an error occurred while
      * reading/writing files
      */
-    public static void tarFolderContent(File folder, File destinationFile, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
+    public static void tarFolderContent(File folder, File destinationFile, HashSet<String> exceptionsPaths, WaitingHandler waitingHandler) throws FileNotFoundException, ArchiveException, IOException {
         FileOutputStream fos = new FileOutputStream(destinationFile);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -75,10 +78,13 @@ public class TarUtils {
                 try {
                     tarOutput.setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU);
                     for (File file : folder.listFiles()) {
-                        if (file.isDirectory()) {
-                            addFolderContent(tarOutput, file, waitingHandler);
-                        } else {
-                            addFile(tarOutput, file, waitingHandler);
+                        String path = file.getAbsolutePath();
+                        if (!exceptionsPaths.contains(path)) {
+                            if (file.isDirectory()) {
+                                addFolderContent(tarOutput, file, waitingHandler);
+                            } else {
+                                addFile(tarOutput, file, waitingHandler);
+                            }
                         }
                     }
                 } finally {
@@ -168,7 +174,7 @@ public class TarUtils {
      * reading/writing files
      */
     private static void addFile(ArchiveOutputStream tarOutput, File file, String parentFolder, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
-        
+
         if (parentFolder == null) {
             parentFolder = file.getParentFile().getAbsolutePath();
         }

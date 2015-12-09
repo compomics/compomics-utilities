@@ -1472,7 +1472,11 @@ public class PtmDialog extends javax.swing.JDialog {
             int index = neutralLossesTable.convertRowIndexToModel(row);
             NeutralLoss neutralLoss = neutralLosses.get(index);
             if (column == 1) {
-                neutralLoss.name = (String) aValue;
+                String oldName = neutralLoss.name;
+                NeutralLoss.removeNeutralLoss(oldName);
+                String newName = aValue.toString();
+                NeutralLoss newLoss = new NeutralLoss(newName, neutralLoss.getComposition(), neutralLoss.isFixed());
+                neutralLosses.set(index, newLoss);
             } else if (column == 4) {
                 neutralLoss.setFixed((Boolean) aValue);
             }

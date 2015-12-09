@@ -127,7 +127,8 @@ public class PhosphoRS {
                 scoringLossesMap = new NeutralLossesMap();
         if (accountNeutralLosses) {
             // here annotation are sequence and modification independant
-            for (NeutralLoss neutralLoss : annotationNeutralLosses.getAccountedNeutralLosses()) {
+            for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
+                NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
                 if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationSettings.getFragmentIonAccuracy()) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }

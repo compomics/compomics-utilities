@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.HashMap;
 
 /**
  * This class represents a neutral loss.
@@ -50,11 +51,15 @@ public class NeutralLoss extends ExperimentObject {
     /**
      * The name of the neutral loss.
      */
-    public String name;
+    public final String name;
     /**
      * Boolean indicating whether the neutral loss will always be accounted for.
      */
     private Boolean fixed = false;
+    /**
+     * Map of available neutral losses.
+     */
+    private static HashMap<String, NeutralLoss> neutralLosses;
 
     /**
      * Constructor for a user defined neutral loss.
@@ -67,6 +72,44 @@ public class NeutralLoss extends ExperimentObject {
         this.name = name;
         this.composition = composition;
         this.fixed = fixed;
+        addNeutralLoss(this);
+    }
+    
+    /**
+     * Adds a neutral loss to the class static map. Neutral losses with the same name will be overwritten.
+     * 
+     * @param neutralLoss the neutral loss to add
+     */
+    public static void addNeutralLoss(NeutralLoss neutralLoss) {
+        if (neutralLosses == null) {
+            neutralLosses = new HashMap<String, NeutralLoss>();
+        }
+        neutralLosses.put(neutralLoss.name, neutralLoss);
+    }
+    
+    /**
+     * Returns the neutral loss associated to the given name in the static map of the class. Null if not found.
+     * 
+     * @param name the name of the neutral loss of interest
+     * 
+     * @return the neutral loss
+     */
+    public static NeutralLoss getNeutralLoss(String name) {
+        if (neutralLosses == null) {
+            return null;
+        }
+        return neutralLosses.get(name);
+    }
+    
+    /**
+     * Removes the neutral loss associated to the given name in the static map of the class.
+     * 
+     * @param name the name of the neutral loss to remove
+     */
+    public static void removeNeutralLoss(String name) {
+        if (neutralLosses != null) {
+            neutralLosses.remove(name);
+        }
     }
 
     /**
@@ -132,9 +175,9 @@ public class NeutralLoss extends ExperimentObject {
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         if (anotherNeutralLoss.getComposition() == null || getComposition() == null) { // Backward compatibility
             return anotherNeutralLoss.name.equals(name)
-                    || Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
+                    && Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
         }
         return anotherNeutralLoss.name.equals(name)
-                || anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
+                && anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
     }
 }

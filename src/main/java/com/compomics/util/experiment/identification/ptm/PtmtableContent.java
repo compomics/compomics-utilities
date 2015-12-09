@@ -292,7 +292,8 @@ public class PtmtableContent {
         }
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
-        for (NeutralLoss neutralLoss : specificAnnotationPreferences.getNeutralLossesMap().getAccountedNeutralLosses()) {
+        for (String neutralLossName : specificAnnotationPreferences.getNeutralLossesMap().getAccountedNeutralLosses()) {
+            NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
             if (Math.abs(neutralLoss.getMass() - ptm.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
                 lossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }

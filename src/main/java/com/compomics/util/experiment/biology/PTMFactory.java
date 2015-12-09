@@ -136,18 +136,18 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given PTM targeting a single amino acid instead
-     * of a pattern.
+     * Returns a clone of the given PTM targeting a single amino acid instead of
+     * a pattern.
      *
      * @param modification the modification of interest
      *
-     * @return a clone of the given PTM targeting a single amino acid instead
-     * of a pattern
+     * @return a clone of the given PTM targeting a single amino acid instead of
+     * a pattern
      */
     public static PTM getSingleAAPTM(PTM modification) {
         if (!modification.isStandardSearch()) {
-            return new PTM(modification.getType(), modification.getShortName(), 
-                    modification.getName() + SINGLE_AA_SUFFIX, modification.getAtomChainAdded(), 
+            return new PTM(modification.getType(), modification.getShortName(),
+                    modification.getName() + SINGLE_AA_SUFFIX, modification.getAtomChainAdded(),
                     modification.getAtomChainRemoved(), modification.getPattern().getStandardSearchPattern());
         } else {
             return modification;
@@ -155,13 +155,13 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Returns a clone of the given PTM targeting a single amino acid instead
-     * of a pattern.
+     * Returns a clone of the given PTM targeting a single amino acid instead of
+     * a pattern.
      *
      * @param modificationName the name of the modification of interest
      *
-     * @return a clone of the given PTM targeting a single amino acid instead
-     * of a pattern
+     * @return a clone of the given PTM targeting a single amino acid instead of
+     * a pattern
      */
     public PTM getSingleAAPTM(String modificationName) {
         PTM modification = getPTM(modificationName);
@@ -306,11 +306,19 @@ public class PTMFactory implements Serializable {
                 if (!oldPTM.isSameAs(newPTM)) {
                     toCheck.add(modification);
                     if (overwrite) {
-                        ptmMap.put(modification, modificationProfile.getPtm(modification));
+                        PTM ptm = modificationProfile.getPtm(modification);
+                        ptmMap.put(modification, ptm);
+                        for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                            NeutralLoss.addNeutralLoss(neutralLoss);
+                        }
                     }
                 }
             } else {
-                addUserPTM(modificationProfile.getPtm(modification));
+                PTM ptm = modificationProfile.getPtm(modification);
+                addUserPTM(ptm);
+                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                    NeutralLoss.addNeutralLoss(neutralLoss);
+                }
             }
         }
         return toCheck;
@@ -998,10 +1006,8 @@ public class PTMFactory implements Serializable {
                         prideParametersReport += "<br>" + utilitiesPtmName + " (assumed variable)";
                     }
                 }
-            } else {
-                if (!unknownPtms.contains(pridePtmName)) {
-                    unknownPtms.add(pridePtmName);
-                }
+            } else if (!unknownPtms.contains(pridePtmName)) {
+                unknownPtms.add(pridePtmName);
             }
         }
 

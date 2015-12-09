@@ -220,7 +220,7 @@ public class FragmentIonTable extends JTable {
                 tooltips.add("b-ion doubly charged");
             }
 
-            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+            if (neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                 if (singleCharge) {
                     columnHeaders.add("b-H2O");
                     tempColumnTypes.add(valueClass);
@@ -232,7 +232,7 @@ public class FragmentIonTable extends JTable {
                     tooltips.add("b-ion with water loss, doubly charged");
                 }
             }
-            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+            if (neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                 if (singleCharge) {
                     columnHeaders.add("b-NH3");
                     tempColumnTypes.add(valueClass);
@@ -274,7 +274,7 @@ public class FragmentIonTable extends JTable {
                 tooltips.add("y-ion, doubly charged");
             }
 
-            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+            if (neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                 if (singleCharge) {
                     columnHeaders.add("y-H2O");
                     tempColumnTypes.add(valueClass);
@@ -286,7 +286,7 @@ public class FragmentIonTable extends JTable {
                     tooltips.add("y-ion with water loss, doubly charged");
                 }
             }
-            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+            if (neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                 if (singleCharge) {
                     columnHeaders.add("y-NH3");
                     tempColumnTypes.add(valueClass);
@@ -392,7 +392,7 @@ public class FragmentIonTable extends JTable {
                                 setValueAt(fragmentMzChargeTwo, fragmentNumber - 1, getColumn("b++").getModelIndex());
                             }
 
-                            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                 if (singleCharge) {
                                     setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-H2O").getModelIndex());
                                 }
@@ -401,7 +401,7 @@ public class FragmentIonTable extends JTable {
                                 }
                             }
 
-                            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                 if (singleCharge) {
                                     setValueAt(fragmentMzChargeOne, fragmentNumber - 1, getColumn("b-NH3").getModelIndex());
                                 }
@@ -421,7 +421,7 @@ public class FragmentIonTable extends JTable {
                                 setValueAt(fragmentMzChargeTwo, peptideSequence.length() - fragmentNumber, getColumn("y++").getModelIndex());
                             }
 
-                            if (neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                 if (singleCharge) {
                                     setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-H2O").getModelIndex());
                                 }
@@ -430,7 +430,7 @@ public class FragmentIonTable extends JTable {
                                 }
                             }
 
-                            if (neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                            if (neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                 if (singleCharge) {
                                     setValueAt(fragmentMzChargeOne, peptideSequence.length() - fragmentNumber, getColumn("y-NH3").getModelIndex());
                                 }
@@ -497,13 +497,13 @@ public class FragmentIonTable extends JTable {
                                     bIonsDoublyCharged.add(fragmentNumber - 1);
                                 }
                             } else {
-                                if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                     if (currentCharge == 1 && singleCharge) {
                                         bIonsH2OSinglyCharged.add(fragmentNumber - 1);
                                     } else if (twoCharges) {
                                         bIonsH2ODoublyCharged.add(fragmentNumber - 1);
                                     }
-                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                     if (currentCharge == 1 && singleCharge) {
                                         bIonsNH3SinglyCharged.add(fragmentNumber - 1);
                                     } else if (twoCharges) {
@@ -523,13 +523,13 @@ public class FragmentIonTable extends JTable {
                                     yIonsDoublyCharged.add(peptideSequence.length() - fragmentNumber);
                                 }
                             } else {
-                                if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                     if (currentCharge == 1 && singleCharge) {
                                         yIonsH2OSinglyCharged.add(peptideSequence.length() - fragmentNumber);
                                     } else if (twoCharges) {
                                         yIonsH2ODoublyCharged.add(peptideSequence.length() - fragmentNumber);
                                     }
-                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                     if (currentCharge == 1 && singleCharge) {
                                         yIonsNH3SinglyCharged.add(peptideSequence.length() - fragmentNumber);
                                     } else if (twoCharges) {
@@ -687,7 +687,7 @@ public class FragmentIonTable extends JTable {
                                         addValue(values, key, peakIntensity);
                                     }
                                 } else {
-                                    if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                    if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                         if (currentCharge == 1 && singleCharge) {
                                             String key = "b-H2O" + "_" + (fragmentNumber - 1);
                                             addValue(values, key, peakIntensity);
@@ -695,7 +695,7 @@ public class FragmentIonTable extends JTable {
                                             String key = "b++-H2O" + "_" + (fragmentNumber - 1);
                                             addValue(values, key, peakIntensity);
                                         }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                         if (currentCharge == 1 && singleCharge) {
                                             String key = "b-NH3" + "_" + (fragmentNumber - 1);
                                             addValue(values, key, peakIntensity);
@@ -720,7 +720,7 @@ public class FragmentIonTable extends JTable {
                                         addValue(values, key, peakIntensity);
                                     }
                                 } else {
-                                    if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O)) {
+                                    if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H20") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                         if (currentCharge == 1 && singleCharge) {
                                             String key = "y-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
                                             addValue(values, key, peakIntensity);
@@ -728,7 +728,7 @@ public class FragmentIonTable extends JTable {
                                             String key = "y++-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
                                             addValue(values, key, peakIntensity);
                                         }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3)) {
+                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                         if (currentCharge == 1 && singleCharge) {
                                             String key = "y-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
                                             addValue(values, key, peakIntensity);

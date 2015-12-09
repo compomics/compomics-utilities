@@ -87,11 +87,13 @@ public abstract class SpectrumAnnotator {
      */
     protected static final boolean subtractIsotope = false;
     /**
-     * The minimal isotope correction. By default only the monoisotopic peak is annotated (min=0).
+     * The minimal isotope correction. By default only the monoisotopic peak is
+     * annotated (min=0).
      */
     protected static final Integer minIsotopicCorrection = 0;
     /**
-     * The maximal isotope correction. By default only the monoisotopic peak is annotated (max=0).
+     * The maximal isotope correction. By default only the monoisotopic peak is
+     * annotated (max=0).
      */
     protected static final Integer maxIsotopicCorrection = 0;
     /**
@@ -123,7 +125,7 @@ public abstract class SpectrumAnnotator {
      * be read by the SpectrumPanel.
      *
      * @param ionMatches list of ion matches
-     * 
+     *
      * @return vector of default spectrum annotations
      */
     public static Vector<SpectrumAnnotation> getSpectrumAnnotation(ArrayList<IonMatch> ionMatches) {
@@ -181,10 +183,8 @@ public abstract class SpectrumAnnotator {
                             bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                             bestAccuracy = tempAccuracy;
                         }
-                    } else {
-                        if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
-                            bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
-                        }
+                    } else if (bestMatch == null || bestMatch.peak.intensity < currentPeak.intensity) {
+                        bestMatch = new IonMatch(currentPeak, theoreticIon, charge);
                     }
                 }
             }
@@ -328,7 +328,8 @@ public abstract class SpectrumAnnotator {
         if (neutralLosses == null || neutralLosses.isEmpty()) {
             return false;
         }
-        for (NeutralLoss neutralLossRef : neutralLosses.getAccountedNeutralLosses()) {
+        for (String neutralLossName : neutralLosses.getAccountedNeutralLosses()) {
+            NeutralLoss neutralLossRef = NeutralLoss.getNeutralLoss(neutralLossName);
             if (neutralLoss.isSameAs(neutralLossRef)) {
                 switch (ion.getType()) {
                     case PEPTIDE_FRAGMENT_ION:
@@ -337,11 +338,11 @@ public abstract class SpectrumAnnotator {
                             case PeptideFragmentIon.A_ION:
                             case PeptideFragmentIon.B_ION:
                             case PeptideFragmentIon.C_ION:
-                                return neutralLosses.getBStart(neutralLossRef) <= peptideFragmentIon.getNumber();
+                                return neutralLosses.getForwardStart(neutralLossName) <= peptideFragmentIon.getNumber();
                             case PeptideFragmentIon.X_ION:
                             case PeptideFragmentIon.Y_ION:
                             case PeptideFragmentIon.Z_ION:
-                                return neutralLosses.getYStart(neutralLossRef) <= peptideFragmentIon.getNumber();
+                                return neutralLosses.getRewindStart(neutralLossName) <= peptideFragmentIon.getNumber();
                             default:
                                 throw new UnsupportedOperationException("Fragment ion type " + ion.getSubTypeAsString() + " not implemented in the spectrum annotator.");
                         }
@@ -351,11 +352,11 @@ public abstract class SpectrumAnnotator {
                             case TagFragmentIon.A_ION:
                             case TagFragmentIon.B_ION:
                             case TagFragmentIon.C_ION:
-                                return neutralLosses.getBStart(neutralLossRef) <= tagFragmentIon.getNumber();
+                                return neutralLosses.getForwardStart(neutralLossName) <= tagFragmentIon.getNumber();
                             case TagFragmentIon.X_ION:
                             case TagFragmentIon.Y_ION:
                             case TagFragmentIon.Z_ION:
-                                return neutralLosses.getYStart(neutralLossRef) <= tagFragmentIon.getNumber();
+                                return neutralLosses.getRewindStart(neutralLossName) <= tagFragmentIon.getNumber();
                             default:
                                 throw new UnsupportedOperationException("Fragment ion type " + ion.getSubTypeAsString() + " not implemented in the spectrum annotator.");
                         }

@@ -280,8 +280,8 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Gene mapping preferences
     //////////////////////////////////
-    USE_GENE_MAPPING("useGeneMapping", "If true gene mappings will be used and saved along with the project. Default is true.", false, true),
-    UPDATE_GENE_MAPPING("updateGeneMapping", "If true gene mappings will be updated automatically from Ensembl (UniProt databases only). Default is true.", false, true),
+    USE_GENE_MAPPING("useGeneMapping", "If true gene mappings will be used and saved along with the project (UniProt databases only). (1: true, 0: false, default is '1')", false, true),
+    UPDATE_GENE_MAPPING("updateGeneMapping", "If true gene mappings will be updated automatically from Ensembl (UniProt databases only). (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////
     // Spectrum annotation
     //////////////////////////////////
@@ -299,7 +299,7 @@ public enum IdentificationParametersCLIParams {
     IMPORT_PEPTIDE_LENGTH_MIN("import_peptide_length_min", "The minimal peptide length to consider when importing identification files, default is 8.", false, true),
     IMPORT_PEPTIDE_LENGTH_MAX("import_peptide_length_max", "The maximal peptide length to consider when importing identification files, default is 30.", false, true),
     IMPORT_PRECURSOR_MZ("import_precurosor_mz", "The maximal precursor precursor deviation to allow when importing identification files, none by default.", false, true),
-    IMPORT_PRECURSOR_MZ_PPM("import_precurosor_mz_ppm", "Import precursor ion tolerance unit: ppm (1) or Da (2, true), default is '1'.", false, true),
+    IMPORT_PRECURSOR_MZ_PPM("import_precurosor_mz_ppm", "Import precursor ion tolerance unit: ppm (1) or Da (2), default is '1'.", false, true),
     EXCLUDE_UNKNOWN_PTMs("exclude_unknown_ptms", "If true peptides presenting unrecognized PTMs will be excluded. (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////
     // PTM localization parameters

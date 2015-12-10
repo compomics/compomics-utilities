@@ -86,10 +86,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         maxPepLengthTxt.setEnabled(editable);
         maxPtmsTxt.setEditable(editable);
         maxPtmsTxt.setEnabled(editable);
-        lowIsotopeErrorRangeTxt.setEditable(editable);
-        lowIsotopeErrorRangeTxt.setEnabled(editable);
-        highIsotopeErrorRangeTxt.setEditable(editable);
-        highIsotopeErrorRangeTxt.setEnabled(editable);
         numberMatchesTxt.setEditable(editable);
         numberMatchesTxt.setEnabled(editable);
         additionalOutputCmb.setEnabled(editable);
@@ -129,12 +125,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
             additionalOutputCmb.setSelectedIndex(1);
         }
 
-        if (msgfParameters.getLowerIsotopeErrorRange() != null) {
-            lowIsotopeErrorRangeTxt.setText(msgfParameters.getLowerIsotopeErrorRange() + "");
-        }
-        if (msgfParameters.getUpperIsotopeErrorRange() != null) {
-            highIsotopeErrorRangeTxt.setText(msgfParameters.getUpperIsotopeErrorRange() + "");
-        }
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
         }
@@ -182,14 +172,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
 
         result.setAdditionalOutput(additionalOutputCmb.getSelectedIndex() == 0);
 
-        input = lowIsotopeErrorRangeTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setLowerIsotopeErrorRange(new Integer(input));
-        }
-        input = highIsotopeErrorRangeTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setUpperIsotopeErrorRange(new Integer(input));
-        }
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
@@ -226,10 +208,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         numberMatchesTxt = new javax.swing.JTextField();
         additionalOutputLabel = new javax.swing.JLabel();
         additionalOutputCmb = new javax.swing.JComboBox();
-        isotopeErrorRangeLabel = new javax.swing.JLabel();
-        lowIsotopeErrorRangeTxt = new javax.swing.JTextField();
-        highIsotopeErrorRangeTxt = new javax.swing.JTextField();
-        isotopeErrorRangeDividerLabel = new javax.swing.JLabel();
         numberTerminiLabel = new javax.swing.JLabel();
         maxPtmsLabel = new javax.swing.JLabel();
         maxPtmsTxt = new javax.swing.JTextField();
@@ -303,27 +281,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         additionalOutputCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         additionalOutputCmb.setSelectedIndex(1);
 
-        isotopeErrorRangeLabel.setText("Isotope Error Range");
-
-        lowIsotopeErrorRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        lowIsotopeErrorRangeTxt.setText("0");
-        lowIsotopeErrorRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                lowIsotopeErrorRangeTxtKeyReleased(evt);
-            }
-        });
-
-        highIsotopeErrorRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        highIsotopeErrorRangeTxt.setText("1");
-        highIsotopeErrorRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                highIsotopeErrorRangeTxtKeyReleased(evt);
-            }
-        });
-
-        isotopeErrorRangeDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        isotopeErrorRangeDividerLabel.setText("-");
-
         numberTerminiLabel.setText("Enzymatic Terminals");
 
         maxPtmsLabel.setText("Max Variable PTMs per Peptide");
@@ -371,19 +328,12 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(additionalOutputLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(additionalOutputCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(isotopeErrorRangeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lowIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(isotopeErrorRangeDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(highIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(numberTerminiLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -395,7 +345,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
                 .addContainerGap())
         );
 
-        advancedSearchSettingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {highIsotopeErrorRangeTxt, lowIsotopeErrorRangeTxt, maxPepLengthTxt, minPepLengthTxt});
+        advancedSearchSettingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {maxPepLengthTxt, minPepLengthTxt});
 
         advancedSearchSettingsPanelLayout.setVerticalGroup(
             advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,12 +380,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPtmsLabel)
                     .addComponent(maxPtmsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lowIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(highIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isotopeErrorRangeDividerLabel)
-                    .addComponent(isotopeErrorRangeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberMatchesLabel)
@@ -506,7 +450,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
@@ -611,24 +555,6 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
      *
      * @param evt
      */
-    private void lowIsotopeErrorRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lowIsotopeErrorRangeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_lowIsotopeErrorRangeTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void highIsotopeErrorRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_highIsotopeErrorRangeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_highIsotopeErrorRangeTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
     private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxPtmsTxtKeyReleased
@@ -646,27 +572,7 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
         valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, lowIsotopeErrorRangeTxt, "lower isotope range", "Isotope Range Error", false, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, highIsotopeErrorRangeTxt, "upper isotope range", "Isotope Range Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
-
-        // isotope range: the low value should be lower than the high value
-        try {
-            int lowValue = Integer.parseInt(lowIsotopeErrorRangeTxt.getText().trim());
-            int highValue = Integer.parseInt(highIsotopeErrorRangeTxt.getText().trim());
-
-            if (lowValue > highValue) {
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "The lower range value has to be smaller than the upper range value.",
-                            "Isotope Range Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                isotopeErrorRangeLabel.setForeground(Color.RED);
-                isotopeErrorRangeLabel.setToolTipText("Please select a valid range (upper <= higher)");
-            }
-        } catch (NumberFormatException e) {
-            // ignore, handled above
-        }
         
         okButton.setEnabled(valid);
 
@@ -684,12 +590,8 @@ public class MsgfSettingsDialog extends javax.swing.JDialog implements Algorithm
     private javax.swing.JLabel decoyDatabaseLabel;
     private javax.swing.JComboBox fragmentationMethodCmb;
     private javax.swing.JLabel fragmentationMethodLabel;
-    private javax.swing.JTextField highIsotopeErrorRangeTxt;
     private javax.swing.JComboBox instrumentCmb;
     private javax.swing.JLabel instrumentLabel;
-    private javax.swing.JLabel isotopeErrorRangeDividerLabel;
-    private javax.swing.JLabel isotopeErrorRangeLabel;
-    private javax.swing.JTextField lowIsotopeErrorRangeTxt;
     private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JLabel maxPtmsLabel;
     private javax.swing.JTextField maxPtmsTxt;

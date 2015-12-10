@@ -270,6 +270,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         fragmentIonAccuracyTxt.setEditable(editable);
         minPrecursorChargeTxt.setEditable(editable);
         maxPrecursorChargeTxt.setEditable(editable);
+        isotopeMinTxt.setEditable(editable);
+        isotopeMaxTxt.setEditable(editable);
         addFixedModification.setEnabled(editable);
         removeFixedModification.setEnabled(editable);
         addVariableModification.setEnabled(editable);
@@ -374,6 +376,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         minPrecursorChargeTxt = new javax.swing.JTextField();
         maxPrecursorChargeTxt = new javax.swing.JTextField();
         precursorChargeRangeLabel = new javax.swing.JLabel();
+        isotopesLbl = new javax.swing.JLabel();
+        isotopeMinTxt = new javax.swing.JTextField();
+        precursorChargeRangeLabel1 = new javax.swing.JLabel();
+        isotopeMaxTxt = new javax.swing.JTextField();
         dataBasePanelSettings = new javax.swing.JPanel();
         databaseSettingsLbl = new javax.swing.JLabel();
         databaseSettingsTxt = new javax.swing.JTextField();
@@ -510,6 +516,29 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         precursorChargeRangeLabel.setText("-");
 
+        isotopesLbl.setText("Isotopes");
+
+        isotopeMinTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        isotopeMinTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                isotopeMinTxtKeyReleased(evt);
+            }
+        });
+
+        precursorChargeRangeLabel1.setText("-");
+
+        isotopeMaxTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        isotopeMaxTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                isotopeMaxTxtActionPerformed(evt);
+            }
+        });
+        isotopeMaxTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                isotopeMaxTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout proteaseAndFragmentationPanelLayout = new javax.swing.GroupLayout(proteaseAndFragmentationPanel);
         proteaseAndFragmentationPanel.setLayout(proteaseAndFragmentationPanelLayout);
         proteaseAndFragmentationPanelLayout.setHorizontalGroup(
@@ -526,26 +555,33 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(precursorIonAccuracyTxt)
-                            .addComponent(fragmentIon1Cmb, 0, 110, Short.MAX_VALUE))
+                            .addComponent(fragmentIon1Cmb, 0, 102, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fragmentIon2Cmb, 0, 110, Short.MAX_VALUE)
-                            .addComponent(precursorIonUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(fragmentIon2Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(precursorIonUnit, 0, 118, Short.MAX_VALUE))))
                 .addGap(50, 50, 50)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fragmentIonLbl)
                     .addComponent(maxMissedCleavagesLabel)
-                    .addComponent(precursorChargeLbl))
+                    .addComponent(precursorChargeLbl)
+                    .addComponent(isotopesLbl))
                 .addGap(18, 18, 18)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maxMissedCleavagesTxt)
                     .addComponent(fragmentIonAccuracyTxt)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(isotopeMinTxt)
+                            .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
                         .addGap(19, 19, 19)
-                        .addComponent(precursorChargeRangeLabel)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(precursorChargeRangeLabel)
+                            .addComponent(precursorChargeRangeLabel1))
                         .addGap(18, 18, 18)
-                        .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)))
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                            .addComponent(isotopeMaxTxt))))
                 .addContainerGap())
         );
         proteaseAndFragmentationPanelLayout.setVerticalGroup(
@@ -573,7 +609,13 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                     .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(precursorChargeRangeLabel))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(isotopesLbl)
+                    .addComponent(isotopeMinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(isotopeMaxTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(precursorChargeRangeLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         dataBasePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Database"));
@@ -929,7 +971,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         );
 
         modificationsLayeredPane.add(modificationsPanel);
-        modificationsPanel.setBounds(0, 0, 800, 0);
+        modificationsPanel.setBounds(0, 0, 800, 318);
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -995,7 +1037,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(15, 15, 15)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton1)
                     .addComponent(okButton)
@@ -1669,6 +1711,18 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         cancelButtonActionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
 
+    private void isotopeMinTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_isotopeMinTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_isotopeMinTxtKeyReleased
+
+    private void isotopeMaxTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_isotopeMaxTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_isotopeMaxTxtKeyReleased
+
+    private void isotopeMaxTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isotopeMaxTxtActionPerformed
+        validateParametersInput(false);
+    }//GEN-LAST:event_isotopeMaxTxtActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFixedModification;
     private javax.swing.JButton addVariableModification;
@@ -1690,6 +1744,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField fragmentIonAccuracyTxt;
     private javax.swing.JLabel fragmentIonLbl;
     private javax.swing.JLabel fragmentIonType1Lbl;
+    private javax.swing.JTextField isotopeMaxTxt;
+    private javax.swing.JTextField isotopeMinTxt;
+    private javax.swing.JLabel isotopesLbl;
     private javax.swing.JLabel maxMissedCleavagesLabel;
     private javax.swing.JTextField maxMissedCleavagesTxt;
     private javax.swing.JTextField maxPrecursorChargeTxt;
@@ -1705,6 +1762,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton openModificationSettingsJButton;
     private javax.swing.JLabel precursorChargeLbl;
     private javax.swing.JLabel precursorChargeRangeLabel;
+    private javax.swing.JLabel precursorChargeRangeLabel1;
     private javax.swing.JTextField precursorIonAccuracyTxt;
     private javax.swing.JLabel precursorIonLbl;
     private javax.swing.JComboBox precursorIonUnit;
@@ -1891,11 +1949,19 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         if (searchParameters.getMinChargeSearched() != null) {
-            minPrecursorChargeTxt.setText(searchParameters.getMinChargeSearched().value + "");
+            minPrecursorChargeTxt.setText(searchParameters.getMinChargeSearched().toString());
         }
 
         if (searchParameters.getMaxChargeSearched() != null) {
-            maxPrecursorChargeTxt.setText(searchParameters.getMaxChargeSearched().value + "");
+            maxPrecursorChargeTxt.setText(searchParameters.getMaxChargeSearched().toString());
+        }
+        
+        if (searchParameters.getMinIsotopicCorrection() != null) {
+            isotopeMinTxt.setText(searchParameters.getMinIsotopicCorrection().toString());
+        }
+        
+        if (searchParameters.getMaxIsotopicCorrection() != null) {
+            isotopeMaxTxt.setText(searchParameters.getMaxIsotopicCorrection().toString());
         }
     }
 
@@ -2003,6 +2069,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         valid = GuiUtilities.validateDoubleInput(this, fragmentIonLbl, fragmentIonAccuracyTxt, "fragment mass tolerance", "Fragment Mass Tolerance Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
 
         // make sure that the lower charge is smaller than the upper charge
         try {
@@ -2017,6 +2085,25 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 valid = false;
                 precursorChargeLbl.setForeground(Color.RED);
                 precursorChargeLbl.setToolTipText("Minimum precursor charge > Maximum precursor charge!");
+            }
+
+        } catch (NumberFormatException e) {
+            // ignore, error already caught above
+        }
+        
+        // make sure that the lower isotope is smaller than the upper isotope
+        try {
+            double isotopeLowerBound = Integer.parseInt(isotopeMinTxt.getText().trim());
+            double isotopeUpperBound = Integer.parseInt(isotopeMaxTxt.getText().trim());
+
+            if (isotopeUpperBound < isotopeLowerBound) {
+                if (showMessage && valid) {
+                    JOptionPane.showMessageDialog(this, "The minimum precursor isotope must be lower than or equal to the maximum precursor isotope.",
+                            "Precursor Isotope Error", JOptionPane.WARNING_MESSAGE);
+                }
+                valid = false;
+                isotopesLbl.setForeground(Color.RED);
+                isotopesLbl.setToolTipText("Minimum precursor isotope > Maximum precursor isotope!");
             }
 
         } catch (NumberFormatException e) {
@@ -2098,6 +2185,10 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         tempSearchParameters.setMinChargeSearched(new Charge(Charge.PLUS, charge));
         charge = new Integer(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(new Charge(Charge.PLUS, charge));
+        Integer minIsotope = new Integer(isotopeMinTxt.getText());
+        tempSearchParameters.setMinIsotopicCorrection(minIsotope);
+        Integer maxIsotope = new Integer(isotopeMaxTxt.getText());
+        tempSearchParameters.setMaxIsotopicCorrection(maxIsotope);
 
         // Adapt X!Tandem options
         XtandemParameters xtandemParameters = (XtandemParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.xtandem.getIndex());
@@ -2111,6 +2202,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         if (cometParameters != null) {
             double binoffset = fragmentAccuracy / 2;
             cometParameters.setFragmentBinOffset(binoffset);
+            if (maxIsotope > 0) {
+                cometParameters.setIsotopeCorrection(1);
+            } else {
+                cometParameters.setIsotopeCorrection(0);
+            }
         }
 
         return tempSearchParameters;

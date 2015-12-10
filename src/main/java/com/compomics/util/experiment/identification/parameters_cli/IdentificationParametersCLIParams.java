@@ -43,7 +43,10 @@ public enum IdentificationParametersCLIParams {
     MAX_CHARGE("max_charge", "Maximal charge to search for, default is '4'.", false, true),
     MC("mc", "Number of allowed missed cleavages, default is '2'.", false, true),
     FI("fi", "Type of forward ion searched, default is 'b'.", false, true),
-    RI("ri", "Type of rewind ion searched, default is 'y'.", false, true),
+    RI("ri", "Type of rewind ion searched, default is 'y'.", false, true),    
+    MIN_ISOTOPE("min_isotope", "Minimal precursor isotope, default is '0'.", false, true),
+    MAX_ISOTOPE("max_isotope", "Maximal precursor isotope, default is '1'.", false, true),
+
     //////////////////////////////////
     // OMSSA specific parameters
     //////////////////////////////////
@@ -120,8 +123,6 @@ public enum IdentificationParametersCLIParams {
     MSGF_MAX_PEP_LENGTH("msgf_max_pep_length", "MS-GF+ maximum peptide length, default is '30'.", false, true),
     MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false, true), // @TODO: find an optimal default
     MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional features, 0: output basic scores only (Default, true), 1: output additional features.", false, true),
-    MSGF_ISOTOPE_LOW("msgf_isotope_low", "MS-GF+ lower isotope error range, default is '0'.", false, true),
-    MSGF_ISOTOPE_HIGH("msgf_isotope_high", "MS-GF+ upper isotope error range, default is '1'.", false, true),
     MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false, true),
     MSGF_PTMS("msgf_num_ptms", "MS-GF+ max number of PTMs per peptide, default is '2'.", false, true),
     //////////////////////////////////
@@ -139,8 +140,6 @@ public enum IdentificationParametersCLIParams {
     MYRIMATCH_MAX_PEP_LENGTH("myrimatch_max_pep_length", "MyriMatch maximum peptide length, default is '30'.", false, true),
     MYRIMATCH_MIN_PREC_MASS("myrimatch_min_prec_mass", "MyriMatch minumum precursor mass, default is '0.0'.", false, true),
     MYRIMATCH_MAX_PREC_MASS("myrimatch_max_prec_mass", "MyriMatch maximum precursor mass, default is '10000.0'.", false, true),
-    MYRIMATCH_ISOTOPE_LOW("myrimatch_isotope_low", "MyriMatch lower isotope error range, default is '-1'.", false, true),
-    MYRIMATCH_ISOTOPE_HIGH("myrimatch_isotope_high", "MyriMatch upper isotope error range, default is '2'.", false, true),
     MYRIMATCH_NUM_MATCHES("myrimatch_num_matches", "MyriMatch maximum number of spectrum matches, default is '10'.", false, true),
     MYRIMATCH_PTMS("myrimatch_num_ptms", "MyriMatch max number of PTMs per peptide, default is '2'.", false, true),
     MYRIMATCH_FRAGMENTATION("myrimatch_fragmentation", "MyriMatch fragmentation method, cid (b, y, true), etd (c, z*) or manual (a comma-separated list of [abcxyz] or z* (z+1, true), e.g. manual:b,y,z).", false, true),

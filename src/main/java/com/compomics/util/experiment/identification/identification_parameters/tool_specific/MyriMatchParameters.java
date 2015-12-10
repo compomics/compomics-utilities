@@ -77,10 +77,14 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     private Integer numberOfBatches = 50;
     /**
      * The lower isotope correction range.
+     * 
+     * @deprecated now general search setting
      */
     private Integer lowerIsotopeCorrection = -1;
     /**
      * The upper isotope correction range.
+     * 
+     * @deprecated now general search setting
      */
     private Integer upperIsotopeCorrection = 2;
     /**
@@ -155,12 +159,6 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
             if (!numberOfBatches.equals(myriMatchParameters.getNumberOfBatches())) {
                 return false;
             }
-            if (!lowerIsotopeCorrection.equals(myriMatchParameters.getLowerIsotopeCorrectionRange())) {
-                return false;
-            }
-            if (!upperIsotopeCorrection.equals(myriMatchParameters.getUpperIsotopeCorrectionRange())) {
-                return false;
-            }
             if (!fragmentationRule.equalsIgnoreCase(myriMatchParameters.getFragmentationRule())) {
                 return false;
             }
@@ -233,12 +231,6 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("NUM_BATCHES=");
         output.append(numberOfBatches);
-        output.append(newLine);
-        output.append("LOWER_ISOTOPE_CORRECTION=");
-        output.append(lowerIsotopeCorrection);
-        output.append(newLine);
-        output.append("UPPER_ISOTOPE_CORRECTION=");
-        output.append(upperIsotopeCorrection);
         output.append(newLine);
         output.append("FRAGMENTATION_RULE=");
         output.append(fragmentationRule);
@@ -494,42 +486,6 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      */
     public void setNumberOfBatches(Integer numberOfBatches) {
         this.numberOfBatches = numberOfBatches;
-    }
-
-    /**
-     * Returns the lower isotope correction range.
-     *
-     * @return the lower isotope correction range
-     */
-    public Integer getLowerIsotopeCorrectionRange() {
-        return lowerIsotopeCorrection;
-    }
-
-    /**
-     * Set the lower isotope correction range.
-     *
-     * @param lowerIsotopeCorrection the lower isotope correction range
-     */
-    public void setLowerIsotopeCorrectionRange(Integer lowerIsotopeCorrection) {
-        this.lowerIsotopeCorrection = lowerIsotopeCorrection;
-    }
-
-    /**
-     * Returns the upper isotope correction range.
-     *
-     * @return the upper isotope correction range
-     */
-    public Integer getUpperIsotopeCorrectionRange() {
-        return upperIsotopeCorrection;
-    }
-
-    /**
-     * Set the upper isotope correction range.
-     *
-     * @param upperIsotopeCorrection the upper isotope correction range
-     */
-    public void setUpperIsotopeCorrectionRange(Integer upperIsotopeCorrection) {
-        this.upperIsotopeCorrection = upperIsotopeCorrection;
     }
 
     /**

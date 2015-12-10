@@ -97,13 +97,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
             maxPrecursorMassTxt.setText(myriMatchParameters.getMaxPrecursorMass() + "");
         }
 
-        if (myriMatchParameters.getLowerIsotopeCorrectionRange() != null) {
-            lowIsotopeErrorRangeTxt.setText(myriMatchParameters.getLowerIsotopeCorrectionRange() + "");
-        }
-        if (myriMatchParameters.getUpperIsotopeCorrectionRange() != null) {
-            highIsotopeErrorRangeTxt.setText(myriMatchParameters.getUpperIsotopeCorrectionRange() + "");
-        }
-
         if (myriMatchParameters.getNumberOfSpectrumMatches() != null) {
             numberMatchesTxt.setText(myriMatchParameters.getNumberOfSpectrumMatches() + "");
         }
@@ -194,15 +187,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
             result.setMaxPrecursorMass(new Double(input));
         }
 
-        input = lowIsotopeErrorRangeTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setLowerIsotopeCorrectionRange(new Integer(input));
-        }
-        input = highIsotopeErrorRangeTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setUpperIsotopeCorrectionRange(new Integer(input));
-        }
-
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
             result.setNumberOfSpectrumMatches(new Integer(input));
@@ -271,10 +255,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
         numberMatchesTxt = new javax.swing.JTextField();
         computeXCorrlLabel = new javax.swing.JLabel();
         computeXCorrCmb = new javax.swing.JComboBox();
-        isotopeErrorRangeLabel = new javax.swing.JLabel();
-        lowIsotopeErrorRangeTxt = new javax.swing.JTextField();
-        highIsotopeErrorRangeTxt = new javax.swing.JTextField();
-        isotopeErrorRangeDividerLabel = new javax.swing.JLabel();
         numberTerminiLabel = new javax.swing.JLabel();
         maxPtmsLabel = new javax.swing.JLabel();
         maxPtmsTxt = new javax.swing.JTextField();
@@ -354,27 +334,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
 
         computeXCorrCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         computeXCorrCmb.setSelectedIndex(1);
-
-        isotopeErrorRangeLabel.setText("Isotope Error Range");
-
-        lowIsotopeErrorRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        lowIsotopeErrorRangeTxt.setText("0");
-        lowIsotopeErrorRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                lowIsotopeErrorRangeTxtKeyReleased(evt);
-            }
-        });
-
-        highIsotopeErrorRangeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        highIsotopeErrorRangeTxt.setText("1");
-        highIsotopeErrorRangeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                highIsotopeErrorRangeTxtKeyReleased(evt);
-            }
-        });
-
-        isotopeErrorRangeDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        isotopeErrorRangeDividerLabel.setText("-");
 
         numberTerminiLabel.setText("Enzymatic Terminals");
 
@@ -516,14 +475,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(terminiCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(advancedSettingsPanelLayout.createSequentialGroup()
-                .addComponent(isotopeErrorRangeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lowIsotopeErrorRangeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(isotopeErrorRangeDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(highIsotopeErrorRangeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE))
-            .addGroup(advancedSettingsPanelLayout.createSequentialGroup()
                 .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
@@ -566,12 +517,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
                     .addComponent(maxPrecursorMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(precursorMassDividerLabel)
                     .addComponent(precursorMassLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lowIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(highIsotopeErrorRangeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isotopeErrorRangeDividerLabel)
-                    .addComponent(isotopeErrorRangeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberMatchesLabel)
@@ -620,7 +565,7 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
                 .addGroup(advancedSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFormatLabel)
                     .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
+                .addContainerGap())
         );
 
         scrollPane.setViewportView(advancedSettingsPanel);
@@ -700,14 +645,14 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
                     .addComponent(okButton)
                     .addComponent(closeButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -800,24 +745,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
     private void numberMatchesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberMatchesTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_numberMatchesTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void lowIsotopeErrorRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lowIsotopeErrorRangeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_lowIsotopeErrorRangeTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void highIsotopeErrorRangeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_highIsotopeErrorRangeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_highIsotopeErrorRangeTxtKeyReleased
 
     /**
      * Validate the input.
@@ -923,8 +850,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
         valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, minPrecursorMassTxt, "minimum precursor mass", "Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, maxPrecursorMassTxt, "maximum precursor mass", "Precursor Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, lowIsotopeErrorRangeTxt, "lower isotope range", "Isotope Range Error", false, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopeErrorRangeLabel, highIsotopeErrorRangeTxt, "upper isotope range", "Isotope Range Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, ticCutoffPercentageLabel, ticCutoffPercentageTxt, "TIC cutoff precentage", "TIC Cutoff Percentage Error", true, showMessage, valid);
@@ -932,24 +857,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
         valid = GuiUtilities.validateIntegerInput(this, classSizeMultiplierLabel, classSizeMultiplierTxt, "class size multiplier", "Class Size Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numbBatchesLabel, numbBatchesTxt, "number of batches", "Number of Batches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPeakCountLabel, maxPeakCountTxt, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
-
-        // isotope range: the low value should be lower than the high value
-        try {
-            int lowValue = Integer.parseInt(lowIsotopeErrorRangeTxt.getText().trim());
-            int highValue = Integer.parseInt(highIsotopeErrorRangeTxt.getText().trim());
-
-            if (lowValue > highValue) {
-                if (showMessage && valid) {
-                    JOptionPane.showMessageDialog(this, "The lower range value has to be smaller than the upper range value.",
-                            "Isotope Range Error", JOptionPane.WARNING_MESSAGE);
-                }
-                valid = false;
-                isotopeErrorRangeLabel.setForeground(Color.RED);
-                isotopeErrorRangeLabel.setToolTipText("Please select a valid range (upper <= higher)");
-            }
-        } catch (NumberFormatException e) {
-            // ignore, handled above
-        }
 
         // check that the tic cuttoff is between 0 and 1
         try {
@@ -986,10 +893,6 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
     private javax.swing.JLabel computeXCorrlLabel;
     private javax.swing.JComboBox fragmentationMethodCmb;
     private javax.swing.JLabel fragmentationMethodLabel;
-    private javax.swing.JTextField highIsotopeErrorRangeTxt;
-    private javax.swing.JLabel isotopeErrorRangeDividerLabel;
-    private javax.swing.JLabel isotopeErrorRangeLabel;
-    private javax.swing.JTextField lowIsotopeErrorRangeTxt;
     private javax.swing.JLabel maxPeakCountLabel;
     private javax.swing.JTextField maxPeakCountTxt;
     private javax.swing.JTextField maxPepLengthTxt;

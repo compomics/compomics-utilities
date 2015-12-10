@@ -539,11 +539,6 @@
                                   <Component id="minPrecChargeMultipleChargedFragmentsTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="nIsotopesLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="nIsotopesTxt" pref="180" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="neutronLbl" min="-2" pref="370" max="-2" attributes="1"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="neutronTxt" pref="180" max="32767" attributes="0"/>
@@ -632,11 +627,6 @@
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="minPrecChargeMultipleChargedFragmentsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="nIsotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="nIsotopesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -735,19 +725,6 @@
                           </Properties>
                           <Events>
                             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPrecChargeMultipleChargedFragmentsTxtKeyReleased"/>
-                          </Events>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="nIsotopesLbl">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="Number of Isotopes"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JTextField" name="nIsotopesTxt">
-                          <Properties>
-                            <Property name="horizontalAlignment" type="int" value="0"/>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nIsotopesTxtKeyReleased"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="neutronLbl">

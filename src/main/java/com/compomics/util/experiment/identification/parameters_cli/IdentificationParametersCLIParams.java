@@ -51,7 +51,6 @@ public enum IdentificationParametersCLIParams {
     // OMSSA specific parameters
     //////////////////////////////////
     OMSSA_SEQUENCES_IN_MEMORY("omssa_memory", "OMSSA map sequences in memory option, 1: true, 0: false, default is '1'.", false, true),
-    OMSSA_ISOTOPES("omssa_isotopes", "OMSSA number of isotopes option, integer, 0: monoisotopic, default is '0'.", false, true),
     OMSSA_NEUTRON("omssa_neutron", "Mass after which OMSSA should consider neutron exact mass, default is '1446.94'.", false, true),
     OMSSA_LOW_INTENSITY("omssa_low_intensity", "OMSSA low intensity cutoff as percentage of the most intense peak, default is '0.0'.", false, true),
     OMSSA_HIGH_INTENSITY("omssa_high_intensity", "OMSSA high intensity cutoff as percentage of the most intense peak, default is '0.2'.", false, true),

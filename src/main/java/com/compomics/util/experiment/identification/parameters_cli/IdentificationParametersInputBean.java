@@ -298,11 +298,6 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             omssaParameters.setMemoryMappedSequenceLibraries(option == 1);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
-            Integer option = new Integer(arg);
-            omssaParameters.setNumberOfItotopicPeaks(option);
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
             Double option = new Double(arg);
@@ -1907,12 +1902,6 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id, arg, true)) {
                 return false;
             }
         }

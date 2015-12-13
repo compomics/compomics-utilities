@@ -105,8 +105,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         cleaveNterminalMethionineCmb.setEnabled(editable);
         minPrecChargeMultipleChargedFragmentsTxt.setEditable(editable);
         minPrecChargeMultipleChargedFragmentsTxt.setEnabled(editable);
-        nIsotopesTxt.setEditable(editable);
-        nIsotopesTxt.setEnabled(editable);
         neutronTxt.setEditable(editable);
         neutronTxt.setEnabled(editable);
         singlyChargedWindowWidthTxt.setEditable(editable);
@@ -255,10 +253,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
 
         if (omssaParameters.getMinimalChargeForMultipleChargedFragments() != null) {
             minPrecChargeMultipleChargedFragmentsTxt.setText(omssaParameters.getMinimalChargeForMultipleChargedFragments().value + "");
-        }
-
-        if (omssaParameters.getNumberOfItotopicPeaks() != null) {
-            nIsotopesTxt.setText(omssaParameters.getNumberOfItotopicPeaks() + "");
         }
 
         if (omssaParameters.getNeutronThreshold() != null) {
@@ -414,8 +408,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         input = minPrecChargeMultipleChargedFragmentsTxt.getText().trim();
         int charge = new Integer(input);
         tempOmssaParameters.setMinimalChargeForMultipleChargedFragments(new Charge(Charge.PLUS, charge));
-        input = nIsotopesTxt.getText().trim();
-        tempOmssaParameters.setNumberOfItotopicPeaks(new Integer(input));
         input = neutronTxt.getText().trim();
         tempOmssaParameters.setNeutronThreshold(new Double(input));
         input = singlyChargedWindowWidthTxt.getText().trim();
@@ -500,8 +492,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         searchSettingsPanel = new javax.swing.JPanel();
         minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel = new javax.swing.JLabel();
         minPrecChargeMultipleChargedFragmentsTxt = new javax.swing.JTextField();
-        nIsotopesLbl = new javax.swing.JLabel();
-        nIsotopesTxt = new javax.swing.JTextField();
         neutronLbl = new javax.swing.JLabel();
         neutronTxt = new javax.swing.JTextField();
         singlyChargedWindowWidthLbl = new javax.swing.JLabel();
@@ -815,15 +805,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
             }
         });
 
-        nIsotopesLbl.setText("Number of Isotopes");
-
-        nIsotopesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        nIsotopesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nIsotopesTxtKeyReleased(evt);
-            }
-        });
-
         neutronLbl.setText("Mass Threshold to Consider Exact Neutron Mass");
 
         neutronTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -977,10 +958,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
             .addGroup(searchSettingsPanelLayout.createSequentialGroup()
-                .addComponent(nIsotopesLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nIsotopesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-            .addGroup(searchSettingsPanelLayout.createSequentialGroup()
                 .addComponent(neutronLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(neutronTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
@@ -1051,10 +1028,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel)
                     .addComponent(minPrecChargeMultipleChargedFragmentsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nIsotopesLbl)
-                    .addComponent(nIsotopesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neutronLbl)
@@ -1526,15 +1499,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
      *
      * @param evt
      */
-    private void nIsotopesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nIsotopesTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_nIsotopesTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
     private void neutronTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_neutronTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_neutronTxtKeyReleased
@@ -1759,7 +1723,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
         valid = GuiUtilities.validateIntegerInput(this, hitListLbl, hitlistTxt, "hitlist length", "Hitlist Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, nHitsPerSpectrumPerChargeLbl, nHitsPerSpectrumPerChargeTxt, "number of hits per spectrum and per charge", "Hits per Spectrum and per Charge Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel, minPrecChargeMultipleChargedFragmentsTxt, "minimal charge to consider multiply charged fragments", "Minimal Charge for Multiple Fragments Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, nIsotopesLbl, nIsotopesTxt, "number of isotopes to consider", "Number of Isotopes Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, neutronLbl, neutronTxt, "mass after which the exact mass of a neutron is used", "Mass for Proton Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, singlyChargedWindowWidthLbl, singlyChargedWindowWidthTxt, "size for single charge windows", "Window Size Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, doublyChargedWindowWidthLbl, doublyChargedWindowWidthTxt, "size for double charge windows", "Window Size Error", true, showMessage, valid);
@@ -1840,8 +1803,6 @@ public class OmssaSettingsDialog extends javax.swing.JDialog implements Algorith
     private javax.swing.JLabel minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel;
     private javax.swing.JLabel nHitsPerSpectrumPerChargeLbl;
     private javax.swing.JTextField nHitsPerSpectrumPerChargeTxt;
-    private javax.swing.JLabel nIsotopesLbl;
-    private javax.swing.JTextField nIsotopesTxt;
     private javax.swing.JLabel nPeaksLbl;
     private javax.swing.JTextField nPeaksTxt;
     private javax.swing.JLabel neutronLbl;

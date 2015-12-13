@@ -72,6 +72,8 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
     private Boolean memoryMappedSequenceLibraries = false;
     /**
      * Number of isotopic peaks to consider.
+     * 
+     * @deprecated now part of the general search parameters
      */
     private Integer numberOfItotopicPeaks = 0;
     /**
@@ -401,24 +403,6 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
      */
     public void setMemoryMappedSequenceLibraries(Boolean memoryMappedSequenceLibraries) {
         this.memoryMappedSequenceLibraries = memoryMappedSequenceLibraries;
-    }
-
-    /**
-     * Returns the number of isotopic peaks to consider.
-     *
-     * @return the number of isotopic peaks to consider
-     */
-    public Integer getNumberOfItotopicPeaks() {
-        return numberOfItotopicPeaks;
-    }
-
-    /**
-     * Sets the number of isotopic peaks to consider.
-     *
-     * @param numberOfItotopicPeaks the number of isotopic peaks to consider
-     */
-    public void setNumberOfItotopicPeaks(Integer numberOfItotopicPeaks) {
-        this.numberOfItotopicPeaks = numberOfItotopicPeaks;
     }
 
     /**
@@ -1135,9 +1119,6 @@ public class OmssaParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!isMemoryMappedSequenceLibraries().equals(omssaParameters.isMemoryMappedSequenceLibraries())) {
-                return false;
-            }
-            if (!getNumberOfItotopicPeaks().equals(omssaParameters.getNumberOfItotopicPeaks())) {
                 return false;
             }
             double diff = Math.abs(neutronThreshold - omssaParameters.getNeutronThreshold());

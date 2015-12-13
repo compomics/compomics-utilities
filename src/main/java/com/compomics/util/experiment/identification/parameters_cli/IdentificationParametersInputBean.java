@@ -230,6 +230,15 @@ public class IdentificationParametersInputBean {
                 PTM modification = ptmFactory.getPTM(ptmName);
                 ptmSettings.addVariableModification(modification);
             }
+        }        if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MIN_ISOTOPE.id);
+            Integer option = new Integer(arg);
+            searchParameters.setMinIsotopicCorrection(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MAX_ISOTOPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MAX_ISOTOPE.id);
+            Integer option = new Integer(arg);
+            searchParameters.setMaxIsotopicCorrection(option);
         }
 
         ///////////////////////////////////
@@ -288,11 +297,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
             Integer option = new Integer(arg);
             omssaParameters.setMemoryMappedSequenceLibraries(option == 1);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
-            Integer option = new Integer(arg);
-            omssaParameters.setNumberOfItotopicPeaks(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.OMSSA_NEUTRON.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_NEUTRON.id);
@@ -604,16 +608,6 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setAdditionalOutput(option == 1);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
-            Integer option = new Integer(arg);
-            msgfParameters.setLowerIsotopeErrorRange(option);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id);
-            Integer option = new Integer(arg);
-            msgfParameters.setUpperIsotopeErrorRange(option);
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
@@ -656,16 +650,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id);
             Double option = new Double(arg);
             myriMatchParameters.setMaxPrecursorMass(option);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id);
-            Integer option = new Integer(arg);
-            myriMatchParameters.setLowerIsotopeCorrectionRange(option);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id);
-            Integer option = new Integer(arg);
-            myriMatchParameters.setUpperIsotopeCorrectionRange(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_NUM_MATCHES.id);
@@ -1844,6 +1828,18 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MIN_ISOTOPE.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.MIN_ISOTOPE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MAX_ISOTOPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MAX_ISOTOPE.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.MAX_ISOTOPE.id, arg, false)) {
+                return false;
+            }
+        }
 
         //////////////////////////////////
         // OMSSA specific parameters
@@ -1906,12 +1902,6 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id);
             if (!isBooleanInput(IdentificationParametersCLIParams.OMSSA_SEQUENCES_IN_MEMORY.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.OMSSA_ISOTOPES.id, arg, true)) {
                 return false;
             }
         }
@@ -2256,18 +2246,6 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.MSGF_ISOTOPE_LOW.id, arg, true)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.MSGF_ISOTOPE_HIGH.id, arg, true)) {
-                return false;
-            }
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TERMINI.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             List<String> supportedInput = Arrays.asList("0", "1", "2");
@@ -2337,18 +2315,6 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id);
             if (!isPositiveDouble(IdentificationParametersCLIParams.MYRIMATCH_MAX_PREC_MASS.id, arg, false)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id);
-            if (!isInteger(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_LOW.id, arg)) {
-                return false;
-            }
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id);
-            if (!isInteger(IdentificationParametersCLIParams.MYRIMATCH_ISOTOPE_HIGH.id, arg)) {
                 return false;
             }
         }

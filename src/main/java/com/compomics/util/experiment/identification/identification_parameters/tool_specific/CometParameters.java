@@ -65,9 +65,10 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     private Integer enzymeType = 2;
     /**
-     * Isotope correction setting. 0: performs no isotope error searches, 1:
-     * searches -1, 0, +1, +2, and +3 isotope offsets and 2: searches -8, -4, 0,
-     * +4, +8 isotope offsets (for +4/+8 stable isotope labeling).
+     * Isotope correction setting. 
+     * 0: performs no isotope error searches, 
+     * 1: searches -1, 0, +1, +2, and +3 isotope offsets
+     * 2: searches -8, -4, 0, +4, +8 isotope offsets (for +4/+8 stable isotope labeling).
      */
     private Integer isotopeCorrection = 1;
     /**

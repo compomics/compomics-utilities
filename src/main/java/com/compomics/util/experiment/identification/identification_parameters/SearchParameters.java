@@ -131,7 +131,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     /**
      * The maximal isotope correction.
      */
-    private Integer maxIsotopicCorrection = 4;
+    private Integer maxIsotopicCorrection = 1;
     /**
      * The algorithm specific parameters.
      */

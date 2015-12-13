@@ -52,10 +52,14 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
     private boolean additionalOutput = false;
     /**
      * The lower isotope error range.
+     * 
+     * @deprecated now a generic search setting
      */
     private Integer lowerIsotopeErrorRange = -1;
     /**
      * The upper isotope error range.
+     * 
+     * @deprecated now a generic search setting
      */
     private Integer upperIsotopeErrorRange = 2;
     /**
@@ -106,12 +110,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (additionalOutput != msgfParameters.isAdditionalOutput()) {
-                return false;
-            }
-            if (!lowerIsotopeErrorRange.equals(msgfParameters.getLowerIsotopeErrorRange())) {
-                return false;
-            }
-            if (!upperIsotopeErrorRange.equals(msgfParameters.getUpperIsotopeErrorRange())) {
                 return false;
             }
             if (!numberTolerableTermini.equals(msgfParameters.getNumberTolerableTermini())) {
@@ -167,12 +165,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("ADDITIONAL_OUTPUT=");
         output.append(additionalOutput);
-        output.append(newLine);
-        output.append("LOWER_ISOTOPE_ERROR_RANGE=");
-        output.append(lowerIsotopeErrorRange);
-        output.append(newLine);
-        output.append("UPPER_ISOTOPE_ERROR_RANGE=");
-        output.append(upperIsotopeErrorRange);
         output.append(newLine);
         output.append("NUMBER_OF_TOLERABLE_TERMINI=");
         output.append(numberTolerableTermini);
@@ -326,42 +318,6 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     public void setAdditionalOutput(boolean additionalOutput) {
         this.additionalOutput = additionalOutput;
-    }
-
-    /**
-     * Returns the lower isotope error range.
-     *
-     * @return the lowerIsotopeErrorRange
-     */
-    public Integer getLowerIsotopeErrorRange() {
-        return lowerIsotopeErrorRange;
-    }
-
-    /**
-     * Set the lower isotope error range.
-     *
-     * @param lowerIsotopeErrorRange the lowerIsotopeErrorRange to set
-     */
-    public void setLowerIsotopeErrorRange(Integer lowerIsotopeErrorRange) {
-        this.lowerIsotopeErrorRange = lowerIsotopeErrorRange;
-    }
-
-    /**
-     * Returns the upper isotope error range.
-     *
-     * @return the upperIsotopeErrorRange
-     */
-    public Integer getUpperIsotopeErrorRange() {
-        return upperIsotopeErrorRange;
-    }
-
-    /**
-     * Set the upper isotope error range.
-     *
-     * @param upperIsotopeErrorRange the upperIsotopeErrorRange to set
-     */
-    public void setUpperIsotopeErrorRange(Integer upperIsotopeErrorRange) {
-        this.upperIsotopeErrorRange = upperIsotopeErrorRange;
     }
 
     /**

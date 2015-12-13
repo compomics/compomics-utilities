@@ -68,17 +68,17 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="advancedSearchSettingsPanel" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="advancedSearchSettingsPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="advancedSettingsWarningLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="closeButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -180,15 +180,6 @@
                               <Component id="terminiCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="isotopeErrorRangeLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lowIsotopeErrorRangeTxt" pref="77" max="32767" attributes="0"/>
-                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                              <Component id="isotopeErrorRangeDividerLabel" min="-2" pref="11" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Component id="highIsotopeErrorRangeTxt" pref="77" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <Component id="peptideLengthLabel" min="-2" pref="200" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="minPepLengthTxt" pref="77" max="32767" attributes="0"/>
@@ -238,13 +229,6 @@
                                   <Component id="maxPrecursorMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorMassDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lowIsotopeErrorRangeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="highIsotopeErrorRangeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="isotopeErrorRangeDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="isotopeErrorRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -306,7 +290,7 @@
                                   <Component id="outputFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="outputFormatCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -384,35 +368,6 @@
                           </StringArray>
                         </Property>
                         <Property name="selectedIndex" type="int" value="1"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="isotopeErrorRangeLabel">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Isotope Error Range"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="lowIsotopeErrorRangeTxt">
-                      <Properties>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="0"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="lowIsotopeErrorRangeTxtKeyReleased"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="highIsotopeErrorRangeTxt">
-                      <Properties>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="1"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="highIsotopeErrorRangeTxtKeyReleased"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="isotopeErrorRangeDividerLabel">
-                      <Properties>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="-"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="numberTerminiLabel">

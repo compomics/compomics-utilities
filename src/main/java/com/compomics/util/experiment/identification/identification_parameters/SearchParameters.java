@@ -971,7 +971,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(newLine);
 
         output.append("FRAGMENT_ION_TYPE_1=");
-        if (forwardIon == PeptideFragmentIon.A_ION) {
+        if (forwardIon == PeptideFragmentIon.A_ION) { // @TODO: what about tag ions?
             output.append("a");
         } else if (forwardIon == PeptideFragmentIon.B_ION) {
             output.append("b");
@@ -987,7 +987,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         output.append(newLine);
 
         output.append("FRAGMENT_ION_TYPE_2=");
-        if (rewindIon == PeptideFragmentIon.A_ION) {
+        if (rewindIon == PeptideFragmentIon.A_ION) { // @TODO: what about tag ions?
             output.append("a");
         } else if (rewindIon == PeptideFragmentIon.B_ION) {
             output.append("b");

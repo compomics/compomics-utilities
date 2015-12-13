@@ -448,8 +448,8 @@
                       <StringArray count="4">
                         <StringItem index="0" value="Full-enzyme"/>
                         <StringItem index="1" value="Semi-specific"/>
-                        <StringItem index="2" value="Unspecific peptide N-term"/>
-                        <StringItem index="3" value="Unspecific peptide C-term"/>
+                        <StringItem index="2" value="Unspecific Peptide C-term"/>
+                        <StringItem index="3" value="Unspecific Peptide N-term"/>
                       </StringArray>
                     </Property>
                   </Properties>

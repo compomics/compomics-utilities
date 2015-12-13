@@ -741,7 +741,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     private boolean isVariableModification(SearchModificationCustom modification, String peptideSequence) {
 
         boolean fixed = false;
-        int location = modification.getLocation();
+        int peptidePtmLocation = modification.getLocation();
 
         // check if the current modification is a fixed modification
         for (SearchModificationCustom fixedModification : fixedModificationsCustomParser) {
@@ -752,17 +752,18 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             // compare accession numbers (excluding  MS:1001460 - unknown modification) and if not equal then compare the delta masses
             if ((modification.getAccession().equals(fixedModification.getAccession()) && !modification.getAccession().equals("MS:1001460"))
                     || massDifference < 0.00001) { // @TODO: is there a better way of doing this..?
+                
                 boolean allRules = true;
                 ArrayList<String> specificityRuleCvTerms = fixedModification.getModRuleCvTerms();
                 if (specificityRuleCvTerms != null && !specificityRuleCvTerms.isEmpty()) {
                     for (String specificityRuleCvTerm : specificityRuleCvTerms) {
                         if (specificityRuleCvTerm.equals("MS:1001189") || specificityRuleCvTerm.equals("MS:1002057")) {
-                            if (location != 0) {
+                            if (peptidePtmLocation != 0) {
                                 allRules = false;
                                 break;
                             }
                         } else if (specificityRuleCvTerm.equals("MS:1001190") || specificityRuleCvTerm.equals("MS:1002058")) {
-                            if (location != peptideSequence.length() + 1) {
+                            if (peptidePtmLocation != peptideSequence.length() + 1) {
                                 allRules = false;
                                 break;
                             }
@@ -778,7 +779,13 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                             break;
                         }
                     }
+                } else {
+                    // no specificity rules, so the modification cannot be terminal (but can still be on the first or last residue)
+                    if (peptidePtmLocation == 0 || peptidePtmLocation == peptideSequence.length() + 1) {
+                        allRules = false;
+                    }
                 }
+
                 if (allRules) {
                     String residues = fixedModification.getResidues();
                     if (residues == null || residues.isEmpty()) {
@@ -786,12 +793,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                         break;
                     } else {
                         char aaAtLocation;
-                        if (location == 0) {
+                        if (peptidePtmLocation == 0) {
                             aaAtLocation = peptideSequence.charAt(0);
-                        } else if (location == peptideSequence.length() + 1) {
-                            aaAtLocation = peptideSequence.charAt(location - 2);
+                        } else if (peptidePtmLocation == peptideSequence.length() + 1) {
+                            aaAtLocation = peptideSequence.charAt(peptidePtmLocation - 2);
                         } else {
-                            aaAtLocation = peptideSequence.charAt(location - 1);
+                            aaAtLocation = peptideSequence.charAt(peptidePtmLocation - 1);
                         }
                         for (char residue : residues.toCharArray()) {
                             if (residue == aaAtLocation || residue == '.') {
@@ -1084,7 +1091,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
             // get the peptide
             PeptideCustom tempPeptide = tempPeptideMap.get(peptideRef);
-
+            
             // create a new peptide
             ArrayList<ModificationMatch> modMatches = new ArrayList<ModificationMatch>();
             for (SearchModificationCustom tempMod : tempPeptide.getModifications()) {

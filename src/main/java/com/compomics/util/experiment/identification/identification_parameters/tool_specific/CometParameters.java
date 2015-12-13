@@ -59,9 +59,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
     private Double upperClearMzRange = 0.0;
     /**
      * The enzyme type: 1 for a semi-enzyme search, 2 for a full-enzyme search,
-     * 8 for a semi-enzyme search, unspecific cleavage on peptide's N-terminus
+     * 8 for a semi-enzyme search, unspecific cleavage on peptide's C-terminus
      * and 9 for a semi-enzyme search, unspecific cleavage on peptide's
-     * C-terminus.
+     * N-terminus.
      */
     private Integer enzymeType = 2;
     /**
@@ -93,7 +93,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * sets of 5000 spectra until all data have been analyzed. Set this
      * parameter to 0 to load and search all spectra at once.
      */
-    private Integer batchSize = 0;
+    private Integer batchSize = 0; // @TODO: find a better default..?
     /**
      * The correlation score type. This parameter specifies how theoretical
      * fragment ion peaks are represented.

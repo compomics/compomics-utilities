@@ -529,7 +529,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
 
         enzymeTypeLabel.setText("Enzyme Type");
 
-        enzymeTypeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Full-enzyme", "Semi-specific", "Unspecific peptide N-term", "Unspecific peptide C-term" }));
+        enzymeTypeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Full-enzyme", "Semi-specific", "Unspecific Peptide C-term", "Unspecific Peptide N-term" }));
 
         isotopeCorrectionLabel.setText("Isotope Correction");
 

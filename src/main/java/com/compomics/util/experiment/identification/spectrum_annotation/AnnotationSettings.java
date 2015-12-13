@@ -288,7 +288,7 @@ public class AnnotationSettings implements Serializable {
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
             return new HashSet<Integer>();
         } else {
-            return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION);
+            return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION); // @TOOO: what about tags..?
         }
     }
 
@@ -672,7 +672,7 @@ public class AnnotationSettings implements Serializable {
                         ionTypes += ", ";
                     }
                     ionTypes += "immonium ions";
-                } else if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                } else if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) { // @TODO: what about tags..?
                     for (int subType : selectedIonsMap.get(ionType)) {
                         if (subType == PeptideFragmentIon.A_ION) {
                             if (!ionTypes.isEmpty()) {

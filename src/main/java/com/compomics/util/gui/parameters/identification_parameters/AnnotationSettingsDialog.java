@@ -3,6 +3,7 @@ package com.compomics.util.gui.parameters.identification_parameters;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import java.awt.Dialog;
@@ -211,27 +212,27 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
 
         if (aBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.A_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.A_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.A_ION);
         }
         if (bBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.B_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.B_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.B_ION);
         }
         if (cBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.C_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.C_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.C_ION);
         }
         if (xBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.X_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.X_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.X_ION);
         }
         if (yBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.Y_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.Y_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.Y_ION);
         }
         if (zBox.isSelected()) {
             annotationSettings.addIonType(IonType.PEPTIDE_FRAGMENT_ION, PeptideFragmentIon.Z_ION);
-            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, PeptideFragmentIon.Z_ION);
+            annotationSettings.addIonType(IonType.TAG_FRAGMENT_ION, TagFragmentIon.Z_ION);
         }
         if (precursorBox.isSelected()) {
             annotationSettings.addIonType(IonType.PRECURSOR_ION);

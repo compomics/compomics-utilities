@@ -5,9 +5,7 @@ import com.compomics.util.experiment.identification.identification_parameters.Id
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.MsgfParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
-import java.awt.Color;
 import java.awt.Dialog;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 /**

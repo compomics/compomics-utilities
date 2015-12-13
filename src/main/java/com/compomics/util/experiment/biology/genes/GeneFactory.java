@@ -42,7 +42,7 @@ public class GeneFactory {
     /**
      * The separator used to separate line contents.
      */
-    public final static String separator = "\t";
+    public final static String SEPARATOR = "\t";
     /**
      * The folder where gene mapping files are stored.
      */
@@ -773,7 +773,7 @@ public class GeneFactory {
             try {
 
                 for (String key : ensemblVersionsMap.keySet()) {
-                    bw.write(key + separator + ensemblVersionsMap.get(key));
+                    bw.write(key + SEPARATOR + ensemblVersionsMap.get(key));
                     bw.newLine();
                 }
 
@@ -804,7 +804,7 @@ public class GeneFactory {
             try {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] splittedLine = line.split(separator);
+                    String[] splittedLine = line.split(SEPARATOR);
                     String speciesAtLine = splittedLine[0];
                     if (speciesAtLine.equals(species)) {
                         String[] ensemblVersionSplit = splittedLine[1].split(" ");

@@ -110,54 +110,61 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="fragmentIonType1Lbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="enzymeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorIonLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="fragmentIonType1Lbl" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                              <Component id="fragmentIon1Cmb" min="-2" pref="100" max="-2" attributes="2"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="fragmentIon2Cmb" max="32767" attributes="2"/>
+                          </Group>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="precursorIonAccuracyTxt" max="32767" attributes="0"/>
-                                  <Component id="fragmentIon1Cmb" max="32767" attributes="2"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="precursorIonUnit" max="32767" attributes="0"/>
-                                  <Component id="fragmentIon2Cmb" max="32767" attributes="2"/>
+                                  <Component id="enzymeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="precursorIonLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="enzymesCmb" min="-2" pref="218" max="-2" attributes="2"/>
+                                  <Component id="precursorIonAccuracyTxt" min="-2" pref="101" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="enzymesCmb" min="-2" pref="218" max="-2" attributes="2"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="fragmentIonLbl" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="fragmentIonAccuracyTxt" min="-2" pref="100" max="-2" attributes="2"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="precursorIonUnit" pref="100" max="32767" attributes="0"/>
+                                  <Component id="fragmentIonUnit" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                      <EmptySpace pref="75" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="fragmentIonLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="maxMissedCleavagesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorChargeLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="precursorChargeLbl" min="-2" max="-2" attributes="0"/>
                           <Component id="isotopesLbl" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="maxMissedCleavagesTxt" alignment="0" pref="218" max="32767" attributes="2"/>
+                      <EmptySpace pref="26" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="fragmentIonAccuracyTxt" alignment="0" max="32767" attributes="2"/>
                                   <Component id="isotopeMinTxt" max="32767" attributes="2"/>
-                                  <Component id="minPrecursorChargeTxt" pref="89" max="32767" attributes="2"/>
+                                  <Component id="minPrecursorChargeTxt" max="32767" attributes="2"/>
                               </Group>
-                              <EmptySpace min="19" pref="19" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="precursorChargeRangeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorChargeRangeLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="maxPrecursorChargeTxt" pref="88" max="32767" attributes="2"/>
+                                  <Component id="maxPrecursorChargeTxt" max="32767" attributes="2"/>
                                   <Component id="isotopeMaxTxt" max="32767" attributes="2"/>
-                                  <Component id="fragmentIonUnit" max="32767" attributes="0"/>
                               </Group>
                           </Group>
+                          <Component id="maxMissedCleavagesTxt" min="-2" pref="218" max="-2" attributes="2"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -166,38 +173,58 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="maxMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="enzymeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="enzymesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="maxMissedCleavagesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="fragmentIonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorIonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="fragmentIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="fragmentIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="maxMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="enzymeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="enzymesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="maxMissedCleavagesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="precursorIonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="precursorIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="precursorIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="fragmentIonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="fragmentIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="fragmentIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="isotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="minPrecursorChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="precursorChargeRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="isotopeMinTxt" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="precursorChargeRangeLabel1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="maxPrecursorChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="precursorChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="isotopeMaxTxt" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="fragmentIonType1Lbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fragmentIon2Cmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fragmentIon1Cmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="minPrecursorChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="maxPrecursorChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorChargeRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="isotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="isotopeMinTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="isotopeMaxTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorChargeRangeLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -259,7 +286,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="fragmentIonLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Fragment Mass Tolerance (Da)"/>
+                <Property name="text" type="java.lang.String" value="Fragment Mass Tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fragmentIonAccuracyTxt">

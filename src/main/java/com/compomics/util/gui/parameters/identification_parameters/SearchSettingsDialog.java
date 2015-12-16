@@ -484,7 +484,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         precursorIonUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ppm", "Da" }));
 
-        fragmentIonLbl.setText("Fragment Mass Tolerance (Da)");
+        fragmentIonLbl.setText("Fragment Mass Tolerance");
 
         fragmentIonAccuracyTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         fragmentIonAccuracyTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -549,78 +549,94 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fragmentIonType1Lbl)
-                    .addComponent(enzymeLabel)
-                    .addComponent(precursorIonLbl))
-                .addGap(18, 18, 18)
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(precursorIonAccuracyTxt)
-                            .addComponent(fragmentIon1Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(fragmentIonType1Lbl)
+                        .addGap(44, 44, 44)
+                        .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(fragmentIon2Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(enzymeLabel)
+                            .addComponent(precursorIonLbl))
                         .addGap(18, 18, 18)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(precursorIonUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fragmentIon2Cmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                            .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                        .addComponent(fragmentIonLbl)
+                        .addGap(18, 18, 18)
+                        .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(precursorIonUnit, 0, 100, Short.MAX_VALUE)
+                            .addComponent(fragmentIonUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fragmentIonLbl)
                     .addComponent(maxMissedCleavagesLabel)
                     .addComponent(precursorChargeLbl)
                     .addComponent(isotopesLbl))
-                .addGap(18, 18, 18)
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(isotopeMinTxt)
-                            .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
-                        .addGap(19, 19, 19)
+                            .addComponent(minPrecursorChargeTxt))
+                        .addGap(18, 18, 18)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(precursorChargeRangeLabel)
                             .addComponent(precursorChargeRangeLabel1))
-                        .addGap(18, 18, 18)
+                        .addGap(26, 26, 26)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                            .addComponent(isotopeMaxTxt)
-                            .addComponent(fragmentIonUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(maxPrecursorChargeTxt)
+                            .addComponent(isotopeMaxTxt)))
+                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         proteaseAndFragmentationPanelLayout.setVerticalGroup(
             proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(enzymeLabel)
-                    .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxMissedCleavagesLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fragmentIonLbl)
-                    .addComponent(precursorIonLbl)
-                    .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precursorIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fragmentIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(enzymeLabel)
+                            .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxMissedCleavagesLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                                    .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(precursorIonLbl)
+                                        .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(precursorIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(fragmentIonLbl)
+                                        .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(fragmentIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(isotopesLbl)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                                    .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(precursorChargeRangeLabel))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(isotopeMinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(precursorChargeRangeLabel1)))
+                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(precursorChargeLbl))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(isotopeMaxTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentIonType1Lbl)
                     .addComponent(fragmentIon2Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precursorChargeLbl)
-                    .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precursorChargeRangeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(isotopesLbl)
-                    .addComponent(isotopeMinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isotopeMaxTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precursorChargeRangeLabel1))
+                    .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1068,51 +1084,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Validates the parameters.
-     *
-     * @param evt
-     */
-    private void maxMissedCleavagesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxMissedCleavagesTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_maxMissedCleavagesTxtKeyReleased
-
-    /**
-     * Validates the parameters.
-     *
-     * @param evt
-     */
-    private void precursorIonAccuracyTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_precursorIonAccuracyTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_precursorIonAccuracyTxtKeyReleased
-
-    /**
-     * Validates the parameters.
-     *
-     * @param evt
-     */
-    private void fragmentIonAccuracyTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fragmentIonAccuracyTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_fragmentIonAccuracyTxtKeyReleased
-
-    /**
-     * Validates the parameters.
-     *
-     * @param evt
-     */
-    private void minPrecursorChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecursorChargeTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_minPrecursorChargeTxtKeyReleased
-
-    /**
-     * Validates the parameters.
-     *
-     * @param evt
-     */
-    private void maxPrecursorChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPrecursorChargeTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_maxPrecursorChargeTxtKeyReleased
-
-    /**
      * Opens a file chooser where the user can select the database file.
      *
      * @param evt
@@ -1359,15 +1330,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
-
-    /**
-     * Validate the parameters.
-     *
-     * @param evt
-     */
-    private void enzymesCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesCmbActionPerformed
-        validateParametersInput(false);
-    }//GEN-LAST:event_enzymesCmbActionPerformed
 
     /**
      * Resize the layered panes.
@@ -1719,10 +1681,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         cancelButtonActionPerformed(null);
     }//GEN-LAST:event_formWindowClosing
 
-    private void isotopeMinTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_isotopeMinTxtKeyReleased
-        validateParametersInput(false);
-    }//GEN-LAST:event_isotopeMinTxtKeyReleased
-
     private void isotopeMaxTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_isotopeMaxTxtKeyReleased
         validateParametersInput(false);
     }//GEN-LAST:event_isotopeMaxTxtKeyReleased
@@ -1730,6 +1688,64 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     private void isotopeMaxTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isotopeMaxTxtActionPerformed
         validateParametersInput(false);
     }//GEN-LAST:event_isotopeMaxTxtActionPerformed
+
+    private void isotopeMinTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_isotopeMinTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_isotopeMinTxtKeyReleased
+
+    /**
+     * Validates the parameters.
+     *
+     * @param evt
+     */
+    private void maxPrecursorChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPrecursorChargeTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_maxPrecursorChargeTxtKeyReleased
+
+    /**
+     * Validates the parameters.
+     *
+     * @param evt
+     */
+    private void minPrecursorChargeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPrecursorChargeTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_minPrecursorChargeTxtKeyReleased
+
+    /**
+     * Validates the parameters.
+     *
+     * @param evt
+     */
+    private void fragmentIonAccuracyTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fragmentIonAccuracyTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_fragmentIonAccuracyTxtKeyReleased
+
+    /**
+     * Validates the parameters.
+     *
+     * @param evt
+     */
+    private void precursorIonAccuracyTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_precursorIonAccuracyTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_precursorIonAccuracyTxtKeyReleased
+
+    /**
+     * Validates the parameters.
+     *
+     * @param evt
+     */
+    private void maxMissedCleavagesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxMissedCleavagesTxtKeyReleased
+        validateParametersInput(false);
+    }//GEN-LAST:event_maxMissedCleavagesTxtKeyReleased
+
+    /**
+     * Validate the parameters.
+     *
+     * @param evt
+     */
+    private void enzymesCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesCmbActionPerformed
+        validateParametersInput(false);
+    }//GEN-LAST:event_enzymesCmbActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFixedModification;

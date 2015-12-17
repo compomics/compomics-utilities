@@ -950,7 +950,7 @@ public class ProteinTree {
      * sequence.
      *
      * @param peptideSequence the peptide sequence
-     * @param proteinInferencePrefeerences the sequence matching preferences
+     * @param proteinInferencePreferences the sequence matching preferences
      *
      * @return the peptide to protein mapping: peptide sequence &gt; protein
      * accession &gt; index in the protein An empty map if not
@@ -964,7 +964,7 @@ public class ProteinTree {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePrefeerences)
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
         long time0 = 0;
@@ -972,7 +972,7 @@ public class ProteinTree {
             time0 = System.currentTimeMillis();
         }
 
-        HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, proteinInferencePrefeerences, false);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> result = getProteinMapping(peptideSequence, proteinInferencePreferences, false);
 
         if (debugSpeed) {
             long time1 = System.currentTimeMillis();

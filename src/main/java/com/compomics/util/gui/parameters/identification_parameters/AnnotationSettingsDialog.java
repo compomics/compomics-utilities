@@ -152,6 +152,11 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
 
         intensitySpinner.setValue((int) (annotationSettings.getAnnotationIntensityLimit() * 100));
         accuracySpinner.setValue(annotationSettings.getFragmentIonAccuracy());
+        if (annotationSettings.isFragmentIonPpm()) {
+            fragmentIonAccuracyLabel.setText("ppm");
+        } else {
+            fragmentIonAccuracyLabel.setText("Da");
+        }
 
         aBox.setSelected(false);
         bBox.setSelected(false);

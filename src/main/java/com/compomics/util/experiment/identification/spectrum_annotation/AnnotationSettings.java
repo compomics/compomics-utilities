@@ -1,12 +1,15 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.io.Serializable;
@@ -177,10 +180,14 @@ public class AnnotationSettings implements Serializable {
         addIonType(Ion.IonType.REPORTER_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
-        PTMFactory ptmFactory = PTMFactory.getInstance();
-        for (String modName : searchParameters.getPtmSettings().getAllModifications()) {
-            PTM ptm = ptmFactory.getPTM(modName);
-            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+        PtmSettings ptmSettings = searchParameters.getPtmSettings();
+        if (getReporterIons()) {
+            HashSet<Integer> ptmReporterIons = IonFactory.getReporterIons(ptmSettings);
+            selectedIonsMap.put(ReporterIon.IonType.REPORTER_ION, ptmReporterIons);
+        }
+        if (isAutomaticAnnotation() || areNeutralLossesSequenceAuto()) {
+            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
+            for (NeutralLoss neutralLoss : neutralLosses) {
                 addNeutralLoss(neutralLoss);
             }
         }

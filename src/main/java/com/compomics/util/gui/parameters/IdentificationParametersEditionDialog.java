@@ -414,25 +414,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the identification settings in case the selected PTMs have been
-     * changed.
-     */
-    private void selectedPtmsChanged() {
-        PtmSettings ptmSettings = searchParameters.getPtmSettings();
-        HashMap<Ion.IonType, HashSet<Integer>> ionTypes = annotationSettings.getIonTypes();
-        if (annotationSettings.getReporterIons()) {
-            HashSet<Integer> reporterIons = IonFactory.getReporterIons(ptmSettings);
-            ionTypes.put(ReporterIon.IonType.REPORTER_ION, reporterIons);
-        }
-        if (annotationSettings.isAutomaticAnnotation() || annotationSettings.areNeutralLossesSequenceAuto()) {
-            ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
-            for (NeutralLoss neutralLoss : neutralLosses) {
-                annotationSettings.addNeutralLoss(neutralLoss);
-            }
-        }
-    }
-
-    /**
      * Validates the user input.
      *
      * @return a boolean indicating whether the user input is valid
@@ -899,18 +880,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         SearchSettingsDialog searchSettingsDialog = new SearchSettingsDialog(this, parentFrame, searchParameters,
                 normalIcon, waitingIcon, true, true, configurationFile, lastSelectedFolder, name, editable);
         if (!searchSettingsDialog.isCanceled()) {
-            if (searchParameters != null) {
-                PtmSettings oldPtms = searchParameters.getPtmSettings();
-                searchParameters = searchSettingsDialog.getSearchParameters();
-                PtmSettings newPtms = searchParameters.getPtmSettings();
-                if (!oldPtms.equals(newPtms)) {
-                    selectedPtmsChanged();
+            SearchParameters oldSearchParameters = searchParameters;
+            searchParameters = searchSettingsDialog.getSearchParameters();
+            if (oldSearchParameters != null && !searchParameters.equals(oldSearchParameters)) {
+                int value = JOptionPane.showConfirmDialog(this, "Spectrum matching settings changed, update advanced settings accordingly?", "Update Advanced Parameters?", JOptionPane.YES_NO_OPTION);
+                if (value == JOptionPane.YES_OPTION) {
+                    IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+                    extractParameters(identificationParameters);
                 }
-            } else {
-                searchParameters = searchSettingsDialog.getSearchParameters();
-                IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
-                extractParameters(identificationParameters);
-                selectedPtmsChanged();
             }
 
             if (!nameTxt.getText().isEmpty()) {
@@ -1203,7 +1180,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 oldIdentificationParameters = null;
                 IdentificationParameters identificationParameters = IdentificationParameters.getIdentificationParameters(selectedFile);
                 extractParameters(identificationParameters);
-                selectedPtmsChanged();
                 nameTxt.setText(identificationParameters.getName());
                 saveButton.setEnabled(true);
                 updateGUI();

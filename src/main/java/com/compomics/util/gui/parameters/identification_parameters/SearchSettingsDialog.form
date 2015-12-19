@@ -383,7 +383,6 @@
                     <StringItem index="1" value="Da"/>
                   </StringArray>
                 </Property>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

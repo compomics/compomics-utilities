@@ -47,7 +47,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     /**
      * The fragment ion mass accuracy.
      */
-    private double fragmentIonMassAccuracy;
+    private double fragmentIonMassAccuracyInDa;
     /**
      * Boolean indicating whether the used canceled the editing.
      */
@@ -77,15 +77,15 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
-     * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
+     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the mass
      * spectrometer
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy, boolean editable) {
+    public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(parent, true);
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = new PtmSettings(modificationProfile);
-        this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
+        this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
         initComponents();
         setUpGUI();
@@ -101,15 +101,15 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
-     * @param fragmentIonMassAccuracy the fragment ion mass accuracy of the mass
+     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the mass
      * spectrometer
      * @param editable boolean indicating whether the settings can be edited by the user
      */
-    public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracy, boolean editable) {
+    public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(owner, true);
         this.xtandemParameters = xtandemParameters;
         this.modificationProfile = new PtmSettings(modificationProfile);
-        this.fragmentIonMassAccuracy = fragmentIonMassAccuracy;
+        this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
         initComponents();
         setUpGUI();
@@ -1457,7 +1457,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
                 if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
-                        && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracy) {
+                        && Math.abs(ptm.getMass() - 42.010565) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick acetyl option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);
@@ -1477,7 +1477,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             for (String modName : modificationProfile.getFixedModifications()) {
                 PTM ptm = ptmFactory.getPTM(modName);
                 if ((ptm.getType() == PTM.MODNP || ptm.getType() == PTM.MODNPAA || ptm.getType() == PTM.MODN || ptm.getType() == PTM.MODNAA)
-                        && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracy) {
+                        && Math.abs(ptm.getMass() + 17.026549) < fragmentIonMassAccuracyInDa) {
                     JOptionPane.showMessageDialog(this, "The quick pyrolidone option might conflict with " + modName + ".",
                             "Modification Conflict", JOptionPane.ERROR_MESSAGE);
                     quickAcetylCmb.setSelectedIndex(1);

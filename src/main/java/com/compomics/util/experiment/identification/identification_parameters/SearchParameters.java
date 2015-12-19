@@ -50,7 +50,19 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public enum MassAccuracyType {
 
-        PPM, DA
+        PPM, DA;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case PPM:
+                    return "ppm";
+                case DA:
+                    return "Da";
+                default:
+                    throw new UnsupportedOperationException("Name of tolerance type " + this.name() + " not implemented.");
+            }
+        }
     };
     /**
      * The precursor accuracy type. Default is ppm.
@@ -268,6 +280,24 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     public Double getFragmentIonAccuracy() {
         return fragmentIonMZTolerance;
+    }
+
+    /**
+     * Returns the absolute fragment ion tolerance in Dalton. If the tolerance is in ppm, the given reference mass is used.
+     * 
+     * @param refMass the reference mass to use for the conversion of tolerances in ppm.
+     * 
+     * @return the absolute fragment ion tolerance in Dalton
+     */
+    public Double getFragmentIonAccuracyInDaltons(Double refMass) {
+        switch (fragmentAccuracyType) {
+            case DA:
+                return fragmentIonMZTolerance;
+            case PPM:
+                return fragmentIonMZTolerance * refMass / 1000000;
+            default:
+                throw new UnsupportedOperationException("Tolerance in " + fragmentAccuracyType + " not implemented.");
+        }
     }
 
     /**
@@ -624,7 +654,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Returns the minimal isotopic correction.
-     * 
+     *
      * @return the minimal isotopic correction
      */
     public Integer getMinIsotopicCorrection() {
@@ -636,7 +666,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Sets the minimal isotopic correction.
-     * 
+     *
      * @param minIsotopicCorrection the minimal isotopic correction
      */
     public void setMinIsotopicCorrection(Integer minIsotopicCorrection) {
@@ -645,7 +675,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Returns the maximal isotopic correction.
-     * 
+     *
      * @return the maximal isotopic correction
      */
     public Integer getMaxIsotopicCorrection() {
@@ -657,13 +687,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     /**
      * Sets the maximal isotopic correction.
-     * 
+     *
      * @param maxIsotopicCorrection the maximal isotopic correction
      */
     public void setMaxIsotopicCorrection(Integer maxIsotopicCorrection) {
         this.maxIsotopicCorrection = maxIsotopicCorrection;
     }
-    
+
     /**
      * Loads the identification parameters from a file. If the file is an
      * identification parameters file, the search parameters are extracted.
@@ -774,7 +804,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
         String newLine = System.getProperty("line.separator");
 
         StringBuilder output = new StringBuilder();
-        
+
         if (enzyme != null) {
             String name = enzyme.getName();
             if (!name.equals("Trypsin")) {
@@ -822,11 +852,12 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
         if (!precursorTolerance.equals(defaultParameters.getPrecursorAccuracy())
                 || !getPrecursorAccuracyType().equals(defaultParameters.getPrecursorAccuracyType())) {
-            output.append("Precursor Tolerance: ").append(precursorTolerance).append(".").append(newLine);
+            output.append("Precursor Tolerance: ").append(precursorTolerance).append(" ").append(precursorAccuracyType).append(".").append(newLine);
         }
 
-        if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())) {
-            output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" Da").append(".").append(newLine);
+        if (!fragmentIonMZTolerance.equals(defaultParameters.getFragmentIonAccuracy())
+                || !getFragmentAccuracyType().equals(defaultParameters.getFragmentAccuracyType())) {
+            output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" ").append(fragmentAccuracyType).append(".").append(newLine);
         }
 
         if (!forwardIon.equals(defaultParameters.getIonSearched1())
@@ -845,7 +876,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 || !getMaxIsotopicCorrection().equals(defaultParameters.getMaxIsotopicCorrection())) {
             output.append("Isotopic Correction ").append(minIsotopicCorrection).append(" to ").append(maxIsotopicCorrection).append(".").append(newLine);
         }
-        
+
         if (fastaFile != null) {
             output.append("DB: ").append(fastaFile.getName()).append(".").append(newLine);
         }
@@ -1043,6 +1074,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             return false;
         }
         if (!this.getPrecursorAccuracy().equals(otherSearchParameters.getPrecursorAccuracy())) {
+            return false;
+        }
+        if (!this.getFragmentAccuracyType().equals(otherSearchParameters.getFragmentAccuracyType())) {
             return false;
         }
         if (!this.getFragmentIonAccuracy().equals(otherSearchParameters.getFragmentIonAccuracy())) {

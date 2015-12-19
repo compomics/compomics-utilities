@@ -542,7 +542,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         });
 
         fragmentIonUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ppm", "Da" }));
-        fragmentIonUnit.setEnabled(false);
 
         javax.swing.GroupLayout proteaseAndFragmentationPanelLayout = new javax.swing.GroupLayout(proteaseAndFragmentationPanel);
         proteaseAndFragmentationPanel.setLayout(proteaseAndFragmentationPanelLayout);
@@ -1977,6 +1976,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             fragmentIonAccuracyTxt.setText(searchParameters.getFragmentIonAccuracy().toString());
         }
 
+        if (searchParameters.getFragmentAccuracyType()!= null) {
+            if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM) {
+                fragmentIonUnit.setSelectedItem("ppm");
+            } else if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.DA) {
+                fragmentIonUnit.setSelectedItem("Da");
+            }
+        }
+
         if (searchParameters.getMinChargeSearched() != null) {
             minPrecursorChargeTxt.setText(searchParameters.getMinChargeSearched().value + "");
         }
@@ -2207,6 +2214,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
         }
         tempSearchParameters.setFragmentIonAccuracy(fragmentAccuracy);
+        if (fragmentIonUnit.getSelectedIndex() == 0) {
+            tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
+        } else {
+            tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+        }
         tempSearchParameters.setIonSearched1(fragmentIon1Cmb.getSelectedItem().toString().trim());
         tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
         tempSearchParameters.setIonSearched2(fragmentIon2Cmb.getSelectedItem().toString().trim());

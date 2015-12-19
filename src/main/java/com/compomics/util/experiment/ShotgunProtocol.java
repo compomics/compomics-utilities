@@ -214,7 +214,7 @@ public class ShotgunProtocol implements Serializable {
         shotgunProtocol.setMs1Resolution(searchParameters.getPrecursorAccuracy());
         shotgunProtocol.setMs1ResolutionPpm(searchParameters.isPrecursorAccuracyTypePpm());
         shotgunProtocol.setMs2Resolution(searchParameters.getFragmentIonAccuracy());
-        shotgunProtocol.setMs2ResolutionPpm(false);
+        shotgunProtocol.setMs2ResolutionPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
         return shotgunProtocol;
     }
 }

@@ -176,6 +176,7 @@ public class AnnotationSettings implements Serializable {
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
+        setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
         PTMFactory ptmFactory = PTMFactory.getInstance();
         for (String modName : searchParameters.getPtmSettings().getAllModifications()) {
             PTM ptm = ptmFactory.getPTM(modName);
@@ -718,7 +719,7 @@ public class AnnotationSettings implements Serializable {
                     ionTypes += "reporter ions";
                 }
             }
-            
+
             output.append(ionTypes).append(".").append(newLine);
         }
 
@@ -740,7 +741,13 @@ public class AnnotationSettings implements Serializable {
 
         output.append("Intensity Limit: ").append(intensityLimit * 100).append(".").append(newLine);
 
-        output.append("Fragment Ion Accuracy: ").append(fragmentIonAccuracy).append(".").append(newLine);
+        String unit;
+        if (fragmentIonPpm) {
+            unit = "ppm";
+        } else {
+            unit = "Da";
+        }
+        output.append("Fragment Ion Accuracy: ").append(fragmentIonAccuracy).append(" ").append(unit).append(".").append(newLine);
 
         output.append("High Resolution Annotation: ").append(highResolutionAnnotation).append(".").append(newLine);
 

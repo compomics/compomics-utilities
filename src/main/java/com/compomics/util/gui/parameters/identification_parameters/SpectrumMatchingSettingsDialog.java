@@ -402,7 +402,7 @@ public class SpectrumMatchingSettingsDialog extends javax.swing.JDialog {
         } else if (identificationAlgorithmParameter instanceof TideParameters) {
             return new TideSettingsDialog(this, parentFrame, (TideParameters) identificationAlgorithmParameter, editable);
         } else if (identificationAlgorithmParameter instanceof XtandemParameters) {
-            return new XTandemSettingsDialog(this, parentFrame, (XtandemParameters) identificationAlgorithmParameter, searchParameters.getPtmSettings(), searchParameters.getFragmentIonAccuracy(), editable);
+            return new XTandemSettingsDialog(this, parentFrame, (XtandemParameters) identificationAlgorithmParameter, searchParameters.getPtmSettings(), searchParameters.getFragmentIonAccuracyInDaltons(2000.0), editable);
         }
         return null;
     }

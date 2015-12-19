@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.normalization;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -8,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class NormalizationFactors {
+public class NormalizationFactors implements Serializable {
 
     /**
      * List of protein level normalization factors. The key should be the same

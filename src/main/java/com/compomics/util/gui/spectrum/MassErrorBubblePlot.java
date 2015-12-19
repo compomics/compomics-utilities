@@ -287,13 +287,8 @@ public class MassErrorBubblePlot extends JPanel {
         }
 
         // set the mass error range
-        if (useRelativeError) {
-            plot.getRangeAxis().setLowerBound(-maxError * 1.1);
-            plot.getRangeAxis().setUpperBound(maxError * 1.1);
-        } else {
-            plot.getRangeAxis().setLowerBound(-massTolerance);
-            plot.getRangeAxis().setUpperBound(massTolerance);
-        }
+        plot.getRangeAxis().setLowerBound(-massTolerance);
+        plot.getRangeAxis().setUpperBound(massTolerance);
 
         plot.getDomainAxis().setLowerBound(0);
         plot.getDomainAxis().setUpperBound(plot.getDomainAxis().getUpperBound() + 100);

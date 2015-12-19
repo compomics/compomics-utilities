@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -121,7 +120,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * The line to use to reference the modification use in the configuration
      * file.
      */
-    public static final String modificationUseInConfiguration = "Modification use:";
+    private static final String MODIFICATION_USE_IN_CONFIGURATION = "Modification use:";
     /**
      * Boolean indicating whether the cancel button was pressed.
      */
@@ -140,6 +139,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * 6...)
      */
     public static String TITLED_BORDER_HORIZONTAL_PADDING = "";
+    /**
+     * Reference mass for the conversion of the fragment ion tolerance from ppm
+     * to Dalton.
+     */
+    private Double refMass = 2000.0; // @TODO: should be moved to SearchGUI user preferences
 
     /**
      * Creates a new SearchSettingsDialog with a frame as owner.
@@ -266,6 +270,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         precursorIonUnit.setEnabled(editable);
         fragmentIon1Cmb.setEnabled(editable);
         fragmentIon2Cmb.setEnabled(editable);
+        fragmentIonUnit.setEnabled(editable);
         maxMissedCleavagesTxt.setEditable(editable);
         fragmentIonAccuracyTxt.setEditable(editable);
         minPrecursorChargeTxt.setEditable(editable);
@@ -1468,16 +1473,14 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                 if (modificationsListCombo.getSelectedIndex() == 0) {
                     // remove from default ptm set
                     modificationUse.remove(ptmName);
-                } else {
-                    if (selected) {
-                        // add to default ptm set
-                        if (!modificationUse.contains(ptmName)) {
-                            modificationUse.add(ptmName);
-                        }
-                    } else {
-                        // remove from default ptm set
-                        modificationUse.remove(ptmName);
+                } else if (selected) {
+                    // add to default ptm set
+                    if (!modificationUse.contains(ptmName)) {
+                        modificationUse.add(ptmName);
                     }
+                } else {
+                    // remove from default ptm set
+                    modificationUse.remove(ptmName);
                 }
 
                 Point viewPosition = modificationsJScrollPane.getViewport().getViewPosition();
@@ -1976,7 +1979,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             fragmentIonAccuracyTxt.setText(searchParameters.getFragmentIonAccuracy().toString());
         }
 
-        if (searchParameters.getFragmentAccuracyType()!= null) {
+        if (searchParameters.getFragmentAccuracyType() != null) {
             if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM) {
                 fragmentIonUnit.setSelectedItem("ppm");
             } else if (searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.DA) {
@@ -1991,11 +1994,11 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         if (searchParameters.getMaxChargeSearched() != null) {
             maxPrecursorChargeTxt.setText(searchParameters.getMaxChargeSearched().value + "");
         }
-        
+
         if (searchParameters.getMinIsotopicCorrection() != null) {
             isotopeMinTxt.setText(searchParameters.getMinIsotopicCorrection().toString());
         }
-        
+
         if (searchParameters.getMaxIsotopicCorrection() != null) {
             isotopeMaxTxt.setText(searchParameters.getMaxIsotopicCorrection().toString());
         }
@@ -2126,7 +2129,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         } catch (NumberFormatException e) {
             // ignore, error already caught above
         }
-        
+
         // make sure that the lower isotope is smaller than the upper isotope
         try {
             double isotopeLowerBound = Integer.parseInt(isotopeMinTxt.getText().trim());
@@ -2241,7 +2244,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         // Adapt Comet options
         CometParameters cometParameters = (CometParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex());
         if (cometParameters != null) {
-            double binoffset = tempSearchParameters.getFragmentIonAccuracyInDaltons(2000.0) / 2;
+            double binoffset = tempSearchParameters.getFragmentIonAccuracyInDaltons(refMass) / 2;
             cometParameters.setFragmentBinOffset(binoffset);
             if (maxIsotope > 0) {
                 cometParameters.setIsotopeCorrection(1);
@@ -2396,71 +2399,6 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the tooltip to the selected modification.
-     *
-     * @param list the list to update the tooltip for
-     * @param evt the mouse event used to locate the item the mouse is hovering
-     * over
-     */
-    private void updateListToolTip(JList list, java.awt.event.MouseEvent evt) {
-
-        // @TODO: reimplement me??
-        String toolTip = null;
-
-        int index = list.locationToIndex(evt.getPoint());
-        Rectangle bounds = list.getCellBounds(index, index);
-
-        // update tooltips
-        if (index != -1 && bounds.contains(evt.getPoint())) {
-            String name = (String) list.getModel().getElementAt(index);
-
-            PTM ptm = ptmFactory.getPTM(name);
-
-            String residuesAsString = "";
-
-            if (ptm.getType() == PTM.MODN) {
-                residuesAsString += "protein N-term";
-            } else if (ptm.getType() == PTM.MODNP) {
-                residuesAsString += "peptide N-term";
-            } else if (ptm.getType() == PTM.MODNAA) {
-                residuesAsString += "protein starting by " + ptm.getPattern().toString();
-            } else if (ptm.getType() == PTM.MODNPAA) {
-                residuesAsString += "peptide starting by " + ptm.getPattern().toString();
-            }
-            if (ptm.getType() == PTM.MODC) {
-                residuesAsString += "protein C-term";
-            } else if (ptm.getType() == PTM.MODCP) {
-                residuesAsString += "peptide C-term";
-            } else if (ptm.getType() == PTM.MODCAA) {
-                residuesAsString += "protein ending by " + ptm.getPattern().toString();
-            } else if (ptm.getType() == PTM.MODCPAA) {
-                residuesAsString += "peptide ending by " + ptm.getPattern().toString();
-            } else if (ptm.getType() == PTM.MODAA) {
-                residuesAsString += ptm.getPattern().toString();
-            }
-
-            toolTip = "<html>"
-                    + "<table border=\"0\">"
-                    + "<tr>"
-                    + "<td>Name:</td>"
-                    + "<td>" + ptm.getName() + "</td>"
-                    + "</tr>"
-                    + "<tr>"
-                    + "<td>Mass:</td>"
-                    + "<td>" + ptm.getRoundedMass() + "</td>"
-                    + "</tr>"
-                    + "<tr>"
-                    + "<td>Target:</td>"
-                    + "<td>" + residuesAsString + "</td>"
-                    + "</tr>"
-                    + "</table>"
-                    + "</html>";
-        }
-
-        list.setToolTipText(toolTip);
-    }
-
-    /**
      * Returns a string with the modifications used.
      *
      * @param configurationFile the file to load the modifications from
@@ -2474,9 +2412,9 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         ArrayList<String> modificationUse = new ArrayList<String>();
 
-        String modificationLine = configurationFile.getParameterLine(modificationUseInConfiguration);
+        String modificationLine = configurationFile.getParameterLine(MODIFICATION_USE_IN_CONFIGURATION);
         if (modificationLine != null) {
-            // Split the different modifications.
+            // split the different modifications
             int start;
 
             ArrayList<String> modificationUses = new ArrayList<String>();
@@ -2512,7 +2450,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      */
     public static void saveModificationUse(ConfigurationFile configurationFile, ArrayList<String> modificationUse) throws IOException {
         String modificationUseAsString = getModificationUseAsString(modificationUse);
-        configurationFile.setParameter(modificationUseInConfiguration, modificationUseAsString);
+        configurationFile.setParameter(MODIFICATION_USE_IN_CONFIGURATION, modificationUseAsString);
     }
 
     /**
@@ -2562,7 +2500,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Saves the search parameters to a file of the users choice. //@TODO: take this method outside the dialog?
+     * Saves the search parameters to a file of the users choice.
      *
      * @param parentDialog the parent dialog
      * @param identificationParameters the current identification parameters
@@ -2572,7 +2510,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
      * @return the file where the new settings were saved, null if not saved
      */
     public static File saveIdentificationParameters(JDialog parentDialog, IdentificationParameters identificationParameters, File identificationParametersFile,
-            LastSelectedFolder lastSelectedFolder) {
+            LastSelectedFolder lastSelectedFolder) {  //@TODO: move this method outside the dialog?
 
         int value = JOptionPane.showConfirmDialog(parentDialog, "The search parameters have changed."
                 + "\nDo you want to save the changes?", "Save Changes?", JOptionPane.YES_NO_CANCEL_OPTION);

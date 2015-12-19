@@ -136,13 +136,8 @@ public class MassErrorPlot extends JPanel {
             plot.getDomainAxis().setLowerMargin(0);
 
             // set the mass error range
-            if (useRelativeError) {
-                plot.getRangeAxis().setLowerBound(-maxError * 1.1);
-                plot.getRangeAxis().setUpperBound(maxError * 1.1);
-            } else {
-                plot.getRangeAxis().setLowerBound(-massTolerance);
-                plot.getRangeAxis().setUpperBound(massTolerance);
-            }
+            plot.getRangeAxis().setLowerBound(-massTolerance);
+            plot.getRangeAxis().setUpperBound(massTolerance);
 
             plot.setRangeGridlinePaint(Color.black);
 

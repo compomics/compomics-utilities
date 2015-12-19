@@ -1,13 +1,10 @@
 package com.compomics.util.gui.parameters;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.gui.parameters.identification_parameters.AnnotationSettingsDialog;
@@ -38,8 +35,6 @@ import java.awt.Dialog;
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import javax.swing.JOptionPane;
 
 /**
@@ -883,7 +878,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             SearchParameters oldSearchParameters = searchParameters;
             searchParameters = searchSettingsDialog.getSearchParameters();
             if (oldSearchParameters != null && !searchParameters.equals(oldSearchParameters)) {
-                int value = JOptionPane.showConfirmDialog(this, "Spectrum matching settings changed, update advanced settings accordingly?", "Update Advanced Parameters?", JOptionPane.YES_NO_OPTION);
+                // @TODO: check if the question is really needed?
+                int value = JOptionPane.showConfirmDialog(this, "Spectrum matching settings changed. Update advanced settings accordingly?", "Update Advanced Parameters?", JOptionPane.YES_NO_OPTION);
                 if (value == JOptionPane.YES_OPTION) {
                     IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
                     extractParameters(identificationParameters);

@@ -2241,7 +2241,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         // Adapt Comet options
         CometParameters cometParameters = (CometParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.comet.getIndex());
         if (cometParameters != null) {
-            double binoffset = fragmentAccuracy / 2;
+            double binoffset = tempSearchParameters.getFragmentIonAccuracyInDaltons(2000.0) / 2;
             cometParameters.setFragmentBinOffset(binoffset);
             if (maxIsotope > 0) {
                 cometParameters.setIsotopeCorrection(1);

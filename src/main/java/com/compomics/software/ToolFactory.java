@@ -31,6 +31,15 @@ public class ToolFactory {
      */
     public static final String peptideShakerUrlDownloadFolderOption = "-zipUrlFolder";
     /**
+     * The command line argument to open a given PX accession in PRIDE Reshake.
+     */
+    public static final String peptideShakerPxAccessionOption = "-pxAccession";
+    /**
+     * The command line argument to indicate that the PX accession to open in
+     * PRIDE Reshake is private. If not set public is assumed.
+     */
+    public static final String peptideShakerPxAccessionPrivateOption = "-pxAccessionPrivate";
+    /**
      * The command line argument for mgf files for SearchGUI.
      */
     public static final String searchGuiSpectrumFileOption = "-mgf";

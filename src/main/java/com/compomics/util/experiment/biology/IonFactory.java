@@ -70,7 +70,7 @@ public class IonFactory {
      * in the given modifications. Note: modifications must be loaded in the PTM
      * factory.
      *
-     * @param ptmSettings the ptm settings
+     * @param ptmSettings the PTM settings
      *
      * @return the neutral losses expected in the dataset
      */
@@ -237,7 +237,7 @@ public class IonFactory {
                 if (ions == null) {
                     ions = new ArrayList<Ion>(1);
                     ionsMap.put(subType, ions);
-                    ions.add(immoniumIon);
+                    ions.add(immoniumIon); // @TODO: what about related ions: http://www.matrixscience.com/help/fragmentation_help.html
                 }
             }
 
@@ -1251,7 +1251,7 @@ public class IonFactory {
      * Convenience summing the masses of various neutral losses.
      *
      * @param neutralLosses list of neutral losses
-     * @return the summ of the masses
+     * @return the sum of the masses
      */
     public static double getLossesMass(ArrayList<NeutralLoss> neutralLosses) {
         double result = 0;

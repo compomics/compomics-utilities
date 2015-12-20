@@ -372,7 +372,7 @@
             <Component class="javax.swing.JLabel" name="fragmentIonAccuracyLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Fragment Ion Accuracy"/>
-                <Property name="toolTipText" type="java.lang.String" value="Fragment ion annotation accuracy ."/>
+                <Property name="toolTipText" type="java.lang.String" value="Fragment ion annotation accuracy "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="fragmentIonAccuracyTypeLabel">
@@ -385,7 +385,7 @@
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                   <SpinnerModel initial="25" maximum="100" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Display a certain percent of the&lt;br&gt;&#xa;possible annotations relative&lt;br&gt;&#xa;to the most intense peak.&#xa;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Display a certain percent of the&lt;br&gt;&#xa;possible annotations relative&lt;br&gt;&#xa;to the most intense peak&#xa;&lt;/html&gt;"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="annotationLevelPercentLabel">
@@ -396,7 +396,7 @@
             <Component class="javax.swing.JLabel" name="annotationLevelLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Annotation Level"/>
-                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Display a certain percent of the&lt;br&gt;&#xa;possible annotations relative&lt;br&gt;&#xa;to the most intense peak.&#xa;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;Display a certain percent of the&lt;br&gt;&#xa;possible annotations relative&lt;br&gt;&#xa;to the most intense peak&#xa;&lt;/html&gt;"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="accuracySpinner">
@@ -404,7 +404,7 @@
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                   <SpinnerModel initial="0.05" maximum="0.05" minimum="0.0" numberType="java.lang.Double" stepSize="0.001" type="number"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Fragment ion annotation accuracy."/>
+                <Property name="toolTipText" type="java.lang.String" value="Fragment ion annotation accuracy"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="highResolutionBox">

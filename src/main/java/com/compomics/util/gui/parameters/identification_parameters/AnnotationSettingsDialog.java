@@ -44,23 +44,30 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * Boolean indicating whether the settings can be edited by the user.
      */
     private boolean editable;
+    /**
+     * The fragment ion accuracy used for the search.
+     */
+    private double maxFragmentIonAccuracy;
 
     /**
      * Creates a new AnnotationPreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
+     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the search
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy, 
+            ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
         this.editable = editable;
+        this.maxFragmentIonAccuracy = maxFragmentIonAccuracy;
         initComponents();
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);
@@ -74,17 +81,20 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
+     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the search
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
+    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy, 
+            ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
         this.reporterIons = reporterIons;
         this.editable = editable;
+        this.maxFragmentIonAccuracy = maxFragmentIonAccuracy;
         initComponents();
         setUpGui();
         populateGui(annotationSettings, possibleNeutralLosses);
@@ -126,18 +136,17 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         intensitySpinner.setEnabled(editable);
         accuracySpinner.setEnabled(editable);
         highResolutionBox.setEnabled(editable);
-
     }
 
     /**
-     * Populates the gui using the given annotation settings.
+     * Populates the GUI using the given annotation settings.
      *
      * @param annotationSettings the annotation settings to display
      * @param possibleNeutralLosses the possible neutral losses
      */
     private void populateGui(AnnotationSettings annotationSettings, ArrayList<NeutralLoss> possibleNeutralLosses) {
 
-        neutralLossesMap = new HashMap<NeutralLoss, Boolean>(possibleNeutralLosses.size());
+        neutralLossesMap = new HashMap<NeutralLoss, Boolean>(possibleNeutralLosses.size()); // @TODO: should not use NeutralLoss as key?
         ArrayList<NeutralLoss> selectedNeutralLosses = annotationSettings.getNeutralLosses();
         for (NeutralLoss possibleNeutralLoss : possibleNeutralLosses) {
             boolean found = false;
@@ -149,13 +158,26 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
             }
             neutralLossesMap.put(possibleNeutralLoss, found);
         }
+        ((NeutralLossesTableModel) neutralLossesTable.getModel()).updateData();
 
         intensitySpinner.setValue((int) (annotationSettings.getAnnotationIntensityLimit() * 100));
-        accuracySpinner.setValue(annotationSettings.getFragmentIonAccuracy());
-        if (annotationSettings.isFragmentIonPpm()) {
-            fragmentIonAccuracyLabel.setText("ppm");
+        
+        double fragmentIonAccuracy = annotationSettings.getFragmentIonAccuracy();
+        double stepSize;
+        if (fragmentIonAccuracy > 10) { // @TODO: find a more generic way of setting the step size
+            stepSize = 1;
+        } else if (fragmentIonAccuracy > 1) {
+            stepSize = 0.1;
+        } else if (fragmentIonAccuracy > 0.1) {
+            stepSize = 0.01;
         } else {
-            fragmentIonAccuracyLabel.setText("Da");
+            stepSize = 0.001;
+        }
+        accuracySpinner.setModel(new javax.swing.SpinnerNumberModel(fragmentIonAccuracy, 0.0d, maxFragmentIonAccuracy, stepSize));
+        if (annotationSettings.isFragmentIonPpm()) {
+            fragmentIonAccuracyTypeLabel.setText("ppm");
+        } else {
+            fragmentIonAccuracyTypeLabel.setText("Da");
         }
 
         aBox.setSelected(false);
@@ -462,20 +484,20 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         peakMatchingPanel.setOpaque(false);
 
         fragmentIonAccuracyLabel.setText("Fragment Ion Accuracy");
-        fragmentIonAccuracyLabel.setToolTipText("Fragment ion annotation accuracy .");
+        fragmentIonAccuracyLabel.setToolTipText("Fragment ion annotation accuracy ");
 
         fragmentIonAccuracyTypeLabel.setText("Da");
 
         intensitySpinner.setModel(new javax.swing.SpinnerNumberModel(25, 0, 100, 1));
-        intensitySpinner.setToolTipText("<html>\nDisplay a certain percent of the<br>\npossible annotations relative<br>\nto the most intense peak.\n</html>");
+        intensitySpinner.setToolTipText("<html>\nDisplay a certain percent of the<br>\npossible annotations relative<br>\nto the most intense peak\n</html>");
 
         annotationLevelPercentLabel.setText("%");
 
         annotationLevelLabel.setText("Annotation Level");
-        annotationLevelLabel.setToolTipText("<html>\nDisplay a certain percent of the<br>\npossible annotations relative<br>\nto the most intense peak.\n</html>");
+        annotationLevelLabel.setToolTipText("<html>\nDisplay a certain percent of the<br>\npossible annotations relative<br>\nto the most intense peak\n</html>");
 
         accuracySpinner.setModel(new javax.swing.SpinnerNumberModel(0.05d, 0.0d, 0.05d, 0.001d));
-        accuracySpinner.setToolTipText("Fragment ion annotation accuracy.");
+        accuracySpinner.setToolTipText("Fragment ion annotation accuracy");
 
         highResolutionBox.setSelected(true);
         highResolutionBox.setText("High Resolution");
@@ -614,7 +636,6 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -684,6 +705,13 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
          * Constructor.
          */
         public NeutralLossesTableModel() {
+            updateData();
+        }
+        
+        /**
+         * Update the table content.
+         */
+        public void updateData() {
             if (neutralLossesMap != null) {
                 for (NeutralLoss neutralLoss : neutralLossesMap.keySet()) {
                     namesMap.put(neutralLoss.name, neutralLoss);

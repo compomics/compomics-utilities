@@ -3,8 +3,6 @@ package com.compomics.util.experiment.identification.spectrum_annotation;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
@@ -615,10 +613,10 @@ public class AnnotationSettings implements Serializable {
             return false;
         }
         ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();
-        if (neutralLossesList.size() != otherNeutralLosses.size()) {
+        if (getNeutralLosses().size() != otherNeutralLosses.size()) {
             return false;
         }
-        for (NeutralLoss neutralLoss1 : neutralLossesList) {
+        for (NeutralLoss neutralLoss1 : getNeutralLosses()) {
             boolean found = false;
             for (NeutralLoss neutralLoss2 : otherNeutralLosses) {
                 if (neutralLoss1.isSameAs(neutralLoss2)) {

@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.parameters_cli;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
+import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.preferences.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
@@ -49,7 +50,15 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 System.out.println("An error occurred while loading the enzymes.");
                 e.printStackTrace();
             }
-
+            
+            try {
+                SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+                speciesFactory.initiate(getJarFilePath());
+            } catch (Exception e) {
+                System.out.println("An error occurred while loading the enzymes.");
+                e.printStackTrace();
+            }
+            
             Options lOptions = new Options();
             createOptionsCLI(lOptions);
             BasicParser parser = new BasicParser();
@@ -197,6 +206,13 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      * @return the enzyme file needed to initiate the factory
      */
     protected abstract File getEnzymeFile();
+
+    /**
+     * Returns the path to the jar file.
+     *
+     * @return the path to the jar file
+     */
+    protected abstract String getJarFilePath();
 
     /**
      * Provides the options left to the user.

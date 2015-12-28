@@ -858,7 +858,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private void spectrumAnnotationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spectrumAnnotationButtonActionPerformed
         ArrayList<NeutralLoss> neutralLosses = IonFactory.getNeutralLosses(searchParameters.getPtmSettings());
         ArrayList<Integer> reporterIons = new ArrayList<Integer>(IonFactory.getReporterIons(searchParameters.getPtmSettings()));
-        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(this, parentFrame, annotationSettings, 
+        AnnotationSettingsDialog annotationSettingsDialog = new AnnotationSettingsDialog(this, parentFrame, annotationSettings,
                 searchParameters.getFragmentIonAccuracy(), neutralLosses, reporterIons, editable);
         if (!annotationSettingsDialog.isCanceled()) {
             annotationSettings = annotationSettingsDialog.getAnnotationSettings();
@@ -878,13 +878,21 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         if (!searchSettingsDialog.isCanceled()) {
             SearchParameters oldSearchParameters = searchParameters;
             searchParameters = searchSettingsDialog.getSearchParameters();
-            if (oldSearchParameters != null && !searchParameters.equals(oldSearchParameters)) {
+
+            boolean extactParameters = false;
+            if (oldSearchParameters == null) {
+                extactParameters = true;
+            } else if (!searchParameters.equals(oldSearchParameters)) {
                 // @TODO: check if the question is really needed..?
                 int value = JOptionPane.showConfirmDialog(this, "Spectrum matching settings changed. Update advanced settings accordingly?", "Update Advanced Parameters?", JOptionPane.YES_NO_OPTION);
                 if (value == JOptionPane.YES_OPTION) {
-                    IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
-                    extractParameters(identificationParameters);
+                    extactParameters = true;
                 }
+            }
+
+            if (extactParameters) {
+                IdentificationParameters identificationParameters = new IdentificationParameters(searchParameters);
+                extractParameters(identificationParameters);
             }
 
             if (!nameTxt.getText().isEmpty()) {

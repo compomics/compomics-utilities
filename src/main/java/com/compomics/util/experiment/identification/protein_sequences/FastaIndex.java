@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.protein_sequences;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.protein.Header;
 import com.compomics.util.protein.Header.DatabaseType;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -350,7 +349,7 @@ public class FastaIndex extends ExperimentObject {
 
     /**
      * Returns the default version based on the time the file was last modified.
-     * Default version is the date "DD.MM.YYYY".
+     * Default version is the date "dd.MM.yyyy".
      *
      * @param lastModified long indicating when the database was last modified
      * @return the default version

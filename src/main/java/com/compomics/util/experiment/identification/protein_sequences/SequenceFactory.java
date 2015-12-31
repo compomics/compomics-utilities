@@ -62,7 +62,7 @@ public class SequenceFactory {
     /**
      * Recognized flags for a decoy protein.
      */
-    private static final String[] decoyFlags = {"REVERSED", "RND", "SHUFFLED", "DECOY"};
+    private static final String[] DECOY_FLAGS = {"REVERSED", "RND", "SHUFFLED", "DECOY"};
     /**
      * HashMap of the currently calculated protein molecular weights.
      */
@@ -82,7 +82,7 @@ public class SequenceFactory {
     /**
      * The time out in milliseconds when querying the file.
      */
-    public final static long timeOut = 10000;
+    public final static long TIME_OUT = 10000;
     /**
      * Indicates whether the decoy hits should be kept in memory.
      */
@@ -380,7 +380,7 @@ public class SequenceFactory {
                     if (currentHeader == null) {
                         currentHeader = Header.parseFromFASTA(line);
                         if (currentHeader == null) {
-                            throw new IllegalArgumentException("Could not parse fasta header \"" + line + "\".");
+                            throw new IllegalArgumentException("Could not parse FASTA header \"" + line + "\".");
                         }
                         currentHeaderMap.put(accession, currentHeader);
                     }
@@ -400,7 +400,7 @@ public class SequenceFactory {
 
         } catch (IOException e) {
             reading = false;
-            if (waitingTime < timeOut) {
+            if (waitingTime < TIME_OUT) {
                 wait(waitingTime);
                 e.printStackTrace();
                 return getProtein(accession, index, 2 * waitingTime);
@@ -437,7 +437,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover.
      */
     public Header getHeader(String accession) throws IOException, InterruptedException {
         return getHeader(accession, true);
@@ -453,7 +453,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover.
      */
     private Header getHeader(String accession, boolean reindex) throws IOException, InterruptedException {
 
@@ -492,7 +492,7 @@ public class SequenceFactory {
      * @throws IOException exception thrown whenever an error occurred while
      * reading the FASTA file
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover.
      */
     private synchronized Header getHeader(long index, int nTries) throws InterruptedException, IOException {
 
@@ -856,10 +856,10 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the name of the fasta index corresponding to the given fasta file
+     * Returns the name of the FASTA index corresponding to the given FASTA file
      * name.
      *
-     * @param fastaName the name of the fasta file
+     * @param fastaName the name of the FASTA file
      *
      * @return the name of the index
      */
@@ -923,7 +923,7 @@ public class SequenceFactory {
      * @return the decoy tag matched by this protein
      */
     private static String getDecoyFlag(String proteinAccession) {
-        for (String flag : decoyFlags) {
+        for (String flag : DECOY_FLAGS) {
             if (isDecoy(proteinAccession, flag)) {
                 return flag;
             }
@@ -1253,9 +1253,9 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the currently loaded fasta file.
+     * Returns the currently loaded FASTA file.
      *
-     * @return the currently loaded fasta file
+     * @return the currently loaded FASTA file
      */
     public File getCurrentFastaFile() {
         return currentFastaFile;
@@ -1267,7 +1267,7 @@ public class SequenceFactory {
      * @return the default suffix for a decoy accession
      */
     public static String getDefaultDecoyAccessionSuffix() {
-        return "_" + decoyFlags[0];
+        return "_" + DECOY_FLAGS[0];
     }
 
     /**
@@ -1287,7 +1287,7 @@ public class SequenceFactory {
      * @return the default description of the decoy protein
      */
     public static String getDefaultDecoyDescription(String targetDescription) {
-        return targetDescription + "-" + decoyFlags[0];
+        return targetDescription + "-" + DECOY_FLAGS[0];
     }
 
     /**

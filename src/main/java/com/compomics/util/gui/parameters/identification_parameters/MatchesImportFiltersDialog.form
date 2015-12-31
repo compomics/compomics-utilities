@@ -35,7 +35,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
+          <Component id="backgroundPanel" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -72,15 +72,15 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="filterPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="filterPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="helpJButton" alignment="2" max="32767" attributes="1"/>
-                      <Component id="okButton" alignment="2" max="32767" attributes="1"/>
-                      <Component id="cancelButton" alignment="2" max="32767" attributes="1"/>
+                      <Component id="helpJButton" alignment="2" min="-2" pref="23" max="-2" attributes="1"/>
+                      <Component id="okButton" alignment="2" min="-2" max="-2" attributes="1"/>
+                      <Component id="cancelButton" alignment="2" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -100,29 +100,43 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="peptideLengthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorAccuracyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="missedCleavagesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="precDevTxt" pref="93" max="32767" attributes="2"/>
-                                  <Component id="nAAminTxt" max="32767" attributes="2"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="precDevTxt" pref="93" max="32767" attributes="2"/>
+                                          <Component id="nAAminTxt" max="32767" attributes="2"/>
+                                      </Group>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Component id="peptideLengthRangeLabel" min="-2" pref="10" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="minMissedCleavagesTxt" max="32767" attributes="2"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="missedCleavagesRangeLabel" min="-2" pref="10" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="peptideLengthRangeLabel" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="maxMissedCleavagesTxt" max="32767" attributes="2"/>
                                   <Component id="nAAmaxTxt" max="32767" attributes="2"/>
                                   <Component id="unitCmb" pref="93" max="32767" attributes="2"/>
                               </Group>
                           </Group>
-                          <Component id="ptmsCheck" alignment="0" min="-2" pref="279" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="ptmsCheck" min="-2" pref="279" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -145,8 +159,15 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ptmsCheck" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="minMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="missedCleavagesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="missedCleavagesRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="ptmsCheck" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -203,6 +224,27 @@
                   <Insets value="[2, 0, 2, 2]"/>
                 </Property>
                 <Property name="opaque" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="missedCleavagesLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Missed Cleavages"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minMissedCleavagesTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="missedCleavagesRangeLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxMissedCleavagesTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
             </Component>
           </SubComponents>

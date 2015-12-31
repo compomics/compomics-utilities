@@ -30,7 +30,8 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
      *
      * @param parentFrame the parent frame
      * @param idFilter the identification filter
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public MatchesImportFiltersDialog(java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
         super(parentFrame, true);
@@ -47,7 +48,8 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param idFilter the identification filter
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public MatchesImportFiltersDialog(Dialog owner, java.awt.Frame parentFrame, PeptideAssumptionFilter idFilter, boolean editable) {
         super(owner, true);
@@ -76,7 +78,10 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         unitCmb.setEnabled(editable);
         unitCmb.setEnabled(editable);
         ptmsCheck.setEnabled(editable);
-        
+        minMissedCleavagesTxt.setEditable(editable);
+        minMissedCleavagesTxt.setEnabled(editable);
+        maxMissedCleavagesTxt.setEditable(editable);
+        maxMissedCleavagesTxt.setEnabled(editable);
     }
 
     /**
@@ -105,6 +110,13 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         } else {
             unitCmb.setSelectedIndex(1);
         }
+
+        if (idFilter.getMinMissedCleavages() != null) {
+            minMissedCleavagesTxt.setText(idFilter.getMinMissedCleavages() + "");
+        }
+        if (idFilter.getMaxMissedCleavages() != null) {
+            maxMissedCleavagesTxt.setText(idFilter.getMaxMissedCleavages() + "");
+        }
     }
 
     /**
@@ -123,6 +135,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
         try {
             String input = nAAmaxTxt.getText();
             if (!input.equals("")) {
@@ -133,6 +146,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
         try {
             String input = precDevTxt.getText();
             if (!input.equals("")) {
@@ -143,6 +157,29 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+        try {
+            String input = minMissedCleavagesTxt.getText();
+            if (!input.equals("")) {
+                new Integer(input);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Please verify the input for the minimum number of missed cleavages.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try {
+            String input = maxMissedCleavagesTxt.getText();
+            if (!input.equals("")) {
+                new Integer(input);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Please verify the input for the maximum number of missed cleavages.",
+                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
 
@@ -161,30 +198,49 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
      * @return the id filter as set by the user
      */
     public PeptideAssumptionFilter getFilter() {
+
         int nAAmin = -1;
         String input = nAAminTxt.getText();
         if (!input.equals("")) {
             nAAmin = new Integer(input);
         }
+
         int nAAmax = -1;
         input = nAAmaxTxt.getText();
         if (!input.equals("")) {
             nAAmax = new Integer(input);
         }
+
         double precDev = -1;
         input = precDevTxt.getText();
         if (!input.equals("")) {
             precDev = new Double(input);
         }
+
         boolean ppm = unitCmb.getSelectedIndex() == 0;
         boolean removePTM = ptmsCheck.isSelected();
+
+        Integer minMissedCleavages = null;
+        input = minMissedCleavagesTxt.getText();
+        if (!input.equals("")) {
+            minMissedCleavages = new Integer(input);
+        }
+
+        Integer maxMissedCleavages = null;
+        input = maxMissedCleavagesTxt.getText();
+        if (!input.equals("")) {
+            maxMissedCleavages = new Integer(input);
+        }
 
         PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter(
                 nAAmin,
                 nAAmax,
                 precDev,
                 ppm,
-                removePTM);
+                removePTM,
+                minMissedCleavages,
+                maxMissedCleavages
+        );
 
         return idFilter;
     }
@@ -208,6 +264,10 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         precDevTxt = new javax.swing.JTextField();
         precursorAccuracyLabel = new javax.swing.JLabel();
         ptmsCheck = new javax.swing.JCheckBox();
+        missedCleavagesLabel = new javax.swing.JLabel();
+        minMissedCleavagesTxt = new javax.swing.JTextField();
+        missedCleavagesRangeLabel = new javax.swing.JLabel();
+        maxMissedCleavagesTxt = new javax.swing.JTextField();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         helpJButton = new javax.swing.JButton();
@@ -248,6 +308,15 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         ptmsCheck.setMargin(new java.awt.Insets(2, 0, 2, 2));
         ptmsCheck.setOpaque(false);
 
+        missedCleavagesLabel.setText("Missed Cleavages");
+
+        minMissedCleavagesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        missedCleavagesRangeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        missedCleavagesRangeLabel.setText("-");
+
+        maxMissedCleavagesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
         javax.swing.GroupLayout filterPanelLayout = new javax.swing.GroupLayout(filterPanel);
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
@@ -258,18 +327,28 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                     .addGroup(filterPanelLayout.createSequentialGroup()
                         .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(peptideLengthLabel)
-                            .addComponent(precursorAccuracyLabel))
+                            .addComponent(precursorAccuracyLabel)
+                            .addComponent(missedCleavagesLabel))
                         .addGap(27, 27, 27)
                         .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(precDevTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-                            .addComponent(nAAminTxt))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(peptideLengthRangeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(precDevTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                                    .addComponent(nAAminTxt))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(peptideLengthRangeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(filterPanelLayout.createSequentialGroup()
+                                .addComponent(minMissedCleavagesTxt)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(missedCleavagesRangeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxMissedCleavagesTxt)
                             .addComponent(nAAmaxTxt)
                             .addComponent(unitCmb, 0, 93, Short.MAX_VALUE)))
-                    .addComponent(ptmsCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(filterPanelLayout.createSequentialGroup()
+                        .addComponent(ptmsCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         filterPanelLayout.setVerticalGroup(
@@ -288,8 +367,14 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
                         .addComponent(precDevTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(precursorAccuracyLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(filterPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(missedCleavagesLabel)
+                    .addComponent(missedCleavagesRangeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ptmsCheck)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         cancelButton.setText("Cancel");
@@ -350,12 +435,12 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(filterPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(filterPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(helpJButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(helpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -367,7 +452,7 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -444,6 +529,10 @@ public class MatchesImportFiltersDialog extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel filterPanel;
     private javax.swing.JButton helpJButton;
+    private javax.swing.JTextField maxMissedCleavagesTxt;
+    private javax.swing.JTextField minMissedCleavagesTxt;
+    private javax.swing.JLabel missedCleavagesLabel;
+    private javax.swing.JLabel missedCleavagesRangeLabel;
     private javax.swing.JTextField nAAmaxTxt;
     private javax.swing.JTextField nAAminTxt;
     private javax.swing.JButton okButton;

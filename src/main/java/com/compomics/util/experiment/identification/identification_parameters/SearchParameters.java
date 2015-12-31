@@ -864,17 +864,17 @@ public class SearchParameters implements Serializable, MarshallableParameter {
                 || !rewindIon.equals(defaultParameters.getIonSearched2())) {
             String ion1 = PeptideFragmentIon.getSubTypeAsString(forwardIon);
             String ion2 = PeptideFragmentIon.getSubTypeAsString(rewindIon);
-            output.append(ion1).append(" and ").append(ion2).append(" ions").append(".").append(newLine);
+            output.append("Ion Types: ").append(ion1).append(" and ").append(ion2).append(".").append(newLine);
         }
 
         if (!minChargeSearched.equals(defaultParameters.getMinChargeSearched())
                 || !maxChargeSearched.equals(defaultParameters.getMaxChargeSearched())) {
-            output.append("Charge ").append(minChargeSearched.value).append(" to ").append(maxChargeSearched.value).append(".").append(newLine);
+            output.append("Charge: ").append(minChargeSearched.value).append("-").append(maxChargeSearched.value).append(".").append(newLine);
         }
 
         if (!getMinIsotopicCorrection().equals(defaultParameters.getMinIsotopicCorrection())
                 || !getMaxIsotopicCorrection().equals(defaultParameters.getMaxIsotopicCorrection())) {
-            output.append("Isotopic Correction ").append(minIsotopicCorrection).append(" to ").append(maxIsotopicCorrection).append(".").append(newLine);
+            output.append("Isotopic Correction: ").append(minIsotopicCorrection).append("-").append(maxIsotopicCorrection).append(".").append(newLine);
         }
 
         if (fastaFile != null) {

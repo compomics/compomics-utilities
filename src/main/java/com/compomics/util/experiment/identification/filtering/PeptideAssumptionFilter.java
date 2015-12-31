@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -53,6 +54,16 @@ public class PeptideAssumptionFilter implements Serializable {
      * ignored.
      */
     private boolean unknownPtm;
+    /**
+     * The minimum number of missed cleavages allowed. Null means no lower
+     * limit.
+     */
+    private Integer minMissedCleavages;
+    /**
+     * The maximum number of missed cleavages allowed. Null means no upper
+     * limit.
+     */
+    private Integer maxMissedCleavages;
 
     /**
      * Constructor with default settings.
@@ -63,27 +74,34 @@ public class PeptideAssumptionFilter implements Serializable {
         maxMassDeviation = -1;
         isPpm = true;
         unknownPtm = true;
+        minMissedCleavages = null;
+        maxMissedCleavages = null;
     }
 
     /**
      * Constructor for an Identification filter.
      *
-     * @param minPepLength The minimal peptide length allowed (0 or less for
+     * @param minPepLength the minimal peptide length allowed (0 or less for
      * disabled)
-     * @param maxPepLength The maximal peptide length allowed (0 or less for
+     * @param maxPepLength the maximal peptide length allowed (0 or less for
      * disabled)
-     * @param maxMzDeviation The maximal m/z deviation allowed (0 or less for
+     * @param maxMzDeviation the maximal m/z deviation allowed (0 or less for
      * disabled)
-     * @param isPpm Boolean indicating the unit of the allowed m/z deviation
+     * @param isPpm boolean indicating the unit of the allowed m/z deviation
      * (true: ppm, false: Da)
-     * @param unknownPTM Shall peptides presenting unknownPTMs be ignored
+     * @param unknownPTM shall peptides presenting unknownPTMs be ignored
+     * @param minMissedCleavages the minimum number of missed cleavages allowed
+     * @param maxMissedCleavages the maximum number of missed cleavages allowed,
+     * null means no upper limit.
      */
-    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM) {
+    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM, Integer minMissedCleavages, Integer maxMissedCleavages) {
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.maxMassDeviation = maxMzDeviation;
         this.isPpm = isPpm;
         this.unknownPtm = unknownPTM;
+        this.minMissedCleavages = minMissedCleavages;
+        this.maxMissedCleavages = maxMissedCleavages;
     }
 
     /**
@@ -98,16 +116,17 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
-     * Validates the peptide based on the peptide length and share of X's in the
-     * sequence.
+     * Validates the peptide based on the peptide length, the share of X's in
+     * the sequence and the allowed number of missed cleavages.
      *
      * @param peptide the peptide to validate
      * @param sequenceMatchingPreferences the sequence matching preferences
      * containing the maximal share of X's allowed
+     * @param enzyme the enzyme
      *
      * @return a boolean indicating whether the peptide passed the test
      */
-    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    public boolean validatePeptide(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, Enzyme enzyme) {
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -120,6 +139,18 @@ public class PeptideAssumptionFilter implements Serializable {
         double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequenceLength;
         if (sequenceMatchingPreferences.hasLimitX() && xShare > sequenceMatchingPreferences.getLimitX()) {
             return false;
+        }
+
+        if (minMissedCleavages != null || maxMissedCleavages != null) {
+
+            int numberOfMissedCleavages = peptide.getNMissedCleavages(enzyme);
+
+            if (minMissedCleavages != null && numberOfMissedCleavages < minMissedCleavages) {
+                return false;
+            }
+            if (maxMissedCleavages != null && numberOfMissedCleavages > maxMissedCleavages) {
+                return false;
+            }
         }
 
         return true;
@@ -252,12 +283,13 @@ public class PeptideAssumptionFilter implements Serializable {
      * precursor should be accessible via the spectrum factory
      * @param spectrumFactory the spectrum factory
      * @param searchParameters the search parameters
-     * 
+     *
      * @return a boolean indicating whether the given assumption passes the
      * filter
-     * 
+     *
      * @throws IOException if an error occurs while reading the spectrum
-     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs reading while the spectrum
+     * @throws MzMLUnmarshallerException if an MzMLUnmarshallerException occurs
+     * reading while the spectrum
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException {
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
@@ -363,29 +395,110 @@ public class PeptideAssumptionFilter implements Serializable {
      * @return a boolean indicating that the filters have the same parameters
      */
     public boolean isSameAs(PeptideAssumptionFilter anotherFilter) {
+        
+        if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() != null) {
+            if (minMissedCleavages.intValue() != anotherFilter.getMinMissedCleavages()) {
+                return false;
+            }
+        }
+        if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() == null) {
+            return false;
+        }
+        if (minMissedCleavages == null && anotherFilter.getMinMissedCleavages() != null) {
+            return false;
+        }
+        if (maxMissedCleavages != null && anotherFilter.getMaxMissedCleavages() != null) {
+            if (maxMissedCleavages.intValue() != anotherFilter.getMaxMissedCleavages()) {
+                return false;
+            }
+        }
+        if (maxMissedCleavages != null && anotherFilter.getMaxMissedCleavages() == null) {
+            return false;
+        }
+        if (maxMissedCleavages == null && anotherFilter.getMaxMissedCleavages() != null) {
+            return false;
+        }
+        
         return isPpm == anotherFilter.isPpm
                 && unknownPtm == anotherFilter.removeUnknownPTMs()
                 && minPepLength == anotherFilter.getMinPepLength()
                 && maxPepLength == anotherFilter.getMaxPepLength()
                 && maxMassDeviation == anotherFilter.getMaxMzDeviation();
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         String newLine = System.getProperty("line.separator");
-        
+
         StringBuilder output = new StringBuilder();
-        
+
         output.append("Peptide Length: ").append(minPepLength).append("-").append(maxPepLength).append(".").append(newLine);
         output.append("Max Mass Deviation: ").append(maxMassDeviation).append(".").append(newLine);
         output.append("PPM Mass Deviation: ").append(isPpm).append(".").append(newLine);
         output.append("Ignore Unknown PTMs: ").append(unknownPtm).append(".").append(newLine);
+        
+        if (minMissedCleavages != null || maxMissedCleavages != null) {
+            
+            output.append("Missed Cleavages: ");
+            
+            if (minMissedCleavages != null) {
+                output.append(minMissedCleavages);
+            } else {
+                output.append("0");
+            }
+            
+            output.append("-");
+            
+            if (maxMissedCleavages != null) {
+                output.append(maxMissedCleavages);
+            }  else {
+                output.append("n");
+            }
+            
+            output.append(".").append(newLine);
+        }
 
         return output.toString();
+    }
+
+    /**
+     * Returns the minimum number of missed cleavages. Null means no limit.
+     *
+     * @return the minMissedCleavages
+     */
+    public Integer getMinMissedCleavages() {
+        return minMissedCleavages;
+    }
+
+    /**
+     * Set the minimum number of missed cleavages. Null means no limit.
+     *
+     * @param minMissedCleavages the minMissedCleavages to set
+     */
+    public void setMinMissedCleavages(Integer minMissedCleavages) {
+        this.minMissedCleavages = minMissedCleavages;
+    }
+
+    /**
+     * Returns the maximum number of missed cleavages. Null means no limit.
+     *
+     * @return the maxMissedCleavages
+     */
+    public Integer getMaxMissedCleavages() {
+        return maxMissedCleavages;
+    }
+
+    /**
+     * Set the maximum number of missed cleavages. Null means no limit.
+     *
+     * @param maxMissedCleavages the maxMissedCleavages to set
+     */
+    public void setMaxMissedCleavages(Integer maxMissedCleavages) {
+        this.maxMissedCleavages = maxMissedCleavages;
     }
 }

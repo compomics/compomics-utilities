@@ -259,7 +259,7 @@ public class Protein extends ExperimentObject {
         if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
             return true;
         }
-        if (sequence.charAt(0) == 'M') {
+        if (sequence.charAt(0) == 'M' && sequence.length() > peptideSequence.length()) {
             subSequence = sequence.substring(1, peptideSequence.length() + 1);
             if (aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences)) {
                 return true;
@@ -279,7 +279,14 @@ public class Protein extends ExperimentObject {
      * peptide
      */
     public boolean isCTerm(String peptideSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        String subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
+        String subSequence;
+
+        if (sequence.length() <= peptideSequence.length()) {
+            subSequence = sequence;
+        } else {
+            subSequence = sequence.substring(sequence.length() - peptideSequence.length() - 1);
+        }
+
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence(peptideSequence);
         return aminoAcidPattern.matchesIn(subSequence, sequenceMatchingPreferences);
     }

@@ -700,7 +700,7 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether the given modification can be found on the peptide. For
      * instance, 'oxidation of M' cannot be found on sequence "PEPTIDE". For the
-     * inspection of protein termini and peptide C-terminus the proteins
+     * inspection of protein termini and peptide terminus the proteins
      * sequences must be accessible from the sequence factory.
      *
      * @param ptm the PTM of interest

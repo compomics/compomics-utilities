@@ -50,7 +50,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 System.out.println("An error occurred while loading the enzymes.");
                 e.printStackTrace();
             }
-            
+
             try {
                 SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
                 speciesFactory.initiate(getJarFilePath());
@@ -58,7 +58,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 System.out.println("An error occurred while loading the enzymes.");
                 e.printStackTrace();
             }
-            
+
             Options lOptions = new Options();
             createOptionsCLI(lOptions);
             BasicParser parser = new BasicParser();
@@ -102,9 +102,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
         }
     }
 
-    /**
-     * Calling this method will run the configured SearchCLI process.
-     */
+    @Override
     public Object call() {
 
         try {
@@ -141,12 +139,14 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             System.out.println(getPtmLine(ptm));
         }
         System.out.println();
-        System.out.println("-------------------");
-        System.out.println("User Modifications:");
-        System.out.println("-------------------");
-        for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
-            PTM ptm = ptmFactory.getPTM(ptmName);
-            System.out.println(getPtmLine(ptm));
+        if (!ptmFactory.getUserModifications().isEmpty()) {
+            System.out.println("-------------------");
+            System.out.println("User Modifications:");
+            System.out.println("-------------------");
+            for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
+                PTM ptm = ptmFactory.getPTM(ptmName);
+                System.out.println(getPtmLine(ptm));
+            }
         }
         System.out.println();
     }
@@ -197,7 +197,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             sign = "+";
         }
 
-        return ptm.getName() + " (" + sign + ptmMass + " targeting " + target + ")";
+        return ptm.getName() + "\t" + "(" + sign + ptmMass + " targeting " + target + ")";
     }
 
     /**

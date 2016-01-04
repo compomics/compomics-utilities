@@ -16,7 +16,7 @@
         <ul>
             <li>
                 <b>e-value filtering:</b> In order to reduce the memory consumption it is possible to remove identifications with a high e-values. 
-                It is adviced to keep these values as high as possible in order to ensure that PSMs reach a PEP of 1. This can be verified in the Validation tab.
+                It is advised to keep these values as high as possible in order to ensure that PSMs reach a PEP of 1. This can be verified in the Validation tab.
             </li>
             <br>
             <li>
@@ -28,10 +28,14 @@
             </li>
             <br>
             <li>
-                <b>Exclude Unknown PTMs:</b> When using <a href="http://searchgui.googlecode.com">SearchGUI</a> with a modification at a particular amino-acid 
+                <b>Exclude Unknown PTMs:</b> When using <a href="http://searchgui.googlecode.com">SearchGUI</a> with a modification at a particular amino acid 
                 on a peptide terminus, X!Tandem will search this modification on every termini and amino acid. If you post-process your results with <b>PeptideShaker</b> using the 
                 option <i>Exclude Unknown PTMs</i>, the PSMs presenting inconsistent modifications will be discarded. You can thus artificially obtain the desired 
                 results although the modification is <i>a priori<i/> not compatible with X!Tandem.
+            </li>
+            <br>
+            <li>
+                <b>Missed cleavages:</b> lower and upper limits can be set for the number of missed cleavages.
             </li>
         </ul>
         <br>

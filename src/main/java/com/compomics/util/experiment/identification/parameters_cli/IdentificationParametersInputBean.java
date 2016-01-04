@@ -106,6 +106,7 @@ public class IdentificationParametersInputBean {
             inputFile = new File(arg);
             identificationParameters = IdentificationParameters.getIdentificationParameters(inputFile);
         }
+        updateIdentificationParameters();
         if (commandLine.hasOption(IdentificationParametersCLIParams.OUT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OUT.id);
             if (!arg.endsWith(".par")) {

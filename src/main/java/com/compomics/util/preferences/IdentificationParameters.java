@@ -432,7 +432,6 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         identificationParameters.setType();
         jsonMarshaller.saveObjectToJson(identificationParameters, identificationParametersFile);
-
     }
 
     /**

@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.Enzyme;
 import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
-import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
@@ -106,7 +105,6 @@ public class IdentificationParametersInputBean {
             inputFile = new File(arg);
             identificationParameters = IdentificationParameters.getIdentificationParameters(inputFile);
         }
-        updateIdentificationParameters();
         if (commandLine.hasOption(IdentificationParametersCLIParams.OUT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.OUT.id);
             if (!arg.endsWith(".par")) {
@@ -114,6 +112,7 @@ public class IdentificationParametersInputBean {
             }
             destinationFile = new File(arg);
         }
+        updateIdentificationParameters();
     }
 
     /**
@@ -139,12 +138,15 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PREC_PPM.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
-            } else if (option == 0) {
-                searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
+            switch (option) {
+                case 1:
+                    searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
+                    break;
+                case 0:
+                    searchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.DA);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FRAG_PPM.id)) {
@@ -1355,6 +1357,11 @@ public class IdentificationParametersInputBean {
         } else {
             identificationParameters = new IdentificationParameters(searchParameters);
         }
+        
+        // set the parameter file name to the same as the name of the file
+        if (identificationParameters.getName() == null) {
+            identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
+        }
 
         //////////////////////////////////
         // Gene mapping preferences
@@ -1368,12 +1375,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.USE_GENE_MAPPING.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.USE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.USE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
             }
             genePreferences.setUseGeneMapping(value);
         }
@@ -1381,12 +1391,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
             }
             genePreferences.setAutoUpdate(value);
         }
@@ -1413,12 +1426,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id + ": " + arg + ". 0 or 1 expected.");
             }
             annotationSettings.setHighResolutionAnnotation(value);
         }
@@ -1457,6 +1473,16 @@ public class IdentificationParametersInputBean {
             Integer value = new Integer(arg);
             peptideAssumptionFilter.setMaxPepLength(value);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_MC_MIN.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_MC_MIN.id);
+            Integer value = new Integer(arg);
+            peptideAssumptionFilter.setMinMissedCleavages(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_MC_MAX.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_MC_MAX.id);
+            Integer value = new Integer(arg);
+            peptideAssumptionFilter.setMaxMissedCleavages(value);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id);
             Integer value = new Integer(arg);
@@ -1465,24 +1491,30 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id);
             Integer option = new Integer(arg);
-            if (option == 1) {
-                peptideAssumptionFilter.setIsPpm(true);
-            } else if (option == 0) {
-                peptideAssumptionFilter.setIsPpm(false);
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
+            switch (option) {
+                case 1:
+                    peptideAssumptionFilter.setIsPpm(true);
+                    break;
+                case 0:
+                    peptideAssumptionFilter.setIsPpm(false);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PREC_PPM.id + ": " + arg + ". 0 or 1 expected.");
             }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id + ": " + arg + ". 0 or 1 expected.");
             }
             peptideAssumptionFilter.setRemoveUnknownPTMs(value);
         }
@@ -1511,12 +1543,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SCORE_NEUTRAL_LOSSES.id + ": " + arg + ". 0 or 1 expected.");
             }
             ptmScoringPreferences.setProbabilisticScoreNeutralLosses(value);
         }
@@ -1567,12 +1602,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PSMs.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PSMs.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PSMs.id + ": " + arg + ". 0 or 1 expected.");
             }
             idMatchValidationPreferences.setSeparatePsms(value);
         }
@@ -1580,12 +1618,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SEPARATE_PEPTIDES.id + ": " + arg + ". 0 or 1 expected.");
             }
             idMatchValidationPreferences.setSeparatePeptides(value);
         }
@@ -1593,12 +1634,15 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MERGE_SUBGROUPS.id);
             Integer intValue = new Integer(arg);
             boolean value;
-            if (intValue == 1) {
-                value = true;
-            } else if (intValue == 0) {
-                value = false;
-            } else {
-                throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.id + ": " + arg + ". 0 or 1 expected.");
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.MERGE_SUBGROUPS.id + ": " + arg + ". 0 or 1 expected.");
             }
             idMatchValidationPreferences.setMergeSmallSubgroups(value);
         }
@@ -3103,6 +3147,29 @@ public class IdentificationParametersInputBean {
             System.out.println(System.getProperty("line.separator")
                     + IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MAX.id + " <= " + IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id
                     + System.getProperty("line.separator"));
+            return false;
+        }
+        min = null;
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_MC_MIN.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_MC_MIN.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.IMPORT_MC_MIN.id, arg, true)) {
+                return false;
+            }
+            min = new Integer(arg);
+        }
+        max = null;
+        if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_MC_MAX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_MC_MAX.id);
+            if (!isPositiveInteger(IdentificationParametersCLIParams.IMPORT_MC_MAX.id, arg, false)) {
+                return false;
+            }
+            max = new Integer(arg);
+        }
+        if (min != null && max != null && max < min) {
+            System.out.println(System.getProperty("line.separator")
+                    + IdentificationParametersCLIParams.IMPORT_MC_MAX.id + " < " + IdentificationParametersCLIParams.IMPORT_MC_MIN.id
+                    + System.getProperty("line.separator"));
+            return false;
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id);

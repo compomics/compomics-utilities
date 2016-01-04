@@ -68,7 +68,7 @@ public class SequenceMatchingPreferences implements Serializable {
         public static String getCommandLineOptions() {
             StringBuilder optionsStringBuilder = new StringBuilder();
             for (MatchingType matchingType : values()) {
-                if (optionsStringBuilder.length() == 0) {
+                if (optionsStringBuilder.length() != 0) {
                     optionsStringBuilder.append(", ");
                 }
                 optionsStringBuilder.append(matchingType.index).append(": ").append(matchingType.description);

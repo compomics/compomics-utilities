@@ -181,7 +181,7 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion for phosphorylation of tyrosine (PMID: 11473401).
      */
-    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY", new AtomChain("C8H10PO4"));
+    public final static ReporterIon PHOSPHO_Y = new ReporterIon("pY", new AtomChain("C8H10NPO4"));
     /**
      * Standard reporter ion for SUMO-2/3 Q87R.
      */

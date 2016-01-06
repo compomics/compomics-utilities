@@ -386,15 +386,18 @@ public class EnzymeFactory {
         if (enzymeName.equalsIgnoreCase("Trypsin")
                 || enzymeName.equalsIgnoreCase("Semi-Tryptic")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001251", enzymeName, null);
-        } else if (enzymeName.equalsIgnoreCase("No Enzyme") || enzymeName.equalsIgnoreCase("Unspecific")) { // note: no enzyme is only kept for backwards oompatibility
+        } else if (enzymeName.equalsIgnoreCase("No Enzyme") 
+                || enzymeName.equalsIgnoreCase("Unspecific")) { // note: no enzyme is only kept for backwards oompatibility
             cvTerm = new CvTerm("PSI-MS", "MS:1001091", enzymeName, null);
-        } else if (enzymeName.equalsIgnoreCase("Arg-C")) {
+        } else if (enzymeName.equalsIgnoreCase("Arg-C")
+                || enzymeName.equalsIgnoreCase("Semi-Arg-C")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001303", enzymeName, null);
         } else if (enzymeName.equalsIgnoreCase("Asp-N")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001304", enzymeName, null);
         } else if (enzymeName.equalsIgnoreCase("Asp-N_ambic")) { // ????
             cvTerm = new CvTerm("PSI-MS", "MS:1001305", enzymeName, null);
-        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)") || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
+        } else if (enzymeName.equalsIgnoreCase("Chymotrypsin (FYWL)") 
+                || enzymeName.equalsIgnoreCase("Semi-Chymotrypsin (FYWL)")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001306", enzymeName, null);
         } else if (enzymeName.equalsIgnoreCase("CNBr")) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001307", enzymeName, null);
@@ -411,8 +414,8 @@ public class EnzymeFactory {
             cvTerm = new CvTerm("PSI-MS", "MS:1001955", enzymeName, null);
         }
 
-        // @TODO: no cv terms found!!!
-        // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), Lys-N (K), "Thermolysin, no P rule" 
+        // @TODO: add more cv terms!!
+        // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), Lys-N (K), "Thermolysin, no P rule", Trypsin + Glu-C, Semi-LysargiNase, LysargiNase
         // supply a *child* term of MS:1001045
         return cvTerm;
     }

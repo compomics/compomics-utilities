@@ -172,7 +172,7 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ENZYME.id);
             Enzyme option = enzymeFactory.getEnzyme(arg);
             searchParameters.setEnzyme(option);
-        } else {
+        } else if (searchParameters.getEnzyme() == null) {
             Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
             searchParameters.setEnzyme(option);
         }
@@ -234,7 +234,8 @@ public class IdentificationParametersInputBean {
                 PTM modification = ptmFactory.getPTM(ptmName);
                 ptmSettings.addVariableModification(modification);
             }
-        }        if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MIN_ISOTOPE.id);
             Integer option = new Integer(arg);
             searchParameters.setMinIsotopicCorrection(option);
@@ -1357,7 +1358,7 @@ public class IdentificationParametersInputBean {
         } else {
             identificationParameters = new IdentificationParameters(searchParameters);
         }
-        
+
         // set the parameter file name to the same as the name of the file
         if (identificationParameters.getName() == null) {
             identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));

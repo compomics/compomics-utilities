@@ -65,11 +65,11 @@ public enum MsFormat {
     /**
      * Bruker FID format.
      */
-    baf(13, "baf", null, "Bruker BAF format", ".baf", true, false);
-//    /**
-//     * Applied Biosystems wiff format.
-//     */
-//    wiff(14, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false); // @TODO: requires two files: .wiff and .scan...
+    baf(13, "baf", null, "Bruker BAF format", ".baf", true, false),
+    /**
+     * Applied Biosystems wiff format.
+     */
+    wiff(14, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false);
 
     /**
      * The index of the format.

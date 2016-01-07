@@ -4,6 +4,8 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
+import com.compomics.util.experiment.biology.PTM;
+import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -64,9 +66,13 @@ public class PepxmlIdfileReader implements IdfileReader {
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
-     * The sequence matching preferences.
+     * The fixed modifications.
      */
-    private SequenceMatchingPreferences sequenceMatchingPreferences = null;
+    private ArrayList<String> fixedModifications;
+    /**
+     * The PTM factory.
+     */
+    private PTMFactory ptmFactory = PTMFactory.getInstance();
 
     /**
      * Blank constructor for instantiation purposes.
@@ -332,7 +338,12 @@ public class PepxmlIdfileReader implements IdfileReader {
                     } else { // c-term
                         site = sequence.length();
                         terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
-                        terminalMass -= Atom.H.getMonoisotopicMass(); // @TODO: remove when Comet fixes its export!
+
+                        // fix for older comet pepxml files
+                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet")
+                                && searchEngineVersion != null && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")) { // @TODO: make more generic...
+                            terminalMass -= Atom.H.getMonoisotopicMass();
+                        }
                     }
 
                     char aa = sequence.charAt(site - 1);
@@ -372,10 +383,30 @@ public class PepxmlIdfileReader implements IdfileReader {
                                     }
                                 }
                             }
+
                             if (modifiedAaMass != null) {
                                 char aa = sequence.charAt(site - 1);
                                 AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
-                                double modificationMass = modifiedAaMass - aminoAcid.getMonoisotopicMass();
+
+                                // see if the amino acid also has a fixed modification
+                                //
+                                // example:
+                                //  carbamidomethyl _and_ pyrolidone from carbamidomethylated c:
+                                //
+                                //  <modification_info modified_peptide="C[143]EQALLQVAK">
+                                //      <mod_aminoacid_mass position="1" mass="143.004100"/>
+                                //  </modification_info>
+                                //
+                                double fixedModificationMass = 0;
+                                for (String ptm : fixedModifications) {
+                                    PTM tempPtm = ptmFactory.getPTM(ptm);
+                                    ArrayList<Character> target = tempPtm.getPattern().getAminoAcidsAtTarget();
+                                    if (target != null && target.contains(aa)) {
+                                        fixedModificationMass += tempPtm.getMass();
+                                    }
+                                }
+
+                                double modificationMass = modifiedAaMass - fixedModificationMass - aminoAcid.getMonoisotopicMass();
                                 modificationMass = Util.roundDouble(modificationMass, 2);
                                 String tempModificationName = modificationMass + "@" + aa;
                                 ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
@@ -556,8 +587,8 @@ public class PepxmlIdfileReader implements IdfileReader {
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
             SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+        this.fixedModifications = searchParameters.getPtmSettings().getFixedModifications();
         if (spectrumMatches == null) {
-            this.sequenceMatchingPreferences = sequenceMatchingPreferences;
             parseFile(waitingHandler, expandAaCombinations, true);
         }
         return spectrumMatches;

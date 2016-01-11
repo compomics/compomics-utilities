@@ -1022,33 +1022,33 @@ public class MgfReader {
         ArrayList<Charge> result = new ArrayList<Charge>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
         String[] chargesAnd = tempLine.split(" and ");
-        ArrayList<String> charges = new ArrayList<String>();
+        ArrayList<String> chargesAsString = new ArrayList<String>();
 
         for (String charge : chargesAnd) {
             for (String charge2 : charge.split(",")) {
-                charges.add(charge2.trim());
+                chargesAsString.add(charge2.trim());
             }
         }
 
-        for (String charge : charges) {
+        for (String chargeAsString : chargesAsString) {
 
             Integer value;
-            charge = charge.trim();
+            chargeAsString = chargeAsString.trim();
 
-            if (!charge.isEmpty()) {
+            if (!chargeAsString.isEmpty()) {
                 try {
-                    if (charge.endsWith("+")) {
-                        value = new Integer(charge.substring(0, charge.length() - 1));
+                    if (chargeAsString.endsWith("+")) {
+                        value = new Integer(chargeAsString.substring(0, chargeAsString.length() - 1));
                         result.add(new Charge(Charge.PLUS, value));
-                    } else if (charge.endsWith("-")) {
-                        value = new Integer(charge.substring(0, charge.length() - 1));
+                    } else if (chargeAsString.endsWith("-")) {
+                        value = new Integer(chargeAsString.substring(0, chargeAsString.length() - 1));
                         result.add(new Charge(Charge.MINUS, value));
-                    } else if (!charge.equalsIgnoreCase("Mr")) {
-                        result.add(new Charge(Charge.PLUS, new Integer(charge)));
+                    } else if (!chargeAsString.equalsIgnoreCase("Mr")) {
+                        result.add(new Charge(Charge.PLUS, new Integer(chargeAsString)));
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    throw new IllegalArgumentException("\'" + charge + "\' could not be processed as a valid precursor charge!");
+                    throw new IllegalArgumentException("\'" + chargeAsString + "\' could not be processed as a valid precursor charge!");
                 }
             }
         }

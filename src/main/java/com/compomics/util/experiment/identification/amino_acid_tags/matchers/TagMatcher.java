@@ -494,6 +494,9 @@ public class TagMatcher {
                                 for (Integer site : nTermModifications.keySet()) {
                                     String ptmName = nTermModifications.get(site);
                                     int remappedSite = nTermSegment.length() + 1 - site;
+                                    if (remappedSite != 0) {
+                                        throw new IllegalArgumentException("Attempting to map N-terminal modification at index " + remappedSite + ".");
+                                    }
                                     modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
                                 }
                             }
@@ -512,7 +515,11 @@ public class TagMatcher {
                             if (cTermModifications != null) {
                                 for (Integer site : cTermModifications.keySet()) {
                                     String ptmName = cTermModifications.get(site);
-                                    modificationMatches.add(new ModificationMatch(ptmName, true, nTermSegment.length() + seedSequence.length() + site));
+                                    int remappedSite = nTermSegment.length() + seedSequence.length() + site;
+                                    if (remappedSite != peptideSequence.length() + 1) {
+                                        throw new IllegalArgumentException("Attempting to map C-terminal modification at index " + remappedSite + ".");
+                                    }
+                                    modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
                                 }
                             }
 

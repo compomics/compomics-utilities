@@ -700,8 +700,8 @@ public class Peptide extends ExperimentObject {
     /**
      * Indicates whether the given modification can be found on the peptide. For
      * instance, 'oxidation of M' cannot be found on sequence "PEPTIDE". For the
-     * inspection of protein termini and peptide terminus the proteins
-     * sequences must be accessible from the sequence factory.
+     * inspection of protein termini and peptide terminus the proteins sequences
+     * must be accessible from the sequence factory.
      *
      * @param ptm the PTM of interest
      * @param sequenceMatchingPreferences the sequence matching preferences
@@ -916,14 +916,14 @@ public class Peptide extends ExperimentObject {
                     return possibleSites;
                 }
             case PTM.MODCP:
-                possibleSites.add(sequence.length());
+                possibleSites.add(sequence.length() + 1);
                 return possibleSites;
             case PTM.MODN:
                 if (isNterm(sequenceMatchingPreferences).isEmpty()) {
                     return possibleSites;
                 }
             case PTM.MODNP:
-                possibleSites.add(1);
+                possibleSites.add(0);
                 return possibleSites;
             case PTM.MODCAA:
                 if (isCterm(sequenceMatchingPreferences).isEmpty()) {
@@ -935,7 +935,7 @@ public class Peptide extends ExperimentObject {
                 target = pattern.getTarget();
                 if (target == patternLength - 1 && sequence.length() >= patternLength) {
                     if (pattern.isEnding(sequence, ptmSequenceMatchingPreferences)) {
-                        possibleSites.add(sequence.length());
+                        possibleSites.add(sequence.length() + 1);
                     }
                     return possibleSites;
                 } else {
@@ -949,7 +949,7 @@ public class Peptide extends ExperimentObject {
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isEnding(tempSequence, ptmSequenceMatchingPreferences)) {
-                                    possibleSites.add(sequence.length());
+                                    possibleSites.add(sequence.length() + 1);
                                     return possibleSites;
                                 }
                             }
@@ -967,7 +967,7 @@ public class Peptide extends ExperimentObject {
                 target = pattern.getTarget();
                 if (target == 0 && sequence.length() >= patternLength) {
                     if (pattern.isStarting(sequence, ptmSequenceMatchingPreferences)) {
-                        possibleSites.add(1);
+                        possibleSites.add(0);
                     }
                     return possibleSites;
                 } else {
@@ -981,7 +981,7 @@ public class Peptide extends ExperimentObject {
                             if (endIndex < protein.getLength()) {
                                 String tempSequence = protein.getSequence().substring(beginIndex, endIndex);
                                 if (pattern.isStarting(tempSequence, ptmSequenceMatchingPreferences)) {
-                                    possibleSites.add(1);
+                                    possibleSites.add(0);
                                     return possibleSites;
                                 }
                             }

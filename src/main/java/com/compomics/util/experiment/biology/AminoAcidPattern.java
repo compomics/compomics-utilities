@@ -1155,6 +1155,9 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         HashMap<Integer, ArrayList<ModificationMatch>> modificationMatches = otherPattern.getModificationMatches();
         if (modificationMatches != null) {
             for (int i : modificationMatches.keySet()) {
+                if (i == 0) {
+                    throw new IllegalArgumentException("Attempting to merge a pattern with an internal terminal modification.");
+                }
                 int newIndex = i + patternLength;
                 for (ModificationMatch oldModificationMatch : modificationMatches.get(i)) {
                     ModificationMatch newModificationMatch = new ModificationMatch(oldModificationMatch.getTheoreticPtm(), oldModificationMatch.isVariable(), newIndex);

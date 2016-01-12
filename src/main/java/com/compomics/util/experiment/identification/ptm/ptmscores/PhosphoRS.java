@@ -393,7 +393,8 @@ public class PhosphoRS {
             }
 
             for (ArrayList<Integer> profile : possibleProfiles) {
-                BigDecimal phosphoRsProbabilityBD = pInvMap.get(profile).multiply(new BigDecimal(100)).divide(pInvTotal, mathContext); //in percent
+                String profileKey = KeyUtils.getKey(profile);
+                BigDecimal phosphoRsProbabilityBD = pInvMap.get(profileKey).multiply(new BigDecimal(100)).divide(pInvTotal, mathContext); //in percent
                 if (phosphoRsProbabilityBD.compareTo(BigMathUtils.maxDouble) == 1) {
                     throw new IllegalArgumentException("PhosphoRS probability >100%");
                 } else if (phosphoRsProbabilityBD.compareTo(BigDecimal.ZERO) == -1) {
@@ -403,7 +404,6 @@ public class PhosphoRS {
                 if (phosphoRsProbabilityBD.compareTo(BigMathUtils.minNormalDouble) == 1) {
                     phosphoRsProbability = phosphoRsProbabilityBD.doubleValue();
                 }
-                String profileKey = KeyUtils.getKey(profile);
                 profileToScoreMap.put(profileKey, phosphoRsProbability);
                 profileToSitesMap.put(profileKey, profile);
             }
@@ -411,6 +411,7 @@ public class PhosphoRS {
         } else if (possibleSites.size() == nPTM) {
             String profileKey = KeyUtils.getKey(possibleSites);
             profileToScoreMap.put(profileKey, 100.0);
+            profileToSitesMap.put(profileKey, possibleSites);
         } else {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }

@@ -975,6 +975,13 @@ public class Util {
         }
     }
 
+    /**
+     * Returns the size of the file located at the given URL.
+     * 
+     * @param url the url of the file
+     * 
+     * @return the size of the file
+     */
     public static int getFileSize(URL url) {
         HttpURLConnection conn = null;
         try {

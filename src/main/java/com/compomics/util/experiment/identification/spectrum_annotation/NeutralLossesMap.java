@@ -109,7 +109,7 @@ public class NeutralLossesMap implements Serializable {
         }
         position = rewindBoundaries.get(neutralLossName);
         if (position == null || yStart < position) {
-            forwardBoundaries.put(neutralLossName, yStart);
+            rewindBoundaries.put(neutralLossName, yStart);
         }
     }
 
@@ -123,7 +123,7 @@ public class NeutralLossesMap implements Serializable {
     }
 
     /**
-     * Makes the neutral losses sequence independant.
+     * Makes the neutral losses sequence independent.
      */
     public void makeSequenceIndependant() {
         backwardCompatibilityFix();

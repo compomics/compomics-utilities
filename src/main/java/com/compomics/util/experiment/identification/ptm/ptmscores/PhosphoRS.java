@@ -42,7 +42,7 @@ public class PhosphoRS {
     /**
      * The maximal depth to use per window (8 in the original paper).
      */
-    public static final int maxDepth = 8;
+    public static final int MAX_DEPTH = 8;
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
@@ -55,7 +55,7 @@ public class PhosphoRS {
      * (com.compomics.util.experiment.identification.SequenceFactory) and
      * indexed using the protein tree (see getDefaultProteinTree in
      * SequenceFactory). PTMs of same mass should be scored together and given
-     * in the ptms list. Neutral losses of mass equal to the mass of the PTM
+     * in the PTMs list. Neutral losses of mass equal to the mass of the PTM
      * will be ignored. Neutral losses to be accounted for should be given in
      * the SpecificAnnotationSettings and will be ignored if
      * accountNeutralLosses is false.
@@ -313,7 +313,7 @@ public class PhosphoRS {
                         }
 
                         if (largestDelta.compareTo(BigDecimal.ZERO) == 0) {
-                            bestI = Math.min(maxDepth, spectra.size() - 1);
+                            bestI = Math.min(MAX_DEPTH, spectra.size() - 1);
                         }
 
                         reducedSpectrum.putAll(spectra.get(bestI).getPeakMap());
@@ -662,7 +662,7 @@ public class PhosphoRS {
         Collections.sort(intensities, Collections.reverseOrder());
         int depth = 1;
 
-        while (depth <= maxDepth) {
+        while (depth <= MAX_DEPTH) {
 
             HashMap<Double, Peak> mzToPeak = new HashMap<Double, Peak>();
             int nPeaks = 0;

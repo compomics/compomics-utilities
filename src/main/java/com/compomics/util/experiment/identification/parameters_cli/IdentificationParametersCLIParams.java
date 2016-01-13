@@ -31,8 +31,8 @@ public enum IdentificationParametersCLIParams {
     // Search Parameters
     //////////////////////////////////
     DB("db", "The sequence database to use for searching spectra in FASTA format.", false, true),
-    PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0, true), default is '1'.", false, true),
-    FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0, true), default is '0'.", false, true),
+    PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
+    FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false, true),
     PREC_TOL_DA("prec_tol", "Precursor ion mass tolerance in Dalton, default is 0.5 Da.", false, true), // For tools which do not have the ppm option
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Dalton, default is '0.5' Da.", false, true),

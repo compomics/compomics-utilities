@@ -24,7 +24,7 @@ public class KeyUtils {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(separator);
             }
-            stringBuilder.append(value.toString());
+            stringBuilder.append(value);
         }
         return stringBuilder.toString();
     }

@@ -9,7 +9,10 @@ import java.util.ArrayList;
  */
 public class KeyUtils {
 
-    public final static String separator = "_";
+    /**
+     * The separator.
+     */
+    public final static String SEPARATOR = "_"; 
 
     /**
      * Returns the key corresponding to a list of integers.
@@ -22,11 +25,10 @@ public class KeyUtils {
         StringBuilder stringBuilder = new StringBuilder(2 * list.size());
         for (Integer value : list) {
             if (stringBuilder.length() > 0) {
-                stringBuilder.append(separator);
+                stringBuilder.append(SEPARATOR);
             }
             stringBuilder.append(value);
         }
         return stringBuilder.toString();
     }
-
 }

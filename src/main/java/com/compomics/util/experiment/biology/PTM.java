@@ -487,16 +487,28 @@ public class PTM extends ExperimentObject {
         tooltip += "Mass: " + getRoundedMass(4) + "<br>";
         tooltip += "Type: ";
 
-        if (type == MODAA) {
-            tooltip += "Particular amino acid(s)";
-        } else if (type == MODN || type == MODNAA) {
-            tooltip += "Protein N terminus";
-        } else if (type == MODC || type == MODCAA) {
-            tooltip += "Protein C terminus";
-        } else if (type == MODNP || type == MODNPAA) {
-            tooltip += "Peptide N terminus";
-        } else if (type == MODCP || type == MODCPAA) {
-            tooltip += "Peptide C terminus";
+        switch (type) {
+            case MODAA:
+                tooltip += "Particular amino acid(s)";
+                break;
+            case MODN:
+            case MODNAA:
+                tooltip += "Protein N terminus";
+                break;
+            case MODC:
+            case MODCAA:
+                tooltip += "Protein C terminus";
+                break;
+            case MODNP:
+            case MODNPAA:
+                tooltip += "Peptide N terminus";
+                break;
+            case MODCP:
+            case MODCPAA:
+                tooltip += "Peptide C terminus";
+                break;
+            default:
+                break;
         }
 
         tooltip += "<br>";

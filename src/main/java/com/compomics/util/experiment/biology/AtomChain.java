@@ -242,21 +242,21 @@ public class AtomChain implements Serializable {
 
     /**
      * Indicates whether two atom chains are of the same composition by
-     * comparing their string and type.
+     * comparing their string and type. An empty chain is considered to be the same composition as a null chain.
      *
-     * @param atomChain another atom chain
+     * @param anotherChain another atom chain
      *
      * @return a boolean indicating whether two atom chains are of the same
      * composition
      */
-    public boolean isSameCompositionAs(AtomChain atomChain) {
-        if (atomChain == null) {
+    public boolean isSameCompositionAs(AtomChain anotherChain) {
+        if (!atomChain.isEmpty() && (anotherChain == null || anotherChain.getAtomChain().isEmpty())) {
             return false;
         }
-        if (!addition.equals(atomChain.getAddition())) {
+        if (!addition.equals(anotherChain.getAddition())) {
             return false;
         }
-        return atomChain.toString().equals(toString());
+        return anotherChain.toString().equals(toString());
     }
 
     @Override

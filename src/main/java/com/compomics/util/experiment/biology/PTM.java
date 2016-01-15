@@ -307,8 +307,8 @@ public class PTM extends ExperimentObject {
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherPTM.getAtomChainRemoved())) {
             return false;
         }
-        if (atomChainAdded == null && anotherPTM.getAtomChainAdded() != null
-                || atomChainRemoved == null && anotherPTM.getAtomChainRemoved() != null) {
+        if (atomChainAdded == null && anotherPTM.getAtomChainAdded() != null && !anotherPTM.getAtomChainAdded().getAtomChain().isEmpty()
+                || atomChainRemoved == null && anotherPTM.getAtomChainRemoved() != null && !anotherPTM.getAtomChainRemoved().getAtomChain().isEmpty()) {
             return false;
         }
         return true;
@@ -316,7 +316,7 @@ public class PTM extends ExperimentObject {
 
     /**
      * Returns true if the targeted pattern of the PTM is the same as another
-     * one.
+     * one. An empty pattern is considered to be the same as a null pattern.
      *
      * @param anotherPTM the PTM to compare to
      *
@@ -324,7 +324,7 @@ public class PTM extends ExperimentObject {
      * one
      */
     public boolean isSamePattern(PTM anotherPTM) {
-        if (pattern == null && anotherPTM.getPattern() != null) {
+        if (pattern == null && anotherPTM.getPattern() != null && anotherPTM.getPattern().length() > 0) {
             return false;
         }
         if (pattern != null && !pattern.isSameAs(anotherPTM.getPattern(), SequenceMatchingPreferences.defaultStringMatching)) {
@@ -361,7 +361,7 @@ public class PTM extends ExperimentObject {
 //            System.out.println("parameters removed: " + anotherPTM.getAtomChainRemoved());
             return false;
         }
-        return type == anotherPTM.getType() && isSamePattern(anotherPTM) && isSameAtomicComposition(anotherPTM);
+        return true;
     }
 
     /**

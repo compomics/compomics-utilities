@@ -65,6 +65,10 @@ public class AnnotationSettings implements Serializable {
      */
     private Boolean reporterIons = true;
     /**
+     * If true related ions will be annotated by default.
+     */
+    private Boolean relatedIons = true;
+    /**
      * Fragment ion accuracy used for peak matching.
      */
     private double fragmentIonAccuracy;
@@ -176,6 +180,7 @@ public class AnnotationSettings implements Serializable {
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);
+        addIonType(Ion.IonType.RELATED_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
         PtmSettings ptmSettings = searchParameters.getPtmSettings();
@@ -234,6 +239,29 @@ public class AnnotationSettings implements Serializable {
      */
     public void setReporterIons(Boolean reporterIons) {
         this.reporterIons = reporterIons;
+    }
+
+    /**
+     * Indicates whether related ions should be annotated by default.
+     *
+     * @return a boolean indicating whether related ions should be annotated by
+     * default
+     */
+    public Boolean getRelatedIons() {
+        if (relatedIons == null) {
+            relatedIons = true;
+        }
+        return relatedIons;
+    }
+
+    /**
+     * Sets whether related ions should be annotated by default.
+     *
+     * @param relatedIons a boolean indicating whether related ions should be
+     * annotated by default
+     */
+    public void setRelatedIons(Boolean relatedIons) {
+        this.relatedIons = relatedIons;
     }
 
     /**
@@ -554,7 +582,8 @@ public class AnnotationSettings implements Serializable {
         annotationSettings.setDeNovoCharge(deNovoCharge);
         annotationSettings.setHighResolutionAnnotation(highResolutionAnnotation);
         annotationSettings.setNeutralLossesSequenceAuto(neutralLossesAuto);
-        annotationSettings.setReporterIons(reporterIons);
+        annotationSettings.setReporterIons(getReporterIons());
+        annotationSettings.setReporterIons(getRelatedIons());
         for (NeutralLoss neutralLoss : neutralLossesList) {
             annotationSettings.addNeutralLoss(neutralLoss);
         }
@@ -610,6 +639,9 @@ public class AnnotationSettings implements Serializable {
             return false;
         }
         if (!getReporterIons().equals(annotationSettings.getReporterIons())) {
+            return false;
+        }
+        if (!getRelatedIons().equals(annotationSettings.getRelatedIons())) {
             return false;
         }
         ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();
@@ -673,55 +705,80 @@ public class AnnotationSettings implements Serializable {
             String ionTypes = "";
 
             for (Ion.IonType ionType : selectedIonsMap.keySet()) {
-                if (ionType == Ion.IonType.IMMONIUM_ION) {
-                    if (!ionTypes.isEmpty()) {
-                        ionTypes += ", ";
+                if (null != ionType) {
+                    switch (ionType) {
+                        case IMMONIUM_ION:
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "immonium ions";
+                            break;
+                        case RELATED_ION:
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "related ions";
+                            break;
+                        case PEPTIDE_FRAGMENT_ION:
+                            // @TODO: what about tags..?
+                            for (int subType : selectedIonsMap.get(ionType)) {
+                                switch (subType) {
+                                    case PeptideFragmentIon.A_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "a ions";
+                                        break;
+                                    case PeptideFragmentIon.B_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "b ions";
+                                        break;
+                                    case PeptideFragmentIon.C_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "x ions";
+                                        break;
+                                    case PeptideFragmentIon.X_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "x ions";
+                                        break;
+                                    case PeptideFragmentIon.Y_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "y ions";
+                                        break;
+                                    case PeptideFragmentIon.Z_ION:
+                                        if (!ionTypes.isEmpty()) {
+                                            ionTypes += ", ";
+                                        }
+                                        ionTypes += "z ions";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            break;
+                        case PRECURSOR_ION:
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "precursor ions";
+                            break;
+                        case REPORTER_ION:
+                            if (!ionTypes.isEmpty()) {
+                                ionTypes += ", ";
+                            }
+                            ionTypes += "reporter ions";
+                            break;
+                        default:
+                            break;
                     }
-                    ionTypes += "immonium ions";
-                } else if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) { // @TODO: what about tags..?
-                    for (int subType : selectedIonsMap.get(ionType)) {
-                        if (subType == PeptideFragmentIon.A_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "a ions";
-                        } else if (subType == PeptideFragmentIon.B_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "b ions";
-                        } else if (subType == PeptideFragmentIon.C_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "x ions";
-                        } else if (subType == PeptideFragmentIon.X_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "x ions";
-                        } else if (subType == PeptideFragmentIon.Y_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "y ions";
-                        } else if (subType == PeptideFragmentIon.Z_ION) {
-                            if (!ionTypes.isEmpty()) {
-                                ionTypes += ", ";
-                            }
-                            ionTypes += "z ions";
-                        }
-                    }
-                } else if (ionType == Ion.IonType.PRECURSOR_ION) {
-                    if (!ionTypes.isEmpty()) {
-                        ionTypes += ", ";
-                    }
-                    ionTypes += "precursor ions";
-                } else if (ionType == Ion.IonType.REPORTER_ION) {
-                    if (!ionTypes.isEmpty()) {
-                        ionTypes += ", ";
-                    }
-                    ionTypes += "reporter ions";
                 }
             }
 

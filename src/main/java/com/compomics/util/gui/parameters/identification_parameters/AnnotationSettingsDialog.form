@@ -155,9 +155,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="reporterBox" min="-2" max="-2" attributes="0"/>
                           <Component id="immoniumBox" linkSize="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="precursorBox" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="precursorBox" linkSize="3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                              <Component id="relatedBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="63" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -169,6 +173,7 @@
                           <Component id="aBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="xBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="precursorBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="relatedBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -254,6 +259,14 @@
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JCheckBox" name="relatedBox">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Related"/>
+                <Property name="toolTipText" type="java.lang.String" value="Related ions"/>
+                <Property name="iconTextGap" type="int" value="10"/>
+                <Property name="opaque" type="boolean" value="false"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="neutralLossPanel">
@@ -271,7 +284,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="neutralLossScrollPane" pref="0" max="32767" attributes="0"/>
+                      <Component id="neutralLossScrollPane" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

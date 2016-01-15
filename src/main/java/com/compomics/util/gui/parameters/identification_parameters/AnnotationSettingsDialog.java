@@ -54,14 +54,15 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      *
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
-     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the search
+     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the
+     * search
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy, 
+    public AnnotationSettingsDialog(java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy,
             ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
@@ -81,14 +82,15 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param annotationSettings previous annotation settings
-     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the search
+     * @param maxFragmentIonAccuracy the fragment ion accuracy used for the
+     * search
      * @param possibleNeutralLosses the list of possible neutral losses
      * @param reporterIons the list of possible reporter ions indexed by their
      * subtypes
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy, 
+    public AnnotationSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AnnotationSettings annotationSettings, double maxFragmentIonAccuracy,
             ArrayList<NeutralLoss> possibleNeutralLosses, ArrayList<Integer> reporterIons, boolean editable) {
         super(owner, true);
         this.parentFrame = parentFrame;
@@ -133,6 +135,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         precursorBox.setEnabled(editable);
         immoniumBox.setEnabled(editable);
         reporterBox.setEnabled(editable);
+        relatedBox.setEnabled(editable);
         intensitySpinner.setEnabled(editable);
         accuracySpinner.setEnabled(editable);
         highResolutionBox.setEnabled(editable);
@@ -161,7 +164,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         ((NeutralLossesTableModel) neutralLossesTable.getModel()).updateData();
 
         intensitySpinner.setValue((int) (annotationSettings.getAnnotationIntensityLimit() * 100));
-        
+
         double fragmentIonAccuracy = annotationSettings.getFragmentIonAccuracy();
         double stepSize;
         if (fragmentIonAccuracy > 10) { // @TODO: find a more generic way of setting the step size
@@ -189,30 +192,52 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         precursorBox.setSelected(false);
         immoniumBox.setSelected(false);
         reporterBox.setSelected(annotationSettings.getReporterIons());
+        reporterBox.setSelected(false);
 
         for (IonType ionType : annotationSettings.getIonTypes().keySet()) {
-            if (ionType == IonType.IMMONIUM_ION) {
-                immoniumBox.setSelected(true);
-            } else if (ionType == IonType.PEPTIDE_FRAGMENT_ION) {
-                for (int subType : annotationSettings.getIonTypes().get(ionType)) {
-                    if (subType == PeptideFragmentIon.A_ION) {
-                        aBox.setSelected(true);
-                    } else if (subType == PeptideFragmentIon.B_ION) {
-                        bBox.setSelected(true);
-                    } else if (subType == PeptideFragmentIon.C_ION) {
-                        cBox.setSelected(true);
-                    } else if (subType == PeptideFragmentIon.X_ION) {
-                        xBox.setSelected(true);
-                    } else if (subType == PeptideFragmentIon.Y_ION) {
-                        yBox.setSelected(true);
-                    } else if (subType == PeptideFragmentIon.Z_ION) {
-                        zBox.setSelected(true);
-                    }
+            if (null != ionType) {
+                switch (ionType) {
+                    case IMMONIUM_ION:
+                        immoniumBox.setSelected(true);
+                        break;
+                    case PEPTIDE_FRAGMENT_ION:
+                        for (int subType : annotationSettings.getIonTypes().get(ionType)) {
+                            switch (subType) {
+                                case PeptideFragmentIon.A_ION:
+                                    aBox.setSelected(true);
+                                    break;
+                                case PeptideFragmentIon.B_ION:
+                                    bBox.setSelected(true);
+                                    break;
+                                case PeptideFragmentIon.C_ION:
+                                    cBox.setSelected(true);
+                                    break;
+                                case PeptideFragmentIon.X_ION:
+                                    xBox.setSelected(true);
+                                    break;
+                                case PeptideFragmentIon.Y_ION:
+                                    yBox.setSelected(true);
+                                    break;
+                                case PeptideFragmentIon.Z_ION:
+                                    zBox.setSelected(true);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
+                    case PRECURSOR_ION:
+                        precursorBox.setSelected(true);
+                        break;
+                    case REPORTER_ION:
+                        reporterBox.setSelected(true);
+                        break;
+                    case RELATED_ION:
+                        relatedBox.setSelected(true);
+                        break;
+                    default:
+                        break;
                 }
-            } else if (ionType == IonType.PRECURSOR_ION) {
-                precursorBox.setSelected(true);
-            } else if (ionType == IonType.REPORTER_ION) {
-                reporterBox.setSelected(true);
             }
         }
 
@@ -272,6 +297,9 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 annotationSettings.addIonType(IonType.REPORTER_ION, reporterIonSubType);
             }
         }
+        if (relatedBox.isSelected()) {
+            annotationSettings.addIonType(IonType.RELATED_ION);
+        }
 
         annotationSettings.setIntensityLimit(((Integer) intensitySpinner.getValue()) / 100.0);
         annotationSettings.setFragmentIonAccuracy((Double) accuracySpinner.getValue());
@@ -309,6 +337,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         precursorBox = new javax.swing.JCheckBox();
         immoniumBox = new javax.swing.JCheckBox();
         reporterBox = new javax.swing.JCheckBox();
+        relatedBox = new javax.swing.JCheckBox();
         neutralLossPanel = new javax.swing.JPanel();
         neutralLossScrollPane = new javax.swing.JScrollPane();
         neutralLossesTable = new javax.swing.JTable();
@@ -410,6 +439,11 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         reporterBox.setIconTextGap(10);
         reporterBox.setOpaque(false);
 
+        relatedBox.setText("Related");
+        relatedBox.setToolTipText("Related ions");
+        relatedBox.setIconTextGap(10);
+        relatedBox.setOpaque(false);
+
         javax.swing.GroupLayout ionsPanelLayout = new javax.swing.GroupLayout(ionsPanel);
         ionsPanel.setLayout(ionsPanelLayout);
         ionsPanelLayout.setHorizontalGroup(
@@ -429,8 +463,11 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 .addGroup(ionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(reporterBox)
                     .addComponent(immoniumBox)
-                    .addComponent(precursorBox))
-                .addContainerGap(63, Short.MAX_VALUE))
+                    .addGroup(ionsPanelLayout.createSequentialGroup()
+                        .addComponent(precursorBox)
+                        .addGap(50, 50, 50)
+                        .addComponent(relatedBox)))
+                .addGap(25, 25, 25))
         );
 
         ionsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {aBox, bBox, cBox, immoniumBox, precursorBox, xBox, yBox, zBox});
@@ -442,7 +479,8 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
                 .addGroup(ionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(aBox)
                     .addComponent(xBox)
-                    .addComponent(precursorBox))
+                    .addComponent(precursorBox)
+                    .addComponent(relatedBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bBox)
@@ -469,7 +507,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
             neutralLossPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(neutralLossPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(neutralLossScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(neutralLossScrollPane)
                 .addContainerGap())
         );
         neutralLossPanelLayout.setVerticalGroup(
@@ -680,6 +718,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JPanel peakMatchingPanel;
     private javax.swing.JCheckBox precursorBox;
+    private javax.swing.JCheckBox relatedBox;
     private javax.swing.JCheckBox reporterBox;
     private javax.swing.JCheckBox xBox;
     private javax.swing.JCheckBox yBox;
@@ -707,7 +746,7 @@ public class AnnotationSettingsDialog extends javax.swing.JDialog {
         public NeutralLossesTableModel() {
             updateData();
         }
-        
+
         /**
          * Update the table content.
          */

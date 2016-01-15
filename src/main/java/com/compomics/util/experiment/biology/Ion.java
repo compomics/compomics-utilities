@@ -26,6 +26,9 @@ public abstract class Ion extends ExperimentObject {
         /**
          * Identifier for a peptide fragment ion.
          */
+        /**
+         * Identifier for a peptide fragment ion.
+         */
         PEPTIDE_FRAGMENT_ION(0),
         /**
          * A tag fragment ion
@@ -54,7 +57,11 @@ public abstract class Ion extends ExperimentObject {
         /**
          * Identifier for an unknown ion.
          */
-        UNKNOWN(7);
+        UNKNOWN(7),
+        /**
+         * Identifier for a related ion.
+         */
+        RELATED_ION(8);
 
         /**
          * The index of the type.
@@ -136,6 +143,8 @@ public abstract class Ion extends ExperimentObject {
                 return PrecursorIon.getPossibleSubtypes();
             case REPORTER_ION:
                 return ReporterIon.getPossibleSubtypes();
+            case RELATED_ION:
+                return RelatedIon.getPossibleSubtypes();
             default:
                 throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -278,6 +287,7 @@ public abstract class Ion extends ExperimentObject {
         result.add(IonType.TAG_FRAGMENT_ION);
         result.add(IonType.PRECURSOR_ION);
         result.add(IonType.REPORTER_ION);
+        result.add(IonType.RELATED_ION);
         return result;
     }
 
@@ -312,6 +322,8 @@ public abstract class Ion extends ExperimentObject {
                 return "Glycan";
             case ELEMENTARY_ION:
                 return "Elementary ion";
+            case RELATED_ION:
+                return "Related ion";
             case UNKNOWN:
                 return "Unknown ion type";
             default:
@@ -343,6 +355,8 @@ public abstract class Ion extends ExperimentObject {
                 return new PrecursorIon(neutralLosses);
             case REPORTER_ION:
                 return ReporterIon.getReporterIon(subType);
+            case RELATED_ION:
+                return new RelatedIon(AminoAcid.A, new AtomChain("H"), -1, false);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }
@@ -372,6 +386,8 @@ public abstract class Ion extends ExperimentObject {
                 return new PrecursorIon();
             case REPORTER_ION:
                 return ReporterIon.getReporterIon(subType);
+            case RELATED_ION:
+                return new RelatedIon(AminoAcid.A, new AtomChain("H"), -1, false);
             default:
                 throw new UnsupportedOperationException("No generic constructor for " + getTypeAsString(ionType) + ".");
         }

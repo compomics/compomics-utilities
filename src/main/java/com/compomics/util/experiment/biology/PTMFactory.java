@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.1.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.2.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -452,46 +452,60 @@ public class PTMFactory implements Serializable {
 
         for (String fixedModification : modificationProfile.getFixedModifications()) {
             PTM ptm = getPTM(fixedModification);
-            if (ptm.getType() == PTM.MODAA) {
-                for (int pos : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
-                    if (!taken.containsKey(pos)) {
-                        taken.put(pos, ptm.getMass());
-                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
-                    } else if (taken.get(pos) != ptm.getMass()) { // @TODO: compare against the accuracy
-                        throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
-                                + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
+            switch (ptm.getType()) {
+                case PTM.MODAA:
+                    for (int pos : peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences)) {
+                        if (!taken.containsKey(pos)) {
+                            taken.put(pos, ptm.getMass());
+                            peptide.addModificationMatch(new ModificationMatch(fixedModification, false, pos));
+                        } else if (taken.get(pos) != ptm.getMass()) { // @TODO: compare against the accuracy
+                            throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
+                                    + taken.get(pos) + ", " + ptm.getMass() + ") at position " + pos + " in peptide " + peptide.getSequence() + ".");
+                        }
                     }
+                    break;
+                case PTM.MODC:
+                    if (!peptide.isCterm(sequenceMatchingPreferences).isEmpty()) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+                    }
+                    break;
+                case PTM.MODN:
+                    if (!peptide.isNterm(sequenceMatchingPreferences).isEmpty()) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                    }
+                    break;
+                case PTM.MODCAA: {
+                    String sequence = peptide.getSequence();
+                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
+                    }
+                    break;
                 }
-            } else if (ptm.getType() == PTM.MODC) {
-                if (!peptide.isCterm(sequenceMatchingPreferences).isEmpty()) {
+                case PTM.MODNAA:
+                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                    }
+                    break;
+                case PTM.MODCP:
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-                }
-            } else if (ptm.getType() == PTM.MODN) {
-                if (!peptide.isNterm(sequenceMatchingPreferences).isEmpty()) {
+                    break;
+                case PTM.MODNP:
                     peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                    break;
+                case PTM.MODCPAA: {
+                    String sequence = peptide.getSequence();
+                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, sequence.length()));
+                    }
+                    break;
                 }
-            } else if (ptm.getType() == PTM.MODCAA) {
-                String sequence = peptide.getSequence();
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-                }
-            } else if (ptm.getType() == PTM.MODNAA) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                }
-            } else if (ptm.getType() == PTM.MODCP) {
-                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, peptide.getSequence().length()));
-            } else if (ptm.getType() == PTM.MODNP) {
-                peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-            } else if (ptm.getType() == PTM.MODCPAA) {
-                String sequence = peptide.getSequence();
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(sequence.length())) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, sequence.length()));
-                }
-            } else if (ptm.getType() == PTM.MODNPAA) {
-                if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
-                    peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
-                }
+                case PTM.MODNPAA:
+                    if (peptide.getPotentialModificationSites(ptm, sequenceMatchingPreferences, ptmSequenceMatchingPreferences).contains(1)) {
+                        peptide.addModificationMatch(new ModificationMatch(fixedModification, false, 1));
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -2211,6 +2225,11 @@ public class PTMFactory implements Serializable {
         ptmName = "Methylation of R";
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", String.valueOf(ptm.getRoundedMass())));
+        ptm.addReporterIon(ReporterIon.METHYL_R_70);
+        ptm.addReporterIon(ReporterIon.METHYL_R_87);
+        ptm.addReporterIon(ReporterIon.METHYL_R_112);
+        ptm.addReporterIon(ReporterIon.METHYL_R_115);
+        ptm.addReporterIon(ReporterIon.METHYL_R_143);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -2295,6 +2314,9 @@ public class PTMFactory implements Serializable {
         ptmName = "Dimethylation of R";
         ptm = new PTM(PTM.MODAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", String.valueOf(ptm.getRoundedMass())));
+        ptm.addReporterIon(ReporterIon.DI_METHYL_R_112);
+        ptm.addReporterIon(ReporterIon.DI_METHYL_R_115);
+        ptm.addReporterIon(ReporterIon.DI_METHYL_R_157);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -2730,6 +2752,7 @@ public class PTMFactory implements Serializable {
         ptmName = "Formylation of K";
         ptm = new PTM(PTM.MODAA, ptmName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", String.valueOf(ptm.getRoundedMass())));
+        ptm.addReporterIon(ReporterIon.FORMYL_K);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 

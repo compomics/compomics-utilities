@@ -747,7 +747,8 @@ public class SpectrumPanel extends GraphicsPanel {
             } else { // other
                 if (iontypes.containsKey(Ion.IonType.IMMONIUM_ION)
                         || iontypes.containsKey(Ion.IonType.PRECURSOR_ION)
-                        || iontypes.containsKey(Ion.IonType.IMMONIUM_ION)) {
+                        || iontypes.containsKey(Ion.IonType.REPORTER_ION)
+                        || iontypes.containsKey(Ion.IonType.RELATED_ION)) {
                     useAnnotation = true;
                 }
             }
@@ -1016,6 +1017,8 @@ public class SpectrumPanel extends GraphicsPanel {
                 return Color.GRAY;
             case REPORTER_ION:
                 return Color.ORANGE;
+            case RELATED_ION:
+                return Color.GRAY;
             default:
                 return Color.GRAY;
         }

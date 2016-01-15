@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.experiment.biology.ions.ImmoniumIon;
 import com.compomics.util.experiment.biology.ions.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.PrecursorIon;
+import com.compomics.util.experiment.biology.ions.RelatedIon;
 import com.compomics.util.experiment.biology.ions.ReporterIon;
 import com.compomics.util.experiment.biology.ions.TagFragmentIon;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -97,9 +98,9 @@ public class IonFactory {
     }
 
     /**
-     * Returns the reporter ions to annotate with the given ptm settings.
+     * Returns the reporter ions to annotate with the given PTM settings.
      *
-     * @param ptmSettings the ptms to annotate
+     * @param ptmSettings the PTMs to annotate
      *
      * @return a hashset of the subtype indexes of the reporter ions to annotate
      */
@@ -225,6 +226,7 @@ public class IonFactory {
 
             char aaName = sequence.charAt(aa);
 
+            // immonium ions
             if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.IMMONIUM_ION)) {
                 HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                 if (ionsMap == null) {
@@ -236,8 +238,31 @@ public class IonFactory {
                 ArrayList<Ion> ions = ionsMap.get(subType);
                 if (ions == null) {
                     ions = new ArrayList<Ion>(1);
+                    ions.add(immoniumIon);
                     ionsMap.put(subType, ions);
-                    ions.add(immoniumIon); // @TODO: what about related ions: http://www.matrixscience.com/help/fragmentation_help.html
+                }
+            }
+
+            // related ions
+            if (selectedIonTypes == null || selectedIonTypes.keySet().contains(Ion.IonType.RELATED_ION)) {
+                HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.RELATED_ION.index);
+                if (ionsMap == null) {
+                    ionsMap = new HashMap<Integer, ArrayList<Ion>>(sequence.length());
+                    result.put(Ion.IonType.RELATED_ION.index, ionsMap);
+                }
+
+                ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(AminoAcid.getAminoAcid(aaName));
+
+                for (RelatedIon tempRelated : relatedIons) {
+                    int subType = tempRelated.getSubType();
+
+                    ArrayList<Ion> ions = ionsMap.get(subType);
+                    if (ions == null) {
+                        ions = new ArrayList<Ion>(1);
+                    }
+
+                    ions.add(tempRelated);
+                    ionsMap.put(subType, ions);
                 }
             }
 
@@ -505,6 +530,7 @@ public class IonFactory {
                             aminoAcidMasses.add(mass);
                         }
 
+                        // immonium ions
                         HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                         if (ionsMap == null) {
                             ionsMap = new HashMap<Integer, ArrayList<Ion>>();
@@ -515,15 +541,37 @@ public class IonFactory {
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
                             ions = new ArrayList<Ion>();
-                            ionsMap.put(subType, ions);
                             ions.add(immoniumIon);
+                            ionsMap.put(subType, ions);
+                        }
+
+                        // related ions
+                        ionsMap = result.get(Ion.IonType.RELATED_ION.index);
+                        if (ionsMap == null) {
+                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            result.put(Ion.IonType.RELATED_ION.index, ionsMap);
+                        }
+                        ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
+
+                        for (RelatedIon tempRelated : relatedIons) {
+                            subType = tempRelated.getSubType();
+
+                            ions = ionsMap.get(subType);
+                            if (ions == null) {
+                                ions = new ArrayList<Ion>(1);
+                            }
+
+                            ions.add(tempRelated);
+                            ionsMap.put(subType, ions);
                         }
                     }
+
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
                         ionsMap = new HashMap<Integer, ArrayList<Ion>>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
+
                     for (double massOffset : massOffsets) {
                         ArrayList<Double> newPatternMassess = new ArrayList<Double>();
                         if (patternMasses.isEmpty()) {
@@ -636,6 +684,7 @@ public class IonFactory {
                 for (int i = 0; i < aminoAcidSequence.length(); i++) {
                     AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
 
+                    // immonium ions
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                     if (ionsMap == null) {
                         ionsMap = new HashMap<Integer, ArrayList<Ion>>();
@@ -646,8 +695,28 @@ public class IonFactory {
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
                         ions = new ArrayList<Ion>();
-                        ionsMap.put(subType, ions);
                         ions.add(immoniumIon);
+                        ionsMap.put(subType, ions);
+                    }
+
+                    // related ions
+                    ionsMap = result.get(Ion.IonType.RELATED_ION.index);
+                    if (ionsMap == null) {
+                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        result.put(Ion.IonType.RELATED_ION.index, ionsMap);
+                    }
+                    ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
+
+                    for (RelatedIon tempRelated : relatedIons) {
+                        subType = tempRelated.getSubType();
+
+                        ions = ionsMap.get(subType);
+                        if (ions == null) {
+                            ions = new ArrayList<Ion>(1);
+                        }
+
+                        ions.add(tempRelated);
+                        ionsMap.put(subType, ions);
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
@@ -861,6 +930,7 @@ public class IonFactory {
                             aminoAcidMasses.add(mass);
                         }
 
+                        // immonium ions
                         HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                         if (ionsMap == null) {
                             ionsMap = new HashMap<Integer, ArrayList<Ion>>();
@@ -871,15 +941,37 @@ public class IonFactory {
                         ArrayList<Ion> ions = ionsMap.get(subType);
                         if (ions == null) {
                             ions = new ArrayList<Ion>();
-                            ionsMap.put(subType, ions);
                             ions.add(immoniumIon);
+                            ionsMap.put(subType, ions);
+                        }
+
+                        // related ions
+                        ionsMap = result.get(Ion.IonType.RELATED_ION.index);
+                        if (ionsMap == null) {
+                            ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                            result.put(Ion.IonType.RELATED_ION.index, ionsMap);
+                        }
+                        ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
+
+                        for (RelatedIon tempRelated : relatedIons) {
+                            subType = tempRelated.getSubType();
+
+                            ions = ionsMap.get(subType);
+                            if (ions == null) {
+                                ions = new ArrayList<Ion>(1);
+                            }
+
+                            ions.add(tempRelated);
+                            ionsMap.put(subType, ions);
                         }
                     }
+
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.TAG_FRAGMENT_ION.index);
                     if (ionsMap == null) {
                         ionsMap = new HashMap<Integer, ArrayList<Ion>>();
                         result.put(Ion.IonType.TAG_FRAGMENT_ION.index, ionsMap);
                     }
+
                     for (double massOffset : massOffsets) {
                         ArrayList<Double> newPatternMassess = new ArrayList<Double>();
                         if (patternMasses.isEmpty()) {
@@ -994,11 +1086,17 @@ public class IonFactory {
                 }
                 massOffsets = newOffsetMasses;
                 ionNumberOffset += aminoAcidPattern.length();
+
             } else if (tagComponent instanceof AminoAcidSequence) {
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
                 double sequenceMass = 0;
+
                 for (int i = aminoAcidSequence.length() - 1; i >= 0; i--) {
+
                     AminoAcid aminoAcid = aminoAcidSequence.getAminoAcidAt(i);
+
+                    // immonium ions
                     HashMap<Integer, ArrayList<Ion>> ionsMap = result.get(Ion.IonType.IMMONIUM_ION.index);
                     if (ionsMap == null) {
                         ionsMap = new HashMap<Integer, ArrayList<Ion>>();
@@ -1009,9 +1107,30 @@ public class IonFactory {
                     ArrayList<Ion> ions = ionsMap.get(subType);
                     if (ions == null) {
                         ions = new ArrayList<Ion>();
-                        ionsMap.put(subType, ions);
                         ions.add(immoniumIon);
+                        ionsMap.put(subType, ions);
                     }
+
+                    // related ions
+                    ionsMap = result.get(Ion.IonType.RELATED_ION.index);
+                    if (ionsMap == null) {
+                        ionsMap = new HashMap<Integer, ArrayList<Ion>>();
+                        result.put(Ion.IonType.RELATED_ION.index, ionsMap);
+                    }
+                    ArrayList<RelatedIon> relatedIons = RelatedIon.getRelatedIons(aminoAcid);
+
+                    for (RelatedIon tempRelated : relatedIons) {
+                        subType = tempRelated.getSubType();
+
+                        ions = ionsMap.get(subType);
+                        if (ions == null) {
+                            ions = new ArrayList<Ion>(1);
+                        }
+
+                        ions.add(tempRelated);
+                        ionsMap.put(subType, ions);
+                    }
+
                     double mass = aminoAcid.getMonoisotopicMass();
                     for (ModificationMatch modificationMatch : aminoAcidSequence.getModificationsAt(i + 1)) {
                         String ptmName = modificationMatch.getTheoreticPtm();

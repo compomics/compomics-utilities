@@ -38,25 +38,33 @@ public class IonLabelColorTableModel extends DefaultTableModel {
         Ion currentIon;
 
         for (IonType ionType : iontypes.keySet()) {
-            if (ionType == IonType.IMMONIUM_ION) {
-                //@TODO: we usually group immonium ions, is it a good idea?
-                ionMap.put("Immonium Ion", Ion.getGenericIon(ionType, 0));
-                keys.add("Immonium Ion");
-            } else {
-                for (Integer subtype : iontypes.get(ionType)) {
-                    if (ionType == Ion.IonType.REPORTER_ION) {
-                        currentIon = Ion.getGenericIon(ionType, subtype);
-                        String key = currentIon.getName();
-                        ionMap.put(key, currentIon);
-                        keys.add(key);
-                    } else {
-                        for (ArrayList<NeutralLoss> possibleCombination : IonFactory.getAccountedNeutralLosses(neutralLosses)) {
-                            currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination);
-                            String key = currentIon.getName();
-                            ionMap.put(key, currentIon);
-                            keys.add(key);
+            if (null != ionType) {
+                switch (ionType) {
+                    case IMMONIUM_ION:
+                        ionMap.put("Immonium Ion", Ion.getGenericIon(ionType, 0)); //@TODO: we usually group immonium ions, is it a good idea?
+                        keys.add("Immonium Ion");
+                        break;
+                    case RELATED_ION:
+                        ionMap.put("Related Ion", Ion.getGenericIon(ionType, 0)); //@TODO: we usually group related ions, is it a good idea?
+                        keys.add("Related Ion");
+                        break;
+                    default:
+                        for (Integer subtype : iontypes.get(ionType)) {
+                            if (ionType == Ion.IonType.REPORTER_ION) {
+                                currentIon = Ion.getGenericIon(ionType, subtype);
+                                String key = currentIon.getName();
+                                ionMap.put(key, currentIon);
+                                keys.add(key);
+                            } else {
+                                for (ArrayList<NeutralLoss> possibleCombination : IonFactory.getAccountedNeutralLosses(neutralLosses)) {
+                                    currentIon = Ion.getGenericIon(ionType, subtype, possibleCombination);
+                                    String key = currentIon.getName();
+                                    ionMap.put(key, currentIon);
+                                    keys.add(key);
+                                }
+                            }
                         }
-                    }
+                        break;
                 }
             }
         }

@@ -242,7 +242,8 @@ public class AtomChain implements Serializable {
 
     /**
      * Indicates whether two atom chains are of the same composition by
-     * comparing their string and type. An empty chain is considered to be the same composition as a null chain.
+     * comparing their string and type. An empty chain is considered to be the
+     * same composition as a null chain.
      *
      * @param anotherChain another atom chain
      *

@@ -406,8 +406,9 @@ public abstract class SpectrumAnnotator {
         }
         switch (theoreticIon.getType()) {
             case IMMONIUM_ION:
+            case RELATED_ION: // note: it is possible to implement higher charges but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
                 return false;
-            case REPORTER_ION: // Note, it is possible to implement higher charges for the reporter ion but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
+            case REPORTER_ION: // note: it is possible to implement higher charges but then modify IonMatch.getPeakAnnotation(boolean html) as well to see the charge displayed on the spectrum
                 return false;
             case PEPTIDE_FRAGMENT_ION:
                 PeptideFragmentIon peptideFragmentIon = ((PeptideFragmentIon) theoreticIon);

@@ -2,6 +2,7 @@ package com.compomics.util.experiment.massspectrometry;
 
 import com.compomics.util.experiment.biology.ions.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.Comparator;
 
 /**
  * This class represents a peak.
@@ -140,15 +141,48 @@ public class Peak extends ExperimentObject {
     public int compareTo(Peak p) {
         return Double.compare(this.getIntensity(), p.getIntensity());
     }
-    
+
     /**
      * Returns the mass of the compound with the given charge.
-     * 
+     *
      * @param chargeValue the value of the charge
-     * 
+     *
      * @return the mass of the compound with the given charge
      */
     public double getMass(int chargeValue) {
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
+
+    /**
+     * This comparator compares 2 Peak instances on ascending intensity.
+     */
+    public static final Comparator<Peak> AscendingIntensityComparator
+            = new Comparator<Peak>() {
+                @Override
+                public int compare(Peak o1, Peak o2) {
+                    return o1.getIntensity() < o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+                }
+            };
+
+    /**
+     * This comparator compares 2 Peak instances on descending intensity.
+     */
+    public static final Comparator<Peak> DescendingIntensityComparator
+            = new Comparator<Peak>() {
+                @Override
+                public int compare(Peak o1, Peak o2) {
+                    return o1.getIntensity() > o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+                }
+            };
+
+    /**
+     * This comparator compares 2 Peak instances on ascending m/z value.
+     */
+    public static final Comparator<Peak> AscendingMzComparator
+            = new Comparator<Peak>() {
+                @Override
+                public int compare(Peak o1, Peak o2) {
+                    return o1.getMz() < o2.getMz() ? -1 : o1.getMz() == o2.getMz() ? 0 : 1;
+                }
+            };
 }

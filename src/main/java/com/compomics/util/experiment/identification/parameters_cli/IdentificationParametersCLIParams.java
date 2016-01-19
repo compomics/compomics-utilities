@@ -33,9 +33,9 @@ public enum IdentificationParametersCLIParams {
     DB("db", "The sequence database to use for searching spectra in FASTA format.", false, true),
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
-    PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10' ppm.", false, true),
+    PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
     PREC_TOL_DA("prec_tol", "Precursor ion mass tolerance in Dalton, default is 0.5 Da.", false, true), // For tools which do not have the ppm option
-    FRAG_TOL("frag_tol", "Fragment ion mass tolerance in Dalton, default is '0.5' Da.", false, true),
+    FRAG_TOL("frag_tol", "Fragment ion mass tolerance, default is '0.5'.", false, true),
     ENZYME("enzyme", "Enzyme, default is 'Trypsin'. Available enzymes are listed in the GUI. (Note: case sensitive.)", false, true), // @TODO: list supported enzymes per search engine on a web page!
     FIXED_MODS("fixed_mods", "Fixed modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false, true),
     VARIABLE_MODS("variable_mods", "Variable modifications as comma separated list, e.g., \"Oxidation of M, Phosphorylation of S\"", false, true),

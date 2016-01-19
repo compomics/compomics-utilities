@@ -154,35 +154,35 @@ public class Peak extends ExperimentObject {
     }
 
     /**
-     * This comparator compares 2 Peak instances on ascending intensity.
+     * This comparator compares two Peak instances on ascending intensity.
      */
     public static final Comparator<Peak> AscendingIntensityComparator
             = new Comparator<Peak>() {
-                @Override
-                public int compare(Peak o1, Peak o2) {
-                    return o1.getIntensity() < o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
-                }
-            };
+        @Override
+        public int compare(Peak o1, Peak o2) {
+            return o1.getIntensity() < o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+        }
+    };
 
     /**
-     * This comparator compares 2 Peak instances on descending intensity.
+     * This comparator compares two Peak instances on descending intensity.
      */
     public static final Comparator<Peak> DescendingIntensityComparator
             = new Comparator<Peak>() {
-                @Override
-                public int compare(Peak o1, Peak o2) {
-                    return o1.getIntensity() > o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
-                }
-            };
+        @Override
+        public int compare(Peak o1, Peak o2) {
+            return o1.getIntensity() > o2.getIntensity() ? -1 : o1.getIntensity() == o2.getIntensity() ? 0 : 1;
+        }
+    };
 
     /**
-     * This comparator compares 2 Peak instances on ascending m/z value.
+     * This comparator compares two Peak instances on ascending m/z value.
      */
     public static final Comparator<Peak> AscendingMzComparator
             = new Comparator<Peak>() {
-                @Override
-                public int compare(Peak o1, Peak o2) {
-                    return o1.getMz() < o2.getMz() ? -1 : o1.getMz() == o2.getMz() ? 0 : 1;
-                }
-            };
+        @Override
+        public int compare(Peak o1, Peak o2) {
+            return o1.getMz() < o2.getMz() ? -1 : o1.getMz() == o2.getMz() ? 0 : 1;
+        }
+    };
 }

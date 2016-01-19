@@ -2406,9 +2406,9 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
         valid = GuiUtilities.validateDoubleInput(this, eValueLbl, eValueTxt, "e-value cutoff", "E-value Cutoff Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, dynamicRangeLbl, dynamicRangeTxt, "dynamic range cutoff", "Dynamic Range Cutoff Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, nPeaksLbl, nPeaksTxt, "number of peaks", "Number of Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, nPeaksLbl, nPeaksTxt, "number of peaks", "Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minFragMzLbl, minFragmentMzTxt, "minimal fragment m/z", "Minimal Fragment MZ Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimal number of peaks", "Minimal Number of Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimal number of peaks", "Minimal Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minPrecMassLbl, minPrecMassTxt, "minimal precursor mass", "Minimal Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, maxEValueRefinmentLbl, maxEValueRefineTxt, "maximal e-value for the refinement", "Maximal Refinement E-Value Error", true, showMessage, valid);
 

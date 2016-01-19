@@ -874,13 +874,13 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
 
         boolean valid = true;
 
-        valid = GuiUtilities.validatePositiveIntegerInput(this, tagLengthLabel, tagLengthTextField, "tag length", "Tag Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, numVariableModsLabel, numVariableModsTextField, "number of variable modifications", "Variable Modifications Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, numberOfChargeStatesLabel, numberOfChargeStatesTextField, "number of charge states", "Charge States Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, deisotopingModeLabel, deisptopingModeTextField, "deisotoping mode", "Deisotoping Mode Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, tagLengthLabel, tagLengthTextField, "tag length", "Tag Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numVariableModsLabel, numVariableModsTextField, "number of variable modifications", "Variable Modifications Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberOfChargeStatesLabel, numberOfChargeStatesTextField, "number of charge states", "Charge States Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, deisotopingModeLabel, deisptopingModeTextField, "deisotoping mode", "Deisotoping Mode Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, isotopeToleranceLabel, isotopeToleranceTextField, "isotope tolerance", "Isotope Tolerance Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, numberOfIntensityClassesLabel, numberOfIntensityClassesTextField, "number of intensity classes", "Intensity Classes Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPeakCountLabel, maxPeakCountTextField, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberOfIntensityClassesLabel, numberOfIntensityClassesTextField, "number of intensity classes", "Intensity Classes Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxPeakCountLabel, maxPeakCountTextField, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, ticCutoffLabel, ticCutoffTextField, "TIC cutoff", "TIC Cutoff Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, complementToleranceLabel, complementToleranceTextField, "complement tolerance", "Complement Tolerance Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorAdjustmentStepLabel, precursorAdjustmentStepTextField, "precursor adjustment step", "Precursor Adjustment Step Error", true, showMessage, valid);

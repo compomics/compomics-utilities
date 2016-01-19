@@ -351,13 +351,32 @@ public abstract class Spectrum extends ExperimentObject {
     }
 
     /**
+     * Setter for the boolean that indicates whether the mzValuesAsArray is
+     * sorted.
+     *
+     * @param mzOrdered whether the mzValuesAsArray is sorted
+     */
+    public void setMzOrdered(boolean mzOrdered) {
+        this.mzOrdered = mzOrdered;
+    }
+
+    /**
+     * Setter for the intensityValuesAsArray.
+     *
+     * @param intensityValuesAsArray the intensity values array
+     */
+    public void setIntensityValuesAsArray(double[] intensityValuesAsArray) {
+        this.intensityValuesAsArray = intensityValuesAsArray;
+    }
+
+    /**
      * Returns the intensity values as an array.
      *
      * @return the intensity values as an array
      */
     public double[] getIntensityValuesAsArray() {
 
-        if (intensityValuesAsArray == null) {
+        if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakList.size())) {
             intensityValuesAsArray = new double[peakList.size()];
 
             int counter = 0;
@@ -535,7 +554,7 @@ public abstract class Spectrum extends ExperimentObject {
         for (Peak peak : peakList.values()) {
             double mz = peak.mz;
             // Skip the low mass region of the spectrum @TODO: skip precursor as well
-            if (mz > 200) { 
+            if (mz > 200) {
                 intensities.add(peak.intensity);
             }
         }

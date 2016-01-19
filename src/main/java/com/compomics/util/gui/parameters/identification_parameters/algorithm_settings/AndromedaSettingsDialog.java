@@ -782,14 +782,14 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
 
         boolean valid = true;
 
-        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthNoEnzymeLabel, minPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthNoEnzymeLabel, maxPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, minPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, maxPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, maxPeptideMassLabel, maxPeptideMassTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, maxCombinationsLabel, maxCombinationsTxt, "maximum combinations", "Max Combinations Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, topPeaksLabel, topPeaksTxt, "top peaks", "Top Peaks Error", true, showMessage, valid);
-        valid = GuiUtilities.validatePositiveIntegerInput(this, topPeaksWindowLabel, topPeaksWindowTxt, "top peaks window", "Top Peaks Window Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxCombinationsLabel, maxCombinationsTxt, "maximum combinations", "Max Combinations Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, topPeaksLabel, topPeaksTxt, "top peaks", "Top Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, topPeaksWindowLabel, topPeaksWindowTxt, "top peaks window", "Top Peaks Window Error", true, showMessage, valid);
 
         // peptide length: the low value should be lower than the high value
         try {

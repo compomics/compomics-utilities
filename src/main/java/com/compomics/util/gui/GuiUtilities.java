@@ -121,7 +121,7 @@ public class GuiUtilities {
     public static boolean validatePositiveIntegerInput(Component parentComponent, JLabel label, JTextField textField,
             String valueDescription, String errorTitle, boolean positiveValue, boolean showMessage, boolean valid) {
 
-        valid = validatePositiveIntegerInput(parentComponent, label, textField, valueDescription, errorTitle, positiveValue, showMessage, valid);
+        valid = validateIntegerInput(parentComponent, label, textField, valueDescription, errorTitle, positiveValue, showMessage, valid);
 
         if (valid) {
             int tempValue = Integer.parseInt(textField.getText().trim());

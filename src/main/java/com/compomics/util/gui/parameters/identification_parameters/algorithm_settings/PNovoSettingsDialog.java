@@ -377,8 +377,8 @@ public class PNovoSettingsDialog extends javax.swing.JDialog implements Algorith
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, minPrecursorMassLabel, minPrecursorMassTextField, "minimum precursor mass", "Minimum Precursor Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxPrecursorMassLabel, maxPrecursorMassTextField, "maximum precursor mass", "Maximum Precursor Mass Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, minPrecursorMassLabel, minPrecursorMassTextField, "minimum precursor mass", "Minimum Precursor Mass Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPrecursorMassLabel, maxPrecursorMassTextField, "maximum precursor mass", "Maximum Precursor Mass Error", true, showMessage, valid);
 
         okButton.setEnabled(valid);
         return valid;

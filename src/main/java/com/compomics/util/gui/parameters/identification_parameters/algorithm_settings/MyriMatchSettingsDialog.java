@@ -846,17 +846,17 @@ public class MyriMatchSettingsDialog extends javax.swing.JDialog implements Algo
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, minPrecursorMassTxt, "minimum precursor mass", "Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, maxPrecursorMassTxt, "maximum precursor mass", "Precursor Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, ticCutoffPercentageLabel, ticCutoffPercentageTxt, "TIC cutoff precentage", "TIC Cutoff Percentage Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numIntensityClassesLabel, numIntensityClassesTxt, "number of intensity classes", "Intensity Classes Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, classSizeMultiplierLabel, classSizeMultiplierTxt, "class size multiplier", "Class Size Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numbBatchesLabel, numbBatchesTxt, "number of batches", "Number of Batches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxPeakCountLabel, maxPeakCountTxt, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, numIntensityClassesLabel, numIntensityClassesTxt, "number of intensity classes", "Intensity Classes Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, classSizeMultiplierLabel, classSizeMultiplierTxt, "class size multiplier", "Class Size Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, numbBatchesLabel, numbBatchesTxt, "number of batches", "Number of Batches Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPeakCountLabel, maxPeakCountTxt, "maximum peak count", "Max Peak Count Error", true, showMessage, valid);
 
         // check that the tic cuttoff is between 0 and 1
         try {

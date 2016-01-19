@@ -491,12 +491,13 @@ public class Peptide extends ExperimentObject {
      * modification based on its key.
      *
      * @param peptideKey the peptide key
-     * @param modification the name of the modification
+     * @param modificationMass the mass of the modification
+     * 
      * @return a boolean indicating whether the peptide has variable
      * modifications
      */
-    public static boolean isModified(String peptideKey, String modification) {
-        return peptideKey.contains(modification);
+    public static boolean isModified(String peptideKey, Double modificationMass) {
+        return peptideKey.contains(modificationMass.toString());
     }
 
     /**

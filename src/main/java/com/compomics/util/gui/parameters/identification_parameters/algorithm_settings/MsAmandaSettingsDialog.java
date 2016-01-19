@@ -409,7 +409,7 @@ public class MsAmandaSettingsDialog extends javax.swing.JDialog implements Algor
      */
     public boolean validateInput(boolean showMessage) {
         boolean valid = true;
-        valid = GuiUtilities.validateIntegerInput(this, maxRankLabel, maxRankTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxRankLabel, maxRankTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
         okButton.setEnabled(valid);
         return valid;
     }

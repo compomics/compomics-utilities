@@ -965,17 +965,17 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimum number of peaks", "Minimum Number of Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimum number of peaks", "Minimum Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minPeakIntensityLbl, minPeakIntensityTxt, "minimum peak intensity", "Minimim Peak Intensity Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, removePrecursorPeakLabel, removePrecursorPeakToleranceTxt, "remove precursor peak tolerance", "Precursor Peak Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, clearMzRangeLabel, clearMzRangeLowerTxt, "lower clear mz range", "Clear MZ Range Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, clearMzRangeLabel, clearMzRangeUpperTxt, "upper clear mz range", "Clear MZ Range Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, minPrecursorMassTxt, "minimum precursor mass", "Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, maxPrecursorMassTxt, "maximum precursor mass", "Precursor Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxFragmentChargeLabel, maxFragmentChargeTxt, "maximum fragment charge", "Maximum Fragment Charge Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, batchSizeLabel, batchSizeTxt, "batch size", "Batch Size Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxFragmentChargeLabel, maxFragmentChargeTxt, "maximum fragment charge", "Maximum Fragment Charge Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, batchSizeLabel, batchSizeTxt, "batch size", "Batch Size Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, fragmentBinOffsetLabel, fragmentBinOffsetTxt, "fragment bin offset", "Fragment Bin Offset Error", true, showMessage, valid);
 
         // clear range: the low value should be lower than the high value

@@ -2103,18 +2103,26 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         // validate missed cleavages, precursor mass tolerances, fragment mass tolerances and precursor charges
-        valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorIonLbl, precursorIonAccuracyTxt, "precursor mass tolerance", "Precursor Mass Tolerance Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, fragmentIonLbl, fragmentIonAccuracyTxt, "fragment mass tolerance", "Fragment Mass Tolerance Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        boolean lowChargeValid = GuiUtilities.validatePositiveIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        if (lowChargeValid) {
+            valid = GuiUtilities.validatePositiveIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        } else {
+            valid = false;
+        }
+        boolean lowIsotopeValid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        if (lowIsotopeValid) {
+            valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        } else {
+            valid = false;
+        }
 
         // make sure that the lower charge is smaller than the upper charge
         try {
-            double chargeLowerBound = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
-            double chargeUpperBound = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
+            int chargeLowerBound = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
+            int chargeUpperBound = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
 
             if (chargeUpperBound < chargeLowerBound) {
                 if (showMessage && valid) {
@@ -2132,8 +2140,8 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         // make sure that the lower isotope is smaller than the upper isotope
         try {
-            double isotopeLowerBound = Integer.parseInt(isotopeMinTxt.getText().trim());
-            double isotopeUpperBound = Integer.parseInt(isotopeMaxTxt.getText().trim());
+            int isotopeLowerBound = Integer.parseInt(isotopeMinTxt.getText().trim());
+            int isotopeUpperBound = Integer.parseInt(isotopeMaxTxt.getText().trim());
 
             if (isotopeUpperBound < isotopeLowerBound) {
                 if (showMessage && valid) {

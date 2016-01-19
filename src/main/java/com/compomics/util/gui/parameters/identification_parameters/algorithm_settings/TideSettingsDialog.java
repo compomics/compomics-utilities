@@ -1262,26 +1262,26 @@ public class TideSettingsDialog extends javax.swing.JDialog implements Algorithm
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, minPrecursorMassTxt, "minimum precursor mass", "Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, maxPrecursorMassTxt, "maximum precursor mass", "Precursor Mass Error", true, showMessage, valid);
 
         if (!maxPtmsTxt.getText().trim().isEmpty()) {
-            valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
+            valid = GuiUtilities.validatePositiveIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
         }
 
-        valid = GuiUtilities.validateIntegerInput(this, maxVariablePtmsPerTypeLabel, maxVariablePtmsPerTypeTxt, "maximum number of variable PTMs per type", "Variable PTMs Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, decoySeedLabel, decoySeedTxt, "decoy seed", "Decoy Seed Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, maxVariablePtmsPerTypeLabel, maxVariablePtmsPerTypeTxt, "maximum number of variable PTMs per type", "Variable PTMs Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, decoySeedLabel, decoySeedTxt, "decoy seed", "Decoy Seed Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, spectrumMzLabel, minSpectrumMzTxt, "minimum spectrum mz", "Spectrum Mz Error", true, showMessage, valid);
         if (!maxSpectrumMzTxt.getText().trim().isEmpty()) {
             valid = GuiUtilities.validateDoubleInput(this, spectrumMzLabel, maxSpectrumMzTxt, "maximum spectrum mz", "Spectrum Mz Error", true, showMessage, valid);
         }
-        valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimum number of peaks", "Spectrum Peaks Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimum number of peaks", "Spectrum Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, removePrecursorPeakLabel, removePrecursorPeakToleranceTxt, "remove precursor peak tolerance", "Precursor Peak Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, mzBinWidthLabel, mzBinWidthTxt, "mz bin width", "Mz Bin Width Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, mzBinOffsetLabel, mzBinOffsetTxt, "mz bin offset", "Mz Bin Offset Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
+        valid = GuiUtilities.validatePositiveIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
 
         // peptide length: the low value should be lower than the high value
         try {

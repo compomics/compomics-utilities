@@ -100,16 +100,42 @@ public class GuiUtilities {
             label.setToolTipText("Please select an integer");
         }
 
-        // and it should be zero or more
-        if (positiveValue && tempValue < 0) {
-            if (showMessage && valid) {
-                JOptionPane.showMessageDialog(parentComponent, "You need to specify a positive integer for " + valueDescription + ".",
-                        errorTitle, JOptionPane.WARNING_MESSAGE);
-                textField.requestFocus();
+        return valid;
+    }
+
+    /**
+     * Validate integer input.
+     *
+     * @param parentComponent the parent component
+     * @param label the label of the input
+     * @param textField the text field containing the input
+     * @param valueDescription the description of the input
+     * @param errorTitle the error title
+     * @param positiveValue if true, only positive values will pass the filter
+     * @param showMessage if true, a message will be shown if the validation
+     * fails
+     * @param valid the status of previous validations
+     * @return true of the field is validated, false if not (or if valid is
+     * false)
+     */
+    public static boolean validatePositiveIntegerInput(Component parentComponent, JLabel label, JTextField textField,
+            String valueDescription, String errorTitle, boolean positiveValue, boolean showMessage, boolean valid) {
+
+        valid = validatePositiveIntegerInput(parentComponent, label, textField, valueDescription, errorTitle, positiveValue, showMessage, valid);
+
+        if (valid) {
+            int tempValue = Integer.parseInt(textField.getText().trim());
+            // and it should be zero or more
+            if (positiveValue && tempValue < 0) {
+                if (showMessage && valid) {
+                    JOptionPane.showMessageDialog(parentComponent, "You need to specify a positive integer for " + valueDescription + ".",
+                            errorTitle, JOptionPane.WARNING_MESSAGE);
+                    textField.requestFocus();
+                }
+                valid = false;
+                label.setForeground(Color.RED);
+                label.setToolTipText("Please select a positive integer");
             }
-            valid = false;
-            label.setForeground(Color.RED);
-            label.setToolTipText("Please select a positive integer");
         }
 
         return valid;

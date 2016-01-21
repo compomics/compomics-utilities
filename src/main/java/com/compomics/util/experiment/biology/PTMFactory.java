@@ -2255,7 +2255,7 @@ public class PTMFactory implements Serializable {
         ptm = new PTM(PTM.MODAA, ptmName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:34", "Methyl", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
+        ptmMap.put(ptmName, ptm); // @TODO: add on c-term?
 
         // Methylation of D
         atomChainAdded = new AtomChain(true);

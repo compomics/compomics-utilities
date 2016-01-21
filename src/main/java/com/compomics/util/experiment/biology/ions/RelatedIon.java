@@ -21,90 +21,94 @@ public class RelatedIon extends Ion {
      */
     static final long serialVersionUID = -4605345486425465764L;
     /**
+     * Subtype counter.
+     */
+    private static int subTypeCounter = 0;
+    /**
      * Map of the implemented related ions.
      */
     private static HashMap<Character, ArrayList<RelatedIon>> implementedIons = new HashMap<Character, ArrayList<RelatedIon>>();
     /**
      * Related ion for R. Cyanamid and ammonia loss from immonium ion (C4H7N).
      */
-    public final static RelatedIon RELATED_R_1 = new RelatedIon(AminoAcid.R, new AtomChain("C4H7N"), 0);
+    public final static RelatedIon RELATED_R_1 = new RelatedIon(AminoAcid.R, new AtomChain("C4H7N"), subTypeCounter++);
     /**
      * Related ion for R. Cyanamid loss from immonium ion (C4H10N2).
      */
-    public final static RelatedIon RELATED_R_2 = new RelatedIon(AminoAcid.R, new AtomChain("C4H10N2"), 1);
+    public final static RelatedIon RELATED_R_2 = new RelatedIon(AminoAcid.R, new AtomChain("C4H10N2"), subTypeCounter++);
     /**
      * Related ion for R. Ammonia loss from immonium ion (C5H9N3).
      */
-    public final static RelatedIon RELATED_R_3 = new RelatedIon(AminoAcid.R, new AtomChain("C5H9N3"), 2);
+    public final static RelatedIon RELATED_R_3 = new RelatedIon(AminoAcid.R, new AtomChain("C5H9N3"), subTypeCounter++);
     /**
      * Related ion for R (C5H10N2O).
      */
-    public final static RelatedIon RELATED_R_4 = new RelatedIon(AminoAcid.R, new AtomChain("C5H10N2O"), 3);
+    public final static RelatedIon RELATED_R_4 = new RelatedIon(AminoAcid.R, new AtomChain("C5H10N2O"), subTypeCounter++);
     /**
      * Related ion for N. Ammonia loss from immonium ion (C3H3NO).
      */
-    public final static RelatedIon RELATED_N_1 = new RelatedIon(AminoAcid.N, new AtomChain("C3H3NO"), 4);
+    public final static RelatedIon RELATED_N_1 = new RelatedIon(AminoAcid.N, new AtomChain("C3H3NO"), subTypeCounter++);
     /**
      * Related ion for D. water loss from immonium ion (C3H3NO).
      */
-    public final static RelatedIon RELATED_D_1 = new RelatedIon(AminoAcid.D, new AtomChain("C3H3NO"), 5);
+    public final static RelatedIon RELATED_D_1 = new RelatedIon(AminoAcid.D, new AtomChain("C3H3NO"), subTypeCounter++);
     /**
      * Related ion for C. Carbamidomethylated immonium ion (C4H8N2SO).
      */
-    public final static RelatedIon RELATED_C_1 = new RelatedIon(AminoAcid.C, new AtomChain("C4H8N2SO"), 6);
+    public final static RelatedIon RELATED_C_1 = new RelatedIon(AminoAcid.C, new AtomChain("C4H8N2SO"), subTypeCounter++);
     /**
      * Related ion for C. Carbamidomethylated and ammonia loss from immonium ion
      * (C4H5NSO).
      */
-    public final static RelatedIon RELATED_C_2 = new RelatedIon(AminoAcid.C, new AtomChain("C4H5NSO"), 7);
+    public final static RelatedIon RELATED_C_2 = new RelatedIon(AminoAcid.C, new AtomChain("C4H5NSO"), subTypeCounter++);
     /**
      * Related ion for E. Water loss from immonium ion (C4H5NO).
      */
-    public final static RelatedIon RELATED_E_1 = new RelatedIon(AminoAcid.E, new AtomChain("C4H5NO"), 8);
+    public final static RelatedIon RELATED_E_1 = new RelatedIon(AminoAcid.E, new AtomChain("C4H5NO"), subTypeCounter++);
     /**
      * Related ion for Q. Ammonia loss from immonium ion (C4H5NO).
      */
-    public final static RelatedIon RELATED_Q_1 = new RelatedIon(AminoAcid.Q, new AtomChain("C4H5NO"), 9);
+    public final static RelatedIon RELATED_Q_1 = new RelatedIon(AminoAcid.Q, new AtomChain("C4H5NO"), subTypeCounter++);
     /**
      * Related ion for Q. Internal b-ion (C5H8N2O2).
      */
-    public final static RelatedIon RELATED_Q_2 = new RelatedIon(AminoAcid.Q, new AtomChain("C5H8N2O2"), 10);
+    public final static RelatedIon RELATED_Q_2 = new RelatedIon(AminoAcid.Q, new AtomChain("C5H8N2O2"), subTypeCounter++);
     /**
      * Related ion for H (C4H5N2).
      */
-    public final static RelatedIon RELATED_H_1 = new RelatedIon(AminoAcid.H, new AtomChain("C4H5N2"), 11);
+    public final static RelatedIon RELATED_H_1 = new RelatedIon(AminoAcid.H, new AtomChain("C4H5N2"), subTypeCounter++);
     /**
      * Related ion for H. Internal b-ion (C6H7N3O).
      */
-    public final static RelatedIon RELATED_H_2 = new RelatedIon(AminoAcid.H, new AtomChain("C6H7N3O"), 12);
+    public final static RelatedIon RELATED_H_2 = new RelatedIon(AminoAcid.H, new AtomChain("C6H7N3O"), subTypeCounter++);
     /**
      * Related ion for K. Ammonia loss from immonium ion (C5H9N).
      */
-    public final static RelatedIon RELATED_K_1 = new RelatedIon(AminoAcid.K, new AtomChain("C5H9N"), 13);
+    public final static RelatedIon RELATED_K_1 = new RelatedIon(AminoAcid.K, new AtomChain("C5H9N"), subTypeCounter++);
     /**
      * Related ion for K. Ammonia loss from internal b-ion (C6H9NO).
      */
-    public final static RelatedIon RELATED_K_2 = new RelatedIon(AminoAcid.K, new AtomChain("C6H9NO"), 14);
+    public final static RelatedIon RELATED_K_2 = new RelatedIon(AminoAcid.K, new AtomChain("C6H9NO"), subTypeCounter++);
     /**
      * Related ion for K. Internal b-ion (C6H12N2O).
      */
-    public final static RelatedIon RELATED_K_3 = new RelatedIon(AminoAcid.K, new AtomChain("C6H12N2O"), 15);
+    public final static RelatedIon RELATED_K_3 = new RelatedIon(AminoAcid.K, new AtomChain("C6H12N2O"), subTypeCounter++);
     /**
      * Related ion for M (C2H4S).
      */
-    public final static RelatedIon RELATED_M_1 = new RelatedIon(AminoAcid.M, new AtomChain("C2H4S"), 16);
+    public final static RelatedIon RELATED_M_1 = new RelatedIon(AminoAcid.M, new AtomChain("C2H4S"), subTypeCounter++);
     /**
      * Related ion for F. Tropylium ion (C7H6).
      */
-    public final static RelatedIon RELATED_F_1 = new RelatedIon(AminoAcid.F, new AtomChain("C7H6"), 17);
+    public final static RelatedIon RELATED_F_1 = new RelatedIon(AminoAcid.F, new AtomChain("C7H6"), subTypeCounter++);
     /**
      * Related ion for W (C9H7N).
      */
-    public final static RelatedIon RELATED_W_1 = new RelatedIon(AminoAcid.W, new AtomChain("C9H7N"), 18);
+    public final static RelatedIon RELATED_W_1 = new RelatedIon(AminoAcid.W, new AtomChain("C9H7N"), subTypeCounter++);
     /**
      * Related ion for Y (C7H7O).
      */
-    public final static RelatedIon RELATED_Y_1 = new RelatedIon(AminoAcid.Y, new AtomChain("C7H7O"), 19);
+    public final static RelatedIon RELATED_Y_1 = new RelatedIon(AminoAcid.Y, new AtomChain("C7H7O"), subTypeCounter);
     /**
      * The amino acid target.
      */
@@ -202,7 +206,7 @@ public class RelatedIon extends Ion {
      */
     public static ArrayList<Integer> getPossibleSubtypes() {
         ArrayList<Integer> possibleTypes = new ArrayList<Integer>();
-        for (int i = 0; i < implementedIons.size(); i++) {
+        for (int i = 0; i < subTypeCounter; i++) {
             possibleTypes.add(i);
         }
         return possibleTypes;

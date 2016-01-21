@@ -4,8 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.Atom;
-import com.compomics.util.experiment.biology.PTM;
-import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -66,13 +64,23 @@ public class PepxmlIdfileReader implements IdfileReader {
      */
     private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
-     * The fixed modifications.
+     * Stores the mass differences of the fixed modifications. The key is the
+     * amino acid residue as a single upper case character and the element is
+     * the list of the mass differences of the masses targeting that residue.
      */
-    private ArrayList<String> fixedModifications;
+    private HashMap<Character, ArrayList<Double>> fixedModificationsMassDiffs;
     /**
-     * The PTM factory.
+     * Stores the masses of the fixed modifications.
      */
-    private PTMFactory ptmFactory = PTMFactory.getInstance();
+    private ArrayList<Double> fixedModificationMasses;
+    /**
+     * Stores the masses of the fixed n-terminal modifications.
+     */
+    private ArrayList<Double> fixedNTerminalModifications = new ArrayList<Double>();
+    /**
+     * Stores the masses of the fixed c-terminal modifications.
+     */
+    private ArrayList<Double> fixedCTerminalModifications = new ArrayList<Double>();
 
     /**
      * Blank constructor for instantiation purposes.
@@ -300,28 +308,9 @@ public class PepxmlIdfileReader implements IdfileReader {
         String tagName = parser.getName();
         if (tagName.equals("modification_info")) {
 
-            // the peptide is modified, take the variable modifications sites from the modified sequence and the mass from the modified amino acid masses
-            ArrayList<Integer> variableModificationSites = new ArrayList<Integer>();
-
             for (int i = 0; i < parser.getAttributeCount(); i++) {
                 String attributeName = parser.getAttributeName(i);
-                if (attributeName.equals("modified_peptide")) {
-                    String modifiedSequence = parser.getAttributeValue(i).trim();
-                    int aa = 0;
-                    boolean modification = false;
-                    for (char character : modifiedSequence.toCharArray()) {
-                        if (character == '[') {
-                            variableModificationSites.add(aa);
-                            modification = true;
-                        } else if (character == ']') {
-                            modification = false;
-                        }
-                        if (!modification && character != ']') {
-                            aa++;
-                        }
-                    }
-                } else if (attributeName.equals("mod_nterm_mass")
-                        || attributeName.equals("mod_cterm_mass")) {
+                if (attributeName.equals("mod_nterm_mass") || attributeName.equals("mod_cterm_mass")) {
 
                     String value = parser.getAttributeValue(i).trim();
                     Double terminalMass = null;
@@ -329,6 +318,14 @@ public class PepxmlIdfileReader implements IdfileReader {
                         terminalMass = new Double(value);
                     } catch (Exception e) {
                         throw new IllegalArgumentException("An error occurred while parsing modification terminal mass " + value + ". Number expected.");
+                    }
+
+                    // check if the terminal modification is fixed or variable
+                    boolean variableModification;
+                    if (attributeName.equals("mod_nterm_mass")) {
+                        variableModification = !fixedNTerminalModifications.contains(terminalMass);
+                    } else {
+                        variableModification = !fixedCTerminalModifications.contains(terminalMass);
                     }
 
                     int site;
@@ -349,7 +346,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     char aa = sequence.charAt(site - 1);
                     terminalMass = Util.roundDouble(terminalMass, 2);
                     String tempModificationName = terminalMass + "@" + aa;
-                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
+                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, variableModification, site);
                     modificationMatches.add(modificationMatch);
                 }
             }
@@ -370,7 +367,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 }
                             }
                         }
-                        if (site != null && variableModificationSites.contains(site)) {
+                        if (site != null) {
                             Double modifiedAaMass = null;
                             for (int i = 0; i < parser.getAttributeCount(); i++) {
                                 String attributeName = parser.getAttributeName(i);
@@ -398,19 +395,26 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 //  </modification_info>
                                 //
                                 double fixedModificationMass = 0;
-                                for (String ptm : fixedModifications) {
-                                    PTM tempPtm = ptmFactory.getPTM(ptm);
-                                    ArrayList<Character> target = tempPtm.getPattern().getAminoAcidsAtTarget();
-                                    if (target != null && target.contains(aa)) {
-                                        fixedModificationMass += tempPtm.getMass();
+                                boolean variableModification;
+
+                                if (fixedModificationMasses.contains(modifiedAaMass)) {
+                                    variableModification = false;
+                                } else {
+                                    if (fixedModificationsMassDiffs.get(aa) != null) {
+                                        for (Double tempMassDiff : fixedModificationsMassDiffs.get(aa)) {
+                                            fixedModificationMass += tempMassDiff;
+                                        }
                                     }
+                                    variableModification = true;
                                 }
 
-                                double modificationMass = modifiedAaMass - fixedModificationMass - aminoAcid.getMonoisotopicMass();
-                                modificationMass = Util.roundDouble(modificationMass, 2);
-                                String tempModificationName = modificationMass + "@" + aa;
-                                ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
-                                modificationMatches.add(modificationMatch);
+                                if (variableModification) {
+                                    double modificationMass = modifiedAaMass - fixedModificationMass - aminoAcid.getMonoisotopicMass();
+                                    modificationMass = Util.roundDouble(modificationMass, 2);
+                                    String tempModificationName = modificationMass + "@" + aa;
+                                    ModificationMatch modificationMatch = new ModificationMatch(tempModificationName, true, site);
+                                    modificationMatches.add(modificationMatch);
+                                }
                             }
                         }
                     } else if (type == XmlPullParser.END_TAG && parser.getName().equals("modification_info")) {
@@ -556,6 +560,107 @@ public class PepxmlIdfileReader implements IdfileReader {
                 searchEngineVersion = parser.getAttributeValue(i);
             }
         }
+
+        
+
+        // extract the required information about the modifications
+        fixedModificationsMassDiffs = new HashMap<Character, ArrayList<Double>>();
+        fixedModificationMasses = new ArrayList<Double>();
+        fixedNTerminalModifications = new ArrayList<Double>();
+        fixedCTerminalModifications = new ArrayList<Double>();
+        
+        int type;
+
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {
+
+            if (type == XmlPullParser.END_TAG && parser.getName() != null) {
+                if (parser.getName().equals("search_summary")) {
+                    break;
+                }
+            }
+
+            if (type == XmlPullParser.START_TAG) {
+
+                String tagName = parser.getName();
+
+                if (type == XmlPullParser.START_TAG && tagName.equals("aminoacid_modification")) {
+
+                    Character aminoacid = null;
+                    Boolean variable = null;
+                    Double massDiff = null;
+                    Double mass = null;
+
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        String name = parser.getAttributeName(i);
+                        if (name.equals("aminoacid")) {
+                            aminoacid = parser.getAttributeValue(i).charAt(0);
+                        } else if (name.equals("massdiff")) {
+                            massDiff = new Double(parser.getAttributeValue(i));
+                        } else if (name.equals("mass")) {
+                            mass = new Double(parser.getAttributeValue(i));
+                        } else if (name.equals("variable")) {
+                            String variableAsString = parser.getAttributeValue(i);
+                            if (variableAsString.equalsIgnoreCase("Y")) {
+                                variable = true;
+                            } else if (variableAsString.equalsIgnoreCase("N")) {
+                                variable = false;
+                            }
+                        }
+                    }
+
+                    if (variable != null && massDiff != null && mass != null && aminoacid != null) {
+                        if (!variable) {
+                            ArrayList<Double> massDiffs = fixedModificationsMassDiffs.get(aminoacid);
+                            if (massDiffs == null) {
+                                massDiffs = new ArrayList<Double>();
+                            }
+                            massDiffs.add(massDiff);
+                            fixedModificationsMassDiffs.put(aminoacid, massDiffs);
+                            fixedModificationMasses.add(mass);
+                        }
+                    } else {
+                        throw new IllegalArgumentException("An error occurred while parsing aminoacid_modification element. Missing values.");
+                    }
+
+                } else if (type == XmlPullParser.START_TAG && tagName.equals("terminal_modification")) {
+
+                    Boolean variable = null;
+                    Double mass = null;
+                    String terminus = null;
+
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        String name = parser.getAttributeName(i);
+                        if (name.equals("terminus")) {
+                            String terminusAsString = parser.getAttributeValue(i);
+                            if (terminusAsString.equalsIgnoreCase("N") || terminusAsString.equalsIgnoreCase("C")) {
+                                terminus = terminusAsString;
+                            }
+                        } else if (name.equals("mass")) {
+                            mass = new Double(parser.getAttributeValue(i));
+                        } else if (name.equals("variable")) {
+                            String variableAsString = parser.getAttributeValue(i);
+                            if (variableAsString.equalsIgnoreCase("Y")) {
+                                variable = true;
+                            } else if (variableAsString.equalsIgnoreCase("N")) {
+                                variable = false;
+                            }
+                        }
+                    }
+
+                    if (variable != null && mass != null && terminus != null) {
+                        if (!variable) {
+                            if (terminus.equalsIgnoreCase("N")) {
+                                fixedNTerminalModifications.add(mass);
+                            } else {
+                                fixedCTerminalModifications.add(mass);
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException("An error occurred while parsing terminal_modification element. Missing values.");
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -587,7 +692,6 @@ public class PepxmlIdfileReader implements IdfileReader {
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
             SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
-        this.fixedModifications = searchParameters.getPtmSettings().getFixedModifications();
         if (spectrumMatches == null) {
             parseFile(waitingHandler, expandAaCombinations, true);
         }

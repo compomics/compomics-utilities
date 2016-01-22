@@ -571,7 +571,8 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
         } else if (enzymeName.equalsIgnoreCase("Lys-C")) {
             myriMatchEnzymeAsString = "Lys-C/P";
         } else if (enzymeName.equalsIgnoreCase("Glu-C (DE)")
-                || enzymeName.equalsIgnoreCase("Glu-C") // again not structly, but really the same enzyme...
+                || enzymeName.equalsIgnoreCase("Semi-Glu-C (DE)")
+                || enzymeName.equalsIgnoreCase("Glu-C") // again not strictly, but really the same enzyme...
                 || enzymeName.equalsIgnoreCase("Semi-Glu-C")) {
             myriMatchEnzymeAsString = "glutamyl endopeptidase";
         } else if (enzymeName.equalsIgnoreCase("Arg-C")) {

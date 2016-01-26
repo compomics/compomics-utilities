@@ -175,7 +175,7 @@ public class NeutralLoss extends ExperimentObject {
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
         if (anotherNeutralLoss.getComposition() == null || getComposition() == null) { // Backward compatibility
             return anotherNeutralLoss.name.equals(name)
-                    && Math.abs(anotherNeutralLoss.mass - mass) < 0.001;
+                    && anotherNeutralLoss.mass.equals(mass);
         }
         return anotherNeutralLoss.name.equals(name)
                 && anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());

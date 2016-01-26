@@ -64,6 +64,14 @@ public class PeptideAssumptionFilter implements Serializable {
      * limit.
      */
     private Integer maxMissedCleavages;
+    /**
+     * The minimum number of isotopes allowed. Null means no lower limit.
+     */
+    private Integer minIsotopes;
+    /**
+     * The maximum number of isotopes allowed. Null means no upper limit.
+     */
+    private Integer maxIsotopes;
 
     /**
      * Constructor with default settings.
@@ -76,6 +84,8 @@ public class PeptideAssumptionFilter implements Serializable {
         unknownPtm = true;
         minMissedCleavages = null;
         maxMissedCleavages = null;
+        minIsotopes = null;
+        maxIsotopes = null;
     }
 
     /**
@@ -91,10 +101,15 @@ public class PeptideAssumptionFilter implements Serializable {
      * (true: ppm, false: Da)
      * @param unknownPTM shall peptides presenting unknownPTMs be ignored
      * @param minMissedCleavages the minimum number of missed cleavages allowed
-     * @param maxMissedCleavages the maximum number of missed cleavages allowed,
-     * null means no upper limit.
+     * (null for disabled)
+     * @param maxMissedCleavages the maximum number of missed cleavages allowed
+     * (null for disabled)
+     * @param minIsotopes the minimum number of isotopes allowed (null for
+     * disabled)
+     * @param maxIsotopes the maximum number of isotopes allowed (null for
+     * disabled)
      */
-    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM, Integer minMissedCleavages, Integer maxMissedCleavages) {
+    public PeptideAssumptionFilter(int minPepLength, int maxPepLength, double maxMzDeviation, boolean isPpm, boolean unknownPTM, Integer minMissedCleavages, Integer maxMissedCleavages, Integer minIsotopes, Integer maxIsotopes) {
         this.minPepLength = minPepLength;
         this.maxPepLength = maxPepLength;
         this.maxMassDeviation = maxMzDeviation;
@@ -102,6 +117,8 @@ public class PeptideAssumptionFilter implements Serializable {
         this.unknownPtm = unknownPTM;
         this.minMissedCleavages = minMissedCleavages;
         this.maxMissedCleavages = maxMissedCleavages;
+        this.minIsotopes = minIsotopes;
+        this.maxIsotopes = maxIsotopes;
     }
 
     /**
@@ -112,6 +129,8 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     public void setFilterFromSearchParameters(SearchParameters searchParameters) {
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
+        this.minIsotopes = searchParameters.getMinIsotopicCorrection();
+        this.maxIsotopes = searchParameters.getMaxIsotopicCorrection();
         this.unknownPtm = true;
     }
 
@@ -293,7 +312,15 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) throws IOException, MzMLUnmarshallerException {
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
-        return (maxMassDeviation <= 0 || Math.abs(assumption.getDeltaMass(precursorMz, isPpm, searchParameters.getMinIsotopicCorrection(), searchParameters.getMinIsotopicCorrection())) <= maxMassDeviation);
+        int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
+        if (minIsotopes != null && isotopeNumber < minIsotopes) {
+            return false;
+        }
+        if (maxIsotopes != null && isotopeNumber > maxIsotopes) {
+            return false;
+        }
+        Double mzDeviation = assumption.getDeltaMass(precursorMz, isPpm, searchParameters.getMinIsotopicCorrection(), searchParameters.getMinIsotopicCorrection());
+        return (maxMassDeviation <= 0 || Math.abs(mzDeviation) <= maxMassDeviation);
     }
 
     /**
@@ -389,15 +416,51 @@ public class PeptideAssumptionFilter implements Serializable {
     }
 
     /**
+     * Returns the minimal number of isotopes allowed (inclusive).
+     *
+     * @return the minimal number of isotopes allowed
+     */
+    public Integer getMinIsotopes() {
+        return minIsotopes;
+    }
+
+    /**
+     * Sets the minimal number of isotopes allowed (inclusive).
+     *
+     * @param minIsotopes the minimal number of isotopes allowed
+     */
+    public void setMinIsotopes(Integer minIsotopes) {
+        this.minIsotopes = minIsotopes;
+    }
+
+    /**
+     * Returns the maximal number of isotopes allowed (inclusive).
+     *
+     * @return the maximal number of isotopes allowed
+     */
+    public Integer getMaxIsotopes() {
+        return maxIsotopes;
+    }
+
+    /**
+     * Sets the maximal number of isotopes allowed (inclusive).
+     *
+     * @param maxIsotopes the maximal number of isotopes allowed
+     */
+    public void setMaxIsotopes(Integer maxIsotopes) {
+        this.maxIsotopes = maxIsotopes;
+    }
+
+    /**
      * Indicates whether this filter is the same as another one.
      *
      * @param anotherFilter another filter
      * @return a boolean indicating that the filters have the same parameters
      */
     public boolean isSameAs(PeptideAssumptionFilter anotherFilter) {
-        
+
         if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() != null) {
-            if (minMissedCleavages.intValue() != anotherFilter.getMinMissedCleavages()) {
+            if (!minMissedCleavages.equals(anotherFilter.getMinMissedCleavages())) {
                 return false;
             }
         }
@@ -408,7 +471,7 @@ public class PeptideAssumptionFilter implements Serializable {
             return false;
         }
         if (maxMissedCleavages != null && anotherFilter.getMaxMissedCleavages() != null) {
-            if (maxMissedCleavages.intValue() != anotherFilter.getMaxMissedCleavages()) {
+            if (maxMissedCleavages.equals(anotherFilter.getMaxMissedCleavages())) {
                 return false;
             }
         }
@@ -418,7 +481,30 @@ public class PeptideAssumptionFilter implements Serializable {
         if (maxMissedCleavages == null && anotherFilter.getMaxMissedCleavages() != null) {
             return false;
         }
-        
+
+        if (minIsotopes != null && anotherFilter.getMinIsotopes() != null) {
+            if (!minIsotopes.equals(anotherFilter.getMinIsotopes())) {
+                return false;
+            }
+        }
+        if (minIsotopes != null && anotherFilter.getMinIsotopes() == null) {
+            return false;
+        }
+        if (minIsotopes == null && anotherFilter.getMinIsotopes() != null) {
+            return false;
+        }
+        if (maxIsotopes != null && anotherFilter.getMaxIsotopes() != null) {
+            if (maxIsotopes.equals(anotherFilter.getMaxIsotopes())) {
+                return false;
+            }
+        }
+        if (maxIsotopes != null && anotherFilter.getMaxIsotopes() == null) {
+            return false;
+        }
+        if (maxIsotopes == null && anotherFilter.getMaxIsotopes() != null) {
+            return false;
+        }
+
         return isPpm == anotherFilter.isPpm
                 && unknownPtm == anotherFilter.removeUnknownPTMs()
                 && minPepLength == anotherFilter.getMinPepLength()
@@ -438,28 +524,55 @@ public class PeptideAssumptionFilter implements Serializable {
         StringBuilder output = new StringBuilder();
 
         output.append("Peptide Length: ").append(minPepLength).append("-").append(maxPepLength).append(".").append(newLine);
-        output.append("Max Mass Deviation: ").append(maxMassDeviation).append(".").append(newLine);
-        output.append("PPM Mass Deviation: ").append(isPpm).append(".").append(newLine);
+        if (maxMassDeviation >= 0) {
+            output.append("Precursor m/z Deviation: ").append(maxMassDeviation);
+            if (isPpm) {
+                output.append(" ppm.").append(newLine);
+            } else {
+                output.append(" Da.").append(newLine);
+            }
+        }
         output.append("Ignore Unknown PTMs: ").append(unknownPtm).append(".").append(newLine);
-        
+
         if (minMissedCleavages != null || maxMissedCleavages != null) {
-            
+
             output.append("Missed Cleavages: ");
-            
+
             if (minMissedCleavages != null) {
                 output.append(minMissedCleavages);
             } else {
                 output.append("0");
             }
-            
+
             output.append("-");
-            
+
             if (maxMissedCleavages != null) {
                 output.append(maxMissedCleavages);
-            }  else {
+            } else {
                 output.append("n");
             }
-            
+
+            output.append(".").append(newLine);
+        }
+
+        if (minIsotopes != null || maxIsotopes != null) {
+
+            output.append("Isotopes: ");
+
+            if (minIsotopes != null) {
+                output.append(minIsotopes);
+            } else {
+                output.append("n");
+            }
+
+            output.append("-");
+
+            if (maxIsotopes != null) {
+                output.append(maxIsotopes);
+            } else {
+                output.append("n");
+            }
+
             output.append(".").append(newLine);
         }
 

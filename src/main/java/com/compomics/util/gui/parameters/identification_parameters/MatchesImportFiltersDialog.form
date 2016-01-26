@@ -35,7 +35,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="backgroundPanel" max="32767" attributes="0"/>
+          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -72,15 +72,15 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="filterPanel" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="filterPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="helpJButton" alignment="2" min="-2" pref="23" max="-2" attributes="1"/>
                       <Component id="okButton" alignment="2" min="-2" max="-2" attributes="1"/>
                       <Component id="cancelButton" alignment="2" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,12 +107,18 @@
                                   <Component id="peptideLengthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorAccuracyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="missedCleavagesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="isotopesLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
+                                      <Component id="minIsotopesTxt" max="32767" attributes="2"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="isotopesRangeLabel" min="-2" pref="10" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="precDevTxt" pref="93" max="32767" attributes="2"/>
+                                          <Component id="precDevTxt" pref="83" max="32767" attributes="2"/>
                                           <Component id="nAAminTxt" max="32767" attributes="2"/>
                                       </Group>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -126,9 +132,10 @@
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="maxIsotopesTxt" max="32767" attributes="2"/>
                                   <Component id="maxMissedCleavagesTxt" max="32767" attributes="2"/>
                                   <Component id="nAAmaxTxt" max="32767" attributes="2"/>
-                                  <Component id="unitCmb" pref="93" max="32767" attributes="2"/>
+                                  <Component id="unitCmb" pref="82" max="32767" attributes="2"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -143,7 +150,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="nAAmaxTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="nAAminTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -166,8 +173,14 @@
                           <Component id="missedCleavagesRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxIsotopesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="minIsotopesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="isotopesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="isotopesRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="ptmsCheck" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -211,7 +224,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="precursorAccuracyLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Precursor Accuracy"/>
+                <Property name="text" type="java.lang.String" value="Precursor m/z Deviation"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="ptmsCheck">
@@ -243,6 +256,27 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="maxMissedCleavagesTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="isotopesLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Isotopes"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minIsotopesTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="isotopesRangeLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxIsotopesTxt">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>

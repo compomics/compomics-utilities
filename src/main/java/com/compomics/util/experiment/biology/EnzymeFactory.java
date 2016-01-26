@@ -415,7 +415,8 @@ public class EnzymeFactory {
         }
 
         // @TODO: add more cv terms!!
-        // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), Lys-N (K), "Thermolysin, no P rule", Trypsin + Glu-C, Semi-LysargiNase, LysargiNase
+        // Trypsin + CNBr, Glu-C (+ Semi-Glu-C), Asp-N + Glu-C, "Chymotrypsin, no P rule (FYWL)", Asp-N (DE), Glu-C (DE), 
+        // Lys-N (K), "Thermolysin, no P rule", Trypsin + Glu-C, Semi-LysargiNase, LysargiNase,  Semi-GluC-(DE)
         // supply a *child* term of MS:1001045
         return cvTerm;
     }

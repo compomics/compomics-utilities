@@ -17,7 +17,11 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     /**
      * Maximal e-value cut-off.
      */
-    private Double maxEValue = 100.0;
+    private Double maxEValue = 0.01;
+    /**
+     * The output results filter: all, valid or stochastic.
+     */
+    private String outputResults = "all";
     /**
      * The dynamic range for spectrum filtering. When the highest peak is given
      * the dynamic range value peaks smaller than one are ignored. e.g. for 100
@@ -112,7 +116,8 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      */
     private Boolean stpBias = false;
     /**
-     * Triggers the noise suppression function.
+     * Triggers the noise suppression function. Note: ignored in X!Tandem
+     * VENGEANCE (2015.12.15) and newer.
      */
     private Boolean useNoiseSuppression = false;
 
@@ -532,7 +537,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Indicates whether noise suppression should be used when importing
-     * spectra.
+     * spectra. Note: ignored in X!Tandem VENGEANCE (2015.12.15) and newer
      *
      * @return true if noise suppression should be used when importing spectra
      */
@@ -542,6 +547,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Sets whether noise suppression should be used when importing spectra.
+     * Note: ignored in X!Tandem VENGEANCE (2015.12.15) and newer
      *
      * @param useNoiseSuppression true if noise suppression should be used when
      * importing spectra
@@ -568,6 +574,27 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     public void setRefineSnaps(Boolean refineSnaps) {
         this.refineSnaps = refineSnaps;
     }
+    
+    /**
+     * Returns the output results filter.
+     * 
+     * @return the outputResults
+     */
+    public String getOutputResults() {
+        if (outputResults == null) {
+            outputResults = "all";
+        }
+        return outputResults;
+    }
+
+    /**
+     * Set the output results filter.
+     * 
+     * @param outputResults the outputResults to set
+     */
+    public void setOutputResults(String outputResults) {
+        this.outputResults = outputResults;
+    }
 
     @Override
     public Advocate getAlgorithm() {
@@ -576,7 +603,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     @Override
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
-        
+
         if (identificationAlgorithmParameter instanceof XtandemParameters) {
             XtandemParameters xtandemParameters = (XtandemParameters) identificationAlgorithmParameter;
             double diff = Math.abs(maxEValue - xtandemParameters.getMaxEValue());
@@ -651,6 +678,9 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!isUseNoiseSuppression().equals(xtandemParameters.isUseNoiseSuppression())) {
+                return false;
+            }
+            if (!getOutputResults().equalsIgnoreCase(xtandemParameters.getOutputResults())) {
                 return false;
             }
             return true;
@@ -794,6 +824,10 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
         output.append("SKYLINE_PATH=");
         output.append(skylinePath);
+        output.append(newLine);
+        
+        output.append("OUTPUT_RESULTS=");
+        output.append(getOutputResults());
         output.append(newLine);
 
         output.append("OUTPUT_PROTEINS=");

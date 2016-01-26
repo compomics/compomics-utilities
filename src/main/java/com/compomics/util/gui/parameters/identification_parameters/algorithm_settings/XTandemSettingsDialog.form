@@ -468,34 +468,26 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="eValueLbl" min="-2" pref="265" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="eValueTxt" max="32767" attributes="2"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="skylinePathValueLbl" min="-2" pref="265" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="skylineTxt" max="32767" attributes="2"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="outputSequencesLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                                      <Component id="outputProteinsLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                                      <Component id="outputSpectraLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                                      <Component id="outputHistogramsLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="outputProteinsCmb" alignment="1" pref="294" max="32767" attributes="0"/>
-                                      <Component id="outputSequencesCmb" max="32767" attributes="0"/>
-                                      <Component id="outputSpectraCmb" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="outputHistogramsCmb" alignment="0" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="eValueLbl" alignment="0" min="-2" pref="265" max="-2" attributes="1"/>
+                              <Component id="outputResultsLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                              <Component id="outputProteinsLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                              <Component id="outputSequencesLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                              <Component id="outputSpectraLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                              <Component id="skylinePathValueLbl" alignment="0" min="-2" pref="265" max="-2" attributes="1"/>
+                              <Component id="outputHistogramsLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="outputResultsCmb" alignment="0" max="32767" attributes="0"/>
+                              <Component id="eValueTxt" alignment="0" max="32767" attributes="2"/>
+                              <Component id="skylineTxt" alignment="0" max="32767" attributes="2"/>
+                              <Component id="outputProteinsCmb" alignment="1" pref="294" max="32767" attributes="0"/>
+                              <Component id="outputSequencesCmb" alignment="1" max="32767" attributes="0"/>
+                              <Component id="outputSpectraCmb" alignment="0" max="32767" attributes="0"/>
+                              <Component id="outputHistogramsCmb" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
@@ -505,6 +497,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="outputResultsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="outputResultsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="eValueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="eValueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -534,7 +531,7 @@
                               <Component id="skylinePathValueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="skylineTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="236" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -565,9 +562,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSequencesLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSequencesLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSequencesLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSequencesLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="outputSequencesCmb">
@@ -599,9 +596,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputProteinsLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputProteinsLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputProteinsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputProteinsLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="outputSpectraLabel">
@@ -610,9 +607,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSpectraLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSpectraLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSpectraLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputSpectraLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="outputSpectraCmb">
@@ -636,9 +633,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="skylinePathValueLblMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="skylinePathValueLblMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="skylinePathValueLblMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="skylinePathValueLblMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="outputHistogramsCmb">
@@ -657,9 +654,34 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputHistogramsLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputHistogramsLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputHistogramsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputHistogramsLabelMouseReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="outputResultsLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Output Results    (?)"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputResultsLabelMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputResultsLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="outputResultsLabelMouseReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="outputResultsCmb">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="3">
+                        <StringItem index="0" value="all"/>
+                        <StringItem index="1" value="valid"/>
+                        <StringItem index="2" value="stochastic"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="outputResultsCmbActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

@@ -37,10 +37,6 @@ import org.jfree.chart.plot.PlotOrientation;
 public class XTandemSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The X!Tandem parameters class containing the information to display.
-     */
-    private XtandemParameters xtandemParameters;
-    /**
      * The modification profile used for the search.
      */
     private PtmSettings modificationProfile;
@@ -83,7 +79,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      */
     public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(parent, true);
-        this.xtandemParameters = xtandemParameters;
         this.modificationProfile = new PtmSettings(modificationProfile);
         this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
@@ -107,7 +102,6 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      */
     public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(owner, true);
-        this.xtandemParameters = xtandemParameters;
         this.modificationProfile = new PtmSettings(modificationProfile);
         this.fragmentIonMassAccuracyInDa = fragmentIonMassAccuracyInDa;
         this.editable = editable;
@@ -138,6 +132,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         pointMutationsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         snapsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         spectrumSynthesisCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        outputResultsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         modificationTableToolTips = new ArrayList<String>();
         modificationTableToolTips.add(null);
@@ -313,6 +308,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             outputSequencesCmb.setEnabled(false);
             outputSequencesCmb.setSelectedIndex(1);
         }
+        outputResultsCmb.setSelectedItem(xtandemParameters.getOutputResults());
         if (xtandemParameters.isOutputSpectra()) {
             outputSpectraCmb.setSelectedIndex(0);
         } else {
@@ -387,6 +383,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         if (!input.equals("")) {
             result.setMaxEValue(new Double(input));
         }
+        result.setOutputResults((String) outputResultsCmb.getSelectedItem());
         result.setOutputProteins(outputProteinsCmb.getSelectedIndex() == 0);
         result.setOutputSequences(outputSequencesCmb.getSelectedIndex() == 0);
         result.setOutputSpectra(outputSpectraCmb.getSelectedIndex() == 0);
@@ -462,6 +459,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         skylinePathValueLbl = new javax.swing.JLabel();
         outputHistogramsCmb = new javax.swing.JComboBox();
         outputHistogramsLabel = new javax.swing.JLabel();
+        outputResultsLabel = new javax.swing.JLabel();
+        outputResultsCmb = new javax.swing.JComboBox();
         refinementSettingsPanel = new javax.swing.JPanel();
         refinementCmb = new javax.swing.JComboBox();
         refinementLabel = new javax.swing.JLabel();
@@ -828,14 +827,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         outputSequencesLabel.setText("Output Sequences    (?)");
         outputSequencesLabel.setToolTipText("Open X!Tandem parameter details");
         outputSequencesLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                outputSequencesLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 outputSequencesLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 outputSequencesLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputSequencesLabelMouseReleased(evt);
             }
         });
 
@@ -851,28 +850,28 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         outputProteinsLabel.setText("Output Proteins    (?)");
         outputProteinsLabel.setToolTipText("Open X!Tandem parameter details");
         outputProteinsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                outputProteinsLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 outputProteinsLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 outputProteinsLabelMouseExited(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputProteinsLabelMouseReleased(evt);
+            }
         });
 
         outputSpectraLabel.setText("Output Spectra    (?)");
         outputSpectraLabel.setToolTipText("Open X!Tandem parameter details");
         outputSpectraLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                outputSpectraLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 outputSpectraLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 outputSpectraLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputSpectraLabelMouseReleased(evt);
             }
         });
 
@@ -883,14 +882,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         skylinePathValueLbl.setText("Skyline Path    (?)");
         skylinePathValueLbl.setToolTipText("Open X!Tandem parameter details");
         skylinePathValueLbl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                skylinePathValueLblMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 skylinePathValueLblMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 skylinePathValueLblMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                skylinePathValueLblMouseReleased(evt);
             }
         });
 
@@ -899,14 +898,35 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         outputHistogramsLabel.setText("Output Histograms    (?)");
         outputHistogramsLabel.setToolTipText("Open X!Tandem parameter details");
         outputHistogramsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                outputHistogramsLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 outputHistogramsLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 outputHistogramsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputHistogramsLabelMouseReleased(evt);
+            }
+        });
+
+        outputResultsLabel.setText("Output Results    (?)");
+        outputResultsLabel.setToolTipText("Open X!Tandem parameter details");
+        outputResultsLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outputResultsLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outputResultsLabelMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                outputResultsLabelMouseReleased(evt);
+            }
+        });
+
+        outputResultsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "all", "valid", "stochastic" }));
+        outputResultsCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputResultsCmbActionPerformed(evt);
             }
         });
 
@@ -914,35 +934,35 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         outputSettingsPanel.setLayout(outputSettingsPanelLayout);
         outputSettingsPanelLayout.setHorizontalGroup(
             outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputSettingsPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputSettingsPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eValueTxt))
-                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(skylinePathValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(skylineTxt))
-                    .addGroup(outputSettingsPanelLayout.createSequentialGroup()
-                        .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(outputProteinsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(outputSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(outputProteinsCmb, 0, 294, Short.MAX_VALUE)
-                            .addComponent(outputSequencesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(outputSpectraCmb, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(outputHistogramsCmb, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(eValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputResultsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputProteinsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputSequencesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(skylinePathValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputHistogramsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(outputResultsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eValueTxt)
+                    .addComponent(skylineTxt)
+                    .addComponent(outputProteinsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 294, Short.MAX_VALUE)
+                    .addComponent(outputSequencesCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(outputSpectraCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(outputHistogramsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(25, 25, 25))
         );
         outputSettingsPanelLayout.setVerticalGroup(
             outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputSettingsPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
+                .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputResultsLabel)
+                    .addComponent(outputResultsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(eValueLbl)
                     .addComponent(eValueTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -966,7 +986,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 .addGroup(outputSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(skylinePathValueLbl)
                     .addComponent(skylineTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(236, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Output", outputSettingsPanel);
@@ -2328,6 +2348,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openModificationSettingsJButtonMouseExited
 
+    /**
+     * Open the ModificationsDialog.
+     * 
+     * @param evt 
+     */
     private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
         new ModificationsDialog((Frame) this.getParent(), true);
         updateModificationList();
@@ -2393,6 +2418,44 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 "SearchGUI - Help", 500, 50);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void outputResultsLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputResultsLabelMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_outputResultsLabelMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void outputResultsLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputResultsLabelMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputResultsLabelMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void outputResultsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outputResultsLabelMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/api/oresu.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_outputResultsLabelMouseReleased
+
+    /**
+     * Enable or disable the e-value cutoff option.
+     * 
+     * @param evt 
+     */
+    private void outputResultsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputResultsCmbActionPerformed
+        eValueTxt.setEnabled(!((String) outputResultsCmb.getSelectedItem()).equalsIgnoreCase("all"));
+    }//GEN-LAST:event_outputResultsCmbActionPerformed
 
     /**
      * Inspects the parameters validity.
@@ -2518,6 +2581,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JLabel outputHistogramsLabel;
     private javax.swing.JComboBox outputProteinsCmb;
     private javax.swing.JLabel outputProteinsLabel;
+    private javax.swing.JComboBox outputResultsCmb;
+    private javax.swing.JLabel outputResultsLabel;
     private javax.swing.JComboBox outputSequencesCmb;
     private javax.swing.JLabel outputSequencesLabel;
     private javax.swing.JPanel outputSettingsPanel;

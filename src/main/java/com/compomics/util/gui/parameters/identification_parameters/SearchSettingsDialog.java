@@ -2104,10 +2104,18 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         valid = GuiUtilities.validateIntegerInput(this, maxMissedCleavagesLabel, maxMissedCleavagesTxt, "number of allowed missed cleavages", "Missed Cleavages Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorIonLbl, precursorIonAccuracyTxt, "precursor mass tolerance", "Precursor Mass Tolerance Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, fragmentIonLbl, fragmentIonAccuracyTxt, "fragment mass tolerance", "Fragment Mass Tolerance Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
+        
+        boolean lowerChargeValid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, precursorChargeLbl, maxPrecursorChargeTxt, "upper bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        if (!lowerChargeValid) {
+            GuiUtilities.validateIntegerInput(this, precursorChargeLbl, minPrecursorChargeTxt, "lower bound for the precursor charge", "Precursor Charge Error", true, showMessage, valid);
+        }
+        
+        boolean lowerBoundValid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        if (!lowerBoundValid) {
+            GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
+        }
 
         // make sure that the lower charge is smaller than the upper charge
         try {

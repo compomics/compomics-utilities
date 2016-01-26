@@ -337,8 +337,10 @@ public class PepxmlIdfileReader implements IdfileReader {
                         terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
 
                         // fix for older comet pepxml files
-                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet")
-                                && searchEngineVersion != null && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")) { // @TODO: make more generic...
+                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet") 
+                                && searchEngineVersion != null 
+                                && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")
+                                && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 5")) { // @TODO: make more generic...
                             terminalMass -= Atom.H.getMonoisotopicMass();
                         }
                     }

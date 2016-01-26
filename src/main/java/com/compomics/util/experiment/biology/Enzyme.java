@@ -147,8 +147,6 @@ public class Enzyme extends ExperimentObject {
         } else if (isUnspecific()) { // unspecific cleavage
             result = "[X]|[X]";
         } else {
-
-            // @TODO: should [X] be used more??
             if (aminoAcidBefore.size() > 0) {
                 result += "[";
                 for (Character aa : aminoAcidBefore) {
@@ -163,6 +161,10 @@ public class Enzyme extends ExperimentObject {
                     result += aa;
                 }
                 result += "}";
+            }
+            
+            if (aminoAcidBefore.isEmpty() && restrictionBefore.isEmpty()) {
+                result += "[X]";
             }
 
             result += "|";
@@ -181,6 +183,10 @@ public class Enzyme extends ExperimentObject {
                     result += aa;
                 }
                 result += "}";
+            }
+            
+            if (aminoAcidAfter.isEmpty() && restrictionAfter.isEmpty()) {
+                result += "[X]";
             }
         }
 

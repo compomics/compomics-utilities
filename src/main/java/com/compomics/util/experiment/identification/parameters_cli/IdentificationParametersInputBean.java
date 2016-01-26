@@ -541,10 +541,14 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             xtandemParameters.setMaxEValue(option);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id);
+            Double option = new Double(arg);
+            xtandemParameters.setMaxEValue(option);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
-            Integer option = new Integer(arg);
-            xtandemParameters.setOutputProteins(option == 1);
+            xtandemParameters.setOutputResults(arg);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id);
@@ -2217,6 +2221,13 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_EVALUE.id);
             if (!isPositiveDouble(IdentificationParametersCLIParams.XTANDEM_EVALUE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id);
+            List<String> supportedInput = Arrays.asList("all", "valid", "stochastic");
+            if (!isInList(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id, arg, supportedInput)) {
                 return false;
             }
         }

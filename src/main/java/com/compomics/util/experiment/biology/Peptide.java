@@ -492,7 +492,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param peptideKey the peptide key
      * @param modificationMass the mass of the modification
-     * 
+     *
      * @return a boolean indicating whether the peptide has variable
      * modifications
      */
@@ -1501,30 +1501,32 @@ public class Peptide extends ExperimentObject {
      * @throws IllegalArgumentException if the peptide sequence contains unknown
      * amino acids
      */
-    public void estimateTheoreticMass() throws IllegalArgumentException {
+    public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
 
-        mass = Atom.H.getMonoisotopicMass();
+        if (mass == null) {
+            mass = Atom.H.getMonoisotopicMass();
 
-        for (int aa = 0; aa < sequence.length(); aa++) {
-            try {
-                AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
+            for (int aa = 0; aa < sequence.length(); aa++) {
+                try {
+                    AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
 
-                if (currentAA != null) {
-                    mass += currentAA.getMonoisotopicMass();
-                } else {
-                    System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                    if (currentAA != null) {
+                        mass += currentAA.getMonoisotopicMass();
+                    } else {
+                        System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
+                    }
+                } catch (NullPointerException e) {
+                    throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
                 }
-            } catch (NullPointerException e) {
-                throw new IllegalArgumentException("Unknown amino acid: " + sequence.charAt(aa) + "!");
             }
-        }
 
-        mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
+            mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
-        if (modifications != null) {
-            PTMFactory ptmFactory = PTMFactory.getInstance();
-            for (ModificationMatch ptmMatch : modifications) {
-                mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+            if (modifications != null) {
+                PTMFactory ptmFactory = PTMFactory.getInstance();
+                for (ModificationMatch ptmMatch : modifications) {
+                    mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+                }
             }
         }
     }

@@ -439,30 +439,33 @@ public class Peptide extends ExperimentObject {
      * @return the index of a peptide
      */
     public static String getKey(String sequence, ArrayList<ModificationMatch> modificationMatches) {
-        String result = sequence;
-        if (modificationMatches != null) {
-            ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
-            for (ModificationMatch mod : modificationMatches) {
-                if (mod.isVariable()) {
-                    if (mod.getTheoreticPtm() != null) {
-                        String ptmName = mod.getTheoreticPtm();
-                        PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                        if (mod.isConfident() || mod.isInferred()) {
-                            tempModifications.add(ptm.getMass() + MODIFICATION_LOCALIZATION_SEPARATOR + mod.getModificationSite());
-                        } else {
-                            tempModifications.add(ptm.getMass() + "");
-                        }
+        if (modificationMatches == null) {
+            return sequence;
+        }
+        StringBuilder result = new StringBuilder(sequence);
+        ArrayList<String> tempModifications = new ArrayList<String>(modificationMatches.size());
+        for (ModificationMatch mod : modificationMatches) {
+            if (mod.isVariable()) {
+                String ptmName = mod.getTheoreticPtm();
+                if (ptmName != null) {
+                    PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
+                    if (mod.isConfident() || mod.isInferred()) {
+                        StringBuilder tempModKey = new StringBuilder();
+                        tempModKey.append(ptm.getMass()).append(MODIFICATION_LOCALIZATION_SEPARATOR).append(mod.getModificationSite());
+                        tempModifications.add(tempModKey.toString());
                     } else {
-                        tempModifications.add("unknown-modification");
+                        tempModifications.add(ptm.getMass() + "");
                     }
+                } else {
+                    tempModifications.add("unknown-modification");
                 }
             }
-            Collections.sort(tempModifications);
-            for (String mod : tempModifications) {
-                result += MODIFICATION_SEPARATOR + mod;
-            }
         }
-        return result;
+        Collections.sort(tempModifications);
+        for (String mod : tempModifications) {
+            result.append(MODIFICATION_SEPARATOR).append(mod);
+        }
+        return result.toString();
     }
 
     /**
@@ -1504,6 +1507,7 @@ public class Peptide extends ExperimentObject {
     public synchronized void estimateTheoreticMass() throws IllegalArgumentException {
 
         if (mass == null) {
+
             mass = Atom.H.getMonoisotopicMass();
 
             for (int aa = 0; aa < sequence.length(); aa++) {

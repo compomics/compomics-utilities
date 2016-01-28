@@ -696,7 +696,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
      */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://141.61.102.17/maxquant_doku/doku.php?id=maxquant:andromeda");
+        BareBonesBrowserLaunch.openURL("http://coxdocs.org/doku.php?id=maxquant:andromeda:start");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 

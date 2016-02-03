@@ -74,10 +74,11 @@ public class NeutralLoss extends ExperimentObject {
         this.fixed = fixed;
         addNeutralLoss(this);
     }
-    
+
     /**
-     * Adds a neutral loss to the class static map. Neutral losses with the same name will be overwritten.
-     * 
+     * Adds a neutral loss to the class static map. Neutral losses with the same
+     * name will be overwritten.
+     *
      * @param neutralLoss the neutral loss to add
      */
     public static void addNeutralLoss(NeutralLoss neutralLoss) {
@@ -86,12 +87,13 @@ public class NeutralLoss extends ExperimentObject {
         }
         neutralLosses.put(neutralLoss.name, neutralLoss);
     }
-    
+
     /**
-     * Returns the neutral loss associated to the given name in the static map of the class. Null if not found.
-     * 
+     * Returns the neutral loss associated to the given name in the static map
+     * of the class. Null if not found.
+     *
      * @param name the name of the neutral loss of interest
-     * 
+     *
      * @return the neutral loss
      */
     public static NeutralLoss getNeutralLoss(String name) {
@@ -100,10 +102,11 @@ public class NeutralLoss extends ExperimentObject {
         }
         return neutralLosses.get(name);
     }
-    
+
     /**
-     * Removes the neutral loss associated to the given name in the static map of the class.
-     * 
+     * Removes the neutral loss associated to the given name in the static map
+     * of the class.
+     *
      * @param name the name of the neutral loss to remove
      */
     public static void removeNeutralLoss(String name) {

@@ -318,7 +318,7 @@ public abstract class SpectrumAnnotator {
      * Returns a boolean indicating whether the neutral loss should be accounted
      * for.
      *
-     * @param neutralLosses Map of expected neutral losses
+     * @param neutralLosses map of expected neutral losses
      * @param neutralLoss the neutral loss of interest
      * @param ion the fragment ion of interest
      *
@@ -372,7 +372,7 @@ public abstract class SpectrumAnnotator {
      * Returns a boolean indicating whether the neutral losses of the given
      * fragment ion fit the requirement of the given neutral losses map.
      *
-     * @param neutralLosses map of expected neutral losses: neutral loss.
+     * @param neutralLosses map of expected neutral losses: neutral loss
      * @param theoreticIon the ion of interest
      *
      * @return a boolean indicating whether the neutral losses of the given

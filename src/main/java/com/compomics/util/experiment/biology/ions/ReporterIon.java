@@ -309,8 +309,21 @@ public class ReporterIon extends Ion {
         this.name = name;
         this.atomChain = atomChain;
         if (save) {
-            implementedIons.put(name, this);
+            addReporterIon(this);
         }
+    }
+    
+    /**
+     * Adds a reporter ion to the class static map. Reporter ions with the same
+     * name will be overwritten.
+     *
+     * @param reporterIon the reporter ion to add
+     */
+    public static void addReporterIon(ReporterIon reporterIon) {
+        if (implementedIons == null) {
+            implementedIons = new HashMap<String, ReporterIon>();
+        }
+        implementedIons.put(reporterIon.name, reporterIon);
     }
 
     /**
@@ -354,7 +367,10 @@ public class ReporterIon extends Ion {
      * @return a boolean indicating whether masses are equal
      */
     public boolean isSameAs(ReporterIon anotherReporterIon) {
-        return theoreticMass.doubleValue() == anotherReporterIon.getTheoreticMass(); // @TODO: compare against the accuracy!
+        if (atomChain != null && anotherReporterIon.getAtomicComposition() != null) {
+            return atomChain.isSameCompositionAs(anotherReporterIon.getAtomicComposition());
+        }
+        return false;
     }
 
     /**
@@ -438,6 +454,11 @@ public class ReporterIon extends Ion {
             return isSameAs(otherIon);
         }
         return false;
+    }
+    
+    @Override
+    public ReporterIon clone() {
+        return new ReporterIon(name, atomChain.clone(), false);
     }
 
     /**

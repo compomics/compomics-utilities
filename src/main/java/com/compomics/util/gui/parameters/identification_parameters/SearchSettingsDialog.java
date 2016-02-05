@@ -232,7 +232,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
         }
 
         // load project specific PTMs
-        String error = loadModifications(searchParameters);
+        String error = loadModifications(this.searchParameters);
         if (error != null) {
             JOptionPane.showMessageDialog(this,
                     error,

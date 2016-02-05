@@ -325,11 +325,15 @@ public abstract class SpectrumAnnotator {
      * @return boolean indicating whether the neutral loss should be considered
      */
     public boolean isAccounted(NeutralLossesMap neutralLosses, NeutralLoss neutralLoss, Ion ion) {
+
         if (neutralLosses == null || neutralLosses.isEmpty()) {
             return false;
         }
+
         for (String neutralLossName : neutralLosses.getAccountedNeutralLosses()) {
+
             NeutralLoss neutralLossRef = NeutralLoss.getNeutralLoss(neutralLossName);
+
             if (neutralLoss.isSameAs(neutralLossRef)) {
                 switch (ion.getType()) {
                     case PEPTIDE_FRAGMENT_ION:

@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
@@ -216,8 +217,17 @@ public class PtmDialog extends javax.swing.JDialog {
             patternTxt.setText(pattern.toString());
             updateMass();
 
-            this.neutralLosses.addAll(currentPtm.getNeutralLosses());
-            this.reporterIons.addAll(currentPtm.getReporterIons());
+            if (!currentPtm.getNeutralLosses().isEmpty()) {
+                for (NeutralLoss tempNeutralLoss : currentPtm.getNeutralLosses()) {
+                    neutralLosses.add(tempNeutralLoss.clone());
+                }
+            }
+            if (!currentPtm.getReporterIons().isEmpty()) {
+                for (ReporterIon tempReporterIon : currentPtm.getReporterIons()) {
+                    reporterIons.add(tempReporterIon.clone());
+                }
+            }
+
             updateTables();
 
             CvTerm cvTerm = currentPtm.getCvTerm();
@@ -281,6 +291,10 @@ public class PtmDialog extends javax.swing.JDialog {
         patternLabel.setForeground(Color.BLACK);
         unimodAccessionLabel.setForeground(Color.BLACK);
         unimodNameLabel.setForeground(Color.BLACK);
+        ((TitledBorder) neutralLossesPanel.getBorder()).setTitleColor(Color.BLACK);
+        neutralLossesPanel.repaint();
+        ((TitledBorder) reporterIonsPanel.getBorder()).setTitleColor(Color.BLACK);
+        reporterIonsPanel.repaint();
 
         nameLabel.setToolTipText(null);
         nameTxt.setToolTipText(null);
@@ -290,6 +304,8 @@ public class PtmDialog extends javax.swing.JDialog {
         patternTxt.setToolTipText(null);
         unimodAccessionLabel.setToolTipText(null);
         unimodAccessionJTextField.setToolTipText(null);
+        neutralLossesPanel.setToolTipText(null);
+        reporterIonsPanel.setToolTipText(null);
 
         // check the modification mass
         if (compositionTxt.getText().trim().length() == 0) {
@@ -476,6 +492,38 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         }
 
+        // check that the neutral losses and reporter ions are not already in use
+        if (!neutralLosses.isEmpty()) {
+            for (NeutralLoss tempNeutralLoss : neutralLosses) {
+                NeutralLoss existingNeutralLoss = NeutralLoss.getNeutralLoss(tempNeutralLoss.name);
+                if (existingNeutralLoss != null && !tempNeutralLoss.isSameAs(existingNeutralLoss)) {
+                    if (showMessage && !error) {
+                        JOptionPane.showMessageDialog(this, "A neutral loss named \'" + tempNeutralLoss.name 
+                                + "\' already exists. Please choose a different name.", "Neutral Loss", JOptionPane.WARNING_MESSAGE);
+                    }
+                    error = true;
+                    ((TitledBorder) neutralLossesPanel.getBorder()).setTitleColor(Color.RED);
+                    neutralLossesPanel.setToolTipText("A neutral loss named \'" + tempNeutralLoss.name + "\' already exists");
+                    neutralLossesPanel.repaint();
+                }
+            }
+        }
+        if (!reporterIons.isEmpty()) {
+            for (ReporterIon tempReporterIon : reporterIons) {
+                ReporterIon existingReporterIon = ReporterIon.getReporterIon(tempReporterIon.getName());
+                if (existingReporterIon != null && !tempReporterIon.isSameAs(existingReporterIon)) {
+                    if (showMessage && !error) {
+                        JOptionPane.showMessageDialog(this, "A reporter ion named \'" + tempReporterIon.getName() 
+                                + "\' already exists. Please choose a different name.", "Reporter Ion", JOptionPane.WARNING_MESSAGE);
+                    }
+                    error = true;
+                    ((TitledBorder) reporterIonsPanel.getBorder()).setTitleColor(Color.RED);
+                    reporterIonsPanel.setToolTipText("A reporter ion named \'" + tempReporterIon.getName() + "\' already exists");
+                    reporterIonsPanel.repaint();
+                }
+            }
+        }
+
         okButton.setEnabled(!error);
 
         return true;
@@ -532,7 +580,7 @@ public class PtmDialog extends javax.swing.JDialog {
         compositionLabel = new javax.swing.JLabel();
         massLabel = new javax.swing.JLabel();
         massTxt = new javax.swing.JTextField();
-        neutralLossesAndReporterIonsPanel = new javax.swing.JPanel();
+        neutralLossesPanel = new javax.swing.JPanel();
         neutralLossesJScrollPane = new javax.swing.JScrollPane();
         neutralLossesTable = new JTable() {
             protected JTableHeader createDefaultTableHeader() {
@@ -860,8 +908,8 @@ public class PtmDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        neutralLossesAndReporterIonsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Neutral Losses"));
-        neutralLossesAndReporterIonsPanel.setOpaque(false);
+        neutralLossesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Neutral Losses"));
+        neutralLossesPanel.setOpaque(false);
 
         neutralLossesTable.setModel(new NeutralLossesTable());
         neutralLossesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -889,26 +937,26 @@ public class PtmDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout neutralLossesAndReporterIonsPanelLayout = new javax.swing.GroupLayout(neutralLossesAndReporterIonsPanel);
-        neutralLossesAndReporterIonsPanel.setLayout(neutralLossesAndReporterIonsPanelLayout);
-        neutralLossesAndReporterIonsPanelLayout.setHorizontalGroup(
-            neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout neutralLossesPanelLayout = new javax.swing.GroupLayout(neutralLossesPanel);
+        neutralLossesPanel.setLayout(neutralLossesPanelLayout);
+        neutralLossesPanelLayout.setHorizontalGroup(
+            neutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(neutralLossesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(neutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addNeutralLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removeNeutralLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        neutralLossesAndReporterIonsPanelLayout.setVerticalGroup(
-            neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
+        neutralLossesPanelLayout.setVerticalGroup(
+            neutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(neutralLossesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(neutralLossesAndReporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(neutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(neutralLossesAndReporterIonsPanelLayout.createSequentialGroup()
+                    .addGroup(neutralLossesPanelLayout.createSequentialGroup()
                         .addGap(0, 33, Short.MAX_VALUE)
                         .addComponent(addNeutralLoss)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -921,7 +969,7 @@ public class PtmDialog extends javax.swing.JDialog {
         scrollPanePanelLayout.setHorizontalGroup(
             scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(detailsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(neutralLossesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(unimodMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(reporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -930,7 +978,7 @@ public class PtmDialog extends javax.swing.JDialog {
             .addGroup(scrollPanePanelLayout.createSequentialGroup()
                 .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(neutralLossesAndReporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(neutralLossesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1127,7 +1175,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addNeutralLossActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNeutralLossActionPerformed
-        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(true), false));
+        neutralLosses.add(new NeutralLoss("new neutral loss", new AtomChain(true), false, false));
         updateTables();
     }//GEN-LAST:event_addNeutralLossActionPerformed
 
@@ -1137,7 +1185,7 @@ public class PtmDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addReporterIonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReporterIonActionPerformed
-        reporterIons.add(new ReporterIon("New reporter ion", 0.0));
+        reporterIons.add(new ReporterIon("New reporter ion", 0.0, false));
         updateTables();
     }//GEN-LAST:event_addReporterIonActionPerformed
 
@@ -1346,8 +1394,8 @@ public class PtmDialog extends javax.swing.JDialog {
     private javax.swing.JLabel nameShortLabel;
     private javax.swing.JTextField nameShortTxt;
     private javax.swing.JTextField nameTxt;
-    private javax.swing.JPanel neutralLossesAndReporterIonsPanel;
     private javax.swing.JScrollPane neutralLossesJScrollPane;
+    private javax.swing.JPanel neutralLossesPanel;
     private javax.swing.JTable neutralLossesTable;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel patternLabel;
@@ -1383,6 +1431,7 @@ public class PtmDialog extends javax.swing.JDialog {
     private void updateTables() {
         ((DefaultTableModel) neutralLossesTable.getModel()).fireTableDataChanged();
         ((DefaultTableModel) reporterIonsTable.getModel()).fireTableDataChanged();
+        validateInput(false);
     }
 
     /**
@@ -1464,7 +1513,7 @@ public class PtmDialog extends javax.swing.JDialog {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 1 && editable;
+            return (columnIndex == 1 || columnIndex == 4) && editable;
         }
 
         @Override
@@ -1472,8 +1521,6 @@ public class PtmDialog extends javax.swing.JDialog {
             int index = neutralLossesTable.convertRowIndexToModel(row);
             NeutralLoss neutralLoss = neutralLosses.get(index);
             if (column == 1) {
-                String oldName = neutralLoss.name;
-                NeutralLoss.removeNeutralLoss(oldName);
                 String newName = aValue.toString();
                 NeutralLoss newLoss = new NeutralLoss(newName, neutralLoss.getComposition(), neutralLoss.isFixed());
                 neutralLosses.set(index, newLoss);

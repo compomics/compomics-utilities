@@ -62,17 +62,32 @@ public class NeutralLoss extends ExperimentObject {
     private static HashMap<String, NeutralLoss> neutralLosses;
 
     /**
-     * Constructor for a user defined neutral loss.
+     * Constructor for a user defined neutral loss. The neutral loss is added to
+     * the factory.
      *
      * @param name name of the neutral loss
      * @param composition the atomic composition of the neutral loss
      * @param fixed is the neutral loss fixed or not
      */
     public NeutralLoss(String name, AtomChain composition, boolean fixed) {
+        this(name, composition, fixed, true);
+    }
+
+    /**
+     * Constructor for a user defined neutral loss.
+     *
+     * @param name name of the neutral loss
+     * @param composition the atomic composition of the neutral loss
+     * @param fixed is the neutral loss fixed or not
+     * @param save if true, the neutral loss will be added to the factory
+     */
+    public NeutralLoss(String name, AtomChain composition, boolean fixed, boolean save) {
         this.name = name;
         this.composition = composition;
         this.fixed = fixed;
-        addNeutralLoss(this);
+        if (save) {
+            addNeutralLoss(this);
+        }
     }
 
     /**
@@ -182,5 +197,10 @@ public class NeutralLoss extends ExperimentObject {
         }
         return anotherNeutralLoss.name.equals(name)
                 && anotherNeutralLoss.getComposition().isSameCompositionAs(getComposition());
+    }
+
+    @Override
+    public NeutralLoss clone() {
+        return new NeutralLoss(name, composition.clone(), fixed, false);
     }
 }

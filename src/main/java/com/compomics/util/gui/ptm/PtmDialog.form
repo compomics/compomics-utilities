@@ -138,7 +138,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="detailsPanel" alignment="0" max="32767" attributes="0"/>
-                      <Component id="neutralLossesAndReporterIonsPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="neutralLossesPanel" alignment="0" max="32767" attributes="0"/>
                       <Component id="unimodMappingPanel" alignment="0" max="32767" attributes="0"/>
                       <Component id="reporterIonsPanel" max="32767" attributes="0"/>
                   </Group>
@@ -148,7 +148,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="detailsPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="neutralLossesAndReporterIonsPanel" max="32767" attributes="0"/>
+                          <Component id="neutralLossesPanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="reporterIonsPanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -558,7 +558,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="neutralLossesAndReporterIonsPanel">
+                <Container class="javax.swing.JPanel" name="neutralLossesPanel">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">

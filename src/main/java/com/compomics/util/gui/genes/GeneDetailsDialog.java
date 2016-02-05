@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -32,9 +33,14 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      */
     private GeneMaps geneMaps;
     /**
-     * the protein accessions of this match.
+     * The protein accessions of this match.
      */
-    private ArrayList<String> proteinAccessions;
+    private ArrayList<String> proteinAccessions = new ArrayList<String>();
+    /**
+     * The protein accession column in the table. Only used if more than one
+     * accession.
+     */
+    private ArrayList<String> proteinAccessionColumn = new ArrayList<String>();
     /**
      * The GO term descriptions attached to this protein match.
      */
@@ -67,9 +73,28 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         initComponents();
         this.geneMaps = geneMaps;
         proteinAccessions = new ArrayList<String>(Arrays.asList(ProteinMatch.getAccessions(proteinMatchKey)));
+        goTable.setModel(new GOTableModel());
         if (geneMaps != null) {
-            goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
-            Collections.sort(goTermDescriptions);
+            goTermDescriptions = new ArrayList<String>();
+
+            if (proteinAccessions.size() == 1) {
+                goTermDescriptions = new ArrayList<String>(geneMaps.getGoNamesForProtein(proteinMatchKey));
+                Collections.sort(goTermDescriptions);
+            } else {
+                for (String accession : proteinAccessions) {
+
+                    HashSet<String> tempGoNameAccessions = geneMaps.getGoNamesForProtein(accession);
+                    ArrayList<String> tempGoNameAccessionsArray = new ArrayList<String>();
+                    tempGoNameAccessionsArray.addAll(tempGoNameAccessions);
+                    Collections.sort(tempGoNameAccessionsArray);
+
+                    goTermDescriptions.addAll(tempGoNameAccessionsArray);
+
+                    for (int i = 0; i < tempGoNameAccessionsArray.size(); i++) {
+                        proteinAccessionColumn.add(accession);
+                    }
+                }
+            }
         } else {
             goTermDescriptions = new ArrayList<String>(0);
         }
@@ -82,9 +107,9 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
      * Set up the GUI.
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
-     * while reading the fasta file.
+     * while reading the FASTA file
      * @throws java.lang.InterruptedException exception thrown whenever an error
-     * occurred while waiting for the connection to the fasta file to recover.
+     * occurred while waiting for the connection to the FASTA file to recover
      */
     private void setUpGUI() throws IOException, InterruptedException {
 
@@ -98,6 +123,17 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         } else {
             goTable.getColumn("Accession").setMinWidth(15);
             goTable.getColumn("Accession").setMaxWidth(Integer.MAX_VALUE);
+        }
+
+        if (proteinAccessions.size() > 1) {
+            width = getPreferredAccessionColumnWidth(goTable, goTable.getColumn("Protein").getModelIndex(), 20);
+            if (width != null) {
+                goTable.getColumn("Protein").setMinWidth(width);
+                goTable.getColumn("Protein").setMaxWidth(width);
+            } else {
+                goTable.getColumn("Protein").setMinWidth(15);
+                goTable.getColumn("Protein").setMaxWidth(Integer.MAX_VALUE);
+            }
         }
 
         goTable.getColumn(" ").setMaxWidth(50);
@@ -117,7 +153,7 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
         String title = "", geneIdsTxt = "", geneNamesTxt = "", chromosomeTxt = "";
         ArrayList<String> geneNames = new ArrayList<String>();
         for (String accession : proteinAccessions) {
-            if (title.equals("")) {
+            if (title.isEmpty()) {
                 title += "Gene details for ";
             } else {
                 title += ", ";
@@ -429,49 +465,96 @@ public class GeneDetailsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 3;
+            if (proteinAccessions.size() > 1) {
+                return 4;
+            } else {
+                return 3;
+            }
         }
 
         @Override
         public String getColumnName(int column) {
 
-            switch (column) {
-                case 0:
-                    return " ";
-                case 1:
-                    return "Accession";
-                case 2:
-                    return "Description";
-                default:
-                    return "";
+            if (proteinAccessions.size() > 1) {
+                switch (column) {
+                    case 0:
+                        return " ";
+                    case 1:
+                        return "Protein";
+                    case 2:
+                        return "Accession";
+                    case 3:
+                        return "Description";
+                    default:
+                        return "";
+                }
+            } else {
+                switch (column) {
+                    case 0:
+                        return " ";
+                    case 1:
+                        return "Accession";
+                    case 2:
+                        return "Description";
+                    default:
+                        return "";
+                }
             }
         }
 
         @Override
         public Object getValueAt(int row, int column) {
 
-            switch (column) {
-                case 0:
-                    return (row + 1);
-                case 1:
-                    try {
-                        String goAccession = geneMaps.getGoAccession(goTermDescriptions.get(row));
-                        if (goAccession != null) {
-                            return addGoLink(goAccession);
-                        } else {
-                            return "";
+            if (proteinAccessions.size() > 1) {
+                switch (column) {
+                    case 0:
+                        return (row + 1);
+                    case 1:
+                        return proteinAccessionColumn.get(row); // @TODO: add database link (requires the DisplayFeaturesGenerator...)
+                    case 2:
+                        try {
+                            String goAccession = geneMaps.getGoAccession(goTermDescriptions.get(row));
+                            if (goAccession != null) {
+                                return addGoLink(goAccession);
+                            } else {
+                                return "";
+                            }
+                        } catch (Exception e) {
+                            return "Error";
                         }
-                    } catch (Exception e) {
-                        return "Error";
-                    }
-                case 2:
-                    try {
-                        return goTermDescriptions.get(row);
-                    } catch (Exception e) {
-                        return "Error";
-                    }
-                default:
-                    return "";
+                    case 3:
+                        try {
+                            return goTermDescriptions.get(row);
+                        } catch (Exception e) {
+                            return "Error";
+                        }
+                    default:
+                        return "";
+                }
+            } else {
+                switch (column) {
+                    case 0:
+                        return (row + 1);
+                    case 1:
+                        try {
+                            String goAccession = geneMaps.getGoAccession(goTermDescriptions.get(row));
+                            if (goAccession != null) {
+                                return addGoLink(goAccession);
+                            } else {
+                                return "";
+                            }
+                        } catch (Exception e) {
+                            return "Error";
+                        }
+                    case 2:
+                        try {
+                            return goTermDescriptions.get(row);
+                        } catch (Exception e) {
+                            return "Error";
+                        }
+                    default:
+                        return "";
+                }
             }
         }
 

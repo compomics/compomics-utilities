@@ -94,17 +94,37 @@ public class PTMFactory implements Serializable {
             try {
                 File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
                 instance = (PTMFactory) SerializationUtils.readObject(savedFile);
+                instance.checkUserModifications();
             } catch (Exception e) {
                 instance = new PTMFactory();
-//                try {
-//                    instance.saveFactory();
-//                } catch (IOException ioe) {
-//                    // cancel save
-//                    ioe.printStackTrace();
-//                }
             }
         }
         return instance;
+    }
+    
+    /**
+     * Add neutral losses and reporter ions for the user PTMs.
+     */
+    private void checkUserModifications() {
+        for (String tempUserMod : getUserModifications()) {
+            
+            PTM ptm = getPTM(tempUserMod);
+            
+            if (!ptm.getNeutralLosses().isEmpty()) {
+                for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                    if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
+                        NeutralLoss.addNeutralLoss(neutralLoss);
+                    }
+                }
+            }
+            if (!ptm.getReporterIons().isEmpty()) {
+                for (ReporterIon reporterIon : ptm.getReporterIons()) {
+                    if (ReporterIon.getReporterIon(reporterIon.getName()) == null) {
+                        ReporterIon.addReporterIon(reporterIon);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -174,6 +194,7 @@ public class PTMFactory implements Serializable {
      * @param ptm the new modification to add
      */
     public void addUserPTM(PTM ptm) {
+
         String modName = ptm.getName();
         ptmMap.put(modName, ptm);
         if (!userMods.contains(modName)) {
@@ -182,6 +203,22 @@ public class PTMFactory implements Serializable {
             userMods.set(userMods.indexOf(modName), modName);
         }
         usersModsSorted = false;
+
+        // add the neutral losses and reporter ions
+        if (!ptm.getNeutralLosses().isEmpty()) {
+            for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
+                if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
+                    NeutralLoss.addNeutralLoss(neutralLoss);
+                }
+            }
+        }
+        if (!ptm.getReporterIons().isEmpty()) {
+            for (ReporterIon reporterIon : ptm.getReporterIons()) {
+                if (ReporterIon.getReporterIon(reporterIon.getName()) == null) {
+                    ReporterIon.addReporterIon(reporterIon);
+                }
+            }
+        }
     }
 
     /**

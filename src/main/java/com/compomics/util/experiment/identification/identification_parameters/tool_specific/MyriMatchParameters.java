@@ -77,16 +77,16 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     private Integer numberOfBatches = 50;
     /**
      * The lower isotope correction range.
-     * 
+     *
      * @deprecated now general search setting
      */
-    private Integer lowerIsotopeCorrection = -1;
+    private Integer lowerIsotopeCorrection = -1; // note: the new default is 0
     /**
      * The upper isotope correction range.
-     * 
+     *
      * @deprecated now general search setting
      */
-    private Integer upperIsotopeCorrection = 2;
+    private Integer upperIsotopeCorrection = 2; // note: new default is 1
     /**
      * The fragmentation rules. CID (b, y), ETD (c, z*) or manual (user-defined
      * (a comma-separated list of [abcxyz] or z* (z+1), e.g. manual:b,y,z)
@@ -95,11 +95,21 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The max number of peaks to use.
      */
-    private Integer maxPeakCount = 100;
+    private Integer maxPeakCount = 300;
     /**
      * The output format.
      */
     private String outputFormat = "mzIdentML";
+
+    /**
+     * @TODO: parameters not currently supported: 
+     * 
+     * AvgPrecursorMzTolerance: "1.5mz", EstimateSearchTimeOnly: "0", KeepUnadjustedPrecursorMz: "0",
+     * MaxFragmentChargeState: "0", MaxPeptideVariants: "1000000",
+     * MinMatchedFragments: "5", MinResultScore: "9.9999999999999995e-008",
+     * NumMzFidelityClasses: "3", PreferIntenseComplements: "1",
+     * ProteinSamplingTime: "15", ResultsPerBatch: "200000"
+     */
 
     /**
      * Constructor.

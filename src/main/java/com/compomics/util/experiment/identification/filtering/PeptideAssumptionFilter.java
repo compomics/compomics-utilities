@@ -319,7 +319,7 @@ public class PeptideAssumptionFilter implements Serializable {
         if (maxIsotopes != null && isotopeNumber > maxIsotopes) {
             return false;
         }
-        Double mzDeviation = assumption.getDeltaMass(precursorMz, isPpm, searchParameters.getMinIsotopicCorrection(), searchParameters.getMinIsotopicCorrection());
+        Double mzDeviation = assumption.getDeltaMass(precursorMz, isPpm, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         return (maxMassDeviation <= 0 || Math.abs(mzDeviation) <= maxMassDeviation);
     }
 

@@ -1039,6 +1039,7 @@ public class ObjectsDB implements Serializable {
         try {
             stmt.executeUpdate("delete from " + tableName + " where NAME='" + correctedKey + "'"); // @TODO: what if the accession contains (') ..? - a single quotation mark is the escape character for a single quotation mark
         } catch (SQLSyntaxErrorException e) {
+            System.out.println("SQL Exception. SQL call: " + "delete from " + tableName + " where NAME='" + correctedKey + "'");
             throw e;
         } finally {
             stmt.close();

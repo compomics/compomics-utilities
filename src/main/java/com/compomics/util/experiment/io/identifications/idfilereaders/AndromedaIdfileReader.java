@@ -114,7 +114,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
                     }
                 }
                 rank++;
-                PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank, sequenceMatchingPreferences);
+                PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank);
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
                     Peptide peptide = peptideAssumption.getPeptide();
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
@@ -146,12 +146,10 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param line the line to parse
      * @param rank the rank of the assumption
-     * @param sequenceMatchingPreferences the sequence matching preferences to
-     * use to fill the secondary maps
      *
      * @return the corresponding assumption
      */
-    private PeptideAssumption getAssumptionFromLine(String line, int rank, SequenceMatchingPreferences sequenceMatchingPreferences) {
+    private PeptideAssumption getAssumptionFromLine(String line, int rank) {
 
         String[] temp = line.trim().split("\t");
 

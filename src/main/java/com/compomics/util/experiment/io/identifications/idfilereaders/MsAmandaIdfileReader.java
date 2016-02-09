@@ -194,15 +194,15 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
 
                 // get the ms amanda score
                 String scoreAsText = elements[amandaScoreIndex];
-                double msAmandaScore = Util.readDoubleAsString(scoreAsText);
-                double msAmandaEValue;
+                double msAmandaRawScore = Util.readDoubleAsString(scoreAsText);
+                double msAmandaTransformedScore;
 
                 // get the ms amanda e-value
                 if (amandaWeightedProbabilityIndex != -1) {
                     String eVaulueAsText = elements[amandaWeightedProbabilityIndex];
-                    msAmandaEValue = Util.readDoubleAsString(eVaulueAsText);
+                    msAmandaTransformedScore = Util.readDoubleAsString(eVaulueAsText);
                 } else {
-                    msAmandaEValue = Math.pow(10, -msAmandaScore); // convert ms amanda score to e-value
+                    msAmandaTransformedScore = Math.pow(10, -msAmandaRawScore); // convert ms amanda score to e-value
                 }
 
                 int rank = Integer.valueOf(elements[rankIndex]);
@@ -277,8 +277,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 Charge peptideCharge = new Charge(Charge.PLUS, charge);
 
                 // create the peptide assumption
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaEValue, Util.getFileName(msAmandaCsvFile));
-                peptideAssumption.setRawScore(msAmandaScore);
+                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), peptideCharge, msAmandaTransformedScore, Util.getFileName(msAmandaCsvFile));
+                peptideAssumption.setRawScore(msAmandaRawScore);
 
                 if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
                     ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
@@ -294,7 +294,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                             }
                         }
                         PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                        newAssumption.setRawScore(msAmandaScore);
+                        newAssumption.setRawScore(msAmandaRawScore);
                         currentMatch.addHit(Advocate.msAmanda.getIndex(), newAssumption, false);
                     }
                 } else {

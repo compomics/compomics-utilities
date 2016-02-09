@@ -19,7 +19,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     private Integer numberOfSpectrumMatches = 10; // @TODO: should be the same as num_output_lines
     /**
-     * The maximum number of variable modifications.
+     * The maximum number of variable modifications per peptide.
      */
     private Integer maxVariableMods = 10;
     /**
@@ -303,7 +303,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Returns the maximum number of variable modifications.
+     * Returns the maximum number of variable modifications per peptide.
      *
      * @return the maxVariableMods
      */
@@ -312,7 +312,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
     }
 
     /**
-     * Set the maximum number of variable modifications.
+     * Set the maximum number of variable modifications per peptide.
      *
      * @param maxVariableMods the maxVariableMods to set
      */

@@ -156,7 +156,7 @@ public enum IdentificationParametersCLIParams {
     // Comet specific parameters
     //////////////////////////////////
     COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
-    COMET_PTMS("comet_num_ptms", "Comet max number of PTMs per peptide, 1: true, 0: false, default is '0'.", false, true),
+    COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),
     COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),
     COMET_MIN_PEAKS("comet_min_peaks", "Comet min number of peaks for a spectrum, default is '10'.", false, true),
     COMET_MIN_PEAK_INTENSITY("comet_min_peak_int", "Comet min peak intensity, default is '0.0'.", false, true),

@@ -1731,12 +1731,11 @@ public class IdentificationParametersInputBean {
                         throw new IllegalArgumentException("PTM " + ptmName + " not found.");
                     }
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 if (!error) {
                     System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the fixed modifications:"
                             + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                 }
-                e.printStackTrace();
                 error = true;
             }
         }
@@ -1746,16 +1745,15 @@ public class IdentificationParametersInputBean {
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 for (String ptmName : args) {
                     PTM ptm = PTMFactory.getInstance().getPTM(ptmName);
-                    if (ptm == null) {
+                    if (ptm == null || ptm == PTMFactory.unknownPTM) {
                         throw new IllegalArgumentException("PTM " + ptmName + " not found.");
                     }
                 }
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 if (!error) {
                     System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the variable modifications:"
                             + System.getProperty("line.separator") + e.getLocalizedMessage() + System.getProperty("line.separator"));
                 }
-                e.printStackTrace();
                 error = true;
             }
         }

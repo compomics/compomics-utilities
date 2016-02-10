@@ -322,7 +322,8 @@ public class ObjectsDB implements Serializable {
      * reading or writing a file
      */
     public void insertObjects(String tableName, HashMap<String, Object> objects, WaitingHandler waitingHandler) throws SQLException, IOException {
-        insertObjects(tableName, objects, waitingHandler, false);
+        HashMap<String, Object> objectsClone = new HashMap<String, Object>(objects);
+        insertObjects(tableName, objectsClone, waitingHandler, false);
     }
 
     /**

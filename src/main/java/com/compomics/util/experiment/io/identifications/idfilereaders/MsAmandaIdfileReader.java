@@ -202,7 +202,7 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                     String eVaulueAsText = elements[amandaWeightedProbabilityIndex];
                     msAmandaTransformedScore = Util.readDoubleAsString(eVaulueAsText);
                 } else {
-                    msAmandaTransformedScore = Math.pow(10, -msAmandaRawScore); // convert ms amanda score to e-value
+                    msAmandaTransformedScore = Math.pow(10, -msAmandaRawScore); // convert ms amanda score to e-value like
                 }
 
                 int rank = Integer.valueOf(elements[rankIndex]);

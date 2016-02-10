@@ -522,7 +522,7 @@ public class ReporterIon extends Ion {
             return atomChain;
         } else if (reporterIonName.equals("iTRAQ8Plex_115")) {
             AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
             atomChain.append(new AtomImpl(Atom.C, 1), 1);
             atomChain.append(new AtomImpl(Atom.H, 0), 12);
             atomChain.append(new AtomImpl(Atom.N, 0), 1);

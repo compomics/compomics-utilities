@@ -1076,6 +1076,7 @@ public class PTMFactory implements Serializable {
         if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")
                 || pridePtmName.equalsIgnoreCase("S-carboxamidomethyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("iodoacetamide - site C")
+                || pridePtmName.equalsIgnoreCase("iodoacetamide -site C")
                 || pridePtmName.equalsIgnoreCase("iodoacetamide derivatized residue")
                 || pridePtmName.equalsIgnoreCase("Iodoacetamide derivative")) {
             return "Carbamidomethylation of C";
@@ -1224,8 +1225,9 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("hydroxylated lysine")
                 || pridePtmName.equalsIgnoreCase("monohydroxylated lysine")) {
             return "Oxidation of K";
-        } else if (pridePtmName.equalsIgnoreCase("iodoacetamide -site E")) {
-            return "Carbamidomethylation of E";
+        } else if (pridePtmName.equalsIgnoreCase("iodoacetamide -site E")
+                || pridePtmName.equalsIgnoreCase("iodoacetamide - site E")) {
+            return "Carbamidomethylat\"iodoacetamide -site E\"ion of E";
         } else if (pridePtmName.equalsIgnoreCase("iodoacetamide N6-derivatized lysine")) {
             return "Carbamidomethylation of K";
         } else if (pridePtmName.equalsIgnoreCase("monomethylated L-aspartic acid")) {

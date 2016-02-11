@@ -1364,7 +1364,7 @@ public class IdentificationParametersInputBean {
         }
 
         // set the parameter file name to the same as the name of the file
-        if (identificationParameters.getName() == null) {
+        if (identificationParameters.getName() == null && destinationFile != null) {
             identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
         }
 

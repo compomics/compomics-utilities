@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.2.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.3.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -1585,14 +1585,14 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Dimethylation of K 2H4
+        // Label of K 2H4
         atomChainAdded = new AtomChain(true);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = new AtomChain(false);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
         aminoAcidPattern = new AminoAcidPattern("K");
-        ptmName = "Dimethylation of K 2H(4)";
-        ptm = new PTM(PTM.MODAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptmName = "Label of K 2H(4)";
+        ptm = new PTM(PTM.MODAA, ptmName, "2H(4)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:481", "Label:2H(4)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);

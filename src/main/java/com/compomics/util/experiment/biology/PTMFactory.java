@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.3.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.4.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -1618,7 +1618,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = new AminoAcidPattern("K");
         ptmName = "Dimethylation of peptide N-term K 2H(4)";
         ptm = new PTM(PTM.MODNPAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291 ", "Dimethyl:2H(6)", String.valueOf(ptm.getRoundedMass())));
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -1631,7 +1631,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = null;
         ptmName = "Dimethylation of peptide N-term 2H(6)";
         ptm = new PTM(PTM.MODNP, ptmName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 199", "Dimethyl:2H(4)", String.valueOf(ptm.getRoundedMass())));
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 1291", "Dimethyl:2H(6)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
         ptmMap.put(ptmName, ptm);

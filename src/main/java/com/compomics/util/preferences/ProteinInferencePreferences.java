@@ -47,7 +47,13 @@ public class ProteinInferencePreferences implements Serializable {
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        output.append("DB: ").append(proteinSequenceDatabase.getName()).append(".").append(newLine);
+        output.append("DB: ");
+        if (proteinSequenceDatabase != null) {
+            output.append(proteinSequenceDatabase.getName());
+        } else {
+            output.append("not set");
+        }
+        output.append(".").append(newLine);
 
         return output.toString();
     }

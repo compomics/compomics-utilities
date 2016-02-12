@@ -800,9 +800,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     public String getShortDescription() {
 
         SearchParameters defaultParameters = new SearchParameters();
-
         String newLine = System.getProperty("line.separator");
-
         StringBuilder output = new StringBuilder();
 
         if (enzyme != null) {
@@ -877,9 +875,13 @@ public class SearchParameters implements Serializable, MarshallableParameter {
             output.append("Isotopic Correction: ").append(minIsotopicCorrection).append("-").append(maxIsotopicCorrection).append(".").append(newLine);
         }
 
+        output.append("DB: ");
         if (fastaFile != null) {
-            output.append("DB: ").append(fastaFile.getName()).append(".").append(newLine);
+            output.append(fastaFile.getName());
+        } else {
+            output.append("not set");
         }
+        output.append(".").append(newLine);
 
         return output.toString();
     }

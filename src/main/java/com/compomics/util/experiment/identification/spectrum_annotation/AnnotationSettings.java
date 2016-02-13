@@ -39,8 +39,8 @@ public class AnnotationSettings implements Serializable {
      */
     private boolean showAllPeaks = false;
     /**
-     * The intensity limit used when only the most intense peaks are to be
-     * annotated.
+     * The intensity percentile to consider for annotation. e.g. 0.75 means that
+     * the 25% most intense peaks will be annotated.
      */
     private double intensityLimit = 0.75;
     /**
@@ -425,9 +425,8 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Returns the intensity limit. [0.0 - 1.0], where 0.0 means that all peaks
-     * are considered for annotations, while 0.75 means that only the 75% most
-     * intense peaks are considered for annotations.
+     * Returns the intensity percentile to consider for annotation. e.g. 0.75
+     * means that the 25% most intense peaks will be annotated.
      *
      * @return the intensityLimit
      */
@@ -436,9 +435,8 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Sets the annotation level. [0.0 - 1.0], where 0.0 means that all peaks
-     * are considered for annotations, while 0.75 means that only the 75% most
-     * intense peaks are considered for annotations.
+     * Sets the intensity percentile to consider for annotation. e.g. 0.75 means
+     * that the 25% most intense peaks will be annotated.
      *
      * @param intensityLimit the intensityLimit to set
      */

@@ -118,6 +118,11 @@ public class ProteinMatchesIterator {
         this.loadPsms = loadPsms;
         this.psmParameters = psmParameters;
         this.waitingHandler = waitingHandler;
+        if (proteinKeys != null) {
+            // adapt the batch size to avoid the hanging of the progress bar
+            batchSize = Math.max(50, proteinKeys.size() / 100);
+            batchSize = Math.min(1000, Math.max(batchSize, proteinKeys.size() / 1000));
+        }
     }
 
     /**

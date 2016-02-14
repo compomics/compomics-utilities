@@ -99,6 +99,11 @@ public class PsmIterator {
         this.psmParameters = psmParameters;
         this.loadAssumptions = loadAssumptions;
         this.waitingHandler = waitingHandler;
+        if (spectrumKeys != null) {
+            // adapt the batch size to avoid the hanging of the progress bar
+            batchSize = Math.max(50, spectrumKeys.size() / 100);
+            batchSize = Math.min(1000, Math.max(batchSize, spectrumKeys.size() / 1000));
+        }
     }
 
     /**

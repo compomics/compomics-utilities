@@ -934,7 +934,8 @@ public class CompomicsWrapper {
             }
 
             // see if the user has set the java home via the gui
-            if (userPreferences.getJavaHome() != null && new File(userPreferences.getJavaHome()).exists()) {
+            if (userPreferences.getJavaHome() != null && new File(userPreferences.getJavaHome()).exists()
+                    && (new File(userPreferences.getJavaHome(), "java.exe").exists() || new File(userPreferences.getJavaHome(), "java").exists())) {
                 javaHome = userPreferences.getJavaHome();
                 usingStandardJavaHome = false;
             }

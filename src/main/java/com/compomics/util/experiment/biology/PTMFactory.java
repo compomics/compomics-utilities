@@ -1236,6 +1236,8 @@ public class PTMFactory implements Serializable {
             return "Thioacyl of peptide N-term";
         } else if (pridePtmName.equalsIgnoreCase("ubiquitination signature dipeptidyl lysine")) {
             return "Ubiquitination of K";
+        } else if (pridePtmName.equalsIgnoreCase("Label:13C(6)15N(2)")) {
+            return "Lysine 13C(6) 15N(2)";
         } else {
             return null;
         }

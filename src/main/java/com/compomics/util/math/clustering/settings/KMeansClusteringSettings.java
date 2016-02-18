@@ -18,12 +18,12 @@ public class KMeansClusteringSettings implements Serializable {
      * Constructor.
      */
     public KMeansClusteringSettings() {
-        
+
     }
 
     /**
      * Returns the number of clusters to use.
-     * 
+     *
      * @return the number of clusters to use
      */
     public int getnClusters() {
@@ -32,13 +32,10 @@ public class KMeansClusteringSettings implements Serializable {
 
     /**
      * Sets the number of clusters to use.
-     * 
+     *
      * @param nClusters the number of clusters to use
      */
     public void setnClusters(int nClusters) {
         this.nClusters = nClusters;
     }
-    
-    
-    
 }

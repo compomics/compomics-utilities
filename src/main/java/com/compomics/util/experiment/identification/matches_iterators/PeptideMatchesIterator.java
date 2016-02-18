@@ -101,6 +101,11 @@ public class PeptideMatchesIterator {
         this.loadPsms = loadPsms;
         this.psmParameters = psmParameters;
         this.waitingHandler = waitingHandler;
+        if (peptideKeys != null) {
+            // adapt the batch size to avoid the hanging of the progress bar
+            batchSize = Math.max(50, peptideKeys.size() / 100);
+            batchSize = Math.min(1000, Math.max(batchSize, peptideKeys.size() / 1000));
+        }
     }
 
     /**

@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This factory imports reporter methods details from an XMl file.
@@ -24,9 +25,13 @@ import java.util.ArrayList;
 public class ReporterMethodFactory extends ExperimentObject {
 
     /**
+     * The reporter methods names.
+     */
+    private ArrayList<String> methodsNames;
+    /**
      * The reporter methods.
      */
-    private ArrayList<ReporterMethod> methods;
+    private HashMap<String, ReporterMethod> methods;
     /**
      * The reporter factory.
      */
@@ -55,7 +60,7 @@ public class ReporterMethodFactory extends ExperimentObject {
      *
      * @return the methods implemented in the factory
      */
-    public ArrayList<ReporterMethod> getMethods() {
+    public HashMap<String, ReporterMethod> getMethods() {
         return methods;
     }
 
@@ -64,12 +69,30 @@ public class ReporterMethodFactory extends ExperimentObject {
      *
      * @return the name of the methods present in the factory
      */
-    public String[] getMethodsNames() {
-        String[] names = new String[methods.size()];
-        for (int i = 0; i < methods.size(); i++) {
-            names[i] = methods.get(i).getName();
-        }
-        return names;
+    public ArrayList<String> getMethodsNames() {
+        return methodsNames;
+    }
+    
+    /**
+     * Returns the methods names as array.
+     * 
+     * @return the methods names
+     */
+    public String[] getMethodsNamesAsArray() {
+        
+        String[] array = methodsNames.toArray(new String[methodsNames.size()]);
+        return array;
+    }
+    
+    /**
+     * Returns the reporter methods corresponding to the given name.
+     * 
+     * @param methodName the name of the method
+     * 
+     * @return the reporter methods
+     */
+    public ReporterMethod getReporterMethod(String methodName) {
+        return methods.get(methodName);
     }
 
     /**
@@ -89,7 +112,9 @@ public class ReporterMethodFactory extends ExperimentObject {
             writer.write("<xml>");
             writer.newLine();
 
-            for (ReporterMethod reporterMethod : methods) {
+            for (String reporterMethodName : methodsNames) {
+
+                ReporterMethod reporterMethod = methods.get(reporterMethodName);
 
                 writer.write(indent + "<reporterMethod>");
                 writer.newLine();
@@ -145,7 +170,8 @@ public class ReporterMethodFactory extends ExperimentObject {
      */
     public void importMethods(File aFile) throws IOException, XmlPullParserException {
 
-        methods = new ArrayList();
+        methodsNames = new ArrayList<String>();
+        methods = new HashMap<String, ReporterMethod>();
 
         // create the pull parser
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
@@ -165,7 +191,10 @@ public class ReporterMethodFactory extends ExperimentObject {
         while (type != XmlPullParser.END_DOCUMENT) {
             // if we find a 'reporterMethod' start tag, we should parse the mod
             if (type == XmlPullParser.START_TAG && parser.getName().equals("reporterMethod")) {
-                methods.add(parseMethod(parser));
+                ReporterMethod reporterMethod = parseMethod(parser);
+                String methodName = reporterMethod.getName();
+                methodsNames.add(methodName);
+                methods.put(methodName, reporterMethod);
             }
             type = parser.next();
         }

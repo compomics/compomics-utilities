@@ -1717,8 +1717,8 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public ArrayList<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        ArrayList<String> proteinMatches = new ArrayList<String>();
+    public HashSet<String> getProteinMatches(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+        HashSet<String> proteinMatches = new HashSet<String>();
         if (peptide.getParentProteinsNoRemapping() == null) {
             throw new IllegalArgumentException("Proteins are not mapped for peptide " + peptide.getKey() + ".");
         }
@@ -1726,9 +1726,7 @@ public abstract class Identification extends ExperimentObject {
             HashSet<String> keys = proteinMap.get(accession);
             if (keys != null) {
                 for (String key : keys) {
-                    if (!proteinMatches.contains(key)) {
-                        proteinMatches.add(key);
-                    }
+                    proteinMatches.add(key);
                 }
             }
         }
@@ -1751,7 +1749,7 @@ public abstract class Identification extends ExperimentObject {
      * @throws InterruptedException thrown whenever a threading issue occurred
      * while interacting with the database
      */
-    public boolean isUnique(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    public boolean isUniqueInDatabase(Peptide peptide) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         return getProteinMatches(peptide).size() == 1;
     }
 

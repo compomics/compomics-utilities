@@ -258,7 +258,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        filterHelpLabel.setText("<html><a href>Help with the msConvert filters</a></html>");
+        filterHelpLabel.setText("<html><a href>Help with the msconvert filters</a></html>");
         filterHelpLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 filterHelpLabelMouseEntered(evt);
@@ -286,7 +286,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         });
 
         folderHelpLabel.setFont(folderHelpLabel.getFont().deriveFont((folderHelpLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        folderHelpLabel.setText("Please locate the ProteoWizard installation folder.");
+        folderHelpLabel.setText("Please locate the ProteoWizard installation folder");
 
         javax.swing.GroupLayout installationPanelLayout = new javax.swing.GroupLayout(installationPanel);
         installationPanel.setLayout(installationPanelLayout);
@@ -294,11 +294,12 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             installationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, installationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(installationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(installationPanelLayout.createSequentialGroup()
+                .addGroup(installationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(installationJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, installationPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(folderHelpLabel))
-                    .addComponent(installationJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE))
+                        .addComponent(folderHelpLabel)
+                        .addGap(11, 11, 11)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseButton)
                 .addContainerGap())
@@ -493,7 +494,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         if (selectedFile != null) {
             // check if it is a valid folder
-            if (!new File(selectedFile, "msconvert.exe").exists()) {
+            if (!(new File(selectedFile, "msconvert.exe").exists() || new File(selectedFile, "msconvert").exists())) {
                 JOptionPane.showMessageDialog(this, "The selected folder is not a valid ProteoWizard folder!", "Wrong Folder Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
             } else {

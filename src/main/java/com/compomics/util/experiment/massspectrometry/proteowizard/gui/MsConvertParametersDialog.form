@@ -228,7 +228,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="filterHelpLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;Help with the msConvert filters&lt;/a&gt;&lt;/html&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;Help with the msconvert filters&lt;/a&gt;&lt;/html&gt;"/>
           </Properties>
           <Events>
             <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="filterHelpLabelMouseEntered"/>
@@ -251,12 +251,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="installationJTextField" pref="609" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Component id="folderHelpLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="installationJTextField" pref="609" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="browseButton" min="-2" max="-2" attributes="0"/>
@@ -302,7 +303,7 @@
                     <Font component="folderHelpLabel" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Please locate the ProteoWizard installation folder."/>
+                <Property name="text" type="java.lang.String" value="Please locate the ProteoWizard installation folder"/>
               </Properties>
             </Component>
           </SubComponents>

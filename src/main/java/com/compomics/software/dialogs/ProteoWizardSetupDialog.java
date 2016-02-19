@@ -313,7 +313,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
 
         if (selectedFile != null) {
             // check if it is a valid folder
-            if (!new File(selectedFile, "msconvert.exe").exists()) {
+            if (!(new File(selectedFile, "msconvert.exe").exists() || new File(selectedFile, "msconvert").exists())) {
                 JOptionPane.showMessageDialog(this, "The selected folder is not a valid ProteoWizard folder!", "Wrong Folder Selected", JOptionPane.WARNING_MESSAGE);
                 okButton.setEnabled(false);
             } else {

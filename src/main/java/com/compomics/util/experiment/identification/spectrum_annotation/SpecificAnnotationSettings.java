@@ -235,6 +235,21 @@ public class SpecificAnnotationSettings {
     }
 
     /**
+     * Returns the fragment ion accuracy in Da. If the tolerance is in ppm it will be converted using the given reference mass.
+     *
+     * @param refMass the reference mass to use for the ppm to Da conversion
+     * 
+     * @return the fragment ion accuracy
+     */
+    public double getFragmentIonAccuracyInDa(Double refMass) {
+        if (fragmentIonPpm) {
+            return fragmentIonAccuracy * refMass / 1000000;
+        } else {
+            return fragmentIonAccuracy;
+        }
+    }
+
+    /**
      * Sets the fragment ion accuracy.
      *
      * @param fragmentIonAccuracy the fragment ion accuracy
@@ -281,7 +296,7 @@ public class SpecificAnnotationSettings {
     public void setNeutralLossesAuto(boolean neutralLossesAuto) {
         this.neutralLossesAuto = neutralLossesAuto;
     }
-    
+
     @Override
     public SpecificAnnotationSettings clone() {
         SpecificAnnotationSettings clone = new SpecificAnnotationSettings(spectrumKey, spectrumIdentificationAssumption);

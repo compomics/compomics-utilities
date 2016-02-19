@@ -159,7 +159,55 @@ public class BinomialDistribution implements Distribution {
 
         int k = (int) x;
 
-        if (k < n / 2) {
+        if (k > n * p) {
+
+            // estimate 1-P to be faster
+            int extraPrecision = 0;
+            if (k > 0) {
+                extraPrecision = (int) FastMath.log10((double) k);
+            }
+
+            MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
+            BigDecimal result = BigDecimal.ZERO;
+
+            for (int i = k; i <= n; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                if (probability.compareTo(minProduct) != -1) {
+                    result.add(probability);
+                }
+            }
+
+            return BigDecimal.ONE.subtract(result);
+            
+        } else {
+
+            int extraPrecision = 0;
+            if (n - k > 0) {
+                extraPrecision = (int) FastMath.log10((double) n - k);
+            }
+
+            MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
+            BigDecimal result = BigDecimal.ZERO;
+
+            for (int i = 0; i < k; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                if (probability.compareTo(minProduct) != -1) {
+                    result.add(probability);
+                }
+            }
+
+            return result;
+        }
+    }
+
+    @Override
+    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+
+        BigDecimal minProduct = new BigDecimal(FastMath.pow(10, -mathContext.getPrecision()));
+
+        int k = (int) x;
+
+        if (k < n * p) {
 
             // estimate 1-P to be faster
             int extraPrecision = 0;
@@ -178,6 +226,7 @@ public class BinomialDistribution implements Distribution {
             }
 
             return BigDecimal.ONE.subtract(result);
+            
         } else {
 
             int extraPrecision = 0;
@@ -197,11 +246,6 @@ public class BinomialDistribution implements Distribution {
 
             return result;
         }
-    }
-
-    @Override
-    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
-        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override

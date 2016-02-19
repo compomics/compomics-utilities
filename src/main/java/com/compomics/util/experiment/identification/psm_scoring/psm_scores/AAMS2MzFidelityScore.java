@@ -60,7 +60,7 @@ public class AAMS2MzFidelityScore {
         int sequenceLength = peptide.getSequence().length();
         HashMap<Integer, Double> aaDeviations = new HashMap(sequenceLength);
         for (int i = 1; i <= sequenceLength; i++) {
-            aaDeviations.put(i, specificAnnotationPreferences.getFragmentIonAccuracy());
+            aaDeviations.put(i, specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz()));
         }
 
         ArrayList<IonMatch> matches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationPreferences, specificAnnotationPreferences,
@@ -81,7 +81,7 @@ public class AAMS2MzFidelityScore {
         
         ArrayList<Double> mzDeviations = new ArrayList<Double>(aaDeviations.values());
         if (mzDeviations.isEmpty()) {
-            return specificAnnotationPreferences.getFragmentIonAccuracy();
+            return specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz());
         }
 
         return BasicMathFunctions.mean(mzDeviations);

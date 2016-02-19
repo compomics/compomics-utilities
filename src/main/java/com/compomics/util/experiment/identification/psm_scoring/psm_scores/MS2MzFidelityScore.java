@@ -25,7 +25,8 @@ public class MS2MzFidelityScore {
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
      * @param annotationPreferences the general spectrum annotation preferences
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this psm
      *
      * @return the score of the match
      */
@@ -41,7 +42,8 @@ public class MS2MzFidelityScore {
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
      * @param annotationPreferences the general spectrum annotation preferences
-     * @param specificAnnotationPreferences the annotation preferences specific to this psm
+     * @param specificAnnotationPreferences the annotation preferences specific
+     * to this psm
      * @param peptideSpectrumAnnotator an external annotator (if null an
      * internal will be used)
      *
@@ -61,7 +63,7 @@ public class MS2MzFidelityScore {
             mzDeviations.add(mzError);
         }
         if (mzDeviations.size() < 2) {
-            return specificAnnotationPreferences.getFragmentIonAccuracy();
+            return specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz());
         }
         double deviationUp = BasicMathFunctions.percentile(mzDeviations, 0.75);
         double deviationDown = BasicMathFunctions.percentile(mzDeviations, 0.25);

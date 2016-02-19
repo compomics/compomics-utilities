@@ -130,7 +130,7 @@ public class PhosphoRS {
             // here annotation are sequence and modification independant
             for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationSettings.getFragmentIonAccuracy()) {
+                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationSettings.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -172,7 +172,7 @@ public class PhosphoRS {
 
         if (possibleSites.size() > nPTM) {
 
-            spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
+            spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings);
 
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
@@ -224,7 +224,7 @@ public class PhosphoRS {
                             ArrayList<BigDecimal> currentDeltas = new ArrayList<BigDecimal>(possibleProfiles.size());
                             ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfiles.size());
                             boolean noIons = false;
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
+                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
                             for (ArrayList<Integer> profile : possibleProfiles) {
                                 String profileKey = KeyUtils.getKey(profile);
                                 HashSet<Double> tempSiteDeterminingIons = profileToScore.get(profileKey);
@@ -324,7 +324,7 @@ public class PhosphoRS {
 
                         for (int i = 0; i < spectra.size(); i++) {
                             MSnSpectrum currentSpectrum = spectra.get(i);
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
+                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
                             BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                             // Check calculation error
                             if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
@@ -352,6 +352,7 @@ public class PhosphoRS {
             }
 
             MSnSpectrum phosphoRsSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_phosphoRS", reducedSpectrum, spectrum.getFileName());
+            double currentP = getp(phosphoRsSpectrum, scoringAnnotationSetttings);
             HashMap<String, BigDecimal> pInvMap = new HashMap<String, BigDecimal>(possibleProfiles.size());
             BigDecimal pInvTotal = BigDecimal.ZERO;
 
@@ -368,8 +369,6 @@ public class PhosphoRS {
                     }
                     tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                 }
-
-                double currentP = getp(phosphoRsSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
                 BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                 // Check calculation error
                 if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
@@ -494,18 +493,28 @@ public class PhosphoRS {
 
     /**
      * The probability p for a calculated fragment matching one of the
-     * experimental masses by chance as estimated in the PhosphoRS algorithm.
+     * experimental masses by chance as estimated in the PhosphoRS algorithm. If
+     * the fragment ion tolerance is in ppm, it will be converted to Da using
+     * the middle of the spectrum as reference.
      *
      * @param spectrum the spectrum studied
-     * @param ms2Tolerance the ms2 Tolerance
+     * @param specificAnnotationSettings the annotation settings
      *
      * @return the probability p for a calculated fragment matching one of the
      * experimental masses by chance as estimated in the PhosphoRS algorithm.
      */
-    private static double getp(Spectrum spectrum, double ms2Tolerance) {
-        int N = spectrum.getPeakMap().size();
+    private static double getp(Spectrum spectrum, SpecificAnnotationSettings specificAnnotationSettings) {
         double w = spectrum.getMaxMz() - spectrum.getMinMz();
-        double p = ms2Tolerance * N / w;
+        if (w == 0.0) {
+            return 1.0;
+        }
+        Double refMz = null;
+        if (specificAnnotationSettings.isFragmentIonPpm()) {
+               refMz = spectrum.getMinMz() + (w / 2);
+        }
+        double d = specificAnnotationSettings.getFragmentIonAccuracyInDa(refMz);
+        int N = spectrum.getPeakMap().size();
+        double p = d * N / w;
         if (p > 1) {
             p = 1;
         }
@@ -694,14 +703,16 @@ public class PhosphoRS {
      * most intense peaks in a window of 10 times the ms2 tolerance.
      *
      * @param spectrum the original spectrum
-     * @param ms2Tolerance the ms2 tolerance
+     * @param scoringAnnotationSetttings the annotation settings
      *
      * @return the filtered spectrum
      */
-    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, double ms2Tolerance) {
+    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         Double window;
         Integer maxPeaks;
+        
+        double ms2Tolerance = scoringAnnotationSetttings.getFragmentIonAccuracyInDa(spectrum.getMaxMz());
 
         if (ms2Tolerance <= 10) {
             window = 10 * ms2Tolerance;

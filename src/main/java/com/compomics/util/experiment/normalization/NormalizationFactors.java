@@ -16,16 +16,14 @@ public class NormalizationFactors implements Serializable {
      * as for the sample assignment.
      */
     private HashMap<String, Double> proteinNormalizationFactors = new HashMap<String, Double>();
-
     /**
-     * List of unique protein level normalization factors. The key should be the same
-     * as for the sample assignment.
+     * List of unique protein level normalization factors. The key should be the
+     * same as for the sample assignment.
      */
     private HashMap<String, Double> proteinUniqueNormalizationFactors = new HashMap<String, Double>();
-
     /**
-     * List of shared protein level normalization factors. The key should be the same
-     * as for the sample assignment.
+     * List of shared protein level normalization factors. The key should be the
+     * same as for the sample assignment.
      */
     private HashMap<String, Double> proteinSharedNormalizationFactors = new HashMap<String, Double>();
     /**
@@ -176,8 +174,8 @@ public class NormalizationFactors implements Serializable {
     }
 
     /**
-     * Returns the unique protein normalization factor for the given sample, 1.0 if not
-     * set.
+     * Returns the unique protein normalization factor for the given sample, 1.0
+     * if not set.
      *
      * @param sampleName the index of the sample
      *
@@ -192,8 +190,8 @@ public class NormalizationFactors implements Serializable {
     }
 
     /**
-     * Returns the shared protein normalization factor for the given sample, 1.0 if not
-     * set.
+     * Returns the shared protein normalization factor for the given sample, 1.0
+     * if not set.
      *
      * @param sampleName the index of the sample
      *

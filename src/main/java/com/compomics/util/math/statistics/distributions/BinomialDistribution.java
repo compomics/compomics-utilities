@@ -160,9 +160,24 @@ public class BinomialDistribution implements Distribution {
         MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
         BigDecimal result = BigDecimal.ZERO;
 
-        for (int i = 0; i < k; i++) {
-            BigDecimal probability = getProbabilityAt(i, tempMathContext);
-            result = result.add(probability);
+        if (k > n * p) {
+
+            // estimate 1-P to be faster
+            if (k < n) {
+                for (int i = k + 1; i <= n; i++) {
+                    BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                    result = result.add(probability);
+                }
+            }
+
+            return BigDecimal.ONE.subtract(result);
+
+        } else {
+
+            for (int i = 0; i <= k; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                result = result.add(probability);
+            }
         }
 
         return result;
@@ -176,9 +191,23 @@ public class BinomialDistribution implements Distribution {
         MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
         BigDecimal result = BigDecimal.ZERO;
 
-        for (int i = k; i <= n; i++) {
-            BigDecimal probability = getProbabilityAt(i, tempMathContext);
-            result = result.add(probability);
+        if (k < n * p) {
+
+            // estimate 1-P to be faster
+            for (int i = 0; i < k; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                result = result.add(probability);
+            }
+
+            return BigDecimal.ONE.subtract(result);
+
+        } else {
+
+            for (int i = k; i <= n; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                result = result.add(probability);
+            }
+
         }
 
         return result;

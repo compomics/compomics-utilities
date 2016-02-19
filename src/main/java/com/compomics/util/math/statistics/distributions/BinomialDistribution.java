@@ -50,7 +50,7 @@ public class BinomialDistribution implements Distribution {
     public BinomialDistribution(int n, double p) {
         this.n = n;
         this.p = p;
-        precisionP = (int) BasicMathFunctions.log(p, 10) - 1;
+        precisionP = (int) -BasicMathFunctions.log(p, 10);
     }
 
     /**
@@ -156,7 +156,7 @@ public class BinomialDistribution implements Distribution {
     public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
 
         int k = (int) x;
-        int extraPrecision = Math.max(k, n - k);
+        int extraPrecision = Math.max(k, n - k) + precisionP;
         MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
         BigDecimal result = BigDecimal.ZERO;
 

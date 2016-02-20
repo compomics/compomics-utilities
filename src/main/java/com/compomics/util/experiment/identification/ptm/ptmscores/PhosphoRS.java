@@ -268,7 +268,7 @@ public class PhosphoRS {
                                             }
                                             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                         }
-                                        
+
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                                         // compensate rounding effects
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
@@ -420,17 +420,16 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
-        HashMap<Integer, BigDecimal> scores = new HashMap<Integer, BigDecimal>();
+        HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
         for (String profile : profileToScoreMap.keySet()) {
             Double score = profileToScoreMap.get(profile);
-            BigDecimal scoreBigDecimal = new BigDecimal(score, mathContext);
             ArrayList<Integer> sites = profileToSitesMap.get(profile);
             for (Integer site : sites) {
-                BigDecimal previousScore = scores.get(site);
+                Double previousScore = scores.get(site);
                 if (previousScore == null) {
-                    scores.put(site, scoreBigDecimal);
+                    scores.put(site, score);
                 } else {
-                    BigDecimal newScore = scoreBigDecimal.add(previousScore, mathContext);
+                    Double newScore = score + previousScore;
                     scores.put(site, newScore);
                 }
             }
@@ -444,7 +443,7 @@ public class PhosphoRS {
 
         HashMap<Integer, Double> doubleScoreMap = new HashMap<Integer, Double>(scores.size());
         for (Integer site : scores.keySet()) {
-            Double score = scores.get(site).doubleValue();
+            Double score = scores.get(site);
             doubleScoreMap.put(site, score);
         }
 

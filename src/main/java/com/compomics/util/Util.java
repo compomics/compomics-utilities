@@ -977,9 +977,9 @@ public class Util {
 
     /**
      * Returns the size of the file located at the given URL.
-     * 
+     *
      * @param url the url of the file
-     * 
+     *
      * @return the size of the file
      */
     public static int getFileSize(URL url) {
@@ -994,5 +994,16 @@ public class Util {
         } finally {
             conn.disconnect();
         }
+    }
+
+    /**
+     * Converts a boolean value to the corresponding integer value, 0 for false
+     * and 1 for true.
+     *
+     * @param booleanToConvert the boolean value to convert
+     * @return 0 for false and 1 for true
+     */
+    public static Integer convertBooleanToInteger(Boolean booleanToConvert) {
+        return booleanToConvert ? 1 : 0;
     }
 }

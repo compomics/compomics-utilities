@@ -65,10 +65,9 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     private Integer enzymeType = 2;
     /**
-     * Isotope correction setting. 
-     * 0: performs no isotope error searches, 
-     * 1: searches -1, 0, +1, +2, and +3 isotope offsets
-     * 2: searches -8, -4, 0, +4, +8 isotope offsets (for +4/+8 stable isotope labeling).
+     * Isotope correction setting. 0: performs no isotope error searches, 1:
+     * searches -1, 0, +1, +2, and +3 isotope offsets 2: searches -8, -4, 0, +4,
+     * +8 isotope offsets (for +4/+8 stable isotope labeling).
      */
     private Integer isotopeCorrection = 1;
     /**
@@ -112,6 +111,24 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * data representation by default
      */
     private Boolean useSparseMatrix = true;
+    /**
+     * The selected output format.
+     */
+    private CometOutputFormat selectedOutputFormat = CometOutputFormat.PepXML;
+
+    /**
+     * The available output formats.
+     */
+    public enum CometOutputFormat {
+        PepXML, SQT, TXT, Percolator;
+    }
+    /**
+     * A boolean flag this determines whether or not the expectation score
+     * (E-value) is reported in .out and SQT formats. Note that the E-value is
+     * always reported in pepXML output. This parameter is only relevant for
+     * results reported in .out and SQT formats.
+     */
+    private Boolean printExpectScore = true;
 
     /**
      * Constructor.
@@ -192,6 +209,12 @@ public class CometParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!useSparseMatrix.equals(cometParameters.getUseSparseMatrix())) {
+                return false;
+            }
+            if (getSelectedOutputFormat() != cometParameters.getSelectedOutputFormat()) {
+                return false;
+            }
+            if (getPrintExpectScore() != cometParameters.getPrintExpectScore()) {
                 return false;
             }
 
@@ -276,6 +299,12 @@ public class CometParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("USE_SPARSE_MATRIX=");
         output.append(useSparseMatrix);
+        output.append(newLine);
+        output.append("OUTPUT_FORAMT=");
+        output.append(getSelectedOutputFormat());
+        output.append(newLine);
+        output.append("PRINT_EXPECT_SCORE=");
+        output.append(getPrintExpectScore());
         output.append(newLine);
 
         return output.toString();
@@ -597,7 +626,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Returns true if a sparse matrix is to be used.
      *
      * @return the useSparseMatrix
-     * 
+     *
      * @deprecated from Comet release 2015.02 all searches use this internal
      * data representation by default
      */
@@ -609,7 +638,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * Set if a sparse matrix is to be used.
      *
      * @param useSparseMatrix the useSparseMatrix to set
-     * 
+     *
      * @deprecated from Comet release 2015.02 all searches use this internal
      * data representation by default
      */
@@ -637,5 +666,47 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public void setRequireVariableMods(Boolean requireVariableMods) {
         this.requireVariableMods = requireVariableMods;
+    }
+
+    /**
+     * Returns true if the export score is to be printed.
+     *
+     * @return true if the export score is to be printed
+     */
+    public boolean getPrintExpectScore() {
+        if (printExpectScore == null) {
+            printExpectScore = true;
+        }
+        return printExpectScore;
+    }
+
+    /**
+     * Set if the export score is to be printed.
+     *
+     * @param printExpectScore the printExpectScore to set
+     */
+    public void setPrintExpectScore(boolean printExpectScore) {
+        this.printExpectScore = printExpectScore;
+    }
+
+    /**
+     * Returns the selected output format.
+     *
+     * @return the selected output format
+     */
+    public CometOutputFormat getSelectedOutputFormat() {
+        if (selectedOutputFormat == null) {
+            selectedOutputFormat = CometOutputFormat.PepXML;
+        }
+        return selectedOutputFormat;
+    }
+
+    /**
+     * Sets the output format.
+     *
+     * @param selectedOutputFormat the output format
+     */
+    public void setSelectedOutputFormat(CometOutputFormat selectedOutputFormat) {
+        this.selectedOutputFormat = selectedOutputFormat;
     }
 }

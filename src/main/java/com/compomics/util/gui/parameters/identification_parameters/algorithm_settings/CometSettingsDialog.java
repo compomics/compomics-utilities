@@ -3,12 +3,16 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters.CometOutputFormat;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
 import java.awt.Dialog;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the Comet specific settings.
@@ -31,7 +35,8 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
      *
      * @param parent the parent frame
      * @param cometParameters the Comet parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public CometSettingsDialog(java.awt.Frame parent, CometParameters cometParameters, boolean editable) {
         super(parent, true);
@@ -50,7 +55,8 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
      * @param owner the dialog owner
      * @param parent the parent frame
      * @param cometParameters the Comet parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public CometSettingsDialog(Dialog owner, java.awt.Frame parent, CometParameters cometParameters, boolean editable) {
         super(owner, true);
@@ -67,7 +73,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
      * Sets up the GUI.
      */
     private void setUpGUI() {
-        
+
         removePrecursorPeakCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         enzymeTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         isotopeCorrectionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -75,7 +81,9 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         correlationScoreTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         requireVariablePtmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        
+        outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        printExpectScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
         minPeaksTxt.setEditable(editable);
         minPeaksTxt.setEnabled(editable);
         minPeakIntensityTxt.setEditable(editable);
@@ -107,12 +115,13 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         correlationScoreTypeCmb.setEnabled(editable);
         fragmentBinOffsetTxt.setEnabled(editable);
         fragmentBinOffsetTxt.setEditable(editable);
-        
+        outputFormatCmb.setEnabled(editable);
+        printExpectScoreCmb.setEnabled(editable);
     }
 
     /**
      * Populates the GUI using the given settings.
-     * 
+     *
      * @param cometParameters the parameters to display
      */
     private void populateGUI(CometParameters cometParameters) {
@@ -200,13 +209,21 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         if (cometParameters.getFragmentBinOffset() != null) {
             fragmentBinOffsetTxt.setText(cometParameters.getFragmentBinOffset() + "");
         }
+
+        outputFormatCmb.setSelectedItem(cometParameters.getSelectedOutputFormat());
+
+        if (cometParameters.getPrintExpectScore()) {
+            printExpectScoreCmb.setSelectedIndex(0);
+        } else {
+            printExpectScoreCmb.setSelectedIndex(1);
+        }
     }
 
     @Override
     public boolean isCancelled() {
         return cancelled;
     }
-    
+
     @Override
     public IdentificationAlgorithmParameter getParameters() {
         return getInput();
@@ -305,6 +322,9 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
             result.setFragmentBinOffset(new Double(input));
         }
 
+        result.setSelectedOutputFormat((CometOutputFormat) outputFormatCmb.getSelectedItem());
+        result.setPrintExpectScore(printExpectScoreCmb.getSelectedIndex() == 0);
+
         return result;
     }
 
@@ -345,8 +365,6 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         minPrecursorMassTxt = new javax.swing.JTextField();
         precursorMassDividerLabel = new javax.swing.JLabel();
         maxPrecursorMassTxt = new javax.swing.JTextField();
-        numberMatchesLabel = new javax.swing.JLabel();
-        numberMatchesTxt = new javax.swing.JTextField();
         maxFragmentChargeLabel = new javax.swing.JLabel();
         maxFragmentChargeTxt = new javax.swing.JTextField();
         removeMethionineLabel = new javax.swing.JLabel();
@@ -362,6 +380,13 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         correlationScoreTypeCmb = new javax.swing.JComboBox();
         fragmentBinOffsetLabel = new javax.swing.JLabel();
         fragmentBinOffsetTxt = new javax.swing.JTextField();
+        outputPanel = new javax.swing.JPanel();
+        numberMatchesLabel = new javax.swing.JLabel();
+        numberMatchesTxt = new javax.swing.JTextField();
+        outputPepXmlLabel = new javax.swing.JLabel();
+        outputFormatCmb = new javax.swing.JComboBox();
+        printExpecScoreLabel = new javax.swing.JLabel();
+        printExpectScoreCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Comet Advanced Settings");
@@ -519,7 +544,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
                     .addComponent(clearMzRangeUpperTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearMzRangeDividerLabel)
                     .addComponent(clearMzRangeLabel))
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addContainerGap(195, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Spectrum", spectrumProcessingPanel);
@@ -553,16 +578,6 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
         maxPrecursorMassTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxPrecursorMassTxtKeyReleased(evt);
-            }
-        });
-
-        numberMatchesLabel.setText("Number of Spectrum Matches");
-
-        numberMatchesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        numberMatchesTxt.setText("10");
-        numberMatchesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                numberMatchesTxtKeyReleased(evt);
             }
         });
 
@@ -627,12 +642,10 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
                                     .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(removeMethionineLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(batchSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(numberMatchesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(isotopeCorrectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(enzymeTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)))
                         .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(numberMatchesTxt)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
                                 .addComponent(minPrecursorMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -676,10 +689,6 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
                     .addComponent(precursorMassLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numberMatchesLabel)
-                    .addComponent(numberMatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxFragmentChargeLabel)
                     .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -698,7 +707,7 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(requireVariablePtmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(requireVariablePtmLabel))
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Search", searchSettingsPanel);
@@ -745,10 +754,76 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentBinOffsetLabel)
                     .addComponent(fragmentBinOffsetTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(272, Short.MAX_VALUE))
+                .addContainerGap(273, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Fragment Ions", fragmentIonsPanel);
+
+        outputPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        numberMatchesLabel.setText("Number of Spectrum Matches");
+
+        numberMatchesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        numberMatchesTxt.setText("10");
+        numberMatchesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numberMatchesTxtKeyReleased(evt);
+            }
+        });
+
+        outputPepXmlLabel.setText("Output Format");
+
+        outputFormatCmb.setModel(new DefaultComboBoxModel(CometOutputFormat.values()));
+        outputFormatCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                outputFormatCmbActionPerformed(evt);
+            }
+        });
+
+        printExpecScoreLabel.setText("Print Expect Score");
+
+        printExpectScoreCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
+        outputPanel.setLayout(outputPanelLayout);
+        outputPanelLayout.setHorizontalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(outputPanelLayout.createSequentialGroup()
+                        .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(outputPepXmlLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(numberMatchesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(outputFormatCmb, 0, 209, Short.MAX_VALUE)
+                            .addComponent(numberMatchesTxt, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addGroup(outputPanelLayout.createSequentialGroup()
+                        .addComponent(printExpecScoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(printExpectScoreCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(30, 30, 30))
+        );
+        outputPanelLayout.setVerticalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numberMatchesLabel)
+                    .addComponent(numberMatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputPepXmlLabel)
+                    .addComponent(outputFormatCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(printExpecScoreLabel)
+                    .addComponent(printExpectScoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(247, 247, 247))
+        );
+
+        tabbedPane.addTab("Output", outputPanel);
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -773,8 +848,8 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tabbedPane)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
@@ -956,6 +1031,28 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
     }//GEN-LAST:event_minPrecursorMassTxtKeyReleased
 
     /**
+     * Enable/disable the show fragment ion and print expected score options.
+     *
+     * @param evt
+     */
+    private void outputFormatCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatCmbActionPerformed
+
+        printExpectScoreCmb.setEnabled(outputFormatCmb.getSelectedItem() == CometOutputFormat.SQT);
+
+        if (outputFormatCmb.getSelectedItem() != CometOutputFormat.PepXML && this.isVisible()) {
+            // invoke later to give time for components to update
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(CometSettingsDialog.this, JOptionEditorPane.getJOptionEditorPane(
+                            "Note that the Comet " + outputFormatCmb.getSelectedItem()
+                            + " format is not compatible with <a href=\"http://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
+                            "Format Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+        }
+    }//GEN-LAST:event_outputFormatCmbActionPerformed
+
+    /**
      * Inspects the parameter validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -1053,8 +1150,13 @@ public class CometSettingsDialog extends javax.swing.JDialog implements Algorith
     private javax.swing.JTextField numberMatchesTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
+    private javax.swing.JComboBox outputFormatCmb;
+    private javax.swing.JPanel outputPanel;
+    private javax.swing.JLabel outputPepXmlLabel;
     private javax.swing.JLabel precursorMassDividerLabel;
     private javax.swing.JLabel precursorMassLabel;
+    private javax.swing.JLabel printExpecScoreLabel;
+    private javax.swing.JComboBox printExpectScoreCmb;
     private javax.swing.JComboBox removeMethionineCmb;
     private javax.swing.JLabel removeMethionineLabel;
     private javax.swing.JComboBox removePrecursorPeakCombo;

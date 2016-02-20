@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import org.apache.commons.math.MathException;
+import org.apache.commons.math.util.FastMath;
 
 /**
  * This class estimates the PhosphoRS score as described in
@@ -122,7 +123,6 @@ public class PhosphoRS {
 
         PTM refPTM = ptms.get(0);
         double ptmMass = refPTM.getMass();
-        BigDecimal resolutionLimit = BigDecimal.ONE.divide(BigDecimal.TEN.pow(mathContext.getPrecision()), mathContext);
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationSettings.getNeutralLossesMap(),
                 scoringLossesMap = new NeutralLossesMap();
@@ -130,7 +130,7 @@ public class PhosphoRS {
             // here annotation are sequence and modification independant
             for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationSettings.getFragmentIonAccuracy()) {
+                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationSettings.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -172,7 +172,7 @@ public class PhosphoRS {
 
         if (possibleSites.size() > nPTM) {
 
-            spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
+            spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings);
 
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
@@ -224,7 +224,7 @@ public class PhosphoRS {
                             ArrayList<BigDecimal> currentDeltas = new ArrayList<BigDecimal>(possibleProfiles.size());
                             ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfiles.size());
                             boolean noIons = false;
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
+                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
                             for (ArrayList<Integer> profile : possibleProfiles) {
                                 String profileKey = KeyUtils.getKey(profile);
                                 HashSet<Double> tempSiteDeterminingIons = profileToScore.get(profileKey);
@@ -268,17 +268,12 @@ public class PhosphoRS {
                                             }
                                             tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                                         }
+
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        // Check calculation error
-                                        if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
-                                        }
                                         // compensate rounding effects
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
                                             bigP = BigDecimal.ZERO;
-                                        } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
                                             bigP = BigDecimal.ONE;
                                         }
                                         bigPs.add(bigP);
@@ -321,21 +316,24 @@ public class PhosphoRS {
 
                         BigDecimal bestP = BigDecimal.ZERO;
                         int bestI = 0;
+                        int n = 0;
+                        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values()) {
+                            for (Ion ion : fragmentIons) {
+                                if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                                    n++;
+                                }
+                            }
+                            n += fragmentIons.size();
+                        }
 
                         for (int i = 0; i < spectra.size(); i++) {
                             MSnSpectrum currentSpectrum = spectra.get(i);
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
-                            BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                            // Check calculation error
-                            if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                                throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                            } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                                throw new IllegalArgumentException("PhosphoRS probability > 1.");
-                            }
+                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
+                            BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                             // compensate rounding effects
                             if (bigP.compareTo(BigDecimal.ZERO) == -1) {
                                 bigP = BigDecimal.ZERO;
-                            } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                            } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
                                 bigP = BigDecimal.ONE;
                             }
                             if (bigP.compareTo(bestP) == -1) {
@@ -352,6 +350,8 @@ public class PhosphoRS {
             }
 
             MSnSpectrum phosphoRsSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_phosphoRS", reducedSpectrum, spectrum.getFileName());
+            double currentP = getp(phosphoRsSpectrum, scoringAnnotationSetttings);
+            int pPrecision = (int) -FastMath.log10(currentP);
             HashMap<String, BigDecimal> pInvMap = new HashMap<String, BigDecimal>(possibleProfiles.size());
             BigDecimal pInvTotal = BigDecimal.ZERO;
 
@@ -369,27 +369,31 @@ public class PhosphoRS {
                     tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
                 }
 
-                double currentP = getp(phosphoRsSpectrum, scoringAnnotationSetttings.getFragmentIonAccuracy());
-                BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                // Check calculation error
-                if (bigP.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                    throw new IllegalArgumentException("PhosphoRS probability < 0.");
-                } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
-                    throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                int n = 0;
+                for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values()) {
+                    for (Ion ion : fragmentIons) {
+                        if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+                            n++;
+                        }
+                    }
+                    n += fragmentIons.size();
+                }
+                BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                if (bigP.compareTo(BigDecimal.ZERO) <= 0) {
+                    throw new IllegalArgumentException("PhosphoRS probability <= 0.");
                 }
                 // compensate rounding effects
-                if (bigP.compareTo(resolutionLimit) == -1) {
-                    bigP = resolutionLimit;
-                } else if (bigP.compareTo(BigDecimal.ONE.add(resolutionLimit)) == 1) {
+                if (bigP.compareTo(BigDecimal.ONE) == 1) {
                     bigP = BigDecimal.ONE;
                 }
-                BigDecimal pInv = BigDecimal.ONE.divide(bigP, mathContext);
+                MathContext pMathContext = new MathContext(mathContext.getPrecision() + n + pPrecision, mathContext.getRoundingMode());
+                BigDecimal pInv = BigDecimal.ONE.divide(bigP, pMathContext);
                 String profileKey = KeyUtils.getKey(profile);
                 pInvMap.put(profileKey, pInv);
-                pInvTotal = pInvTotal.add(pInv, mathContext);
+                pInvTotal = pInvTotal.add(pInv, pMathContext);
             }
-            if (pInvTotal.compareTo(BigDecimal.ZERO.subtract(resolutionLimit)) == -1) {
-                throw new IllegalArgumentException("PhosphoRS probability < 0.");
+            if (pInvTotal.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("PhosphoRS probability <= 0.");
             }
 
             for (ArrayList<Integer> profile : possibleProfiles) {
@@ -416,17 +420,16 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Found less potential modification sites than PTMs during PhosphoRS calculation. Peptide key: " + peptide.getKey());
         }
 
-        HashMap<Integer, BigDecimal> scores = new HashMap<Integer, BigDecimal>();
+        HashMap<Integer, Double> scores = new HashMap<Integer, Double>();
         for (String profile : profileToScoreMap.keySet()) {
             Double score = profileToScoreMap.get(profile);
-            BigDecimal scoreBigDecimal = new BigDecimal(score, mathContext);
             ArrayList<Integer> sites = profileToSitesMap.get(profile);
             for (Integer site : sites) {
-                BigDecimal previousScore = scores.get(site);
+                Double previousScore = scores.get(site);
                 if (previousScore == null) {
-                    scores.put(site, scoreBigDecimal);
+                    scores.put(site, score);
                 } else {
-                    BigDecimal newScore = scoreBigDecimal.add(previousScore, mathContext);
+                    Double newScore = score + previousScore;
                     scores.put(site, newScore);
                 }
             }
@@ -440,7 +443,7 @@ public class PhosphoRS {
 
         HashMap<Integer, Double> doubleScoreMap = new HashMap<Integer, Double>(scores.size());
         for (Integer site : scores.keySet()) {
-            Double score = scores.get(site).doubleValue();
+            Double score = scores.get(site);
             doubleScoreMap.put(site, score);
         }
 
@@ -449,7 +452,7 @@ public class PhosphoRS {
 
     /**
      * Returns the PhosphoRS score of the given peptide on the given spectrum.
-     * This method returns P in -10.log(P).
+     * This method returns P and not -10.log(P).
      *
      * @param peptide the peptide of interest
      * @param spectrum the spectrum of interest
@@ -464,10 +467,10 @@ public class PhosphoRS {
      * @return the phosphoRS score
      */
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, PeptideSpectrumAnnotator spectrumAnnotator,
-            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings, MathContext mathContext) throws MathException {
+            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSetttings, MathContext mathContext) throws MathException {
 
         int n = 0;
-        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationSettings, peptide).values()) {
+        for (ArrayList<Ion> fragmentIons : spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide).values()) {
             for (Ion ion : fragmentIons) {
                 if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                     n++;
@@ -475,6 +478,29 @@ public class PhosphoRS {
             }
             n += fragmentIons.size();
         }
+        return getPhosphoRsScoreP(peptide, spectrum, p, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+
+    }
+
+    /**
+     * Returns the PhosphoRS score of the given peptide on the given spectrum.
+     * This method returns P and not -10.log(P).
+     *
+     * @param peptide the peptide of interest
+     * @param spectrum the spectrum of interest
+     * @param p the probability for a calculated fragment matching one of the
+     * experimental masses by chance as estimated by PhosphoRS
+     * @param n the number of expected ions
+     * @param spectrumAnnotator spectrum annotator
+     * @param annotationSettings the global annotation settings
+     * @param scoringAnnotationSettings the annotation settings specific to this
+     * peptide and spectrum
+     * @param mathContext the math context to use for calculation
+     *
+     * @return the phosphoRS score
+     */
+    private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
+            AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings, MathContext mathContext) throws MathException {
 
         BinomialDistribution distribution = new BinomialDistribution(n, p);
 
@@ -489,23 +515,33 @@ public class PhosphoRS {
             return BigDecimal.ONE;
         }
 
-        return distribution.getCumulativeProbabilityAt((double) k, mathContext);
+        return distribution.getDescendingCumulativeProbabilityAt((double) k, mathContext);
     }
 
     /**
      * The probability p for a calculated fragment matching one of the
-     * experimental masses by chance as estimated in the PhosphoRS algorithm.
+     * experimental masses by chance as estimated in the PhosphoRS algorithm. If
+     * the fragment ion tolerance is in ppm, it will be converted to Da using
+     * the middle of the spectrum as reference.
      *
      * @param spectrum the spectrum studied
-     * @param ms2Tolerance the ms2 Tolerance
+     * @param specificAnnotationSettings the annotation settings
      *
      * @return the probability p for a calculated fragment matching one of the
      * experimental masses by chance as estimated in the PhosphoRS algorithm.
      */
-    private static double getp(Spectrum spectrum, double ms2Tolerance) {
-        int N = spectrum.getPeakMap().size();
+    private static double getp(Spectrum spectrum, SpecificAnnotationSettings specificAnnotationSettings) {
         double w = spectrum.getMaxMz() - spectrum.getMinMz();
-        double p = ms2Tolerance * N / w;
+        if (w == 0.0) {
+            return 1.0;
+        }
+        Double refMz = null;
+        if (specificAnnotationSettings.isFragmentIonPpm()) {
+            refMz = spectrum.getMinMz() + (w / 2);
+        }
+        double d = specificAnnotationSettings.getFragmentIonAccuracyInDa(refMz);
+        int N = spectrum.getPeakMap().size();
+        double p = d * N / w;
         if (p > 1) {
             p = 1;
         }
@@ -694,14 +730,16 @@ public class PhosphoRS {
      * most intense peaks in a window of 10 times the ms2 tolerance.
      *
      * @param spectrum the original spectrum
-     * @param ms2Tolerance the ms2 tolerance
+     * @param scoringAnnotationSetttings the annotation settings
      *
      * @return the filtered spectrum
      */
-    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, double ms2Tolerance) {
+    private static MSnSpectrum filterSpectrum(MSnSpectrum spectrum, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         Double window;
         Integer maxPeaks;
+
+        double ms2Tolerance = scoringAnnotationSetttings.getFragmentIonAccuracyInDa(spectrum.getMaxMz());
 
         if (ms2Tolerance <= 10) {
             window = 10 * ms2Tolerance;

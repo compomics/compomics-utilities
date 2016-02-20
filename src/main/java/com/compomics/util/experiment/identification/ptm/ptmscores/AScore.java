@@ -116,7 +116,7 @@ public class AScore {
             // here annotation should be sequence and modification independant
             for (String neutralLossName : annotationNeutralLosses.getAccountedNeutralLosses()) {
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
+                if (Math.abs(neutralLoss.getMass() - ptmMass) > specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                     scoringLossesMap.addNeutralLoss(neutralLoss, 1, 1);
                 }
             }
@@ -146,7 +146,7 @@ public class AScore {
         if (possibleSites.size() > nPTM) {
             Collections.sort(possibleSites);
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
-            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, specificAnnotationPreferences.getFragmentIonAccuracy(), 10);
+            HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz()), 10);
 
             HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
                     spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM, mathContext);
@@ -359,7 +359,7 @@ public class AScore {
 
         BinomialDistribution distribution = new BinomialDistribution(N, p);
 
-        BigDecimal p1 = distribution.getCumulativeProbabilityAt((double) n, mathContext);
+        BigDecimal p1 = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
 
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
@@ -388,7 +388,7 @@ public class AScore {
                 }
             }
         }
-        BigDecimal p2 = distribution.getCumulativeProbabilityAt((double) n, mathContext);
+        BigDecimal p2 = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
 
         if (p1.compareTo(p2) == 0) {
             result.put(posMin, 0.0);
@@ -560,7 +560,7 @@ public class AScore {
                 int n = matches.size();
 
                 BinomialDistribution distribution = new BinomialDistribution(N, p);
-                BigDecimal P = distribution.getCumulativeProbabilityAt((double) n, mathContext);
+                BigDecimal P = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
                 BigDecimal score = BigDecimal.TEN.negate();
                 score = score.multiply(BigFunctions.log(P, 10, mathContext));
                 HashMap<Integer, BigDecimal> scoresAtPosition = positionToScoreMap.get(pos);

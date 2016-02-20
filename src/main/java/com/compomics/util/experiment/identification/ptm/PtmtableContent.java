@@ -12,6 +12,8 @@ import com.compomics.util.experiment.identification.spectrum_annotation.spectrum
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -274,27 +276,27 @@ public class PtmtableContent {
      * @param specificAnnotationPreferences the specific annotation preferences
      *
      * @return the PtmtableContent object
+     * 
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading a protein sequence
+     * @throws InterruptedException exception thrown whenever an error occurred
+     * while reading a protein sequence
+     * @throws ClassNotFoundException if a ClassNotFoundException occurs
+     * @throws SQLException if an SQLException occurs
      */
     public static PtmtableContent getPTMTableContent(Peptide peptide, PTM ptm, int nPTM, MSnSpectrum spectrum,
-            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) {
+            AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         PtmtableContent ptmTableContent = new PtmtableContent();
 
-        //@TODO: use Peptide.getNoModPeptide instead
-        Peptide noModPeptide = new Peptide(peptide.getSequence(), new ArrayList<ModificationMatch>());
-
-        if (peptide.isModified()) {
-            for (ModificationMatch modificationMatch : peptide.getModificationMatches()) {
-                if (!modificationMatch.getTheoreticPtm().equals(ptm.getName())) {
-                    noModPeptide.addModificationMatch(modificationMatch);
-                }
-            }
-        }
+        ArrayList<PTM> ptms = new ArrayList<PTM>(1);
+        ptms.add(ptm);
+        Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
 
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         for (String neutralLossName : specificAnnotationPreferences.getNeutralLossesMap().getAccountedNeutralLosses()) {
             NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-            if (Math.abs(neutralLoss.getMass() - ptm.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracy()) {
+            if (Math.abs(neutralLoss.getMass() - ptm.getMass()) > specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
                 lossesMap.addNeutralLoss(neutralLoss, 1, 1);
             }
         }

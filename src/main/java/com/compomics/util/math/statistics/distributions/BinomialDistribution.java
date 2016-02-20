@@ -50,7 +50,7 @@ public class BinomialDistribution implements Distribution {
     public BinomialDistribution(int n, double p) {
         this.n = n;
         this.p = p;
-        precisionP = (int) BasicMathFunctions.log(p, 10) - 1;
+        precisionP = (int) -BasicMathFunctions.log(p, 10);
     }
 
     /**
@@ -155,53 +155,62 @@ public class BinomialDistribution implements Distribution {
     @Override
     public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
 
-        BigDecimal minProduct = new BigDecimal(FastMath.pow(10, -mathContext.getPrecision()));
-
         int k = (int) x;
+        int extraPrecision = Math.max(k, n - k) + precisionP;
+        MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
+        BigDecimal result = BigDecimal.ZERO;
 
-        if (k < n / 2) {
+        if (k > n * p) {
 
             // estimate 1-P to be faster
-            int extraPrecision = 0;
-            if (k > 0) {
-                extraPrecision = (int) FastMath.log10((double) k);
-            }
-
-            MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
-            BigDecimal result = BigDecimal.ZERO;
-
-            for (int i = 0; i < k; i++) {
-                BigDecimal probability = getProbabilityAt(i, tempMathContext);
-                if (probability.compareTo(minProduct) != -1) {
-                    result.add(probability);
+            if (k < n) {
+                for (int i = k + 1; i <= n; i++) {
+                    BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                    result = result.add(probability);
                 }
             }
 
             return BigDecimal.ONE.subtract(result);
+
         } else {
 
-            int extraPrecision = 0;
-            if (n - k > 0) {
-                extraPrecision = (int) FastMath.log10((double) n - k);
-            }
-
-            MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
-            BigDecimal result = BigDecimal.ZERO;
-
-            for (int i = k; i <= n; i++) {
+            for (int i = 0; i <= k; i++) {
                 BigDecimal probability = getProbabilityAt(i, tempMathContext);
-                if (probability.compareTo(minProduct) != -1) {
-                    result.add(probability);
-                }
+                result = result.add(probability);
             }
-
-            return result;
         }
+
+        return result;
     }
 
     @Override
     public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
-        throw new UnsupportedOperationException("Not supported.");
+
+        int k = (int) x;
+        int extraPrecision = Math.max(k, n - k);
+        MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
+        BigDecimal result = BigDecimal.ZERO;
+
+        if (k < n * p) {
+
+            // estimate 1-P to be faster
+            for (int i = 0; i < k; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                result = result.add(probability);
+            }
+
+            return BigDecimal.ONE.subtract(result);
+
+        } else {
+
+            for (int i = k; i <= n; i++) {
+                BigDecimal probability = getProbabilityAt(i, tempMathContext);
+                result = result.add(probability);
+            }
+
+        }
+
+        return result;
     }
 
     @Override

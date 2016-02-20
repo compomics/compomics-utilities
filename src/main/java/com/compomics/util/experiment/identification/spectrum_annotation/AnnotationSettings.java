@@ -394,10 +394,11 @@ public class AnnotationSettings implements Serializable {
     }
 
     /**
-     * Returns the fragment ion accuracy in Da. If the tolerance is in ppm it will be converted using the given reference mass.
+     * Returns the fragment ion accuracy in Da. If the tolerance is in ppm it
+     * will be converted using the given reference mass.
      *
      * @param refMass the reference mass to use for the ppm to Da conversion
-     * 
+     *
      * @return the fragment ion accuracy
      */
     public double getFragmentIonAccuracyInDa(Double refMass) {

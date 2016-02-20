@@ -202,12 +202,10 @@ public class BinomialDistribution implements Distribution {
             return BigDecimal.ONE.subtract(result);
 
         } else {
-
             for (int i = k; i <= n; i++) {
                 BigDecimal probability = getProbabilityAt(i, tempMathContext);
                 result = result.add(probability);
             }
-
         }
 
         return result;

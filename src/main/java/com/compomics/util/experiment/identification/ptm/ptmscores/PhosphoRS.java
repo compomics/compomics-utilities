@@ -243,9 +243,15 @@ public class PhosphoRS {
                                         }
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                                        }
+                                        // compensate rounding effects
+                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability <0%.");
+                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                                            throw new IllegalArgumentException("PhosphoRS probability >100%.");
                                         }
                                         bigPs.add(bigP);
                                     }
@@ -270,11 +276,16 @@ public class PhosphoRS {
                                         }
 
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                                        }
                                         // compensate rounding effects
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            bigP = BigDecimal.ZERO;
+                                            throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            bigP = BigDecimal.ONE;
+                                            throw new IllegalArgumentException("PhosphoRS probability >100%.");
                                         }
                                         bigPs.add(bigP);
                                         scored.add(tempSiteDeterminingIons);
@@ -332,9 +343,14 @@ public class PhosphoRS {
                             BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                             // compensate rounding effects
                             if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                bigP = BigDecimal.ZERO;
+                                bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                             } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                bigP = BigDecimal.ONE;
+                                bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
+                            }
+                            if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                                throw new IllegalArgumentException("PhosphoRS probability <0%.");
+                            } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                                throw new IllegalArgumentException("PhosphoRS probability >100%.");
                             }
                             if (bigP.compareTo(bestP) == -1) {
                                 bestP = bigP;
@@ -380,11 +396,18 @@ public class PhosphoRS {
                 }
                 BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                 if (bigP.compareTo(BigDecimal.ZERO) <= 0) {
+                    bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                     throw new IllegalArgumentException("PhosphoRS probability <= 0.");
                 }
                 // compensate rounding effects
                 if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                    bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                     bigP = BigDecimal.ONE;
+                }
+                if (bigP.compareTo(BigDecimal.ZERO) == -1) {
+                    throw new IllegalArgumentException("PhosphoRS probability <0%.");
+                } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                    throw new IllegalArgumentException("PhosphoRS probability >100%.");
                 }
                 MathContext pMathContext = new MathContext(mathContext.getPrecision() + n + pPrecision, mathContext.getRoundingMode());
                 BigDecimal pInv = BigDecimal.ONE.divide(bigP, pMathContext);

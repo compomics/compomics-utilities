@@ -92,24 +92,28 @@ public class BinomialDistribution implements Distribution {
     @Override
     public BigDecimal getProbabilityAt(double x, MathContext mathContext) {
 
+        if (x < 0 || x > n) {
+            throw new IllegalArgumentException("Attempting to estimate the probability at " + x + ".");
+        }
+
         if (p == 0 || p == 1) {
             return BigDecimal.ZERO;
         }
 
         int precisionLimit = -300 + mathContext.getPrecision();
-        int i = (int) x;
+        int k = (int) x;
         int extraPrecision = 0;
-        if (i > 0) {
-            extraPrecision = (int) FastMath.log10((double) i);
+        if (k > 0) {
+            extraPrecision = (int) FastMath.log10((double) k);
         }
 
         // check whether the calculation needs to be done with big objects
         boolean needBigObjects = false;
-        Long combinations = BasicMathFunctions.getCombination(i, n);
+        Long combinations = BasicMathFunctions.getCombination(k, n);
         BigInteger conbinationsBI = null;
 
         if (combinations == null) {
-            BigInteger iBI = new BigInteger(i + "");
+            BigInteger iBI = new BigInteger(k + "");
             conbinationsBI = BigFunctions.getCombination(iBI, getNBI());
             if (conbinationsBI.compareTo(new BigInteger(Long.MAX_VALUE + "")) == -1) {
                 combinations = conbinationsBI.longValue();
@@ -118,34 +122,36 @@ public class BinomialDistribution implements Distribution {
             }
         }
 
-        if (!needBigObjects && (i > 0 && i * precisionP <= precisionLimit + extraPrecision || n - i > 0 && (n - i) * precisionP <= precisionLimit + extraPrecision)) {
+        if (!needBigObjects && (k > 0 && k * precisionP <= precisionLimit + extraPrecision || n - k > 0 && (n - k) * precisionP <= precisionLimit + extraPrecision)) {
             needBigObjects = true;
         }
 
         BigDecimal result;
 
         if (needBigObjects) {
-            if (i > 1) {
+            if (k == 0) {
                 result = BigDecimal.ONE;
-            } else if (i == 1) {
+            } else if (k == 1) {
                 result = getPBigDecimal();
             } else {
-                result = getPBigDecimal().pow(i);
+                result = getPBigDecimal().pow(k);
             }
             if (combinations != null) {
-                result.multiply(new BigDecimal(combinations));
+                result = result.multiply(new BigDecimal(combinations));
             } else {
-                result.multiply(new BigDecimal(conbinationsBI));
+                BigDecimal combinationsBD = new BigDecimal(conbinationsBI);
+                result = result.multiply(combinationsBD);
             }
-            if (n - i == 1) {
+            if (n - k == 1) {
                 result = result.multiply(getOneMinusPBigDecimal());
-            } else if (n - i > 1) {
-                result = result.multiply(getOneMinusPBigDecimal().pow(n - i));
+            } else if (n - k > 1) {
+                BigDecimal oneMinusPNK = getOneMinusPBigDecimal().pow(n - k);
+                result = result.multiply(oneMinusPNK);
             }
         } else {
-            double product = FastMath.pow(p, i);
+            double product = FastMath.pow(p, k);
             product *= combinations;
-            product *= FastMath.pow(1 - p, n - i);
+            product *= FastMath.pow(1 - p, n - k);
             result = new BigDecimal(product);
         }
 

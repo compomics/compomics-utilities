@@ -243,12 +243,6 @@ public class PhosphoRS {
                                         }
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        }
-                                        // compensate rounding effects
-                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
                                             throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
                                             throw new IllegalArgumentException("PhosphoRS probability >100%.");
@@ -276,12 +270,6 @@ public class PhosphoRS {
                                         }
 
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        }
-                                        // compensate rounding effects
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
                                             throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
@@ -341,12 +329,6 @@ public class PhosphoRS {
                             MSnSpectrum currentSpectrum = spectra.get(i);
                             double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
                             BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                            // compensate rounding effects
-                            if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                            } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                            }
                             if (bigP.compareTo(BigDecimal.ZERO) == -1) {
                                 throw new IllegalArgumentException("PhosphoRS probability <0%.");
                             } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
@@ -396,16 +378,7 @@ public class PhosphoRS {
                 }
                 BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                 if (bigP.compareTo(BigDecimal.ZERO) <= 0) {
-                    bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                     throw new IllegalArgumentException("PhosphoRS probability <= 0.");
-                }
-                // compensate rounding effects
-                if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                    bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                    bigP = BigDecimal.ONE;
-                }
-                if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                    throw new IllegalArgumentException("PhosphoRS probability <0%.");
                 } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
                     throw new IllegalArgumentException("PhosphoRS probability >100%.");
                 }

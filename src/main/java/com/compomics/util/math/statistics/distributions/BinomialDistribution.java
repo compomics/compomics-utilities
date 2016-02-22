@@ -6,6 +6,8 @@ import com.compomics.util.math.statistics.Distribution;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.util.HashMap;
+import java.util.HashSet;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.util.FastMath;
 
@@ -40,6 +42,22 @@ public class BinomialDistribution implements Distribution {
      * 1-p as BigDecimal.
      */
     private BigDecimal oneMinuspBD = null;
+    /**
+     * The maximal number of keys kept in each cache map.
+     */
+    private int cacheSize = 1000;
+    /**
+     * A cache for the probabilities.
+     */
+    private HashMap<Integer, BigDecimal> pCache = new HashMap<Integer, BigDecimal>();
+    /**
+     * A cache for the cumulative probabilities.
+     */
+    private HashMap<Integer, BigDecimal> cumulativePCache = new HashMap<Integer, BigDecimal>();
+    /**
+     * A cache for the cumulative probabilities.
+     */
+    private HashMap<Integer, BigDecimal> descendingCumulativePCache = new HashMap<Integer, BigDecimal>();
 
     /**
      * Constructor.
@@ -129,6 +147,12 @@ public class BinomialDistribution implements Distribution {
         BigDecimal result;
 
         if (needBigObjects) {
+            // Check if the result is in cache
+            BigDecimal pInCache = pCache.get(k);
+            if (pInCache != null) {
+                return pInCache;
+            }
+            // Estimate p
             if (k == 0) {
                 result = BigDecimal.ONE;
             } else if (k == 1) {
@@ -148,6 +172,7 @@ public class BinomialDistribution implements Distribution {
                 BigDecimal oneMinusPNK = getOneMinusPBigDecimal().pow(n - k);
                 result = result.multiply(oneMinusPNK);
             }
+            addPToCache(k, result);
         } else {
             double product = FastMath.pow(p, k);
             product *= combinations;
@@ -158,35 +183,88 @@ public class BinomialDistribution implements Distribution {
         return result;
     }
 
+    /**
+     * Adds a probability to the cache and manages the cache size.
+     *
+     * @param k the value
+     * @param p the probability
+     */
+    private synchronized void addPToCache(int k, BigDecimal p) {
+        if (pCache.size() >= cacheSize) {
+            HashSet<Integer> keys = new HashSet<Integer>(pCache.keySet());
+            for (Integer key : keys) {
+                pCache.remove(key);
+                if (pCache.size() < cacheSize) {
+                    break;
+                }
+            }
+        }
+        pCache.put(k, p);
+    }
+
     @Override
     public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
 
         int k = (int) x;
         int extraPrecision = Math.max(k, n - k) + precisionP;
         MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
+
         BigDecimal result = BigDecimal.ZERO;
 
+        // Check if the result is in cache
+        BigDecimal pInCache = cumulativePCache.get(k);
+        if (pInCache != null) {
+            return pInCache;
+        }
+        int nOperations = 0;
+
+        // Estimate p
         if (k > n * p) {
 
-            // estimate 1-P to be faster
+            // estimate 1-p to be faster
             if (k < n) {
                 for (int i = k + 1; i <= n; i++) {
                     BigDecimal probability = getProbabilityAt(i, tempMathContext);
                     result = result.add(probability);
+                    nOperations++;
                 }
             }
 
-            return BigDecimal.ONE.subtract(result);
+            result = BigDecimal.ONE.subtract(result);
 
         } else {
 
             for (int i = 0; i <= k; i++) {
                 BigDecimal probability = getProbabilityAt(i, tempMathContext);
                 result = result.add(probability);
+                nOperations++;
             }
         }
 
+        if (nOperations > 50) {
+            addCumulativePToCache(k, result);
+        }
+
         return result;
+    }
+
+    /**
+     * Adds a probability to the cache and manages the cache size.
+     *
+     * @param k the value
+     * @param p the probability
+     */
+    private synchronized void addCumulativePToCache(int k, BigDecimal p) {
+        if (cumulativePCache.size() >= cacheSize) {
+            HashSet<Integer> keys = new HashSet<Integer>(cumulativePCache.keySet());
+            for (Integer key : keys) {
+                cumulativePCache.remove(key);
+                if (cumulativePCache.size() < cacheSize) {
+                    break;
+                }
+            }
+        }
+        cumulativePCache.put(k, p);
     }
 
     @Override
@@ -197,24 +275,66 @@ public class BinomialDistribution implements Distribution {
         MathContext tempMathContext = new MathContext(mathContext.getPrecision() + extraPrecision, mathContext.getRoundingMode());
         BigDecimal result = BigDecimal.ZERO;
 
+        // Check if the result is in cache
+        BigDecimal pInCache = descendingCumulativePCache.get(k);
+        if (pInCache != null) {
+            return pInCache;
+        }
+        int nOperations = 0;
+
+        // Estimate p
         if (k < n * p) {
 
-            // estimate 1-P to be faster
+            // estimate 1-p to be faster
             for (int i = 0; i < k; i++) {
                 BigDecimal probability = getProbabilityAt(i, tempMathContext);
                 result = result.add(probability);
+                nOperations++;
             }
 
-            return BigDecimal.ONE.subtract(result);
+            result = BigDecimal.ONE.subtract(result);
 
         } else {
             for (int i = k; i <= n; i++) {
                 BigDecimal probability = getProbabilityAt(i, tempMathContext);
                 result = result.add(probability);
+                nOperations++;
             }
         }
 
+        if (nOperations > 50) {
+            addDescendingCumulativePToCache(k, result);
+        }
+
         return result;
+    }
+
+    /**
+     * Adds a probability to the cache and manages the cache size.
+     *
+     * @param k the value
+     * @param p the probability
+     */
+    private synchronized void addDescendingCumulativePToCache(int k, BigDecimal p) {
+        if (descendingCumulativePCache.size() >= cacheSize) {
+            HashSet<Integer> keys = new HashSet<Integer>(descendingCumulativePCache.keySet());
+            for (Integer key : keys) {
+                descendingCumulativePCache.remove(key);
+                if (descendingCumulativePCache.size() < cacheSize) {
+                    break;
+                }
+            }
+        }
+        descendingCumulativePCache.put(k, p);
+    }
+
+    /**
+     * Indicates whether all caches are empty.
+     *
+     * @return a boolean indicating whether all caches are empty
+     */
+    public boolean isCacheEmpty() {
+        return pCache.isEmpty() && cumulativePCache.isEmpty() && descendingCumulativePCache.isEmpty();
     }
 
     @Override

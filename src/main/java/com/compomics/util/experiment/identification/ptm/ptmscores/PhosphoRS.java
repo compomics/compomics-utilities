@@ -33,7 +33,7 @@ import org.apache.commons.math.util.FastMath;
  * This class estimates the PhosphoRS score as described in
  * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: the calculation in its
  * present form is very slow for multiply modified peptides, peptides with many
- * modification sites, and noisy spectra. Typically, avoid scoring deamindation
+ * modification sites, and noisy spectra. Typically, avoid scoring deamidation
  * sites.
  *
  * @author Marc Vaudel
@@ -44,6 +44,14 @@ public class PhosphoRS {
      * The maximal depth to use per window (8 in the original paper).
      */
     public static final int MAX_DEPTH = 8;
+    /**
+     * The number of binomial distributions kept in cache.
+     */
+    private static int distributionCacheSize = 1000;
+    /**
+     * The binomial distributions cache.
+     */
+    private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
@@ -498,7 +506,16 @@ public class PhosphoRS {
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
             AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings, MathContext mathContext) throws MathException {
 
-        BinomialDistribution distribution = new BinomialDistribution(n, p);
+        BinomialDistribution distribution = null;
+        HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
+        boolean inCache = true;
+        if (distributionsAtP != null) {
+            distribution = distributionsAtP.get(n);
+        }
+        if (distribution == null) {
+            distribution = new BinomialDistribution(n, p);
+            inCache = false;
+        }
 
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide);
         int k = 0;
@@ -511,7 +528,35 @@ public class PhosphoRS {
             return BigDecimal.ONE;
         }
 
-        return distribution.getDescendingCumulativeProbabilityAt((double) k, mathContext);
+        BigDecimal result = distribution.getDescendingCumulativeProbabilityAt((double) k, mathContext);
+        if (!inCache && !distribution.isCacheEmpty()) {
+            addDistributionToCache(p, n, distribution);
+        }
+        return result;
+    }
+
+    /**
+     * Adds a distribution to the cache and manages the cache size.
+     *
+     * @param p the distribution p
+     * @param n the distribution n
+     */
+    private static synchronized void addDistributionToCache(double p, int n, BinomialDistribution binomialDistribution) {
+        if (distributionCache.size() >= distributionCacheSize) {
+            HashSet<Double> keys = new HashSet<Double>(distributionCache.keySet());
+            for (Double key : keys) {
+                distributionCache.remove(key);
+                if (distributionCache.size() < distributionCacheSize) {
+                    break;
+                }
+            }
+        }
+        HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
+        if (distributionsAtP == null) {
+            distributionsAtP = new HashMap<Integer, BinomialDistribution>(2);
+            distributionCache.put(p, distributionsAtP);
+        }
+        distributionsAtP.put(n, binomialDistribution);
     }
 
     /**

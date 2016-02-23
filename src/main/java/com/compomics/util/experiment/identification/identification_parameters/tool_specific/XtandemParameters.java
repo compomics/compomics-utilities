@@ -120,6 +120,14 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
      * VENGEANCE (2015.12.15) and newer.
      */
     private Boolean useNoiseSuppression = false;
+    /**
+     * The value of the command "protein, ptm complexity" (C, a floating point
+     * number 0.0–12.0) sets the maximum number of variable modification
+     * alternatives that will be tested for a particular peptide. The number of
+     * alternatives is 2.0C. If this number is not specified, the default value
+     * C = 6.0 will be used.
+     */
+    private Double proteinPtmComplexity = 6.0;
 
     /**
      * Constructor.
@@ -574,10 +582,10 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
     public void setRefineSnaps(Boolean refineSnaps) {
         this.refineSnaps = refineSnaps;
     }
-    
+
     /**
      * Returns the output results filter.
-     * 
+     *
      * @return the outputResults
      */
     public String getOutputResults() {
@@ -589,11 +597,32 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
 
     /**
      * Set the output results filter.
-     * 
+     *
      * @param outputResults the outputResults to set
      */
     public void setOutputResults(String outputResults) {
         this.outputResults = outputResults;
+    }
+
+    /**
+     * Returns the proteinPtmComplexity. 
+     * 
+     * @return the proteinPtmComplexity
+     */
+    public Double getProteinPtmComplexity() {
+        if (proteinPtmComplexity == null) {
+            proteinPtmComplexity = 6.0;
+        }
+        return proteinPtmComplexity;
+    }
+
+    /**
+     * Set the proteinPtmComplexity.
+     * 
+     * @param proteinPtmComplexity the proteinPtmComplexity to set
+     */
+    public void setProteinPtmComplexity(Double proteinPtmComplexity) {
+        this.proteinPtmComplexity = proteinPtmComplexity;
     }
 
     @Override
@@ -614,7 +643,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getnPeaks().equals(xtandemParameters.getnPeaks())) {
+            if (getnPeaks().intValue() != xtandemParameters.getnPeaks()) {
                 return false;
             }
             diff = Math.abs(minPrecursorMass - xtandemParameters.getMinPrecursorMass());
@@ -625,62 +654,65 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!getMinPeaksPerSpectrum().equals(xtandemParameters.getMinPeaksPerSpectrum())) {
+            if (getMinPeaksPerSpectrum().intValue() != xtandemParameters.getMinPeaksPerSpectrum()) {
                 return false;
             }
-            if (!isProteinQuickAcetyl().equals(xtandemParameters.isProteinQuickAcetyl())) {
+            if (isProteinQuickAcetyl().booleanValue() != xtandemParameters.isProteinQuickAcetyl()) {
                 return false;
             }
-            if (!isQuickPyrolidone().equals(xtandemParameters.isQuickPyrolidone())) {
+            if (isQuickPyrolidone().booleanValue() != xtandemParameters.isQuickPyrolidone()) {
                 return false;
             }
-            if (!isRefine().equals(xtandemParameters.isRefine())) {
+            if (isRefine().booleanValue() != xtandemParameters.isRefine()) {
                 return false;
             }
-            if (!isRefineSemi().equals(xtandemParameters.isRefineSemi())) {
+            if (isRefineSemi().booleanValue() != xtandemParameters.isRefineSemi()) {
                 return false;
             }
-            if (!isRefinePointMutations().equals(xtandemParameters.isRefinePointMutations())) {
+            if (isRefinePointMutations().booleanValue() != xtandemParameters.isRefinePointMutations()) {
                 return false;
             }
-            if (!isRefineSpectrumSynthesis().equals(xtandemParameters.isRefineSpectrumSynthesis())) {
+            if (isRefineSpectrumSynthesis().booleanValue() != xtandemParameters.isRefineSpectrumSynthesis()) {
                 return false;
             }
-            if (!isRefineUnanticipatedCleavages().equals(xtandemParameters.isRefineUnanticipatedCleavages())) {
+            if (isRefineUnanticipatedCleavages().booleanValue() != xtandemParameters.isRefineUnanticipatedCleavages()) {
                 return false;
             }
-            if (!isRefineSnaps().equals(xtandemParameters.isRefineSnaps())) {
+            if (isRefineSnaps().booleanValue() != xtandemParameters.isRefineSnaps()) {
                 return false;
             }
             diff = Math.abs(maximumExpectationValueRefinement - xtandemParameters.getMaximumExpectationValueRefinement());
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (!isPotentialModificationsForFullRefinment().equals(xtandemParameters.isPotentialModificationsForFullRefinment())) {
+            if (isPotentialModificationsForFullRefinment().booleanValue() != xtandemParameters.isPotentialModificationsForFullRefinment()) {
                 return false;
             }
             if (!getSkylinePath().equals(xtandemParameters.getSkylinePath())) {
                 return false;
             }
-            if (!isOutputProteins().equals(xtandemParameters.isOutputProteins())) {
+            if (isOutputProteins().booleanValue() != xtandemParameters.isOutputProteins()) {
                 return false;
             }
-            if (!isOutputSpectra().equals(xtandemParameters.isOutputSpectra())) {
+            if (isOutputSpectra().booleanValue() != xtandemParameters.isOutputSpectra()) {
                 return false;
             }
-            if (!isOutputSequences().equals(xtandemParameters.isOutputSequences())) {
+            if (isOutputSequences().booleanValue() != xtandemParameters.isOutputSequences()) {
                 return false;
             }
-            if (!isOutputHistograms().equals(xtandemParameters.isOutputHistograms())) {
+            if (isOutputHistograms().booleanValue() != xtandemParameters.isOutputHistograms()) {
                 return false;
             }
-            if (!isStpBias().equals(xtandemParameters.isStpBias())) {
+            if (isStpBias().booleanValue() != xtandemParameters.isStpBias()) {
                 return false;
             }
-            if (!isUseNoiseSuppression().equals(xtandemParameters.isUseNoiseSuppression())) {
+            if (isUseNoiseSuppression().booleanValue() != xtandemParameters.isUseNoiseSuppression()) {
                 return false;
             }
             if (!getOutputResults().equalsIgnoreCase(xtandemParameters.getOutputResults())) {
+                return false;
+            }
+            if (getProteinPtmComplexity().doubleValue() != xtandemParameters.getProteinPtmComplexity()) {
                 return false;
             }
             return true;
@@ -748,6 +780,10 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         } else {
             output.append("NO");
         }
+        output.append(newLine);
+        
+        output.append("PROTEIN_PTM_COMPLEXITY=");
+        output.append(getProteinPtmComplexity());
         output.append(newLine);
 
         output.append("STP_BIAS=");
@@ -825,7 +861,7 @@ public class XtandemParameters implements IdentificationAlgorithmParameter {
         output.append("SKYLINE_PATH=");
         output.append(skylinePath);
         output.append(newLine);
-        
+
         output.append("OUTPUT_RESULTS=");
         output.append(getOutputResults());
         output.append(newLine);

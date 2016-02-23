@@ -73,9 +73,10 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
-     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the mass
-     * spectrometer
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the
+     * mass spectrometer
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public XTandemSettingsDialog(java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(parent, true);
@@ -96,9 +97,10 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * @param parent the parent frame
      * @param xtandemParameters the X!Tandem parameters
      * @param modificationProfile the modification profile of the search
-     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the mass
-     * spectrometer
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param fragmentIonMassAccuracyInDa the fragment ion mass accuracy of the
+     * mass spectrometer
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public XTandemSettingsDialog(Dialog owner, java.awt.Frame parent, XtandemParameters xtandemParameters, PtmSettings modificationProfile, double fragmentIonMassAccuracyInDa, boolean editable) {
         super(owner, true);
@@ -116,7 +118,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
      * Sets up the GUI.
      */
     private void setUpGUI() {
-        
+
         noiseSuppressionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         quickAcetylCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         quickPyroCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -145,7 +147,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         modificationsTable.getTableHeader().setReorderingAllowed(false);
 
         setAllModificationTableProperties();
-        
+
         dynamicRangeTxt.setEditable(editable);
         dynamicRangeTxt.setEnabled(editable);
         nPeaksTxt.setEditable(editable);
@@ -177,7 +179,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         pointMutationsCmb.setEnabled(editable);
         snapsCmb.setEnabled(editable);
         spectrumSynthesisCmb.setEnabled(editable);
-        
+        ptmComplexityTxt.setEnabled(editable);
     }
 
     /**
@@ -199,7 +201,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
     /**
      * Populates the GUI using the given settings.
-     * 
+     *
      * @param xtandemParameters the parameters to display
      */
     private void populateGUI(XtandemParameters xtandemParameters) {
@@ -323,6 +325,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             skylineTxt.setText(xtandemParameters.getSkylinePath() + "");
         }
 
+        ptmComplexityTxt.setText(xtandemParameters.getProteinPtmComplexity() + "");
+
         // load the ptms
         updateModificationList();
     }
@@ -331,7 +335,7 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     public boolean isCancelled() {
         return cancelled;
     }
-    
+
     @Override
     public IdentificationAlgorithmParameter getParameters() {
         return getInput();
@@ -392,6 +396,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         if (!input.equals("")) {
             result.setSkylinePath(input);
         }
+        input = ptmComplexityTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setProteinPtmComplexity(new Double(input));
+        }
+        
         return result;
     }
 
@@ -446,6 +455,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         quickPyroLabel = new javax.swing.JLabel();
         stpBiasLabel = new javax.swing.JLabel();
         stpBiasCmb = new javax.swing.JComboBox();
+        ptmComplexityLbl = new javax.swing.JLabel();
+        ptmComplexityTxt = new javax.swing.JTextField();
         outputSettingsPanel = new javax.swing.JPanel();
         eValueLbl = new javax.swing.JLabel();
         eValueTxt = new javax.swing.JTextField();
@@ -751,18 +762,39 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         stpBiasLabel.setText("stP bias    (?)");
         stpBiasLabel.setToolTipText("Open X!Tandem parameter details");
         stpBiasLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                stpBiasLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 stpBiasLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 stpBiasLabelMouseExited(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                stpBiasLabelMouseReleased(evt);
+            }
         });
 
         stpBiasCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        ptmComplexityLbl.setText("PTM Complexity    (?)");
+        ptmComplexityLbl.setToolTipText("Open X!Tandem parameter details");
+        ptmComplexityLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                ptmComplexityLblMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                ptmComplexityLblMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ptmComplexityLblMouseReleased(evt);
+            }
+        });
+
+        ptmComplexityTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        ptmComplexityTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ptmComplexityTxtKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
@@ -771,14 +803,20 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
             .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quickAcetylLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(quickPyroCmb, 0, 294, Short.MAX_VALUE)
-                    .addComponent(stpBiasCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(quickAcetylCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(ptmComplexityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ptmComplexityTxt))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(quickPyroLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(quickAcetylLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(stpBiasLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(quickPyroCmb, 0, 294, Short.MAX_VALUE)
+                            .addComponent(stpBiasCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(quickAcetylCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(25, 25, 25))
         );
         advancedSearchSettingsPanelLayout.setVerticalGroup(
@@ -796,7 +834,11 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stpBiasCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stpBiasLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ptmComplexityLbl)
+                    .addComponent(ptmComplexityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(314, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Advanced Search", advancedSearchSettingsPanel);
@@ -1040,14 +1082,14 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         maxEValueRefinmentLbl.setText("Maximum Valid Expectation Value    (?)");
         maxEValueRefinmentLbl.setToolTipText("Open X!Tandem parameter details");
         maxEValueRefinmentLbl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                maxEValueRefinmentLblMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 maxEValueRefinmentLblMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 maxEValueRefinmentLblMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                maxEValueRefinmentLblMouseReleased(evt);
             }
         });
 
@@ -2350,8 +2392,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
     /**
      * Open the ModificationsDialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void openModificationSettingsJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openModificationSettingsJButtonActionPerformed
         new ModificationsDialog((Frame) this.getParent(), true);
@@ -2450,12 +2492,50 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
 
     /**
      * Enable or disable the e-value cutoff option.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void outputResultsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputResultsCmbActionPerformed
         eValueTxt.setEnabled(!((String) outputResultsCmb.getSelectedItem()).equalsIgnoreCase("all"));
     }//GEN-LAST:event_outputResultsCmbActionPerformed
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void ptmComplexityLblMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_ptmComplexityLblMouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void ptmComplexityLblMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_ptmComplexityLblMouseExited
+
+    /**
+     * Open the link to the X!Tandem help pages.
+     *
+     * @param evt
+     */
+    private void ptmComplexityLblMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ptmComplexityLblMouseReleased
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("http://www.thegpm.org/TANDEM/release.html");
+        this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_ptmComplexityLblMouseReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void ptmComplexityTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptmComplexityTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_ptmComplexityTxtKeyReleased
 
     /**
      * Inspects the parameters validity.
@@ -2474,6 +2554,25 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
         valid = GuiUtilities.validateIntegerInput(this, minPeaksLbl, minPeaksTxt, "minimal number of peaks", "Minimal Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, minPrecMassLbl, minPrecMassTxt, "minimal precursor mass", "Minimal Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, maxEValueRefinmentLbl, maxEValueRefineTxt, "maximal e-value for the refinement", "Maximal Refinement E-Value Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, ptmComplexityLbl, ptmComplexityTxt, "PTM complexity", "PTM Complexity Error", true, showMessage, valid);
+
+        // check if the ptm complexity value is in the range (0.0-12.0)
+        if (valid) {
+            try {
+                Double value = new Double(ptmComplexityTxt.getText());
+                if (value > 12) {
+                    if (showMessage && valid) {
+                        JOptionPane.showMessageDialog(this, "Please select a number in the range (0.0-12.0) for PTM complexity.",
+                                "PTM Complexity Error", JOptionPane.WARNING_MESSAGE);
+                    }
+                    valid = false;
+                    ptmComplexityLbl.setForeground(Color.RED);
+                    ptmComplexityLbl.setToolTipText("Please select a number in the range (0.0-12.0)");
+                }
+            } catch (NumberFormatException e) {
+                // ignore, already caught above
+            }
+        }
 
         okButton.setEnabled(valid);
 
@@ -2591,6 +2690,8 @@ public class XTandemSettingsDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JLabel pointMutationLabel;
     private javax.swing.JComboBox pointMutationsCmb;
     private javax.swing.JComboBox potentialModificationsCmb;
+    private javax.swing.JLabel ptmComplexityLbl;
+    private javax.swing.JTextField ptmComplexityTxt;
     private javax.swing.JComboBox quickAcetylCmb;
     private javax.swing.JLabel quickAcetylLabel;
     private javax.swing.JComboBox quickPyroCmb;

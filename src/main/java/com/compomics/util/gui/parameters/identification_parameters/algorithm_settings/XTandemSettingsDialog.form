@@ -339,20 +339,29 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="quickPyroLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                              <Component id="quickAcetylLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
-                              <Component id="stpBiasLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="ptmComplexityLbl" min="-2" pref="265" max="-2" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="ptmComplexityTxt" max="32767" attributes="2"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="quickPyroLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                                      <Component id="quickAcetylLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                                      <Component id="stpBiasLabel" alignment="0" min="-2" pref="265" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="quickPyroCmb" pref="294" max="32767" attributes="0"/>
+                                      <Component id="stpBiasCmb" max="32767" attributes="0"/>
+                                      <Component id="quickAcetylCmb" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="quickPyroCmb" pref="294" max="32767" attributes="0"/>
-                              <Component id="stpBiasCmb" max="32767" attributes="0"/>
-                              <Component id="quickAcetylCmb" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -374,7 +383,12 @@
                               <Component id="stpBiasCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="stpBiasLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="ptmComplexityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ptmComplexityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="314" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -434,9 +448,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="stpBiasLabelMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="stpBiasLabelMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="stpBiasLabelMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="stpBiasLabelMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="stpBiasCmb">
@@ -448,6 +462,25 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="ptmComplexityLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="PTM Complexity    (?)"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ptmComplexityLblMouseEntered"/>
+                    <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ptmComplexityLblMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ptmComplexityLblMouseReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JTextField" name="ptmComplexityTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ptmComplexityTxtKeyReleased"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -845,9 +878,9 @@
                     <Property name="toolTipText" type="java.lang.String" value="Open X!Tandem parameter details"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxEValueRefinmentLblMouseReleased"/>
                     <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxEValueRefinmentLblMouseEntered"/>
                     <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxEValueRefinmentLblMouseExited"/>
+                    <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="maxEValueRefinmentLblMouseReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="pointMutationLabel">

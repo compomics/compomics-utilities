@@ -33,7 +33,7 @@ import org.apache.commons.math.util.FastMath;
  * This class estimates the PhosphoRS score as described in
  * http://www.ncbi.nlm.nih.gov/pubmed/22073976. Warning: the calculation in its
  * present form is very slow for multiply modified peptides, peptides with many
- * modification sites, and noisy spectra. Typically, avoid scoring deamindation
+ * modification sites, and noisy spectra. Typically, avoid scoring deamidation
  * sites.
  *
  * @author Marc Vaudel
@@ -44,6 +44,14 @@ public class PhosphoRS {
      * The maximal depth to use per window (8 in the original paper).
      */
     public static final int MAX_DEPTH = 8;
+    /**
+     * The number of binomial distributions kept in cache.
+     */
+    private static int distributionCacheSize = 1000;
+    /**
+     * The binomial distributions cache.
+     */
+    private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
@@ -186,9 +194,23 @@ public class PhosphoRS {
             double minMz = spectrum.getMinMz(), maxMz = spectrum.getMaxMz(), tempMax;
             HashMap<Double, Peak> reducedSpectrum = new HashMap<Double, Peak>();
 
+            double d = specificAnnotationSettings.getFragmentIonAccuracy();
+            double dOverW = d / 100;
+            dOverW = -FastMath.log10(dOverW);
+            int nDecimals = ((int) dOverW) + 1;
+
             while (minMz < maxMz) {
 
                 tempMax = minMz + 100;
+
+                if (specificAnnotationSettings.isFragmentIonPpm()) {
+                    Double refMz = minMz + 50;
+                    d = specificAnnotationSettings.getFragmentIonAccuracyInDa(refMz);
+                    dOverW = d / 100;
+                    dOverW = -FastMath.log10(dOverW);
+                    nDecimals = ((int) dOverW) + 1;
+                }
+
                 HashMap<Double, Peak> extractedPeakList = spectrum.getSubSpectrum(minMz, tempMax);
 
                 if (!extractedPeakList.isEmpty()) {
@@ -224,7 +246,7 @@ public class PhosphoRS {
                             ArrayList<BigDecimal> currentDeltas = new ArrayList<BigDecimal>(possibleProfiles.size());
                             ArrayList<HashSet<Double>> scored = new ArrayList<HashSet<Double>>(possibleProfiles.size());
                             boolean noIons = false;
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
+                            double currentP = getp(currentSpectrum, 100, d, nDecimals, scoringAnnotationSetttings);
                             for (ArrayList<Integer> profile : possibleProfiles) {
                                 String profileKey = KeyUtils.getKey(profile);
                                 HashSet<Double> tempSiteDeterminingIons = profileToScore.get(profileKey);
@@ -243,9 +265,9 @@ public class PhosphoRS {
                                         }
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability < 0.");
+                                            throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            throw new IllegalArgumentException("PhosphoRS probability > 1.");
+                                            throw new IllegalArgumentException("PhosphoRS probability >100%.");
                                         }
                                         bigPs.add(bigP);
                                     }
@@ -270,11 +292,10 @@ public class PhosphoRS {
                                         }
 
                                         BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                                        // compensate rounding effects
                                         if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                            bigP = BigDecimal.ZERO;
+                                            throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                            bigP = BigDecimal.ONE;
+                                            throw new IllegalArgumentException("PhosphoRS probability >100%.");
                                         }
                                         bigPs.add(bigP);
                                         scored.add(tempSiteDeterminingIons);
@@ -328,13 +349,12 @@ public class PhosphoRS {
 
                         for (int i = 0; i < spectra.size(); i++) {
                             MSnSpectrum currentSpectrum = spectra.get(i);
-                            double currentP = getp(currentSpectrum, scoringAnnotationSetttings);
+                            double currentP = getp(currentSpectrum, 100, d, nDecimals, scoringAnnotationSetttings);
                             BigDecimal bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
-                            // compensate rounding effects
                             if (bigP.compareTo(BigDecimal.ZERO) == -1) {
-                                bigP = BigDecimal.ZERO;
+                                throw new IllegalArgumentException("PhosphoRS probability <0%.");
                             } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                                bigP = BigDecimal.ONE;
+                                throw new IllegalArgumentException("PhosphoRS probability >100%.");
                             }
                             if (bigP.compareTo(bestP) == -1) {
                                 bestP = bigP;
@@ -350,8 +370,17 @@ public class PhosphoRS {
             }
 
             MSnSpectrum phosphoRsSpectrum = new MSnSpectrum(spectrum.getLevel(), spectrum.getPrecursor(), spectrum.getSpectrumTitle() + "_phosphoRS", reducedSpectrum, spectrum.getFileName());
-            double currentP = getp(phosphoRsSpectrum, scoringAnnotationSetttings);
-            int pPrecision = (int) -FastMath.log10(currentP);
+
+            double w = spectrum.getMaxMz() - spectrum.getMinMz();
+            if (specificAnnotationSettings.isFragmentIonPpm()) {
+                Double refMz = spectrum.getMinMz() + (w / 2);
+                d = specificAnnotationSettings.getFragmentIonAccuracyInDa(refMz);
+            }
+            dOverW = d / w;
+            dOverW = -FastMath.log10(dOverW);
+            nDecimals = ((int) dOverW) + 1;
+            double currentP = getp(phosphoRsSpectrum, w, d, nDecimals, scoringAnnotationSetttings);
+            int pPrecision = ((int) -FastMath.log10(currentP)) + 1;
             HashMap<String, BigDecimal> pInvMap = new HashMap<String, BigDecimal>(possibleProfiles.size());
             BigDecimal pInvTotal = BigDecimal.ZERO;
 
@@ -381,10 +410,8 @@ public class PhosphoRS {
                 BigDecimal bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings, mathContext);
                 if (bigP.compareTo(BigDecimal.ZERO) <= 0) {
                     throw new IllegalArgumentException("PhosphoRS probability <= 0.");
-                }
-                // compensate rounding effects
-                if (bigP.compareTo(BigDecimal.ONE) == 1) {
-                    bigP = BigDecimal.ONE;
+                } else if (bigP.compareTo(BigDecimal.ONE) == 1) {
+                    throw new IllegalArgumentException("PhosphoRS probability >100%.");
                 }
                 MathContext pMathContext = new MathContext(mathContext.getPrecision() + n + pPrecision, mathContext.getRoundingMode());
                 BigDecimal pInv = BigDecimal.ONE.divide(bigP, pMathContext);
@@ -502,7 +529,16 @@ public class PhosphoRS {
     private static BigDecimal getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
             AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings, MathContext mathContext) throws MathException {
 
-        BinomialDistribution distribution = new BinomialDistribution(n, p);
+        BinomialDistribution distribution = null;
+        HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
+        boolean inCache = true;
+        if (distributionsAtP != null) {
+            distribution = distributionsAtP.get(n);
+        }
+        if (distribution == null) {
+            distribution = new BinomialDistribution(n, p);
+            inCache = false;
+        }
 
         ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide);
         int k = 0;
@@ -515,7 +551,35 @@ public class PhosphoRS {
             return BigDecimal.ONE;
         }
 
-        return distribution.getDescendingCumulativeProbabilityAt((double) k, mathContext);
+        BigDecimal result = distribution.getDescendingCumulativeProbabilityAt((double) k, mathContext);
+        if (!inCache && !distribution.isCacheEmpty()) {
+            addDistributionToCache(p, n, distribution);
+        }
+        return result;
+    }
+
+    /**
+     * Adds a distribution to the cache and manages the cache size.
+     *
+     * @param p the distribution p
+     * @param n the distribution n
+     */
+    private static synchronized void addDistributionToCache(double p, int n, BinomialDistribution binomialDistribution) {
+        if (distributionCache.size() >= distributionCacheSize) {
+            HashSet<Double> keys = new HashSet<Double>(distributionCache.keySet());
+            for (Double key : keys) {
+                distributionCache.remove(key);
+                if (distributionCache.size() < distributionCacheSize) {
+                    break;
+                }
+            }
+        }
+        HashMap<Integer, BinomialDistribution> distributionsAtP = distributionCache.get(p);
+        if (distributionsAtP == null) {
+            distributionsAtP = new HashMap<Integer, BinomialDistribution>(2);
+            distributionCache.put(p, distributionsAtP);
+        }
+        distributionsAtP.put(n, binomialDistribution);
     }
 
     /**
@@ -525,27 +589,28 @@ public class PhosphoRS {
      * the middle of the spectrum as reference.
      *
      * @param spectrum the spectrum studied
+     * @param w the m/z range considered
+     * @param d the m/z tolerance in daltons
+     * @param nDecimals the number of decimals to use
      * @param specificAnnotationSettings the annotation settings
      *
      * @return the probability p for a calculated fragment matching one of the
      * experimental masses by chance as estimated in the PhosphoRS algorithm.
      */
-    private static double getp(Spectrum spectrum, SpecificAnnotationSettings specificAnnotationSettings) {
-        double w = spectrum.getMaxMz() - spectrum.getMinMz();
+    private static double getp(Spectrum spectrum, double w, double d, int nDecimals, SpecificAnnotationSettings specificAnnotationSettings) {
         if (w == 0.0) {
             return 1.0;
         }
-        Double refMz = null;
-        if (specificAnnotationSettings.isFragmentIonPpm()) {
-            refMz = spectrum.getMinMz() + (w / 2);
-        }
-        double d = specificAnnotationSettings.getFragmentIonAccuracyInDa(refMz);
         int N = spectrum.getPeakMap().size();
+        if (N <= 1) {
+            return 1.0;
+        }
         double p = d * N / w;
         if (p > 1) {
             p = 1;
         }
-        return p;
+        double roundedP = Util.floorDouble(p, nDecimals);
+        return roundedP;
     }
 
     /**

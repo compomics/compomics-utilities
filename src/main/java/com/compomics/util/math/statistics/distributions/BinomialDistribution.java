@@ -241,7 +241,7 @@ public class BinomialDistribution implements Distribution {
             }
         }
 
-        if (nOperations > 50) {
+        if (nOperations > 1) {
             addCumulativePToCache(k, result);
         }
 

@@ -44,7 +44,7 @@ public class PrideWebService {
     private static String getQueryURL(String queryRoot, String query, PrideFilter... filters) {
         String queryURLAsString = queryRoot + "?";
         if (!query.isEmpty()) {
-            queryURLAsString = queryRoot + "query=" + query;
+            queryURLAsString = queryURLAsString + "query=" + query;
         }
         if (filters != null && filters.length > 0) {
             for (PrideFilter aFilter : filters) {

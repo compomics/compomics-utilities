@@ -17,6 +17,10 @@ public abstract class Ion extends ExperimentObject {
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -1505719074403886934L;
+    /**
+     * Cache for the neutral losses as string.
+     */
+    private String neutralLossesAsString = null;
 
     /**
      * An enumerator of the supported ion types.
@@ -189,7 +193,10 @@ public abstract class Ion extends ExperimentObject {
      * @return the neutral loss
      */
     public String getNeutralLossesAsString() {
-        return getNeutralLossesAsString(getNeutralLosses());
+        if (neutralLossesAsString == null) {
+            neutralLossesAsString = getNeutralLossesAsString(getNeutralLosses());
+        }
+        return neutralLossesAsString;
     }
 
     /**
@@ -207,7 +214,7 @@ public abstract class Ion extends ExperimentObject {
             names.add(neutralLoss.name);
         }
         Collections.sort(names);
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(4*neutralLosses.size());
         for (String name : names) {
             result.append("-").append(name);
         }

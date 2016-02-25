@@ -2,11 +2,13 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.ions.*;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
+import java.util.HashMap;
 
 /**
  * This class will model the assignment of a peak to a theoretical ion.
@@ -19,6 +21,15 @@ public class IonMatch extends ExperimentObject {
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 5753142782728884464L;
+    /**
+     * Cache for the ion type keys.
+     */
+    private static final HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> ionKeysCache = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>(8);
+    /**
+     * Cache for the charge keys.
+     */
+    private static final HashMap<Integer, String> chargeKeysCache = new HashMap<Integer, String>(4);
+
     /**
      * The matched peak.
      */
@@ -60,12 +71,12 @@ public class IonMatch extends ExperimentObject {
      *
      * @param minIsotope the minimal isotope
      * @param maxIsotope the maximal isotope
-     * 
+     *
      * @return the absolute matching error
      */
     public double getAbsoluteError(int minIsotope, int maxIsotope) {
         double theoreticMass = ion.getTheoreticMass();
-            theoreticMass -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1);
+        theoreticMass -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1);
         return peak.mz - ((theoreticMass + charge.value * ElementaryIon.proton.getTheoreticMass()) / charge.value);
     }
 
@@ -127,7 +138,7 @@ public class IonMatch extends ExperimentObject {
      * in ppm (true) or in Dalton (false)
      * @param minIsotope the minimal isotope
      * @param maxIsotope the maximal isotope
-     * 
+     *
      * @return the match m/z error
      */
     public double getError(boolean isPpm, int minIsotope, int maxIsotope) {
@@ -143,7 +154,7 @@ public class IonMatch extends ExperimentObject {
      *
      * @param isPpm a boolean indicating whether the error should be retrieved
      * in ppm (true) or in Dalton (false)
-     * 
+     *
      * @return the match m/z error
      */
     public double getError(boolean isPpm) {
@@ -175,27 +186,99 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns a key for the ion match uniquely representing a peak annotation.
+     * Returns the key for the ion match uniquely representing a peak
+     * annotation.
      *
      * @param ion the ion matched
      * @param charge the charge
      *
-     * @return a key for the ion match
+     * @return the key for the ion match
      */
     public static String getMatchKey(Ion ion, int charge) {
-        StringBuilder key = new StringBuilder();
-        key.append(ion.getType().index).append("_");
-        key.append(ion.getSubType()).append("_");
-        if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
-            key.append(fragmentIon.getNumber()).append("_");
-        } else if (ion.getType() == Ion.IonType.TAG_FRAGMENT_ION) {
-            TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
-            key.append(tagFragmentIon.getSubNumber()).append("_");
-        }
-        key.append(ion.getNeutralLossesAsString()).append("_");
-        key.append(charge);
+        StringBuilder key = new StringBuilder(9);
+        key.append(getIonTypeKey(ion));
+        key.append(ion.getNeutralLossesAsString());
+        key.append(getChargeKey(charge));
         return key.toString();
+    }
+
+    /**
+     * Returns the key for the type of the given ion.
+     *
+     * @param ion
+     *
+     * @return the key for the ion type
+     */
+    public static String getIonTypeKey(Ion ion) {
+        IonType ionType = ion.getType();
+        int ionTypeIndex = ionType.index;
+        int ionSubType = ion.getSubType();
+        int fragmentIonNumber;
+        if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
+            fragmentIonNumber = fragmentIon.getNumber();
+        } else if (ionType == Ion.IonType.TAG_FRAGMENT_ION) {
+            TagFragmentIon tagFragmentIon = ((TagFragmentIon) ion);
+            fragmentIonNumber = tagFragmentIon.getNumber();
+        } else {
+            fragmentIonNumber = 0;
+        }
+        HashMap<Integer, HashMap<Integer, String>> ionTypeMap = ionKeysCache.get(ionTypeIndex);
+        if (ionTypeMap == null) {
+            synchronized (IonMatch.class) {
+                ionTypeMap = ionKeysCache.get(ionTypeIndex);
+                if (ionTypeMap == null) {
+                    ionTypeMap = new HashMap<Integer, HashMap<Integer, String>>(8);
+                    ionKeysCache.put(ionSubType, ionTypeMap);
+                }
+            }
+        }
+        HashMap<Integer, String> ionSubTypeMap = ionTypeMap.get(ionSubType);
+        if (ionSubTypeMap == null) {
+            synchronized (IonMatch.class) {
+                ionSubTypeMap = ionTypeMap.get(ionSubType);
+                if (ionSubTypeMap == null) {
+                    ionSubTypeMap = new HashMap<Integer, String>(2);
+                    ionTypeMap.put(ionSubType, ionSubTypeMap);
+                }
+            }
+        }
+        String typeKey = ionSubTypeMap.get(fragmentIonNumber);
+        if (typeKey == null) {
+            synchronized (IonMatch.class) {
+                typeKey = ionSubTypeMap.get(fragmentIonNumber);
+                if (typeKey == null) {
+                    StringBuilder stringBuilder = new StringBuilder(6);
+                    stringBuilder.append(ionTypeIndex).append("_").append(ionSubType).append("_").append(fragmentIonNumber).append("_");
+                    typeKey = stringBuilder.toString();
+                    ionSubTypeMap.put(fragmentIonNumber, typeKey);
+                }
+            }
+        }
+        return typeKey;
+    }
+
+    /**
+     * Returns the key for the given charge.
+     *
+     * @param charge
+     *
+     * @return the key for the charge
+     */
+    public static String getChargeKey(int charge) {
+        String key = chargeKeysCache.get(charge);
+        if (key == null) {
+            synchronized (IonMatch.class) {
+                key = chargeKeysCache.get(charge);
+                if (key == null) {
+                    StringBuilder stringBuilder = new StringBuilder(2);
+                    stringBuilder.append("_").append(charge);
+                    key = stringBuilder.toString();
+                    chargeKeysCache.put(charge, key);
+                }
+            }
+        }
+        return key;
     }
 
     /**
@@ -352,7 +435,7 @@ public class IonMatch extends ExperimentObject {
 
     /**
      * Returns the pride CV term for the ion match error.
-     * 
+     *
      * @param minIsotope the minimal isotope
      * @param maxIsotope the maximal isotope
      *

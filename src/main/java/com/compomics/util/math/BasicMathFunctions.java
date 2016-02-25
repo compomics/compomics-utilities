@@ -24,7 +24,7 @@ public class BasicMathFunctions {
     /**
      * Cache for factorials.
      */
-    private static HashMap<Integer, Long> factorialsCache = new HashMap<Integer, Long>();
+    private static final HashMap<Integer, Long> factorialsCache = new HashMap<Integer, Long>();
 
     /**
      * Returns n! as a long. Returns null if the capacity of a long is not
@@ -61,8 +61,13 @@ public class BasicMathFunctions {
     private static synchronized Long estimateFactorial(Integer n) {
         Long result = factorialsCache.get(n);
         if (result == null) {
-            result = factorial(n - 1) * n;
-            factorialsCache.put(n, result);
+            synchronized (BasicMathFunctions.class) {
+                result = factorialsCache.get(n);
+                if (result == null) {
+                    result = factorial(n - 1) * n;
+                    factorialsCache.put(n, result);
+                }
+            }
         }
         return result;
     }

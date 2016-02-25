@@ -119,6 +119,10 @@ public abstract class SpectrumAnnotator {
      * specific annotation settings.
      */
     protected SpecificAnnotationSettings specificAnnotationSettings = null;
+    /**
+     * The cache to use for the ion match keys.
+     */
+    protected IonMatchKeysCache ionMatchKeysCache = new IonMatchKeysCache();
 
     /**
      * Translates the list of ion matches into a vector of annotations which can
@@ -253,9 +257,9 @@ public abstract class SpectrumAnnotator {
         }
 
         if (bestMatch != null) {
-            spectrumAnnotation.put(IonMatch.getMatchKey(theoreticIon, charge.value), bestMatch);
+            spectrumAnnotation.put(IonMatch.getMatchKey(theoreticIon, charge.value, ionMatchKeysCache), bestMatch);
         } else {
-            unmatchedIons.add(IonMatch.getMatchKey(theoreticIon, charge.value));
+            unmatchedIons.add(IonMatch.getMatchKey(theoreticIon, charge.value, ionMatchKeysCache));
         }
 
         return bestMatch != null;

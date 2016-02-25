@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Annotates a spectrum with peptide fragments. Warning: not multi-thread safe,
- * use different annotators for each thread.
+ * Annotates a spectrum with peptide fragments. 
+ * Warning: not multi-thread safe, use different annotators for each thread.
  *
  * @author Marc Vaudel
  */
@@ -138,7 +138,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
 
                                 for (int charge : ionPossibleCharges) {
                                     if (chargeValidated(ion, charge, precursorCharge)) {
-                                        String key = IonMatch.getMatchKey(ion, charge);
+                                        String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
                                         boolean matchFound = false;
                                         boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
                                         if (!alreadyAnnotated && !unmatchedIons.contains(key)) {

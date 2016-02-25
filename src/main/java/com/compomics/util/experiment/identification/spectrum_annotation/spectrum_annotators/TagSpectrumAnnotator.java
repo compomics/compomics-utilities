@@ -259,7 +259,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
                                     for (int charge : tempCharges) {
                                         if (chargeValidated(ion, charge, precursorCharge)) {
-                                            String key = IonMatch.getMatchKey(ion, charge);
+                                            String key = IonMatch.getMatchKey(ion, charge, ionMatchKeysCache);
                                             boolean matchFound = false;
                                             boolean alreadyAnnotated = spectrumAnnotation.containsKey(key);
                                             if (!alreadyAnnotated && !unmatchedIons.contains(key)) {

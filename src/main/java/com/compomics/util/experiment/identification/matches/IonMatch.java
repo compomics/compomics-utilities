@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
 import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.ions.*;
+import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -21,14 +22,6 @@ public class IonMatch extends ExperimentObject {
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 5753142782728884464L;
-    /**
-     * Cache for the ion type keys.
-     */
-    private static final HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>> ionKeysCache = new HashMap<Integer, HashMap<Integer, HashMap<Integer, String>>>(8);
-    /**
-     * Cache for the charge keys.
-     */
-    private static final HashMap<Integer, String> chargeKeysCache = new HashMap<Integer, String>(4);
 
     /**
      * The matched peak.
@@ -186,8 +179,7 @@ public class IonMatch extends ExperimentObject {
     }
 
     /**
-     * Returns the key for the ion match uniquely representing a peak
-     * annotation.
+     * Returns the key for the ion match uniquely representing a peak annotation.
      *
      * @param ion the ion matched
      * @param charge the charge
@@ -195,22 +187,24 @@ public class IonMatch extends ExperimentObject {
      * @return the key for the ion match
      */
     public static String getMatchKey(Ion ion, int charge) {
-        StringBuilder key = new StringBuilder(9);
-        key.append(getIonTypeKey(ion));
-        key.append(ion.getNeutralLossesAsString());
-        key.append(getChargeKey(charge));
-        return key.toString();
+        return getMatchKey(ion, charge, null);
     }
 
     /**
-     * Returns the key for the type of the given ion.
+     * Returns the key for the ion match uniquely representing a peak annotation.
+     * If a cache is given it will be used to store keys, ignored if null.
      *
-     * @param ion
+     * @param ion the ion matched
+     * @param charge the charge
+     * @param ionMatchKeysCache a cache for the ion match keys
      *
-     * @return the key for the ion type
+     * @return the key for the ion match
      */
-    public static String getIonTypeKey(Ion ion) {
-        IonType ionType = ion.getType();
+    public static String getMatchKey(Ion ion, int charge, IonMatchKeysCache ionMatchKeysCache) {
+        if (ionMatchKeysCache != null) {
+            return ionMatchKeysCache.getMatchKey(ion, charge);
+        }
+        Ion.IonType ionType = ion.getType();
         int ionTypeIndex = ionType.index;
         int ionSubType = ion.getSubType();
         int fragmentIonNumber;
@@ -223,62 +217,26 @@ public class IonMatch extends ExperimentObject {
         } else {
             fragmentIonNumber = 0;
         }
-        HashMap<Integer, HashMap<Integer, String>> ionTypeMap = ionKeysCache.get(ionTypeIndex);
-        if (ionTypeMap == null) {
-            synchronized (IonMatch.class) {
-                ionTypeMap = ionKeysCache.get(ionTypeIndex);
-                if (ionTypeMap == null) {
-                    ionTypeMap = new HashMap<Integer, HashMap<Integer, String>>(8);
-                    ionKeysCache.put(ionSubType, ionTypeMap);
-                }
-            }
-        }
-        HashMap<Integer, String> ionSubTypeMap = ionTypeMap.get(ionSubType);
-        if (ionSubTypeMap == null) {
-            synchronized (IonMatch.class) {
-                ionSubTypeMap = ionTypeMap.get(ionSubType);
-                if (ionSubTypeMap == null) {
-                    ionSubTypeMap = new HashMap<Integer, String>(2);
-                    ionTypeMap.put(ionSubType, ionSubTypeMap);
-                }
-            }
-        }
-        String typeKey = ionSubTypeMap.get(fragmentIonNumber);
-        if (typeKey == null) {
-            synchronized (IonMatch.class) {
-                typeKey = ionSubTypeMap.get(fragmentIonNumber);
-                if (typeKey == null) {
-                    StringBuilder stringBuilder = new StringBuilder(6);
-                    stringBuilder.append(ionTypeIndex).append("_").append(ionSubType).append("_").append(fragmentIonNumber).append("_");
-                    typeKey = stringBuilder.toString();
-                    ionSubTypeMap.put(fragmentIonNumber, typeKey);
-                }
-            }
-        }
-        return typeKey;
+        String neutralLossesAsString = ion.getNeutralLossesAsString();
+        String key = getMatchKey(ionTypeIndex, ionSubType, fragmentIonNumber, neutralLossesAsString, charge);
+        return key;
     }
 
     /**
-     * Returns the key for the given charge.
-     *
-     * @param charge
-     *
-     * @return the key for the charge
+     * Returns the key based on the different attributes of a match.
+     * 
+     * @param ionTypeIndex the index of the ion type
+     * @param ionSubType the index of the ion subtype
+     * @param fragmentIonNumber the number of the ion, 0 if none
+     * @param neutralLossesAsString the neutral losses as a string
+     * @param charge the charge
+     * 
+     * @return the key for the ion match
      */
-    public static String getChargeKey(int charge) {
-        String key = chargeKeysCache.get(charge);
-        if (key == null) {
-            synchronized (IonMatch.class) {
-                key = chargeKeysCache.get(charge);
-                if (key == null) {
-                    StringBuilder stringBuilder = new StringBuilder(2);
-                    stringBuilder.append("_").append(charge);
-                    key = stringBuilder.toString();
-                    chargeKeysCache.put(charge, key);
-                }
-            }
-        }
-        return key;
+    public static String getMatchKey(int ionTypeIndex, int ionSubType, int fragmentIonNumber, String neutralLossesAsString, int charge) {
+        StringBuilder stringBuilder = new StringBuilder(8);
+        stringBuilder.append(ionTypeIndex).append("_").append(ionSubType).append("_").append(fragmentIonNumber).append("_").append(neutralLossesAsString).append("_").append(charge);
+        return stringBuilder.toString();
     }
 
     /**

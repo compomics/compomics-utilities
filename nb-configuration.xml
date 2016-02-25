@@ -10,9 +10,11 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>Da</word>
         <word>Ensembl</word>
         <word>immonium</word>
+        <word>json</word>
         <word>Maven</word>
         <word>Novor</word>
         <word>sparkline</word>
         <word>taskbar</word>
+        <word>webservice</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

@@ -42,12 +42,16 @@ public class PrideWebService {
      * instances
      */
     private static String getQueryURL(String queryRoot, String query, PrideFilter... filters) {
-        String queryURLAsString = queryRoot + "?query=" + query;
+        String queryURLAsString = queryRoot + "?";
+        if (!query.isEmpty()) {
+            queryURLAsString = queryURLAsString + "query=" + query;
+        }
         if (filters != null && filters.length > 0) {
             for (PrideFilter aFilter : filters) {
                 queryURLAsString += aFilter.getType().toString() + "=" + aFilter.getValue().replace(" ", "%20");
             }
         }
+        System.out.println(queryURLAsString);
         return queryURLAsString;
     }
 

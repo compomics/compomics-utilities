@@ -30,11 +30,11 @@ public class PTMScoringPreferences implements Serializable {
     /**
      * Boolean indicating whether the threshold should be FLR based.
      */
-    private boolean estimateFlr = true;
+    private boolean estimateFlr = false;
     /**
      * The probabilistic score threshold.
      */
-    private double probabilisticScoreThreshold = 99;
+    private double probabilisticScoreThreshold = 95;
     /**
      * Boolean indicating whether neutral losses shall be accounted for in the
      * calculation of the probabilistic score.

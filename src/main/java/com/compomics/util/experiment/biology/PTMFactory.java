@@ -39,9 +39,9 @@ public class PTMFactory implements Serializable {
      */
     private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
-     * The name of the PTM factory back-up file.
+     * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-3.50.4.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.2.cus";
     /**
      * A map linking indexes with modifications.
      */

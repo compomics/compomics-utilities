@@ -72,7 +72,7 @@ public abstract class SpectrumAnnotator {
     /**
      * List of unmatched ions.
      */
-    protected ArrayList<String> unmatchedIons = new ArrayList<String>();
+    protected HashSet<String> unmatchedIons = new HashSet<String>();
     /**
      * The m/z tolerance for peak matching.
      */

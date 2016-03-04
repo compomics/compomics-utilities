@@ -112,7 +112,10 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * display
      */
     private void populateGUI(ProteinInferencePreferences proteinInferencePreferences) {
-        databaseSettingsTxt.setText(proteinInferencePreferences.getProteinSequenceDatabase().getAbsolutePath());
+        if (proteinInferencePreferences.getProteinSequenceDatabase() != null) {
+            databaseSettingsTxt.setText(proteinInferencePreferences.getProteinSequenceDatabase().getAbsolutePath());
+            okButton.setEnabled(true);
+        }
     }
 
     /**
@@ -170,6 +173,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         });
 
         okButton.setText("OK");
+        okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);

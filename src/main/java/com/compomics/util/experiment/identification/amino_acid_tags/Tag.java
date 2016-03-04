@@ -296,10 +296,10 @@ public class Tag extends ExperimentObject {
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
-     * @param useShortName if true the short names are used in the tags
-     * @param includeTerminalGaps if true the terminal gaps will be displayed on
+     * @param useShortName if true. the short names are used in the tags
+     * @param includeTerminalGaps if true. the terminal gaps will be displayed on
      * the sequence
-     * @param excludeAllFixedModifications if true fixed modifications will not
+     * @param excludeAllFixedModifications if true. fixed modifications will not
      * be displayed on the sequence
      *
      * @return the modified sequence as a tagged string
@@ -319,8 +319,8 @@ public class Tag extends ExperimentObject {
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
-     * @param useShortName if true the short names are used in the tags
-     * @param includeTerminalGaps if true the terminal gaps will be displayed on
+     * @param useShortName if true, the short names are used in the tags
+     * @param includeTerminalGaps if true, the terminal gaps will be displayed on
      * the sequence
      *
      * @return the modified sequence as a tagged string
@@ -341,10 +341,10 @@ public class Tag extends ExperimentObject {
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * PTM tags, e.g, &lt;mox&gt;, are used
-     * @param useShortName if true the short names are used in the tags
+     * @param useShortName if true, the short names are used in the tags
      * @return the tagged modified sequence as a string
-     * @param excludeAllFixedPtms if true the fixed ptms will not be displayed
-     * @param includeTerminalGaps if true the terminal gaps will be displayed on
+     * @param excludeAllFixedPtms if true, the fixed PTMs will not be displayed
+     * @param includeTerminalGaps if true, the terminal gaps will be displayed on
      * the sequence
      */
     public static String getTaggedModifiedSequence(PtmSettings modificationProfile, Tag tag,
@@ -539,6 +539,12 @@ public class Tag extends ExperimentObject {
                             possibleSites.add(i + offset);
                         }
                         offset += aminoAcidPattern.length();
+                    } else if (tagComponent instanceof AminoAcidSequence) {
+                        AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+                        for (int i : ptmPattern.getIndexes(aminoAcidSequence.getSequence(), ptmSequenceMatchingPreferences)) {
+                            possibleSites.add(i + offset);
+                        }
+                        offset += aminoAcidSequence.length();
                     } else {
                         offset++;
                     }

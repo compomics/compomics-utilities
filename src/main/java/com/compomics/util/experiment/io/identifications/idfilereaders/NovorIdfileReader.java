@@ -136,7 +136,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
 //            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
 //        }
-
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
         LinkedList<SpectrumMatch> result = new LinkedList<SpectrumMatch>();
@@ -151,6 +150,8 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
         long progressUnit = bufferedRandomAccessFile.length() / 100;
 
         String inputFile = null;
+        String fixedModificationsLine = null;
+        String variableModificationsLine = null;
 
         // read until we find the header line
         String line;
@@ -158,14 +159,40 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
             if (line.startsWith("# input file = ")) {
                 inputFile = line.substring("# input file = ".length()).trim();
             }
+            if (line.startsWith("# fixedModifications = ")) {
+                fixedModificationsLine = line.substring("# fixedModifications = ".length()).trim();
+            }
+            if (line.startsWith("# variableModifications = ")) {
+                variableModificationsLine = line.substring("# variableModifications = ".length()).trim();
+            }
         }
 
         if (inputFile == null) {
             throw new IllegalArgumentException("Mandatory header information is missing in the Novor csv file (the input file tag). Please check the file!");
         }
+        if (fixedModificationsLine == null) {
+            throw new IllegalArgumentException("Mandatory header information is missing in the Novor csv file (the fixedModifications tag). Please check the file!");
+        }
+        if (variableModificationsLine == null) {
+            throw new IllegalArgumentException("Mandatory header information is missing in the Novor csv file (the variableModifications tag). Please check the file!");
+        }
 
         // get the spectrum file name
         String spectrumFileName = new File(inputFile).getName();
+
+        // get the variable modifications
+        HashMap<Integer, String> variableModificationsMap = new HashMap<Integer, String>();
+        String[] tempVariable = variableModificationsLine.split(", ");
+        for (int i = 0; i < tempVariable.length; i++) {
+            variableModificationsMap.put(i, tempVariable[i]);
+        }
+
+        // get the fixed modifications
+        HashMap<Integer, String> fixedModificationsMap = new HashMap<Integer, String>();
+        String[] tempFixed = fixedModificationsLine.split(", ");
+        for (int i = 0; i < tempFixed.length; i++) {
+            fixedModificationsMap.put(variableModificationsMap.size() + i, tempFixed[i]);
+        }
 
         String headerString = line.substring(1).trim();
         if (headerString.endsWith(",")) {
@@ -271,7 +298,6 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                 if (peptideSequenceWithMods.contains("(") || peptideSequenceWithMods.contains("[")) {
 
                     // example: (N-term|Acetyl)S(Phospho)EQUENCES(Phospho)(C-term|Amidated)
-
                     peptideSequence = "";
 
                     for (int i = 0; i < peptideSequenceWithMods.length(); i++) {
@@ -282,24 +308,34 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
                             int modStart = i + 1;
                             int modEnd = peptideSequenceWithMods.indexOf(")", i + 1);
                             String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
-                            
+
                             if (currentMod.toLowerCase().startsWith("n-term|")) {
-                                currentMod = currentMod.substring("n-term|".length());
-                                if (novorParameters.getNovorPtmMap() != null) {
-                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                int currentModAsInt = new Integer(currentMod.substring("n-term|".length()));
+                                if (variableModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, 1));
+                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, 1));
+                                } else if (novorParameters.getNovorPtmMap() == null) {
+                                    throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
-                                utilitiesModifications.add(new ModificationMatch(currentMod, true, 1));
                             } else if (currentMod.toLowerCase().startsWith("c-term|")) {
-                                currentMod = currentMod.substring("c-term|".length());
-                                if (novorParameters.getNovorPtmMap() != null) {
-                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                int currentModAsInt = new Integer(currentMod.substring("c-term|".length()));
+                                if (variableModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, peptideSequence.length()));
+                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, peptideSequence.length()));
+                                } else if (novorParameters.getNovorPtmMap() == null) {
+                                    throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
-                                utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             } else {
-                                if (novorParameters.getNovorPtmMap() != null) {
-                                    currentMod = novorParameters.getUtilitiesPtmName(currentMod);
+                                int currentModAsInt = new Integer(currentMod);
+                                if (variableModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), true, peptideSequence.length()));
+                                } else if (fixedModificationsMap.containsKey(currentModAsInt)) {
+                                    utilitiesModifications.add(new ModificationMatch(fixedModificationsMap.get(currentModAsInt), false, peptideSequence.length()));
+                                } else if (novorParameters.getNovorPtmMap() == null) {
+                                    throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                 }
-                                utilitiesModifications.add(new ModificationMatch(currentMod, true, peptideSequence.length()));
                             }
 
                             i = modEnd;

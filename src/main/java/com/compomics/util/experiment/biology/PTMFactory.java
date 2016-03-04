@@ -571,11 +571,16 @@ public class PTMFactory implements Serializable {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         int indexInTag = 0, componentNumber = 0;
+        
         for (TagComponent tagComponent : tag.getContent()) {
+            
             componentNumber++;
+            
             if (tagComponent instanceof AminoAcidPattern) {
+                
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                 ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+                
                 for (int aa : aminoAcidPattern.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
@@ -587,12 +592,16 @@ public class PTMFactory implements Serializable {
                         aminoAcidPattern.removeModificationMatch(aa, modMatch);
                     }
                 }
+                
                 for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
+                    
                     indexInTag++;
                     Double modificationMass = null;
 
                     for (String fixedModification : modificationProfile.getFixedModifications()) {
+                        
                         PTM ptm = getPTM(fixedModification);
+                        
                         if (ptm.getType() == PTM.MODAA) {
                             if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
                                 if (modificationMass == null) {
@@ -615,6 +624,56 @@ public class PTMFactory implements Serializable {
                         } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
                             if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
                                 aminoAcidPattern.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
+                            }
+                        }
+                    }
+                }
+            } else if (tagComponent instanceof AminoAcidSequence) {
+              
+                AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
+                
+                ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
+                
+                for (int aa : aminoAcidSequence.getModificationIndexes()) {
+                    ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(aa);
+                    for (ModificationMatch modMatch : modificationMatches) {
+                        if (!modMatch.isVariable()) {
+                            toRemove.add(modMatch);
+                        }
+                    }
+                    for (ModificationMatch modMatch : toRemove) {
+                        aminoAcidSequence.removeModificationMatch(aa, modMatch);
+                    }
+                }
+                
+                for (int aa = 1; aa <= aminoAcidSequence.length(); aa++) {
+                    indexInTag++;
+                    Double modificationMass = null;
+
+                    for (String fixedModification : modificationProfile.getFixedModifications()) {
+                        PTM ptm = getPTM(fixedModification);
+                        if (ptm.getType() == PTM.MODAA) {
+                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
+                                if (modificationMass == null) {
+                                    modificationMass = ptm.getMass();
+                                    aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                                } else if (modificationMass != ptm.getMass()) { // @TODO: compare against the accuracy
+                                    throw new IllegalArgumentException("Attempting to put two fixed modifications of different masses ("
+                                            + modificationMass + ", " + ptm.getMass() + ") at position " + aa + " in pattern "
+                                            + aminoAcidSequence.asSequence() + " of tag " + tag.asSequence() + ".");
+                                }
+                            }
+                        } else if (ptm.getType() == PTM.MODCP && componentNumber == tag.getContent().size() && aa == aminoAcidSequence.length()) {
+                            aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                        } else if (ptm.getType() == PTM.MODNP && componentNumber == 1 && aa == 1) {
+                            aminoAcidSequence.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
+                        } else if (ptm.getType() == PTM.MODCPAA && componentNumber == tag.getContent().size() && aa == aminoAcidSequence.length()) {
+                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
+                                aminoAcidSequence.addModificationMatch(aa, new ModificationMatch(fixedModification, false, aa));
+                            }
+                        } else if (ptm.getType() == PTM.MODNPAA && componentNumber == 1 && aa == 1) {
+                            if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(1)) {
+                                aminoAcidSequence.addModificationMatch(1, new ModificationMatch(fixedModification, false, 1));
                             }
                         }
                     }

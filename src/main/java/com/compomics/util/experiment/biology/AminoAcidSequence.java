@@ -153,6 +153,13 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
         setSequenceStringBuilder(false);
         if (aminoAcidPattern == null) {
             aminoAcidPattern = new AminoAcidPattern(sequence);
+            if (modifications != null) {
+                for (Integer location : modifications.keySet()) {
+                    for (ModificationMatch modMatch : modifications.get(location)) {
+                        aminoAcidPattern.addModificationMatch(location, modMatch);
+                    }
+                }
+            }
         }
         return aminoAcidPattern;
     }
@@ -790,16 +797,20 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                 }
             } else {
                 Color ptmColor = modificationProfile.getColor(ptmName);
-                if (localizationConfidenceLevel == 1) {
-                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
-                } else if (localizationConfidenceLevel == 2) {
-                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                } else if (localizationConfidenceLevel == 3) {
-//                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
-//                    taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
-                    taggedResidue.append(residue);
-                } else {
-                    throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
+                switch (localizationConfidenceLevel) {
+                    case 1:
+                        taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
+                        break;
+                    case 2:
+                        taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                        break;
+                    case 3:
+                        // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(ptmColor)).append("\">").append(residue).append("</span>");
+                        // taggedResidue.append("<span style=\"color:#").append(Util.color2Hex(Color.BLACK)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                        taggedResidue.append(residue);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
                 }
             }
         } else {

@@ -494,7 +494,7 @@ public class PeptideAssumptionFilter implements Serializable {
             return false;
         }
         if (maxIsotopes != null && anotherFilter.getMaxIsotopes() != null) {
-            if (maxIsotopes.equals(anotherFilter.getMaxIsotopes())) {
+            if (!maxIsotopes.equals(anotherFilter.getMaxIsotopes())) {
                 return false;
             }
         }

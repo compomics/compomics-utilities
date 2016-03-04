@@ -336,7 +336,7 @@ public class PtmDialog extends javax.swing.JDialog {
         }
 
         // check if name contains ','
-        if (name.lastIndexOf("|") != -1) {
+        if (name.lastIndexOf(",") != -1) {
             if (showMessage && !error) {
                 JOptionPane.showMessageDialog(this, "Modification names cannot contain \',\'.");
             }

@@ -2,7 +2,6 @@ package com.compomics.util.math.statistics.linear_regression.filters;
 
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,12 +22,10 @@ public class ProbabilityFilter {
      * @param y y series
      * @param p the (non cumulative) probability to use for filtering, e.g. 0.95
      * for 95%
-     * @param mathContext the math context to use for the evaluation of the
-     * threshold
      *
      * @return a filtered list of x and y
      */
-    public static ArrayList<ArrayList<Double>> getFilteredInput(ArrayList<Double> x, ArrayList<Double> y, double p, MathContext mathContext) {
+    public static ArrayList<ArrayList<Double>> getFilteredInput(ArrayList<Double> x, ArrayList<Double> y, double p) {
 
         if (x == null) {
             throw new IllegalArgumentException("null given as x for filtering.");
@@ -99,8 +96,8 @@ public class ProbabilityFilter {
 
         NonSymmetricalNormalDistribution slopeDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistribution(deviationsSquare);
         double threshold = 1 - p;
-        Double deviationMax = slopeDistribution.getMaxValueForProbability(threshold, mathContext).doubleValue();
-        Double deviationMin = slopeDistribution.getMinValueForProbability(threshold, mathContext).doubleValue();
+        Double deviationMax = slopeDistribution.getMaxValueForProbability(threshold);
+        Double deviationMin = slopeDistribution.getMinValueForProbability(threshold);
         ArrayList<Double> filteredX = new ArrayList<Double>(x.size());
         ArrayList<Double> filteredY = new ArrayList<Double>(y.size());
 

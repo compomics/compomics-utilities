@@ -1,7 +1,6 @@
 package com.compomics.util.math.roc;
 
 import com.compomics.util.math.statistics.ROC;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -108,7 +107,7 @@ public class DataRoc implements ROC {
     }
 
     @Override
-    public double getValueAt(double specificity, MathContext mathContext) throws MathException {
+    public double getValueAt(double specificity) throws MathException {
         Double xBefore = null;
         Double yBefore = null;
         Double xAfter = null;
@@ -136,7 +135,7 @@ public class DataRoc implements ROC {
     }
 
     @Override
-    public double getSpecificityAt(double sensitivity, MathContext mathContext) throws MathException {
+    public double getSpecificityAt(double sensitivity) throws MathException {
         Double xBefore = null;
         Double yBefore = null;
         Double xAfter = null;
@@ -164,7 +163,7 @@ public class DataRoc implements ROC {
     }
 
     @Override
-    public double[][] getxYValues(MathContext mathContext) throws MathException {
+    public double[][] getxYValues() throws MathException {
         double[][] result = new double[xValues.size()][2];
         int i = 0;
         for (double xValue : xValues) {
@@ -176,7 +175,7 @@ public class DataRoc implements ROC {
     }
 
     @Override
-    public double getAuc(MathContext mathContext) throws MathException {
+    public double getAuc() throws MathException {
         double auc = 0;
         for (int i = 0; i < xValues.size() - 1; i++) {
             double xAfter = xValues.get(i + 1);

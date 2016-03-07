@@ -75,26 +75,23 @@ public class NormalDistribution implements Distribution {
     }
 
     @Override
-    public BigDecimal getProbabilityAt(double x, MathContext mathContext) {
+    public Double getProbabilityAt(double x) {
         if (std == 0) {
             if (x == mean) {
-                return BigDecimal.ONE;
+                return 1.0;
             } else {
-                return BigDecimal.ZERO;
+                return 0.0;
             }
         }
-        if (mathContext.getPrecision() > 300) {
-            throw new UnsupportedOperationException("Not implemented for resolution " + mathContext.getPrecision() + ".");
-        }
         double xNorm = (x - mean) / std;
-        double result = Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5)); //@TODO: verify that xNorm is not too big/small for the desired precision
-        return new BigDecimal(result, mathContext);
+        double result = Math.pow(Math.E, -Math.pow(xNorm, 2) / 2) / (Math.pow(2 * Math.PI, 0.5)); //@TODO: verify that xNorm is not too big/small
+        return result;
     }
 
     @Override
-    public BigDecimal getMaxValueForProbability(double p, MathContext mathContext) {
+    public Double getMaxValueForProbability(double p) {
         if (std == 0) {
-            return new BigDecimal(mean, mathContext);
+            return mean;
         }
         if (p >= 1) {
             throw new IllegalArgumentException("Probability >= 1");
@@ -102,17 +99,14 @@ public class NormalDistribution implements Distribution {
         if (p <= 0) {
             throw new IllegalArgumentException("Probability <= 0");
         }
-        if (mathContext.getPrecision() > 300) {
-            throw new UnsupportedOperationException("Not implemented for resolution " + mathContext.getPrecision() + ".");
-        }
         double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
-        return new BigDecimal(mean + std * x, mathContext);
+        return mean + std * x;
     }
 
     @Override
-    public BigDecimal getMinValueForProbability(double p, MathContext mathContext) {
+    public Double getMinValueForProbability(double p) {
         if (std == 0) {
-            return new BigDecimal(mean, mathContext);
+            return mean;
         }
         if (p >= 1) {
             throw new IllegalArgumentException("Probability >= 1");
@@ -120,86 +114,77 @@ public class NormalDistribution implements Distribution {
         if (p <= 0) {
             throw new IllegalArgumentException("Probability <= 0");
         }
-        if (mathContext.getPrecision() > 300) {
-            throw new UnsupportedOperationException("Not implemented for resolution " + mathContext.getPrecision() + ".");
-        }
         double x = Math.pow(-2 * Math.log(p * Math.pow(2 * Math.PI, 0.5)), 0.5); //@TODO: verify that p is not too small
-        return new BigDecimal(mean - std * x, mathContext);
+        return mean - std * x;
     }
 
     @Override
-    public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getCumulativeProbabilityAt(double x) throws MathException {
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (x < mean) {
-                return BigDecimal.ZERO;
+                return 0.0;
             } else if (x == mean) {
-                return new BigDecimal(0.5, mathContext);
+                return 0.5;
             } else {
-                return BigDecimal.ONE;
+                return 1.0;
             }
         }
-        if (mathContext.getPrecision() > 300) {
-            throw new UnsupportedOperationException("Not implemented for resolution " + mathContext.getPrecision() + ".");
-        }
-        return new BigDecimal(normalDistributionImpl.cumulativeProbability(x), mathContext);
+        return normalDistributionImpl.cumulativeProbability(x);
     }
 
     @Override
-    public BigDecimal getValueAtCumulativeProbability(double p, MathContext mathContext) throws MathException {
+    public Double getValueAtCumulativeProbability(double p) throws MathException {
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
-                return new BigDecimal(Double.NEGATIVE_INFINITY, mathContext);
+                return Double.NEGATIVE_INFINITY;
             } else if (p == 0.5) {
-                return new BigDecimal(mean, mathContext);
+                return mean;
             } else {
-                return new BigDecimal(Double.POSITIVE_INFINITY, mathContext);
+                return Double.POSITIVE_INFINITY;
             }
         }
-        if (mathContext.getPrecision() > 300) {
-            throw new UnsupportedOperationException("Not implemented for resolution " + mathContext.getPrecision() + ".");
-        }
-        return new BigDecimal(normalDistributionImpl.inverseCumulativeProbability(p), mathContext);
+        return normalDistributionImpl.inverseCumulativeProbability(p);
     }
 
     @Override
-    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (x > mean) {
-                return BigDecimal.ZERO;
+                return 0.0;
             } else if (x == mean) {
-                return new BigDecimal(0.5, mathContext);
+                return 0.5;
             } else {
-                return BigDecimal.ONE;
+                return 1.0;
             }
         }
-        return BigDecimal.ONE.subtract(getCumulativeProbabilityAt(x, mathContext));
+        return 1.0 - getCumulativeProbabilityAt(x);
     }
 
     @Override
-    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getSmallestCumulativeProbabilityAt(double x) throws MathException {
         if (x > mean) {
-            return getDescendingCumulativeProbabilityAt(x, mathContext);
+            return getDescendingCumulativeProbabilityAt(x);
         } else {
-            getCumulativeProbabilityAt(x, mathContext);
+            getCumulativeProbabilityAt(x);
         }
-        return new BigDecimal(0.5);
+        return 0.5;
     }
 
     @Override
-    public BigDecimal getValueAtDescendingCumulativeProbability(double p, MathContext mathContext) throws MathException {
+    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
         if (std == 0) {
             // Note: this is my personal interpretation of the cumulative distribution in this case
             if (p < 0.5) {
-                return new BigDecimal(Double.POSITIVE_INFINITY, mathContext);
+                return Double.POSITIVE_INFINITY;
             } else if (p == 0.5) {
-                return new BigDecimal(mean, mathContext);
+                return mean;
             } else {
-                return new BigDecimal(Double.NEGATIVE_INFINITY, mathContext);
+                return Double.NEGATIVE_INFINITY;
             }
         }
-        return getValueAtCumulativeProbability(1 - p, mathContext);
+        return getValueAtCumulativeProbability(1 - p);
     }
 }

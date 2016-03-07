@@ -3,8 +3,6 @@ package com.compomics.util.math.statistics.linear_regression;
 import com.compomics.util.math.statistics.linear_regression.filters.ProbabilityFilter;
 import com.compomics.util.math.statistics.linear_regression.regressions.MedianRegression;
 import com.compomics.util.math.statistics.linear_regression.regressions.SimpleLinearRegression;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 /**
@@ -56,7 +54,7 @@ public class LinearRegression {
             return MedianRegression.getLinearRegression(x, y);
         }
 
-        ArrayList<ArrayList<Double>> filteredInput = ProbabilityFilter.getFilteredInput(x, y, p, new MathContext(10, RoundingMode.HALF_UP));
+        ArrayList<ArrayList<Double>> filteredInput = ProbabilityFilter.getFilteredInput(x, y, p);
         ArrayList<Double> filteredX = filteredInput.get(0);
         ArrayList<Double> filteredY = filteredInput.get(1);
         if (filteredX.size() < 100) {

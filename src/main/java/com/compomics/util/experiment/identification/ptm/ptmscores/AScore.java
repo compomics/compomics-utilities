@@ -11,20 +11,17 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
-import com.compomics.util.math.BigFunctions;
 import com.compomics.util.math.statistics.distributions.BinomialDistribution;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationSettings;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import org.apache.commons.math.MathException;
-import org.apache.commons.math.util.FastMath;
+import org.apache.commons.math.util.MathUtils;
 
 /**
  * This class estimates the A-score as described in
@@ -65,7 +62,6 @@ public class AScore {
      * @param ptmSequenceMatchingPreferences the sequence matching preferences
      * for PTM to peptide mapping
      * @param spectrumAnnotator a spectrum annotator to annotate the spectra
-     * @param mathContext the math context to use for calculation
      *
      * @return a map containing the best or two best PTM location(s) and the
      * corresponding A-score
@@ -84,7 +80,7 @@ public class AScore {
      */
     public static HashMap<Integer, Double> getAScore(Peptide peptide, ArrayList<PTM> ptms, MSnSpectrum spectrum, AnnotationSettings annotationPreferences,
             SpecificAnnotationSettings specificAnnotationPreferences, boolean accountNeutralLosses, SequenceMatchingPreferences sequenceMatchingPreferences,
-            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator, MathContext mathContext)
+            SequenceMatchingPreferences ptmSequenceMatchingPreferences, PeptideSpectrumAnnotator spectrumAnnotator)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException, MathException {
 
         if (ptms.isEmpty()) {
@@ -148,8 +144,8 @@ public class AScore {
             Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             HashMap<Integer, MSnSpectrum> spectrumMap = getReducedSpectra(spectrum, specificAnnotationPreferences.getFragmentIonAccuracyInDa(spectrum.getMaxMz()), 10);
 
-            HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
-                    spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM, mathContext);
+            HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = getPositionToScoreMap(peptide, noModPeptide, possibleSites,
+                    spectrum, spectrumMap, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, refPTM);
 
             HashMap<Double, ArrayList<Integer>> peptideScoreToPostitionMap = getPeptideScoreToPositionMap(positionToScoreMap);
             ArrayList<Double> scores = new ArrayList<Double>(peptideScoreToPostitionMap.keySet());
@@ -169,7 +165,7 @@ public class AScore {
                 Double lowestScore = null;
                 for (int secondPosition : secondScoringSites) {
                     int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth), mathContext);
+                    tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                     Double tempMapLowestScore = null;
                     for (int tempPos : tempMap.keySet()) {
                         double tempScore = tempMap.get(tempPos);
@@ -203,7 +199,7 @@ public class AScore {
                     for (int secondPosition : bestScoringSites) {
                         if (bestPosition != secondPosition) {
                             int bestDepth = getBestDepth(positionToScoreMap, bestPosition, secondPosition);
-                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth), mathContext);
+                            tempMap = getScoreForPositions(peptide, noModPeptide, refPTM, bestPosition, secondPosition, annotationPreferences, specificAnnotationPreferences, spectrumAnnotator, bestDepth, spectrumMap.get(bestDepth));
                             Double tempMapLowestScore = null;
                             for (int tempPos : tempMap.keySet()) {
                                 double tempScore = tempMap.get(tempPos);
@@ -255,14 +251,14 @@ public class AScore {
      * @return the depth at which the score difference between the best position
      * and the second position is maximized
      */
-    private static int getBestDepth(HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap, int bestPosition, int secondPosition) {
+    private static int getBestDepth(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap, int bestPosition, int secondPosition) {
 
-        BigDecimal diff, maxDiff = BigDecimal.ZERO;
+        Double maxDiff = 0.0;
         int bestI = 0;
 
         for (int i = 1; i <= 10; i++) {
-            diff = positionToScoreMap.get(bestPosition).get(i).subtract(positionToScoreMap.get(secondPosition).get(i));
-            if (diff.compareTo(maxDiff) == 1) {
+            double diff = positionToScoreMap.get(bestPosition).get(i) - positionToScoreMap.get(secondPosition).get(i);
+            if (diff > maxDiff) {
                 bestI = i - 1;
                 maxDiff = diff;
             }
@@ -289,7 +285,6 @@ public class AScore {
      * best and second best scoring sites (see getBestDepth)
      * @param spectrumAtBestDepth the spectrum extracted from the original
      * spectrum filtered at bestDepth intensities
-     * @param mathContext the math context to use for calculation
      *
      * @return the candidate A-score in a map
      *
@@ -297,7 +292,7 @@ public class AScore {
      * math error occurred while computing the score.
      */
     private static HashMap<Integer, Double> getScoreForPositions(Peptide peptide, Peptide noModPeptide, PTM refPTM, int bestPosition, int secondPosition, AnnotationSettings annotationPreferences,
-            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth, MathContext mathContext) throws MathException {
+            SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, int bestDepth, MSnSpectrum spectrumAtBestDepth) throws MathException {
 
         HashMap<Integer, Double> result = new HashMap<Integer, Double>(2);
 
@@ -359,7 +354,7 @@ public class AScore {
 
         BinomialDistribution distribution = new BinomialDistribution(N, p);
 
-        BigDecimal p1 = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
+        Double p1 = distribution.getDescendingCumulativeProbabilityAt((double) n);
 
         tempPeptide = new Peptide(noModPeptide.getSequence(), noModPeptide.getModificationMatches());
         tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, posMax));
@@ -388,51 +383,41 @@ public class AScore {
                 }
             }
         }
-        BigDecimal p2 = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
+        Double p2 = distribution.getDescendingCumulativeProbabilityAt((double) n);
 
-        if (p1.compareTo(p2) == 0) {
+        if (p1.equals(p2)) {
             result.put(posMin, 0.0);
             result.put(posMax, 0.0);
-        } else if (p1.compareTo(p2) == -1) {
-            BigDecimal minusTen = BigDecimal.TEN.negate();
-            BigDecimal score1;
-            BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
-            if (p1.compareTo(BigDecimal.ZERO) == 0) {
-                score1 = maxValue;
+        } else if (p1 < p2) {
+            Double score1;
+            if (p1 == 0.0) {
+                score1 = Double.MAX_VALUE;
             } else {
-                score1 = minusTen.multiply(BigFunctions.log(p1, 10, mathContext), mathContext);
+                score1 = -10 * MathUtils.log(10, p1);
             }
-            BigDecimal score2;
-            if (p2.compareTo(BigDecimal.ZERO) == 0) {
-                score2 = new BigDecimal(Double.MAX_VALUE);
+            Double score2;
+            if (p2 == 0.0) {
+                score2 = Double.MAX_VALUE;
             } else {
-                score2 = minusTen.multiply(BigFunctions.log(p2, 10, mathContext), mathContext);
+                score2 = -10 * MathUtils.log(10, p2);
             }
-            BigDecimal score = score1.subtract(score2);
-            if (score.compareTo(maxValue) == 1) {
-                score = maxValue;
-            }
-            result.put(posMin, score.doubleValue());
+            Double score = score1 - score2;
+            result.put(posMin, score);
         } else {
-            BigDecimal minusTen = BigDecimal.TEN.negate();
-            BigDecimal maxValue = new BigDecimal(Double.MAX_VALUE);
-            BigDecimal score1;
-            if (p1.compareTo(BigDecimal.ZERO) == 0) {
-                score1 = maxValue;
+            Double score1;
+            if (p1 == 0.0) {
+                score1 = Double.MAX_VALUE;
             } else {
-                score1 = minusTen.multiply(BigFunctions.log(p1, 10, mathContext), mathContext);
+                score1 = -10 * MathUtils.log(10, p1);
             }
-            BigDecimal score2;
-            if (p2.compareTo(BigDecimal.ZERO) == 0) {
-                score2 = new BigDecimal(Double.MAX_VALUE);
+            Double score2;
+            if (p2 == 0.0) {
+                score2 = Double.MAX_VALUE;
             } else {
-                score2 = minusTen.multiply(BigFunctions.log(p2, 10, mathContext), mathContext);
+                score2 = -10 * MathUtils.log(10, p2);
             }
-            BigDecimal score = score2.subtract(score1);
-            if (score.compareTo(maxValue) == 1) {
-                score = maxValue;
-            }
-            result.put(posMax, score.doubleValue());
+            Double score = score2 - score1;
+            result.put(posMax, score);
         }
         return result;
     }
@@ -445,57 +430,56 @@ public class AScore {
      *
      * @return a score to position map
      */
-    public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap) {
+    public static HashMap<Double, ArrayList<Integer>> getPeptideScoreToPositionMap(HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap) {
 
         HashMap<Double, ArrayList<Integer>> result = new HashMap<Double, ArrayList<Integer>>();
 
         for (int pos : positionToScoreMap.keySet()) {
-            BigDecimal peptideScore = BigDecimal.ZERO;
-            BigDecimal depthScore = positionToScoreMap.get(pos).get(1);
+            Double peptideScore = 0.0;
+            Double depthScore = positionToScoreMap.get(pos).get(1);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.5)));
+                peptideScore += 0.5 * depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(2);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.75)));
+                peptideScore += 0.75 * depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(3);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore);
+                peptideScore += depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(4);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore);
+                peptideScore += depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(5);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore);
+                peptideScore += depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(6);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore);
+                peptideScore += depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(7);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.75)));
+                peptideScore += 0.75 * depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(8);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.5)));
+                peptideScore += 0.5 * depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(9);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.25)));
+                peptideScore += 0.25 * depthScore;
             }
             depthScore = positionToScoreMap.get(pos).get(10);
             if (depthScore != null) {
-                peptideScore = peptideScore.add(depthScore.multiply(new BigDecimal(0.25)));
+                peptideScore += 0.25 * depthScore;
             }
-            double peptideScoreDouble = peptideScore.doubleValue();
-            ArrayList<Integer> sites = result.get(peptideScoreDouble);
+            ArrayList<Integer> sites = result.get(peptideScore);
             if (sites == null) {
                 sites = new ArrayList<Integer>(2);
-                result.put(peptideScoreDouble, sites);
+                result.put(peptideScore, sites);
             }
             sites.add(pos);
         }
@@ -518,17 +502,16 @@ public class AScore {
      * @param spectrumMap the map of the extracted spectra: depth &gt; extracted
      * spectrum
      * @param possibleSites the possible modification sites
-     * @param mathContext the math context to use for calculation
      *
      * @return a map PTM localization &gt; score
      *
      * @throws org.apache.commons.math.MathException exception thrown whenever a
      * math error occurred while computing the score.
      */
-    public static HashMap<Integer, HashMap<Integer, BigDecimal>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
-            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM, MathContext mathContext) throws MathException {
+    public static HashMap<Integer, HashMap<Integer, Double>> getPositionToScoreMap(Peptide peptide, Peptide noModPeptide, ArrayList<Integer> possibleSites,
+            MSnSpectrum spectrum, HashMap<Integer, MSnSpectrum> spectrumMap, AnnotationSettings annotationPreferences, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator spectrumAnnotator, PTM refPTM) throws MathException {
 
-        HashMap<Integer, HashMap<Integer, BigDecimal>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, BigDecimal>>();
+        HashMap<Integer, HashMap<Integer, Double>> positionToScoreMap = new HashMap<Integer, HashMap<Integer, Double>>();
 
         int N = 0;
 
@@ -560,12 +543,11 @@ public class AScore {
                 int n = matches.size();
 
                 BinomialDistribution distribution = new BinomialDistribution(N, p);
-                BigDecimal P = distribution.getDescendingCumulativeProbabilityAt((double) n, mathContext);
-                BigDecimal score = BigDecimal.TEN.negate();
-                score = score.multiply(BigFunctions.log(P, 10, mathContext));
-                HashMap<Integer, BigDecimal> scoresAtPosition = positionToScoreMap.get(pos);
+                Double bigP = distribution.getDescendingCumulativeProbabilityAt((double) n);
+                Double score = -10 * MathUtils.log(10, bigP);
+                HashMap<Integer, Double> scoresAtPosition = positionToScoreMap.get(pos);
                 if (scoresAtPosition == null) {
-                    scoresAtPosition = new HashMap<Integer, BigDecimal>(2);
+                    scoresAtPosition = new HashMap<Integer, Double>(2);
                     positionToScoreMap.put(pos, scoresAtPosition);
                 }
                 scoresAtPosition.put(i + 1, score);

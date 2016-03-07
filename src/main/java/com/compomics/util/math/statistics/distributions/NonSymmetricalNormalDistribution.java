@@ -112,67 +112,67 @@ public class NonSymmetricalNormalDistribution implements Distribution {
     }
 
     @Override
-    public BigDecimal getProbabilityAt(double x, MathContext mathContext) {
+    public Double getProbabilityAt(double x) {
         if (x >= mean) {
-            return distributionUp.getProbabilityAt(x, mathContext);
+            return distributionUp.getProbabilityAt(x);
         } else {
-            return distributionDown.getProbabilityAt(x, mathContext);
+            return distributionDown.getProbabilityAt(x);
         }
     }
 
     @Override
-    public BigDecimal getCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getCumulativeProbabilityAt(double x) throws MathException {
         if (x >= mean) {
-            return distributionUp.getCumulativeProbabilityAt(x, mathContext);
+            return distributionUp.getCumulativeProbabilityAt(x);
         } else {
-            return distributionDown.getCumulativeProbabilityAt(x, mathContext);
+            return distributionDown.getCumulativeProbabilityAt(x);
         }
     }
 
     @Override
-    public BigDecimal getDescendingCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getDescendingCumulativeProbabilityAt(double x) throws MathException {
         if (x > mean) {
-            return distributionUp.getDescendingCumulativeProbabilityAt(x, mathContext);
+            return distributionUp.getDescendingCumulativeProbabilityAt(x);
         } else {
-            return distributionDown.getDescendingCumulativeProbabilityAt(x, mathContext);
+            return distributionDown.getDescendingCumulativeProbabilityAt(x);
         }
     }
 
     @Override
-    public BigDecimal getSmallestCumulativeProbabilityAt(double x, MathContext mathContext) throws MathException {
+    public Double getSmallestCumulativeProbabilityAt(double x) throws MathException {
         if (x > mean) {
-            return getDescendingCumulativeProbabilityAt(x, mathContext);
+            return getDescendingCumulativeProbabilityAt(x);
         } else {
-            getCumulativeProbabilityAt(x, mathContext);
+            getCumulativeProbabilityAt(x);
         }
-        return new BigDecimal(0.5);
+        return 0.5;
     }
 
     @Override
-    public BigDecimal getMaxValueForProbability(double p, MathContext mathContext) {
-        return distributionUp.getMaxValueForProbability(p, mathContext);
+    public Double getMaxValueForProbability(double p) {
+        return distributionUp.getMaxValueForProbability(p);
     }
 
     @Override
-    public BigDecimal getMinValueForProbability(double p, MathContext mathContext) {
-        return distributionDown.getMinValueForProbability(p, mathContext);
+    public Double getMinValueForProbability(double p) {
+        return distributionDown.getMinValueForProbability(p);
     }
 
     @Override
-    public BigDecimal getValueAtCumulativeProbability(double p, MathContext mathContext) throws MathException {
+    public Double getValueAtCumulativeProbability(double p) throws MathException {
         if (p < 0.5) {
-            return distributionDown.getValueAtCumulativeProbability(p, mathContext);
+            return distributionDown.getValueAtCumulativeProbability(p);
         } else {
-            return distributionUp.getValueAtCumulativeProbability(p, mathContext);
+            return distributionUp.getValueAtCumulativeProbability(p);
         }
     }
 
     @Override
-    public BigDecimal getValueAtDescendingCumulativeProbability(double p, MathContext mathContext) throws MathException {
+    public Double getValueAtDescendingCumulativeProbability(double p) throws MathException {
         if (p < 0.5) {
-            return distributionUp.getValueAtDescendingCumulativeProbability(p, mathContext);
+            return distributionUp.getValueAtDescendingCumulativeProbability(p);
         } else {
-            return distributionDown.getValueAtDescendingCumulativeProbability(p, mathContext);
+            return distributionDown.getValueAtDescendingCumulativeProbability(p);
         }
     }
 }

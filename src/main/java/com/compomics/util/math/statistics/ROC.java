@@ -1,6 +1,5 @@
 package com.compomics.util.math.statistics;
 
-import java.math.MathContext;
 import org.apache.commons.math.MathException;
 
 /**
@@ -16,45 +15,39 @@ public interface ROC {
      * healthy.
      *
      * @param specificity the specificity (0.1 is 10%)
-     * @param mathContext the math context to use for calculation
      *
      * @return the sensitivity at the given specificity (0.1 is 10%)
      *
      * @throws org.apache.commons.math.MathException if a MathException occurs
      */
-    public double getValueAt(double specificity, MathContext mathContext) throws MathException;
+    public double getValueAt(double specificity) throws MathException;
 
     /**
      * Returns the 1-specificity at a given sensitivity.
      *
      * @param sensitivity the sensitivity (0.1 is 10%)
-     * @param mathContext the math context to use for calculation
      *
      * @return the corresponding 1-specificity (0.1 is 10%)
      *
      * @throws MathException if a MathException occurs
      */
-    public double getSpecificityAt(double sensitivity, MathContext mathContext) throws MathException;
+    public double getSpecificityAt(double sensitivity) throws MathException;
 
     /**
      * Returns xy values to draw the curve.
-     *
-     * @param mathContext the math context to use for calculation
      * 
      * @return xy values to draw the curve
      *
      * @throws MathException if a MathException occurs
      */
-    public double[][] getxYValues(MathContext mathContext) throws MathException;
+    public double[][] getxYValues() throws MathException;
 
     /**
      * Returns an estimation of the area under the curve.
-     *
-     * @param mathContext the math context to use for calculation
      * 
      * @return an estimation of the area under the curve
      *
      * @throws MathException if a MathException occurs
      */
-    public double getAuc(MathContext mathContext) throws MathException;
+    public double getAuc() throws MathException;
 }

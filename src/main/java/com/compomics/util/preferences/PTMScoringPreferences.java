@@ -210,9 +210,9 @@ public class PTMScoringPreferences implements Serializable {
         StringBuilder output = new StringBuilder();
 
         output.append("Score: ").append(selectedProbabilisticScore).append(".").append(newLine);
-        output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
         output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
-        output.append("Estimate FLR: ").append(estimateFlr).append(".").append(newLine);
+        output.append("Threshold Auto: ").append(estimateFlr).append(".").append(newLine);
+        output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
 
         return output.toString();
     }

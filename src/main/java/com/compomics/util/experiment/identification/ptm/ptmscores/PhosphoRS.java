@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.ptm.ptmscores;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.Ion;
+import com.compomics.util.experiment.biology.IonFactory;
 import com.compomics.util.experiment.biology.NeutralLoss;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.Peptide;
@@ -182,13 +183,13 @@ public class PhosphoRS {
 
             spectrum = filterSpectrum(spectrum, scoringAnnotationSetttings);
 
+            Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
 
-            Peptide noModPeptide = Peptide.getNoModPeptide(peptide, ptms);
-
             HashMap<String, Peptide> profileToPeptide = getPossiblePeptidesMap(peptide, ptms, refPTM, possibleProfiles);
-            HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, spectrumAnnotator, scoringAnnotationSetttings);
+            HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> profileToPossibleFragments = getPossiblePeptideFragments(profileToPeptide, scoringAnnotationSetttings);
+            HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, profileToPossibleFragments, spectrumAnnotator, scoringAnnotationSetttings);
 
             HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, scoringAnnotationSetttings);
             ArrayList<Double> siteDeterminingIons = new ArrayList<Double>(siteDeterminingIonsMap.keySet());
@@ -257,8 +258,9 @@ public class PhosphoRS {
                                     if (!noIons) {
                                         noIons = true;
                                         Peptide tempPeptide = profileToPeptide.get(profileKey);
+                                        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = profileToPossibleFragments.get(profileKey);
                                         Integer n = profileToN.get(profileKey);
-                                        Double bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
+                                        Double bigP = getPhosphoRsScoreP(tempPeptide, possibleFragmentIons, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
                                         if (bigP <= 0) {
                                             throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP > 1) {
@@ -277,7 +279,8 @@ public class PhosphoRS {
                                     if (!alreadyScored) {
                                         Peptide tempPeptide = profileToPeptide.get(profileKey);
                                         Integer n = profileToN.get(profileKey);
-                                        Double bigP = getPhosphoRsScoreP(tempPeptide, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
+                                        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = profileToPossibleFragments.get(profileKey);
+                                        Double bigP = getPhosphoRsScoreP(tempPeptide, possibleFragmentIons, currentSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
                                         if (bigP <= 0) {
                                             throw new IllegalArgumentException("PhosphoRS probability <0%.");
                                         } else if (bigP > 1) {
@@ -333,10 +336,12 @@ public class PhosphoRS {
                         for (ArrayList<Ion> expectedIons : expectedFragmentIons.values()) {
                             nExpectedFragmentIons += expectedIons.size();
                         }
+                        IonFactory fragmentFactory = IonFactory.getInstance();
+                        HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = fragmentFactory.getFragmentIons(peptide, scoringAnnotationSetttings);
                         for (int i = 0; i < spectra.size(); i++) {
                             MSnSpectrum currentSpectrum = spectra.get(i);
                             double currentP = getp(currentSpectrum, 100, d, nDecimals, scoringAnnotationSetttings);
-                            Double bigP = getPhosphoRsScoreP(peptide, currentSpectrum, currentP, nExpectedFragmentIons, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
+                            Double bigP = getPhosphoRsScoreP(peptide, possibleFragmentIons, currentSpectrum, currentP, nExpectedFragmentIons, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
                             if (bigP < 0.0) {
                                 throw new IllegalArgumentException("PhosphoRS probability <0%.");
                             } else if (bigP > 1.0) {
@@ -374,7 +379,8 @@ public class PhosphoRS {
                 String profileKey = KeyUtils.getKey(profile);
                 Peptide tempPeptide = profileToPeptide.get(profileKey);
                 Integer n = profileToN.get(profileKey);
-                Double bigP = getPhosphoRsScoreP(tempPeptide, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
+                HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = profileToPossibleFragments.get(profileKey);
+                Double bigP = getPhosphoRsScoreP(tempPeptide, possibleFragmentIons, phosphoRsSpectrum, currentP, n, spectrumAnnotator, annotationSettings, scoringAnnotationSetttings);
                 if (bigP <= 0) {
                     throw new IllegalArgumentException("PhosphoRS probability <= 0.");
                 } else if (bigP > 1) {
@@ -454,7 +460,7 @@ public class PhosphoRS {
      *
      * @return the phosphoRS score
      */
-    private static Double getPhosphoRsScoreP(Peptide peptide, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
+    private static Double getPhosphoRsScoreP(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments, MSnSpectrum spectrum, double p, int n, PeptideSpectrumAnnotator spectrumAnnotator,
             AnnotationSettings annotationSettings, SpecificAnnotationSettings scoringAnnotationSettings) throws MathException {
 
         BinomialDistribution distribution = null;
@@ -468,7 +474,7 @@ public class PhosphoRS {
             inCache = false;
         }
 
-        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide);
+        ArrayList<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotation(annotationSettings, scoringAnnotationSettings, spectrum, peptide, possiblePeptideFragments);
         int k = 0;
         for (IonMatch ionMatch : matches) {
             if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
@@ -585,22 +591,45 @@ public class PhosphoRS {
      * indexed by the corresponding profile.
      *
      * @param possiblePeptides map of the possible peptides for every profile
+     * @param possiblePeptideFragments the possible peptide fragments for every
+     * peptide
      * @param spectrumAnnotator the spectrum annotator
      * @param scoringAnnotationSetttings the spectrum scoring annotation
      * settings
      *
      * @return a map of the number of possible fragment ions for every peptide
      */
-    private static HashMap<String, Integer> getPossiblePeptideToN(HashMap<String, Peptide> possiblePeptides, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
-        HashMap<String, Integer> result = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> getPossiblePeptideToN(HashMap<String, Peptide> possiblePeptides, HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> possiblePeptideFragments, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+        HashMap<String, Integer> result = new HashMap<String, Integer>(possiblePeptides.size());
         for (String profileKey : possiblePeptides.keySet()) {
             Peptide peptide = possiblePeptides.get(profileKey);
-            HashMap<Integer, ArrayList<Ion>> expectedFragmentIons = spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide);
+            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> fragmentsForProfile = possiblePeptideFragments.get(profileKey);
+            HashMap<Integer, ArrayList<Ion>> expectedFragmentIons = spectrumAnnotator.getExpectedIons(scoringAnnotationSetttings, peptide, fragmentsForProfile);
             int n = 0;
             for (ArrayList<Ion> ions : expectedFragmentIons.values()) {
                 n += ions.size();
             }
             result.put(profileKey, n);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a map of the possible ions for every peptide of every profile.
+     *
+     * @param possiblePeptides map of the possible peptides for every profile
+     * @param scoringAnnotationSetttings the spectrum scoring annotation
+     * settings
+     *
+     * @return a map of the possible ions for every peptide of every profile
+     */
+    private static HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> getPossiblePeptideFragments(HashMap<String, Peptide> possiblePeptides, SpecificAnnotationSettings scoringAnnotationSetttings) {
+        HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> result = new HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>>(possiblePeptides.size());
+        IonFactory fragmentFactory = IonFactory.getInstance();
+        for (String profileKey : possiblePeptides.keySet()) {
+            Peptide peptide = possiblePeptides.get(profileKey);
+            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons = fragmentFactory.getFragmentIons(peptide, scoringAnnotationSetttings);
+            result.put(profileKey, possibleFragmentIons);
         }
         return result;
     }

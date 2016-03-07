@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Annotates a spectrum with peptide fragments. 
- * Warning: not multi-thread safe, use different annotators for each thread.
+ * Annotates a spectrum with peptide fragments. Warning: not multi-thread safe,
+ * use different annotators for each thread.
  *
  * @author Marc Vaudel
  */
@@ -52,6 +52,19 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * using these settings will be selected
      */
     public void setPeptide(Peptide peptide, int precursorCharge, SpecificAnnotationSettings specificAnnotationSettings) {
+        setPeptide(peptide, null, precursorCharge, specificAnnotationSettings);
+    }
+
+    /**
+     * Sets a new peptide to match.
+     *
+     * @param peptide the new peptide
+     * @param possibleFragmentIons the possible fragment ions of the peptide
+     * @param precursorCharge the new precursor charge
+     * @param specificAnnotationSettings if provided, only the ions detectable
+     * using these settings will be selected
+     */
+    public void setPeptide(Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons, int precursorCharge, SpecificAnnotationSettings specificAnnotationSettings) {
         if (specificAnnotationSettings != null && super.specificAnnotationSettings == null
                 || specificAnnotationSettings == null && super.specificAnnotationSettings != null
                 || specificAnnotationSettings != null && super.specificAnnotationSettings != null && specificAnnotationSettings != super.specificAnnotationSettings
@@ -61,7 +74,11 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 || this.precursorCharge != precursorCharge) {
             this.peptide = peptide;
             this.precursorCharge = precursorCharge;
-            theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide, specificAnnotationSettings);
+            if (possibleFragmentIons == null) {
+                theoreticalFragmentIons = fragmentFactory.getFragmentIons(peptide, specificAnnotationSettings);
+            } else {
+                theoreticalFragmentIons = possibleFragmentIons;
+            }
             if (massShift != 0 || massShiftNTerm != 0 || massShiftCTerm != 0) {
                 updateMassShifts();
             }
@@ -99,6 +116,25 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given settings
      */
     public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
+        return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null);
+    }
+
+    /**
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches.
+     *
+     * Note that, except for +1 precursors, fragments ions will be expected to
+     * have a charge strictly smaller than the precursor ion charge.
+     *
+     * @param annotationSettings the annotation settings
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param spectrum the spectrum to match
+     * @param peptide the peptide of interest
+     * @param possiblePeptideFragments the possible peptide fragments for this peptide
+     *
+     * @return an ArrayList of IonMatch containing the ion matches with the
+     * given settings
+     */
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
@@ -106,7 +142,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
             setSpectrum(spectrum, spectrum.getIntensityLimit(annotationSettings.getAnnotationIntensityLimit()));
         }
 
-        setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
+        setPeptide(peptide, possiblePeptideFragments, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
         setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.isHighResolutionAnnotation());
 
         ArrayList<Integer> precursorCharges = new ArrayList<Integer>();
@@ -211,7 +247,25 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * given settings
      */
     public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings, Peptide peptide) {
-        setPeptide(peptide, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
+        return getExpectedIons(specificAnnotationSettings, peptide, null);
+    }
+
+    /**
+     * Returns the expected ions in a map indexed by the possible charges.
+     *
+     * Note that, except for +1 precursors, fragments ions will be expected to
+     * have a charge strictly smaller than the precursor ion charge.
+     *
+     * @param specificAnnotationSettings the specific annotation settings
+     * @param peptide The peptide of interest
+     * @param possibleFragmentIons the possible fragment ions for the given
+     * peptide
+     *
+     * @return an ArrayList of IonMatch containing the ion matches with the
+     * given settings
+     */
+    public HashMap<Integer, ArrayList<Ion>> getExpectedIons(SpecificAnnotationSettings specificAnnotationSettings, Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possibleFragmentIons) {
+        setPeptide(peptide, possibleFragmentIons, specificAnnotationSettings.getPrecursorCharge(), specificAnnotationSettings);
         return getExpectedIons(specificAnnotationSettings);
     }
 

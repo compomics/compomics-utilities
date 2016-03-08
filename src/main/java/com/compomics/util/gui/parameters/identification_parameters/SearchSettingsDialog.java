@@ -485,7 +485,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
             }
         });
 
-        precursorIonLbl.setText("Precursor Mass Tolerance");
+        precursorIonLbl.setText("Precursor m/z Tolerance");
 
         precursorIonAccuracyTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         precursorIonAccuracyTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -496,7 +496,7 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
 
         precursorIonUnit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ppm", "Da" }));
 
-        fragmentIonLbl.setText("Fragment Mass Tolerance");
+        fragmentIonLbl.setText("Fragment m/z Tolerance");
 
         fragmentIonAccuracyTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         fragmentIonAccuracyTxt.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -571,21 +571,21 @@ public class SearchSettingsDialog extends javax.swing.JDialog {
                                 .addComponent(enzymesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                                .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(precursorIonUnit, 0, 103, Short.MAX_VALUE))))
+                                .addComponent(precursorIonUnit, 0, 107, Short.MAX_VALUE))))
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fragmentIonLbl)
                             .addComponent(fragmentIonType1Lbl))
                         .addGap(18, 18, 18)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                            .addComponent(fragmentIon1Cmb, 0, 103, Short.MAX_VALUE))
+                            .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                            .addComponent(fragmentIon1Cmb, 0, 106, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fragmentIon2Cmb, 0, 103, Short.MAX_VALUE)
-                            .addComponent(fragmentIonUnit, 0, 103, Short.MAX_VALUE))))
+                            .addComponent(fragmentIon2Cmb, 0, 107, Short.MAX_VALUE)
+                            .addComponent(fragmentIonUnit, 0, 107, Short.MAX_VALUE))))
                 .addGap(75, 75, 75)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maxMissedCleavagesLabel)

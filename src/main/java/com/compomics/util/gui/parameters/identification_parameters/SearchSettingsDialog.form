@@ -123,9 +123,9 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Component id="precursorIonAccuracyTxt" pref="103" max="32767" attributes="0"/>
+                                      <Component id="precursorIonAccuracyTxt" pref="106" max="32767" attributes="0"/>
                                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                      <Component id="precursorIonUnit" pref="103" max="32767" attributes="0"/>
+                                      <Component id="precursorIonUnit" pref="107" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -136,13 +136,13 @@
                               </Group>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="fragmentIonAccuracyTxt" pref="103" max="32767" attributes="2"/>
-                                  <Component id="fragmentIon1Cmb" pref="103" max="32767" attributes="2"/>
+                                  <Component id="fragmentIonAccuracyTxt" pref="106" max="32767" attributes="2"/>
+                                  <Component id="fragmentIon1Cmb" pref="106" max="32767" attributes="2"/>
                               </Group>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="fragmentIon2Cmb" pref="103" max="32767" attributes="2"/>
-                                  <Component id="fragmentIonUnit" pref="103" max="32767" attributes="0"/>
+                                  <Component id="fragmentIon2Cmb" pref="107" max="32767" attributes="2"/>
+                                  <Component id="fragmentIonUnit" pref="107" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -269,7 +269,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="precursorIonLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Precursor Mass Tolerance"/>
+                <Property name="text" type="java.lang.String" value="Precursor m/z Tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="precursorIonAccuracyTxt">
@@ -292,7 +292,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="fragmentIonLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Fragment Mass Tolerance"/>
+                <Property name="text" type="java.lang.String" value="Fragment m/z Tolerance"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="fragmentIonAccuracyTxt">

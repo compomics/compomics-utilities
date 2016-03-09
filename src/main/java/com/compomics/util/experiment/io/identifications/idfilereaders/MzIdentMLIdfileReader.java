@@ -1426,7 +1426,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                     } else {
                                                                         eValue = scoreMap.get("MS:1002053");
                                                                         if (eValue != null) {
-                                                                            advocate = Advocate.msgf;
+                                                                            advocate = Advocate.comet;
                                                                             String name = advocate.getName();
                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1438,7 +1438,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                         } else {
                                                                             eValue = scoreMap.get("MS:1002056");
                                                                             if (eValue != null) {
-                                                                                advocate = Advocate.msgf;
+                                                                                advocate = Advocate.comet;
                                                                                 String name = advocate.getName();
                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1450,7 +1450,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             } else {
                                                                                 eValue = scoreMap.get("MS:1002055");
                                                                                 if (eValue != null) {
-                                                                                    advocate = Advocate.msgf;
+                                                                                    advocate = Advocate.comet;
                                                                                     String name = advocate.getName();
                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1462,7 +1462,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                 } else {
                                                                                     eValue = scoreMap.get("MS:1002054");
                                                                                     if (eValue != null) {
-                                                                                        advocate = Advocate.msgf;
+                                                                                        advocate = Advocate.comet;
                                                                                         String name = advocate.getName();
                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1474,7 +1474,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                     } else {
                                                                                         eValue = scoreMap.get("MS:1002049");
                                                                                         if (eValue != null) {
-                                                                                            advocate = Advocate.msgf;
+                                                                                            advocate = Advocate.comet;
                                                                                             String name = advocate.getName();
                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);

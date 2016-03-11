@@ -68,10 +68,6 @@ public class SequenceFactory {
      */
     private HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
     /**
-     * The tag added after adding decoy sequences to a FASTA file.
-     */
-    private static String targetDecoyFileNameTag = "_concatenated_target_decoy.fasta";
-    /**
      * The default protein tree attached to the database loaded
      */
     private ProteinTree defaultProteinTree = null;
@@ -1017,6 +1013,7 @@ public class SequenceFactory {
 
         // first create the new target-decoy file
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile));
+        String lineBreak = System.getProperty("line.separator");
 
         try {
             ProteinIterator proteinIterator = getProteinIterator(true);
@@ -1050,12 +1047,12 @@ public class SequenceFactory {
                 }
 
                 // write the target protein to the fasta file
-                bufferedWriter.write(currentHeader.getRawHeader() + System.getProperty("line.separator"));
-                bufferedWriter.write(currentProtein.getSequence() + System.getProperty("line.separator"));
+                bufferedWriter.write(currentHeader.getRawHeader() + lineBreak);
+                bufferedWriter.write(currentProtein.getSequence() + lineBreak);
 
                 // write the decoy protein to the fasta file
-                bufferedWriter.write(currentRawHeader + System.getProperty("line.separator"));
-                bufferedWriter.write(reverseSequence(currentProtein.getSequence()) + System.getProperty("line.separator"));
+                bufferedWriter.write(currentRawHeader + lineBreak);
+                bufferedWriter.write(reverseSequence(currentProtein.getSequence()) + lineBreak);
 
                 // possible fix for the dbtoolkit uniprot format
 //            Protein currentProtein = getProtein(accession);
@@ -1220,24 +1217,6 @@ public class SequenceFactory {
             molecularWeights.put(accession, molecularWeight);
         }
         return molecularWeight;
-    }
-
-    /**
-     * Returns the target-decoy file name tag.
-     *
-     * @return the targetDecoyFileNameTag
-     */
-    public static String getTargetDecoyFileNameTag() {
-        return targetDecoyFileNameTag;
-    }
-
-    /**
-     * Set the target-decoy file name tag.
-     *
-     * @param targetDecoyFileNameTag the targetDecoyFileNameTag to set
-     */
-    public static void setTargetDecoyFileNameTag(String targetDecoyFileNameTag) {
-        SequenceFactory.targetDecoyFileNameTag = targetDecoyFileNameTag;
     }
 
     /**

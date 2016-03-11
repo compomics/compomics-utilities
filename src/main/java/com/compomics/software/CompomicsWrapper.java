@@ -1,6 +1,5 @@
 package com.compomics.software;
 
-import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
 import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.software.autoupdater.MavenJarFile;
 import com.compomics.software.autoupdater.WebDAO;
@@ -27,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.stream.XMLStreamException;
+import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a

@@ -148,12 +148,13 @@ public class BugReport extends javax.swing.JDialog {
      */
     private void insertLogFileContent() {
         StringBuilder log = new StringBuilder();
+        String lineBreak = System.getProperty("line.separator");
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(logFile));
             String line;
             while ((line = br.readLine()) != null) {
-                log.append(line).append(System.getProperty("line.separator"));
+                log.append(line).append(lineBreak);
             }
             br.close();
         } catch (FileNotFoundException e) {
@@ -378,7 +379,8 @@ public class BugReport extends javax.swing.JDialog {
         try {
             FileWriter w = new FileWriter(logFile);
             BufferedWriter bw = new BufferedWriter(w);
-            bw.write(System.getProperty("line.separator") + new Date() + ": " + toolName + " version " + toolVersion + "." + System.getProperty("line.separator"));
+            String lineBreak = System.getProperty("line.separator");
+            bw.write(lineBreak + new Date() + ": " + toolName + " version " + toolVersion + "." + lineBreak);
             bw.close();
             w.close();
         } catch (FileNotFoundException e) {

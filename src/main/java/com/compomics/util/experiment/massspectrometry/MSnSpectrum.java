@@ -115,26 +115,27 @@ public class MSnSpectrum extends Spectrum {
     public String asMgf(HashMap<String, String> additionalTags) {
 
         StringBuilder results = new StringBuilder();
+        String lineBreak = System.getProperty("line.separator");
         
-        results.append("BEGIN IONS").append(System.getProperty("line.separator"));
+        results.append("BEGIN IONS").append(lineBreak);
 
         if (additionalTags != null) {
             ArrayList<String> additionalTagsKeys = new ArrayList<String>(additionalTags.keySet());
             Collections.sort(additionalTagsKeys);
             for (String tag : additionalTagsKeys) {
                 if (additionalTags.get(tag) != null) {
-                    results.append(tag).append("=").append(additionalTags.get(tag)).append(System.getProperty("line.separator"));
+                    results.append(tag).append("=").append(additionalTags.get(tag)).append(lineBreak);
                 }
             }
         }
 
-        results.append("TITLE=").append(spectrumTitle).append(System.getProperty("line.separator"));
-        results.append("PEPMASS=").append(precursor.getMz()).append("\t").append(precursor.getIntensity()).append(System.getProperty("line.separator"));
+        results.append("TITLE=").append(spectrumTitle).append(lineBreak);
+        results.append("PEPMASS=").append(precursor.getMz()).append("\t").append(precursor.getIntensity()).append(lineBreak);
 
         if (precursor.hasRTWindow()) {
-            results.append("RTINSECONDS=").append(precursor.getRtWindow()[0]).append("-").append(precursor.getRtWindow()[1]).append(System.getProperty("line.separator"));
+            results.append("RTINSECONDS=").append(precursor.getRtWindow()[0]).append("-").append(precursor.getRtWindow()[1]).append(lineBreak);
         } else if (precursor.getRt() != -1) {
-            results.append("RTINSECONDS=").append(precursor.getRt()).append(System.getProperty("line.separator"));
+            results.append("RTINSECONDS=").append(precursor.getRt()).append(lineBreak);
         }
 
         if (!precursor.getPossibleCharges().isEmpty()) {
@@ -148,11 +149,11 @@ public class MSnSpectrum extends Spectrum {
                 }
                 results.append(charge.toString());
             }
-            results.append(System.getProperty("line.separator"));
+            results.append(lineBreak);
         }
 
         if (scanNumber != null && !scanNumber.equals("")) {
-            results.append("SCANS=").append(scanNumber).append(System.getProperty("line.separator"));
+            results.append("SCANS=").append(scanNumber).append(lineBreak);
         }
 
         // add the values to a tree map to get them sorted in mz    
@@ -163,10 +164,10 @@ public class MSnSpectrum extends Spectrum {
         }
 
         for (Map.Entry<Double, Double> entry : sortedPeakList.entrySet()) {
-            results.append(entry.getKey()).append(" ").append(entry.getValue()).append(System.getProperty("line.separator"));
+            results.append(entry.getKey()).append(" ").append(entry.getValue()).append(lineBreak);
         }
 
-        results.append("END IONS").append(System.getProperty("line.separator")).append(System.getProperty("line.separator"));
+        results.append("END IONS").append(lineBreak).append(lineBreak);
 
         return results.toString();
     }

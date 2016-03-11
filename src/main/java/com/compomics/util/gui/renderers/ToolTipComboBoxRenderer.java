@@ -1,5 +1,6 @@
 package com.compomics.util.gui.renderers;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -9,10 +10,10 @@ import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 /**
- * A combo box renderer that allows tooltip for each element in the combo 
- * box list.
+ * A combo box renderer that allows tooltip for each element in the combo box
+ * list.
  *
- * @author  Harald Barsnes
+ * @author Harald Barsnes
  */
 public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
 
@@ -29,10 +30,14 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
      * longer than the maximum will be split into multiple lines.
      */
     private final int MAX_TOOLTIP_WIDTH = 40;
+    /**
+     * The background color for the list. Defaults to white if not set.
+     */
+    private Color backgroundColor = Color.WHITE;
 
     /**
      * Creates a new instance of the MyComboBoxRenderer.
-     * 
+     *
      * @param tooltips vector containing the tooltips
      * @param align the horizontal alignment of the text
      */
@@ -42,8 +47,22 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
     }
 
     /**
+     * Creates a new instance of the MyComboBoxRenderer.
+     *
+     * @param tooltips vector containing the tooltips
+     * @param align the horizontal alignment of the text
+     * @param backgroundColor the background color for the list, defaults to
+     * white if not set
+     */
+    public ToolTipComboBoxRenderer(Vector tooltips, int align, Color backgroundColor) {
+        this.tooltips = tooltips;
+        this.align = align;
+        this.backgroundColor = backgroundColor;
+    }
+
+    /**
      * Set the tooltips.
-     * 
+     *
      * @param tooltips vector containing the tooltips
      */
     public void setToolTips(Vector tooltips) {
@@ -95,7 +114,7 @@ public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
                 list.setToolTipText(null);
             }
         } else {
-            lbl.setBackground(list.getBackground());
+            lbl.setBackground(backgroundColor);
             lbl.setForeground(list.getForeground());
         }
 

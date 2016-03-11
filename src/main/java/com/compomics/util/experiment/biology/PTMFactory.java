@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.2.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.5.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -992,9 +992,9 @@ public class PTMFactory implements Serializable {
                 modProfile.addVariableModification(getPTM("Dimethylation of R"));
                 prideParametersReport += "<br>" + "Dimethylation of R" + " (assumed variable)";
             }
-            if (!modProfile.contains("Dimethylation of peptide N-term K")) {
-                modProfile.addVariableModification(getPTM("Dimethylation of peptide N-term K"));
-                prideParametersReport += "<br>" + "Dimethylation of peptide N-term K" + " (assumed variable)";
+            if (!modProfile.contains("Dimethylation of peptide N-term")) {
+                modProfile.addVariableModification(getPTM("Dimethylation of peptide N-term"));
+                prideParametersReport += "<br>" + "Dimethylation of peptide N-term" + " (assumed variable)";
             }
 
         } else if (pridePtmName.equalsIgnoreCase("trimethylated residue")) {
@@ -1191,7 +1191,7 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("3x(2)H labeled L-aspartic acid 4-methyl ester")) {
             return "Trideuterated Methyl Ester of D";
         } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled alpha-dimethylamino N-terminal residue")) {
-            return "Dimethylation of peptide N-term K 2H(4)";
+            return "Dimethylation of peptide N-term 2H(4)";
         } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled dimethylated L-lysine")) {
             return "Dimethylation of K 2H(4)";
         } else if (pridePtmName.equalsIgnoreCase("5-methyl-L-arginine")) {
@@ -1271,7 +1271,7 @@ public class PTMFactory implements Serializable {
         } else if (pridePtmName.equalsIgnoreCase("S-methyl-L-cysteine")) {
             return "Methylation of C";
         } else if (pridePtmName.equalsIgnoreCase("alpha-amino dimethylated residue")) {
-            return "Dimethylation of N-term K";
+            return "Dimethylation of N-term";
         } else if (pridePtmName.equalsIgnoreCase("amidated residue")) {
             return "Amidation of the peptide C-term";
         } else if (pridePtmName.equalsIgnoreCase("deamidated L-asparagine")
@@ -1671,13 +1671,13 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Dimethylation of peptide N-term K 2H4
+        // Dimethylation of peptide N-term 2H4
         atomChainAdded = new AtomChain(true);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
-        ptmName = "Dimethylation of peptide N-term K 2H(4)";
+        aminoAcidPattern = null;
+        ptmName = "Dimethylation of peptide N-term 2H(4)";
         ptm = new PTM(PTM.MODNPAA, ptmName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
@@ -2393,13 +2393,13 @@ public class PTMFactory implements Serializable {
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
-        // Dimethylation of peptide N-term K
+        // Dimethylation of peptide N-term
         atomChainAdded = new AtomChain(true);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved = null;
-        aminoAcidPattern = new AminoAcidPattern("K");
-        ptmName = "Dimethylation of peptide N-term K";
+        aminoAcidPattern = null;
+        ptmName = "Dimethylation of peptide N-term";
         ptm = new PTM(PTM.MODNPAA, ptmName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);

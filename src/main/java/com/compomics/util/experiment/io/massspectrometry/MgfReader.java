@@ -4,6 +4,7 @@ import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.MSnSpectrum;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.massspectrometry.Precursor;
+import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
@@ -214,6 +215,7 @@ public class MgfReader {
         double maxRT = -1, minRT = Double.MAX_VALUE, maxMz = -1, maxIntensity = 0;
         int maxCharge = 0, maxPeakCount = 0, peakCount = 0;
         boolean peakPicked = true;
+        boolean precursorChargesMissing = false;
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -225,6 +227,7 @@ public class MgfReader {
 
         String line;
         boolean insideSpectrum = false;
+        boolean chargeTagFound = false;
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
@@ -232,6 +235,7 @@ public class MgfReader {
 
             if (line.equals("BEGIN IONS")) {
                 insideSpectrum = true;
+                chargeTagFound = false;
                 currentIndex = bufferedRandomAccessFile.getFilePointer();
                 spectrumCounter++;
                 peakCount = 0;
@@ -271,6 +275,7 @@ public class MgfReader {
                         maxCharge = charge.value;
                     }
                 }
+                chargeTagFound = true;
             } else if (line.startsWith("PEPMASS")) {
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
@@ -338,6 +343,9 @@ public class MgfReader {
                     }
                 }
                 title = null;
+                if (!chargeTagFound) {
+                    precursorChargesMissing = true;
+                }
             } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
@@ -370,7 +378,7 @@ public class MgfReader {
         }
 
         return new MgfIndex(spectrumTitlesAsArrayList, duplicateTitles, indexes, spectrumIndexes, precursorMzMap, mgfFile.getName(), minRT, maxRT,
-                maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, mgfFile.lastModified(), spectrumCounter);
+                maxMz, maxIntensity, maxCharge, maxPeakCount, peakPicked, precursorChargesMissing, mgfFile.lastModified(), spectrumCounter);
     }
 
     /**
@@ -398,6 +406,7 @@ public class MgfReader {
         }
 
         BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        String lineBreak = System.getProperty("line.separator");
 
         try {
             long progressUnit = br.length() / 100;
@@ -414,7 +423,7 @@ public class MgfReader {
                     while ((line = br.readLine()) != null) {
 
                         if (line.equals("BEGIN IONS")) {
-                            currentSpectrum = line + System.getProperty("line.separator");
+                            currentSpectrum = line + lineBreak;
 
                             if (waitingHandler != null) {
                                 if (waitingHandler.isRunCanceled()) {
@@ -424,7 +433,7 @@ public class MgfReader {
                             }
 
                         } else if (line.startsWith("TITLE")) {
-                            currentSpectrum += line + System.getProperty("line.separator");
+                            currentSpectrum += line + lineBreak;
 
                             String title = line.substring(line.indexOf('=') + 1).trim();
 
@@ -443,13 +452,13 @@ public class MgfReader {
                             }
 
                         } else if (line.equals("END IONS")) {
-                            currentSpectrum += line + System.getProperty("line.separator");
+                            currentSpectrum += line + lineBreak;
                             if (includeSpectrum) {
                                 bw.write(currentSpectrum);
                                 bw.newLine();
                             }
                         } else {
-                            currentSpectrum += line + System.getProperty("line.separator");
+                            currentSpectrum += line + lineBreak;
                         }
                     }
 
@@ -508,6 +517,7 @@ public class MgfReader {
         }
 
         BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        String lineBreak = System.getProperty("line.separator");
 
         try {
             long progressUnit = br.length() / 100;
@@ -535,7 +545,7 @@ public class MgfReader {
                             }
 
                         } else if (line.startsWith("TITLE")) {
-                            currentSpectrum += line + System.getProperty("line.separator");
+                            currentSpectrum += line + lineBreak;
 
                             title = line.substring(line.indexOf('=') + 1).trim();
 
@@ -549,7 +559,7 @@ public class MgfReader {
                             spectrumTitles.add(title);
                         } else if (line.equals("END IONS")) {
 
-                            bw.write("BEGIN IONS" + System.getProperty("line.separator"));
+                            bw.write("BEGIN IONS" + lineBreak);
 
                             if (title == null) {
                                 title = "Spectrum " + spectrumCounter;
@@ -557,16 +567,134 @@ public class MgfReader {
                                     title = "Spectrum " + ++spectrumCounter;
                                 }
                                 spectrumTitles.add(title);
-                                bw.write("TITLE=" + title + System.getProperty("line.separator"));
+                                bw.write("TITLE=" + title + lineBreak);
                             }
 
                             bw.write(currentSpectrum);
-                            bw.write("END IONS" + System.getProperty("line.separator"));
+                            bw.write("END IONS" + lineBreak);
                             currentSpectrum = "";
                             title = null;
                         } else {
-                            currentSpectrum += line + System.getProperty("line.separator");
+                            currentSpectrum += line + lineBreak;
                         }
+                    }
+                } finally {
+                    bw.close();
+                }
+            } finally {
+                fw.close();
+            }
+        } finally {
+            br.close();
+        }
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+        }
+
+        // replace the old file
+        String orignalFilePath = mgfFile.getAbsolutePath();
+        boolean fileDeleted = mgfFile.delete();
+
+        if (!fileDeleted) {
+            throw new IOException("Failed to delete the original spectrum file.");
+        }
+
+        boolean fileRenamed = tempSpectrumFile.renameTo(new File(orignalFilePath));
+
+        if (!fileRenamed) {
+            throw new IOException("Failed to replace the original spectrum file.");
+        }
+    }
+
+    /**
+     * Add missing precursor charges.
+     *
+     * @param mgfFile the MGF file to fix
+     * @param waitingHandler a waitingHandler showing the progress, can be null
+     *
+     * @throws FileNotFoundException Exception thrown whenever the file is not
+     * found
+     * @throws IOException Exception thrown whenever an error occurs while
+     * reading the file
+     * @throws UnsupportedEncodingException if the decoding of a spectrum title
+     * fails
+     */
+    public static void addMissingPrecursorCharges(File mgfFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException, UnsupportedEncodingException {
+
+        File tempSpectrumFile = new File(mgfFile.getParentFile(), mgfFile.getName() + "_temp");
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+
+        UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+
+        BufferedRandomAccessFile br = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+        String lineBreak = System.getProperty("line.separator");
+
+        try {
+            long progressUnit = br.length() / 100;
+
+            FileWriter fw = new FileWriter(tempSpectrumFile);
+
+            try {
+                BufferedWriter bw = new BufferedWriter(fw);
+                try {
+
+                    String line;
+                    boolean chargeFound = false;
+                    boolean insideSpectrum = false;
+
+                    while ((line = br.readLine()) != null) {
+
+                        if (line.equals("BEGIN IONS")) {
+
+                            insideSpectrum = true;
+                            chargeFound = false;
+
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) {
+                                    break;
+                                }
+                                waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit));
+                            }
+                        } else if (line.equals("END IONS")) {
+                            insideSpectrum = false;
+                        } else if (line.startsWith("CHARGE")) {
+                            chargeFound = true;
+                        } else if (!line.equals("")) {
+
+                            if (insideSpectrum && !chargeFound) {
+
+                                try {
+                                    String values[] = line.split("\\s+");
+                                    new Double(values[0]);
+                                    new Double(values[1]);
+
+                                    // we're inside the peak list
+                                    bw.write("CHARGE=");
+
+                                    for (int i = userPreferences.getMinSpectrumChargeRange(); i <= userPreferences.getMaxSpectrumChargeRange(); i++) {
+                                        if (i > userPreferences.getMinSpectrumChargeRange()) {
+                                            bw.write(" and ");
+                                        }
+                                        bw.write(i + "+");
+                                    }
+                                    
+                                    bw.write(lineBreak);
+                                    chargeFound = true;
+
+                                } catch (Exception e1) {
+                                    // ignore comments and all other lines
+                                }
+                            }
+                        }
+                        
+                        bw.write(line);
+                        bw.write(lineBreak);
                     }
                 } finally {
                     bw.close();
@@ -732,6 +860,7 @@ public class MgfReader {
         BufferedWriter bw = new BufferedWriter(fw);
         FileReader fr = new FileReader(mgfFile);
         BufferedReader br = new BufferedReader(fr);
+        String lineBreak = System.getProperty("line.separator");
 
         String line = br.readLine();
 
@@ -762,9 +891,9 @@ public class MgfReader {
                 }
 
                 spectrumTitles.add(tempTitle);
-                bw.write("TITLE=" + tempTitle + System.getProperty("line.separator"));
+                bw.write("TITLE=" + tempTitle + lineBreak);
             } else {
-                bw.write(line + System.getProperty("line.separator"));
+                bw.write(line + lineBreak);
             }
 
             line = br.readLine();
@@ -826,6 +955,7 @@ public class MgfReader {
 
             BufferedRandomAccessFile writeBufferedRandomAccessFile = new BufferedRandomAccessFile(testFile, "rw", 1024 * 100);
             BufferedRandomAccessFile readBufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+            String lineBreak = System.getProperty("line.separator");
 
             long sizeOfReadAccessFile = readBufferedRandomAccessFile.length(), lastIndex = 0;
             long progressUnit = sizeOfReadAccessFile / 100;
@@ -861,7 +991,7 @@ public class MgfReader {
                     }
                 }
 
-                writeBufferedRandomAccessFile.writeBytes(line + System.getProperty("line.separator"));
+                writeBufferedRandomAccessFile.writeBytes(line + lineBreak);
             }
 
             writeBufferedRandomAccessFile.close();

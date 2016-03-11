@@ -102,6 +102,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * The waiting action listener.
      */
     private WaitingActionListener waitingActionListener = null;
+    /**
+     * The line break type.
+     */
+    private String lineBreak = System.getProperty("line.separator");
 
     /**
      * Creates a new WaitingDialog.
@@ -922,13 +926,13 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             if (includeDate) {
                 Date date = new Date();
                 if (addNewLine) {
-                    reportTextArea.append(date + TAB_NON_HTML + report + System.getProperty("line.separator"));
+                    reportTextArea.append(date + TAB_NON_HTML + report + lineBreak);
                 } else {
                     reportTextArea.append(date + TAB_NON_HTML + report);
                 }
             } else {
                 if (addNewLine) {
-                    reportTextArea.append(report + System.getProperty("line.separator"));
+                    reportTextArea.append(report + lineBreak);
                 } else {
                     reportTextArea.append(report);
                 }
@@ -950,7 +954,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      */
     public synchronized void appendReportEndLine() {
         if (displayProgress) {
-            reportTextArea.append(System.getProperty("line.separator"));
+            reportTextArea.append(lineBreak);
         }
     }
 
@@ -1150,16 +1154,16 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
 
         // Write the file header.        
-        output.append("# ------------------------------------------------------------------" + System.getProperty("line.separator")
-                + "# " + toolName + " " + toolVersion + " Report File" + System.getProperty("line.separator")
-                + "#" + System.getProperty("line.separator")
-                + "# Originally saved by: " + System.getProperty("user.name") + host + System.getProperty("line.separator")
-                + "#                  on: " + SIMPLE_DATA_FORMAT.format(new Date()) + System.getProperty("line.separator"));
+        output.append("# ------------------------------------------------------------------" + lineBreak
+                + "# " + toolName + " " + toolVersion + " Report File" + lineBreak
+                + "#" + lineBreak
+                + "# Originally saved by: " + System.getProperty("user.name") + host + lineBreak
+                + "#                  on: " + SIMPLE_DATA_FORMAT.format(new Date()) + lineBreak);
         if (aFile != null) {
-            output.append("#                  as: " + aFile.getName() + System.getProperty("line.separator"));
+            output.append("#                  as: " + aFile.getName() + lineBreak);
         }
 
-        output.append("# ------------------------------------------------------------------" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+        output.append("# ------------------------------------------------------------------" + lineBreak + lineBreak + lineBreak);
         output.append(reportTextArea.getText());
 
         return output.toString();

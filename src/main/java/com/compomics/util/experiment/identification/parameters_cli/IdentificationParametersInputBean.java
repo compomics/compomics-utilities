@@ -3315,7 +3315,7 @@ public class IdentificationParametersInputBean {
      * @param allowZero if true, zero values are allowed
      * @return true if the argument can be parsed as a positive double value
      */
-    private static boolean isPositiveDouble(String argType, String arg, boolean allowZero) {
+    public static boolean isPositiveDouble(String argType, String arg, boolean allowZero) {
 
         boolean valid = true;
 
@@ -3357,7 +3357,7 @@ public class IdentificationParametersInputBean {
      * @param allowZero if true, zero values are allowed
      * @return true if the argument can be parsed as a positive integer value
      */
-    private static boolean isPositiveInteger(String argType, String arg, boolean allowZero) {
+    public static boolean isPositiveInteger(String argType, String arg, boolean allowZero) {
 
         boolean valid = true;
 
@@ -3394,7 +3394,7 @@ public class IdentificationParametersInputBean {
      * @param arg the content of the argument
      * @return true if the argument can be parsed as an integer value
      */
-    private static boolean isInteger(String argType, String arg) {
+    public static boolean isInteger(String argType, String arg) {
 
         boolean valid = true;
 
@@ -3420,7 +3420,7 @@ public class IdentificationParametersInputBean {
      * @param arg the content of the argument
      * @return true if the argument can be parsed as a double value
      */
-    private static boolean isDouble(String argType, String arg) {
+    public static boolean isDouble(String argType, String arg) {
 
         boolean valid = true;
 
@@ -3446,7 +3446,7 @@ public class IdentificationParametersInputBean {
      * @param arg the content of the argument
      * @return true of the input is 0 or 1
      */
-    private static boolean isBooleanInput(String argType, String arg) {
+    public static boolean isBooleanInput(String argType, String arg) {
 
         boolean valid = true;
 
@@ -3481,7 +3481,7 @@ public class IdentificationParametersInputBean {
      * @param supportedInput the list of supported input
      * @return true of the input is in the list
      */
-    private static boolean isInList(String argType, String arg, List<String> supportedInput) {
+    public static boolean isInList(String argType, String arg, List<String> supportedInput) {
 
         boolean valid = true;
 
@@ -3511,10 +3511,9 @@ public class IdentificationParametersInputBean {
      *
      * @param argType the name of the argument
      * @param arg the content of the argument
-     * @param supportedInput the list of supported input
      * @return true of the input is in the list
      */
-    private static boolean isSequenceMatchingType(String argType, String arg) {
+    public static boolean isSequenceMatchingType(String argType, String arg) {
 
         List<String> supportedInput = new ArrayList<String>(IdentificationMatch.MatchType.values().length);
         for (IdentificationMatch.MatchType matchType : IdentificationMatch.MatchType.values()) {
@@ -3532,7 +3531,7 @@ public class IdentificationParametersInputBean {
      * @param maxValue the maximum value allowed
      * @return true if the input is an integer value inside the given range
      */
-    private static boolean inIntegerRange(String argType, String arg, int minValue, int maxValue) {
+    public static boolean inIntegerRange(String argType, String arg, int minValue, int maxValue) {
 
         boolean valid = true;
 
@@ -3568,7 +3567,7 @@ public class IdentificationParametersInputBean {
      * @param maxValue the maximum value allowed
      * @return true if the input is a double value inside the given range
      */
-    private static boolean inDoubleRange(String argType, String arg, double minValue, double maxValue) {
+    public static boolean inDoubleRange(String argType, String arg, double minValue, double maxValue) {
 
         boolean valid = true;
 

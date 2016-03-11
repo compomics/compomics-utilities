@@ -18,6 +18,7 @@ import java.awt.Toolkit;
  * com.compomics.util.experiment.biology.AminoAcidPattern)
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
@@ -53,7 +54,11 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
      */
     public AminoAcidPatternDialog(java.awt.Frame parent, AminoAcidPattern pattern, boolean editable) {
         super(parent, true);
-        this.pattern = new AminoAcidPattern(pattern);
+        if (pattern == null) {
+             this.pattern = new AminoAcidPattern();
+        } else {
+            this.pattern = new AminoAcidPattern(pattern);
+        }
         this.editable = editable;
         initComponents();
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/compomics-utilities.png")));

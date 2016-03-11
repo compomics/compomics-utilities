@@ -51,6 +51,10 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * feedback to the user.
      */
     private boolean needNewLine = false;
+    /**
+     * The line break type.
+     */
+    private String lineBreak = System.getProperty("line.separator");
 
     @Override
     public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
@@ -147,13 +151,13 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             int progress = 10 * progress2;
             if (progress1 == 0) {
                 if (needNewLine) {
-                    System.out.append(System.getProperty("line.separator"));
+                    System.out.append(lineBreak);
                 }
                 System.out.print("10%");
                 needNewLine = true;
             } else if (progress2 > 99) {
                 System.out.print(" " + progress + "%");
-                System.out.append(System.getProperty("line.separator"));
+                System.out.append(lineBreak);
                 needNewLine = false;
             } else {
                 System.out.print(" " + progress + "%");
@@ -190,12 +194,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             }
 
             if (addNewLine) {
-                tempReport = tempReport + System.getProperty("line.separator");
+                tempReport = tempReport + lineBreak;
             }
 
             iReport = iReport + tempReport;
             if (needNewLine) {
-                System.out.append(System.getProperty("line.separator"));
+                System.out.append(lineBreak);
                 needNewLine = false;
             }
             System.out.append(tempReport);
@@ -206,11 +210,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public synchronized void appendReportNewLineNoDate() {
         if (displayProgress) {
             if (needNewLine) {
-                System.out.append(System.getProperty("line.separator"));
+                System.out.append(lineBreak);
                 needNewLine = false;
             }
-            iReport = iReport + System.getProperty("line.separator");
-            System.out.append(System.getProperty("line.separator"));
+            iReport = iReport + lineBreak;
+            System.out.append(lineBreak);
         }
     }
 
@@ -218,11 +222,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public synchronized void appendReportEndLine() {
         if (displayProgress) {
             if (needNewLine) {
-                System.out.append(System.getProperty("line.separator"));
+                System.out.append(lineBreak);
                 needNewLine = false;
             }
-            iReport = iReport + System.getProperty("line.separator");
-            System.out.append(System.getProperty("line.separator"));
+            iReport = iReport + lineBreak;
+            System.out.append(lineBreak);
         }
     }
 

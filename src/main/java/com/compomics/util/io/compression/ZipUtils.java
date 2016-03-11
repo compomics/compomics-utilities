@@ -230,6 +230,7 @@ public class ZipUtils {
         }
 
         FileInputStream fi = new FileInputStream(zipFile);
+        boolean isWindowsPlatform = (System.getProperty("os.name").lastIndexOf("Windows") == -1);
 
         try {
             BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
@@ -255,7 +256,7 @@ public class ZipUtils {
                         String entryName = entry.getName();
 
                         // dirty fix to be able to open windows files on linux/mac and the other way around
-                        if (System.getProperty("os.name").lastIndexOf("Windows") == -1) {
+                        if (isWindowsPlatform) {
                             entryName = entryName.replaceAll("\\\\", "/");
                         } else {
                             entryName = entryName.replaceAll("/", "\\\\");

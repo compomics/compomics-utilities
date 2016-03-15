@@ -1312,6 +1312,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                             softwareVersions.put(name, versions);
                                         }
                                     } else {
+
                                         // Andromeda
                                         eValue = scoreMap.get("MS:1002338");
                                         if (eValue != null) {
@@ -1397,8 +1398,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                             } else {
 
                                                                 // Comet
-                                                                //TODO: no e-value?
-                                                                eValue = scoreMap.get("MS:1002255");
+                                                                eValue = scoreMap.get("MS:1002255"); // @TODO: no e-value?
                                                                 if (eValue != null) {
                                                                     advocate = Advocate.comet;
                                                                     String name = advocate.getName();
@@ -1424,9 +1424,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             softwareVersions.put(name, versions);
                                                                         }
                                                                     } else {
+                                                                        
+                                                                        // ms-gf+
                                                                         eValue = scoreMap.get("MS:1002053");
                                                                         if (eValue != null) {
-                                                                            advocate = Advocate.comet;
+                                                                            advocate = Advocate.msgf;
                                                                             String name = advocate.getName();
                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1438,7 +1440,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                         } else {
                                                                             eValue = scoreMap.get("MS:1002056");
                                                                             if (eValue != null) {
-                                                                                advocate = Advocate.comet;
+                                                                                advocate = Advocate.msgf;
                                                                                 String name = advocate.getName();
                                                                                 if (!softwareVersions.containsKey(name)) {
                                                                                     ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1450,7 +1452,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                             } else {
                                                                                 eValue = scoreMap.get("MS:1002055");
                                                                                 if (eValue != null) {
-                                                                                    advocate = Advocate.comet;
+                                                                                    advocate = Advocate.msgf;
                                                                                     String name = advocate.getName();
                                                                                     if (!softwareVersions.containsKey(name)) {
                                                                                         ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1462,7 +1464,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                 } else {
                                                                                     eValue = scoreMap.get("MS:1002054");
                                                                                     if (eValue != null) {
-                                                                                        advocate = Advocate.comet;
+                                                                                        advocate = Advocate.msgf;
                                                                                         String name = advocate.getName();
                                                                                         if (!softwareVersions.containsKey(name)) {
                                                                                             ArrayList<String> versions = tempSoftwareVersions.get(name);
@@ -1474,7 +1476,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                                                                                     } else {
                                                                                         eValue = scoreMap.get("MS:1002049");
                                                                                         if (eValue != null) {
-                                                                                            advocate = Advocate.comet;
+                                                                                            advocate = Advocate.msgf;
                                                                                             String name = advocate.getName();
                                                                                             if (!softwareVersions.containsKey(name)) {
                                                                                                 ArrayList<String> versions = tempSoftwareVersions.get(name);

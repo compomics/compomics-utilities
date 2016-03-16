@@ -300,7 +300,7 @@ public enum IdentificationParametersCLIParams {
     IMPORT_MC_MIN("import_missed_cleavages_min", "The minimal number if missed cleavages to consider when importing identification files, default is no filter.", false, true),
     IMPORT_MC_MAX("import_missed_cleavages_max", "The maximal number if missed cleavages to consider when importing identification files, default is no filter.", false, true),
     IMPORT_PRECURSOR_MZ("import_precurosor_mz", "The maximal precursor precursor deviation to allow when importing identification files, none by default.", false, true),
-    IMPORT_PRECURSOR_MZ_PPM("import_precurosor_mz_ppm", "Import precursor ion tolerance unit: ppm (1) or Da (2), default is '1'.", false, true),
+    IMPORT_PRECURSOR_MZ_PPM("import_precurosor_mz_ppm", "Import precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
     EXCLUDE_UNKNOWN_PTMs("exclude_unknown_ptms", "If true peptides presenting unrecognized PTMs will be excluded. (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////
     // PTM localization parameters

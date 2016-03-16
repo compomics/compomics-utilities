@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.5.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.7.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -1695,7 +1695,6 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 1291", "Dimethyl:2H(6)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        ptmMap.put(ptmName, ptm);
 
         // Dimethylation of peptide N-term 2H(6) 13C(2)
         atomChainAdded = new AtomChain(true);
@@ -1709,6 +1708,18 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", String.valueOf(ptm.getRoundedMass())));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
+
+        // Dimethylation of K 2H(6) 13C(2)
+        atomChainAdded = new AtomChain(true);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
+        atomChainRemoved = new AtomChain(false);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = new AminoAcidPattern("K");
+        ptmName = "Dimethylation of K 2H(6) 13C(2)";
+        ptm = new PTM(PTM.MODAA, ptmName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", String.valueOf(ptm.getRoundedMass())));
+        defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
         // 18O(2) of peptide C-term

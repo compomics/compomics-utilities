@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.2.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.4.cus";
     /**
      * A map linking indexes with modifications.
      */
@@ -2032,11 +2032,11 @@ public class PTMFactory implements Serializable {
 
         // iTRAQ 8-plex of peptide N-term
         atomChainAdded = new AtomChain(true);
-        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
-        atomChainAdded.append(new AtomImpl(Atom.C, 1), 7);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
-        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
-        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = null;
@@ -2056,11 +2056,11 @@ public class PTMFactory implements Serializable {
 
         // iTRAQ 8-plex of K
         atomChainAdded = new AtomChain(true);
-        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
-        atomChainAdded.append(new AtomImpl(Atom.C, 1), 7);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
-        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
-        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = new AminoAcidPattern("K");
@@ -2080,11 +2080,11 @@ public class PTMFactory implements Serializable {
 
         // iTRAQ 8-plex of Y
         atomChainAdded = new AtomChain(true);
-        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
-        atomChainAdded.append(new AtomImpl(Atom.C, 1), 7);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
-        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
-        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainRemoved = null;
         aminoAcidPattern = new AminoAcidPattern("Y");

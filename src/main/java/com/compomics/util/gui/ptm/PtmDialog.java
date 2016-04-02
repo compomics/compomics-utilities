@@ -1085,8 +1085,6 @@ public class PtmDialog extends javax.swing.JDialog {
                 if (cvTermOk) {
                     int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
                     cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-                    Double mass = atomChainAdded.getMass() + atomChainRemoved.getMass();
-                    cvTerm.setValue(mass + "");
                 }
 
                 PTM newPTM = new PTM(typeCmb.getSelectedIndex(),

@@ -2,7 +2,6 @@ package com.compomics.util.io.compression;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -241,6 +240,7 @@ public class TarUtils {
 
         try {
             BufferedInputStream bis = new BufferedInputStream(fi, BUFFER);
+            boolean isWindowsPlatform = (System.getProperty("os.name").lastIndexOf("Windows") == -1);
             try {
                 ArchiveInputStream tarInput = new ArchiveStreamFactory().createArchiveInputStream(bis);
                 try {
@@ -253,7 +253,7 @@ public class TarUtils {
                         String entryName = archiveEntry.getName();
 
                         // dirty fix to be able to open windows cps files on linux/mac and the other way around
-                        if (System.getProperty("os.name").lastIndexOf("Windows") == -1) {
+                        if (isWindowsPlatform) {
                             entryName = entryName.replaceAll("\\\\", "/");
                         } else {
                             entryName = entryName.replaceAll("/", "\\\\");

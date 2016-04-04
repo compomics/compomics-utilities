@@ -443,6 +443,7 @@ public class GeneFactory {
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            String lineBreak = System.getProperty("line.separator");
 
             try {
                 wr.write(requestXml);
@@ -496,7 +497,7 @@ public class GeneFactory {
                                                     lastThousand = thousand;
                                                 }
                                             }
-                                            bw.write(rowLine + System.getProperty("line.separator"));
+                                            bw.write(rowLine + lineBreak);
                                             rowLine = br.readLine();
                                         }
                                     }
@@ -570,6 +571,7 @@ public class GeneFactory {
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            String lineBreak = System.getProperty("line.separator");
 
             try {
                 wr.write(requestXml);
@@ -599,7 +601,7 @@ public class GeneFactory {
                                         if (waitingHandler instanceof ProgressDialogX) {
                                             waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                         }
-                                        bw.write(rowLine + System.getProperty("line.separator"));
+                                        bw.write(rowLine + lineBreak);
                                         rowLine = br.readLine();
                                     }
                                 }

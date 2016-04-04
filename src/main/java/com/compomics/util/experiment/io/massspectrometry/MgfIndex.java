@@ -76,6 +76,11 @@ public class MgfIndex extends ExperimentObject {
      * tags. Null if not set.
      */
     private Integer spectrumCount = null;
+    /**
+     * Indicates if there are spectra where the precursor charge is missing. A
+     * null value indicated that the check was not performed.
+     */
+    private Boolean precursorChargesMissing = null;
 
     /**
      * Constructor.
@@ -94,11 +99,14 @@ public class MgfIndex extends ExperimentObject {
      * @param maxCharge the maximum peak precursor charge
      * @param maxPeakCount the maximum peak count
      * @param peakPicked indicates if the spectra seem to be peak picked or not
+     * @param precursorChargesMissing indicates if at least one spectrum is
+     * missing the precursor charge tag
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, HashMap<Integer, Double> precursorMzMap,
-            String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, long lastModified) {
+            String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, boolean precursorChargesMissing,
+            long lastModified) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
@@ -111,8 +119,9 @@ public class MgfIndex extends ExperimentObject {
         this.maxIntensity = maxIntensity;
         this.maxCharge = maxCharge;
         this.maxPeakCount = maxPeakCount;
-        this.lastModified = lastModified;
         this.peakPicked = peakPicked;
+        this.precursorChargesMissing = precursorChargesMissing;
+        this.lastModified = lastModified;
     }
 
     /**
@@ -134,6 +143,8 @@ public class MgfIndex extends ExperimentObject {
      * @param maxCharge the maximum peak precursor charge
      * @param maxPeakCount the maximum peak count
      * @param peakPicked indicates if the spectra seem to be peak picked or not
+     * @param precursorChargesMissing indicates if at least one spectrum is
+     * missing the precursor charge tag
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      * @param spectrumCount the number of spectra in the file counted by the
@@ -141,7 +152,7 @@ public class MgfIndex extends ExperimentObject {
      */
     public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap,
             HashMap<Integer, Double> precursorMzMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount,
-            boolean peakPicked, long lastModified, int spectrumCount) {
+            boolean peakPicked, boolean precursorChargesMissing, long lastModified, int spectrumCount) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
@@ -154,8 +165,9 @@ public class MgfIndex extends ExperimentObject {
         this.maxIntensity = maxIntensity;
         this.maxCharge = maxCharge;
         this.maxPeakCount = maxPeakCount;
-        this.lastModified = lastModified;
         this.peakPicked = peakPicked;
+        this.precursorChargesMissing = precursorChargesMissing;
+        this.lastModified = lastModified;
         this.spectrumCount = spectrumCount;
     }
 
@@ -401,10 +413,10 @@ public class MgfIndex extends ExperimentObject {
     }
 
     /**
-     * Returns true of the indexed file seems to contain only peak picked
+     * Returns true if the indexed file seems to contain only peak picked
      * spectra.
      *
-     * @return true of the indexed file seems to contain only peak picked
+     * @return true if the indexed file seems to contain only peak picked
      * spectra
      */
     public Boolean isPeakPicked() {
@@ -421,5 +433,24 @@ public class MgfIndex extends ExperimentObject {
      */
     public void setPeakPicked(Boolean peakPicked) {
         this.peakPicked = peakPicked;
+    }
+
+    /**
+     * Returns true if the at least one spectrum is missing the precursor
+     * charge.
+     *
+     * @return true if the at least one spectrum is missing the precursor charge
+     */
+    public Boolean isPrecursorChargesMissing() {
+        return precursorChargesMissing;
+    }
+
+    /**
+     * Set if at least one spectrum is missing the precursor charge.
+     *
+     * @param precursorChargesMissing the precursorChargesMissing to set
+     */
+    public void setPrecursorChargesMissing(Boolean precursorChargesMissing) {
+        this.precursorChargesMissing = precursorChargesMissing;
     }
 }

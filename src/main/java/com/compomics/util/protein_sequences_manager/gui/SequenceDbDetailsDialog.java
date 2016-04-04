@@ -421,7 +421,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         }
 
         // add the target decoy tag
-        newFasta += SequenceFactory.getTargetDecoyFileNameTag();
+        newFasta += utilitiesUserPreferences.getTargetDecoyFileNameTag() + ".fasta";
 
         try {
             File newFile = new File(newFasta);

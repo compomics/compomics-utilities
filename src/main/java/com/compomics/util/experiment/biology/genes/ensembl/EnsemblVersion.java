@@ -22,9 +22,9 @@ public class EnsemblVersion {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
         if (ensemblGenomeDivision != null) {
-            return 30;
+            return 31;
         } else {
-            return 83;
+            return 84;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released
@@ -82,14 +82,22 @@ public class EnsemblVersion {
             return "default";
         }
         switch (ensemblGenomeDivision) {
+//            case fungi:
+//                return "fungi_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+//            case plants:
+//                return "plants_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+//            case protists:
+//                return "protists_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+//            case metazoa:
+//                return "metazoa_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
             case fungi:
-                return "fungi_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+                return "fungi_mart";
             case plants:
-                return "plants_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+                return "plants_mart";
             case protists:
-                return "protists_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+                return "protists_mart";
             case metazoa:
-                return "metazoa_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+                return "metazoa_mart";
             default:
                 return "default";
         }

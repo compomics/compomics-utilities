@@ -141,7 +141,7 @@ public class PeptideFragmentIon extends Ion {
                 }
             case B_ION:
                 if (neutralLosses == null || neutralLosses.isEmpty()) {
-                    return new CvTerm("PSI-MS", "MS:1001221", "frag: b ion", "" + getNumber());
+                    return new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
                     return new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", "" + getNumber());
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {

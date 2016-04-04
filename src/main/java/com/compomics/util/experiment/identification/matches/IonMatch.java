@@ -2,14 +2,12 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.biology.Atom;
 import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.Ion.IonType;
 import com.compomics.util.experiment.biology.ions.*;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
-import java.util.HashMap;
 
 /**
  * This class will model the assignment of a peak to a theoretical ion.

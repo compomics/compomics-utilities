@@ -92,7 +92,7 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainAdded = currentPTM.getAtomChainAdded();
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
-            pattern = new AminoAcidPattern();
+            pattern = null;
             this.atomChainAdded = new AtomChain(true);
             this.atomChainRemoved = new AtomChain(false);
         }
@@ -123,7 +123,7 @@ public class PtmDialog extends javax.swing.JDialog {
             this.atomChainAdded = currentPTM.getAtomChainAdded();
             this.atomChainRemoved = currentPTM.getAtomChainRemoved();
         } else {
-            pattern = new AminoAcidPattern();
+            pattern = null;
             this.atomChainAdded = new AtomChain(true);
             this.atomChainRemoved = new AtomChain(false);
         }
@@ -214,7 +214,9 @@ public class PtmDialog extends javax.swing.JDialog {
             String temp = addition + " " + deletion;
             compositionTxt.setText(temp.trim());
 
-            patternTxt.setText(pattern.toString());
+            if (pattern != null) {
+                patternTxt.setText(pattern.toString());
+            }
             updateMass();
 
             if (!currentPtm.getNeutralLosses().isEmpty()) {
@@ -666,19 +668,19 @@ public class PtmDialog extends javax.swing.JDialog {
 
         unimodLinkLabel.setText("<html><a href>See: http://www.unimod.org</a></html>");
         unimodLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                unimodLinkLabelMouseReleased(evt);
-            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 unimodLinkLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 unimodLinkLabelMouseExited(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                unimodLinkLabelMouseReleased(evt);
+            }
         });
 
         cvExampleLabel.setFont(cvExampleLabel.getFont().deriveFont((cvExampleLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
-        cvExampleLabel.setText("Ex.: accession:1, name: Acetyl");
+        cvExampleLabel.setText("Ex.: Accession:1, PSI-MS Name: Acetyl");
 
         javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
         unimodMappingPanel.setLayout(unimodMappingPanelLayout);
@@ -692,8 +694,8 @@ public class PtmDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(unimodAccessionJTextField)
                     .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))
@@ -779,7 +781,6 @@ public class PtmDialog extends javax.swing.JDialog {
         typeCmb.setMaximumRowCount(15);
         typeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Particular Amino Acid", "Protein N-term", "Protein N-term - Particular Amino Acid(s)", "Protein C-term", "Protein C-term - Particular Amino Acid(s)", "Peptide N-term", "Peptide N-term - Particular Amino Acid(s)", "Peptide C-term", "Peptide C-term - Particular Amino Acid(s)" }));
         typeCmb.setToolTipText("The modification type. See help for details.");
-        typeCmb.setEnabled(false);
         typeCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeCmbActionPerformed(evt);
@@ -1084,8 +1085,6 @@ public class PtmDialog extends javax.swing.JDialog {
                 if (cvTermOk) {
                     int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
                     cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
-                    Double mass = atomChainAdded.getMass() + atomChainRemoved.getMass();
-                    cvTerm.setValue(mass + "");
                 }
 
                 PTM newPTM = new PTM(typeCmb.getSelectedIndex(),
@@ -1131,8 +1130,8 @@ public class PtmDialog extends javax.swing.JDialog {
                 || typeCmb.getSelectedIndex() == 8) {
             patternTxt.setEnabled(true);
         } else {
-            pattern = new AminoAcidPattern();
-            patternTxt.setText(pattern.toString());
+            pattern = null;
+            patternTxt.setText(null);
             patternTxt.setEnabled(false);
         }
         validateInput(false);

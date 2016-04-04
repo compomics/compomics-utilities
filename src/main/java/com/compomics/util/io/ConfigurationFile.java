@@ -20,6 +20,10 @@ public class ConfigurationFile {
      * The file where to read/write configuration from/to.
      */
     private File configurationFile;
+    /**
+     * The line break type.
+     */
+    private String lineBreak = System.getProperty("line.separator");
 
     /**
      * Constructor.
@@ -53,12 +57,12 @@ public class ConfigurationFile {
                 try {
                     String line;
                     while ((line = br.readLine()) != null) {
-                        newContent.append(line).append(System.getProperty("line.separator"));
+                        newContent.append(line).append(lineBreak);
                         // Skip empty lines and comment ('#') lines.
                         line = line.trim();
                         if (!line.equals("") && !line.startsWith("#") && line.equals(parameterName)) {
                             found = true;
-                            newContent.append(value).append(System.getProperty("line.separator"));
+                            newContent.append(value).append(lineBreak);
                             br.readLine();
                         }
                     }
@@ -70,8 +74,8 @@ public class ConfigurationFile {
             }
 
             if (!found) {
-                newContent.append(parameterName).append(System.getProperty("line.separator"));
-                newContent.append(value).append(System.getProperty("line.separator"));
+                newContent.append(parameterName).append(lineBreak);
+                newContent.append(value).append(lineBreak);
             }
             FileWriter fileWriter = new FileWriter(configurationFile);
             try {

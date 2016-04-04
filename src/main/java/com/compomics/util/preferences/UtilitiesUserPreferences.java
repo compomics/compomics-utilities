@@ -92,8 +92,8 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private HashMap<Long, ArrayList<Long>> proteinTreeImportTime;
     /**
-     * The path to the ProteoWizard installation (if any). Set to null if no path is
-     * provided.
+     * The path to the ProteoWizard installation (if any). Set to null if no
+     * path is provided.
      */
     private String proteoWizardPath = null;
     /**
@@ -108,8 +108,8 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     private String peptideShakerPath = null;
     /**
-     * The path to the DeNovoGUI installation (if any). Set to null if no
-     * path is provided.
+     * The path to the DeNovoGUI installation (if any). Set to null if no path
+     * is provided.
      */
     private String deNovoGuiPath = null;
     /**
@@ -162,6 +162,69 @@ public class UtilitiesUserPreferences implements Serializable {
      * If true, the PSMs are sorted on retention time, false sorts on PSM score.
      */
     private Boolean sortPsmsOnRt = false;
+    /**
+     * The tag added after adding decoy sequences to a FASTA file.
+     */
+    private String targetDecoyFileNameTag = "_concatenated_target_decoy";
+    /**
+     * If true, the selected spectra will be checked for peak picking.
+     */
+    private Boolean checkPeakPicking = true;
+    /**
+     * If true, the selected spectra will be checked for duplicate spectrum
+     * titles.
+     */
+    private Boolean checkDuplicateTitles = true;
+    /**
+     * If true, the mgf files will be checked for size.
+     */
+    private Boolean checkMgfSize = false;
+    /**
+     * If an mgf file exceeds this limit, the user will be asked for a split.
+     */
+    private Double mgfMaxSize = 1000.0;
+    /**
+     * Number of spectra allowed in the split file.
+     */
+    private Integer mgfNSpectra = 25000;
+    /**
+     * Reference mass for the conversion of the fragment ion tolerance from ppm
+     * to Dalton.
+     */
+    private Double refMass = 2000.0;
+    /**
+     * If true the protein tree will be created parallel to the searches.
+     */
+    private Boolean generateProteinTree = false;
+    /**
+     * The way output files should be exported.
+     */
+    private SearchGuiOutputOption outputOption = SearchGuiOutputOption.grouped;
+    /**
+     * Indicates whether data files (mgf and FASTA) should be copied in the
+     * output.
+     */
+    private Boolean outputData = false;
+    /**
+     * Indicates whether the date should be included in the output.
+     */
+    private Boolean includeDateInOutputName = false;
+    /**
+     * If true the X! Tandem file will be renamed.
+     */
+    private Boolean renameXTandemFile = true;
+    /**
+     * If true, the spectra will be checked for missing charges.
+     */
+    private Boolean checkSpectrumCharges = true;
+    /**
+     * The maximum charge added when the charge is missing for a given spectrum.
+     */
+    private Integer minSpectrumChargeRange = 2;
+    /**
+     * The minimum charge added when the charge is missing for a given spectrum.
+     */
+    private Integer maxSpectrumChargeRange = 4;
 
     /**
      * Constructor.
@@ -454,7 +517,7 @@ public class UtilitiesUserPreferences implements Serializable {
     public void setSearchGuiPath(String searchGuiPath) {
         this.searchGuiPath = searchGuiPath;
     }
-    
+
     /**
      * Returns the path to the DeNovoGUI installation.
      *
@@ -475,7 +538,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Returns the path to ProteoWizard.
-     * 
+     *
      * @return the path to ProteoWizard
      */
     public String getProteoWizardPath() {
@@ -484,7 +547,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Set the path to ProteoWizard.
-     * 
+     *
      * @param proteoWizardPath the path to ProteoWizard
      */
     public void setProteoWizardPath(String proteoWizardPath) {
@@ -629,7 +692,7 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * returns the folder to use in the protein sequences manager.
-     * 
+     *
      * @return the folder to use in the protein sequences manager
      */
     public File getProteinSequencesManagerFolder() {
@@ -644,8 +707,9 @@ public class UtilitiesUserPreferences implements Serializable {
 
     /**
      * Sets the folder to use in the protein sequences manager.
-     * 
-     * @param proteinSequencesManagerFolder the folder to use in the protein sequences manager
+     *
+     * @param proteinSequencesManagerFolder the folder to use in the protein
+     * sequences manager
      */
     public void setProteinSequencesManagerFolder(File proteinSequencesManagerFolder) {
         this.proteinSequencesManagerFolder = proteinSequencesManagerFolder;
@@ -657,7 +721,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * @return the last used databases.
      */
     public ArrayList<File> getFavoriteDBs() {
-            checkDbFiles();
+        checkDbFiles();
         return favoriteDBs;
     }
 
@@ -899,5 +963,338 @@ public class UtilitiesUserPreferences implements Serializable {
      */
     public void setSortPsmsOnRt(Boolean sortPsmsOnRt) {
         this.sortPsmsOnRt = sortPsmsOnRt;
+    }
+
+    /**
+     * Returns the target-decoy file name tag.
+     *
+     * @return the targetDecoyFileNameTag
+     */
+    public String getTargetDecoyFileNameTag() {
+        if (targetDecoyFileNameTag == null) {
+            targetDecoyFileNameTag = "_concatenated_target_decoy";
+        }
+        return targetDecoyFileNameTag;
+    }
+
+    /**
+     * Set the target-decoy file name tag.
+     *
+     * @param targetDecoyFileNameTag the targetDecoyFileNameTag to set
+     */
+    public void setTargetDecoyFileNameTag(String targetDecoyFileNameTag) {
+        this.targetDecoyFileNameTag = targetDecoyFileNameTag;
+    }
+
+    /**
+     * Returns if the spectra should be checked for peak picking or not.
+     *
+     * @return true if the spectra should be checked for peak picking
+     */
+    public Boolean checkPeakPicking() {
+        if (checkPeakPicking == null) {
+            checkPeakPicking = true;
+        }
+        return checkPeakPicking;
+    }
+
+    /**
+     * Set if the spectra should be checked for peak picking or not.
+     *
+     * @param checkPeakPicking the checkPeakPicking to set
+     */
+    public void setCheckPeakPicking(boolean checkPeakPicking) {
+        this.checkPeakPicking = checkPeakPicking;
+    }
+
+    /**
+     * Returns if the spectra should be checked for duplicate titles or not.
+     *
+     * @return true if the spectra should be checked for duplicate titles
+     */
+    public Boolean checkDuplicateTitles() {
+        if (checkDuplicateTitles == null) {
+            checkDuplicateTitles = true;
+        }
+        return checkDuplicateTitles;
+    }
+
+    /**
+     * Set if the spectra should be checked for duplicate titles or not.
+     *
+     * @param checkDuplicateTitles the checkDuplicateTitles to set
+     */
+    public void setCheckDuplicateTitles(boolean checkDuplicateTitles) {
+        this.checkDuplicateTitles = checkDuplicateTitles;
+    }
+
+    /**
+     * Returns if the mgf should be checked for size.
+     *
+     * @return true if the mgf should be checked for size
+     */
+    public Boolean checkMgfSize() {
+        if (checkMgfSize == null) {
+            checkMgfSize = false;
+        }
+        return checkMgfSize;
+    }
+
+    /**
+     * Set if the mgf should be checked for size.
+     *
+     * @param checkMgfSize the mgf should be checked for size
+     */
+    public void setCheckMgfSize(boolean checkMgfSize) {
+        this.checkMgfSize = checkMgfSize;
+    }
+
+    /**
+     * Returns the max mgf file size before splitting.
+     *
+     * @return the mgfMaxSize
+     */
+    public double getMgfMaxSize() {
+        if (mgfMaxSize == null) {
+            mgfMaxSize = 1000.0;
+        }
+        return mgfMaxSize;
+    }
+
+    /**
+     * Set the max mgf file size before splitting.
+     *
+     * @param mgfMaxSize the mgfMaxSize to set
+     */
+    public void setMgfMaxSize(double mgfMaxSize) {
+        this.mgfMaxSize = mgfMaxSize;
+    }
+
+    /**
+     * Get the max number of spectra in an mgf file.
+     *
+     * @return the mgfNSpectra
+     */
+    public int getMgfNSpectra() {
+        if (mgfNSpectra == null) {
+            mgfNSpectra = 25000;
+        }
+        return mgfNSpectra;
+    }
+
+    /**
+     * Set the max number of spectra in an mgf file.
+     *
+     * @param mgfNSpectra the mgfNSpectra to set
+     */
+    public void setMgfNSpectra(int mgfNSpectra) {
+        this.mgfNSpectra = mgfNSpectra;
+    }
+
+    /**
+     * Returns the reference mass for the conversion of the fragment ion
+     * tolerance from ppm to Dalton.
+     *
+     * @return the reference mass for the conversion of the fragment ion
+     * tolerance from ppm to Dalton
+     */
+    public Double getRefMass() {
+        if (refMass == null) {
+            refMass = 2000.0;
+        }
+        return refMass;
+    }
+
+    /**
+     * Sets the reference mass for the conversion of the fragment ion tolerance
+     * from ppm to Dalton.
+     *
+     * @param refMass the reference mass for the conversion of the fragment ion
+     * tolerance from ppm to Dalton
+     */
+    public void setRefMass(Double refMass) {
+        this.refMass = refMass;
+    }
+
+    /**
+     * Returns true if the protein tree will be created parallel to the
+     * searches.
+     *
+     * @return true if the protein tree will be created parallel to the searches
+     */
+    public Boolean generateProteinTree() {
+        if (generateProteinTree == null) {
+            generateProteinTree = false;
+        }
+        return generateProteinTree;
+    }
+
+    /**
+     * Set if the the protein tree will be created parallel to the searches.
+     *
+     * @param generateProteinTree create protein tree?
+     */
+    public void setGenerateProteinTree(Boolean generateProteinTree) {
+        this.generateProteinTree = generateProteinTree;
+    }
+
+    /**
+     * Sets how SearchGUI output files should be organized.
+     *
+     * @param outputOption the SearchGUI output option
+     */
+    public void setOutputOption(SearchGuiOutputOption outputOption) {
+        this.outputOption = outputOption;
+    }
+
+    /**
+     * Returns the selected SearchGUI output option.
+     *
+     * @return the selected SearchGUI output option
+     */
+    public SearchGuiOutputOption getOutputOption() {
+        if (outputOption == null) {
+            outputOption = SearchGuiOutputOption.grouped;
+        }
+        return outputOption;
+    }
+
+    /**
+     * Indicates whether data should be copied along with the identification
+     * files in the SearchGUI output.
+     *
+     * @return a boolean indicating whether data should be copied along with the
+     * identification files in the SearchGUI output
+     */
+    public Boolean outputData() {
+        if (outputData == null) {
+            outputData = false;
+        }
+        return outputData;
+    }
+
+    /**
+     * Sets whether data should be copied along with the identification files in
+     * the SearchGUI output.
+     *
+     * @param outputData whether data should be copied along with the
+     * identification files in the SearchGUI output
+     */
+    public void setOutputData(Boolean outputData) {
+        this.outputData = outputData;
+    }
+
+    /**
+     * Indicates whether the date should be included in the SearchGUI output
+     * name.
+     *
+     * @return a boolean indicating whether the date should be included in the
+     * SearchGUI output name
+     */
+    public Boolean isIncludeDateInOutputName() {
+        if (includeDateInOutputName == null) {
+            includeDateInOutputName = false;
+        }
+        return includeDateInOutputName;
+    }
+
+    /**
+     * Sets whether the date should be included in the SearchGUI output name.
+     *
+     * @param includeDateInOutputName whether the date should be included in the
+     * SearchGUI output name
+     */
+    public void setIncludeDateInOutputName(Boolean includeDateInOutputName) {
+        this.includeDateInOutputName = includeDateInOutputName;
+    }
+
+    /**
+     * Returns true if the X! Tandem file should be renamed.
+     *
+     * @return true if the X! Tandem file should be renamed
+     */
+    public Boolean renameXTandemFile() {
+        if (renameXTandemFile == null) {
+            renameXTandemFile = true;
+        }
+        return renameXTandemFile;
+    }
+
+    /**
+     * Set if the X! Tandem file should be renamed.
+     *
+     * @param renameXTandemFile rename file?
+     */
+    public void setRenameXTandemFile(Boolean renameXTandemFile) {
+        this.renameXTandemFile = renameXTandemFile;
+    }
+
+    /**
+     * Returns whether the spectra are to be checked for missing charges.
+     *
+     * @return true, if the spectra are to be checked for missing charges
+     */
+    public Boolean isCheckSpectrumCharges() {
+        if (checkSpectrumCharges == null) {
+            checkSpectrumCharges = true;
+        }
+        return checkSpectrumCharges;
+    }
+
+    /**
+     * Set if the spectra are to be checked for missing charges.
+     *
+     * @param checkSpectrumCharges the checkSpectrumCharges to set
+     */
+    public void setCheckSpectrumCharges(Boolean checkSpectrumCharges) {
+        this.checkSpectrumCharges = checkSpectrumCharges;
+    }
+
+    /**
+     * Returns the minimum charge added when the charge is missing for a given
+     * spectrum.
+     *
+     * @return the minimum charge added when the charge is missing for a given
+     * spectrum
+     */
+    public Integer getMinSpectrumChargeRange() {
+        if (minSpectrumChargeRange == null) {
+            minSpectrumChargeRange = 2;
+        }
+        return minSpectrumChargeRange;
+    }
+
+    /**
+     * Set the minimum charge added when the charge is missing for a given
+     * spectrum.
+     *
+     * @param minSpectrumChargeRange the minSpectrumChargeRange to set
+     */
+    public void setMinSpectrumChargeRange(Integer minSpectrumChargeRange) {
+        this.minSpectrumChargeRange = minSpectrumChargeRange;
+    }
+    
+    /**
+     * Returns the maximum charge added when the charge is missing for a given
+     * spectrum.
+     *
+     * @return the maximum charge added when the charge is missing for a given
+     * spectrum
+     */
+    public Integer getMaxSpectrumChargeRange() {
+        if (maxSpectrumChargeRange == null) {
+            maxSpectrumChargeRange = 4;
+        }
+        return maxSpectrumChargeRange;
+    }
+
+    /**
+     * Set the maximum charge added when the charge is missing for a given
+     * spectrum.
+     *
+     * @param maxSpectrumChargeRange the maxSpectrumChargeRange to set
+     */
+    public void setMaxSpectrumChargeRange(Integer maxSpectrumChargeRange) {
+        this.maxSpectrumChargeRange = maxSpectrumChargeRange;
     }
 }

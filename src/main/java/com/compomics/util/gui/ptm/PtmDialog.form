@@ -180,8 +180,8 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="cvExampleLabel" min="-2" pref="187" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="cvExampleLabel" max="32767" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="unimodLinkLabel" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="unimodAccessionJTextField" alignment="1" max="32767" attributes="0"/>
@@ -248,9 +248,9 @@
                         <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;See: http://www.unimod.org&lt;/a&gt;&lt;/html&gt;"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseReleased"/>
                         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseEntered"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseExited"/>
+                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabelMouseReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="cvExampleLabel">
@@ -260,7 +260,7 @@
                             <Font component="cvExampleLabel" italic="true" property="font" relativeSize="true" size="0"/>
                           </FontInfo>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Ex.: accession:1, name: Acetyl"/>
+                        <Property name="text" type="java.lang.String" value="Ex.: Accession:1, PSI-MS Name: Acetyl"/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -468,7 +468,6 @@
                           </StringArray>
                         </Property>
                         <Property name="toolTipText" type="java.lang.String" value="The modification type. See help for details."/>
-                        <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="typeCmbActionPerformed"/>

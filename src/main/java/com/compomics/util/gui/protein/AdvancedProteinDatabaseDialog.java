@@ -17,6 +17,10 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * The database folder.
      */
     private File dbFolder;
+    /**
+     * The user preferences.
+     */
+    private UtilitiesUserPreferences userPreferences;
 
     /**
      * Creates a new AdvancedProteinDatabaseDialog.
@@ -35,7 +39,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * Initiates the GUI.
      */
     private void initGUI() {
-        UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        userPreferences = UtilitiesUserPreferences.loadUserPreferences();
         dbFolder = userPreferences.getProteinTreeFolder();
         updateText();
     }
@@ -47,6 +51,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         if (dbFolder != null) {
             databasesFolderTxt.setText(dbFolder.getAbsolutePath());
         }
+        fastaSuffixTxt.setText(userPreferences.getTargetDecoyFileNameTag());
     }
 
     /**
@@ -65,6 +70,8 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         databasesFolderTxt = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        fileProcessingPanel = new javax.swing.JPanel();
+        fastaSuffixTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Database Details");
@@ -136,6 +143,28 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
             }
         });
 
+        fileProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("FASTA File Decoy Suffix"));
+        fileProcessingPanel.setOpaque(false);
+
+        fastaSuffixTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        javax.swing.GroupLayout fileProcessingPanelLayout = new javax.swing.GroupLayout(fileProcessingPanel);
+        fileProcessingPanel.setLayout(fileProcessingPanelLayout);
+        fileProcessingPanelLayout.setHorizontalGroup(
+            fileProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fileProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(fastaSuffixTxt)
+                .addContainerGap())
+        );
+        fileProcessingPanelLayout.setVerticalGroup(
+            fileProcessingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fileProcessingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(fastaSuffixTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -146,9 +175,10 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
                     .addComponent(folderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fileProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -158,12 +188,14 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(folderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(folderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fileProcessingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -174,7 +206,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -186,9 +218,10 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-        userPreferences.setProteinTreeFolder(dbFolder);
-        UtilitiesUserPreferences.saveUserPreferences(userPreferences);
+        UtilitiesUserPreferences tempUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
+        tempUserPreferences.setProteinTreeFolder(dbFolder);
+        tempUserPreferences.setTargetDecoyFileNameTag(fastaSuffixTxt.getText().trim());
+        UtilitiesUserPreferences.saveUserPreferences(tempUserPreferences);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -249,12 +282,15 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_clearDatabaseFolderButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton browseDatabaseFolderButton;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton clearDatabaseFolderButton;
     private javax.swing.JTextField databasesFolderTxt;
+    private javax.swing.JTextField fastaSuffixTxt;
+    private javax.swing.JPanel fileProcessingPanel;
     private javax.swing.JPanel folderPanel;
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables

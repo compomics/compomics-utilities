@@ -428,4 +428,32 @@ public class BasicMathFunctions {
         corr = corr / (n - 1);
         return corr;
     }
+
+    /**
+     * Checks that a probability is between 0 and 1 and throws an
+     * IllegalArgumentException otherwise. 0.5 represents a probability of 50%.
+     *
+     * @param p the probability
+     */
+    public static void checkProbabilityRange(double p) {
+        if (p < 0.0) {
+            throw new IllegalArgumentException("Probability <0%.");
+        } else if (p > 1.0) {
+            throw new IllegalArgumentException("Probability >100%.");
+        }
+    }
+
+    /**
+     * Checks that a probability is between 0 % and 100 % and throws an
+     * IllegalArgumentException otherwise. 50 represents a probability of 50%.
+     *
+     * @param p the probability
+     */
+    public static void checkProbabilityRangeInPercent(double p) {
+        if (p < 0.0) {
+            throw new IllegalArgumentException("Probability <0%.");
+        } else if (p > 100.0) {
+            throw new IllegalArgumentException("Probability >100%.");
+        }
+    }
 }

@@ -682,4 +682,13 @@ public abstract class Spectrum extends ExperimentObject {
         }
         return peakList.size();
     }
+    
+    /**
+     * Returns a boolean indicating whether the spectrum is empty.
+     * 
+     * @return a boolean indicating whether the spectrum is empty
+     */
+    public boolean isEmpty() {
+        return getNPeaks() > 0;
+    }
 }

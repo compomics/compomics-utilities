@@ -54,6 +54,10 @@ public class PhosphoRS {
      * The binomial distributions cache.
      */
     private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
+    /**
+     * Convenience name for the temporary PTM used by PhosphoRS.
+     */
+    public static final String TEMP_PTM_NAME = "RS_TEMP";
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
@@ -130,8 +134,7 @@ public class PhosphoRS {
             throw new IllegalArgumentException("Given PTMs not found in the peptide for PhosphoRS calculation.");
         }
 
-        PTM refPTM = ptms.get(0);
-        double ptmMass = refPTM.getMass();
+        double ptmMass = ptms.get(0).getMass();
 
         NeutralLossesMap annotationNeutralLosses = specificAnnotationSettings.getNeutralLossesMap(),
                 scoringLossesMap = new NeutralLossesMap();
@@ -187,11 +190,11 @@ public class PhosphoRS {
             Collections.sort(possibleSites);
             ArrayList<ArrayList<Integer>> possibleProfiles = getPossibleModificationProfiles(possibleSites, nPTM);
 
-            HashMap<String, Peptide> profileToPeptide = getPossiblePeptidesMap(peptide, ptms, refPTM, possibleProfiles);
+            HashMap<String, Peptide> profileToPeptide = getPossiblePeptidesMap(peptide, ptms, possibleProfiles);
             HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> profileToPossibleFragments = getPossiblePeptideFragments(profileToPeptide, scoringAnnotationSetttings);
             HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, profileToPossibleFragments, spectrumAnnotator, scoringAnnotationSetttings);
 
-            HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, refPTM.getName(), spectrumAnnotator, scoringAnnotationSetttings);
+            HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, spectrumAnnotator, scoringAnnotationSetttings);
             ArrayList<Double> siteDeterminingIons = new ArrayList<Double>(siteDeterminingIonsMap.keySet());
             Collections.sort(siteDeterminingIons);
 
@@ -553,7 +556,6 @@ public class PhosphoRS {
      *
      * @param peptide the peptide of interest
      * @param ptms the PTMs to score
-     * @param refPTM the reference PTM
      * @param possibleProfiles the different profiles
      *
      * @return a map of the different peptides for the different profiles
@@ -565,7 +567,7 @@ public class PhosphoRS {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws SQLException if an SQLException occurs
      */
-    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<PTM> ptms, PTM refPTM, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
+    private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<PTM> ptms, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
         HashMap<String, Peptide> result = new HashMap<String, Peptide>(possibleProfiles.size());
         int peptideLength = peptide.getSequence().length();
@@ -579,7 +581,7 @@ public class PhosphoRS {
                 } else if (index == peptideLength + 1) {
                     index = peptideLength;
                 }
-                tempPeptide.addModificationMatch(new ModificationMatch(refPTM.getName(), true, index));
+                tempPeptide.addModificationMatch(new ModificationMatch(TEMP_PTM_NAME, true, index));
             }
             result.put(profileKey, tempPeptide);
         }
@@ -681,7 +683,6 @@ public class PhosphoRS {
      * @param noModPeptide the version of the peptide which does not contain the
      * modification of interest
      * @param possibleProfiles the possible modification profiles to inspect
-     * @param referencePtmName the name of the reference ptm
      * @param spectrumAnnotator the spectrum annotator used throughout the
      * scoring
      * @param scoringAnnotationSetttings the annotation settings specific to
@@ -689,8 +690,7 @@ public class PhosphoRS {
      *
      * @return a list of mz where we can possibly find a site determining ion
      */
-    private static HashMap<Double, ArrayList<ArrayList<Integer>>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles,
-            String referencePtmName, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static HashMap<Double, ArrayList<ArrayList<Integer>>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         HashMap<Double, ArrayList<ArrayList<Integer>>> siteDeterminingIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();
         HashMap<Double, ArrayList<ArrayList<Integer>>> commonIons = new HashMap<Double, ArrayList<ArrayList<Integer>>>();
@@ -710,7 +710,7 @@ public class PhosphoRS {
                 } else {
                     position = pos;
                 }
-                peptide.addModificationMatch(new ModificationMatch(referencePtmName, true, position));
+                peptide.addModificationMatch(new ModificationMatch(TEMP_PTM_NAME, true, position));
             }
 
             HashSet<Double> mzs = new HashSet<Double>();

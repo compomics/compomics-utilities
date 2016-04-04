@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.9.cus";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.5.10.cus";
     /**
      * A map linking indexes with modifications.
      */

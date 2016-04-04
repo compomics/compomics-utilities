@@ -44,8 +44,8 @@ public class PhosphoRS {
      */
     public static final double WINDOW_SIZE = 100.0;
     /**
-     * The maximal depth to use per window. 8 in the original paper, Must be >
-     * 1.
+     * The maximal depth to use per window. 8 in the original paper, Must be
+     * greater than 1.
      */
     public static final int MAX_DEPTH = 8;
     /**
@@ -709,15 +709,13 @@ public class PhosphoRS {
                     ArrayList<String> profiles = new ArrayList<String>(2);
                     commonIons.put(mz, profiles);
                     profiles.add(profileKey);
-                } else {
-                    if (!commonIons.containsKey(mz)) {
-                        ArrayList<String> profiles = siteDeterminingIons.get(mz);
-                        if (profiles == null) {
-                            profiles = new ArrayList<String>(2);
-                            siteDeterminingIons.put(mz, profiles);
-                        }
-                        profiles.add(profileKey);
+                } else if (!commonIons.containsKey(mz)) {
+                    ArrayList<String> profiles = siteDeterminingIons.get(mz);
+                    if (profiles == null) {
+                        profiles = new ArrayList<String>(2);
+                        siteDeterminingIons.put(mz, profiles);
                     }
+                    profiles.add(profileKey);
                 }
             }
 

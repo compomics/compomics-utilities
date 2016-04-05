@@ -39,21 +39,59 @@ public class Util {
     public static final String separator = "_cus_";
 
     /**
+     * Removes characters from a string.
+     *
+     * @param string the string of interest
+     * @param subString the sub-string to remove
+     *
+     * @return a version without forbidden characters
+     */
+    public static String removeSubString(String string, String subString) {
+        String result;
+        String[] split = string.split(subString);
+        if (split.length > 1) {
+            StringBuilder stringBuilder = new StringBuilder(string.length());
+            for (String splitPart : split) {
+                stringBuilder.append(splitPart);
+            }
+            result = stringBuilder.toString();
+        } else {
+            result = string;
+        }
+        return result;
+    }
+
+    /**
+     * Removes characters from a string.
+     *
+     * @param string the string of interest
+     * @param forbiddenCharacters the characters to remove
+     *
+     * @return a version without forbidden characters
+     */
+    public static String removeCharacters(String string, String[] forbiddenCharacters) {
+        String result = string;
+        for (String fc : forbiddenCharacters) {
+            String[] split = result.split(fc);
+            if (split.length > 1) {
+                StringBuilder stringBuilder = new StringBuilder(string.length());
+                for (String splitPart : split) {
+                    stringBuilder.append(splitPart);
+                }
+                result = stringBuilder.toString();
+            }
+        }
+        return result;
+    }
+
+    /**
      * Removes the forbidden characters from a string.
      *
      * @param string the string of interest
      * @return a version without forbidden characters
      */
     public static String removeForbiddenCharacters(String string) {
-        String result = string;
-        for (String fc : forbiddenCharacters) {
-            String[] split = string.split(fc);
-            result = "";
-            for (String splitPart : split) {
-                result += splitPart;
-            }
-        }
-        return result;
+        return removeCharacters(string, forbiddenCharacters);
     }
 
     /**
@@ -88,7 +126,7 @@ public class Util {
      *
      * @param d the double to floor of
      * @param places number of decimal places wanted
-     * 
+     *
      * @return double - the new double
      */
     public static double floorDouble(double d, int places) {
@@ -563,7 +601,7 @@ public class Util {
         progressDialog.setMaxPrimaryProgressCounter(table.getRowCount());
 
         String lineBreak = System.getProperty("line.separator");
-        
+
         tableAsString.append(lineBreak);
 
         for (int i = 0; i < table.getRowCount() && !progressDialog.isRunCanceled(); i++) {
@@ -615,7 +653,7 @@ public class Util {
         }
 
         String lineBreak = System.getProperty("line.separator");
-        
+
         writer.write(lineBreak);
 
         for (int i = 0; i < table.getRowCount(); i++) {

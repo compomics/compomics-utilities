@@ -382,7 +382,7 @@ public class SequenceFactory {
                     }
                     headerFound = true;
                 } else {
-                    sequence += line;
+                    sequence += Util.removeSubString(line, "\\*");
                 }
             }
 

@@ -323,7 +323,7 @@ public class PhosphoRS {
                             }
                         }
 
-                        if (bestI < MIN_DEPTH - 1) {
+                        if (bestI < MIN_DEPTH - 1 && MIN_DEPTH -1 < spectra.size()) {
                             bestI = MIN_DEPTH - 1;
                         }
                         if (bestI > MAX_DEPTH - 1) {

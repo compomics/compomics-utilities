@@ -1,14 +1,6 @@
 package com.compomics.util.experiment.massspectrometry;
 
-import com.compomics.util.experiment.biology.Ion;
-import com.compomics.util.experiment.biology.IonFactory;
-import com.compomics.util.experiment.biology.ions.ReporterIon;
-import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
-import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
-import com.compomics.util.experiment.io.massspectrometry.MgfReader;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
@@ -16,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * This class models a spectrum.
@@ -682,10 +673,10 @@ public abstract class Spectrum extends ExperimentObject {
         }
         return peakList.size();
     }
-    
+
     /**
      * Returns a boolean indicating whether the spectrum is empty.
-     * 
+     *
      * @return a boolean indicating whether the spectrum is empty
      */
     public boolean isEmpty() {

@@ -183,15 +183,15 @@ public class AtomChain implements Serializable {
     private synchronized void estimateMass() {
         
         if (mass == null) {
-            Double theoreticMass = 0.0;
+            Double tempMass = 0.0;
             for (AtomImpl atom : atomChain) {
                 if (addition) {
-                    theoreticMass += atom.getMass();
+                    tempMass += atom.getMass();
                 } else {
-                    theoreticMass -= atom.getMass();
+                    tempMass -= atom.getMass();
                 }
             }
-            mass = theoreticMass;
+            mass = tempMass;
         }
     }
 

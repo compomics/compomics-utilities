@@ -387,8 +387,9 @@ public class PhosphoRS {
             }
 
             for (String profileKey : possibleProfileKeys) {
-                Double phosphoRsProbability = pInvMap.get(profileKey) * 100 / pInvTotal; //in percent
-                BasicMathFunctions.checkProbabilityRangeInPercent(phosphoRsProbability);
+                Double phosphoRsProbability = pInvMap.get(profileKey) / pInvTotal; //in percent
+                BasicMathFunctions.checkProbabilityRange(phosphoRsProbability);
+                phosphoRsProbability *= 100;
                 profileToScoreMap.put(profileKey, phosphoRsProbability);
             }
 

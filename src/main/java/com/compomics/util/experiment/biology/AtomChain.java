@@ -180,14 +180,18 @@ public class AtomChain implements Serializable {
     /**
      * Estimates the mass of the atom chain.
      */
-    private void estimateMass() {
-        mass = 0.0;
-        for (AtomImpl atom : atomChain) {
-            if (addition) {
-                mass += atom.getMass();
-            } else {
-                mass -= atom.getMass();
+    private synchronized void estimateMass() {
+        
+        if (mass == null) {
+            Double theoreticMass = 0.0;
+            for (AtomImpl atom : atomChain) {
+                if (addition) {
+                    theoreticMass += atom.getMass();
+                } else {
+                    theoreticMass -= atom.getMass();
+                }
             }
+            mass = theoreticMass;
         }
     }
 

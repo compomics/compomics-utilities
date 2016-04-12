@@ -1508,14 +1508,14 @@ public class Peptide extends ExperimentObject {
 
         if (mass == null) {
 
-            mass = Atom.H.getMonoisotopicMass();
+            Double tempMass = Atom.H.getMonoisotopicMass();
 
             for (int aa = 0; aa < sequence.length(); aa++) {
                 try {
                     AminoAcid currentAA = AminoAcid.getAminoAcid(sequence.charAt(aa));
 
                     if (currentAA != null) {
-                        mass += currentAA.getMonoisotopicMass();
+                        tempMass += currentAA.getMonoisotopicMass();
                     } else {
                         System.out.println("Unknown amino acid: " + sequence.charAt(aa) + "!");
                     }
@@ -1524,14 +1524,16 @@ public class Peptide extends ExperimentObject {
                 }
             }
 
-            mass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
+            tempMass += Atom.H.getMonoisotopicMass() + Atom.O.getMonoisotopicMass();
 
             if (modifications != null) {
                 PTMFactory ptmFactory = PTMFactory.getInstance();
                 for (ModificationMatch ptmMatch : modifications) {
-                    mass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
+                    tempMass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
                 }
             }
+            
+            mass = tempMass;
         }
     }
 

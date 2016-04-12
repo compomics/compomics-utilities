@@ -60,10 +60,6 @@ public class PhosphoRS {
      * The binomial distributions cache.
      */
     private static HashMap<Double, HashMap<Integer, BinomialDistribution>> distributionCache = new HashMap<Double, HashMap<Integer, BinomialDistribution>>();
-    /**
-     * Convenience name for the temporary PTM used by PhosphoRS.
-     */
-    public static final String TEMP_PTM_NAME = "RS_TEMP";
 
     /**
      * Returns the PhosphoRS sequence probabilities for the PTM possible
@@ -206,7 +202,7 @@ public class PhosphoRS {
             HashMap<String, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>>> profileToPossibleFragments = getPossiblePeptideFragments(profileToPeptide, scoringAnnotationSetttings);
             HashMap<String, Integer> profileToN = getPossiblePeptideToN(profileToPeptide, profileToPossibleFragments, spectrumAnnotator, scoringAnnotationSetttings);
 
-            HashMap<Double, ArrayList<String>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, spectrumAnnotator, scoringAnnotationSetttings);
+            HashMap<Double, ArrayList<String>> siteDeterminingIonsMap = getSiteDeterminingIons(noModPeptide, possibleProfiles, ptms, spectrumAnnotator, scoringAnnotationSetttings);
             ArrayList<Double> siteDeterminingIons = new ArrayList<Double>(siteDeterminingIonsMap.keySet());
 
             double minMz = spectrum.getMinMz(), maxMz = spectrum.getMaxMz(), tempMax;
@@ -547,6 +543,7 @@ public class PhosphoRS {
      */
     private static HashMap<String, Peptide> getPossiblePeptidesMap(Peptide peptide, ArrayList<PTM> ptms, ArrayList<ArrayList<Integer>> possibleProfiles) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
+        String representativePTM = ptms.get(0).getName();
         HashMap<String, Peptide> result = new HashMap<String, Peptide>(possibleProfiles.size());
         int peptideLength = peptide.getSequence().length();
         for (ArrayList<Integer> profile : possibleProfiles) {
@@ -558,7 +555,7 @@ public class PhosphoRS {
                 } else if (index == peptideLength + 1) {
                     index = peptideLength;
                 }
-                tempPeptide.addModificationMatch(new ModificationMatch(TEMP_PTM_NAME, true, index));
+                tempPeptide.addModificationMatch(new ModificationMatch(representativePTM, true, index));
             }
             String profileKey = KeyUtils.getKey(profile);
             result.put(profileKey, tempPeptide);
@@ -660,6 +657,7 @@ public class PhosphoRS {
      * @param noModPeptide the version of the peptide which does not contain the
      * modification of interest
      * @param possibleProfiles the possible modification profiles to inspect
+     * @param ptms the PTMs scored
      * @param spectrumAnnotator the spectrum annotator used throughout the
      * scoring
      * @param scoringAnnotationSetttings the annotation settings specific to
@@ -667,11 +665,12 @@ public class PhosphoRS {
      *
      * @return a map of all potential site determining ions indexed by their m/z
      */
-    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
+    private static HashMap<Double, ArrayList<String>> getSiteDeterminingIons(Peptide noModPeptide, ArrayList<ArrayList<Integer>> possibleProfiles, ArrayList<PTM> ptms, PeptideSpectrumAnnotator spectrumAnnotator, SpecificAnnotationSettings scoringAnnotationSetttings) {
 
         String sequence = noModPeptide.getSequence();
         Peptide peptide = new Peptide(sequence, noModPeptide.getModificationMatches());
         int sequenceLength = sequence.length();
+        String representativePTM = ptms.get(0).getName();
 
         HashMap<Double, ArrayList<String>> siteDeterminingIons = new HashMap<Double, ArrayList<String>>();
         HashMap<Double, ArrayList<String>> commonIons = new HashMap<Double, ArrayList<String>>();
@@ -687,7 +686,7 @@ public class PhosphoRS {
                 } else {
                     position = pos;
                 }
-                peptide.addModificationMatch(new ModificationMatch(TEMP_PTM_NAME, true, position));
+                peptide.addModificationMatch(new ModificationMatch(representativePTM, true, position));
             }
 
             HashSet<Double> mzs = new HashSet<Double>(2);

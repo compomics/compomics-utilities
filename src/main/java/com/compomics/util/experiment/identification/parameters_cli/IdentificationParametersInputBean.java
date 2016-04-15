@@ -1490,7 +1490,7 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ.id);
-            Integer value = new Integer(arg);
+            Double value = new Double(arg);
             peptideAssumptionFilter.setMaxMzDeviation(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id)) {

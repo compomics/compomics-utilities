@@ -1535,8 +1535,13 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_SCORE.id);
             Integer intValue = new Integer(arg);
-            SequenceMatchingPreferences.MatchingType value = SequenceMatchingPreferences.MatchingType.getMatchingType(intValue);
-            sequenceMatchingPreferences.setSequenceMatchingType(value);
+            PtmScore ptmScore = PtmScore.getScore(intValue);
+            if (ptmScore == PtmScore.None) {
+                ptmScoringPreferences.setProbabilitsticScoreCalculation(false);
+            } else {
+                ptmScoringPreferences.setProbabilitsticScoreCalculation(true);
+                ptmScoringPreferences.setSelectedProbabilisticScore(ptmScore);
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_THRESHOLD.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_THRESHOLD.id);
@@ -1783,13 +1788,13 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.PREC_PPM.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PREC_PPM.id);
-            if(!isBooleanInput(IdentificationParametersCLIParams.PREC_PPM.id, arg)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.PREC_PPM.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.FRAG_PPM.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FRAG_PPM.id);
-            if(!isBooleanInput(IdentificationParametersCLIParams.FRAG_PPM.id, arg)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.FRAG_PPM.id, arg)) {
                 return false;
             }
         }
@@ -3110,7 +3115,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
-            if(isBooleanInput(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id, arg)) {
+            if (isBooleanInput(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id, arg)) {
                 return false;
             }
         }
@@ -3186,13 +3191,13 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id);
-            if(!isBooleanInput(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id, arg)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.IMPORT_PRECURSOR_MZ_PPM.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id);
-            if(!isBooleanInput(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id, arg)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.EXCLUDE_UNKNOWN_PTMs.id, arg)) {
                 return false;
             }
         }

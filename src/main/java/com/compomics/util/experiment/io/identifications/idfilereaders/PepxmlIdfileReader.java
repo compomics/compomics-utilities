@@ -337,8 +337,8 @@ public class PepxmlIdfileReader implements IdfileReader {
                         terminalMass -= (Atom.O.getMonoisotopicMass() + Atom.H.getMonoisotopicMass());
 
                         // fix for older comet pepxml files
-                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet") 
-                                && searchEngineVersion != null 
+                        if (searchEngine != null && searchEngine.equalsIgnoreCase("Comet")
+                                && searchEngineVersion != null
                                 && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 4")
                                 && !searchEngineVersion.equalsIgnoreCase("2015.02 rev. 5")) { // @TODO: make more generic...
                             terminalMass -= Atom.H.getMonoisotopicMass();
@@ -475,6 +475,7 @@ public class PepxmlIdfileReader implements IdfileReader {
 
         Integer scanNumber = null;
         String spectrumId = null;
+        String spectrumNativeID = null;
 
         for (int i = 0; i < parser.getAttributeCount(); i++) {
             String name = parser.getAttributeName(i);
@@ -487,6 +488,8 @@ public class PepxmlIdfileReader implements IdfileReader {
                 } catch (Exception e) {
                     throw new IllegalArgumentException("An error occurred while parsing start_scan " + value + ". Integer expected.");
                 }
+            } else if (name.equals("spectrumNativeID")) {
+                spectrumNativeID = parser.getAttributeValue(i);
             }
         }
 
@@ -494,18 +497,16 @@ public class PepxmlIdfileReader implements IdfileReader {
             throw new IllegalArgumentException("No start scan found for spectrum " + spectrumId + ".");
         }
 
-        String spectrumTitle = scanNumber + "";
-        if (spectrumFactory.fileLoaded(inputFileName)) {
-            spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
+        String spectrumTitle;
+
+        if (spectrumNativeID != null) {
+            spectrumTitle = spectrumNativeID;
+        } else {
+            spectrumTitle = scanNumber + "";
+            if (spectrumFactory.fileLoaded(inputFileName)) {
+                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
+            }
         }
-//        String spectrumTitle = scanNumber + "";
-//        if (spectrumFactory.fileLoaded(inputFileName)) {
-//            if (spectrumFactory.spectrumLoaded(inputFileName, spectrumId)) {
-//                spectrumTitle = spectrumId;
-//            } else {
-//                spectrumTitle = spectrumFactory.getSpectrumTitle(inputFileName, scanNumber);
-//            }
-//        }
 
         String spectrumKey = Spectrum.getSpectrumKey(inputFileName, spectrumTitle);
         SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
@@ -563,14 +564,12 @@ public class PepxmlIdfileReader implements IdfileReader {
             }
         }
 
-        
-
         // extract the required information about the modifications
         fixedModificationsMassDiffs = new HashMap<Character, ArrayList<Double>>();
         fixedModificationMasses = new ArrayList<Double>();
         fixedNTerminalModifications = new ArrayList<Double>();
         fixedCTerminalModifications = new ArrayList<Double>();
-        
+
         int type;
 
         while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {

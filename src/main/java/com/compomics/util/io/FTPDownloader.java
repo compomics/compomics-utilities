@@ -55,7 +55,6 @@ public class FTPDownloader {
      */
     public FTPDownloader(String host, String user, String pwd, boolean debug) throws Exception {
         ftp = new FTPClient();
-
         if (debug) {
             ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
         }

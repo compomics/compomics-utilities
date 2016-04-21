@@ -4,6 +4,7 @@ import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
@@ -27,6 +28,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  */
 public class SequenceFactory {
 
+    private FMIndex fmIndex = null;
     /**
      * Instance of the factory.
      */
@@ -591,6 +593,11 @@ public class SequenceFactory {
     private FastaIndex getFastaIndex() throws IOException, ClassNotFoundException {
         return getFastaIndex(false, null);
     }
+    
+    
+    public void createFMIndex(){
+        fmIndex = new FMIndex();
+    }
 
     /**
      * Returns the file index of the FASTA file loaded in the factory (see
@@ -749,9 +756,9 @@ public class SequenceFactory {
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
 //                }
-                if (indexes.containsKey(accession)) {
-                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
-                }
+//                if (indexes.containsKey(accession)) {
+//                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
+//                }
 
                 indexes.put(accession, index);
                 if (decoyTag == null) {
@@ -1298,6 +1305,11 @@ public class SequenceFactory {
      */
     public ProteinTree getDefaultProteinTree() {
         return defaultProteinTree;
+    }
+    
+    public synchronized FMIndex getDefaultFMIndex() {
+        if (fmIndex == null) fmIndex = new FMIndex();
+        return fmIndex;
     }
 
     /**

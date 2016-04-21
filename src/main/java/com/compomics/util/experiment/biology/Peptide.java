@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 
@@ -241,11 +242,20 @@ public class Peptide extends ExperimentObject {
         if (!remap || parentProteins != null) { // avoid building the tree if not necessary
             return parentProteins;
         }
+        /*
         ProteinTree proteinTree = SequenceFactory.getInstance().getDefaultProteinTree();
         if (proteinTree == null) {
             throw new IllegalArgumentException("Protein tree not created for peptide to protein mapping.");
         }
         return getParentProteins(remap, sequenceMatchingPreferences, proteinTree);
+        */
+        
+        FMIndex fmIndex = SequenceFactory.getInstance().getDefaultFMIndex();
+        if (fmIndex == null) {
+            throw new IllegalArgumentException("FM-Index not created for peptide to protein mapping.");
+        }
+        return getParentProteins(remap, sequenceMatchingPreferences, fmIndex);
+        
     }
 
     /**
@@ -350,6 +360,18 @@ public class Peptide extends ExperimentObject {
 
         return parentProteins;
     }
+    
+    
+    public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences,
+            FMIndex fmIndex) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+
+        if (remap && parentProteins == null) {
+            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = fmIndex.getProteinMapping(sequence, sequenceMatchingPreferences);
+            saveProteins(proteinMapping, remap, sequenceMatchingPreferences);
+        }
+
+        return parentProteins;
+    }
 
     /**
      * Saves the peptide protein mapping in the parentProteins list.
@@ -373,6 +395,10 @@ public class Peptide extends ExperimentObject {
                         }
                     }
                 }
+            }
+            
+            if (parentProteins.isEmpty()) {
+                int debug = 1;
             }
 
             Collections.sort(parentProteins);

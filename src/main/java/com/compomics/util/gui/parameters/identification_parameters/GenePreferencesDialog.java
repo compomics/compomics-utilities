@@ -94,17 +94,17 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
         autoUpdateCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useMappingCmb.setEnabled(editable);
         autoUpdateCmb.setEnabled(editable);
-        
+
         // set the species
         Vector availableSpecies = new Vector();
         speciesMap = new HashMap<String, Integer>();
-        
+
         File fastaFile = searchParameters.getFastaFile();
 
         if (fastaFile != null) {
 
             int selectedIndex = 0;
-            
+
             try {
                 FastaIndex fastaIndex = SequenceFactory.getFastaIndex(fastaFile, false, null);
                 HashMap<String, Integer> speciesOccurrence = fastaIndex.getSpecies();
@@ -119,7 +119,7 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
                             try {
                                 Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
                                 if (taxon != null) {
-                                    if (genePreferences.getSelectedBackgroundSpecies() != null 
+                                    if (genePreferences.getSelectedBackgroundSpecies() != null
                                             && genePreferences.getSelectedBackgroundSpecies().intValue() == taxon) {
                                         selectedIndex = availableSpecies.size();
                                     }
@@ -138,22 +138,24 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
                 // Not able to read the species, ignore
                 e.printStackTrace();
             }
-            
+
             speciesCmb.setModel(new DefaultComboBoxModel(availableSpecies));
-            speciesCmb.setSelectedIndex(selectedIndex);
+            if (!availableSpecies.isEmpty()) {
+                speciesCmb.setSelectedIndex(selectedIndex);
+            }
         } else {
             availableSpecies.add("(no species available)");
             speciesCmb.setModel(new DefaultComboBoxModel(availableSpecies));
             speciesCmb.setEnabled(false);
         }
-        
+
         // set if the gene mappings are to be used
         if (genePreferences.getUseGeneMapping()) {
             useMappingCmb.setSelectedIndex(0);
         } else {
             useMappingCmb.setSelectedIndex(1);
         }
-        
+
         // set if the gene mappings are to be auto updated
         if (genePreferences.getAutoUpdate()) {
             autoUpdateCmb.setSelectedIndex(0);
@@ -161,26 +163,26 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
             autoUpdateCmb.setSelectedIndex(1);
         }
     }
-    
+
     /**
      * Returns the gene preferences.
-     * 
+     *
      * @return the gene preferences
      */
     public GenePreferences getGenePreferences() {
-        
+
         GenePreferences tempGenePreferences = new GenePreferences();
-        
+
         tempGenePreferences.setUseGeneMapping(useMappingCmb.getSelectedIndex() == 0);
         tempGenePreferences.setAutoUpdate(autoUpdateCmb.getSelectedIndex() == 0);
-        
+
         if (speciesCmb.isEnabled()) {
             tempGenePreferences.setSelectedBackgroundSpecies(speciesMap.get((String) speciesCmb.getSelectedItem()));
         }
 
         return tempGenePreferences;
     }
-    
+
     /**
      * Indicates whether the user canceled the editing.
      *
@@ -349,8 +351,8 @@ public class GenePreferencesDialog extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         cancelButtonActionPerformed(null);

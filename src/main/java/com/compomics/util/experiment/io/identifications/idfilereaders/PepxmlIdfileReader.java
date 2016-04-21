@@ -12,6 +12,7 @@ import com.compomics.util.experiment.identification.protein_sequences.SequenceFa
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -118,13 +119,6 @@ public class PepxmlIdfileReader implements IdfileReader {
     private void parseFile(WaitingHandler waitingHandler, boolean expandAaCombinations, boolean overwriteExtension)
             throws XmlPullParserException, FileNotFoundException, IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        int minimalPeptideSize;
-        try {
-            minimalPeptideSize = SequenceFactory.getInstance().getDefaultProteinTree().getInitialTagSize();
-        } catch (Exception e) {
-            minimalPeptideSize = 3;
-        }
-
         // Create the pull parser.
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
         factory.setNamespaceAware(true);
@@ -186,62 +180,60 @@ public class PepxmlIdfileReader implements IdfileReader {
                     PeptideAssumption peptideAssumption = parseSearchHit(parser, currentCharge);
                     Peptide peptide = peptideAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
-                    if (peptideSequence.length() >= minimalPeptideSize) {
-                        hasMatch = true;
-                        boolean found = false;
-                        if (currentMatch.getAllAssumptions() != null) {
-                            for (SpectrumIdentificationAssumption tempAssumption : currentMatch.getAllAssumptions()) {
-                                PeptideAssumption tempPeptideAssumption = (PeptideAssumption) tempAssumption;
-                                Peptide tempPeptide = tempPeptideAssumption.getPeptide();
-                                if (peptide.getSequence().equals(tempPeptide.getSequence())) {
-                                    boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
-                                    if (sameModifications && peptide.isModified()) {
-                                        for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
-                                            boolean ptmFound = false;
-                                            for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
-                                                if (originalMatch.getTheoreticPtm().equals(otherMatch.getTheoreticPtm()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
-                                                    ptmFound = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (!ptmFound) {
-                                                sameModifications = false;
+                    hasMatch = true;
+                    boolean found = false;
+                    if (currentMatch.getAllAssumptions() != null) {
+                        for (SpectrumIdentificationAssumption tempAssumption : currentMatch.getAllAssumptions()) {
+                            PeptideAssumption tempPeptideAssumption = (PeptideAssumption) tempAssumption;
+                            Peptide tempPeptide = tempPeptideAssumption.getPeptide();
+                            if (peptide.getSequence().equals(tempPeptide.getSequence())) {
+                                boolean sameModifications = peptide.getNModifications() == tempPeptide.getNModifications();
+                                if (sameModifications && peptide.isModified()) {
+                                    for (ModificationMatch originalMatch : peptide.getModificationMatches()) {
+                                        boolean ptmFound = false;
+                                        for (ModificationMatch otherMatch : tempPeptide.getModificationMatches()) {
+                                            if (originalMatch.getTheoreticPtm().equals(otherMatch.getTheoreticPtm()) && originalMatch.getModificationSite() == otherMatch.getModificationSite()) {
+                                                ptmFound = true;
                                                 break;
                                             }
                                         }
+                                        if (!ptmFound) {
+                                            sameModifications = false;
+                                            break;
+                                        }
                                     }
-                                    if (sameModifications) {
-                                        found = true;
-                                        break;
-                                    }
+                                }
+                                if (sameModifications) {
+                                    found = true;
+                                    break;
                                 }
                             }
                         }
-                        if (!found) {
+                    }
+                    if (!found) {
 
-                            Advocate advocate = Advocate.getAdvocate(searchEngine);
-                            if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-                                ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
-                                        newModificationMatches = null;
-                                if (previousModificationMatches != null) {
-                                    newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
-                                }
-                                for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                                    Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
-                                    if (previousModificationMatches != null) {
-                                        for (ModificationMatch modificationMatch : previousModificationMatches) {
-                                            newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
-                                                    modificationMatch.isVariable(), modificationMatch.getModificationSite()));
-                                        }
-                                    }
-                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
-                                            peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(),
-                                            peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                                    currentMatch.addHit(advocate.getIndex(), newAssumption, false);
-                                }
-                            } else {
-                                currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
+                        Advocate advocate = Advocate.getAdvocate(searchEngine);
+                        if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
+                            ArrayList<ModificationMatch> previousModificationMatches = peptide.getModificationMatches(),
+                                    newModificationMatches = null;
+                            if (previousModificationMatches != null) {
+                                newModificationMatches = new ArrayList<ModificationMatch>(previousModificationMatches.size());
                             }
+                            for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                                if (previousModificationMatches != null) {
+                                    for (ModificationMatch modificationMatch : previousModificationMatches) {
+                                        newPeptide.addModificationMatch(new ModificationMatch(modificationMatch.getTheoreticPtm(),
+                                                modificationMatch.isVariable(), modificationMatch.getModificationSite()));
+                                    }
+                                }
+                                PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(),
+                                        peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(),
+                                        peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                                currentMatch.addHit(advocate.getIndex(), newAssumption, false);
+                            }
+                        } else {
+                            currentMatch.addHit(advocate.getIndex(), peptideAssumption, false);
                         }
                     }
                 }

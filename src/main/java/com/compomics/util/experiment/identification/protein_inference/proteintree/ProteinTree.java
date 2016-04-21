@@ -15,6 +15,7 @@ import com.compomics.util.experiment.identification.TagFactory;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
@@ -40,7 +41,7 @@ import java.util.concurrent.Executors;
  *
  * @author Marc Vaudel
  */
-public class ProteinTree {
+public class ProteinTree implements PeptideMapper {
 
     /**
      * The memory allocation in MB.
@@ -945,25 +946,7 @@ public class ProteinTree {
         sequenceIndexers.removeAll(done);
     }
 
-    /**
-     * Returns the protein mapping in the sequence factory for the given peptide
-     * sequence.
-     *
-     * @param peptideSequence the peptide sequence
-     * @param proteinInferencePreferences the sequence matching preferences
-     *
-     * @return the peptide to protein mapping: peptide sequence &gt; protein
-     * accession &gt; index in the protein An empty map if not
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
+    @Override
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException {
 
@@ -1562,16 +1545,8 @@ public class ProteinTree {
 
         return result;
     }
-
-    /**
-     * Closes all connections to files, tries to delete corrupted and deprecated
-     * trees.
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
+    
+    @Override
     public void close() throws IOException, SQLException {
         if (debugSpeed) {
             try {

@@ -5,31 +5,28 @@
  */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.experiment.identification.protein_inference.fm_index.Sais;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.Wavelet;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
 import com.compomics.util.waiting.Duration;
 import com.compomics.util.experiment.biology.AminoAcid;
+import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 /**
  *
  * @author dominik.kopczynski
+ * @author Marc Vaudel
  */
-public class FMIndex {
+public class FMIndex implements PeptideMapper {
     
     private int binarySearch(ArrayList<Integer> array, int key){
         int low = 0;
@@ -190,6 +187,7 @@ public class FMIndex {
     
     
     
+    @Override
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref){
         HashMap<String, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
         
@@ -311,5 +309,20 @@ public class FMIndex {
             */
         }
         return allMatches;
+    }
+
+    @Override
+    public void emptyCache() {
+        // No cache here
+    }
+
+    @Override
+    public void close() throws IOException, SQLException {
+        // No open connection here
+    }
+
+    @Override
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

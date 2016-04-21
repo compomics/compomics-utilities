@@ -1,6 +1,7 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.mutations.MutationMatrix;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import java.io.Serializable;
 
 /**
@@ -109,6 +110,10 @@ public class SequenceMatchingPreferences implements Serializable {
      * The maximal number of mutations allowed per peptide.
      */
     private Integer maxMutationsPerPeptide = null;
+    /**
+     * The peptide mapper to use, FMI by default.
+     */
+    private PeptideMapperType peptideMapperType = PeptideMapperType.fmi;
 
     /**
      * Constructor for empty preferences.
@@ -292,4 +297,26 @@ public class SequenceMatchingPreferences implements Serializable {
 
         return output.toString();
     }
+
+    /**
+     * Returns the type of peptide mapper to use.
+     * 
+     * @return the type of peptide mapper to use
+     */
+    public PeptideMapperType getPeptideMapperType() {
+        if (peptideMapperType == null) { // Backward compatibility.
+            peptideMapperType = PeptideMapperType.fmi;
+        }
+        return peptideMapperType;
+    }
+
+    /**
+     * Sets the type of peptide mapper to use.
+     * 
+     * @param peptideMapperEnum the type of peptide mapper to use
+     */
+    public void setPeptideMapperType(PeptideMapperType peptideMapperEnum) {
+        this.peptideMapperType = peptideMapperEnum;
+    }
+    
 }

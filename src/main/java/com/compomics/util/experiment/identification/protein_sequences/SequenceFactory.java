@@ -4,10 +4,13 @@ import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
+import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
 import java.io.*;
@@ -25,10 +28,10 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
+ * @author dominik.kopczynski
  */
 public class SequenceFactory {
 
-    private FMIndex fmIndex = null;
     /**
      * Instance of the factory.
      */
@@ -70,9 +73,9 @@ public class SequenceFactory {
      */
     private HashMap<String, Double> molecularWeights = new HashMap<String, Double>();
     /**
-     * The default protein tree attached to the database loaded
+     * The default peptide to protein mapper.
      */
-    private ProteinTree defaultProteinTree = null;
+    private PeptideMapper defaultPeptideMapper = null;
     /**
      * Boolean indicating that the factory is reading the file.
      */
@@ -142,7 +145,7 @@ public class SequenceFactory {
      */
     public void clearFactory() throws IOException, SQLException {
         closeFile();
-        defaultProteinTree = null;
+        defaultPeptideMapper = null;
         currentHeaderMap.clear();
         currentProteinMap.clear();
         fastaIndex = null;
@@ -160,27 +163,9 @@ public class SequenceFactory {
         currentProteinMap.clear();
         loadedProteins.clear();
         molecularWeights.clear();
-        if (defaultProteinTree != null) {
-            defaultProteinTree.emptyCache();
+        if (defaultPeptideMapper != null) {
+            defaultPeptideMapper.emptyCache();
         }
-    }
-
-    /**
-     * Reduces the node cache size of the protein tree by the given share.
-     *
-     * @param share the share of the cache to remove. 0.5 means 50%
-     */
-    public void reduceNodeCacheSize(double share) {
-        defaultProteinTree.reduceNodeCacheSize(share);
-    }
-
-    /**
-     * Returns the number of nodes currently loaded in cache.
-     *
-     * @return the number of nodes currently loaded in cache
-     */
-    public int getNodesInCache() {
-        return defaultProteinTree.getNodesInCache();
     }
 
     /**
@@ -551,7 +536,7 @@ public class SequenceFactory {
             throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");
         }
 
-        defaultProteinTree = null;
+        defaultPeptideMapper = null;
         currentFastaFile = fastaFile;
         currentRandomAccessFile = new BufferedRandomAccessFile(fastaFile, "r", 1024 * 100);
         fastaIndex = getFastaIndex(false, waitingHandler);
@@ -592,11 +577,6 @@ public class SequenceFactory {
      */
     private FastaIndex getFastaIndex() throws IOException, ClassNotFoundException {
         return getFastaIndex(false, null);
-    }
-    
-    
-    public void createFMIndex(){
-        fmIndex = new FMIndex();
     }
 
     /**
@@ -759,7 +739,6 @@ public class SequenceFactory {
 //                if (indexes.containsKey(accession)) {
 //                    throw new IllegalArgumentException("Non unique accession number found \'" + accession + "\'!\nPlease check the FASTA file.");
 //                }
-
                 indexes.put(accession, index);
                 if (decoyTag == null) {
                     decoyTag = getDecoyFlag(accession);
@@ -891,8 +870,8 @@ public class SequenceFactory {
             currentRandomAccessFile.close();
             currentFastaFile = null;
         }
-        if (defaultProteinTree != null) {
-            defaultProteinTree.close();
+        if (defaultPeptideMapper != null) {
+            defaultPeptideMapper.close();
         }
     }
 
@@ -1299,146 +1278,134 @@ public class SequenceFactory {
     }
 
     /**
-     * Returns the default protein tree. Null if none created.
+     * Returns the default peptide mapper. Null if none created.
      *
-     * @return the default protein tree
+     * @return the default peptide mapper
      */
-    public ProteinTree getDefaultProteinTree() {
-        return defaultProteinTree;
-    }
-    
-    public synchronized FMIndex getDefaultFMIndex() {
-        if (fmIndex == null) fmIndex = new FMIndex();
-        return fmIndex;
+    public PeptideMapper getDefaultPeptideMapper() {
+        return defaultPeptideMapper;
     }
 
     /**
-     * Returns the default protein tree corresponding to the database loaded in
-     * factory, creates a new one if none found.
+     * Returns the default peptide to protein mapper for the database loaded in
+     * factory according to the sequence matching preferences. Creates a new one
+     * if none found.
      *
+     * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
-     * during the initiation of the tree
+     * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
+     * indexing the database
      *
-     * @return the default protein tree
+     * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
      * @throws ClassNotFoundException exception thrown whenever an error occurs
      * while deserializing an object.
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * occurred while indexing the database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
      */
-    public ProteinTree getDefaultProteinTree(WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
-        return getDefaultProteinTree(nThreads, waitingHandler, exceptionHandler, true);
+        return getDefaultPeptideMapper(sequenceMatchingPreferences, waitingHandler, exceptionHandler, true, nThreads);
     }
 
     /**
-     * Returns the default protein tree corresponding to the database loaded in
-     * factory, creates a new one if none found.
+     * Returns the default peptide to protein mapper for the database loaded in
+     * factory according to the sequence matching preferences. Creates a new one
+     * if none found.
      *
-     * @param nThreads the number of threads to use
+     * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
-     * during the initiation of the tree
+     * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
+     * indexing the database
+     * @param nThreads the number of threads to use during indexing
      *
-     * @return the default protein tree
+     * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
      * @throws ClassNotFoundException exception thrown whenever an error occurs
      * while deserializing an object.
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * occurred while indexing the database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
      */
-    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getDefaultProteinTree(nThreads, waitingHandler, exceptionHandler, true);
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        return getDefaultPeptideMapper(sequenceMatchingPreferences, waitingHandler, exceptionHandler, true, nThreads);
     }
 
     /**
-     * Returns the default protein tree corresponding to the database loaded in
-     * factory, creates a new one if none found.
+     * Returns the default peptide to protein mapper for the database loaded in
+     * factory according to the sequence matching preferences. Creates a new one
+     * if none found.
      *
-     * @param nThreads the number of threads to use
+     * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
-     * during the initiation of the tree
+     * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
-     * @param displayProgress display progress
-     * @return the default protein tree
+     * indexing the database
+     * @param displayProgress boolean indicating whether the progress of the
+     * indexing should be displayed
+     * @param nThreads the number of threads to use during indexing
+     *
+     * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
      * @throws ClassNotFoundException exception thrown whenever an error occurs
      * while deserializing an object.
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * occurred while indexing the database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
      */
-    public ProteinTree getDefaultProteinTree(int nThreads, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        if (defaultProteinTree == null) {
+    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        if (defaultPeptideMapper == null) {
 
-            UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
-            int memoryPreference = userPreferences.getMemoryPreference();
-            int memoryAllocated = 3 * memoryPreference / 4;
-            int cacheSize = 250000;
-            if (memoryPreference < 2500) {
-                cacheSize = 5000;
-            } else if (memoryPreference < 10000) {
-                cacheSize = 25000;
-            }
+            PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
+            switch (peptideMapperType) {
+                case fmi:
+                    defaultPeptideMapper = new FMIndex();
+                    break;
+                case tree:
 
-            defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
+                    UtilitiesUserPreferences userPreferences = UtilitiesUserPreferences.loadUserPreferences();
+                    int memoryPreference = userPreferences.getMemoryPreference();
+                    int memoryAllocated = 3 * memoryPreference / 4;
+                    int cacheSize = 250000;
+                    if (memoryPreference < 2500) {
+                        cacheSize = 5000;
+                    } else if (memoryPreference < 10000) {
+                        cacheSize = 25000;
+                    }
 
-            int tagLength = 3;
-            defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, exceptionHandler, true, displayProgress, nThreads);
-            emptyCache();
+                    ProteinTree defaultProteinTree = new ProteinTree(memoryAllocated, cacheSize);
 
-            int treeSize = memoryPreference / 4;
-            defaultProteinTree.setMemoryAllocation(treeSize);
+                    int tagLength = 3;
+                    defaultProteinTree.initiateTree(tagLength, 50, 50, waitingHandler, exceptionHandler, true, displayProgress, nThreads);
+                    emptyCache();
 
-            // close and delete the database if the process was canceled
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                defaultProteinTree.deleteDb();
+                    int treeSize = memoryPreference / 4;
+                    defaultProteinTree.setMemoryAllocation(treeSize);
+
+                    // close and delete the database if the process was canceled
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        defaultProteinTree.deleteDb();
+                    }
+                    defaultPeptideMapper = defaultProteinTree;
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Peptide mapper type " + peptideMapperType + " not supported.");
             }
         }
 
-        return defaultProteinTree;
-    }
-
-    /**
-     * Try to delete the default protein tree.
-     *
-     * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
-     *
-     * @return true of the deletion was a success
-     */
-    public synchronized boolean deleteProteinTree(ExceptionHandler exceptionHandler) {
-        if (defaultProteinTree != null) {
-            try {
-                defaultProteinTree.close();
-            } catch (Exception e) {
-                if (exceptionHandler != null) {
-                    exceptionHandler.catchException(e);
-                } else {
-                    e.printStackTrace();
-                }
-                return false;
-            }
-            if (defaultProteinTree != null) {
-                return defaultProteinTree.deleteDb();
-            }
-        }
-        return true;
+        return defaultPeptideMapper;
     }
 
     /**
@@ -1449,6 +1416,7 @@ public class SequenceFactory {
      * @param targetOnly boolean indicating whether only target accessions shall
      * be iterated
      * @return a header iterator
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public HeaderIterator getHeaderIterator(boolean targetOnly) throws FileNotFoundException {

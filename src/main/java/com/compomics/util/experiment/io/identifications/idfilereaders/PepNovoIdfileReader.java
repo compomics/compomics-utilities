@@ -13,6 +13,8 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
+import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.io.identifications.IdfileReader;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.massspectrometry.Spectrum;
@@ -167,9 +169,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         int tagMapKeyLength = 0;
-        if (sequenceMatchingPreferences != null) {
+        if (sequenceMatchingPreferences != null && sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
             SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
+            tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
             tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
 
@@ -208,7 +210,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             }
             if (solutionsFound) {
 
-                if (sequenceMatchingPreferences != null) {
+                if (sequenceMatchingPreferences != null && sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
                     HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
                     for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
                         for (String key : advocateMap.keySet()) {

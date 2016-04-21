@@ -48,7 +48,7 @@ public class PrideWebService {
         }
         if (filters != null && filters.length > 0) {
             for (PrideFilter aFilter : filters) {
-                queryURLAsString += aFilter.getType().toString() + "=" + aFilter.getValue().replace(" ", "%20");
+                queryURLAsString += "&" + aFilter.getType().toString() + "=" + aFilter.getValue().replace(" ", "%20");
             }
         }
         System.out.println(queryURLAsString);

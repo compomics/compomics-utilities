@@ -60,11 +60,13 @@ public class SequenceMatchingPreferences implements Serializable {
         public String toString() {
             return description;
         }
-        
+
         /**
-         * Returns the different matching types as command line options description.
-         * 
-         * @return the different matching types as command line options description
+         * Returns the different matching types as command line options
+         * description.
+         *
+         * @return the different matching types as command line options
+         * description
          */
         public static String getCommandLineOptions() {
             StringBuilder optionsStringBuilder = new StringBuilder();
@@ -76,12 +78,12 @@ public class SequenceMatchingPreferences implements Serializable {
             }
             return optionsStringBuilder.toString();
         }
-        
+
         /**
          * Returns the matching type corresponding to the given index.
-         * 
+         *
          * @param index the index of the matching type
-         * 
+         *
          * @return the matching type
          */
         public static MatchingType getMatchingType(int index) {
@@ -90,7 +92,7 @@ public class SequenceMatchingPreferences implements Serializable {
                     return matchingType;
                 }
             }
-            throw new IllegalArgumentException("No matching type found for index " + index  + ".");
+            throw new IllegalArgumentException("No matching type found for index " + index + ".");
         }
 
     }
@@ -244,38 +246,62 @@ public class SequenceMatchingPreferences implements Serializable {
     }
 
     /**
-     * Indicates whether another protein inference preferences is the same as
+     * Returns the type of peptide mapper to use.
+     *
+     * @return the type of peptide mapper to use
+     */
+    public PeptideMapperType getPeptideMapperType() {
+        if (peptideMapperType == null) { // Backward compatibility.
+            peptideMapperType = PeptideMapperType.fmi;
+        }
+        return peptideMapperType;
+    }
+
+    /**
+     * Sets the type of peptide mapper to use.
+     *
+     * @param peptideMapperEnum the type of peptide mapper to use
+     */
+    public void setPeptideMapperType(PeptideMapperType peptideMapperEnum) {
+        this.peptideMapperType = peptideMapperEnum;
+    }
+
+    /**
+     * Indicates whether another sequence matching preferences is the same as
      * this one.
      *
-     * @param proteinInferencePreferences the other protein inference
+     * @param sequenceMatchingPreferences the other sequence matching
      * preferences
      *
-     * @return whether another protein inference preferences is the same as this
+     * @return whether another sequence matching preferences is the same as this
      * one
      */
-    public boolean isSameAs(SequenceMatchingPreferences proteinInferencePreferences) {
-        if (sequenceMatchingType != proteinInferencePreferences.getSequenceMatchingType()) {
+    public boolean isSameAs(SequenceMatchingPreferences sequenceMatchingPreferences) {
+        if (peptideMapperType != sequenceMatchingPreferences.getPeptideMapperType()) {
             return false;
         }
-        if (hasLimitX() && proteinInferencePreferences.hasLimitX()) {
-            double diff = Math.abs(limitX - proteinInferencePreferences.getLimitX());
+        if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
+            return false;
+        }
+        if (hasLimitX() && sequenceMatchingPreferences.hasLimitX()) {
+            double diff = Math.abs(limitX - sequenceMatchingPreferences.getLimitX());
             if (diff > 0.0000000000001) {
                 return false;
             }
         }
-        if (hasLimitX() && !proteinInferencePreferences.hasLimitX()) {
+        if (hasLimitX() && !sequenceMatchingPreferences.hasLimitX()) {
             return false;
         }
-        if (!hasLimitX() && proteinInferencePreferences.hasLimitX()) {
+        if (!hasLimitX() && sequenceMatchingPreferences.hasLimitX()) {
             return false;
         }
-        if (hasMutationMatrix() && proteinInferencePreferences.hasMutationMatrix() && !mutationMatrix.isSameAs(proteinInferencePreferences.getMutationMatrix())) {
+        if (hasMutationMatrix() && sequenceMatchingPreferences.hasMutationMatrix() && !mutationMatrix.isSameAs(sequenceMatchingPreferences.getMutationMatrix())) {
             return false;
         }
-        if (!hasMutationMatrix() && proteinInferencePreferences.hasMutationMatrix()) {
+        if (!hasMutationMatrix() && sequenceMatchingPreferences.hasMutationMatrix()) {
             return false;
         }
-        if (hasMutationMatrix() && !proteinInferencePreferences.hasMutationMatrix()) {
+        if (hasMutationMatrix() && !sequenceMatchingPreferences.hasMutationMatrix()) {
             return false;
         }
         return true;
@@ -292,31 +318,11 @@ public class SequenceMatchingPreferences implements Serializable {
 
         StringBuilder output = new StringBuilder();
 
+        output.append("Index: ").append(peptideMapperType).append(".").append(newLine);
         output.append("Method: ").append(sequenceMatchingType).append(".").append(newLine);
         output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
 
         return output.toString();
     }
 
-    /**
-     * Returns the type of peptide mapper to use.
-     * 
-     * @return the type of peptide mapper to use
-     */
-    public PeptideMapperType getPeptideMapperType() {
-        if (peptideMapperType == null) { // Backward compatibility.
-            peptideMapperType = PeptideMapperType.fmi;
-        }
-        return peptideMapperType;
-    }
-
-    /**
-     * Sets the type of peptide mapper to use.
-     * 
-     * @param peptideMapperEnum the type of peptide mapper to use
-     */
-    public void setPeptideMapperType(PeptideMapperType peptideMapperEnum) {
-        this.peptideMapperType = peptideMapperEnum;
-    }
-    
 }

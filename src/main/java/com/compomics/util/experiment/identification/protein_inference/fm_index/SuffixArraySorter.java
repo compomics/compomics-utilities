@@ -93,7 +93,7 @@ public class SuffixArraySorter {
     }
 
     /**
-     * @param alphabetSize
+     * @param alphabetSize the alphabet size
      */
     public SuffixArraySorter(int alphabetSize)
     {
@@ -159,14 +159,12 @@ public class SuffixArraySorter {
     
     /**
      * {@inheritDoc}
-     * <p>
      * Additional constraints enforced by DivSufSort algorithm:
      * <ul>
      * <li>non-negative (&ge;0) symbols in the input</li>
      * <li>symbols limited by alphabet size passed in the constructor.</li>
-     * <li>length >= 2</li>
+     * <li>length &ge; 2</li>
      * </ul>
-     * <p>
      */
     public final int [] buildSuffixArray(byte [] input, int start, int length)
     {

@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.protein_inference.fm_index.R
 
 /**
  *
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class Wavelet {
     Rank rkg;

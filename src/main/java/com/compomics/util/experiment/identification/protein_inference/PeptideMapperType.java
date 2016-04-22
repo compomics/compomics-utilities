@@ -7,11 +7,11 @@ import static com.compomics.util.preferences.SequenceMatchingPreferences.Matchin
  * Enum of the different peptide mappers implemented.
  *
  * @author Marc Vaudel
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public enum PeptideMapperType {
 
-    fmi(0, "FMIndex", "ToDo"),
+    fmi(0, "FMIndex", "Succinct data structure to find patterns in texts."),
     tree(1, "Tree", "Protein fasta database index in the form of a tree using an ObjectDB as back-end.");
 
     /**

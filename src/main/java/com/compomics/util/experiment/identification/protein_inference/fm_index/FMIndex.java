@@ -23,10 +23,12 @@ import java.util.HashMap;
 
 /**
  *
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
 public class FMIndex implements PeptideMapper {
+    
+    
     
     private int binarySearch(ArrayList<Integer> array, int key){
         int low = 0;
@@ -84,10 +86,6 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
         
-        d.end();
-        System.out.println("t1 " + d.toString());
-        d.start();
-        
         n += Math.max(0, numProteins - 1); // delimiters between protein sequences
         n += 1; // sentinal
         
@@ -112,26 +110,15 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
         
-        d.end();
-        System.out.println("t2 " + d.toString());
-        d.start();
         
-        
-        SuffixArraySorter sas = new SuffixArraySorter();
+        SuffixArraySorter sas = new SuffixArraySorter(128);
         SA = sas.buildSuffixArray(T, 0, T.length);
         
-        
-        d.end();
-        System.out.println("t3 " + d.toString());
-        d.start();
         
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[n];
         for (int i = 0; i < n; ++i) bwt[i] = (SA[i] != 0) ? T[SA[i] - 1] : T[n - 1];
         
-        d.end();
-        System.out.println("t4 " + d.toString());
-        d.start();
         
         // Sampling Suffix array
         int[] sampledSA = new int[((n + 1) >> samplingShift) + 1];
@@ -139,10 +126,6 @@ public class FMIndex implements PeptideMapper {
         for (int i = 0; i < n; i += sampling) sampledSA[sampledIndex++] = SA[i];
         SA = sampledSA;
         
-        
-        d.end();
-        System.out.println("t5 " + d.toString());
-        d.start();
         
         
         char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
@@ -153,7 +136,7 @@ public class FMIndex implements PeptideMapper {
         
         long[] alphabet = new long[]{0, 0};
         for (int i = 0; i < sortedAas.length; ++i){
-            int shift = sortedAas[i] - (sortedAas[i] & 64);//((sortedAas[i] >> 6) << 6);//(sortedAas[i] & 63);
+            int shift = sortedAas[i] - (sortedAas[i] & 64);
             alphabet[(int)(sortedAas[i] >> 6)] |= 1L << shift;
         }
         occ = new Wavelet(bwt, alphabet);

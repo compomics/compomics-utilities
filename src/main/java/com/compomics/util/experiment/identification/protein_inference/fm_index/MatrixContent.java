@@ -7,7 +7,7 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 /**
  *
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class MatrixContent {
     public int L;

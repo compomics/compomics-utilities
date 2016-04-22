@@ -50,6 +50,7 @@ public class FMIndex implements PeptideMapper {
     private int n; // length of indexed string
     private final int samplingShift = 3; // every 2^samplingShift Suffix array entry will be sampled
     private final int samplingMask = (1 << samplingShift) - 1;
+    private final int sampling = 1 << samplingShift;
     ArrayList<Integer> boundaries;
     ArrayList<String> accessions;
     
@@ -63,25 +64,29 @@ public class FMIndex implements PeptideMapper {
         accessions = new ArrayList<String>();
         boundaries.add(0);
         
-        int numProteins = 0;
         Duration d = new Duration();
         d.start();
         
         n = 0;
+        int numProteins = 0;
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
             while (pi.hasNext()){
                 Protein currentProtein = pi.getNextProtein();
-                n += currentProtein.getSequence().length();
-                boundaries.add(boundaries.get(boundaries.size() - 1) + currentProtein.getSequence().length() + 1);
-                accessions.add(currentProtein.getAccession());
+                int proteinLen = currentProtein.getLength();
+                n += proteinLen;
                 ++numProteins;
+                boundaries.add(n + numProteins);
+                accessions.add(currentProtein.getAccession());
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("t1");
+        
+        d.end();
+        System.out.println("t1 " + d.toString());
+        d.start();
         
         n += Math.max(0, numProteins - 1); // delimiters between protein sequences
         n += 1; // sentinal
@@ -94,63 +99,64 @@ public class FMIndex implements PeptideMapper {
             while (pi.hasNext()){
 
                 Protein currentProtein = pi.getNextProtein();
+                int proteinLen = currentProtein.getLength();
                 if (tmpN > 0) {
-                    T[tmpN] = '/'; // adding the delimiters
-                    ++tmpN;
+                    T[tmpN++] = '/'; // adding the delimiters
                 }
-                //System.arraycopy(sf, tmpN, less, tmpN, n);
-                System.arraycopy(currentProtein.getSequence().getBytes(), 0, T, tmpN, currentProtein.getSequence().length());
-                tmpN += currentProtein.getSequence().length();
+                
+                System.arraycopy(currentProtein.getSequence().getBytes(), 0, T, tmpN, proteinLen);
+                tmpN += proteinLen;
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("t2");
+        
+        d.end();
+        System.out.println("t2 " + d.toString());
+        d.start();
         
         SA = new int[n];
         Sais.suffixsort(T, SA, n);
-        System.out.println("t3");
+        
+        d.end();
+        System.out.println("t3 " + d.toString());
+        d.start();
         
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[n];
-        for (int i = 0; i < n; ++i){
-            bwt[i] = T[Math.floorMod(SA[i] - 1, n)];
-        }
-        System.out.println("t4");
+        for (int i = 0; i < n; ++i) bwt[i] = (SA[i] != 0) ? T[SA[i] - 1] : T[n - 1];
+        
+        d.end();
+        System.out.println("t4 " + d.toString());
+        d.start();
         
         // Sampling Suffix array
         int[] sampledSA = new int[((n + 1) >> samplingShift) + 1];
-        for (int i = 0; i < n; ++i){
-            try{
-                if((i & samplingMask) == 0) sampledSA[i >> samplingShift] = SA[i];
-            }
-            catch (Exception e){
-                
-                System.out.println((i >> samplingShift) + " " + ((n + 1) >> samplingShift));
-            }
-        }
+        int sampledIndex = 0;
+        for (int i = 0; i < n; i += sampling) sampledSA[sampledIndex++] = SA[i];
         SA = sampledSA;
-        System.out.println("t5");
+        
+        
+        d.end();
+        System.out.println("t5 " + d.toString());
+        d.start();
         
         
         char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
-        for (int i = 0; i < AminoAcid.getAminoAcids().length; ++i) sortedAas[i] = AminoAcid.getAminoAcids()[i];
+        System.arraycopy(AminoAcid.getAminoAcids(), 0, sortedAas, 0, AminoAcid.getAminoAcids().length);
         sortedAas[AminoAcid.getAminoAcids().length] = '$';
         sortedAas[AminoAcid.getAminoAcids().length + 1] = '/';
         Arrays.sort(sortedAas);
         
         long[] alphabet = new long[]{0, 0};
         for (int i = 0; i < sortedAas.length; ++i){
-            int shift = sortedAas[i] - ((sortedAas[i] >> 6) << 6);
+            int shift = sortedAas[i] - (sortedAas[i] & 64);//((sortedAas[i] >> 6) << 6);//(sortedAas[i] & 63);
             alphabet[(int)(sortedAas[i] >> 6)] |= 1L << shift;
         }
         occ = new Wavelet(bwt, alphabet);
         less = occ.createLessTable();
         d.end();
-        System.out.println("t6");
-        
-                
         System.out.println("finished efficient FM-Index on " + numProteins + " in " + d.toString());
     }
     
@@ -215,7 +221,7 @@ public class FMIndex implements PeptideMapper {
     
     private int getPos(int i){
         int t = 0;
-        while ((i != 0) && ((i & samplingMask) != 0)){
+        while (((i & samplingMask) != 0) && (i != 0)){
             int aa = occ.getCharacter(i);
             i = less[aa] + occ.getRank(i - 1, aa);
             ++t;
@@ -235,23 +241,23 @@ public class FMIndex implements PeptideMapper {
         int k = numPositions[0];
         
         if (numPositions[1] > 0){
-            ArrayList<ArrayList<HashMap<Long, long[]>>> matrix = new ArrayList<ArrayList<HashMap<Long, long[]>>>();
+            ArrayList<ArrayList<HashMap<Long, MatrixContent>>> matrix = new ArrayList<ArrayList<HashMap<Long, MatrixContent>>>();
             for (int i = 0; i <= k; ++i){
-                matrix.add(new ArrayList<HashMap<Long, long[]>>());
+                matrix.add(new ArrayList<HashMap<Long, MatrixContent>>());
                 for (int j = 0; j <= p; ++j){
-                    matrix.get(i).add(new HashMap<Long, long[]>());
+                    matrix.get(i).add(new HashMap<Long, MatrixContent>());
                 }
             }
-            matrix.get(0).get(0).put(0L, new long[]{1, n - 1, 0, -1, 0}); // L, R, char, traceback, last_index
+            matrix.get(0).get(0).put(0L, new MatrixContent(1, n - 1, '\0', -1, 0)); // L, R, char, traceback, last_index
             for (int i = 0; i <= k; ++i){
-                ArrayList<HashMap<Long, long[]>> row = matrix.get(i);
+                ArrayList<HashMap<Long, MatrixContent>> row = matrix.get(i);
                 for (int j = 0; j < p; ++j){
-                    HashMap<Long, long[]> cell = row.get(j);
+                    HashMap<Long, MatrixContent> cell = row.get(j);
                     for (Long key : cell.keySet()){
                         boolean first = true;
-                        long[] content = cell.get(key);
-                        int L_old = (int)content[0];
-                        int R_old = (int)content[1];
+                        MatrixContent content = cell.get(key);
+                        int L_old = content.L;
+                        int R_old = content.R;
                         for (int l = 0; l < combinations.get(j).length(); ++l){
                             int aa = (int)combinations.get(j).charAt(l);
                             int L = less[aa] + occ.getRank(L_old - 1, aa);
@@ -260,10 +266,10 @@ public class FMIndex implements PeptideMapper {
                             if (L <= R){
                                 Long newKey = new Long(L * n + R);
                                 if (first){
-                                    row.get(j + 1).put(newKey, new long[]{L, R, aa, 0, key});
+                                    row.get(j + 1).put(newKey, new MatrixContent(L, R, (char)aa, 0, key));
                                 }
                                 else if (i < k) {
-                                    matrix.get(i + 1).get(j + 1).put(newKey, new long[]{L, R, aa, 1, key});
+                                    matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(L, R, (char)aa, 1, key));
                                 }
                                 
                             }
@@ -287,17 +293,17 @@ public class FMIndex implements PeptideMapper {
                     Long currentKey = key;
                     String currentPeptide = "";
                     while (true){
-                        long[] content = matrix.get(currentI).get(currentJ).get(currentKey);
-                        if (content[3] == -1) break;
-                        currentI -= (int)content[3];
+                        MatrixContent content = matrix.get(currentI).get(currentJ).get(currentKey);
+                        if (content.traceback == -1) break;
+                        currentI -= content.traceback;
                         currentJ -= 1;
-                        currentKey = content[4];
-                        currentPeptide += (char)content[2];
+                        currentKey = content.lastIndex;
+                        currentPeptide += content.character;
                     }
-                    long[] contentLR = matrix.get(i).get(p).get(key);
+                    MatrixContent contentLR = matrix.get(i).get(p).get(key);
                     
-                    int L = (int)contentLR[0];
-                    int R = (int)contentLR[1];
+                    int L = contentLR.L;
+                    int R = contentLR.R;
                     
                     HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
                     for (int j = L; j <= R; ++j){

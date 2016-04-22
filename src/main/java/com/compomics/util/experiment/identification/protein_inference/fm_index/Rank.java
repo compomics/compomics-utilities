@@ -79,5 +79,12 @@ public class Rank {
         count_ones += popcount(active_ones);
         return counter ? i - count_ones : count_ones;
     }
+    
+    boolean isOne(int i){
+        int cell = i >> shift;
+        int pos = i & mask;
+        if (((bitfield[cell] >> pos) & 1L) == 1) return true;
+        return false;
+    }
 }
 

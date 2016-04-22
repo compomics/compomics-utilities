@@ -15,6 +15,7 @@ public class Wavelet {
     Rank rkg;
     long[] alphabet;
     int len_alphabet;
+    char[] char_alphabet;
     int half;
     Wavelet left_child;
     Wavelet right_child;
@@ -34,6 +35,14 @@ public class Wavelet {
         right_child = null;
 
         len_alphabet = rkg.popcount(alphabet[0]) + rkg.popcount(alphabet[1]);
+        char_alphabet = new char[len_alphabet];
+        int c = 0;
+        for(int i = 0; i < 128; ++i){
+            if (((alphabet[i >> 6] >> (i & 63L)) & 1L) == 1){
+                char_alphabet[c++] = (char)i;
+            }
+        }
+        
         half = (len_alphabet - 1) >> 1;
         int cnt = 0;
         for (int i = 0; i < 128 && cnt <= half; ++i){
@@ -127,5 +136,23 @@ public class Wavelet {
             return right_child.getRank(result - 1, c);
         }
         return result;
+    }
+    
+    public char getCharacter(int i){
+        boolean left = !rkg.isOne(i);
+        int result = rkg.getRank(i, left);
+        if (result == 0) return char_alphabet[result];
+        
+        char c;
+        result -= 1;
+        if (left){
+            if (left_child == null) c = char_alphabet[0];
+            else c = left_child.getCharacter(result);
+        }
+        else {
+            if (right_child == null) c = char_alphabet[char_alphabet.length - 1];
+            else c = right_child.getCharacter(result);
+        }
+        return c;
     }
 }

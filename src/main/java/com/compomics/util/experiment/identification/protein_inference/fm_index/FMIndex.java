@@ -5,25 +5,15 @@
  */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.experiment.identification.protein_inference.fm_index.Sais;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.Wavelet;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
 import com.compomics.util.waiting.Duration;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 /**
  *
@@ -51,12 +41,14 @@ public class FMIndex {
     private Wavelet occ;
     private int[] less;
     private int n; // length of indexed string
+    private final int samplingShift = 3; // every 2^samplingShift Suffix array entry will be sampled
+    private final int samplingMask = (1 << samplingShift) - 1;
     ArrayList<Integer> boundaries;
     ArrayList<String> accessions;
     
     
     public FMIndex(){
-        System.out.println("FM-Index creation started");
+        System.out.println("Efficient FM-Index creation started");
         SequenceFactory sf = SequenceFactory.getInstance(100000);
         
         StringBuilder TT = new StringBuilder();
@@ -67,13 +59,13 @@ public class FMIndex {
         int numProteins = 0;
         Duration d = new Duration();
         d.start();
+        
+        n = 0;
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
             while (pi.hasNext()){
-
                 Protein currentProtein = pi.getNextProtein();
-                if (TT.length() > 0) TT.append("/");
-                TT.append(currentProtein.getSequence());
+                n += currentProtein.getSequence().length();
                 boundaries.add(boundaries.get(boundaries.size() - 1) + currentProtein.getSequence().length() + 1);
                 accessions.add(currentProtein.getAccession());
                 ++numProteins;
@@ -82,23 +74,57 @@ public class FMIndex {
         catch (Exception e){
             e.printStackTrace();
         }
-        byte[] T = (TT + "$").getBytes();
-        n = T.length;
+        System.out.println("t1");
         
-        byte[] bwt = new byte[n];
+        n += Math.max(0, numProteins - 1); // delimiters between protein sequences
+        n += 1; // sentinal
+        
+        byte[] T = new byte[n];
+        T[n - 1] = '$'; // adding the sentinal
+        int tmpN = 0;
+        try {
+            ProteinIterator pi = sf.getProteinIterator(false);
+            while (pi.hasNext()){
+
+                Protein currentProtein = pi.getNextProtein();
+                if (tmpN > 0) {
+                    T[tmpN] = '/'; // adding the delimiters
+                    ++tmpN;
+                }
+                //System.arraycopy(sf, tmpN, less, tmpN, n);
+                System.arraycopy(currentProtein.getSequence().getBytes(), 0, T, tmpN, currentProtein.getSequence().length());
+                tmpN += currentProtein.getSequence().length();
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println("t2");
+        
         SA = new int[n];
         Sais.suffixsort(T, SA, n);
-
+        System.out.println("t3");
+        
+        // create Burrows-Wheeler-Transform
+        byte[] bwt = new byte[n];
         for (int i = 0; i < n; ++i){
             bwt[i] = T[Math.floorMod(SA[i] - 1, n)];
-            /*
-            if (SA[i] != 0)
-                bwt[i] = T[SA[i] - 1];
-            else
-                bwt[i] = T[n - 1];
-            */
         }
+        System.out.println("t4");
         
+        // Sampling Suffix array
+        int[] sampledSA = new int[((n + 1) >> samplingShift) + 1];
+        for (int i = 0; i < n; ++i){
+            try{
+                if((i & samplingMask) == 0) sampledSA[i >> samplingShift] = SA[i];
+            }
+            catch (Exception e){
+                
+                System.out.println((i >> samplingShift) + " " + ((n + 1) >> samplingShift));
+            }
+        }
+        SA = sampledSA;
+        System.out.println("t5");
         
         
         char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
@@ -115,20 +141,12 @@ public class FMIndex {
         occ = new Wavelet(bwt, alphabet);
         less = occ.createLessTable();
         d.end();
-        System.out.println("finished FM-Index on " + numProteins + " in " + d.toString());
-    }   
-    
-    /*
-    private void createCombinations(String peptide, ArrayList<String> combinations, ArrayList<String> peptides){
-        if (peptide.length() == combinations.size()) peptides.add(peptide);
-        else {
-            for (int i = 0; i < combinations.get(peptide.length()).length(); ++i){
-                String newPeptide = peptide + combinations.get(peptide.length()).substring(i, i + 1);
-                createCombinations(newPeptide, combinations, peptides);
-            }
-        }
+        System.out.println("t6");
+        
+                
+        System.out.println("finished efficient FM-Index on " + numProteins + " in " + d.toString());
     }
-    */
+    
     
     public ArrayList<String> createPeptideCombinations(String peptide, SequenceMatchingPreferences seqMatchPref, int[] numPositions){
         ArrayList<String> combinations = new ArrayList<String>();
@@ -178,7 +196,6 @@ public class FMIndex {
                             combinations.add(peptide.substring(i, i + 1));
                         }
                     }
-                    /* if (numCombination < 100) createCombinations("", combinations, peptides);*/ 
                 }
             }
             else {
@@ -188,6 +205,16 @@ public class FMIndex {
         return combinations;
     }
     
+    
+    private int getPos(int i){
+        int t = 0;
+        while ((i != 0) && ((i & samplingMask) != 0)){
+            int aa = occ.getCharacter(i);
+            i = less[aa] + occ.getRank(i - 1, aa);
+            ++t;
+        }
+        return SA[i >> samplingShift] + t;
+    }
     
     
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref){
@@ -266,49 +293,19 @@ public class FMIndex {
                     
                     HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
                     for (int j = L; j <= R; ++j){
-                        int index = binarySearch(boundaries, SA[j]);
+                        int pos = getPos(j);
+                        int index = binarySearch(boundaries, pos);
                         String accession = accessions.get(index);
                         if (!matches.containsKey(accession)){
                             matches.put(accession, new ArrayList<Integer>());
                         }
-                        matches.get(accession).add(SA[j] - boundaries.get(index));
+                        matches.get(accession).add(pos - boundaries.get(index));
                     }
                     allMatches.put(currentPeptide, matches);
                     
                 }
                 
             }
-            
-            
-            
-            /*
-            ArrayList<String> peptides = new ArrayList<String>();
-
-            for (int i = 0; i < peptides.size(); ++i){
-                int L = 1;  
-                int R = n - 1;
-
-                for (char aa : pep_rev.toCharArray()){
-                    L = (int)less[(int)aa] + (int)occ.getRank(L - 1, (int)aa);
-                    R = (int)less[(int)aa] + (int)occ.getRank(R, (int)aa) - 1;
-
-                    if (L > R) break;
-                }
-
-                if (L <= R){
-                    HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
-                    for (int j = L; j <= R; ++j){
-                        int index = binarySearch(boundaries, SA[j]);
-                        String accession = accessions.get(index);
-                        if (!matches.containsKey(accession)){
-                            matches.put(accession, new ArrayList<Integer>());
-                        }
-                        matches.get(accession).add(SA[j] - boundaries.get(index));
-                    }
-                    allMatches.put(peptide, matches);
-                }
-            }
-            */
         }
         return allMatches;
     }

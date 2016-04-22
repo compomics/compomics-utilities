@@ -64,6 +64,8 @@ public class FMIndexTest extends TestCase {
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         FMIndex fmIndex = new FMIndex();
+        
+        
         SequenceMatchingPreferences smp = new SequenceMatchingPreferences();
         smp.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         smp.setLimitX(0.25);

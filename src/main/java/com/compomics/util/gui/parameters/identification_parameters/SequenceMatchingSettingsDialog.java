@@ -1,5 +1,6 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
@@ -67,6 +68,8 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private void setUpGui() {
         matchingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         matchingCmb.setEnabled(editable);
+        indexTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        indexTypeCmb.setEnabled(editable);
         xSpinner.setEnabled(editable);
     }
 
@@ -79,6 +82,8 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     private void populateGUI(SequenceMatchingPreferences sequenceMatchingPreferences) {
         SequenceMatchingPreferences.MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
         matchingCmb.setSelectedItem(matchingType);
+        PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
+        indexTypeCmb.setSelectedItem(peptideMapperType);
         xSpinner.setValue(sequenceMatchingPreferences.getLimitX());
     }
 
@@ -98,6 +103,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
      */
     public SequenceMatchingPreferences getSequenceMatchingPreferences() {
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setPeptideMapperType((PeptideMapperType) indexTypeCmb.getSelectedItem());
         sequenceMatchingPreferences.setSequenceMatchingType((SequenceMatchingPreferences.MatchingType) matchingCmb.getSelectedItem());
         sequenceMatchingPreferences.setLimitX((Double) xSpinner.getValue());
         return sequenceMatchingPreferences;
@@ -129,6 +135,8 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         xLbl = new javax.swing.JLabel();
         matchingCmb = new javax.swing.JComboBox();
         xSpinner = new javax.swing.JSpinner();
+        indexTypeCmb = new javax.swing.JComboBox();
+        indexTypeLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sequence Matching");
@@ -165,6 +173,10 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
 
         xSpinner.setModel(new javax.swing.SpinnerNumberModel(0.25d, 0.0d, 1.0d, 0.1d));
 
+        indexTypeCmb.setModel(new DefaultComboBoxModel(PeptideMapperType.values()));
+
+        indexTypeLbl.setText("Index Type");
+
         javax.swing.GroupLayout sequenceMatchingPanelLayout = new javax.swing.GroupLayout(sequenceMatchingPanel);
         sequenceMatchingPanel.setLayout(sequenceMatchingPanelLayout);
         sequenceMatchingPanelLayout.setHorizontalGroup(
@@ -173,17 +185,23 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(matchingMethodLbl)
-                    .addComponent(xLbl))
+                    .addComponent(xLbl)
+                    .addComponent(indexTypeLbl))
                 .addGap(18, 18, 18)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(indexTypeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(matchingCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(xSpinner))
+                    .addComponent(xSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE))
                 .addContainerGap())
         );
         sequenceMatchingPanelLayout.setVerticalGroup(
             sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sequenceMatchingPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sequenceMatchingPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(indexTypeLbl)
+                    .addComponent(indexTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(matchingMethodLbl)
                     .addComponent(matchingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -213,12 +231,12 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sequenceMatchingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -229,7 +247,7 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -268,6 +286,8 @@ public class SequenceMatchingSettingsDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox indexTypeCmb;
+    private javax.swing.JLabel indexTypeLbl;
     private javax.swing.JComboBox matchingCmb;
     private javax.swing.JLabel matchingMethodLbl;
     private javax.swing.JButton okButton;

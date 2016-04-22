@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.massspectrometry.SpectrumFactory;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -191,7 +192,7 @@ public class PeptideAssumptionFilter implements Serializable {
      * @throws InterruptedException if an InterruptedException occurs
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultProteinTree());
+        return validateProteins(peptide, sequenceMatchingPreferences, SequenceFactory.getInstance().getDefaultPeptideMapper());
     }
 
     /**
@@ -200,7 +201,7 @@ public class PeptideAssumptionFilter implements Serializable {
      *
      * @param peptide the peptide
      * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param proteinTree the protein tree to use for peptide to protein mapping
+     * @param peptideMapper the peptide mapper to use for peptide to protein mapping
      *
      * @return a boolean indicating whether the peptide passed the test
      *
@@ -209,10 +210,10 @@ public class PeptideAssumptionFilter implements Serializable {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      * @throws InterruptedException if an InterruptedException occurs
      */
-    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree)
+    public boolean validateProteins(Peptide peptide, SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException {
 
-        ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, proteinTree);
+        ArrayList<String> accessions = peptide.getParentProteins(sequenceMatchingPreferences, peptideMapper);
 
         if (accessions != null && accessions.size() > 1) {
             boolean target = false;

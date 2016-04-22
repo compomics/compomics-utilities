@@ -24,6 +24,7 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationSettings;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
@@ -1451,6 +1452,12 @@ public class IdentificationParametersInputBean {
         if (sequenceMatchingPreferences == null) {
             sequenceMatchingPreferences = new SequenceMatchingPreferences();
             identificationParameters.setSequenceMatchingPreferences(sequenceMatchingPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_INDEX_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_INDEX_TYPE.id);
+            Integer intValue = new Integer(arg);
+            PeptideMapperType value = PeptideMapperType.getPeptideMapperType(intValue);
+            sequenceMatchingPreferences.setPeptideMapperType(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_TYPE.id);

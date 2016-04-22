@@ -7,6 +7,8 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -202,6 +204,7 @@ public class Peptide extends ExperimentObject {
      *
      * @param sequence the peptide sequence
      * @param enzyme the enzyme used
+     *
      * @return the amount of missed cleavages
      */
     public static int getNMissedCleavages(String sequence, Enzyme enzyme) {
@@ -220,11 +223,10 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the parent proteins and eventually remaps the peptide to the
-     * protein using the default protein tree.
+     * Returns the parent proteins and remaps the peptide to the protein in the
+     * sequence factory if no protein mapping was set using the default mapper
+     * of the sequence factory.
      *
-     * @param remap boolean indicating whether the peptide sequence should be
-     * remapped to the proteins if no protein is found
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @return the proteins mapping this peptide
@@ -235,37 +237,54 @@ public class Peptide extends ExperimentObject {
      * while deserializing an object.
      * @throws InterruptedException exception thrown whenever a threading issue
      * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
      */
-    public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
-        if (!remap || parentProteins != null) { // avoid building the tree if not necessary
+    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        return getParentProteins(sequenceMatchingPreferences, true);
+    }
+
+    /**
+     * Returns the parent proteins and eventually remaps the peptide to the
+     * protein using the default protein tree.
+     *
+     * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param remap boolean indicating whether the peptide sequence should be
+     * remapped to the proteins if no protein is found
+     *
+     * @return the proteins mapping this peptide
+     *
+     * @throws IOException exception thrown whenever an error occurs while
+     * reading or writing a file.
+     * @throws ClassNotFoundException exception thrown whenever an error occurs
+     * while deserializing an object.
+     * @throws InterruptedException exception thrown whenever a threading issue
+     * occurred while interacting with the tree.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
+     */
+    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, boolean remap) throws IOException, ClassNotFoundException, InterruptedException, SQLException {
+        if (!remap || parentProteins != null) { // avoid building the index if not necessary
             return parentProteins;
         }
-        /*
-        ProteinTree proteinTree = SequenceFactory.getInstance().getDefaultProteinTree();
-        if (proteinTree == null) {
-            throw new IllegalArgumentException("Protein tree not created for peptide to protein mapping.");
+
+        PeptideMapper peptideMapper = SequenceFactory.getInstance().getDefaultPeptideMapper();
+
+        if (peptideMapper == null) {
+            throw new IllegalArgumentException("Index not created for peptide to protein mapping.");
         }
-        return getParentProteins(remap, sequenceMatchingPreferences, proteinTree);
-        */
-        
-        FMIndex fmIndex = SequenceFactory.getInstance().getDefaultFMIndex();
-        if (fmIndex == null) {
-            throw new IllegalArgumentException("FM-Index not created for peptide to protein mapping.");
-        }
-        return getParentProteins(remap, sequenceMatchingPreferences, fmIndex);
-        
+        return getParentProteins(sequenceMatchingPreferences, peptideMapper);
     }
 
     /**
      * Returns the parent proteins and remaps the peptide to the protein if no
      * protein mapping was set.
      *
-     * @param proteinTree the protein tree to use for peptide to protein mapping
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param peptideMapper the peptide mapper to use for peptide to protein
+     * mapping
      *
-     * @return the proteins mapping this peptide
+     * @return the proteins where this peptide can be mapped
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
@@ -273,104 +292,48 @@ public class Peptide extends ExperimentObject {
      * while deserializing an object.
      * @throws InterruptedException exception thrown whenever a threading issue
      * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with an SQL database.
      */
-    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        return getParentProteins(true, sequenceMatchingPreferences, proteinTree);
-    }
+    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-    /**
-     * Returns the parent proteins and remaps the peptide to the protein if no
-     * protein mapping was set using the default protein tree of the sequence
-     * factory.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return the proteins mapping this peptide
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
-    public ArrayList<String> getParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        return getParentProteins(true, sequenceMatchingPreferences);
-    }
-
-    /**
-     * Returns the parent proteins and remaps the peptide to the protein if no
-     * protein mapping was set using the default protein tree of the sequence
-     * factory. The tree will be created if not done previously.
-     *
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param waitingHandler the waiting handler used to display progress to the
-     * user and cancel the process. Can be null but strongly recommended.
-     * @param exceptionHandler handler for the exceptions encountered while
-     * creating the tree
-     *
-     * @return the proteins mapping this peptide
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
-    public ArrayList<String> getParentProteinsCreateTree(SequenceMatchingPreferences sequenceMatchingPreferences, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        ProteinTree proteinTree = SequenceFactory.getInstance().getDefaultProteinTree(waitingHandler, exceptionHandler);
-        return getParentProteins(true, sequenceMatchingPreferences, proteinTree);
-    }
-
-    /**
-     * Returns the parent proteins and eventually remaps the peptide to the
-     * protein. Note, the maximal share of 'X's in the sequence is set according
-     * to the ProteinMatch MaxX field.
-     *
-     * @param remap boolean indicating whether the peptide sequence should be
-     * remapped to the proteins if no protein is found
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     * @param proteinTree the protein tree to use for peptide to protein mapping
-     *
-     * @return the proteins mapping this peptide
-     *
-     * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
-     * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
-     * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
-     * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
-     */
-    public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences,
-            ProteinTree proteinTree) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-
-        if (remap && parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(sequence, sequenceMatchingPreferences);
-            saveProteins(proteinMapping, remap, sequenceMatchingPreferences);
+        if (parentProteins == null) {
+            mapParentProteins(sequenceMatchingPreferences, peptideMapper);
         }
 
         return parentProteins;
     }
-    
-    
-    public ArrayList<String> getParentProteins(boolean remap, SequenceMatchingPreferences sequenceMatchingPreferences,
-            FMIndex fmIndex) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
-        if (remap && parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = fmIndex.getProteinMapping(sequence, sequenceMatchingPreferences);
-            saveProteins(proteinMapping, remap, sequenceMatchingPreferences);
+    public synchronized void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+
+        if (parentProteins == null) {
+            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
+            HashSet<String> accessionsFound = new HashSet<String>(2);
+
+            PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
+            switch (peptideMapperType) {
+                case fmi:
+                    for (String peptideSequence : proteinMapping.keySet()) {
+                        HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                        accessionsFound.addAll(subMapping.keySet());
+                    }
+                    break;
+                case tree:
+                    for (String peptideSequence : proteinMapping.keySet()) {
+                        double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length(); //@TODO: should be done in the tree
+                        if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
+                            HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
+                            accessionsFound.addAll(subMapping.keySet());
+                        }
+                    }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Peptide mapper type " + peptideMapperType + " not supported.");
+            }
+
+            parentProteins = new ArrayList<String>(accessionsFound);
+            Collections.sort(parentProteins);
         }
-
-        return parentProteins;
     }
 
     /**
@@ -396,7 +359,7 @@ public class Peptide extends ExperimentObject {
                     }
                 }
             }
-            
+
             if (parentProteins.isEmpty()) {
                 int debug = 1;
             }
@@ -1558,7 +1521,7 @@ public class Peptide extends ExperimentObject {
                     tempMass += ptmFactory.getPTM(ptmMatch.getTheoreticPtm()).getMass();
                 }
             }
-            
+
             mass = tempMass;
         }
     }

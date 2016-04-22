@@ -116,8 +116,10 @@ public class FMIndex implements PeptideMapper {
         System.out.println("t2 " + d.toString());
         d.start();
         
-        SA = new int[n];
-        Sais.suffixsort(T, SA, n);
+        
+        SuffixArraySorter sas = new SuffixArraySorter();
+        SA = sas.buildSuffixArray(T, 0, T.length);
+        
         
         d.end();
         System.out.println("t3 " + d.toString());

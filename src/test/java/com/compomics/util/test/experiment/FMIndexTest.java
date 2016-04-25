@@ -60,27 +60,18 @@ public class FMIndexTest extends TestCase {
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
+        //File sequences = new File("/home/dominik.kopczynski/Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         FMIndex fmIndex = new FMIndex();
         
         
-        SequenceMatchingPreferences smp = new SequenceMatchingPreferences();
-        smp.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        smp.setLimitX(0.25);
-        //HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = fmIndex.getProteinMapping("B", smp);
-        /*
-        ArrayList<String> testPeptides = fmIndex.createPeptideInstances("MISSISSIPP", smp);
-        Assert.assertTrue(testPeptides.size() == 64);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesFirst = fmIndex.getProteinMapping("FNPDGTPVYSIGLKTSSTXS", SequenceMatchingPreferences.getDefaultSequenceMatching());
         
-        
-        smp.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.aminoAcid);
-        testPeptides = fmIndex.createPeptideInstances("BISAX", smp);
-        Assert.assertTrue(testPeptides.size() == 78);
-        */
-        
-        
+        Assert.assertTrue(testIndexesFirst.containsKey("FNPDGTPVYSLGIKTSSTHS"));
+        Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").containsKey("Q9FHX5"));
+        Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").get("Q9FHX5").get(0) == 335);
         
         
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = fmIndex.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
@@ -108,8 +99,6 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-
-        //proteinTree.deleteDb();
     }
 
     /**

@@ -28,7 +28,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class SequenceFactory {
 

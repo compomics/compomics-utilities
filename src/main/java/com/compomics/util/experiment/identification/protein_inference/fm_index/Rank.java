@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 /**
@@ -70,21 +65,27 @@ public class Rank {
     
     
     int getRank(int i, boolean counter) {
-        int cell = i >> shift;
-        int pos = i & mask;
-        int masked = mask - pos;
-        long active_ones = bitfield[cell] << masked;
-        int count_ones = sums[cell];
-        i += 1;
-        count_ones += popcount(active_ones);
-        return counter ? i - count_ones : count_ones;
+        if (0 <= i && i < length){
+            int cell = i >> shift;
+            int pos = i & mask;
+            int masked = mask - pos;
+            long active_ones = bitfield[cell] << masked;
+            int count_ones = sums[cell];
+            i += 1;
+            count_ones += popcount(active_ones);
+            return counter ? i - count_ones : count_ones;
+        }
+        throw new ArrayIndexOutOfBoundsException();
     }
     
     boolean isOne(int i){
-        int cell = i >> shift;
-        int pos = i & mask;
-        if (((bitfield[cell] >> pos) & 1L) == 1) return true;
-        return false;
+        if (0 <= i && i < length){
+            int cell = i >> shift;
+            int pos = i & mask;
+            if (((bitfield[cell] >> pos) & 1L) == 1) return true;
+            return false;
+        }
+        throw new ArrayIndexOutOfBoundsException();
     }
 }
 

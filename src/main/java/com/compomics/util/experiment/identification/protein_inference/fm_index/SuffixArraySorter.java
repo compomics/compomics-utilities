@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import java.util.ArrayList;
@@ -85,26 +80,11 @@ public class SuffixArraySorter {
         }
     }
 
-    public SuffixArraySorter()
-    {
-        ALPHABET_SIZE = DEFAULT_ALPHABET_SIZE;
-        BUCKET_A_SIZE = ALPHABET_SIZE;
-        BUCKET_B_SIZE = ALPHABET_SIZE * ALPHABET_SIZE;
-    }
-
-    /**
-     * @param alphabetSize the alphabet size
-     */
-    public SuffixArraySorter(int alphabetSize)
-    {
-        ALPHABET_SIZE = alphabetSize;
-        BUCKET_A_SIZE = ALPHABET_SIZE;
-        BUCKET_B_SIZE = ALPHABET_SIZE * ALPHABET_SIZE;
-    }
+    
 
     /* constants */
 
-    private final static int DEFAULT_ALPHABET_SIZE = 256;
+    private final static int DEFAULT_alphabetSize = 256;
     private final static int SS_INSERTIONSORT_THRESHOLD = 8;
     private final static int SS_BLOCKSIZE = 1024;
     private final static int SS_MISORT_STACKSIZE = 16;
@@ -146,45 +126,27 @@ public class SuffixArraySorter {
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
     };
 
-    /* fields */
-    private final int ALPHABET_SIZE;
-    private final int BUCKET_A_SIZE;
-    private final int BUCKET_B_SIZE;
-    private int [] SA;
-    private byte [] T;
-    private int start;
-
     
     
     
-    /**
-     * {@inheritDoc}
-     * Additional constraints enforced by DivSufSort algorithm:
-     * <ul>
-     * <li>non-negative (&ge;0) symbols in the input</li>
-     * <li>symbols limited by alphabet size passed in the constructor.</li>
-     * <li>length &ge; 2</li>
-     * </ul>
-     */
-    public final int [] buildSuffixArray(byte [] input, int start, int length)
+    public static int [] buildSuffixArray(byte [] T, int alphabetSize)
     {
 
-        final int [] ret = new int [length];
-        this.SA = ret;
-        this.T = input;
+        int BUCKET_A_SIZE = alphabetSize;
+        int BUCKET_B_SIZE = alphabetSize * alphabetSize;
+        int [] SA = new int [T.length];
         int [] bucket_A = new int [BUCKET_A_SIZE];
         int [] bucket_B = new int [BUCKET_B_SIZE];
-        this.start = start;
         /* Suffixsort. */
-        int m = sortTypeBstar(bucket_A, bucket_B, length);
-        constructSuffixArray(bucket_A, bucket_B, length, m);
-        return ret;
+        int m = sortTypeBstar(bucket_A, bucket_B, T.length, T, SA, alphabetSize);
+        constructSuffixArray(bucket_A, bucket_B, T.length, m, T, SA, alphabetSize);
+        return SA;
     }
 
     /**
      * Constructs the suffix array by using the sorted order of type B* suffixes.
      */
-    private final void constructSuffixArray(int [] bucket_A, int [] bucket_B, int n, int m)
+    private final static void constructSuffixArray(int [] bucket_A, int [] bucket_B, int n, int m, byte[] T, int[] SA, int alphabetSize)
     {
         int i, j, k; // ptr
         int s, c0, c1, c2;
@@ -195,10 +157,10 @@ public class SuffixArraySorter {
              * Construct the sorted order of type B suffixes by using the sorted order of
              * type B suffixes.
              */
-            for (c1 = ALPHABET_SIZE - 2; 0 <= c1; --c1)
+            for (c1 = alphabetSize - 2; 0 <= c1; --c1)
             {
                 /* Scan the suffix array from right to left. */
-                for (i = bucket_B[(c1) * ALPHABET_SIZE + (c1 + 1)], j = bucket_A[c1 + 1] - 1, k = 0, c2 = -1; i <= j; --j)
+                for (i = bucket_B[(c1) * alphabetSize + (c1 + 1)], j = bucket_A[c1 + 1] - 1, k = 0, c2 = -1; i <= j; --j)
                 {
                     if (0 < (s = SA[j]))
                     {
@@ -208,8 +170,8 @@ public class SuffixArraySorter {
                         // "");
                         // Tools.assertAlways(T[s - 1] <= T[s], "");
                         SA[j] = ~s;
-                        c0 = T[start + --s];
-                        if ((0 < s) && (T[start + s - 1] > c0))
+                        c0 = T[--s];
+                        if ((0 < s) && (T[s - 1] > c0))
                         {
                             s = ~s;
                         }
@@ -217,9 +179,9 @@ public class SuffixArraySorter {
                         {
                             if (0 <= c2)
                             {
-                                bucket_B[(c1) * ALPHABET_SIZE + (c2)] = k;
+                                bucket_B[(c1) * alphabetSize + (c2)] = k;
                             }
-                            k = bucket_B[(c1) * ALPHABET_SIZE + (c2 = c0)];
+                            k = bucket_B[(c1) * alphabetSize + (c2 = c0)];
                         }
                         // Tools.assertAlways(k < j, "");
                         SA[k--] = s;
@@ -237,16 +199,16 @@ public class SuffixArraySorter {
         /*
          * Construct the suffix array by using the sorted order of type B suffixes.
          */
-        k = bucket_A[c2 = T[start + n - 1]];
-        SA[k++] = (T[start + n - 2] < c2) ? ~(n - 1) : (n - 1);
+        k = bucket_A[c2 = T[n - 1]];
+        SA[k++] = (T[n - 2] < c2) ? ~(n - 1) : (n - 1);
         /* Scan the suffix array from left to right. */
         for (i = 0, j = n; i < j; ++i)
         {
             if (0 < (s = SA[i]))
             {
                 // Tools.assertAlways(T[s - 1] >= T[s], "");
-                c0 = T[start + --s];
-                if ((s == 0) || (T[start + s - 1] < c0))
+                c0 = T[--s];
+                if ((s == 0) || (T[s - 1] < c0))
                 {
                     s = ~s;
                 }
@@ -269,7 +231,7 @@ public class SuffixArraySorter {
     /**
     * 
     */
-    private final int sortTypeBstar(int [] bucket_A, int [] bucket_B, int n)
+    private final static int sortTypeBstar(int [] bucket_A, int [] bucket_B, int n, byte[] T, int[] SA, int alphabetSize)
     {
         int PAb, ISAb, buf;
 
@@ -281,23 +243,23 @@ public class SuffixArraySorter {
          * A, B and B suffix. Moreover, store the beginning position of all type B
          * suffixes into the array SA.
          */
-        for (i = n - 1, m = n, c0 = T[start + n - 1]; 0 <= i;)
+        for (i = n - 1, m = n, c0 = T[n - 1]; 0 <= i;)
         {
             /* type A suffix. */
             do
             {
                 ++bucket_A[c1 = c0];
             }
-            while ((0 <= --i) && ((c0 = T[start + i]) >= c1));
+            while ((0 <= --i) && ((c0 = T[i]) >= c1));
             if (0 <= i)
             {
                 /* type B suffix. */
-                ++bucket_B[(c0) * ALPHABET_SIZE + (c1)];
+                ++bucket_B[(c0) * alphabetSize + (c1)];
                 SA[--m] = i;
                 /* type B suffix. */
-                for (--i, c1 = c0; (0 <= i) && ((c0 = T[start + i]) <= c1); --i, c1 = c0)
+                for (--i, c1 = c0; (0 <= i) && ((c0 = T[i]) <= c1); --i, c1 = c0)
                 {
-                    ++bucket_B[(c1) * ALPHABET_SIZE + (c0)];
+                    ++bucket_B[(c1) * alphabetSize + (c0)];
                 }
             }
         }
@@ -309,16 +271,16 @@ public class SuffixArraySorter {
         // begins with the same first two characters.
 
         // Calculate the index of start/end point of each bucket.
-        for (c0 = 0, i = 0, j = 0; c0 < ALPHABET_SIZE; ++c0)
+        for (c0 = 0, i = 0, j = 0; c0 < alphabetSize; ++c0)
         {
             t = i + bucket_A[c0];
             bucket_A[c0] = i + j; /* start point */
-            i = t + bucket_B[(c0) * ALPHABET_SIZE + (c0)];
-            for (c1 = c0 + 1; c1 < ALPHABET_SIZE; ++c1)
+            i = t + bucket_B[(c0) * alphabetSize + (c0)];
+            for (c1 = c0 + 1; c1 < alphabetSize; ++c1)
             {
-                j += bucket_B[(c0) * ALPHABET_SIZE + (c1)];
-                bucket_B[(c0) * ALPHABET_SIZE + (c1)] = j; // end point
-                i += bucket_B[(c1) * ALPHABET_SIZE + (c0)];
+                j += bucket_B[(c0) * alphabetSize + (c1)];
+                bucket_B[(c0) * alphabetSize + (c1)] = j; // end point
+                i += bucket_B[(c1) * alphabetSize + (c0)];
             }
         }
 
@@ -330,28 +292,28 @@ public class SuffixArraySorter {
             for (i = m - 2; 0 <= i; --i)
             {
                 t = SA[PAb + i];
-                c0 = T[start + t];
-                c1 = T[start + t + 1];
-                SA[--bucket_B[(c0) * ALPHABET_SIZE + (c1)]] = i;
+                c0 = T[t];
+                c1 = T[t + 1];
+                SA[--bucket_B[(c0) * alphabetSize + (c1)]] = i;
             }
             t = SA[PAb + m - 1];
-            c0 = T[start + t];
-            c1 = T[start + t + 1];
-            SA[--bucket_B[(c0) * ALPHABET_SIZE + (c1)]] = m - 1;
+            c0 = T[t];
+            c1 = T[t + 1];
+            SA[--bucket_B[(c0) * alphabetSize + (c1)]] = m - 1;
 
             // Sort the type B* substrings using sssort.
 
             buf = m;// SA
             bufsize = n - (2 * m);
 
-            for (c0 = ALPHABET_SIZE - 2, j = m; 0 < j; --c0)
+            for (c0 = alphabetSize - 2, j = m; 0 < j; --c0)
             {
-                for (c1 = ALPHABET_SIZE - 1; c0 < c1; j = i, --c1)
+                for (c1 = alphabetSize - 1; c0 < c1; j = i, --c1)
                 {
-                    i = bucket_B[(c0) * ALPHABET_SIZE + (c1)];
+                    i = bucket_B[(c0) * alphabetSize + (c1)];
                     if (1 < (j - i))
                     {
-                        ssSort(PAb, i, j, buf, bufsize, 2, n, SA[i] == (m - 1));
+                        ssSort(PAb, i, j, buf, bufsize, 2, n, SA[i] == (m - 1), T, SA, alphabetSize);
                     }
                 }
             }
@@ -383,17 +345,17 @@ public class SuffixArraySorter {
             }
             // Construct the inverse suffix array of type B* suffixes using
             // trsort.
-            trSort(ISAb, m, 1);
+            trSort(ISAb, m, 1, T, SA, alphabetSize);
             // Set the sorted order of type B* suffixes.
-            for (i = n - 1, j = m, c0 = T[start + n - 1]; 0 <= i;)
+            for (i = n - 1, j = m, c0 = T[n - 1]; 0 <= i;)
             {
-                for (--i, c1 = c0; (0 <= i) && ((c0 = T[start + i]) >= c1); --i, c1 = c0)
+                for (--i, c1 = c0; (0 <= i) && ((c0 = T[i]) >= c1); --i, c1 = c0)
                 {
                 }
                 if (0 <= i)
                 {
                     t = i;
-                    for (--i, c1 = c0; (0 <= i) && ((c0 = T[start + i]) <= c1); --i, c1 = c0)
+                    for (--i, c1 = c0; (0 <= i) && ((c0 = T[i]) <= c1); --i, c1 = c0)
                     {
                     }
                     SA[SA[ISAb + --j]] = ((t == 0) || (1 < (t - i))) ? t : ~t;
@@ -401,25 +363,25 @@ public class SuffixArraySorter {
             }
 
             // Calculate the index of start/end point of each bucket.
-            bucket_B[(ALPHABET_SIZE - 1) * ALPHABET_SIZE + (ALPHABET_SIZE - 1)] = n; // end
+            bucket_B[(alphabetSize - 1) * alphabetSize + (alphabetSize - 1)] = n; // end
             // point
-            for (c0 = ALPHABET_SIZE - 2, k = m - 1; 0 <= c0; --c0)
+            for (c0 = alphabetSize - 2, k = m - 1; 0 <= c0; --c0)
             {
                 i = bucket_A[c0 + 1] - 1;
-                for (c1 = ALPHABET_SIZE - 1; c0 < c1; --c1)
+                for (c1 = alphabetSize - 1; c0 < c1; --c1)
                 {
-                    t = i - bucket_B[(c1) * ALPHABET_SIZE + (c0)];
-                    bucket_B[(c1) * ALPHABET_SIZE + (c0)] = i; // end point
+                    t = i - bucket_B[(c1) * alphabetSize + (c0)];
+                    bucket_B[(c1) * alphabetSize + (c0)] = i; // end point
 
                     // Move all type B* suffixes to the correct position.
-                    for (i = t, j = bucket_B[(c0) * ALPHABET_SIZE + (c1)]; j <= k; --i, --k)
+                    for (i = t, j = bucket_B[(c0) * alphabetSize + (c1)]; j <= k; --i, --k)
                     {
                         SA[i] = SA[k];
                     }
                 }
-                bucket_B[(c0) * ALPHABET_SIZE + (c0 + 1)] = i
-                    - bucket_B[(c0) * ALPHABET_SIZE + (c0)] + 1; //
-                bucket_B[(c0) * ALPHABET_SIZE + (c0)] = i; // end point
+                bucket_B[(c0) * alphabetSize + (c0 + 1)] = i
+                    - bucket_B[(c0) * alphabetSize + (c0)] + 1; //
+                bucket_B[(c0) * alphabetSize + (c0)] = i; // end point
             }
         }
 
@@ -429,8 +391,8 @@ public class SuffixArraySorter {
     /**
      *
      */
-    private final void ssSort(final int PA, int first, int last, int buf, int bufsize,
-        int depth, int n, boolean lastsuffix)
+    private final static void ssSort(final int PA, int first, int last, int buf, int bufsize,
+        int depth, int n, boolean lastsuffix, byte[] T, int[] SA, int alphabetSize)
     {
         int a, b, middle, curbuf;// SA pointer
 
@@ -460,7 +422,7 @@ public class SuffixArraySorter {
         }
         for (a = first, i = 0; SS_BLOCKSIZE < (middle - a); a += SS_BLOCKSIZE, ++i)
         {
-            ssMintroSort(PA, a, a + SS_BLOCKSIZE, depth);
+            ssMintroSort(PA, a, a + SS_BLOCKSIZE, depth, T, SA, alphabetSize);
             curbufsize = last - (a + SS_BLOCKSIZE);
             curbuf = a + SS_BLOCKSIZE;
             if (curbufsize <= bufsize)
@@ -470,22 +432,22 @@ public class SuffixArraySorter {
             }
             for (b = a, k = SS_BLOCKSIZE, j = i; (j & 1) != 0; b -= k, k <<= 1, j >>= 1)
             {
-                ssSwapMerge(PA, b - k, b, b + k, curbuf, curbufsize, depth);
+                ssSwapMerge(PA, b - k, b, b + k, curbuf, curbufsize, depth, T, SA, alphabetSize);
             }
         }
-        ssMintroSort(PA, a, middle, depth);
+        ssMintroSort(PA, a, middle, depth, T, SA, alphabetSize);
         for (k = SS_BLOCKSIZE; i != 0; k <<= 1, i >>= 1)
         {
             if ((i & 1) != 0)
             {
-                ssSwapMerge(PA, a - k, a, middle, buf, bufsize, depth);
+                ssSwapMerge(PA, a - k, a, middle, buf, bufsize, depth, T, SA, alphabetSize);
                 a -= k;
             }
         }
         if (limit != 0)
         {
-            ssMintroSort(PA, middle, last, depth);
-            ssInplaceMerge(PA, first, middle, last, depth);
+            ssMintroSort(PA, middle, last, depth, T, SA, alphabetSize);
+            ssInplaceMerge(PA, first, middle, last, depth, T, SA, alphabetSize);
         }
 
         if (lastsuffix)
@@ -493,7 +455,7 @@ public class SuffixArraySorter {
             int p1 = SA[PA + SA[first - 1]];
             int p11 = n - 2;
             for (a = first, i = SA[first - 1]; (a < last)
-                && ((SA[a] < 0) || (0 < ssCompare(p1, p11, PA + SA[a], depth))); ++a)
+                && ((SA[a] < 0) || (0 < ssCompare(p1, p11, PA + SA[a], depth, T, SA, alphabetSize))); ++a)
             {
                 SA[a - 1] = SA[a];
             }
@@ -506,32 +468,32 @@ public class SuffixArraySorter {
      * special version of ss_compare for handling
      * <code>ss_compare(T, &(PAi[0]), PA + *a, depth)</code> situation.
      */
-    private final int ssCompare(int pa, int pb, int p2, int depth)
+    private final static int ssCompare(int pa, int pb, int p2, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         int U1, U2, U1n, U2n;// pointers to T
 
         for (U1 = depth + pa, U2 = depth + SA[p2], U1n = pb + 2, U2n = SA[p2 + 1] + 2; (U1 < U1n)
-            && (U2 < U2n) && (T[start + U1] == T[start + U2]); ++U1, ++U2)
+            && (U2 < U2n) && (T[U1] == T[U2]); ++U1, ++U2)
         {
         }
 
-        return U1 < U1n ? (U2 < U2n ? T[start + U1] - T[start + U2] : 1) : (U2 < U2n ? -1
+        return U1 < U1n ? (U2 < U2n ? T[U1] - T[U2] : 1) : (U2 < U2n ? -1
             : 0);
     }
 
     /**
      * 
      */
-    private final int ssCompare(int p1, int p2, int depth)
+    private final static int ssCompare(int p1, int p2, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         int U1, U2, U1n, U2n;// pointers to T
 
         for (U1 = depth + SA[p1], U2 = depth + SA[p2], U1n = SA[p1 + 1] + 2, U2n = SA[p2 + 1] + 2; (U1 < U1n)
-            && (U2 < U2n) && (T[start + U1] == T[start + U2]); ++U1, ++U2)
+            && (U2 < U2n) && (T[U1] == T[U2]); ++U1, ++U2)
         {
         }
 
-        return U1 < U1n ? (U2 < U2n ? T[start + U1] - T[start + U2] : 1) : (U2 < U2n ? -1
+        return U1 < U1n ? (U2 < U2n ? T[U1] - T[U2] : 1) : (U2 < U2n ? -1
             : 0);
 
     }
@@ -539,7 +501,7 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void ssInplaceMerge(int PA, int first, int middle, int last, int depth)
+    private final static void ssInplaceMerge(int PA, int first, int middle, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         // PA, middle, first, last are pointers to SA
         int p, a, b;// pointer to SA
@@ -562,7 +524,7 @@ public class SuffixArraySorter {
             for (a = first, len = middle - first, half = len >> 1, r = -1; 0 < len; len = half, half >>= 1)
             {
                 b = a + half;
-                q = ssCompare(PA + ((0 <= SA[b]) ? SA[b] : ~SA[b]), p, depth);
+                q = ssCompare(PA + ((0 <= SA[b]) ? SA[b] : ~SA[b]), p, depth, T, SA, alphabetSize);
                 if (q < 0)
                 {
                     a = b + 1;
@@ -579,7 +541,7 @@ public class SuffixArraySorter {
                 {
                     SA[a] = ~SA[a];
                 }
-                ssRotate(a, middle, last);
+                ssRotate(a, middle, last, T, SA, alphabetSize);
                 last -= middle - a;
                 middle = a;
                 if (first == middle)
@@ -606,7 +568,7 @@ public class SuffixArraySorter {
     /**
     *
     */
-    private final void ssRotate(int first, int middle, int last)
+    private final static void ssRotate(int first, int middle, int last, byte[] T, int[] SA, int alphabetSize)
     {
         // first, middle, last are pointers in SA
         int a, b, t;// pointers in SA
@@ -617,7 +579,7 @@ public class SuffixArraySorter {
         {
             if (l == r)
             {
-                ssBlockSwap(first, middle, l);
+                ssBlockSwap(first, middle, l, T, SA, alphabetSize);
                 break;
             }
             if (l < r)
@@ -674,7 +636,7 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void ssBlockSwap(int a, int b, int n)
+    private final static void ssBlockSwap(int a, int b, int n, byte[] T, int[] SA, int alphabetSize)
     {
         // a, b -- pointer to SA
         int t;
@@ -699,8 +661,8 @@ public class SuffixArraySorter {
     /**
      * D&C based merge.
      */
-    private final void ssSwapMerge(int PA, int first, int middle, int last, int buf,
-        int bufsize, int depth)
+    private final static void ssSwapMerge(int PA, int first, int middle, int last, int buf,
+        int bufsize, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         // Pa, first, middle, last and buf - pointers in SA array
 
@@ -718,16 +680,16 @@ public class SuffixArraySorter {
             {
                 if ((first < middle) && (middle < last))
                 {
-                    ssMergeBackward(PA, first, middle, last, buf, depth);
+                    ssMergeBackward(PA, first, middle, last, buf, depth, T, SA, alphabetSize);
                 }
                 if (((check & 1) != 0)
                     || (((check & 2) != 0) && (ssCompare(PA + getIDX(SA[first - 1]), PA
-                        + SA[first], depth) == 0)))
+                        + SA[first], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[first] = ~SA[first];
                 }
                 if (((check & 4) != 0)
-                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth) == 0)))
+                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[last] = ~SA[last];
                 }
@@ -751,16 +713,16 @@ public class SuffixArraySorter {
             {
                 if (first < middle)
                 {
-                    ssMergeForward(PA, first, middle, last, buf, depth);
+                    ssMergeForward(PA, first, middle, last, buf, depth, T, SA, alphabetSize);
                 }
                 if (((check & 1) != 0)
                     || (((check & 2) != 0) && (ssCompare(PA + getIDX(SA[first - 1]), PA
-                        + SA[first], depth) == 0)))
+                        + SA[first], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[first] = ~SA[first];
                 }
                 if (((check & 4) != 0)
-                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth) == 0)))
+                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[last] = ~SA[last];
                 }
@@ -784,7 +746,7 @@ public class SuffixArraySorter {
             for (m = 0, len = min(middle - first, last - middle), half = len >> 1; 0 < len; len = half, half >>= 1)
             {
                 if (ssCompare(PA + getIDX(SA[middle + m + half]), PA
-                    + getIDX(SA[middle - m - half - 1]), depth) < 0)
+                    + getIDX(SA[middle - m - half - 1]), depth, T, SA, alphabetSize) < 0)
                 {
                     m += half + 1;
                     half -= (len & 1) ^ 1;
@@ -795,7 +757,7 @@ public class SuffixArraySorter {
             {
                 lm = middle - m;
                 rm = middle + m;
-                ssBlockSwap(lm, middle, m);
+                ssBlockSwap(lm, middle, m, T, SA, alphabetSize);
                 l = r = middle;
                 next = 0;
                 if (rm < last)
@@ -846,19 +808,19 @@ public class SuffixArraySorter {
             }
             else
             {
-                if (ssCompare(PA + getIDX(SA[middle - 1]), PA + SA[middle], depth) == 0)
+                if (ssCompare(PA + getIDX(SA[middle - 1]), PA + SA[middle], depth, T, SA, alphabetSize) == 0)
                 {
                     SA[middle] = ~SA[middle];
                 }
 
                 if (((check & 1) != 0)
                     || (((check & 2) != 0) && (ssCompare(PA + getIDX(SA[first - 1]), PA
-                        + SA[first], depth) == 0)))
+                        + SA[first], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[first] = ~SA[first];
                 }
                 if (((check & 4) != 0)
-                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth) == 0)))
+                    && ((ssCompare(PA + getIDX(SA[last - 1]), PA + SA[last], depth, T, SA, alphabetSize) == 0)))
                 {
                     SA[last] = ~SA[last];
                 }
@@ -885,19 +847,19 @@ public class SuffixArraySorter {
     /**
      * Merge-forward with internal buffer.
      */
-    private final void ssMergeForward(int PA, int first, int middle, int last, int buf,
-        int depth)
+    private final static void ssMergeForward(int PA, int first, int middle, int last, int buf,
+        int depth, byte[] T, int[] SA, int alphabetSize)
     {
         // PA, first, middle, last, buf are pointers to SA
         int a, b, c, bufend;// pointers to SA
         int t, r;
 
         bufend = buf + (middle - first) - 1;
-        ssBlockSwap(buf, first, middle - first);
+        ssBlockSwap(buf, first, middle - first, T, SA, alphabetSize);
 
         for (t = SA[a = first], b = buf, c = middle;;)
         {
-            r = ssCompare(PA + SA[b], PA + SA[c], depth);
+            r = ssCompare(PA + SA[b], PA + SA[c], depth, T, SA, alphabetSize);
             if (r < 0)
             {
                 do
@@ -972,8 +934,8 @@ public class SuffixArraySorter {
     /**
      * Merge-backward with internal buffer.
      */
-    private final void ssMergeBackward(int PA, int first, int middle, int last, int buf,
-        int depth)
+    private final static void ssMergeBackward(int PA, int first, int middle, int last, int buf,
+        int depth, byte[] T, int[] SA, int alphabetSize)
     {
         // PA, first, middle, last, buf are pointers in SA
         int p1, p2;// pointers in SA
@@ -981,7 +943,7 @@ public class SuffixArraySorter {
         int t, r, x;
 
         bufend = buf + (last - middle) - 1;
-        ssBlockSwap(buf, middle, last - middle);
+        ssBlockSwap(buf, middle, last - middle, T, SA, alphabetSize);
 
         x = 0;
         if (SA[bufend] < 0)
@@ -1004,7 +966,7 @@ public class SuffixArraySorter {
         }
         for (t = SA[a = last - 1], b = bufend, c = middle - 1;;)
         {
-            r = ssCompare(p1, p2, depth);
+            r = ssCompare(p1, p2, depth, T, SA, alphabetSize);
             if (0 < r)
             {
                 if ((x & 1) != 0)
@@ -1136,7 +1098,7 @@ public class SuffixArraySorter {
     /**
      * Insertionsort for small size groups
      */
-    private final void ssInsertionSort(int PA, int first, int last, int depth)
+    private final static void ssInsertionSort(int PA, int first, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         // PA, first, last are pointers in SA
         int i, j;// pointers in SA
@@ -1144,7 +1106,7 @@ public class SuffixArraySorter {
 
         for (i = last - 2; first <= i; --i)
         {
-            for (t = SA[i], j = i + 1; 0 < (r = ssCompare(PA + t, PA + SA[j], depth));)
+            for (t = SA[i], j = i + 1; 0 < (r = ssCompare(PA + t, PA + SA[j], depth, T, SA, alphabetSize));)
             {
                 do
                 {
@@ -1203,7 +1165,7 @@ public class SuffixArraySorter {
     }
 
     /* Multikey introsort for medium size groups. */
-    private final void ssMintroSort(int PA, int first, int last, int depth)
+    private final static void ssMintroSort(int PA, int first, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         final int STACK_SIZE = SS_MISORT_STACKSIZE;
         StackElement [] stack = new StackElement [STACK_SIZE];
@@ -1220,7 +1182,7 @@ public class SuffixArraySorter {
             {
                 if (1 < (last - first))
                 {
-                    ssInsertionSort(PA, first, last, depth);
+                    ssInsertionSort(PA, first, last, depth, T, SA, alphabetSize);
                 }
                 if (ssize > 0)
                 {
@@ -1241,14 +1203,14 @@ public class SuffixArraySorter {
             Td = depth;
             if (limit-- == 0)
             {
-                ssHeapSort(Td, PA, first, last - first);
+                ssHeapSort(Td, PA, first, last - first, T, SA, alphabetSize);
 
             }
             if (limit < 0)
             {
-                for (a = first + 1, v = T[start + Td + SA[PA + SA[first]]]; a < last; ++a)
+                for (a = first + 1, v = T[Td + SA[PA + SA[first]]]; a < last; ++a)
                 {
-                    if ((x = T[start + Td + SA[PA + SA[a]]]) != v)
+                    if ((x = T[Td + SA[PA + SA[a]]]) != v)
                     {
                         if (1 < (a - first))
                         {
@@ -1259,9 +1221,9 @@ public class SuffixArraySorter {
                     }
                 }
 
-                if (T[start + Td + SA[PA + SA[first]] - 1] < v)
+                if (T[Td + SA[PA + SA[first]] - 1] < v)
                 {
-                    first = ssPartition(PA, first, a, depth);
+                    first = ssPartition(PA, first, a, depth, T, SA, alphabetSize);
                 }
                 if ((a - first) <= (last - a))
                 {
@@ -1298,36 +1260,36 @@ public class SuffixArraySorter {
             }
 
             // choose pivot
-            a = ssPivot(Td, PA, first, last);
-            v = T[start + Td + SA[PA + SA[a]]];
-            swapInSA(first, a);
+            a = ssPivot(Td, PA, first, last, T, SA, alphabetSize);
+            v = T[Td + SA[PA + SA[a]]];
+            swapInSA(first, a, T, SA, alphabetSize);
 
             // partition
-            for (b = first; (++b < last) && ((x = T[start + Td + SA[PA + SA[b]]]) == v);)
+            for (b = first; (++b < last) && ((x = T[Td + SA[PA + SA[b]]]) == v);)
             {
             }
             if (((a = b) < last) && (x < v))
             {
-                for (; (++b < last) && ((x = T[start + Td + SA[PA + SA[b]]]) <= v);)
+                for (; (++b < last) && ((x = T[Td + SA[PA + SA[b]]]) <= v);)
                 {
                     if (x == v)
                     {
-                        swapInSA(b, a);
+                        swapInSA(b, a, T, SA, alphabetSize);
                         ++a;
                     }
                 }
             }
 
-            for (c = last; (b < --c) && ((x = T[start + Td + SA[PA + SA[c]]]) == v);)
+            for (c = last; (b < --c) && ((x = T[Td + SA[PA + SA[c]]]) == v);)
             {
             }
             if ((b < (d = c)) && (x > v))
             {
-                for (; (b < --c) && ((x = T[start + Td + SA[PA + SA[c]]]) >= v);)
+                for (; (b < --c) && ((x = T[Td + SA[PA + SA[c]]]) >= v);)
                 {
                     if (x == v)
                     {
-                        swapInSA(c, d);
+                        swapInSA(c, d, T, SA, alphabetSize);
                         --d;
                     }
                 }
@@ -1335,20 +1297,20 @@ public class SuffixArraySorter {
 
             for (; b < c;)
             {
-                swapInSA(b, c);
-                for (; (++b < c) && ((x = T[start + Td + SA[PA + SA[b]]]) <= v);)
+                swapInSA(b, c, T, SA, alphabetSize);
+                for (; (++b < c) && ((x = T[Td + SA[PA + SA[b]]]) <= v);)
                 {
                     if (x == v)
                     {
-                        swapInSA(b, a);
+                        swapInSA(b, a, T, SA, alphabetSize);
                         ++a;
                     }
                 }
-                for (; (b < --c) && ((x = T[start + Td + SA[PA + SA[c]]]) >= v);)
+                for (; (b < --c) && ((x = T[Td + SA[PA + SA[c]]]) >= v);)
                 {
                     if (x == v)
                     {
-                        swapInSA(c, d);
+                        swapInSA(c, d, T, SA, alphabetSize);
                         --d;
                     }
                 }
@@ -1364,7 +1326,7 @@ public class SuffixArraySorter {
                 }
                 for (e = first, f = b - s; 0 < s; --s, ++e, ++f)
                 {
-                    swapInSA(e, f);
+                    swapInSA(e, f, T, SA, alphabetSize);
                 }
                 if ((s = d - c) > (t = last - d - 1))
                 {
@@ -1372,13 +1334,13 @@ public class SuffixArraySorter {
                 }
                 for (e = b, f = last - s; 0 < s; --s, ++e, ++f)
                 {
-                    swapInSA(e, f);
+                    swapInSA(e, f, T, SA, alphabetSize);
                 }
 
                 a = first + (b - a);
                 c = last - (d - c);
-                b = (v <= T[start + Td + SA[PA + SA[a]] - 1]) ? a : ssPartition(PA, a, c,
-                    depth);
+                b = (v <= T[Td + SA[PA + SA[a]] - 1]) ? a : ssPartition(PA, a, c,
+                    depth, T, SA, alphabetSize);
 
                 if ((a - first) <= (last - c))
                 {
@@ -1433,9 +1395,9 @@ public class SuffixArraySorter {
             else
             {
                 limit += 1;
-                if (T[start + Td + SA[PA + SA[first]] - 1] < v)
+                if (T[Td + SA[PA + SA[first]] - 1] < v)
                 {
-                    first = ssPartition(PA, first, last, depth);
+                    first = ssPartition(PA, first, last, depth, T, SA, alphabetSize);
                     limit = ssIlg(last - first);
                 }
                 depth += 1;
@@ -1448,7 +1410,7 @@ public class SuffixArraySorter {
     /**
      * Returns the pivot element.
      */
-    private final int ssPivot(int Td, int PA, int first, int last)
+    private final static int ssPivot(int Td, int PA, int first, int last, byte[] T, int[] SA, int alphabetSize)
     {
         int middle;// SA pointer
         int t = last - first;
@@ -1458,41 +1420,41 @@ public class SuffixArraySorter {
         {
             if (t <= 32)
             {
-                return ssMedian3(Td, PA, first, middle, last - 1);
+                return ssMedian3(Td, PA, first, middle, last - 1, T, SA, alphabetSize);
             }
             else
             {
                 t >>= 2;
-                return ssMedian5(Td, PA, first, first + t, middle, last - 1 - t, last - 1);
+                return ssMedian5(Td, PA, first, first + t, middle, last - 1 - t, last - 1, T, SA, alphabetSize);
             }
         }
         t >>= 3;
-        first = ssMedian3(Td, PA, first, first + t, first + (t << 1));
-        middle = ssMedian3(Td, PA, middle - t, middle, middle + t);
-        last = ssMedian3(Td, PA, last - 1 - (t << 1), last - 1 - t, last - 1);
-        return ssMedian3(Td, PA, first, middle, last);
+        first = ssMedian3(Td, PA, first, first + t, first + (t << 1), T, SA, alphabetSize);
+        middle = ssMedian3(Td, PA, middle - t, middle, middle + t, T, SA, alphabetSize);
+        last = ssMedian3(Td, PA, last - 1 - (t << 1), last - 1 - t, last - 1, T, SA, alphabetSize);
+        return ssMedian3(Td, PA, first, middle, last, T, SA, alphabetSize);
     }
 
     /**
      * Returns the median of five elements
      */
-    private final int ssMedian5(int Td, int PA, int v1, int v2, int v3, int v4, int v5)
+    private final static int ssMedian5(int Td, int PA, int v1, int v2, int v3, int v4, int v5, byte[] T, int[] SA, int alphabetSize)
     {
         int t;
-        if (T[start + Td + SA[PA + SA[v2]]] > T[start + Td + SA[PA + SA[v3]]])
+        if (T[Td + SA[PA + SA[v2]]] > T[Td + SA[PA + SA[v3]]])
         {
             t = v2;
             v2 = v3;
             v3 = t;
 
         }
-        if (T[start + Td + SA[PA + SA[v4]]] > T[start + Td + SA[PA + SA[v5]]])
+        if (T[Td + SA[PA + SA[v4]]] > T[Td + SA[PA + SA[v5]]])
         {
             t = v4;
             v4 = v5;
             v5 = t;
         }
-        if (T[start + Td + SA[PA + SA[v2]]] > T[start + Td + SA[PA + SA[v4]]])
+        if (T[Td + SA[PA + SA[v2]]] > T[Td + SA[PA + SA[v4]]])
         {
             t = v2;
             v2 = v4;
@@ -1501,13 +1463,13 @@ public class SuffixArraySorter {
             v3 = v5;
             v5 = t;
         }
-        if (T[start + Td + SA[PA + SA[v1]]] > T[start + Td + SA[PA + SA[v3]]])
+        if (T[Td + SA[PA + SA[v1]]] > T[Td + SA[PA + SA[v3]]])
         {
             t = v1;
             v1 = v3;
             v3 = t;
         }
-        if (T[start + Td + SA[PA + SA[v1]]] > T[start + Td + SA[PA + SA[v4]]])
+        if (T[Td + SA[PA + SA[v1]]] > T[Td + SA[PA + SA[v4]]])
         {
             t = v1;
             v1 = v4;
@@ -1516,7 +1478,7 @@ public class SuffixArraySorter {
             v3 = v5;
             v5 = t;
         }
-        if (T[start + Td + SA[PA + SA[v3]]] > T[start + Td + SA[PA + SA[v4]]])
+        if (T[Td + SA[PA + SA[v3]]] > T[Td + SA[PA + SA[v4]]])
         {
             return v4;
         }
@@ -1526,17 +1488,17 @@ public class SuffixArraySorter {
     /**
      * Returns the median of three elements.
      */
-    private final int ssMedian3(int Td, int PA, int v1, int v2, int v3)
+    private final static int ssMedian3(int Td, int PA, int v1, int v2, int v3, byte[] T, int[] SA, int alphabetSize)
     {
-        if (T[start + Td + SA[PA + SA[v1]]] > T[start + Td + SA[PA + SA[v2]]])
+        if (T[Td + SA[PA + SA[v1]]] > T[Td + SA[PA + SA[v2]]])
         {
             int t = v1;
             v1 = v2;
             v2 = t;
         }
-        if (T[start + Td + SA[PA + SA[v2]]] > T[start + Td + SA[PA + SA[v3]]])
+        if (T[Td + SA[PA + SA[v2]]] > T[Td + SA[PA + SA[v3]]])
         {
-            if (T[start + Td + SA[PA + SA[v1]]] > T[start + Td + SA[PA + SA[v3]]])
+            if (T[Td + SA[PA + SA[v1]]] > T[Td + SA[PA + SA[v3]]])
             {
                 return v1;
             }
@@ -1551,7 +1513,7 @@ public class SuffixArraySorter {
     /**
      * Binary partition for substrings.
      */
-    private final int ssPartition(int PA, int first, int last, int depth)
+    private final static int ssPartition(int PA, int first, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         int a, b;// SA pointer
         int t;
@@ -1582,7 +1544,7 @@ public class SuffixArraySorter {
     /**
      * Simple top-down heapsort.
      */
-    private final void ssHeapSort(int Td, int PA, int sa, int size)
+    private final static void ssHeapSort(int Td, int PA, int sa, int size, byte[] T, int[] SA, int alphabetSize)
     {
         int i, m, t;
 
@@ -1590,27 +1552,27 @@ public class SuffixArraySorter {
         if ((size % 2) == 0)
         {
             m--;
-            if (T[start + Td + SA[PA + SA[sa + (m / 2)]]] < T[start + Td
+            if (T[Td + SA[PA + SA[sa + (m / 2)]]] < T[Td
                 + SA[PA + SA[sa + m]]])
             {
-                swapInSA(sa + m, sa + (m / 2));
+                swapInSA(sa + m, sa + (m / 2), T, SA, alphabetSize);
             }
         }
 
         for (i = m / 2 - 1; 0 <= i; --i)
         {
-            ssFixDown(Td, PA, sa, i, m);
+            ssFixDown(Td, PA, sa, i, m, T, SA, alphabetSize);
         }
         if ((size % 2) == 0)
         {
-            swapInSA(sa, sa + m);
-            ssFixDown(Td, PA, sa, 0, m);
+            swapInSA(sa, sa + m, T, SA, alphabetSize);
+            ssFixDown(Td, PA, sa, 0, m, T, SA, alphabetSize);
         }
         for (i = m - 1; 0 < i; --i)
         {
             t = SA[sa];
             SA[sa] = SA[sa + i];
-            ssFixDown(Td, PA, sa, 0, i);
+            ssFixDown(Td, PA, sa, 0, i, T, SA, alphabetSize);
             SA[sa + i] = t;
         }
 
@@ -1619,17 +1581,17 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void ssFixDown(int Td, int PA, int sa, int i, int size)
+    private final static void ssFixDown(int Td, int PA, int sa, int i, int size, byte[] T, int[] SA, int alphabetSize)
     {
         int j, k;
         int v;
         int c, d, e;
 
-        for (v = SA[sa + i], c = T[start + Td + SA[PA + v]]; (j = 2 * i + 1) < size; SA[sa
+        for (v = SA[sa + i], c = T[Td + SA[PA + v]]; (j = 2 * i + 1) < size; SA[sa
             + i] = SA[sa + k], i = k)
         {
-            d = T[start + Td + SA[PA + SA[sa + (k = j++)]]];
-            if (d < (e = T[start + Td + SA[PA + SA[sa + j]]]))
+            d = T[Td + SA[PA + SA[sa + (k = j++)]]];
+            if (d < (e = T[Td + SA[PA + SA[sa + j]]]))
             {
                 k = j;
                 d = e;
@@ -1656,7 +1618,7 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void swapInSA(int a, int b)
+    private final static void swapInSA(int a, int b, byte[] T, int[] SA, int alphabetSize)
     {
         int tmp = SA[a];
         SA[a] = SA[b];
@@ -1666,7 +1628,7 @@ public class SuffixArraySorter {
     /**
      * Tandem repeat sort
      */
-    private final void trSort(int ISA, int n, int depth)
+    private final static void trSort(int ISA, int n, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         TRBudget budget = new TRBudget(trIlg(n) * 2 / 3, n);
         int ISAd;
@@ -1695,7 +1657,7 @@ public class SuffixArraySorter {
                     if (1 < (last - first))
                     {
                         budget.count = 0;
-                        trIntroSort(ISA, ISAd, first, last, budget);
+                        trIntroSort(ISA, ISAd, first, last, budget, T, SA, alphabetSize);
                         if (budget.count != 0)
                         {
                             unsorted += budget.count;
@@ -1727,8 +1689,8 @@ public class SuffixArraySorter {
     /**
      *
      */
-    private final TRPartitionResult trPartition(int ISAd, int first, int middle,
-        int last, int pa, int pb, int v)
+    private final static TRPartitionResult trPartition(int ISAd, int first, int middle,
+        int last, int pa, int pb, int v, byte[] T, int[] SA, int alphabetSize)
     {
         int a, b, c, d, e, f;// ptr
         int t, s, x = 0;
@@ -1742,7 +1704,7 @@ public class SuffixArraySorter {
             {
                 if (x == v)
                 {
-                    swapInSA(a, b);
+                    swapInSA(a, b, T, SA, alphabetSize);
                     ++a;
                 }
             }
@@ -1756,19 +1718,19 @@ public class SuffixArraySorter {
             {
                 if (x == v)
                 {
-                    swapInSA(c, d);
+                    swapInSA(c, d, T, SA, alphabetSize);
                     --d;
                 }
             }
         }
         for (; b < c;)
         {
-            swapInSA(c, b);
+            swapInSA(c, b, T, SA, alphabetSize);
             for (; (++b < c) && ((x = SA[ISAd + SA[b]]) <= v);)
             {
                 if (x == v)
                 {
-                    swapInSA(a, b);
+                    swapInSA(a, b, T, SA, alphabetSize);
                     ++a;
                 }
             }
@@ -1776,7 +1738,7 @@ public class SuffixArraySorter {
             {
                 if (x == v)
                 {
-                    swapInSA(c, d);
+                    swapInSA(c, d, T, SA, alphabetSize);
                     --d;
                 }
             }
@@ -1791,7 +1753,7 @@ public class SuffixArraySorter {
             }
             for (e = first, f = b - s; 0 < s; --s, ++e, ++f)
             {
-                swapInSA(e, f);
+                swapInSA(e, f, T, SA, alphabetSize);
             }
             if ((s = d - c) > (t = last - d - 1))
             {
@@ -1799,7 +1761,7 @@ public class SuffixArraySorter {
             }
             for (e = b, f = last - s; 0 < s; --s, ++e, ++f)
             {
-                swapInSA(e, f);
+                swapInSA(e, f, T, SA, alphabetSize);
             }
             first += (b - a);
             last -= (d - c);
@@ -1807,7 +1769,7 @@ public class SuffixArraySorter {
         return new TRPartitionResult(first, last);
     }
 
-    private final void trIntroSort(int ISA, int ISAd, int first, int last, TRBudget budget)
+    private final static void trIntroSort(int ISA, int ISAd, int first, int last, TRBudget budget, byte[] T, int[] SA, int alphabetSize)
     {
         final int STACK_SIZE = TR_STACKSIZE;
         StackElement [] stack = new StackElement [STACK_SIZE];
@@ -1824,7 +1786,7 @@ public class SuffixArraySorter {
                 {
                     /* tandem repeat partition */
                     TRPartitionResult res = trPartition(ISAd - incr, first, first, last,
-                        a, b, last - 1);
+                        a, b, last - 1, T, SA, alphabetSize);
                     a = res.a;
                     b = res.b;
                     /* update ranks */
@@ -1923,7 +1885,7 @@ public class SuffixArraySorter {
                     b = se.c;
                     if (stack[ssize].d == 0)
                     {
-                        trCopy(ISA, first, a, b, last, ISAd - ISA);
+                        trCopy(ISA, first, a, b, last, ISAd - ISA, T, SA, alphabetSize);
                     }
                     else
                     {
@@ -1931,7 +1893,7 @@ public class SuffixArraySorter {
                         {
                             stack[trlink].d = -1;
                         }
-                        trPartialCopy(ISA, first, a, b, last, ISAd - ISA);
+                        trPartialCopy(ISA, first, a, b, last, ISAd - ISA, T, SA, alphabetSize);
                     }
                     if (ssize > 0)
                     {
@@ -2057,14 +2019,14 @@ public class SuffixArraySorter {
 
             if ((last - first) <= TR_INSERTIONSORT_THRESHOLD)
             {
-                trInsertionSort(ISAd, first, last);
+                trInsertionSort(ISAd, first, last, T, SA, alphabetSize);
                 limit = -3;
                 continue;
             }
 
             if (limit-- == 0)
             {
-                trHeapSort(ISAd, first, last - first);
+                trHeapSort(ISAd, first, last - first, T, SA, alphabetSize);
                 for (a = last - 1; first < a; a = b)
                 {
                     for (x = SA[ISAd + SA[a]], b = a - 1; (first <= b)
@@ -2077,12 +2039,12 @@ public class SuffixArraySorter {
                 continue;
             }
             // choose pivot
-            a = trPivot(ISAd, first, last);
-            swapInSA(first, a);
+            a = trPivot(ISAd, first, last, T, SA, alphabetSize);
+            swapInSA(first, a, T, SA, alphabetSize);
             v = SA[ISAd + SA[first]];
 
             // partition
-            TRPartitionResult res = trPartition(ISAd, first, first + 1, last, a, b, v);
+            TRPartitionResult res = trPartition(ISAd, first, first + 1, last, a, b, v, T, SA, alphabetSize);
             a = res.a;
             b = res.b;
 
@@ -2325,7 +2287,7 @@ public class SuffixArraySorter {
     /**
      * Returns the pivot element.
      */
-    private final int trPivot(int ISAd, int first, int last)
+    private final static int trPivot(int ISAd, int first, int last, byte[] T, int[] SA, int alphabetSize)
     {
         int middle;
         int t;
@@ -2337,25 +2299,25 @@ public class SuffixArraySorter {
         {
             if (t <= 32)
             {
-                return trMedian3(ISAd, first, middle, last - 1);
+                return trMedian3(ISAd, first, middle, last - 1, T, SA, alphabetSize);
             }
             else
             {
                 t >>= 2;
-                return trMedian5(ISAd, first, first + t, middle, last - 1 - t, last - 1);
+                return trMedian5(ISAd, first, first + t, middle, last - 1 - t, last - 1, T, SA, alphabetSize);
             }
         }
         t >>= 3;
-        first = trMedian3(ISAd, first, first + t, first + (t << 1));
-        middle = trMedian3(ISAd, middle - t, middle, middle + t);
-        last = trMedian3(ISAd, last - 1 - (t << 1), last - 1 - t, last - 1);
-        return trMedian3(ISAd, first, middle, last);
+        first = trMedian3(ISAd, first, first + t, first + (t << 1), T, SA, alphabetSize);
+        middle = trMedian3(ISAd, middle - t, middle, middle + t, T, SA, alphabetSize);
+        last = trMedian3(ISAd, last - 1 - (t << 1), last - 1 - t, last - 1, T, SA, alphabetSize);
+        return trMedian3(ISAd, first, middle, last, T, SA, alphabetSize);
     }
 
     /**
      * Returns the median of five elements.
      */
-    private final int trMedian5(int ISAd, int v1, int v2, int v3, int v4, int v5)
+    private final static int trMedian5(int ISAd, int v1, int v2, int v3, int v4, int v5, byte[] T, int[] SA, int alphabetSize)
     {
         int t;
         if (SA[ISAd + SA[v2]] > SA[ISAd + SA[v3]])
@@ -2404,7 +2366,7 @@ public class SuffixArraySorter {
     /**
      * Returns the median of three elements.
      */
-    private final int trMedian3(int ISAd, int v1, int v2, int v3)
+    private final static int trMedian3(int ISAd, int v1, int v2, int v3, byte[] T, int[] SA, int alphabetSize)
     {
         if (SA[ISAd + SA[v1]] > SA[ISAd + SA[v2]])
         {
@@ -2429,7 +2391,7 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void trHeapSort(int ISAd, int sa, int size)
+    private final static void trHeapSort(int ISAd, int sa, int size, byte[] T, int[] SA, int alphabetSize)
     {
         int i, m, t;
 
@@ -2439,24 +2401,24 @@ public class SuffixArraySorter {
             m--;
             if (SA[ISAd + SA[sa + m / 2]] < SA[ISAd + SA[sa + m]])
             {
-                swapInSA(sa + m, sa + m / 2);
+                swapInSA(sa + m, sa + m / 2, T, SA, alphabetSize);
             }
         }
 
         for (i = m / 2 - 1; 0 <= i; --i)
         {
-            trFixDown(ISAd, sa, i, m);
+            trFixDown(ISAd, sa, i, m, T, SA, alphabetSize);
         }
         if ((size % 2) == 0)
         {
-            swapInSA(sa, sa + m);
-            trFixDown(ISAd, sa, 0, m);
+            swapInSA(sa, sa + m, T, SA, alphabetSize);
+            trFixDown(ISAd, sa, 0, m, T, SA, alphabetSize);
         }
         for (i = m - 1; 0 < i; --i)
         {
             t = SA[sa];
             SA[sa] = SA[sa + i];
-            trFixDown(ISAd, sa, 0, i);
+            trFixDown(ISAd, sa, 0, i, T, SA, alphabetSize);
             SA[sa + i] = t;
         }
 
@@ -2465,7 +2427,7 @@ public class SuffixArraySorter {
     /**
      * 
      */
-    private final void trFixDown(int ISAd, int sa, int i, int size)
+    private final static void trFixDown(int ISAd, int sa, int i, int size, byte[] T, int[] SA, int alphabetSize)
     {
         int j, k;
         int v;
@@ -2491,7 +2453,7 @@ public class SuffixArraySorter {
 
     /**
      */
-    private final void trInsertionSort(int ISAd, int first, int last)
+    private final static void trInsertionSort(int ISAd, int first, int last, byte[] T, int[] SA, int alphabetSize)
     {
         int a, b;// SA ptr
         int t, r;
@@ -2521,7 +2483,7 @@ public class SuffixArraySorter {
 
     /**
      */
-    private final void trPartialCopy(int ISA, int first, int a, int b, int last, int depth)
+    private final static void trPartialCopy(int ISA, int first, int a, int b, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         int c, d, e;// ptr
         int s, v;
@@ -2581,7 +2543,7 @@ public class SuffixArraySorter {
      * sort suffixes of middle partition by using sorted order of suffixes of left and
      * right partition.
      */
-    private final void trCopy(int ISA, int first, int a, int b, int last, int depth)
+    private final static void trCopy(int ISA, int first, int a, int b, int last, int depth, byte[] T, int[] SA, int alphabetSize)
     {
         int c, d, e;// ptr
         int s, v;

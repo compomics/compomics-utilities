@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.biology.Protein;
@@ -29,8 +24,60 @@ import java.util.HashMap;
 public class FMIndex implements PeptideMapper {
     
     
+    /**
+     * Sampled suffix array
+     */
+    private int[] SA; // Suffix array
     
-    private int binarySearch(ArrayList<Integer> array, int key){
+    /**
+     * Wavelet tree for storing the burrows wheeler transform
+     */
+    private WaveletTree occ;
+    
+    /**
+     * less table for doing an update step according to the LF step.
+     */
+    private int[] less;
+    
+    /**
+     * length of the indexed string (all concatinated protein sequences).
+     */
+    private int n;
+    
+    /**
+     * every 2^samplingShift suffix array entry will be sampled.
+     */
+    private final int samplingShift = 3;
+    
+    /**
+     * Mask of fast modulo operations.
+     */
+    private final int samplingMask = (1 << samplingShift) - 1;
+    
+    /**
+     * Bit shifting for fast multiplying / dividing operations.
+     */
+    private final int sampling = 1 << samplingShift;
+    
+    /**
+     * Storing the starting positions of the protein sequences.
+     */
+    ArrayList<Integer> boundaries;
+    
+    /**
+     * list of all accession ids in the fasta file.
+     */
+    ArrayList<String> accessions;
+    
+    
+    
+    /**
+     * Returns the position of a value in the array or if not found the position of the closest smaller value.
+     * @param array
+     * @param key
+     * @return 
+     */
+    private static int binarySearch(ArrayList<Integer> array, int key){
         int low = 0;
         int mid = 0;
         int high = array.size() - 1;
@@ -44,19 +91,9 @@ public class FMIndex implements PeptideMapper {
         return mid;
     }
     
-    
-    
-    private int[] SA; // Suffix array
-    private Wavelet occ;
-    private int[] less;
-    private int n; // length of indexed string
-    private final int samplingShift = 3; // every 2^samplingShift Suffix array entry will be sampled
-    private final int samplingMask = (1 << samplingShift) - 1;
-    private final int sampling = 1 << samplingShift;
-    ArrayList<Integer> boundaries;
-    ArrayList<String> accessions;
-    
-    
+    /**
+     * Constructor
+     */
     public FMIndex(){
         System.out.println("Efficient FM-Index creation started");
         SequenceFactory sf = SequenceFactory.getInstance(100000);
@@ -110,9 +147,8 @@ public class FMIndex implements PeptideMapper {
             e.printStackTrace();
         }
         
-        
-        SuffixArraySorter sas = new SuffixArraySorter(128);
-        SA = sas.buildSuffixArray(T, 0, T.length);
+        // create the suffix array using at most 128 characters
+        SA = SuffixArraySorter.buildSuffixArray(T, 128);
         
         
         // create Burrows-Wheeler-Transform
@@ -139,13 +175,19 @@ public class FMIndex implements PeptideMapper {
             int shift = sortedAas[i] - (sortedAas[i] & 64);
             alphabet[(int)(sortedAas[i] >> 6)] |= 1L << shift;
         }
-        occ = new Wavelet(bwt, alphabet);
+        occ = new WaveletTree(bwt, alphabet);
         less = occ.createLessTable();
         d.end();
         System.out.println("finished efficient FM-Index on " + numProteins + " in " + d.toString());
     }
     
-    
+    /**
+     * Returs a list of all possible amino acids per position in the peptide according to the sequence matching preferences.
+     * @param peptide
+     * @param seqMatchPref
+     * @param numPositions
+     * @return 
+     */
     public ArrayList<String> createPeptideCombinations(String peptide, SequenceMatchingPreferences seqMatchPref, int[] numPositions){
         ArrayList<String> combinations = new ArrayList<String>();
         int numCombination = 1;
@@ -203,18 +245,28 @@ public class FMIndex implements PeptideMapper {
         return combinations;
     }
     
-    
-    private int getPos(int i){
+    /**
+     * Method to get the text position using the sampled suffix array.
+     * @param i
+     * @return 
+     */
+    private int getTextPosition(int i){
         int t = 0;
         while (((i & samplingMask) != 0) && (i != 0)){
             int aa = occ.getCharacter(i);
             i = less[aa] + occ.getRank(i - 1, aa);
             ++t;
         }
-        return SA[i >> samplingShift] + t;
+        int pos = SA[i >> samplingShift] + t;
+        return (pos < n) ? pos : pos - n;
     }
     
-    
+    /**
+     * main function for mapping a peptide with all variants against all registered proteins in the experiment.
+     * @param peptide
+     * @param seqMatchPref
+     * @return 
+     */
     @Override
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref){
         HashMap<String, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
@@ -233,10 +285,12 @@ public class FMIndex implements PeptideMapper {
                     matrix.get(i).add(new HashMap<Long, MatrixContent>());
                 }
             }
-            matrix.get(0).get(0).put(0L, new MatrixContent(1, n - 1, '\0', -1, 0)); // L, R, char, traceback, last_index
+            matrix.get(0).get(0).put(0L, new MatrixContent(0, n - 1, '\0', -1, 0)); // L, R, char, traceback, last_index
+            int layerStartingPos = 0;
             for (int i = 0; i <= k; ++i){
                 ArrayList<HashMap<Long, MatrixContent>> row = matrix.get(i);
-                for (int j = 0; j < p; ++j){
+                int tmpLayerStartingPos = p;
+                for (int j = layerStartingPos; j < p; ++j){
                     HashMap<Long, MatrixContent> cell = row.get(j);
                     for (Long key : cell.keySet()){
                         boolean first = true;
@@ -245,7 +299,7 @@ public class FMIndex implements PeptideMapper {
                         int R_old = content.R;
                         for (int l = 0; l < combinations.get(j).length(); ++l){
                             int aa = (int)combinations.get(j).charAt(l);
-                            int L = less[aa] + occ.getRank(L_old - 1, aa);
+                            int L = less[aa] + ((0 < L_old) ? occ.getRank(L_old - 1, aa) : 0);
                             int R = less[aa] + occ.getRank(R_old, aa) - 1;
                             
                             if (L <= R){
@@ -255,6 +309,7 @@ public class FMIndex implements PeptideMapper {
                                 }
                                 else if (i < k) {
                                     matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(L, R, (char)aa, 1, key));
+                                    tmpLayerStartingPos = Math.min(tmpLayerStartingPos, j + 1);
                                 }
                                 
                             }
@@ -264,12 +319,12 @@ public class FMIndex implements PeptideMapper {
                     }
                     
                 }
+                layerStartingPos = tmpLayerStartingPos;
                 
             }
             
             
             // Traceback
-            
             for (int i = 0; i <= k; ++i){
                 
                 for (Long key : matrix.get(i).get(p).keySet()){
@@ -292,9 +347,10 @@ public class FMIndex implements PeptideMapper {
                     
                     HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
                     for (int j = L; j <= R; ++j){
-                        int pos = getPos(j);
+                        int pos = getTextPosition(j);
                         int index = binarySearch(boundaries, pos);
                         String accession = accessions.get(index);
+                        
                         if (!matches.containsKey(accession)){
                             matches.put(accession, new ArrayList<Integer>());
                         }

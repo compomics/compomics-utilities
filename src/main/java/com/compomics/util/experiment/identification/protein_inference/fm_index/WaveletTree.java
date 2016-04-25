@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.identification.protein_inference.fm_index.Rank;
@@ -11,18 +6,19 @@ import com.compomics.util.experiment.identification.protein_inference.fm_index.R
  *
  * @author Dominik Kopczynski
  */
-public class Wavelet {
+public class WaveletTree {
     Rank rkg;
     long[] alphabet;
     int len_alphabet;
+    int len_text;
     char[] char_alphabet;
     int half;
-    Wavelet left_child;
-    Wavelet right_child;
+    WaveletTree left_child;
+    WaveletTree right_child;
     private final int shift = 6;
     private final int mask = 63;
         
-    Wavelet(byte[] text, long[] _alphabet){
+    WaveletTree(byte[] text, long[] _alphabet){
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
         alphabet = new long[2];
@@ -30,6 +26,7 @@ public class Wavelet {
         alphabet_right[0] = alphabet[0] = _alphabet[0];
         alphabet_right[1] = alphabet[1] = _alphabet[1];
         alphabet_left[0] = alphabet_left[1] = 0;
+        len_text = text.length;
         rkg = new Rank(text, alphabet);
         left_child = null;
         right_child = null;
@@ -78,7 +75,7 @@ public class Wavelet {
                     ++j;
                 }
             }
-            left_child = new Wavelet(text_left, alphabet_left);
+            left_child = new WaveletTree(text_left, alphabet_left);
         }
 
         if (len_alphabet_right > 1){
@@ -100,7 +97,7 @@ public class Wavelet {
                     ++j;
                 }
             }
-            right_child = new Wavelet(text_right, alphabet_right);
+            right_child = new WaveletTree(text_right, alphabet_right);
         }
     }
     
@@ -117,42 +114,49 @@ public class Wavelet {
     }
     
     public int getRank(int i, int c){
-        int cell = c >> shift;
-        int pos = c & mask;
-        int masked = mask - pos;
-        long active_ones = alphabet[cell] << masked;
-        int p = rkg.popcount(active_ones);
-        p += cell * rkg.popcount(alphabet[0]);
-        p -= 1;
-        boolean left = (p <= half);
-        int result = rkg.getRank(i, left);
-        if (result == 0) return result;
+        if (0 <= i && i < len_text){
+            int cell = c >> shift;
+            int pos = c & mask;
+            int masked = mask - pos;
+            long active_ones = alphabet[cell] << masked;
+            int p = rkg.popcount(active_ones);
+            p += cell * rkg.popcount(alphabet[0]);
+            p -= 1;
+            boolean left = (p <= half);
+            int result = rkg.getRank(i, left);
+            if (result == 0) return result;
 
 
-        if (left && left_child != null){
-            return left_child.getRank(result - 1, c);
+            if (left && left_child != null){
+                return left_child.getRank(result - 1, c);
+            }
+            else if (!left && right_child != null){
+                return right_child.getRank(result - 1, c);
+            }
+            return result;
         }
-        else if (!left && right_child != null){
-            return right_child.getRank(result - 1, c);
-        }
-        return result;
+        System.out.println("WT-Error: " + i);
+        throw new ArrayIndexOutOfBoundsException();
     }
     
     public char getCharacter(int i){
-        boolean left = !rkg.isOne(i);
-        int result = rkg.getRank(i, left);
-        if (result == 0) return char_alphabet[result];
-        
-        char c;
-        result -= 1;
-        if (left){
-            if (left_child == null) c = char_alphabet[0];
-            else c = left_child.getCharacter(result);
+        if (0 <= i && i < len_text){
+            boolean left = !rkg.isOne(i);
+            int result = rkg.getRank(i, left);
+            if (result == 0) return char_alphabet[result];
+
+            char c;
+            result -= 1;
+            if (left){
+                if (left_child == null) c = char_alphabet[0];
+                else c = left_child.getCharacter(result);
+            }
+            else {
+                if (right_child == null) c = char_alphabet[char_alphabet.length - 1];
+                else c = right_child.getCharacter(result);
+            }
+            return c;
         }
-        else {
-            if (right_child == null) c = char_alphabet[char_alphabet.length - 1];
-            else c = right_child.getCharacter(result);
-        }
-        return c;
+        throw new ArrayIndexOutOfBoundsException();
     }
 }

@@ -291,7 +291,7 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Sequence matching
     //////////////////////////////////
-    SEQUENCE_INDEX_TYPE("sequence_index_type", "The protein database index type. (" + PeptideMapperType.getCommandLineOptions() + ", default is " + PeptideMapperType.fmi + ")", false, true),
+    SEQUENCE_INDEX_TYPE("sequence_index_type", "The protein database index type. (" + PeptideMapperType.getCommandLineOptions() + ", default is " + PeptideMapperType.fm_index + ")", false, true),
     SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids + ")", false, true),
     SEQUENCE_MATCHING_X("sequence_matching_x", "The maximal share of Xs in a sequence, 0.25 means 25% of Xs, default is 0.25.", false, true),
     //////////////////////////////////

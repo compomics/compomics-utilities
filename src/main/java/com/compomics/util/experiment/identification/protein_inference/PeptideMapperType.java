@@ -11,8 +11,8 @@ import static com.compomics.util.preferences.SequenceMatchingPreferences.Matchin
  */
 public enum PeptideMapperType {
 
-    fmi(0, "FMIndex", "Succinct data structure to find patterns in texts."),
-    tree(1, "Tree", "Protein fasta database index in the form of a tree using an ObjectDB as back-end.");
+    fm_index(0, "FM-Index", "Full-text index in Minute space index after Paolo Ferragina and Giovanni Manzini, \"Opportunistic Data Structures with Applications\", Proceedings of the 41st Annual Symposium on Foundations of Computer Science (2000)."),
+    tree(1, "Tree", "Protein fasta database index in the form of a tree using a database as back-end.");
 
     /**
      * The unique index of the peptide mapper.
@@ -55,21 +55,26 @@ public enum PeptideMapperType {
         }
         return optionsStringBuilder.toString();
     }
-        
-        /**
-         * Returns the peptide mapper type corresponding to the given index.
-         * 
-         * @param index the index of the peptide mapper type
-         * 
-         * @return the peptide mapper type
-         */
-        public static PeptideMapperType getPeptideMapperType(int index) {
-            for (PeptideMapperType mapperType : values()) {
-                if (mapperType.index == index) {
-                    return mapperType;
-                }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    /**
+     * Returns the peptide mapper type corresponding to the given index.
+     *
+     * @param index the index of the peptide mapper type
+     *
+     * @return the peptide mapper type
+     */
+    public static PeptideMapperType getPeptideMapperType(int index) {
+        for (PeptideMapperType mapperType : values()) {
+            if (mapperType.index == index) {
+                return mapperType;
             }
-            throw new IllegalArgumentException("No peptide mapper type found for index " + index  + ".");
         }
+        throw new IllegalArgumentException("No peptide mapper type found for index " + index + ".");
+    }
 
 }

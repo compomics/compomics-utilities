@@ -11,7 +11,7 @@ import static com.compomics.util.preferences.SequenceMatchingPreferences.Matchin
  */
 public enum PeptideMapperType {
 
-    fm_index(0, "FM-Index", "Full-text index in Minute space index after Paolo Ferragina and Giovanni Manzini, \"Opportunistic Data Structures with Applications\", Proceedings of the 41st Annual Symposium on Foundations of Computer Science (2000)."),
+    fm_index(0, "FM-Index", "Full-text index in Minute space index stored in a wavelet tree."),
     tree(1, "Tree", "Protein fasta database index in the form of a tree using a database as back-end.");
 
     /**

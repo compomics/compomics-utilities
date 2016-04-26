@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class SuffixArraySorter {
 
     /**
-     * 
+     *
      */
     private final static class StackElement {
 
@@ -47,8 +47,9 @@ public class SuffixArraySorter {
 
         /**
          * Making a check.
+         *
          * @param size
-         * @return 
+         * @return
          */
         private int check(int size) {
             if (size <= this.remain) {
@@ -66,7 +67,7 @@ public class SuffixArraySorter {
     }
 
     /**
-     * 
+     *
      */
     private static final class TRPartitionResult {
 
@@ -127,9 +128,10 @@ public class SuffixArraySorter {
 
     /**
      * Building the suffix array.
+     *
      * @param T
      * @param alphabetSize
-     * @return 
+     * @return
      */
     public static int[] buildSuffixArray(byte[] T, int alphabetSize) {
 
@@ -145,14 +147,16 @@ public class SuffixArraySorter {
     }
 
     /**
-     * Constructs the suffix array by using the sorted order of type B* suffixes.
+     * Constructs the suffix array by using the sorted order of type B*
+     * suffixes.
+     *
      * @param bucket_A
      * @param bucket_B
      * @param n
      * @param m
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void constructSuffixArray(int[] bucket_A, int[] bucket_B, int n, int m, byte[] T, int[] SA, int alphabetSize) {
         int i, j, k; // ptr
@@ -213,13 +217,14 @@ public class SuffixArraySorter {
 
     /**
      * Sort all Bstar type characters.
+     *
      * @param bucket_A
      * @param bucket_B
      * @param n
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int sortTypeBstar(int[] bucket_A, int[] bucket_B, int n, byte[] T, int[] SA, int alphabetSize) {
         int PAb, ISAb, buf;
@@ -352,6 +357,7 @@ public class SuffixArraySorter {
 
     /**
      * SS sorting.
+     *
      * @param PA
      * @param first
      * @param last
@@ -362,7 +368,7 @@ public class SuffixArraySorter {
      * @param lastsuffix
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssSort(final int PA, int first, int last, int buf, int bufsize,
             int depth, int n, boolean lastsuffix, byte[] T, int[] SA, int alphabetSize) {
@@ -424,7 +430,9 @@ public class SuffixArraySorter {
     }
 
     /**
-     * special version of ss_compare for handling ss_compare(T, &(PAi[0]), PA + *a, depth) situation.
+     * special version of ss_compare for handling ss_compare(T, &(PAi[0]), PA +
+     * *a, depth) situation.
+     *
      * @param pa
      * @param pb
      * @param p2
@@ -432,7 +440,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssCompare(int pa, int pb, int p2, int depth, byte[] T, int[] SA, int alphabetSize) {
         int U1, U2, U1n, U2n;// pointers to T
@@ -447,13 +455,14 @@ public class SuffixArraySorter {
 
     /**
      * SS compare.
+     *
      * @param p1
      * @param p2
      * @param depth
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssCompare(int p1, int p2, int depth, byte[] T, int[] SA, int alphabetSize) {
         int U1, U2, U1n, U2n;// pointers to T
@@ -469,6 +478,7 @@ public class SuffixArraySorter {
 
     /**
      * ss inplece merger.
+     *
      * @param PA
      * @param first
      * @param middle
@@ -476,7 +486,7 @@ public class SuffixArraySorter {
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssInplaceMerge(int PA, int first, int middle, int last, int depth, byte[] T, int[] SA, int alphabetSize) {
         // PA, middle, first, last are pointers to SA
@@ -529,12 +539,13 @@ public class SuffixArraySorter {
 
     /**
      * SS rotating.
+     *
      * @param first
      * @param middle
      * @param last
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssRotate(int first, int middle, int last, byte[] T, int[] SA, int alphabetSize) {
         // first, middle, last are pointers in SA
@@ -589,12 +600,13 @@ public class SuffixArraySorter {
 
     /**
      * SS block swapping.
+     *
      * @param a
      * @param b
      * @param n
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssBlockSwap(int a, int b, int n, byte[] T, int[] SA, int alphabetSize) {
         // a, b -- pointer to SA
@@ -606,20 +618,22 @@ public class SuffixArraySorter {
         }
     }
 
-    /** 
+    /**
      * Computes complement bitfield if necessary
+     *
      * @param a
-     * @return 
+     * @return
      */
     private final static int getIDX(int a) {
         return (0 <= (a)) ? (a) : (~(a));
     }
 
     /**
-     * Computes minimum of two integers. 
+     * Computes minimum of two integers.
+     *
      * @param a
      * @param b
-     * @return 
+     * @return
      */
     private final static int min(int a, int b) {
         return a < b ? a : b;
@@ -627,6 +641,7 @@ public class SuffixArraySorter {
 
     /**
      * D&C based merge.
+     *
      * @param PA
      * @param first
      * @param middle
@@ -636,7 +651,7 @@ public class SuffixArraySorter {
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssSwapMerge(int PA, int first, int middle, int last, int buf,
             int bufsize, int depth, byte[] T, int[] SA, int alphabetSize) {
@@ -997,8 +1012,9 @@ public class SuffixArraySorter {
 
     /**
      * Computes ssI square root
+     *
      * @param x
-     * @return 
+     * @return
      */
     private final static int ssIsqrt(int x) {
         int y, e;
@@ -1028,13 +1044,14 @@ public class SuffixArraySorter {
 
     /**
      * Multikey introsort for medium size groups
+     *
      * @param PA
      * @param first
      * @param last
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssMintroSort(int PA, int first, int last, int depth, byte[] T, int[] SA, int alphabetSize) {
         final int STACK_SIZE = SS_MISORT_STACKSIZE;
@@ -1220,6 +1237,7 @@ public class SuffixArraySorter {
 
     /**
      * Returns the pivot element.
+     *
      * @param Td
      * @param PA
      * @param first
@@ -1227,7 +1245,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssPivot(int Td, int PA, int first, int last, byte[] T, int[] SA, int alphabetSize) {
         int middle;// SA pointer
@@ -1251,6 +1269,7 @@ public class SuffixArraySorter {
 
     /**
      * Returns the median of five elements
+     *
      * @param Td
      * @param PA
      * @param v1
@@ -1261,7 +1280,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssMedian5(int Td, int PA, int v1, int v2, int v3, int v4, int v5, byte[] T, int[] SA, int alphabetSize) {
         int t;
@@ -1305,6 +1324,7 @@ public class SuffixArraySorter {
 
     /**
      * Returns the median of three elements.
+     *
      * @param Td
      * @param PA
      * @param v1
@@ -1313,7 +1333,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssMedian3(int Td, int PA, int v1, int v2, int v3, byte[] T, int[] SA, int alphabetSize) {
         if (T[Td + SA[PA + SA[v1]]] > T[Td + SA[PA + SA[v2]]]) {
@@ -1333,6 +1353,7 @@ public class SuffixArraySorter {
 
     /**
      * Binary partition for substrings.
+     *
      * @param PA
      * @param first
      * @param last
@@ -1340,7 +1361,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int ssPartition(int PA, int first, int last, int depth, byte[] T, int[] SA, int alphabetSize) {
         int a, b;// SA pointer
@@ -1366,13 +1387,14 @@ public class SuffixArraySorter {
 
     /**
      * Simple top-down heapsort.
+     *
      * @param Td
      * @param PA
      * @param sa
      * @param size
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssHeapSort(int Td, int PA, int sa, int size, byte[] T, int[] SA, int alphabetSize) {
         int i, m, t;
@@ -1404,6 +1426,7 @@ public class SuffixArraySorter {
 
     /**
      * Making a substring fixdown.
+     *
      * @param Td
      * @param PA
      * @param sa
@@ -1411,7 +1434,7 @@ public class SuffixArraySorter {
      * @param size
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void ssFixDown(int Td, int PA, int sa, int i, int size, byte[] T, int[] SA, int alphabetSize) {
         int j, k;
@@ -1435,8 +1458,9 @@ public class SuffixArraySorter {
 
     /**
      * Logarithmic computing.
+     *
      * @param n
-     * @return 
+     * @return
      */
     private final static int ssIlg(int n) {
 
@@ -1446,11 +1470,12 @@ public class SuffixArraySorter {
 
     /**
      * Swap function.
+     *
      * @param a
      * @param b
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void swapInSA(int a, int b, byte[] T, int[] SA, int alphabetSize) {
         int tmp = SA[a];
@@ -1460,12 +1485,13 @@ public class SuffixArraySorter {
 
     /**
      * Tandem repeat sort
+     *
      * @param ISA
      * @param n
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trSort(int ISA, int n, int depth, byte[] T, int[] SA, int alphabetSize) {
         TRBudget budget = new TRBudget(trIlg(n) * 2 / 3, n);
@@ -1511,6 +1537,7 @@ public class SuffixArraySorter {
 
     /**
      * Partitioning for sorting.
+     *
      * @param ISAd
      * @param first
      * @param middle
@@ -1521,7 +1548,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static TRPartitionResult trPartition(int ISAd, int first, int middle,
             int last, int pa, int pb, int v, byte[] T, int[] SA, int alphabetSize) {
@@ -1586,6 +1613,7 @@ public class SuffixArraySorter {
 
     /**
      * Sorting with Introsort.
+     *
      * @param ISA
      * @param ISAd
      * @param first
@@ -1593,7 +1621,7 @@ public class SuffixArraySorter {
      * @param budget
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trIntroSort(int ISA, int ISAd, int first, int last, TRBudget budget, byte[] T, int[] SA, int alphabetSize) {
         final int STACK_SIZE = TR_STACKSIZE;
@@ -1952,13 +1980,14 @@ public class SuffixArraySorter {
 
     /**
      * Returns the pivot element.
+     *
      * @param ISAd
      * @param first
      * @param last
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int trPivot(int ISAd, int first, int last, byte[] T, int[] SA, int alphabetSize) {
         int middle;
@@ -1984,6 +2013,7 @@ public class SuffixArraySorter {
 
     /**
      * Returns the median of five elements.
+     *
      * @param ISAd
      * @param v1
      * @param v2
@@ -1993,7 +2023,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int trMedian5(int ISAd, int v1, int v2, int v3, int v4, int v5, byte[] T, int[] SA, int alphabetSize) {
         int t;
@@ -2036,6 +2066,7 @@ public class SuffixArraySorter {
 
     /**
      * Returns the median of three elements.
+     *
      * @param ISAd
      * @param v1
      * @param v2
@@ -2043,7 +2074,7 @@ public class SuffixArraySorter {
      * @param T
      * @param SA
      * @param alphabetSize
-     * @return 
+     * @return
      */
     private final static int trMedian3(int ISAd, int v1, int v2, int v3, byte[] T, int[] SA, int alphabetSize) {
         if (SA[ISAd + SA[v1]] > SA[ISAd + SA[v2]]) {
@@ -2063,12 +2094,13 @@ public class SuffixArraySorter {
 
     /**
      * Making a heap sort.
+     *
      * @param ISAd
      * @param sa
      * @param size
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trHeapSort(int ISAd, int sa, int size, byte[] T, int[] SA, int alphabetSize) {
         int i, m, t;
@@ -2099,13 +2131,14 @@ public class SuffixArraySorter {
 
     /**
      * Fix down for heap sort.
+     *
      * @param ISAd
      * @param sa
      * @param i
      * @param size
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trFixDown(int ISAd, int sa, int i, int size, byte[] T, int[] SA, int alphabetSize) {
         int j, k;
@@ -2129,12 +2162,13 @@ public class SuffixArraySorter {
 
     /**
      * Insertion sort.
+     *
      * @param ISAd
      * @param first
      * @param last
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trInsertionSort(int ISAd, int first, int last, byte[] T, int[] SA, int alphabetSize) {
         int a, b;// SA ptr
@@ -2159,6 +2193,7 @@ public class SuffixArraySorter {
 
     /**
      * Partial copy.
+     *
      * @param ISA
      * @param first
      * @param a
@@ -2167,7 +2202,7 @@ public class SuffixArraySorter {
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trPartialCopy(int ISA, int first, int a, int b, int last, int depth, byte[] T, int[] SA, int alphabetSize) {
         int c, d, e;// ptr
@@ -2216,7 +2251,9 @@ public class SuffixArraySorter {
     }
 
     /**
-     * sort suffixes of middle partition by using sorted order of suffixes of left and right partition.
+     * sort suffixes of middle partition by using sorted order of suffixes of
+     * left and right partition.
+     *
      * @param ISA
      * @param first
      * @param a
@@ -2225,7 +2262,7 @@ public class SuffixArraySorter {
      * @param depth
      * @param T
      * @param SA
-     * @param alphabetSize 
+     * @param alphabetSize
      */
     private final static void trCopy(int ISA, int first, int a, int b, int last, int depth, byte[] T, int[] SA, int alphabetSize) {
         int c, d, e;// ptr
@@ -2250,8 +2287,9 @@ public class SuffixArraySorter {
 
     /**
      * Compute logarithmic.
+     *
      * @param n
-     * @return 
+     * @return
      */
     private final static int trIlg(int n) {
         return ((n & 0xffff0000) != 0) ? (((n & 0xff000000) != 0) ? 24 + lg_table[(n >> 24) & 0xff]

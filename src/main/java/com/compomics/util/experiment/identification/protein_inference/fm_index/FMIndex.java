@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
-import com.compomics.util.waiting.Duration;
+//import com.compomics.util.waiting.Duration;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
@@ -28,19 +28,19 @@ public class FMIndex implements PeptideMapper {
     /**
      * Sampled suffix array.
      */
-    private int[] suffixArray;
+    private int[] suffixArray = null;
     /**
      * Wavelet tree for storing the burrows wheeler transform.
      */
-    private WaveletTree occurrenceTable;
+    private WaveletTree occurrenceTable = null;
     /**
      * Less table for doing an update step according to the LF step.
      */
-    private int[] lessTable;
+    private int[] lessTable = null;
     /**
      * Length of the indexed string (all concatenated protein sequences).
      */
-    private int indexStringLength;
+    private int indexStringLength = 0;
     /**
      * Every 2^samplingShift suffix array entry will be sampled.
      */
@@ -56,11 +56,11 @@ public class FMIndex implements PeptideMapper {
     /**
      * Storing the starting positions of the protein sequences.
      */
-    ArrayList<Integer> boundaries;
+    ArrayList<Integer> boundaries = null;
     /**
      * List of all accession IDs in the FASTA file.
      */
-    ArrayList<String> accessions;
+    ArrayList<String> accessions = null;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -93,6 +93,8 @@ public class FMIndex implements PeptideMapper {
 
     /**
      * Constructor.
+     * @param waitingHandler
+     * @param displayProgress 
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress) {
         SequenceFactory sf = SequenceFactory.getInstance(100000);
@@ -280,17 +282,17 @@ public class FMIndex implements PeptideMapper {
     /**
      * Method to get the text position using the sampled suffix array.
      *
-     * @param i the position
+     * @param index the position
      * @return the text position
      */
-    private int getTextPosition(int i) {
-        int t = 0;
-        while (((i & samplingMask) != 0) && (i != 0)) {
-            int aa = occurrenceTable.getCharacter(i);
-            i = lessTable[aa] + occurrenceTable.getRank(i - 1, aa);
-            ++t;
+    private int getTextPosition(int index) {
+        int numIterations = 0;
+        while (((index & samplingMask) != 0) && (index != 0)) {
+            int aa = occurrenceTable.getCharacter(index);
+            index = lessTable[aa] + occurrenceTable.getRank(index - 1, aa);
+            ++numIterations;
         }
-        int pos = suffixArray[i >> samplingShift] + t;
+        int pos = suffixArray[index >> samplingShift] + numIterations;
         return (pos < indexStringLength) ? pos : pos - indexStringLength;
     }
 
@@ -340,21 +342,21 @@ public class FMIndex implements PeptideMapper {
 
                         boolean first = true;
                         MatrixContent content = cell.get(key);
-                        int L_old = content.left;
-                        int R_old = content.right;
+                        int leftIndexOld = content.left;
+                        int rightIndexOld = content.right;
 
                         for (int l = 0; l < combinations.get(j).length(); ++l) {
 
-                            int aa = (int) combinations.get(j).charAt(l);
-                            int L = lessTable[aa] + ((0 < L_old) ? occurrenceTable.getRank(L_old - 1, aa) : 0);
-                            int R = lessTable[aa] + occurrenceTable.getRank(R_old, aa) - 1;
+                            int intAminoAcid = (int) combinations.get(j).charAt(l);
+                            int leftIndex = lessTable[intAminoAcid] + ((0 < leftIndexOld) ? occurrenceTable.getRank(leftIndexOld - 1, intAminoAcid) : 0);
+                            int rightIndex = lessTable[intAminoAcid] + occurrenceTable.getRank(rightIndexOld, intAminoAcid) - 1;
 
-                            if (L <= R) {
-                                Long newKey = new Long(L * indexStringLength + R);
+                            if (leftIndex <= rightIndex) {
+                                Long newKey = new Long(leftIndex * indexStringLength + rightIndex);
                                 if (first) {
-                                    row.get(j + 1).put(newKey, new MatrixContent(L, R, (char) aa, 0, key));
+                                    row.get(j + 1).put(newKey, new MatrixContent(leftIndex, rightIndex, (char) intAminoAcid, 0, key));
                                 } else if (i < k) {
-                                    matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(L, R, (char) aa, 1, key));
+                                    matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(leftIndex, rightIndex, (char)intAminoAcid, 1, key));
                                     tmpLayerStartingPos = Math.min(tmpLayerStartingPos, j + 1);
                                 }
                             }
@@ -390,12 +392,12 @@ public class FMIndex implements PeptideMapper {
 
                     MatrixContent contentLR = matrix.get(i).get(p).get(key);
 
-                    int L = contentLR.left;
-                    int R = contentLR.right;
+                    int leftIndex = contentLR.left;
+                    int rightIndex = contentLR.right;
 
                     HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
 
-                    for (int j = L; j <= R; ++j) {
+                    for (int j = leftIndex; j <= rightIndex; ++j) {
                         int pos = getTextPosition(j);
                         int index = binarySearch(boundaries, pos);
                         String accession = accessions.get(index);

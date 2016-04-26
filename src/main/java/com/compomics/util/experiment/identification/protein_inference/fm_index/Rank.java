@@ -14,11 +14,11 @@ public class Rank {
     /**
      * The bit field.
      */
-    private long[] bitfield;
+    private final long[] bitfield;
     /**
      * The sums.
      */
-    private int[] sums;
+    private final int[] sums;
     /**
      * Binary: 0101.
      */
@@ -103,7 +103,7 @@ public class Rank {
     }
 
     /**
-     * Pop count.
+     * Counts the number of 1bits in a 64bit bitfield.
      *
      * @param x the value
      * @return the result

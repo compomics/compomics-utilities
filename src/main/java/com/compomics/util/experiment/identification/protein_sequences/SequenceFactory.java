@@ -28,7 +28,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public class SequenceFactory {
 
@@ -1371,7 +1371,7 @@ public class SequenceFactory {
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
             switch (peptideMapperType) {
                 case fm_index:
-                    defaultPeptideMapper = new FMIndex();
+                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress);
                     break;
                 case tree:
 

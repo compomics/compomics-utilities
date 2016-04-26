@@ -23,6 +23,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.matchers.Tag
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class FMIndexTest extends TestCase {
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
-        FMIndex fmIndex = new FMIndex();
+        FMIndex fmIndex = new FMIndex(null, false);
         
         
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesFirst = fmIndex.getProteinMapping("FNPDGTPVYSIGLKTSSTXS", SequenceMatchingPreferences.getDefaultSequenceMatching());

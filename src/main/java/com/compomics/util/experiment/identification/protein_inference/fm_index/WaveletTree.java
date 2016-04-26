@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.identification.protein_inference.fm_index.Rank;
+import com.compomics.util.waiting.WaitingHandler;
 
 /**
  *
@@ -18,7 +19,7 @@ public class WaveletTree {
     private final int shift = 6;
     private final int mask = 63;
         
-    WaveletTree(byte[] text, long[] _alphabet){
+    WaveletTree(byte[] text, long[] _alphabet, WaitingHandler waitingHandler){
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
         alphabet = new long[2];
@@ -75,8 +76,9 @@ public class WaveletTree {
                     ++j;
                 }
             }
-            left_child = new WaveletTree(text_left, alphabet_left);
+            left_child = new WaveletTree(text_left, alphabet_left, waitingHandler);
         }
+        if (waitingHandler != null && waitingHandler.isRunCanceled()) return;
 
         if (len_alphabet_right > 1){
             int len_text_right = 0;
@@ -97,7 +99,7 @@ public class WaveletTree {
                     ++j;
                 }
             }
-            right_child = new WaveletTree(text_right, alphabet_right);
+            right_child = new WaveletTree(text_right, alphabet_right, waitingHandler);
         }
     }
     

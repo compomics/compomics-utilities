@@ -10,6 +10,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,23 +95,27 @@ public class FMIndex implements PeptideMapper {
     /**
      * Constructor
      */
-    public FMIndex(){
-        System.out.println("Efficient FM-Index creation started");
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress){
         SequenceFactory sf = SequenceFactory.getInstance(100000);
+        
+        if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(6);
+            waitingHandler.setSecondaryProgressCounter(0);
+        }
+
         
         StringBuilder TT = new StringBuilder();
         boundaries = new ArrayList<Integer>();
         accessions = new ArrayList<String>();
         boundaries.add(0);
         
-        Duration d = new Duration();
-        d.start();
-        
         n = 0;
         int numProteins = 0;
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
             while (pi.hasNext()){
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) return;
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
                 n += proteinLen;
@@ -125,6 +130,9 @@ public class FMIndex implements PeptideMapper {
         
         n += Math.max(0, numProteins - 1); // delimiters between protein sequences
         n += 1; // sentinal
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
         
         byte[] T = new byte[n];
         T[n - 1] = '$'; // adding the sentinal
@@ -132,6 +140,7 @@ public class FMIndex implements PeptideMapper {
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
             while (pi.hasNext()){
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) return;
 
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
@@ -146,21 +155,39 @@ public class FMIndex implements PeptideMapper {
         catch (Exception e){
             e.printStackTrace();
         }
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
         
         // create the suffix array using at most 128 characters
         SA = SuffixArraySorter.buildSuffixArray(T, 128);
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
         
         
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[n];
-        for (int i = 0; i < n; ++i) bwt[i] = (SA[i] != 0) ? T[SA[i] - 1] : T[n - 1];
+        for (int i = 0; i < n; ++i){
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) return;
+            bwt[i] = (SA[i] != 0) ? T[SA[i] - 1] : T[n - 1];
+        }
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
         
         
         // Sampling Suffix array
         int[] sampledSA = new int[((n + 1) >> samplingShift) + 1];
         int sampledIndex = 0;
-        for (int i = 0; i < n; i += sampling) sampledSA[sampledIndex++] = SA[i];
+        for (int i = 0; i < n; i += sampling){
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) return;
+            sampledSA[sampledIndex++] = SA[i];
+        }
         SA = sampledSA;
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
         
         
         
@@ -175,11 +202,14 @@ public class FMIndex implements PeptideMapper {
             int shift = sortedAas[i] - (sortedAas[i] & 64);
             alphabet[(int)(sortedAas[i] >> 6)] |= 1L << shift;
         }
-        occ = new WaveletTree(bwt, alphabet);
+        occ = new WaveletTree(bwt, alphabet, waitingHandler);
         less = occ.createLessTable();
-        d.end();
-        System.out.println("finished efficient FM-Index on " + numProteins + " in " + d.toString());
+        if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
+            waitingHandler.increaseSecondaryProgressCounter();
+        }
     }
+    
+    
     
     /**
      * Returs a list of all possible amino acids per position in the peptide according to the sequence matching preferences.

@@ -1371,7 +1371,7 @@ public class SequenceFactory {
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
             switch (peptideMapperType) {
                 case fmi:
-                    defaultPeptideMapper = new FMIndex();
+                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress);
                     break;
                 case tree:
 

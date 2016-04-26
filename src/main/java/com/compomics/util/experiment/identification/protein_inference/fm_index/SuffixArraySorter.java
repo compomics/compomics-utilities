@@ -1,10 +1,9 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import java.util.ArrayList;
-
 /**
- *
- * @author dominik.kopczynski
+ * Suffix array sorter.
+ * 
+ * @author Dominik Kopczynski
  */
 public class SuffixArraySorter {
 
@@ -129,9 +128,9 @@ public class SuffixArraySorter {
     /**
      * Building the suffix array.
      *
-     * @param T
-     * @param alphabetSize
-     * @return
+     * @param T the byte array
+     * @param alphabetSize alphabet size
+     * @return the suffix array
      */
     public static int[] buildSuffixArray(byte[] T, int alphabetSize) {
 

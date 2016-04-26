@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
-//import com.compomics.util.waiting.Duration;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
@@ -93,8 +92,9 @@ public class FMIndex implements PeptideMapper {
 
     /**
      * Constructor.
-     * @param waitingHandler
-     * @param displayProgress 
+     *
+     * @param waitingHandler the waiting handler
+     * @param displayProgress if true, the progress is displayed
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress) {
         SequenceFactory sf = SequenceFactory.getInstance(100000);
@@ -111,6 +111,7 @@ public class FMIndex implements PeptideMapper {
         boundaries.add(0);
         indexStringLength = 0;
         int numProteins = 0;
+
         try {
             ProteinIterator pi = sf.getProteinIterator(false);
             while (pi.hasNext()) {
@@ -356,7 +357,7 @@ public class FMIndex implements PeptideMapper {
                                 if (first) {
                                     row.get(j + 1).put(newKey, new MatrixContent(leftIndex, rightIndex, (char) intAminoAcid, 0, key));
                                 } else if (i < k) {
-                                    matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(leftIndex, rightIndex, (char)intAminoAcid, 1, key));
+                                    matrix.get(i + 1).get(j + 1).put(newKey, new MatrixContent(leftIndex, rightIndex, (char) intAminoAcid, 1, key));
                                     tmpLayerStartingPos = Math.min(tmpLayerStartingPos, j + 1);
                                 }
                             }

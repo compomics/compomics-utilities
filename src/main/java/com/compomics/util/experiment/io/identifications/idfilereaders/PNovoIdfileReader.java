@@ -138,10 +138,12 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             SequenceMatchingPreferences sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        int tagMapKeyLength = 0;
-        if (sequenceMatchingPreferences != null && sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
+        int tagMapKeyLength = 3;
+        if (sequenceMatchingPreferences != null) {
+            if (sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
+                SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
+            }
             tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
 
@@ -178,7 +180,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             }
 
             if (solutionsFound) {
-                if (sequenceMatchingPreferences != null && sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
+                if (sequenceMatchingPreferences != null) {
                     HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
                     for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
                         for (String key : advocateMap.keySet()) {

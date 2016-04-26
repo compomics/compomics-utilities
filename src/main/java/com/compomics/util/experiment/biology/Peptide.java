@@ -312,7 +312,7 @@ public class Peptide extends ExperimentObject {
 
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
             switch (peptideMapperType) {
-                case fmi:
+                case fm_index:
                     for (String peptideSequence : proteinMapping.keySet()) {
                         HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
                         accessionsFound.addAll(subMapping.keySet());

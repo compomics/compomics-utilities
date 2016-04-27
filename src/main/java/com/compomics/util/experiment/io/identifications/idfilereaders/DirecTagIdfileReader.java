@@ -477,10 +477,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
         int tagMapKeyLength = 3;
         if (sequenceMatchingPreferences != null) {
             if (sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.tree) {
-            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
-            tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
+                SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+                tagMapKeyLength = ((ProteinTree) sequenceFactory.getDefaultPeptideMapper()).getInitialTagSize();
             }
-        tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
         }
 
         String spectrumFileName = Util.getFileName(getInputFile());

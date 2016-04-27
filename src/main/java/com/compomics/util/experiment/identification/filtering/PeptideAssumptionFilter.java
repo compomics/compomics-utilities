@@ -130,7 +130,7 @@ public class PeptideAssumptionFilter implements Serializable {
      */
     public void setFilterFromSearchParameters(SearchParameters searchParameters) {
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
-        this.maxMassDeviation = searchParameters.getFragmentIonAccuracy();
+        this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
         this.minIsotopes = searchParameters.getMinIsotopicCorrection();
         this.maxIsotopes = searchParameters.getMaxIsotopicCorrection();
         this.unknownPtm = true;

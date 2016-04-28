@@ -115,7 +115,7 @@ public class SequenceMatchingPreferences implements Serializable {
     /**
      * The peptide mapper to use, FMI by default.
      */
-    private PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
+    private PeptideMapperType peptideMapperType = PeptideMapperType.tree;
 
     /**
      * Constructor for empty preferences.
@@ -252,7 +252,7 @@ public class SequenceMatchingPreferences implements Serializable {
      */
     public PeptideMapperType getPeptideMapperType() {
         if (peptideMapperType == null) { // Backward compatibility.
-            peptideMapperType = PeptideMapperType.fm_index;
+            peptideMapperType = PeptideMapperType.tree;
         }
         return peptideMapperType;
     }

@@ -175,7 +175,8 @@ public class WaveletTree {
      * @return the rank
      */
     public int getRank(int index, int character) {
-        if (0 <= index && index < lenText) {
+        if (index < 0) return 0;
+        if (index < lenText) {
             int cell = character >> shift;
             int pos = character & mask;
             int masked = mask - pos;

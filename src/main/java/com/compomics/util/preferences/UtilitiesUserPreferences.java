@@ -194,6 +194,8 @@ public class UtilitiesUserPreferences implements Serializable {
     private Double refMass = 2000.0;
     /**
      * If true the protein tree will be created parallel to the searches.
+     * 
+     * @deprecated no longer used
      */
     private Boolean generateProteinTree = false;
     /**
@@ -1121,6 +1123,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * searches.
      *
      * @return true if the protein tree will be created parallel to the searches
+     * @deprecated no longer used
      */
     public Boolean generateProteinTree() {
         if (generateProteinTree == null) {
@@ -1133,6 +1136,7 @@ public class UtilitiesUserPreferences implements Serializable {
      * Set if the the protein tree will be created parallel to the searches.
      *
      * @param generateProteinTree create protein tree?
+     * @deprecated no longer used
      */
     public void setGenerateProteinTree(Boolean generateProteinTree) {
         this.generateProteinTree = generateProteinTree;

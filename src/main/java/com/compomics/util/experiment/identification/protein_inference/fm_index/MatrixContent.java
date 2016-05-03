@@ -16,27 +16,28 @@ public class MatrixContent {
      * Right Index.
      */
     public int right;
+
+    /**
+     * Left opposite Index.
+     */
+    public int leftOpposite;
+    
+    /**
+     * Right opposite Index.
+     */
+    public int rightOpposite;
     
     /**
      * Character which was chosen.
      */
     public char character;
     
-    /**
-     * Indicating if the traceback should go a level up.
-     */
-    public int tracebackRow;
-    
-    /**
-     * Indicating if the traceback should go an amino acid back.
-     */
-    public int tracebackCol;
     
     /**
      * Index of the originating entry of a particular cell with the pattern
      * searching matrix.
      */
-    public long lastIndex;
+    public MatrixContent previousContent;
     
     /**
      * Current mass.
@@ -54,21 +55,34 @@ public class MatrixContent {
      * @param left
      * @param right
      * @param character
-     * @param tracebackRow
-     * @param tracebackCol
-     * @param lastIndex
+     * @param previousContent
      * @param mass
      * @param peptideSequence 
      */
-    public MatrixContent(int left, int right, char character, int tracebackRow, int tracebackCol, long lastIndex, double mass, String peptideSequence) {
+    public MatrixContent(int left, int right, int leftOpposite, int rightOpposite, char character, MatrixContent previousContent, double mass, String peptideSequence) {
         this.left = left;
         this.right = right;
+        this.leftOpposite = leftOpposite;
+        this.rightOpposite = rightOpposite;
         this.character = character;
-        this.tracebackRow = tracebackRow;
-        this.tracebackCol = tracebackCol;
-        this.lastIndex = lastIndex;
+        this.previousContent = previousContent;
         this.mass = mass;
         this.peptideSequence = peptideSequence;
+    }
+    
+    /**
+     * Copy constructor
+     * @param foreign 
+     */
+    public MatrixContent(MatrixContent foreign){
+        this.left = foreign.left;
+        this.right = foreign.right;
+        this.leftOpposite = foreign.leftOpposite;
+        this.rightOpposite = foreign.rightOpposite;
+        this.character = foreign.character;
+        this.previousContent = foreign.previousContent;
+        this.mass = foreign.mass;
+        this.peptideSequence = foreign.peptideSequence;
     }
     
     /**
@@ -77,16 +91,16 @@ public class MatrixContent {
      * @param left the left index
      * @param right the right index
      * @param character the character
-     * @param lastIndex the last index
+     * @param previousContent the last index
      */
-    public MatrixContent(int left, int right, char character, long lastIndex) {
+    public MatrixContent(int left, int right, char character, MatrixContent previousContent) {
         this.left = left;
         this.right = right;
+        this.leftOpposite = -1;
+        this.rightOpposite = -1;
         this.character = character;
-        this.tracebackRow = 0;
-        this.tracebackCol = 0;
-        this.lastIndex = lastIndex;
-        this.mass = 0;
+        this.previousContent = previousContent;
+        this.mass = -1;
         this.peptideSequence = null;
     }
 }

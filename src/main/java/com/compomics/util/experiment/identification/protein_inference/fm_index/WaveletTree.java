@@ -66,7 +66,7 @@ public class WaveletTree {
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting Handler
      */
-    WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
+    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
         alphabet = new long[2];
@@ -230,5 +230,46 @@ public class WaveletTree {
             return character;
         }
         throw new ArrayIndexOutOfBoundsException();
+    }
+    
+    public int getSelect(int occurence, int character){
+        if (occurence <= 0) return -1;
+        if (occurence < lenText) {
+            int cell = character >> shift;
+            int pos = character & mask;
+            if (((alphabet[cell] >> pos) & 1) != 1) return 0;
+            int masked = mask - pos;
+            long active_ones = alphabet[cell] << masked;
+            int positionCharacter = rank.popcount(active_ones);
+            positionCharacter += cell * rank.popcount(alphabet[0]);
+            positionCharacter -= 1;
+            boolean left = (positionCharacter <= halfAlphabet);
+            if (left){
+                if (leftChild == null){
+                    return rank.getSelect(occurence, left);
+                }
+                else {
+                    int position = leftChild.getSelect(occurence, character) + 1;
+                    return rank.getSelect(position, left);
+                }
+            }
+            else {
+                if (rightChild == null){
+                    return rank.getSelect(occurence, left);
+                }
+                else {
+                    int position = rightChild.getSelect(occurence, character) + 1;
+                    return rank.getSelect(position, left);
+                }
+            }
+        }
+        else throw new ArrayIndexOutOfBoundsException();
+    }
+    
+    public int getAllocatedBytes(){
+        int bytes = 0;
+        if (leftChild != null) bytes += leftChild.getAllocatedBytes();
+        if (rightChild != null) bytes += rightChild.getAllocatedBytes();
+        return bytes + rank.getAllocatedBytes();
     }
 }

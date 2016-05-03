@@ -122,7 +122,7 @@ public class Rank {
      * @param counter the counter
      * @return the rank
      */
-    public int getRank(int index, boolean counter) {
+    public int getRank(int index, boolean zeros) {
         if (0 <= index && index < length) {
             int cell = index >> shift;
             int pos = index & mask;
@@ -131,7 +131,7 @@ public class Rank {
             int count_ones = sums[cell];
             index += 1;
             count_ones += popcount(active_ones);
-            return counter ? index - count_ones : count_ones;
+            return zeros ? index - count_ones : count_ones;
         }
         throw new ArrayIndexOutOfBoundsException();
     }
@@ -152,5 +152,25 @@ public class Rank {
             return false;
         }
         throw new ArrayIndexOutOfBoundsException();
+    }
+
+    public int getSelect(int index, boolean zeros) {
+        int middle = 0;
+        int left = 0;
+        int right = length - 1;
+        
+
+        while (right - left > 1) {
+            middle = (right + left) >> 1;
+            int rank = getRank(middle, zeros);
+            if (rank >= index) right = middle;
+            else left = middle;
+        }
+        if (getRank(left, zeros) == index) return left;
+        return right;
+    }
+    
+    public int getAllocatedBytes(){
+        return (bitfield.length << 3) + (sums.length << 2);
     }
 }

@@ -283,10 +283,12 @@ public class SearchParameters implements Serializable, MarshallableParameter {
     }
 
     /**
-     * Returns the absolute fragment ion tolerance in Dalton. If the tolerance is in ppm, the given reference mass is used.
-     * 
-     * @param refMass the reference mass to use for the conversion of tolerances in ppm.
-     * 
+     * Returns the absolute fragment ion tolerance in Dalton. If the tolerance
+     * is in ppm, the given reference mass is used.
+     *
+     * @param refMass the reference mass to use for the conversion of tolerances
+     * in ppm.
+     *
      * @return the absolute fragment ion tolerance in Dalton
      */
     public Double getFragmentIonAccuracyInDaltons(Double refMass) {

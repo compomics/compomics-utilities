@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import java.util.ArrayList;
+
 /**
  * Rank as used in the FM index.
  *
@@ -172,5 +174,12 @@ public class Rank {
     
     public int getAllocatedBytes(){
         return (bitfield.length << 3) + (sums.length << 2);
+    }
+    
+    public void rangeQuery(int leftIndex, int rightIndex, boolean zeros, char character, ArrayList<Character> setCharacter){
+//System.out.println("1");
+        int num = (rightIndex >= 0) ? getRank(rightIndex, zeros) : 0;
+        num -= (leftIndex >= 0) ? getRank(leftIndex, zeros) : 0;
+        if (num > 0) setCharacter.add(character);
     }
 }

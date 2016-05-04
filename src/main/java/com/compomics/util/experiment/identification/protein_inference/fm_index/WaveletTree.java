@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
+import java.util.ArrayList;
 
 /**
  * Wavelet tree.
@@ -223,7 +224,7 @@ public class WaveletTree {
                     character = leftChild.getCharacter(result);
                 }
             } else if (rightChild == null) {
-                character = charAlphabetField[charAlphabetField.length - 1];
+                character = charAlphabetField[lenAlphabet - 1];
             } else {
                 character = rightChild.getCharacter(result);
             }
@@ -272,4 +273,31 @@ public class WaveletTree {
         if (rightChild != null) bytes += rightChild.getAllocatedBytes();
         return bytes + rank.getAllocatedBytes();
     }
+    
+    public void rangeQuery(int leftIndex, int rightIndex, ArrayList<Character> setCharacter){
+        if (rightIndex == leftIndex) return;
+        
+        
+        int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
+        int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+        
+        if (leftChild != null){
+            //int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
+            //int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+            leftChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
+        }
+        else {
+            rank.rangeQuery(leftIndex, rightIndex, true, charAlphabetField[0], setCharacter);
+        }
+        
+        if (rightChild != null){
+            //int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, false) : 0;
+            //int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, false) : 0;
+            rightChild.rangeQuery(leftIndex - newLeftIndex, rightIndex - newRightIndex, setCharacter);
+        }
+        else {
+            rank.rangeQuery(leftIndex, rightIndex, false, charAlphabetField[lenAlphabet - 1], setCharacter);
+        }
+    }
+    
 }

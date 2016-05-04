@@ -16,16 +16,6 @@ public class MatrixContent {
      * Right Index.
      */
     public int right;
-
-    /**
-     * Left opposite Index.
-     */
-    public int leftOpposite;
-    
-    /**
-     * Right opposite Index.
-     */
-    public int rightOpposite;
     
     /**
      * Character which was chosen.
@@ -59,11 +49,9 @@ public class MatrixContent {
      * @param mass
      * @param peptideSequence 
      */
-    public MatrixContent(int left, int right, int leftOpposite, int rightOpposite, char character, MatrixContent previousContent, double mass, String peptideSequence) {
+    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence) {
         this.left = left;
         this.right = right;
-        this.leftOpposite = leftOpposite;
-        this.rightOpposite = rightOpposite;
         this.character = character;
         this.previousContent = previousContent;
         this.mass = mass;
@@ -77,8 +65,6 @@ public class MatrixContent {
     public MatrixContent(MatrixContent foreign){
         this.left = foreign.left;
         this.right = foreign.right;
-        this.leftOpposite = foreign.leftOpposite;
-        this.rightOpposite = foreign.rightOpposite;
         this.character = foreign.character;
         this.previousContent = foreign.previousContent;
         this.mass = foreign.mass;
@@ -96,8 +82,6 @@ public class MatrixContent {
     public MatrixContent(int left, int right, char character, MatrixContent previousContent) {
         this.left = left;
         this.right = right;
-        this.leftOpposite = -1;
-        this.rightOpposite = -1;
         this.character = character;
         this.previousContent = previousContent;
         this.mass = -1;

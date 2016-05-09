@@ -16,7 +16,7 @@ public class Rank {
     /**
      * The bit field.
      */
-    private final long[] bitfield;
+    public final long[] bitfield;
     /**
      * The sums.
      */
@@ -103,6 +103,30 @@ public class Rank {
             }
         }
     }
+    
+    public Rank(byte[] text, long[] ones, boolean huffman) {
+        length = text.length;
+
+        int field_len = (length >> 6) + 1;
+        bitfield = new long[field_len];
+        sums = new int[field_len];
+        sums[0] = 0;
+
+        for (int i = 0; i < length; ++i) {
+            int cell = i >> shift;
+            int pos = i & mask;
+            if (pos == 0) {
+                bitfield[cell] = 0;
+            }
+            long bit = (ones[text[i] >> shift] >> (text[i] & mask)) & 1L;
+//if (bit > 0) System.out.println("found: " + (char)text[i]);
+            bitfield[cell] |= (bit << pos);
+
+            if (pos == 0 && i != 0) {
+                sums[cell] = sums[cell - 1] + popcount(bitfield[cell - 1]);
+            }
+        }
+    }
 
     /**
      * Counts the number of 1bits in a 64bit bitfield.
@@ -176,10 +200,12 @@ public class Rank {
         return (bitfield.length << 3) + (sums.length << 2);
     }
     
-    public void rangeQuery(int leftIndex, int rightIndex, boolean zeros, char character, ArrayList<Character> setCharacter){
-//System.out.println("1");
-        int num = (rightIndex >= 0) ? getRank(rightIndex, zeros) : 0;
-        num -= (leftIndex >= 0) ? getRank(leftIndex, zeros) : 0;
-        if (num > 0) setCharacter.add(character);
+    public void rangeQuery(int leftIndex, int rightIndex, boolean zeros, byte character, ArrayList<Integer[]> setCharacter){
+        //if (leftIndex <= rightIndex){
+            int newLeftIndex = getRank(leftIndex, zeros);
+            int newRightIndex = getRank(rightIndex, zeros);
+            
+            if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)character, newLeftIndex, newRightIndex});
+        //}
     }
 }

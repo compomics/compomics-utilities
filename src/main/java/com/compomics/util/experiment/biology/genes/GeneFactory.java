@@ -110,6 +110,8 @@ public class GeneFactory {
         File ensemblVersionsFile = getEnsemblVersionsFile();
         if (ensemblVersionsFile.exists()) {
             loadEnsemblSpeciesVersions(ensemblVersionsFile);
+        } else {
+            ensemblVersionsMap = new HashMap<String, String>();
         }
 
         createDefaultGeneMappingFiles(
@@ -211,6 +213,9 @@ public class GeneFactory {
 
         // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
+        if (ensemblVersionsMap == null) {
+            ensemblVersionsMap = new HashMap<String, String>();
+        }
         HashMap<String, String> ensemblVersionsUsed = new HashMap<String, String>(ensemblVersionsMap);
         HashMap<String, String> geneNameToEnsemblIdMap = new HashMap<String, String>();
         HashMap<String, String> geneNameToChromosomeMap = new HashMap<String, String>();
@@ -306,7 +311,7 @@ public class GeneFactory {
      */
     public boolean downloadGeneSequences(File destinationFile, String ensemblType, String ensemblSchemaName, String ensemblDbName, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
 
-        // Construct data
+        // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"FASTA\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
@@ -352,7 +357,7 @@ public class GeneFactory {
             accessionMapping = "\"uniprot_sptrembl\"";
         }
 
-        // Construct data
+        // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
                 + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
@@ -437,7 +442,7 @@ public class GeneFactory {
 
         if (waitingHandler == null || !waitingHandler.isRunCanceled()) {
 
-            // Send data
+            // send data
             URL url = getEnsemblUrl(ensemblType);
 
             URLConnection conn = url.openConnection();
@@ -463,7 +468,7 @@ public class GeneFactory {
 
                     if (fileCreated || destinationFile.exists()) {
 
-                        // Get the response
+                        // get the response
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                         try {
                             FileWriter w = new FileWriter(destinationFile);
@@ -565,7 +570,7 @@ public class GeneFactory {
         // @TODO: use the queryEnsembl method here as well?
         if (!waitingHandler.isRunCanceled()) {
 
-            // Send data
+            // send data
             URL url = getEnsemblUrl(ensemblType);
 
             URLConnection conn = url.openConnection();
@@ -585,7 +590,7 @@ public class GeneFactory {
 
                     File tempFile = getGeneMappingFile(ensemblDatasetName);
 
-                    // Get the response
+                    // get the response
                     BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     try {
                         FileWriter w = new FileWriter(tempFile);
@@ -773,12 +778,10 @@ public class GeneFactory {
         try {
             BufferedWriter bw = new BufferedWriter(w);
             try {
-
                 for (String key : ensemblVersionsMap.keySet()) {
                     bw.write(key + SEPARATOR + ensemblVersionsMap.get(key));
                     bw.newLine();
                 }
-
             } finally {
                 bw.close();
             }
@@ -836,7 +839,6 @@ public class GeneFactory {
         try {
             BufferedReader br = new BufferedReader(r);
             try {
-
                 ensemblVersionsMap = new HashMap<String, String>();
                 String line = br.readLine();
 
@@ -845,7 +847,6 @@ public class GeneFactory {
                     ensemblVersionsMap.put(elements[0], elements[1]);
                     line = br.readLine();
                 }
-
             } finally {
                 br.close();
             }
@@ -1006,7 +1007,6 @@ public class GeneFactory {
             return null;
         }
         return ensemblVersionsMap.get(ensemblDatasetName);
-
     }
 
     /**

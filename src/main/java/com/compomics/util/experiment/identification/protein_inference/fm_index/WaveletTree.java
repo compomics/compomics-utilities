@@ -451,8 +451,8 @@ public class WaveletTree {
     public void rangeQuery(int leftIndex, int rightIndex, ArrayList<Integer[]> setCharacter){
         if (rightIndex == leftIndex) return;
         
-        int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
-        int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+        int newLeftIndex = rank.getRank(leftIndex, true);
+        int newRightIndex = rank.getRank(rightIndex, true);
         
         if (leftChild != null){
             leftChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);

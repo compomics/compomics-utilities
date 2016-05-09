@@ -149,7 +149,8 @@ public class Rank {
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
-        if (0 <= index && index < length) {
+        if (index < 0) return 0;
+        if (index < length) {
             int cell = index >> shift;
             int pos = index & mask;
             int masked = mask - pos;

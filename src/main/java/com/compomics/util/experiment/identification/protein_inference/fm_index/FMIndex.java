@@ -11,6 +11,7 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.Duration;
@@ -124,7 +125,7 @@ public class FMIndex implements PeptideMapper {
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress) {
         SequenceFactory sf = SequenceFactory.getInstance(100000);
-        boolean deNovo = false; // TODO: change it for de novo
+        boolean deNovo = true; // TODO: change it for de novo
         int maxProgressBar = 6 + ((deNovo) ? 4 : 0);
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
@@ -919,7 +920,7 @@ public class FMIndex implements PeptideMapper {
                     matches.get(accession).add(pos - boundaries.get(index));
                 }
 
-                allMatches.put(new Peptide(peptide, null), matches);
+                allMatches.put(new Peptide(peptide, new ArrayList<ModificationMatch>()), matches);
             }
         }
         /*

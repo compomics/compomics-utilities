@@ -45,6 +45,11 @@ public class MatrixContent {
     public int length;
     
     /**
+     * Current number of contained Xs.
+     */
+    public int numX;
+    
+    /**
      * Constructor.
      * 
      * @param left
@@ -54,7 +59,7 @@ public class MatrixContent {
      * @param mass
      * @param peptideSequence 
      */
-    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length) {
+    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -62,6 +67,7 @@ public class MatrixContent {
         this.mass = mass;
         this.peptideSequence = peptideSequence;
         this.length = length;
+        this.numX = numX;
     }
     
     /**
@@ -76,17 +82,19 @@ public class MatrixContent {
         this.mass = foreign.mass;
         this.peptideSequence = foreign.peptideSequence;
         this.length = foreign.length;
+        this.numX = foreign.numX;
     }
     
     /**
-     * Constructor.
-     *
-     * @param left the left index
-     * @param right the right index
-     * @param character the character
-     * @param previousContent the last index
+     * Constructor 
+     * 
+     * @param left
+     * @param right
+     * @param character
+     * @param previousContent
+     * @param numX 
      */
-    public MatrixContent(int left, int right, char character, MatrixContent previousContent) {
+    public MatrixContent(int left, int right, char character, MatrixContent previousContent, int numX) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -94,5 +102,6 @@ public class MatrixContent {
         this.mass = -1;
         this.peptideSequence = null;
         this.length = 0;
+        this.numX = numX;
     }
 }

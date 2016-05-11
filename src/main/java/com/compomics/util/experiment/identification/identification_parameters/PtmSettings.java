@@ -193,7 +193,7 @@ public class PtmSettings implements Serializable {
      * in the back-up. In case a modification with the same name was already
      * used it will be silently overwritten.
      *
-     * @param modification The modification to add
+     * @param modification the modification to add
      */
     public void addRefinementVariableModification(PTM modification) {
         String modName = modification.getName();
@@ -209,7 +209,7 @@ public class PtmSettings implements Serializable {
      * the back-up. In case a modification with the same name was already used
      * it will be silently overwritten.
      *
-     * @param modification The modification to add
+     * @param modification the modification to add
      */
     public void addRefinementFixedModification(PTM modification) {
         String modName = modification.getName();
@@ -225,7 +225,7 @@ public class PtmSettings implements Serializable {
      * case a modification with the same name was already used it will be
      * silently overwritten.
      *
-     * @param modification The modification to add
+     * @param modification the modification to add
      */
     public void addFixedModification(PTM modification) {
         String modName = modification.getName();

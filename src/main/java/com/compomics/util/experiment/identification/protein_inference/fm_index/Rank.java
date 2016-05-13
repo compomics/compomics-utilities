@@ -149,6 +149,7 @@ public class Rank {
      * Returns the rank.
      *
      * @param index the value
+     * @param zeros the zeros
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
@@ -204,14 +205,16 @@ public class Rank {
     
     /**
      * Returns the number of bytes for the allocated arrays.
-     * @return 
+     *
+     * @return  the number of bytes for the allocated arrays
      */
     public int getAllocatedBytes(){
         return (bitfield.length << 3) + (sums.length << 2);
     }
     
     /**
-     * Retruns a list of character and new left / right index for a given range recursively.
+     * Returns a list of character and new left / right index for a given range recursively.
+     *
      * @param leftIndex left index boundary
      * @param rightIndex right index boundary
      * @param zeros count zeros

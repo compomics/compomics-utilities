@@ -857,19 +857,6 @@ public class FMIndex implements PeptideMapper {
                 
 
         }
-
-        
-        ArrayList<TagComponent> tc = tag.getContent();
-        if (tc.size() == 3){
-            for (Peptide pep : allMatches.keySet()){
-                for (String acc : allMatches.get(pep).keySet()){
-                    for (Integer pos : allMatches.get(pep).get(acc)){
-                        System.out.println(tc.get(0).getMass() + "\t" + tc.get(1).asSequence() + "\t" + tc.get(2).getMass() + "\t" + pep.getSequence() + "\t" + acc + "\t" + pos);
-                    }
-                }
-            }
-        }
-        
                 
         return allMatches;
     }

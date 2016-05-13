@@ -206,7 +206,7 @@ public class Rank {
             int newLeftIndex = getRank(leftIndex, zeros);
             int newRightIndex = getRank(rightIndex, zeros);
             
-            if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)character, newLeftIndex, newRightIndex});
+            if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)character, newLeftIndex, newRightIndex, (int)character});
         //}
     }
 }

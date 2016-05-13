@@ -1,5 +1,8 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import java.util.ArrayList;
+
 /**
  * Element for the matrix necessary in pattern search of the FMIndex.
  *
@@ -47,19 +50,33 @@ public class MatrixContent {
     /**
      * Current number of contained Xs.
      */
-    public int numX;
+    public int numX;    
     
     /**
-     * Constructor.
+     * Index to the modifications list.
+     */
+    public int modificationNum;
+    
+    /**
+     * List of all modifictations
+     */
+    public ArrayList<ModificationMatch> modifications;
+    
+    /**
+     * Constructor
      * 
      * @param left
      * @param right
      * @param character
      * @param previousContent
      * @param mass
-     * @param peptideSequence 
+     * @param peptideSequence
+     * @param length
+     * @param numX
+     * @param modificationNum
+     * @param modifications 
      */
-    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX) {
+    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -68,6 +85,8 @@ public class MatrixContent {
         this.peptideSequence = peptideSequence;
         this.length = length;
         this.numX = numX;
+        this.modificationNum = modificationNum;
+        this.modifications = modifications;
     }
     
     /**
@@ -83,6 +102,8 @@ public class MatrixContent {
         this.peptideSequence = foreign.peptideSequence;
         this.length = foreign.length;
         this.numX = foreign.numX;
+        this.modificationNum = foreign.modificationNum;
+        this.modifications = foreign.modifications;
     }
     
     /**
@@ -103,5 +124,7 @@ public class MatrixContent {
         this.peptideSequence = null;
         this.length = 0;
         this.numX = numX;
+        this.modificationNum = -1;
+        this.modifications = null;
     }
 }

@@ -30,9 +30,6 @@ public abstract class Ion extends ExperimentObject {
         /**
          * Identifier for a peptide fragment ion.
          */
-        /**
-         * Identifier for a peptide fragment ion.
-         */
         PEPTIDE_FRAGMENT_ION(0),
         /**
          * A tag fragment ion
@@ -103,10 +100,10 @@ public abstract class Ion extends ExperimentObject {
     public abstract String getName();
 
     /**
-     * Returns the pride cv term adapted to the fragment ion. null if none
+     * Returns the CV term adapted to the fragment ion. null if none
      * corresponding.
      *
-     * @return the pride cv term adapted to the fragment ion. null if none
+     * @return the CV term adapted to the fragment ion. null if none
      * corresponding
      */
     public abstract CvTerm getPrideCvTerm();

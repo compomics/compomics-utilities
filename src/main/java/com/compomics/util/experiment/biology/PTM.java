@@ -155,7 +155,8 @@ public class PTM extends ExperimentObject {
     }
 
     /**
-     * Simple constructor for a PTM. This constructor does not set the atomic composition or the cv term.
+     * Simple constructor for a PTM. This constructor does not set the atomic
+     * composition or the cv term.
      *
      * @param type type of modification according to static attributes
      * @param name name of the modification
@@ -221,17 +222,26 @@ public class PTM extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
-        if (mass != null) {
-            return mass;
-        }
-        mass = 0.0;
-        if (atomChainAdded != null) {
-            mass += atomChainAdded.getMass();
-        }
-        if (atomChainRemoved != null) {
-            mass += atomChainRemoved.getMass();
+        if (mass == null) {
+            estimateMass();
         }
         return mass;
+    }
+    
+    /**
+     * Estimates the mass of the PTM and stores it in the mass attribute.
+     */
+    private synchronized void estimateMass() {
+        if (mass == null) {
+            Double tempMass = 0.0;
+            if (atomChainAdded != null) {
+                tempMass += atomChainAdded.getMass();
+            }
+            if (atomChainRemoved != null) {
+                tempMass += atomChainRemoved.getMass();
+            }
+            mass = tempMass;
+        }
     }
 
     /**

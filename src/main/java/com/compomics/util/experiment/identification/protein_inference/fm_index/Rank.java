@@ -105,9 +105,9 @@ public class Rank {
     
     /**
      * Constructor when wavelet tree uses huffman coding
-     * @param text
-     * @param ones
-     * @param huffman 
+     * @param text the text
+     * @param ones which letters are encoded by one
+     * @param huffman is the wavelet tree huffman coded
      */
     public Rank(byte[] text, long[] ones, boolean huffman) {
         length = text.length;
@@ -149,7 +149,6 @@ public class Rank {
      * Returns the rank.
      *
      * @param index the value
-     * @param counter the counter
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
@@ -213,11 +212,11 @@ public class Rank {
     
     /**
      * Retruns a list of character and new left / right index for a given range recursively.
-     * @param leftIndex
-     * @param rightIndex
-     * @param zeros
-     * @param character
-     * @param setCharacter 
+     * @param leftIndex left index boundary
+     * @param rightIndex right index boundary
+     * @param zeros count zeros
+     * @param character which character to count
+     * @param setCharacter set of counted characters
      */
     public void rangeQuery(int leftIndex, int rightIndex, boolean zeros, byte character, ArrayList<Integer[]> setCharacter){
         int newLeftIndex = getRank(leftIndex, zeros);

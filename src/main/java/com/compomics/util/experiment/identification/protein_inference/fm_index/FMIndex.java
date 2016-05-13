@@ -122,6 +122,7 @@ public class FMIndex implements PeptideMapper {
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
+     * @param identificationParameters contains all parameters for identification
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) {
         

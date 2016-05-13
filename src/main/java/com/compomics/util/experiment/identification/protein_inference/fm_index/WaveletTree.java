@@ -441,7 +441,7 @@ public class WaveletTree {
     
     /**
      * Returns the number of bytes for the allocated arrays.
-     * @return 
+     * @return number of allocated bytes
      */
     public int getAllocatedBytes(){
         int bytes = rank.getAllocatedBytes();
@@ -452,9 +452,9 @@ public class WaveletTree {
     
     /**
      * Retruns a list of character and new left / right index for a given range.
-     * @param leftIndex
-     * @param rightIndex
-     * @return 
+     * @param leftIndex left index boundary
+     * @param rightIndex right index boundary
+     * @return list of counted characters
      */
     public ArrayList<Integer[]> rangeQuery(int leftIndex, int rightIndex){
         ArrayList<Integer[]> setCharacter = new ArrayList<Integer[]>(26);
@@ -464,9 +464,9 @@ public class WaveletTree {
     
     /**
      * Retruns a list of character and new left / right index for a given range recursively.
-     * @param leftIndex
-     * @param rightIndex
-     * @param setCharacter 
+     * @param leftIndex left index boundary
+     * @param rightIndex right index boundary
+     * @param setCharacter list of counted characters
      */
     public void rangeQuery(int leftIndex, int rightIndex, ArrayList<Integer[]> setCharacter){
         if (rightIndex == leftIndex) return;

@@ -1297,6 +1297,7 @@ public class SequenceFactory {
      * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
      * indexing the database
+     * @param identificationParameters contains all parameters for identification
      *
      * @return the default peptide mapper
      *
@@ -1325,6 +1326,7 @@ public class SequenceFactory {
      * @param exceptionHandler handler for the exceptions encountered while
      * indexing the database
      * @param nThreads the number of threads to use during indexing
+     * @param identificationParameters contains all parameters for identification
      *
      * @return the default peptide mapper
      *
@@ -1354,6 +1356,7 @@ public class SequenceFactory {
      * @param displayProgress boolean indicating whether the progress of the
      * indexing should be displayed
      * @param nThreads the number of threads to use during indexing
+     * @param identificationParameters contains all parameters for identification
      *
      * @return the default peptide mapper
      *

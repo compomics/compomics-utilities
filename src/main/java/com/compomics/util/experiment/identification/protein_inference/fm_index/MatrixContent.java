@@ -65,16 +65,16 @@ public class MatrixContent {
     /**
      * Constructor
      * 
-     * @param left
-     * @param right
-     * @param character
-     * @param previousContent
-     * @param mass
-     * @param peptideSequence
-     * @param length
-     * @param numX
-     * @param modificationNum
-     * @param modifications 
+     * @param left left index boundary
+     * @param right right index boundary
+     * @param character current character stored
+     * @param previousContent previous matrix content
+     * @param mass current mass
+     * @param peptideSequence intermediate peptide sequence
+     * @param length current peptide length
+     * @param numX number of current X amino acids
+     * @param modificationNum index to modification list
+     * @param modifications intermediate list of modifications
      */
     public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
         this.left = left;
@@ -91,7 +91,7 @@ public class MatrixContent {
     
     /**
      * Copy constructor
-     * @param foreign 
+     * @param foreign foreign matrix content instance
      */
     public MatrixContent(MatrixContent foreign){
         this.left = foreign.left;
@@ -109,11 +109,11 @@ public class MatrixContent {
     /**
      * Constructor 
      * 
-     * @param left
-     * @param right
-     * @param character
-     * @param previousContent
-     * @param numX 
+     * @param left left index boundary
+     * @param right right index boundary
+     * @param character current character stored
+     * @param previousContent previous matrix content
+     * @param numX number of current X amino acids
      */
     public MatrixContent(int left, int right, char character, MatrixContent previousContent, int numX) {
         this.left = left;

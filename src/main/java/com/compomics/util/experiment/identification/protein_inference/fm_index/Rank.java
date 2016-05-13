@@ -74,7 +74,6 @@ public class Rank {
         alphabet[1] = aAlphabet[1];
         length = text.length;
         int half = ((popcount(alphabet[0]) + popcount(alphabet[1])) - 1) >> 1;
-        //long half = (len_alphabet - 1) >> 1;
         int cnt = 0;
 
         for (int i = 0; i < 128 && cnt <= half; ++i) {
@@ -104,6 +103,12 @@ public class Rank {
         }
     }
     
+    /**
+     * Constructor when wavelet tree uses huffman coding
+     * @param text
+     * @param ones
+     * @param huffman 
+     */
     public Rank(byte[] text, long[] ones, boolean huffman) {
         length = text.length;
 
@@ -119,7 +124,6 @@ public class Rank {
                 bitfield[cell] = 0;
             }
             long bit = (ones[text[i] >> shift] >> (text[i] & mask)) & 1L;
-//if (bit > 0) System.out.println("found: " + (char)text[i]);
             bitfield[cell] |= (bit << pos);
 
             if (pos == 0 && i != 0) {
@@ -135,10 +139,10 @@ public class Rank {
      * @return the result
      */
     public int popcount(long x) {
-        x -= (x >> 1) & m1;             // put count of each 2 bits into those 2 bits
-        x = (x & m2) + ((x >> 2) & m2);    // put count of each 4 bits into those 4 bits 
-        x = (x + (x >> 4)) & m4;         // put count of each 8 bits into those 8 bits 
-        return (int) ((x * h01) >> 56);     // returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24) + ... 
+        x -= (x >> 1) & m1;               // put count of each 2 bits into those 2 bits
+        x = (x & m2) + ((x >> 2) & m2);   // put count of each 4 bits into those 4 bits 
+        x = (x + (x >> 4)) & m4;          // put count of each 8 bits into those 8 bits 
+        return (int) ((x * h01) >> 56);   // returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24) + ... 
     }
 
     /**
@@ -181,6 +185,7 @@ public class Rank {
         throw new ArrayIndexOutOfBoundsException();
     }
 
+    /*
     public int getSelect(int index, boolean zeros) {
         int middle = 0;
         int left = 0;
@@ -196,17 +201,28 @@ public class Rank {
         if (getRank(left, zeros) == index) return left;
         return right;
     }
+    */
     
+    /**
+     * Returns the number of bytes for the allocated arrays.
+     * @return 
+     */
     public int getAllocatedBytes(){
         return (bitfield.length << 3) + (sums.length << 2);
     }
     
+    /**
+     * Retruns a list of character and new left / right index for a given range recursively.
+     * @param leftIndex
+     * @param rightIndex
+     * @param zeros
+     * @param character
+     * @param setCharacter 
+     */
     public void rangeQuery(int leftIndex, int rightIndex, boolean zeros, byte character, ArrayList<Integer[]> setCharacter){
-        //if (leftIndex <= rightIndex){
-            int newLeftIndex = getRank(leftIndex, zeros);
-            int newRightIndex = getRank(rightIndex, zeros);
-            
-            if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)character, newLeftIndex, newRightIndex, (int)character});
-        //}
+        int newLeftIndex = getRank(leftIndex, zeros);
+        int newRightIndex = getRank(rightIndex, zeros);
+
+        if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)character, newLeftIndex, newRightIndex, (int)character});
     }
 }

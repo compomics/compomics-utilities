@@ -115,48 +115,6 @@ public class FMIndexTest extends TestCase {
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
         
-        
-        
-        
-        /*
-        // VYSLGIKT
-        int l = 0, r = fmIndex.indexStringLength - 1;
-        int lf = 0, rf = fmIndex.indexStringLength - 1;
-        int lt = 0, rt = fmIndex.indexStringLength - 1;
-        String p = "SSGGS";
-        String p_r = "GGSS";
-        
-        
-        for (int i = 0; i < p_r.length(); ++i){
-            int c = p_r.charAt(i);
-            lt = fmIndex.lessTablePrimary[c] + fmIndex.occurrenceTablePrimary.getRank(lt - 1, c);
-            rt = fmIndex.lessTablePrimary[c] + fmIndex.occurrenceTablePrimary.getRank(rt, c) - 1;
-        }
-        
-        for (int i = 0; i < p.length(); ++i){
-            //l = fmIndex.lessTablePrimary[c] + fmIndex.occurrenceTablePrimary.getRank(l - 1, c);
-            //r = fmIndex.lessTablePrimary[c] + fmIndex.occurrenceTablePrimary.getRank(r, c) - 1;
-            
-            int c = p.charAt(i);
-            
-            ArrayList<Integer[]> setCharacter = new ArrayList<Integer[]>(26);
-            fmIndex.occurrenceTableReversed.rangeQuery(lf - 1, rf, setCharacter);
-            int ct = 0;
-            int cum = 0;
-            while (setCharacter.get(ct)[0] < c){
-                cum += setCharacter.get(ct)[2] - setCharacter.get(ct)[1];
-                ++ct;
-            }
-            l += cum;
-            r = l + ((setCharacter.size() > 0 && setCharacter.get(ct)[0] == c) ? setCharacter.get(ct)[2] - setCharacter.get(ct)[1] : 0) - 1;
-            lf = fmIndex.lessTableReversed[c] + fmIndex.occurrenceTableReversed.getRank(lf - 1, c);
-            rf = fmIndex.lessTableReversed[c] + fmIndex.occurrenceTableReversed.getRank(rf, c) - 1;
-        }
-        
-        System.out.println("out: " + lt + " " + rt);
-        
-        System.out.println("got: " + l + " " + r);
-        */
     }
     
     /**
@@ -199,7 +157,7 @@ public class FMIndexTest extends TestCase {
         
         //Tag tag = new Tag(531.243, new AminoAcidSequence("SDPI"), 2126.88468196889);
         
-        /*
+        
         // TESTMRITESTCKTESTK
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence("TEST");
         double nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -279,7 +237,7 @@ public class FMIndexTest extends TestCase {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping6 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping6.isEmpty());
         Assert.assertTrue(proteinMapping6.keySet().iterator().next().getSequence().compareTo("RITESTCKT") == 0);
-        */
+        
     }
     
 }

@@ -13,11 +13,13 @@ import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
+import com.sun.prism.impl.PrismSettings;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -118,21 +120,21 @@ public class FMIndex implements PeptideMapper {
     }
 
     /**
-     * Constructor.
+     * Constructor. If ptmSettings are provided the index will contain modification information, ignored if null.
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param identificationParameters contains all parameters for identification
+     * @param ptmSettings contains modification parameters for identification
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) {
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
         
         
-        if (identificationParameters != null){
+        if (ptmSettings != null){
             // create masses table and modifications
             int[] modificationCounts = new int[128];
             for (int i = 0; i < modificationCounts.length; ++i) modificationCounts[i] = 0;
-            ArrayList<String> variableModifications = identificationParameters.getSearchParameters().getPtmSettings().getVariableModifications();
-            ArrayList<String> fixedModifications = identificationParameters.getSearchParameters().getPtmSettings().getFixedModifications();
+            ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
+            ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
             PTMFactory ptmFactory = PTMFactory.getInstance();
 
 

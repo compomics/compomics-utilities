@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import java.util.ArrayList;
 
 /**
  * Rank as used in the FM index.
@@ -12,7 +11,7 @@ public class Rank {
     /**
      * The length.
      */
-    private int length;
+    private final int length;
     /**
      * The bit field.
      */
@@ -77,6 +76,7 @@ public class Rank {
      * Returns the rank.
      *
      * @param index the value
+     * @param zeros the zeros
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
@@ -104,7 +104,8 @@ public class Rank {
     
     /**
      * Returns the number of bytes for the allocated arrays.
-     * @return 
+     *
+     * @return  the number of bytes for the allocated arrays
      */
     public int getAllocatedBytes(){
         return (bitfield.length << 3) + (sums.length << 2) + sumsSecondLevel.length;

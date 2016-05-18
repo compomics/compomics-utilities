@@ -21,7 +21,7 @@ public class PrecursorIon extends Ion {
      */
     public static final int PRECURSOR = 0;
     /**
-     * the neutral losses found on the ion.
+     * The neutral losses found on the ion.
      */
     private ArrayList<NeutralLoss> neutralLosses = null;
 

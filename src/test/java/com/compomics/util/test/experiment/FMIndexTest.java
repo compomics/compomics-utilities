@@ -70,15 +70,12 @@ public class FMIndexTest extends TestCase {
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         FMIndex fmIndex = new FMIndex(null, false, null);
-        
         /*
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesFirst = fmIndex.getProteinMapping("FNPDGTPVYSIGLKTSSTXS", SequenceMatchingPreferences.getDefaultSequenceMatching());
-        
         Assert.assertTrue(testIndexesFirst.containsKey("FNPDGTPVYSLGIKTSSTHS"));
         Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").containsKey("Q9FHX5"));
         Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").get("Q9FHX5").get(0) == 335);
         */
-        
         
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
@@ -114,7 +111,6 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-        
     }
     
     /**
@@ -239,5 +235,4 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(proteinMapping6.keySet().iterator().next().getSequence().compareTo("RITESTCKT") == 0);
         
     }
-    
 }

@@ -4,31 +4,27 @@ import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory.ProteinIterator;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+//import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
+//import com.sun.prism.impl.PrismSettings;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 
 /**
  * The FM index.
@@ -121,22 +117,20 @@ public class FMIndex implements PeptideMapper {
     }
 
     /**
-     * Constructor.
+     * Constructor. If ptmSettings are provided the index will contain modification information, ignored if null.
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param identificationParameters contains all parameters for identification
+     * @param ptmSettings contains modification parameters for identification
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) {
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
         
-        
-        
-        if (identificationParameters != null){
+        if (ptmSettings != null){
             // create masses table and modifications
             int[] modificationCounts = new int[128];
             for (int i = 0; i < modificationCounts.length; ++i) modificationCounts[i] = 0;
-            ArrayList<String> variableModifications = identificationParameters.getSearchParameters().getPtmSettings().getVariableModifications();
-            ArrayList<String> fixedModifications = identificationParameters.getSearchParameters().getPtmSettings().getFixedModifications();
+            ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
+            ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
             PTMFactory ptmFactory = PTMFactory.getInstance();
 
 
@@ -690,8 +684,6 @@ public class FMIndex implements PeptideMapper {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
-        if (withVariableModifications || true) return allMatches;
-        
         // copying tags into own data structure
         int maxSequencePosition = -1;
         TagElement[] tagElements = new TagElement[tag.getContent().size()];
@@ -894,7 +886,7 @@ public class FMIndex implements PeptideMapper {
             for (Peptide pep : allMatches.keySet()){
                 for (String acc : allMatches.get(pep).keySet()){
                     for (int pos : allMatches.get(pep).get(acc)){
-System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
                     }
                 }
             }

@@ -23,14 +23,14 @@ public class MatrixContent {
     /**
      * Character which was chosen.
      */
-    public char character;
+    public int character;
     
     
     /**
      * Index of the originating entry of a particular cell with the pattern
      * searching matrix.
      */
-    public MatrixContent previousContent;
+    public MatrixContent previousContent;;
     
     /**
      * Current mass.
@@ -76,7 +76,7 @@ public class MatrixContent {
      * @param modificationNum index to modification list
      * @param modifications intermediate list of modifications
      */
-    public MatrixContent(int left, int right, char character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -115,7 +115,7 @@ public class MatrixContent {
      * @param previousContent previous matrix content
      * @param numX number of current X amino acids
      */
-    public MatrixContent(int left, int right, char character, MatrixContent previousContent, int numX) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX) {
         this.left = left;
         this.right = right;
         this.character = character;

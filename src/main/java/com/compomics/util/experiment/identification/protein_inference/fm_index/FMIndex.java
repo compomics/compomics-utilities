@@ -10,14 +10,12 @@ import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-//import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
-//import com.sun.prism.impl.PrismSettings;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -134,7 +132,7 @@ public class FMIndex implements PeptideMapper {
             PTMFactory ptmFactory = PTMFactory.getInstance();
 
 
-            int highestAAmodificationNum = 0;
+            int hasVariableModification = 0;
 
             // check which amino acids have variable modificatitions
             for (String modification : variableModifications){
@@ -142,13 +140,16 @@ public class FMIndex implements PeptideMapper {
                 if (ptm.getPattern().length() > 1) throw new UnsupportedOperationException();
                 ArrayList<Character> targets = ptm.getPattern().getAminoAcidsAtTarget();
                 modificationCounts[targets.get(0)]++;
-                highestAAmodificationNum = Math.max(highestAAmodificationNum, modificationCounts[targets.get(0)]);
+                if (modificationCounts[targets.get(0)] > 1){
+                    throw new UnsupportedOperationException("More than one modification on one amino acid is not allowed");
+                }
+                hasVariableModification = 1;
                 withVariableModifications = true;
             }
 
             // create masses for all amino acids including modifications
-            aaMasses = new double[128 * (1 + highestAAmodificationNum)];
-            modifictationLabels = new String[128 * (1 + highestAAmodificationNum)];
+            aaMasses = new double[128 * (1 + hasVariableModification)];
+            modifictationLabels = new String[128 * (1 + hasVariableModification)];
             for(int i = 0; i < aaMasses.length; ++i) aaMasses[i] = -1;
             for(int i = 0; i < aaMasses.length; ++i) modifictationLabels[i] = null;
             char[] aminoAcids = AminoAcid.getAminoAcids();
@@ -161,9 +162,6 @@ public class FMIndex implements PeptideMapper {
                 PTM ptm = ptmFactory.getPTM(modification);
                 if (ptm.getPattern().length() > 1) throw new UnsupportedOperationException();
                 ArrayList<Character> targets = ptm.getPattern().getAminoAcidsAtTarget();
-                if (modificationCounts[targets.get(0)] != 0){
-                     throw new UnsupportedOperationException("Assignment of fixed and variable modification to the same amino acid");
-                }
                 aaMasses[targets.get(0)] += ptm.getMass();
                 modifictationLabels[targets.get(0)] = modification;
             }

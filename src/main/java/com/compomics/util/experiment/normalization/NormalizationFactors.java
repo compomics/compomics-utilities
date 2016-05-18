@@ -17,16 +17,6 @@ public class NormalizationFactors implements Serializable {
      */
     private HashMap<String, Double> proteinNormalizationFactors = new HashMap<String, Double>();
     /**
-     * List of unique protein level normalization factors. The key should be the
-     * same as for the sample assignment.
-     */
-    private HashMap<String, Double> proteinUniqueNormalizationFactors = new HashMap<String, Double>();
-    /**
-     * List of shared protein level normalization factors. The key should be the
-     * same as for the sample assignment.
-     */
-    private HashMap<String, Double> proteinSharedNormalizationFactors = new HashMap<String, Double>();
-    /**
      * List of peptide level normalization factors. The key should be the same
      * as for the sample assignment.
      */
@@ -89,8 +79,6 @@ public class NormalizationFactors implements Serializable {
      */
     public void resetProteinNormalisationFactors() {
         proteinNormalizationFactors.clear();
-        proteinUniqueNormalizationFactors.clear();
-        proteinSharedNormalizationFactors.clear();
     }
 
     /**
@@ -115,26 +103,6 @@ public class NormalizationFactors implements Serializable {
      */
     public void addProteinNormalisationFactor(String sampleName, double normalisationFactor) {
         proteinNormalizationFactors.put(sampleName, normalisationFactor);
-    }
-
-    /**
-     * Adds a unique protein normalization factor.
-     *
-     * @param sampleName the index of the sample
-     * @param normalisationFactor the normalization factor
-     */
-    public void addUniqueProteinNormalisationFactor(String sampleName, double normalisationFactor) {
-        proteinUniqueNormalizationFactors.put(sampleName, normalisationFactor);
-    }
-
-    /**
-     * Adds a unique protein normalization factor.
-     *
-     * @param sampleName the index of the sample
-     * @param normalisationFactor the normalization factor
-     */
-    public void addSharedProteinNormalisationFactor(String sampleName, double normalisationFactor) {
-        proteinSharedNormalizationFactors.put(sampleName, normalisationFactor);
     }
 
     /**
@@ -167,38 +135,6 @@ public class NormalizationFactors implements Serializable {
      */
     public double getProteinNormalisationFactor(String sampleName) {
         Double normalisationFactor = proteinNormalizationFactors.get(sampleName);
-        if (normalisationFactor == null) {
-            return 1.0;
-        }
-        return normalisationFactor;
-    }
-
-    /**
-     * Returns the unique protein normalization factor for the given sample, 1.0
-     * if not set.
-     *
-     * @param sampleName the index of the sample
-     *
-     * @return the normalization factor
-     */
-    public double getUniqueProteinNormalisationFactor(String sampleName) {
-        Double normalisationFactor = proteinUniqueNormalizationFactors.get(sampleName);
-        if (normalisationFactor == null) {
-            return 1.0;
-        }
-        return normalisationFactor;
-    }
-
-    /**
-     * Returns the shared protein normalization factor for the given sample, 1.0
-     * if not set.
-     *
-     * @param sampleName the index of the sample
-     *
-     * @return the normalization factor
-     */
-    public double getSharedProteinNormalisationFactor(String sampleName) {
-        Double normalisationFactor = proteinSharedNormalizationFactors.get(sampleName);
         if (normalisationFactor == null) {
             return 1.0;
         }

@@ -27,6 +27,11 @@ public class WaveletTree {
     private long[] alphabetDirections = new long[2];  // 1 equals left child
     
     /**
+     * Stored alphabet of excluded letters ind a 128 bit field
+     */
+    private long[] alphabetExcluded = new long[2];
+    
+    /**
      * Number of characters in alphabet list
      */
     private int lenAlphabet;
@@ -36,21 +41,21 @@ public class WaveletTree {
      */
     private int lenText;
     
+    /**
+     * continue range query for left child
+     */
+    private boolean continueLeftRangeQuery = false;
+    
     
     /**
-     * WaveletTree huffman coded.
+     * continue range query for right child
      */
-    private boolean huffmanCoded;    
+    private boolean continueRightRangeQuery = false;
     
     /**
      * Characters in Alphabet stored as list.
      */
     private byte[] charAlphabetField;
-    
-    /**
-     * Half number of the alphabet length.
-     */
-    private int halfAlphabet;
     
     /**
      * Left child of the wavelet tree.
@@ -72,102 +77,10 @@ public class WaveletTree {
      */
     private final int mask = 63;
 
+    
     /**
-     * Constructor.
-     *
-     * @param text the text
-     * @param aAlphabet the alphabet
-     * @param waitingHandler the waiting Handler
+     * Class for huffman nodes
      */
-    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
-        createWaveletTree(text, aAlphabet, waitingHandler);
-    }
-        
-    public void createWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
-        long[] alphabet_left = new long[2];
-        long[] alphabet_right = new long[2];
-        huffmanCoded = false;
-
-        alphabet_right[0] = alphabet[0] = aAlphabet[0];
-        alphabet_right[1] = alphabet[1] = aAlphabet[1];
-        alphabet_left[0] = alphabet_left[1] = 0;
-        lenText = text.length;
-        rank = new Rank(text, alphabet);
-        leftChild = null;
-        rightChild = null;
-
-        lenAlphabet = rank.popcount(alphabet[0]) + rank.popcount(alphabet[1]);
-        charAlphabetField = new byte[lenAlphabet];
-        int c = 0;
-        for (int i = 0; i < 128; ++i) {
-            if (((alphabet[i >> 6] >> (i & 63L)) & 1L) == 1) {
-                charAlphabetField[c++] = (byte) i;
-            }
-        }
-
-        halfAlphabet = (lenAlphabet - 1) >> 1;
-        int countCharacters = 0;
-        for (int i = 0; i < 128 && countCharacters <= halfAlphabet; ++i) {
-            int cell = i >> 6;
-            int pos = i & 63;
-            long bit = (int) ((alphabet[cell] >> pos) & 1L);
-            countCharacters += bit;
-            alphabet_right[cell] &= ~(1L << pos);
-            alphabet_left[cell] |= bit << pos;
-        }
-
-        int len_alphabet_left = rank.popcount(alphabet_left[0]) + rank.popcount(alphabet_left[1]);
-        int len_alphabet_right = rank.popcount(alphabet_right[0]) + rank.popcount(alphabet_right[1]);
-
-        if (len_alphabet_left > 1) {
-            int len_text_left = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> 6L;
-                int pos = text[i] & 63;
-                len_text_left += (int) ((alphabet_left[cell] >> pos) & 1L);
-            }
-            byte[] text_left = new byte[len_text_left + 1];
-            text_left[len_text_left] = 0;
-            int j = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> 6L;
-                int pos = text[i] & 63;
-                long bit = (alphabet_left[cell] >> pos) & 1L;
-                if (bit > 0) {
-                    text_left[j] = text[i];
-                    ++j;
-                }
-            }
-            leftChild = new WaveletTree(text_left, alphabet_left, waitingHandler);
-        }
-        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-            return;
-        }
-
-        if (len_alphabet_right > 1) {
-            int len_text_right = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> 6;
-                int pos = text[i] & 63;
-                len_text_right += (int) ((alphabet_right[cell] >> pos) & 1L);
-            }
-            byte[] text_right = new byte[len_text_right + 1];
-            text_right[len_text_right] = 0;
-            int j = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> 6;
-                int pos = text[i] & 63;
-                long bit = (alphabet_right[cell] >> pos) & 1L;
-                if (bit > 0) {
-                    text_right[j] = text[i];
-                    ++j;
-                }
-            }
-            rightChild = new WaveletTree(text_right, alphabet_right, waitingHandler);
-        }
-    }
-    
-    
     public class HuffmanNode implements Comparable<HuffmanNode> {
         long[] alphabet = new long[]{0, 0};
         int counts = 0;
@@ -202,35 +115,34 @@ public class WaveletTree {
     }
     
     
-    
-    
-    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean huffman) {
-        this.huffmanCoded = huffman;
-        if (!huffman){
-            createWaveletTree(text, aAlphabet, waitingHandler);
-        }
-        else {
-            int[] counts = new int[128];
-            for (byte c : text){
-                ++counts[c];
-            }        
+    /**
+     * Constructor.
+     *
+     * @param text the text
+     * @param aAlphabet the alphabet
+     * @param waitingHandler the waiting Handler
+     */
+    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
+        int[] counts = new int[128];
+        for (byte c : text){
+            ++counts[c];
+        }        
 
-            ArrayList<HuffmanNode> huffmanNodes = new ArrayList<HuffmanNode>();
-            for (int i = 0; i < 128; ++i){
-                if (((aAlphabet[i >> shift] >> (i & mask)) & 1L) == 1) {
-                    huffmanNodes.add(new HuffmanNode(counts[i], i));
-                }
+        ArrayList<HuffmanNode> huffmanNodes = new ArrayList<HuffmanNode>();
+        for (int i = 0; i < 128; ++i){
+            if (((aAlphabet[i >> shift] >> (i & mask)) & 1L) == 1) {
+                huffmanNodes.add(new HuffmanNode(counts[i], i));
             }
-
-            while (huffmanNodes.size() > 1){
-                Collections.sort(huffmanNodes);
-                HuffmanNode first = huffmanNodes.remove(0);
-                HuffmanNode second = huffmanNodes.remove(0);
-                huffmanNodes.add(new HuffmanNode(first, second));
-            }
-
-            createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0));
         }
+
+        while (huffmanNodes.size() > 1){
+            Collections.sort(huffmanNodes);
+            HuffmanNode first = huffmanNodes.remove(0);
+            HuffmanNode second = huffmanNodes.remove(0);
+            huffmanNodes.add(new HuffmanNode(first, second));
+        }
+
+        createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0));
     }
         
     public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root) {
@@ -238,10 +150,15 @@ public class WaveletTree {
     }
     
     public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root) {
-        huffmanCoded = true;
         alphabet[0] = root.alphabet[0];
         alphabet[1] = root.alphabet[1];
-    
+        
+        alphabetExcluded[0] = 1L << '$';
+        alphabetExcluded[0] |= 1L << '/';
+        alphabetExcluded[1] = 1L << ('B' & 63);
+        alphabetExcluded[1] |= 1L << ('J' & 63);
+        alphabetExcluded[1] |= 1L << ('X' & 63);
+        
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
 
@@ -250,21 +167,24 @@ public class WaveletTree {
         alphabet_right[0] = root.rightChild.alphabet[0];
         alphabet_right[1] = root.rightChild.alphabet[1];
         
+        continueLeftRangeQuery = (((alphabet_left[0] & (~alphabetExcluded[0])) + (alphabet_left[1] & (~alphabetExcluded[1]))) > 0);
+        continueRightRangeQuery = (((alphabet_right[0] & (~alphabetExcluded[0])) + (alphabet_right[1] & (~alphabetExcluded[1]))) > 0);
+
         
         lenText = text.length;
-        rank = new Rank(text, alphabet_right, true);
+        rank = new Rank(text, alphabet_right);
         leftChild = null;
         rightChild = null;
 
-        lenAlphabet = rank.popcount(alphabet[0]) + rank.popcount(alphabet[1]);
+        lenAlphabet = Long.bitCount(alphabet[0]) + Long.bitCount(alphabet[1]);
         charAlphabetField = new byte[lenAlphabet];
         
         
         for (int i = 0; i < root.charAlphabet.size(); ++i) charAlphabetField[i] = root.charAlphabet.get(i);
-                
-        int len_alphabet_left = rank.popcount(alphabet_left[0]) + rank.popcount(alphabet_left[1]);
-        int len_alphabet_right = rank.popcount(alphabet_right[0]) + rank.popcount(alphabet_right[1]);
 
+        int len_alphabet_left = Long.bitCount(alphabet_left[0]) + Long.bitCount(alphabet_left[1]);
+        int len_alphabet_right = Long.bitCount(alphabet_right[0]) + Long.bitCount(alphabet_right[1]);
+   
         if (len_alphabet_left > 1) {
             int len_text_left = 0;
             for (int i = 0; i < text.length; ++i) {
@@ -323,8 +243,7 @@ public class WaveletTree {
         for (int i = 0; i < 128; ++i) {
             less[i] = cumulativeSum;
             if (((alphabet[i >> shift] >> (i & mask)) & 1L) != 0) {
-//System.out.println("less: " + (char)i + " " + cumulativeSum);
-                cumulativeSum += getRank(rank.length - 1, i);
+                cumulativeSum += getRank(lenText - 1, i);
             }
         }
         return less;
@@ -338,106 +257,67 @@ public class WaveletTree {
      * @return the rank
      */
     public int getRank(int index, int character) {
-
-        if (index < 0) return 0;
         if (index < lenText) {
+            return getRankRecursive(index, character);
+        }
+        throw new ArrayIndexOutOfBoundsException();        
+    }
+    
+    /**
+     * Returns the number of occurrences of a given character until position index.
+     *
+     * @param index the index
+     * @param character the character
+     * @return the rank
+     */
+    public int getRankRecursive(int index, int character) {
+        if (index >= 0) {
             int cell = character >> shift;
             int pos = character & mask;
-            boolean left = false;
-            if (((alphabet[cell] >> pos) & 1L) == 0) return 0;
+            //if (((alphabet[cell] >> pos) & 1L) == 0) return 0;
             
-            if (huffmanCoded) {
-                left = ((alphabetDirections[cell] >> pos) & 1) == 1;
-            }
-            else {
-                int masked = mask - pos;
-                long active_ones = alphabet[cell] << masked;
-                int positionCharacter = rank.popcount(active_ones);
-                positionCharacter += cell * rank.popcount(alphabet[0]);
-                positionCharacter -= 1;
-                left = (positionCharacter <= halfAlphabet);
-            }
-
+            boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;
             int result = rank.getRank(index, left);
-            if (result == 0) return result;
 
             if (left && leftChild != null) {
-                return leftChild.getRank(result - 1, character);
+                return leftChild.getRankRecursive(result - 1, character);
             } else if (!left && rightChild != null) {
-                return rightChild.getRank(result - 1, character);
+                return rightChild.getRankRecursive(result - 1, character);
             }
             return result;
         }
-        throw new ArrayIndexOutOfBoundsException();
+        return 0;
     }
 
     /**
-     * Returns the character at a given index.
+     * Returns the character and rank at a given index.
      *
      * @param index the index
-     * @return the character
+     * @return the character and rank
      */
-    public byte getCharacter(int index) {
-        if (0 <= index && index < lenText) {
+    public int[] getCharacterInfo(int index) {
+        if (index < lenText) {
             boolean left = !rank.isOne(index);
             int result = rank.getRank(index, left);
             if (result == 0) {
-                return charAlphabetField[result];
+                return new int[]{charAlphabetField[result], 0};
             }
 
-            byte character;
             result -= 1;
             if (left) {
                 if (leftChild == null) {
-                    character = charAlphabetField[0];
+                    return new int[]{charAlphabetField[0], result};
                 } else {
-                    character = leftChild.getCharacter(result);
+                    return leftChild.getCharacterInfo(result);
                 }
             } else if (rightChild == null) {
-                character = charAlphabetField[lenAlphabet - 1];
+                return new int[]{charAlphabetField[lenAlphabet - 1], result};
             } else {
-                character = rightChild.getCharacter(result);
+                return rightChild.getCharacterInfo(result);
             }
-            return character;
         }
         throw new ArrayIndexOutOfBoundsException();
     }
-    
-    /*
-    public int getSelect(int occurence, int character){
-        if (occurence <= 0) return -1;
-        if (occurence < lenText) {
-            int cell = character >> shift;
-            int pos = character & mask;
-            if (((alphabet[cell] >> pos) & 1) != 1) return 0;
-            int masked = mask - pos;
-            long active_ones = alphabet[cell] << masked;
-            int positionCharacter = rank.popcount(active_ones);
-            positionCharacter += cell * rank.popcount(alphabet[0]);
-            positionCharacter -= 1;
-            boolean left = (positionCharacter <= halfAlphabet);
-            if (left){
-                if (leftChild == null){
-                    return rank.getSelect(occurence, left);
-                }
-                else {
-                    int position = leftChild.getSelect(occurence, character) + 1;
-                    return rank.getSelect(position, left);
-                }
-            }
-            else {
-                if (rightChild == null){
-                    return rank.getSelect(occurence, left);
-                }
-                else {
-                    int position = rightChild.getSelect(occurence, character) + 1;
-                    return rank.getSelect(position, left);
-                }
-            }
-        }
-        else throw new ArrayIndexOutOfBoundsException();
-    }
-    */
     
     /**
      * Returns the number of bytes for the allocated arrays.
@@ -469,23 +349,52 @@ public class WaveletTree {
      * @param setCharacter list of counted characters
      */
     public void rangeQuery(int leftIndex, int rightIndex, ArrayList<Integer[]> setCharacter){
-        if (rightIndex == leftIndex) return;
+        if ((leftIndex < rightIndex)){
         
-        int newLeftIndex = rank.getRank(leftIndex, true);
-        int newRightIndex = rank.getRank(rightIndex, true);
+            int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
+            int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+
+            if (continueLeftRangeQuery){
+                
+                if (leftChild != null) leftChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
+                else if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)charAlphabetField[0], newLeftIndex, newRightIndex, (int)charAlphabetField[0]});
+            }
+
+            if (continueRightRangeQuery) {
+                newLeftIndex = leftIndex - newLeftIndex;
+                newRightIndex = rightIndex - newRightIndex;
+
+                if (rightChild != null)rightChild.rangeQuery(newLeftIndex, newRightIndex, setCharacter);
+                else if (newRightIndex - newLeftIndex > 0) setCharacter.add(new Integer[]{(int)charAlphabetField[lenAlphabet - 1], newLeftIndex + 1, newRightIndex + 1, (int)charAlphabetField[lenAlphabet - 1]});
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * Retruns a list of character and new left / right index for a given range recursively.
+     * @param leftIndex left index boundary
+     * @param rightIndex right index boundary
+     * @param character character to check
+     */
+    public int[] singleRangeQuery(int leftIndex, int rightIndex, int character){
+        int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
+        int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+        int cell = character >> shift;
+        int pos = character & mask;
+        boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;
         
-        if (leftChild != null){
-            leftChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
+        if (left){
+            if (leftChild != null) return leftChild.singleRangeQuery(newLeftIndex - 1, newRightIndex - 1, character);
+            else return new int[]{newLeftIndex, newRightIndex};
         }
         else {
-            rank.rangeQuery(leftIndex, rightIndex, true, charAlphabetField[0], setCharacter);
-        }
-        
-        if (rightChild != null){
-            rightChild.rangeQuery(leftIndex - newLeftIndex, rightIndex - newRightIndex, setCharacter);
-        }
-        else {
-            rank.rangeQuery(leftIndex, rightIndex, false, charAlphabetField[lenAlphabet - 1], setCharacter);
+            newLeftIndex = leftIndex - newLeftIndex;
+            newRightIndex = rightIndex - newRightIndex;
+
+            if (rightChild != null) return rightChild.singleRangeQuery(newLeftIndex, newRightIndex, character);
+            else return new int[]{newLeftIndex + 1, newRightIndex + 1};
         }
     }
     

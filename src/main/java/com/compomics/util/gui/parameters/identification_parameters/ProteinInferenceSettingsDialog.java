@@ -305,6 +305,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         boolean success = sequenceDbDetailsDialog.selectDB(true);
         if (success) {
             sequenceDbDetailsDialog.setVisible(true);
+            okButton.setEnabled(true);
         }
 
         if (sequenceFactory.getCurrentFastaFile() != null) {

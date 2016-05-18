@@ -1,32 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author dominik.kopczynski
- */
 package com.compomics.util.test.experiment;
+
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.AminoAcid;
-import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.SuffixArraySorter;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,10 +26,11 @@ import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * Test for the protein tree.
+ * Test for the FM Index.
  *
  * @author Marc Vaudel
  * @author Kenneth Verheggen
+ * @author dominik.kopczynski
  */
 public class FMIndexTest extends TestCase {
 
@@ -59,26 +47,15 @@ public class FMIndexTest extends TestCase {
      * @throws SQLException if an SQLException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    
     public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
-        
+
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences");
-        //File sequences = new File("/home/dominik.kopczynski/Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
         FMIndex fmIndex = new FMIndex(null, false, null);
-        
-        /*
-        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesFirst = fmIndex.getProteinMapping("FNPDGTPVYSIGLKTSSTXS", SequenceMatchingPreferences.getDefaultSequenceMatching());
-        
-        Assert.assertTrue(testIndexesFirst.containsKey("FNPDGTPVYSLGIKTSSTHS"));
-        Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").containsKey("Q9FHX5"));
-        Assert.assertTrue(testIndexesFirst.get("FNPDGTPVYSLGIKTSSTHS").get("Q9FHX5").get(0) == 335);
-        */
-        
         
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
@@ -87,10 +64,9 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(testIndexesX.size() == 1);
         Assert.assertTrue(testIndexesX.get("ECTQDRXKTAFTEAVLLP").containsKey("TEST_ACCESSION"));
         Assert.assertTrue(testIndexesX.get("ECTQDRXKTAFTEAVLLP").get("TEST_ACCESSION").get(0) == 3);
-        
-        
+
         HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = fmIndex.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
-        
+
         Assert.assertTrue(testIndexes.size() == 1);
         HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
         Assert.assertTrue(proteinMapping.size() == 2);
@@ -114,9 +90,9 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(indexes.get(1) == index);
         index = sequence.lastIndexOf("SSS");
         Assert.assertTrue(indexes.get(2) == index);
-        
+
     }
-    
+
     /**
      * Tests the mapping of de novo sequence tags to the database.
      *
@@ -132,8 +108,6 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    
-    
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
 
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -143,27 +117,16 @@ public class FMIndexTest extends TestCase {
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
-        //File sequences = new File("/home/dominik.kopczynski/Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
 
-        //ProteinTree proteinTree = new ProteinTree(1000, 1000);
-        //proteinTree.initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
-        
-        FMIndex proteinTree = new FMIndex(null, false, null);
-
-        //Duration: 54693 <1029.5805646837> DIDS <904.0084353163> 
-        //Duration: 72384 <531.243> SDPI <2126.88468196889> 
-        
-        //Tag tag = new Tag(531.243, new AminoAcidSequence("SDPI"), 2126.88468196889);
-        
-        
         // TESTMRITESTCKTESTK
         AminoAcidSequence aminoAcidPattern = new AminoAcidSequence("TEST");
         double nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         double cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         Tag tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
 
+        PtmSettings ptmSettings = new PtmSettings();
         ArrayList<String> fixedModifications = new ArrayList<String>();
         fixedModifications.add("Carbamidomethylation of C");
         for (String ptmName : fixedModifications) {
@@ -171,6 +134,7 @@ public class FMIndexTest extends TestCase {
             if (ptm.getName().equals(PTMFactory.unknownPTM.getName())) {
                 throw new IllegalArgumentException("PTM " + ptmName + " not in the PTM factory.");
             }
+            ptmSettings.addFixedModification(ptm);
         }
 
         ArrayList<String> variableModifications = new ArrayList<String>();
@@ -181,63 +145,59 @@ public class FMIndexTest extends TestCase {
             if (ptm.getName().equals(PTMFactory.unknownPTM.getName())) {
                 throw new IllegalArgumentException("PTM " + ptmName + " not in the PTM factory.");
             }
+            ptmSettings.addVariableModification(ptm);
         }
+        
+        FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings);
         
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+
         TagMatcher tagMatcher = new TagMatcher(fixedModifications, variableModifications, sequenceMatchingPreferences);
 
-        
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         Assert.assertTrue(proteinMapping.keySet().iterator().next().getSequence().compareTo("TMRITESTCK") == 0);
-        
-        
+
         // TESTMRITESTCKTESTK // testing cache
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping2 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
-        //Assert.assertTrue(!proteinMapping2.isEmpty());
-        //Assert.assertTrue(proteinMapping2.keySet().iterator().next().getSequence().compareTo("TMRITESTCK") == 0);
-        
-        
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping2 = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!proteinMapping2.isEmpty());
+        Assert.assertTrue(proteinMapping2.keySet().iterator().next().getSequence().compareTo("TMRITESTCK") == 0);
+
         // TESTMRITESTCKTESTK // testing cache
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping3 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
-        //Assert.assertTrue(!proteinMapping3.isEmpty());
-        //Assert.assertTrue(proteinMapping3.keySet().iterator().next().getSequence().compareTo("TMRITESTC") == 0);
-        
-        
-        
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping3 = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!proteinMapping3.isEmpty());
+        Assert.assertTrue(proteinMapping3.keySet().iterator().next().getSequence().compareTo("TMRITESTC") == 0);
+
         // TESTMRITESTCKTESTK
         AminoAcidSequence aminoAcidPattern3 = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern3, cTermGap);
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping4 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping4 = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping4.isEmpty());
         Assert.assertTrue(proteinMapping4.keySet().iterator().next().getSequence().compareTo("RITESTCKTE") == 0);
-        
-        
-        
+
         nTermGap = AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern3, cTermGap);
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping5 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping5 = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping5.isEmpty());
         Assert.assertTrue(proteinMapping5.keySet().iterator().next().getSequence().compareTo("ITESTCKTE") == 0);
-        
-        
+
         nTermGap = AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern3, cTermGap);
-        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping6 = proteinTree.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping6 = fmIndex.getProteinMapping(tag, tagMatcher, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping6.isEmpty());
         Assert.assertTrue(proteinMapping6.keySet().iterator().next().getSequence().compareTo("RITESTCKT") == 0);
-        
+
     }
-    
+
 }

@@ -177,6 +177,7 @@ public class IdentificationParametersInputBean {
             Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
             searchParameters.setEnzyme(option);
         }
+        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
@@ -184,7 +185,6 @@ public class IdentificationParametersInputBean {
 
             // also update the protein inference database if that option is not set
             if (identificationParameters != null && !commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
-                ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
                 proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
             }
         }
@@ -1601,11 +1601,90 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Protein inference parameters
         //////////////////////////////////
-        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
             File fastaFile = new File(arg);
             proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroups(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsScore(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsEnzymaticity(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsEvidence(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsUncharacterized(value);
         }
 
         //////////////////////////////////
@@ -3277,6 +3356,41 @@ public class IdentificationParametersInputBean {
                 System.out.println(System.getProperty("line.separator")
                         + "Protein inference database not found."
                         + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id, arg, supportedInput)) {
                 return false;
             }
         }

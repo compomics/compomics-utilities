@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import org.jsuffixarrays.*;
 
 /**
  * The FM index.
@@ -113,6 +115,8 @@ public class FMIndex implements PeptideMapper {
         }
         return mid;
     }
+    
+    
 
     /**
      * Constructor. If ptmSettings are provided the index will contain modification information, ignored if null.
@@ -122,6 +126,8 @@ public class FMIndex implements PeptideMapper {
      * @param ptmSettings contains modification parameters for identification
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
+               
+        
         
         if (ptmSettings != null){
             // create masses table and modifications
@@ -192,7 +198,7 @@ public class FMIndex implements PeptideMapper {
         
         
         SequenceFactory sf = SequenceFactory.getInstance(100000);
-        boolean deNovo = true; // TODO: change it for de novo
+        boolean deNovo = true; // @TODO: change it for de novo
         int maxProgressBar = 6 + ((deNovo) ? 4 : 0);
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
@@ -264,12 +270,15 @@ public class FMIndex implements PeptideMapper {
         }
 
         
-        // create the suffix array using at most 128 characters
-        suffixArrayPrimary = SuffixArraySorter.buildSuffixArray(T, 128);
+        
+        int[] T_int = new int[indexStringLength];
+        for (int i = 0; i < indexStringLength; ++i) T_int[i] = T[i];
+        suffixArrayPrimary = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);        
+        
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
-        
+        T_int = null;
 
         // Prepare alphabet
         char[] sortedAas = new char[AminoAcid.getAminoAcids().length + 2];
@@ -329,7 +338,9 @@ public class FMIndex implements PeptideMapper {
             }
 
             // create the inversed suffix array using at most 128 characters
-            int[] suffixArrayReversed = SuffixArraySorter.buildSuffixArray(TReversed, 128);
+            T_int = new int[indexStringLength];
+            for (int i = 0; i < indexStringLength; ++i) T_int[i] = TReversed[i];
+            int[] suffixArrayReversed = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);     
             if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 waitingHandler.increaseSecondaryProgressCounter();
             }

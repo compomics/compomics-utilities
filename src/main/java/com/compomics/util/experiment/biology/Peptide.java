@@ -1,17 +1,13 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
-import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
-import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -410,7 +406,7 @@ public class Peptide extends ExperimentObject {
      *
      * Note: the key is not unique for indistinguishable sequences, see
      * getMatchingKey(SequenceMatchingPreferences sequenceMatchingPreferences).
-     * Modifications must be loaded in the PTM factory
+     * Modifications must be loaded in the PTM factory.
      *
      * @return the index of a peptide
      */

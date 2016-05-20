@@ -17,10 +17,9 @@ import com.compomics.util.pride.CvTerm;
 public class IonMatch extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = 5753142782728884464L;
-
     /**
      * The matched peak.
      */

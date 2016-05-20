@@ -1473,7 +1473,7 @@ public abstract class Identification extends ExperimentObject {
      * assigned using the default protein tree and the given matching
      * parameters.
      *
-     * @param spectrumMatchKey The key of the spectrum match to add
+     * @param spectrumMatchKey the key of the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws SQLException exception thrown whenever an error occurred while

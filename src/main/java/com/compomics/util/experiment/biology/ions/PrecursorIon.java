@@ -75,7 +75,7 @@ public class PrecursorIon extends Ion {
 
     @Override
     public CvTerm getPrideCvTerm() {
-        if (neutralLosses.isEmpty()) {
+        if (neutralLosses == null || neutralLosses.isEmpty()) {
             return new CvTerm("PSI-MS", "MS:1001523", "frag: precursor ion", "0");
         } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H2O)) {
             return new CvTerm("PSI-MS", "MS:1001521", "frag: precursor ion - H2O", "0");

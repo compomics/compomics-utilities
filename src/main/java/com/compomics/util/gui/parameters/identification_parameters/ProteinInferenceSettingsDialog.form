@@ -55,7 +55,7 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="jPanel1" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="0" pref="433" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="65" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
@@ -176,36 +176,24 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="simplifyGroupsLbl" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="simplifyGroupsCmb" min="-2" pref="80" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="simplifyGroupsLbl" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="simplifyCharacterizationLbl" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="simplifyCharacterizationCmb" min="-2" pref="80" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="simplifyScoreLbl" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="simplifyScoreCmb" min="-2" pref="80" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="simplifyEnzymaticityLbl" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="simplifyenzymaticityCmb" min="-2" pref="80" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="simplifyEvidenceLbl" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="simplifyEvidenceCmb" min="-2" pref="80" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="simplifyScoreLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="simplifyEnzymaticityLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="simplifyEvidenceLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="simplifyCharacterizationLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                      </Group>
+                      <EmptySpace pref="239" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="simplifyEvidenceCmb" alignment="1" max="32767" attributes="0"/>
+                          <Component id="simplifyEnzymaticityCmb" alignment="1" max="32767" attributes="0"/>
+                          <Component id="simplifyScoreCmb" alignment="1" max="32767" attributes="0"/>
+                          <Component id="simplifyGroupsCmb" alignment="1" pref="120" max="32767" attributes="0"/>
+                          <Component id="simplifyCharacterizationCmb" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -227,7 +215,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="simplifyEnzymaticityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="simplifyenzymaticityCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="simplifyEnzymaticityCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -252,22 +240,22 @@
             </Component>
             <Component class="javax.swing.JLabel" name="simplifyScoreLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Based on score"/>
+                <Property name="text" type="java.lang.String" value="- based on score"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="simplifyEnzymaticityLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Based on enzymaticity"/>
+                <Property name="text" type="java.lang.String" value="- based on enzymaticity"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="simplifyEvidenceLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Based on Uniprot evidence level"/>
+                <Property name="text" type="java.lang.String" value="- based on Uniprot evidence level"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="simplifyCharacterizationLbl">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Based on protein characterization"/>
+                <Property name="text" type="java.lang.String" value="- based on protein characterization"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="simplifyGroupsCmb">
@@ -293,7 +281,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="simplifyenzymaticityCmb">
+            <Component class="javax.swing.JComboBox" name="simplifyEnzymaticityCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="2">

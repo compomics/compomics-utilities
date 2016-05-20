@@ -4,7 +4,7 @@ import com.compomics.util.experiment.identification.ptm.PtmScore;
 import java.io.Serializable;
 
 /**
- * This class contains the PTM localization scoring preferences.
+ * This class contains the PTM localization preferences.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -44,6 +44,10 @@ public class PTMScoringPreferences implements Serializable {
      * The preferences to use when matching PTMs to amino acid sequences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
+    /**
+     * Boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites.
+     */
+    private Boolean alignNonConfidentPTMs = true;
 
     /**
      * Constructor.
@@ -199,6 +203,27 @@ public class PTMScoringPreferences implements Serializable {
     }
 
     /**
+     * Indicates whether the non confidently localized PTMs should be aligned on the confident sites.
+     * 
+     * @return boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites
+     */
+    public Boolean getAlignNonConfidentPTMs() {
+        if (alignNonConfidentPTMs == null) { // Backward compatibility
+            alignNonConfidentPTMs = true;
+        }
+        return alignNonConfidentPTMs;
+    }
+
+    /**
+     * Sets whether the non confidently localized PTMs should be aligned on the confident sites.
+     * 
+     * @param alignNonConfidentPTMs a boolean indicating whether the non confidently localized PTMs should be aligned on the confident sites
+     */
+    public void setAlignNonConfidentPTMs(Boolean alignNonConfidentPTMs) {
+        this.alignNonConfidentPTMs = alignNonConfidentPTMs;
+    }
+    
+    /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
@@ -213,6 +238,7 @@ public class PTMScoringPreferences implements Serializable {
         output.append("Include Neutral Losses: ").append(probabilisticScoreNeutralLosses).append(".").append(newLine);
         output.append("Threshold Auto: ").append(estimateFlr).append(".").append(newLine);
         output.append("Threshold: ").append(probabilisticScoreThreshold).append(".").append(newLine);
+        output.append("Align PTMs: ").append(getAlignNonConfidentPTMs()).append(".").append(newLine);
 
         return output.toString();
     }
@@ -231,7 +257,7 @@ public class PTMScoringPreferences implements Serializable {
         }
 
         double diff = Math.abs(flr - otherPtmScoringPreferences.getFlrThreshold());
-        if (diff > 0.0000000000001) {
+        if (diff > Double.MIN_VALUE) {
             return false;
         }
 
@@ -248,11 +274,15 @@ public class PTMScoringPreferences implements Serializable {
         }
 
         diff = Math.abs(probabilisticScoreThreshold - otherPtmScoringPreferences.getProbabilisticScoreThreshold());
-        if (diff > 0.0000000000001) {
+        if (diff > Double.MIN_VALUE) {
             return false;
         }
 
         if (probabilisticScoreNeutralLosses.booleanValue() != otherPtmScoringPreferences.isProbabilisticScoreNeutralLosses()) {
+            return false;
+        }
+        
+        if (!getAlignNonConfidentPTMs() == otherPtmScoringPreferences.getAlignNonConfidentPTMs()) {
             return false;
         }
 

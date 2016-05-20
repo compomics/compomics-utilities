@@ -1581,6 +1581,22 @@ public class IdentificationParametersInputBean {
             ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
             ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PTM_ALIGNMENT.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            ptmScoringPreferences.setAlignNonConfidentPTMs(value);
+        }
 
         //////////////////////////////////
         // Protein inference parameters
@@ -3240,6 +3256,13 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id);
             if (!isSequenceMatchingType(IdentificationParametersCLIParams.PTM_SEQUENCE_MATCHING_TYPE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.PTM_ALIGNMENT.id, arg, supportedInput)) {
                 return false;
             }
         }

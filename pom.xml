@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.5.18</version>
+    <version>4.5.19</version>
     <name>computational omics utilities</name>
     <url>http://compomics-utilities.googlecode.com</url>
     <description>Open source java library for computational proteomics</description>
@@ -339,7 +339,14 @@
             <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
             <layout>default</layout>
         </repository>
-
+        
+        <!-- Suffix array construction -->
+        <repository>
+            <id>sonatype-nexus-public</id>
+            <name>SonaType public snapshots and releases repository</name>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
 
 
@@ -387,6 +394,13 @@
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
             <scope>compile</scope>
+        </dependency>
+        
+        <!-- Suffix array construction -->
+        <dependency>
+            <groupId>com.carrotsearch</groupId>
+            <artifactId>jsuffixarrays</artifactId>
+            <version>0.1.0</version>
         </dependency>
 
         <dependency>

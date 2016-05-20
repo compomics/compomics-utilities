@@ -311,10 +311,16 @@ public enum IdentificationParametersCLIParams {
     PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
     PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.aminoAcid + ")", false, true),
+    PTM_ALIGNMENT("ptm_alignment", "Align peptide ambiguously localized PTMs on confident sites (1: true, 0: false, default is '1').", false, true),
     //////////////////////////////////
     // Protein inference parameters
     //////////////////////////////////
     DB_PI("db_pi", "The sequence database to use for protein inference in FASTA format.", false, true),
+    SIMPLIFY_GOUPS("simplify_groups", "Simplify protein groups, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_SCORE("simplify_score", "Simplify protein groups based on the PeptideShaker target/decoy score, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_ENZYMATICITY("simplify_enzymaticity", "Simplify protein groups based on the peptide enzymaticity, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_EVIDENCE("simplify_evidence", "Simplify protein groups based on the Uniprot protein evidence, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_UNCHARACTERIZED("simplify_uncharacterized", "Simplify protein groups based on the protein characterization, 1: yes, 0: no, default is 1.", false, true),
     //////////////////////////////////
     // Validation parameters
     //////////////////////////////////

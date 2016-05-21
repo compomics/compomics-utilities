@@ -55,8 +55,6 @@ public class MgfReader {
 
         while ((line = br.readLine()) != null) {
 
-            line = line.trim();
-
             if (line.equals("BEGIN IONS")) {
                 // reset the spectrum details
                 insideSpectrum = true;
@@ -231,8 +229,6 @@ public class MgfReader {
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
-            line = line.trim();
-
             if (line.equals("BEGIN IONS")) {
                 insideSpectrum = true;
                 chargeTagFound = false;
@@ -246,7 +242,7 @@ public class MgfReader {
                     waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                 }
             } else if (line.startsWith("TITLE")) {
-                title = line.substring(line.indexOf('=') + 1).trim();
+                title = line.substring(line.indexOf('=') + 1);
                 try {
                     title = URLDecoder.decode(title, "utf-8");
                 } catch (UnsupportedEncodingException e) {
@@ -435,7 +431,7 @@ public class MgfReader {
                         } else if (line.startsWith("TITLE")) {
                             currentSpectrum += line + lineBreak;
 
-                            String title = line.substring(line.indexOf('=') + 1).trim();
+                            String title = line.substring(line.indexOf('=') + 1);
 
                             try {
                                 title = URLDecoder.decode(title, "utf-8");
@@ -547,7 +543,7 @@ public class MgfReader {
                         } else if (line.startsWith("TITLE")) {
                             currentSpectrum += line + lineBreak;
 
-                            title = line.substring(line.indexOf('=') + 1).trim();
+                            title = line.substring(line.indexOf('=') + 1);
 
                             try {
                                 title = URLDecoder.decode(title, "utf-8");
@@ -875,7 +871,7 @@ public class MgfReader {
                     //waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit)); // @TODO: use the waitingHandler??
                 }
 
-                String originalTitle = line.substring(line.indexOf('=') + 1).trim();
+                String originalTitle = line.substring(line.indexOf('=') + 1);
 
                 try {
                     originalTitle = URLDecoder.decode(originalTitle, "utf-8");
@@ -963,8 +959,6 @@ public class MgfReader {
 
             while ((line = readBufferedRandomAccessFile.getNextLine()) != null) {
 
-                line = line.trim();
-
                 if (line.equals("BEGIN IONS")) {
 
                     spectrumCounter++;
@@ -1048,8 +1042,6 @@ public class MgfReader {
         boolean insideSpectrum = false;
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
-
-            line = line.trim();
 
             if (line.equals("BEGIN IONS")) {
                 insideSpectrum = true;
@@ -1213,9 +1205,6 @@ public class MgfReader {
         ArrayList<Charge> precursorCharges = new ArrayList<Charge>(1);
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
-
-            line = line.trim();
-
             if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1);
                 try {

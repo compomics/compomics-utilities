@@ -930,7 +930,6 @@ public class GeneFactory {
             if (!goMappingsDownloaded) {
                 waitingHandler.appendReport(PADDING + "Gene ontology mappings not available. Downloading gene mappings only.", true, true);
             } else {
-                waitingHandler.setWaitingText(PADDING + "GO mappings downloaded.");
                 if (waitingHandler.isReport()) {
                     waitingHandler.appendReport(PADDING + "GO mappings downloaded.", true, true);
                 }
@@ -942,7 +941,6 @@ public class GeneFactory {
                     EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision).toString(), waitingHandler);
 
             if (!waitingHandler.isRunCanceled()) {
-                waitingHandler.setWaitingText(PADDING + "Gene mappings downloaded.");
                 if (waitingHandler.isReport()) {
                     waitingHandler.appendReport(PADDING + "Gene mappings downloaded.", true, true);
                 }

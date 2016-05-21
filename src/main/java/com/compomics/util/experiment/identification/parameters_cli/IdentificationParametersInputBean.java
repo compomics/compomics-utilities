@@ -3361,36 +3361,31 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id, arg, supportedInput)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id, arg, supportedInput)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id, arg, supportedInput)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id, arg, supportedInput)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id, arg)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
-            List<String> supportedInput = Arrays.asList("0", "1");
-            if (!isInList(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id, arg, supportedInput)) {
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id, arg)) {
                 return false;
             }
         }

@@ -9,11 +9,13 @@ Without this configuration present, some functionality in the IDE may be limited
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
         <word>Da</word>
         <word>deserialization</word>
+        <word>deserializing</word>
         <word>Ensembl</word>
         <word>immonium</word>
         <word>json</word>
         <word>Maven</word>
         <word>Novor</word>
+        <word>proteome</word>
         <word>sparkline</word>
         <word>taskbar</word>
         <word>webservice</word>

@@ -14,9 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 /**
- * Dialog for the edition of the protein inference settings
+ * Dialog for the edition of the protein inference settings.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
 
@@ -169,16 +170,16 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
      * @return the protein inference preferences
      */
     public ProteinInferencePreferences getProteinInferencePreferences() {
-        
+
         ProteinInferencePreferences proteinInferencePreferences = new ProteinInferencePreferences();
         proteinInferencePreferences.setProteinSequenceDatabase(new File(databaseSettingsTxt.getText()));
-        
+
         proteinInferencePreferences.setSimplifyGroups(simplifyGroupsCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsScore(simplifyScoreCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsEvidence(simplifyEvidenceCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsEnzymaticity(simplifyEnzymaticityCmb.getSelectedIndex() == 0);
         proteinInferencePreferences.setSimplifyGroupsUncharacterized(simplifyCharacterizationCmb.getSelectedIndex() == 0);
-        
+
         return proteinInferencePreferences;
     }
 
@@ -207,7 +208,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         databaseSettingsLbl = new javax.swing.JLabel();
         databaseSettingsTxt = new javax.swing.JTextField();
         editDatabaseDetailsButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        proteinGroupPanel = new javax.swing.JPanel();
         simplifyGroupsLbl = new javax.swing.JLabel();
         simplifyScoreLbl = new javax.swing.JLabel();
         simplifyEnzymaticityLbl = new javax.swing.JLabel();
@@ -282,18 +283,18 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Groups Simplification"));
-        jPanel1.setOpaque(false);
+        proteinGroupPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Protein Groups Simplification"));
+        proteinGroupPanel.setOpaque(false);
 
-        simplifyGroupsLbl.setText("Simplify protein groups");
+        simplifyGroupsLbl.setText("Simplify Protein Groups");
 
-        simplifyScoreLbl.setText("- based on score");
+        simplifyScoreLbl.setText("- Based on Score");
 
-        simplifyEnzymaticityLbl.setText("- based on enzymaticity");
+        simplifyEnzymaticityLbl.setText("- Based on Enzymaticity");
 
-        simplifyEvidenceLbl.setText("- based on Uniprot evidence level");
+        simplifyEvidenceLbl.setText("- Based on UniProt Evidence Level");
 
-        simplifyCharacterizationLbl.setText("- based on protein characterization");
+        simplifyCharacterizationLbl.setText("- Based on Protein Characterization");
 
         simplifyGroupsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         simplifyGroupsCmb.addActionListener(new java.awt.event.ActionListener() {
@@ -310,51 +311,51 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
 
         simplifyCharacterizationCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout proteinGroupPanelLayout = new javax.swing.GroupLayout(proteinGroupPanel);
+        proteinGroupPanel.setLayout(proteinGroupPanelLayout);
+        proteinGroupPanelLayout.setHorizontalGroup(
+            proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(simplifyGroupsLbl)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(simplifyScoreLbl)
                             .addComponent(simplifyEnzymaticityLbl)
                             .addComponent(simplifyEvidenceLbl)
                             .addComponent(simplifyCharacterizationLbl))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(simplifyEvidenceCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(61, 61, 61)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(simplifyScoreCmb, 0, 296, Short.MAX_VALUE)
                     .addComponent(simplifyEnzymaticityCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(simplifyScoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(simplifyGroupsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 120, Short.MAX_VALUE)
-                    .addComponent(simplifyCharacterizationCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(simplifyEvidenceCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(simplifyCharacterizationCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(simplifyGroupsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        proteinGroupPanelLayout.setVerticalGroup(
+            proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(simplifyGroupsLbl)
                     .addComponent(simplifyGroupsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(simplifyScoreLbl)
                     .addComponent(simplifyScoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(simplifyEnzymaticityLbl)
                     .addComponent(simplifyEnzymaticityCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(simplifyEvidenceLbl)
                     .addComponent(simplifyEvidenceCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(simplifyCharacterizationLbl)
                     .addComponent(simplifyCharacterizationCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -367,7 +368,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(proteinGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, backgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -381,9 +382,9 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(proteinGroupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -398,9 +399,7 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -469,13 +468,16 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
         canceled = true;
     }//GEN-LAST:event_formWindowClosing
 
+    /**
+     * Enable or disable the detailed options.
+     *
+     * @param evt
+     */
     private void simplifyGroupsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simplifyGroupsCmbActionPerformed
-
         simplifyScoreCmb.setEnabled(editable && simplifyGroupsCmb.getSelectedIndex() == 0);
         simplifyEnzymaticityCmb.setEnabled(editable && simplifyGroupsCmb.getSelectedIndex() == 0);
         simplifyEvidenceCmb.setEnabled(editable && simplifyGroupsCmb.getSelectedIndex() == 0);
         simplifyCharacterizationCmb.setEnabled(editable && simplifyGroupsCmb.getSelectedIndex() == 0);
-
     }//GEN-LAST:event_simplifyGroupsCmbActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -485,8 +487,8 @@ public class ProteinInferenceSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel databaseSettingsLbl;
     private javax.swing.JTextField databaseSettingsTxt;
     private javax.swing.JButton editDatabaseDetailsButton;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton okButton;
+    private javax.swing.JPanel proteinGroupPanel;
     private javax.swing.JComboBox simplifyCharacterizationCmb;
     private javax.swing.JLabel simplifyCharacterizationLbl;
     private javax.swing.JComboBox simplifyEnzymaticityCmb;

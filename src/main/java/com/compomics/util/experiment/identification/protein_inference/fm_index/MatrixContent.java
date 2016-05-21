@@ -11,60 +11,50 @@ import java.util.ArrayList;
 public class MatrixContent {
 
     /**
-     * Left Index.
+     * Left index.
      */
     public int left;
-    
     /**
-     * Right Index.
+     * Right index.
      */
     public int right;
-    
     /**
      * Character which was chosen.
      */
     public int character;
-    
-    
     /**
      * Index of the originating entry of a particular cell with the pattern
      * searching matrix.
      */
-    public MatrixContent previousContent;;
-    
+    public MatrixContent previousContent;
     /**
      * Current mass.
      */
     public double mass;
-    
     /**
      * Current peptide sequence.
      */
     public String peptideSequence;
-    
     /**
      * Current peptide sequence length.
      */
     public int length;
-    
     /**
-     * Current number of contained Xs.
+     * Current number of contained X's.
      */
-    public int numX;    
-    
+    public int numX;
     /**
      * Index to the modifications list.
      */
     public int modificationNum;
-    
     /**
-     * List of all modifictations
+     * List of all modifications.
      */
     public ArrayList<ModificationMatch> modifications;
-    
+
     /**
-     * Constructor
-     * 
+     * Constructor.
+     *
      * @param left left index boundary
      * @param right right index boundary
      * @param character current character stored
@@ -76,7 +66,8 @@ public class MatrixContent {
      * @param modificationNum index to modification list
      * @param modifications intermediate list of modifications
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, 
+            int length, int numX, int modificationNum, ArrayList<ModificationMatch> modifications) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -88,12 +79,13 @@ public class MatrixContent {
         this.modificationNum = modificationNum;
         this.modifications = modifications;
     }
-    
+
     /**
-     * Copy constructor
+     * Copy constructor.
+     *
      * @param foreign foreign matrix content instance
      */
-    public MatrixContent(MatrixContent foreign){
+    public MatrixContent(MatrixContent foreign) {
         this.left = foreign.left;
         this.right = foreign.right;
         this.character = foreign.character;
@@ -105,10 +97,10 @@ public class MatrixContent {
         this.modificationNum = foreign.modificationNum;
         this.modifications = foreign.modifications;
     }
-    
+
     /**
-     * Constructor 
-     * 
+     * Constructor.
+     *
      * @param left left index boundary
      * @param right right index boundary
      * @param character current character stored

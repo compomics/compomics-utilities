@@ -1,8 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference;
 
-import com.compomics.util.preferences.SequenceMatchingPreferences;
-import static com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType.values;
-
 /**
  * Enum of the different peptide mappers implemented.
  *
@@ -11,7 +8,13 @@ import static com.compomics.util.preferences.SequenceMatchingPreferences.Matchin
  */
 public enum PeptideMapperType {
 
+    /**
+     * The FM index.
+     */
     fm_index(0, "FM-Index", "Full-text index in Minute space index stored in a wavelet tree."),
+    /**
+     * The protein tree.
+     */
     tree(1, "Tree", "Protein fasta database index in the form of a tree using a database as back-end.");
 
     /**
@@ -76,5 +79,4 @@ public enum PeptideMapperType {
         }
         throw new IllegalArgumentException("No peptide mapper type found for index " + index + ".");
     }
-
 }

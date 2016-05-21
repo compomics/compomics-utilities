@@ -20,7 +20,7 @@ public class ProteinInferencePreferences implements Serializable {
      */
     private File proteinSequenceDatabase;
     /**
-     * Simplify Protein Groups.
+     * Simplify protein groups.
      */
     private Boolean simplifyProteinGroups = true;
     /**
@@ -28,7 +28,7 @@ public class ProteinInferencePreferences implements Serializable {
      */
     private Boolean simplifyGroupsScore = true;
     /**
-     * Simplify groups based on Uniprot evidence level.
+     * Simplify groups based on UniProt evidence level.
      */
     private Boolean simplifyGroupsEvidence = true;
     /**
@@ -252,5 +252,4 @@ public class ProteinInferencePreferences implements Serializable {
     public void setSimplifyGroupsUncharacterized(Boolean simplifyGroupsUncharacterized) {
         this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
     }
-
 }

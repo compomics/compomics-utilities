@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 
 /**
  * PTMLocalizationParametersDialog.
- * 
+ *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
@@ -30,7 +30,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      *
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public PTMLocalizationParametersDialog(java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(parentFrame, true);
@@ -48,7 +49,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame a parent frame
      * @param ptmScoringPreferences the PTM scoring preferences to display
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public PTMLocalizationParametersDialog(Dialog owner, java.awt.Frame parentFrame, PTMScoringPreferences ptmScoringPreferences, boolean editable) {
         super(owner, true);
@@ -68,7 +70,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         neutralLossesCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         alignOnConfidentCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         scoreCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-        
+
         scoreCmb.setEnabled(editable);
         neutralLossesCmb.setEnabled(editable);
         thresholdAutoCmb.setEnabled(editable);
@@ -111,7 +113,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
             thresholdTxt.setEnabled(false);
             thresholdTxt.setEditable(false);
         }
-        
+
         if (ptmScoringPreferences.getAlignNonConfidentPTMs()) {
             alignOnConfidentCmb.setSelectedIndex(0);
         } else {
@@ -178,22 +180,22 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
      * @return the PTM scoring preferences as set by the user
      */
     public PTMScoringPreferences getPtmScoringPreferences() {
-        
+
         PTMScoringPreferences ptmScoringPreferences = new PTMScoringPreferences();
-        
+
         ptmScoringPreferences.setProbabilitsticScoreCalculation(scoreCmb.getSelectedItem() != PtmScore.None);
         ptmScoringPreferences.setSelectedProbabilisticScore((PtmScore) scoreCmb.getSelectedItem());
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
-        
+
         if (thresholdAutoCmb.getSelectedIndex() == 0) {
             ptmScoringPreferences.setEstimateFlr(true);
         } else {
             ptmScoringPreferences.setEstimateFlr(false);
             ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
         }
-        
-        ptmScoringPreferences.setAlignNonConfidentPTMs(alignOnConfidentCmb.getSelectedIndex()==0);
-        
+
+        ptmScoringPreferences.setAlignNonConfidentPTMs(alignOnConfidentCmb.getSelectedIndex() == 0);
+
         return ptmScoringPreferences;
     }
 
@@ -285,7 +287,7 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                 .addGroup(ptmScoringPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                         .addComponent(neutralLossesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                         .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(ptmScoringPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -326,7 +328,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
         siteAlignmentPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Site Alignment"));
         siteAlignmentPanel.setOpaque(false);
 
-        alignOnConfidentLbl.setText("Align peptide ambiguously localized PTMs on confident sites");
+        alignOnConfidentLbl.setText("Confident Sites");
+        alignOnConfidentLbl.setToolTipText("Align peptide ambiguously localized PTMs on confident sites");
 
         alignOnConfidentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -373,8 +376,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(ptmScoringPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(siteAlignmentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -397,8 +400,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
@@ -407,8 +410,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Close the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
@@ -418,8 +421,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Enable/disable the subsettings setting.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void scoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreCmbActionPerformed
         if (scoreCmb.getSelectedItem() != PtmScore.None) {
@@ -442,8 +445,8 @@ public class PTMLocalizationParametersDialog extends javax.swing.JDialog {
 
     /**
      * Enable/disable the threshold setting.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void thresholdAutoCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thresholdAutoCmbActionPerformed
         if (thresholdAutoCmb.getSelectedIndex() == 1) {

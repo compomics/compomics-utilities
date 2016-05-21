@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.protein_inference;
 import com.compomics.util.experiment.biology.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
-import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,14 +13,14 @@ import java.util.HashMap;
  * Interface for a class mapping peptides to a protein.
  *
  * @author Marc Vaudel
- * @author dominik.kopczynski
+ * @author Dominik Kopczynski
  */
 public interface PeptideMapper {
 
     /**
-     * Returns the protein mapping in the fasta file loaded in the sequence
+     * Returns the protein mapping in the FASTA file loaded in the sequence
      * factory for the given peptide sequence in a map: peptide sequence found
-     * in the fasta file | protein accession | list of indexes of the peptide
+     * in the FASTA file | protein accession | list of indexes of the peptide
      * sequence on the protein sequence. 0 is the first amino acid.
      *
      * @param peptideSequence the peptide sequence
@@ -31,27 +30,25 @@ public interface PeptideMapper {
      * accession &gt; index in the protein An empty map if not
      *
      * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
+     * reading or writing a file
      * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
+     * while deserializing an object
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while interacting with the tree.
+     * occurred while interacting with the tree
      * @throws SQLException if an SQLException exception thrown whenever a
-     * problem occurred while interacting with the tree database.
+     * problem occurred while interacting with the tree database
      */
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException;
-    
-    
 
     /**
      * Returns the protein mappings for the given peptide sequence. Peptide
-     * sequence | Protein accession | Index in the protein. An empty map
-     * if not found.
+     * sequence | Protein accession | Index in the protein. An empty map if not
+     * found.
      *
      * @param tag the tag to look for in the tree. Must contain a consecutive
      * amino acid sequence of longer or equal size than the initialTagSize of
-     * the tree.
+     * the tree
      * @param tagMatcher the tag matcher to use
      * @param sequenceMatchingPreferences the sequence matching preferences
      * @param massTolerance the MS2 m/z tolerance
@@ -73,15 +70,15 @@ public interface PeptideMapper {
      * Empties all caches.
      */
     public void emptyCache();
-    
+
     /**
      * Closes all connections to files, tries to delete corrupted and deprecated
      * indexes.
      *
      * @throws IOException exception thrown whenever an error occurs while
      * reading or writing a file.
-     * @throws SQLException exception thrown whenever a
-     * problem occurred while interacting with a database.
+     * @throws SQLException exception thrown whenever a problem occurred while
+     * interacting with a database.
      */
     public void close() throws IOException, SQLException;
 }

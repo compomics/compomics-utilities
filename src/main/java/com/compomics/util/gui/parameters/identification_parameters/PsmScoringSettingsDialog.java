@@ -172,6 +172,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringPreferences getPsmScoringPreferences() {
         PsmScoringPreferences psmScoringPreferences = new PsmScoringPreferences();
+        psmScoringPreferences.clearAllScores();
         for (Integer algorithm : spectrumMatchingScores.keySet()) {
             HashSet<Integer> scores = spectrumMatchingScores.get(algorithm);
             for (Integer score : scores) {

@@ -54,6 +54,24 @@ public class PsmScoringPreferences implements Serializable {
         }
         algorithmScores.add(scoreId);
     }
+    
+    /**
+     * Clears the score for the given algorithm.
+     * 
+     * @param advocateId the score for the given algorithm
+     */
+    public void clearScores(Integer advocateId) {
+        if (spectrumMatchingScores != null) {
+            spectrumMatchingScores.remove(advocateId);
+        }
+    }
+    
+    /**
+     * Clears all scores.
+     */
+    public void clearAllScores() {
+        spectrumMatchingScores.clear();
+    }
 
     /**
      * Returns the scores set for a given algorithm.
@@ -252,14 +270,15 @@ public class PsmScoringPreferences implements Serializable {
         defaultScores.add(PsmScore.native_score.index);
 
         // De novo scores
-        HashSet<Integer> scores = new HashSet<Integer>(3);
-        scores.add(PsmScore.precursor_accuracy.index);
-        scores.add(PsmScore.aa_ms2_mz_fidelity.index);
-        scores.add(PsmScore.aa_intensity.index);
-        spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(3);
-        spectrumMatchingScores.put(Advocate.direcTag.getIndex(), scores);
-        spectrumMatchingScores.put(Advocate.pepnovo.getIndex(), new HashSet<Integer>(scores));
-        spectrumMatchingScores.put(Advocate.pNovo.getIndex(), new HashSet<Integer>(scores));
-
+        if (spectrumMatchingScores == null) { // Backward compatibility
+            spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(3);
+            HashSet<Integer> scores = new HashSet<Integer>(3);
+            scores.add(PsmScore.precursor_accuracy.index);
+            scores.add(PsmScore.aa_ms2_mz_fidelity.index);
+            scores.add(PsmScore.aa_intensity.index);
+            spectrumMatchingScores.put(Advocate.direcTag.getIndex(), scores);
+            spectrumMatchingScores.put(Advocate.pepnovo.getIndex(), new HashSet<Integer>(scores));
+            spectrumMatchingScores.put(Advocate.pNovo.getIndex(), new HashSet<Integer>(scores));
+        }
     }
 }

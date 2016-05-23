@@ -332,7 +332,6 @@
                           <Image iconType="3" name="/icons/edit_gray.png"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="PSM Scoring"/>
-                        <Property name="enabled" type="boolean" value="false"/>
                         <Property name="horizontalAlignment" type="int" value="2"/>
                         <Property name="iconTextGap" type="int" value="15"/>
                         <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">

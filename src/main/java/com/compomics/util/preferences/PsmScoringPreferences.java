@@ -1,7 +1,8 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.Util;
-import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
+import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class PsmScoringPreferences implements Serializable {
                     return true;
                 }
                 for (int scoreIndex : scores) {
-                    if (scoreIndex != PsmScores.native_score.index) {
+                    if (scoreIndex != PsmScore.native_score.index) {
                         return true;
                     }
                 }
@@ -96,7 +97,7 @@ public class PsmScoringPreferences implements Serializable {
                 return true;
             }
             for (int scoreIndex : defaultScores) {
-                if (scoreIndex != PsmScores.native_score.index) {
+                if (scoreIndex != PsmScore.native_score.index) {
                     return true;
                 }
             }
@@ -110,6 +111,9 @@ public class PsmScoringPreferences implements Serializable {
      * @return the advocates with a specific scoring
      */
     public Set<Integer> getAdvocates() {
+        if (spectrumMatchingScores == null) {
+            return new HashSet<Integer>(0);
+        }
         return spectrumMatchingScores.keySet();
     }
 
@@ -161,8 +165,33 @@ public class PsmScoringPreferences implements Serializable {
 
         StringBuilder output = new StringBuilder();
 
-        //output.append(" : ").append("").append(".").append(newLine);
-        output.append("(not yet available)").append(newLine); // @TODO: implement me!
+        for (Integer advocateIndex : getAdvocates()) {
+            Advocate advocate = Advocate.getAdvocate(advocateIndex);
+            output.append(advocate.getName()).append(": ");
+            boolean first = true;
+            for (Integer scoreIndex : getScoreForAlgorithm(advocateIndex)) {
+                if (first) {
+                    first = false;
+                } else {
+                    output.append(", ");
+                }
+                PsmScore score = PsmScore.getScore(scoreIndex);
+                output.append(score.name);
+            }
+            output.append(".").append(newLine);
+        }
+        output.append("Default: ");
+        boolean first = true;
+        for (Integer scoreIndex : getDefaultScores()) {
+            if (first) {
+                first = false;
+            } else {
+                output.append(", ");
+            }
+            PsmScore score = PsmScore.getScore(scoreIndex);
+            output.append(score.name);
+        }
+        output.append(".").append(newLine);
 
         return output.toString();
     }
@@ -207,6 +236,9 @@ public class PsmScoringPreferences implements Serializable {
      * @return the default scores
      */
     public HashSet<Integer> getDefaultScores() {
+        if (defaultScores == null) { // Backward compatibility
+            setDefaultScores();
+        }
         return defaultScores;
     }
 
@@ -214,7 +246,20 @@ public class PsmScoringPreferences implements Serializable {
      * Sets the scores to use by default.
      */
     private void setDefaultScores() {
+
+        // Use only the native score by default
         defaultScores = new HashSet<Integer>(1);
-        defaultScores.add(PsmScores.native_score.index);
+        defaultScores.add(PsmScore.native_score.index);
+
+        // De novo scores
+        HashSet<Integer> scores = new HashSet<Integer>(3);
+        scores.add(PsmScore.precursor_accuracy.index);
+        scores.add(PsmScore.aa_ms2_mz_fidelity.index);
+        scores.add(PsmScore.aa_intensity.index);
+        spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(3);
+        spectrumMatchingScores.put(Advocate.direcTag.getIndex(), scores);
+        spectrumMatchingScores.put(Advocate.pepnovo.getIndex(), new HashSet<Integer>(scores));
+        spectrumMatchingScores.put(Advocate.pNovo.getIndex(), new HashSet<Integer>(scores));
+
     }
 }

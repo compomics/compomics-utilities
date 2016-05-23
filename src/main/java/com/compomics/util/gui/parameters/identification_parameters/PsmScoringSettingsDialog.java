@@ -172,6 +172,12 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
      */
     public PsmScoringPreferences getPsmScoringPreferences() {
         PsmScoringPreferences psmScoringPreferences = new PsmScoringPreferences();
+        for (Integer algorithm : spectrumMatchingScores.keySet()) {
+            HashSet<Integer> scores = spectrumMatchingScores.get(algorithm);
+            for (Integer score : scores) {
+                psmScoringPreferences.addScore(algorithm, score);
+            }
+        }
         return psmScoringPreferences;
     }
 
@@ -193,6 +199,9 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        psmScoresPopupMenu = new javax.swing.JPopupMenu();
+        addJMenuItem = new javax.swing.JMenuItem();
+        removeJMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
@@ -210,6 +219,24 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
                 };
             }
         };
+
+        addJMenuItem.setText("Add");
+        addJMenuItem.setEnabled(false);
+        addJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addJMenuItemActionPerformed(evt);
+            }
+        });
+        psmScoresPopupMenu.add(addJMenuItem);
+
+        removeJMenuItem.setText("Remove");
+        removeJMenuItem.setEnabled(false);
+        removeJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeJMenuItemActionPerformed(evt);
+            }
+        });
+        psmScoresPopupMenu.add(removeJMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("PSM Scoring Settings");
@@ -339,29 +366,52 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         if (evt.getButton() == MouseEvent.BUTTON1) {
             int row = psmScoresJTable.getSelectedRow();
             int column = psmScoresJTable.getSelectedColumn();
-
-            String advocateName = advocateNames.get(row);
-            Advocate advocate = Advocate.getAdvocate(advocateName);
-            Integer advocateIndex = advocate.getIndex();
-            HashSet<Integer> scores = spectrumMatchingScores.get(advocateIndex);
-            String scoreName = scoresNames.get(column - 2);
-            PsmScore psmScore = PsmScore.getScore(scoreName);
-            Integer scoreIndex = psmScore.index;
-            if (scores.contains(scoreIndex)) {
-                scores.remove(scoreIndex);
-            } else {
-                scores.add(scoreIndex);
+            if (column > 1 && row < advocateNames.size()) {
+                String advocateName = advocateNames.get(row);
+                Advocate advocate = Advocate.getAdvocate(advocateName);
+                Integer advocateIndex = advocate.getIndex();
+                HashSet<Integer> scores = spectrumMatchingScores.get(advocateIndex);
+                String scoreName = scoresNames.get(column - 2);
+                PsmScore psmScore = PsmScore.getScore(scoreName);
+                Integer scoreIndex = psmScore.index;
+                if (scores.contains(scoreIndex)) {
+                    scores.remove(scoreIndex);
+                } else {
+                    scores.add(scoreIndex);
+                }
+                if (scores.isEmpty()) {
+                    scores.add(PsmScore.native_score.index);
+                }
+                updateTableContent();
             }
-            updateTableContent();
+        } else if (evt.getButton() == MouseEvent.BUTTON3) {
+            psmScoresJTable.setRowSelectionInterval(psmScoresJTable.rowAtPoint(evt.getPoint()), psmScoresJTable.rowAtPoint(evt.getPoint()));
+            psmScoresPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_psmScoresJTableMouseReleased
 
+    private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
+        // TODO: let the user select a score
+    }//GEN-LAST:event_addJMenuItemActionPerformed
+
+    private void removeJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeJMenuItemActionPerformed
+
+        int row = psmScoresJTable.getSelectedRow();
+        String advocateName = advocateNames.get(row);
+        Advocate advocate = Advocate.getAdvocate(advocateName);
+        Integer advocateIndex = advocate.getIndex();
+        spectrumMatchingScores.remove(advocateIndex);
+    }//GEN-LAST:event_removeJMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addJMenuItem;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton okButton;
     private javax.swing.JScrollPane psmScoresJScrollPane;
     private javax.swing.JTable psmScoresJTable;
+    private javax.swing.JPopupMenu psmScoresPopupMenu;
+    private javax.swing.JMenuItem removeJMenuItem;
     private javax.swing.JPanel scoresSelectionJPanel;
     // End of variables declaration//GEN-END:variables
 

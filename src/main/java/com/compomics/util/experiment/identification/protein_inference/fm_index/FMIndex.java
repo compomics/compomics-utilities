@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import org.jsuffixarrays.*;
 
@@ -608,10 +609,7 @@ public class FMIndex implements PeptideMapper {
         int maxNum = setCharacter.size();
         for (int i = 0; i < maxNum; ++i){
             int pos = 128 + setCharacter.get(i)[0];
-            while (pos < aaMasses.length && aaMasses[pos] != -1){
-                setCharacter.add(new Integer[]{setCharacter.get(i)[0], setCharacter.get(i)[1], setCharacter.get(i)[2], pos});
-                pos += 128;
-            }
+            if (aaMasses[pos] != -1) setCharacter.add(new Integer[]{setCharacter.get(i)[0], setCharacter.get(i)[1], setCharacter.get(i)[2], pos});
         }
     }
     
@@ -650,10 +648,8 @@ public class FMIndex implements PeptideMapper {
 
                         if (combinationMass <= newMass + massTolerance) {
                             MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, pepLen + 1, 0, borders[3], null);
-                            if (pepLen + 1 < lenCombinations){
-                                matrix.add(newCell);
-                            }
-                            else matrixFinished.add(newCell);
+                            List insertList = (pepLen + 1 < lenCombinations) ? matrix : matrixFinished;
+                            insertList.add(newCell);
                         } else {
                             matrix.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, pepLen, 0, borders[3], null));
                         }
@@ -669,17 +665,13 @@ public class FMIndex implements PeptideMapper {
                     final int lessValue = less[aminoAcid];
                     final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
                     final int leftIndex = lessValue + range[0];
-                    final int rightIndex = lessValue + range[1] - 1;                    
+                    final int rightIndex = lessValue + range[1] - 1;
+                    final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
 
-                    if (leftIndex <= rightIndex) {
-                        final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                        if (newNumX <= xNumLimit){
-                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, pepLen + 1, newNumX, -1, null);
-                            if(pepLen + 1 < lenCombinations){
-                                matrix.add(newCell);
-                            }
-                            else matrixFinished.add(newCell);
-                        }
+                    if (leftIndex <= rightIndex && newNumX <= xNumLimit){
+                        MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, pepLen + 1, newNumX, -1, null);
+                        List insertList = (pepLen + 1 < lenCombinations) ? matrix : matrixFinished;
+                        insertList.add(newCell);
                     }
                 }
             }

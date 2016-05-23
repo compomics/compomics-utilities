@@ -60,7 +60,7 @@ public class PrecursorIon extends Ion {
 
     /**
      * Constructor for a generic ion without neutral losses.
-     * 
+     *
      * @param theoreticMass the theoretic mass of the precursor
      */
     public PrecursorIon(double theoreticMass) {
@@ -81,6 +81,14 @@ public class PrecursorIon extends Ion {
             return new CvTerm("PSI-MS", "MS:1001521", "frag: precursor ion - H2O", "0");
         } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
             return new CvTerm("PSI-MS", "MS:1001522", "frag: precursor ion - NH3", "0");
+        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
+            return new CvTerm("PSI-MS", "MS:1002692", "frag: precursor ion - H3PO4", "0");
+        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
+            return new CvTerm("PSI-MS", "MS:1002693", "frag: precursor ion - HPO3", "0");
+        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
+            return new CvTerm("PSI-MS", "MS:1002694", "frag: precursor ion - CH4OS", "0");
+        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
+            return new CvTerm("PSI-MS", "MS:1002695", "frag: precursor ion - C3H9N", "0");
         } else {
             return null;
         }

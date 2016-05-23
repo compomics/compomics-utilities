@@ -23,36 +23,36 @@ public enum PsmScore {
     /**
      * The native score of the search engine.
      */
-    native_score(-1, "native", false, "The algorithm native score"),
+    native_score(-1, "Native", false, "The algorithm native score"),
     /**
      * The precursor accuracy.
      */
-    precursor_accuracy(0, "precursor accuracy", false, "Precursor accuracy score"),
+    precursor_accuracy(0, "Precursor Accuracy", false, "Precursor accuracy score"),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    ms2_mz_fidelity(1, "fragment ion mz fildelity", false, "Fragment ion m/z fidelity score"),
+    ms2_mz_fidelity(1, "Fragment Ion mz Fildelity", false, "Fragment ion m/z fidelity score"),
     /**
      * The m/z fidelity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
      */
-    aa_ms2_mz_fidelity(2, "AA fragment ion mz fildelity", false, "Fragment ion m/z fidelity score per amino acid"),
+    aa_ms2_mz_fidelity(2, "AA Fragment Ion mz Fildelity", false, "Fragment ion m/z fidelity score per amino acid"),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    intensity(3, "intensity", true, "Intensity score"),
+    intensity(3, "Intensity", true, "Intensity score"),
     /**
      * The intensity sub-score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943) per amino acid.
      */
-    aa_intensity(4, "AA intensity", false, "Intensity score per amino acid"),
+    aa_intensity(4, "AA Intensity", false, "Intensity score per amino acid"),
     /**
      * The complementarity score as adapted from the DirecTag paper
      * (http://www.ncbi.nlm.nih.gov/pubmed/18630943).
      */
-    complementarity(5, "complementarity", true, "Ion complementarity score");
+    complementarity(5, "Complementarity", true, "Ion complementarity score");
 
     /**
      * The index of the score of interest.
@@ -106,7 +106,7 @@ public enum PsmScore {
      * Returns the PSM score of the given name. Null if not found.
      *
      * @param scoreName the name of the desired score
-     * 
+     *
      * @return the score of given name
      */
     public static PsmScore getScore(String scoreName) {
@@ -134,12 +134,13 @@ public enum PsmScore {
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
-     * to this psm
+     * to this PSM
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, 
+            IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
         PsmScore psmScore = getScore(scoreIndex);
         double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
         if (psmScore.increasing) {
@@ -158,12 +159,13 @@ public enum PsmScore {
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
-     * to this psm
+     * to this PSM
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, 
+            IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
         PsmScore psmScore = getScore(scoreIndex);
         return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
     }
@@ -178,17 +180,19 @@ public enum PsmScore {
      * @param shotgunProtocol information on the protocol used
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
-     * to this psm
+     * to this PSM
      * @param psmScore the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PsmScore psmScore) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, 
+            IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PsmScore psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm(), identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
+                return PrecursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(), shotgunProtocol.isMs1ResolutionPpm(), 
+                        identificationParameters.getSearchParameters().getMinIsotopicCorrection(), identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
             case ms2_mz_fidelity:
                 return MS2MzFidelityScore.getScore(peptide, spectrum, identificationParameters.getAnnotationPreferences(), specificAnnotationPreferences, peptideSpectrumAnnotator);
             case aa_ms2_mz_fidelity:
@@ -203,5 +207,4 @@ public enum PsmScore {
                 throw new UnsupportedOperationException("Score not implemented.");
         }
     }
-
 }

@@ -1,10 +1,12 @@
 package com.compomics.util.preferences;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScores;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Generic class for peptide spectrum match scoring.
@@ -22,6 +24,17 @@ public class PsmScoringPreferences implements Serializable {
      * map: advocate index &gt; list of score indexes.
      */
     private HashMap<Integer, HashSet<Integer>> spectrumMatchingScores = null;
+    /**
+     * The scores to use by default.
+     */
+    private HashSet<Integer> defaultScores;
+
+    /**
+     * Constructor.
+     */
+    public PsmScoringPreferences() {
+        setDefaultScores();
+    }
 
     /**
      * Adds a score for a given algorithm to the scoring preferences.
@@ -63,9 +76,14 @@ public class PsmScoringPreferences implements Serializable {
      * @return a boolean indicating whether a score computation is needed
      */
     public boolean isScoringNeeded(int advocate) {
+        boolean scoreSet = false;
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             HashSet<Integer> scores = spectrumMatchingScores.get(advocate);
             if (scores != null && !scores.isEmpty()) {
+                scoreSet = true;
+                if (scores.size() > 1) {
+                    return true;
+                }
                 for (int scoreIndex : scores) {
                     if (scoreIndex != PsmScores.native_score.index) {
                         return true;
@@ -73,7 +91,26 @@ public class PsmScoringPreferences implements Serializable {
                 }
             }
         }
+        if (!scoreSet && defaultScores != null && !defaultScores.isEmpty()) {
+            if (defaultScores.size() > 1) {
+                return true;
+            }
+            for (int scoreIndex : defaultScores) {
+                if (scoreIndex != PsmScores.native_score.index) {
+                    return true;
+                }
+            }
+        }
         return false;
+    }
+
+    /**
+     * Returns the advocates with a specific scoring.
+     *
+     * @return the advocates with a specific scoring
+     */
+    public Set<Integer> getAdvocates() {
+        return spectrumMatchingScores.keySet();
     }
 
     /**
@@ -86,7 +123,7 @@ public class PsmScoringPreferences implements Serializable {
     public boolean isScoringNeeded(ArrayList<Integer> advocates) {
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             for (Integer advocate : advocates) {
-                if (isScoringNeeded(advocate)) {
+                if (PsmScoringPreferences.this.isScoringNeeded(advocate)) {
                     return true;
                 }
             }
@@ -112,25 +149,24 @@ public class PsmScoringPreferences implements Serializable {
         }
         return false;
     }
-    
+
     /**
      * Returns a short description of the parameters.
      *
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
-        String newLine = System.getProperty("line.separator");
-        
-        StringBuilder output = new StringBuilder();
-        
-        //output.append(" : ").append("").append(".").append(newLine);
 
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+
+        //output.append(" : ").append("").append(".").append(newLine);
         output.append("(not yet available)").append(newLine); // @TODO: implement me!
 
         return output.toString();
     }
-    
+
     /**
      * Returns true if the objects have identical settings.
      *
@@ -144,8 +180,41 @@ public class PsmScoringPreferences implements Serializable {
             return false;
         }
 
-        // @TODO: implement me!!
-        
+        if (!Util.sameSets(defaultScores, otherPsmScoringPreferences.getDefaultScores())) {
+            return false;
+        }
+
+        HashSet<Integer> thisAdvocates = new HashSet<Integer>(getAdvocates());
+        HashSet<Integer> otherAdvocates = new HashSet<Integer>(otherPsmScoringPreferences.getAdvocates());
+        if (!Util.sameSets(thisAdvocates, otherAdvocates)) {
+            return false;
+        }
+
+        for (Integer advocate : thisAdvocates) {
+            HashSet<Integer> thisScores = getScoreForAlgorithm(advocate);
+            HashSet<Integer> otherScores = otherPsmScoringPreferences.getScoreForAlgorithm(advocate);
+            if (!Util.sameSets(thisScores, otherScores)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    /**
+     * Returns the default scores.
+     *
+     * @return the default scores
+     */
+    public HashSet<Integer> getDefaultScores() {
+        return defaultScores;
+    }
+
+    /**
+     * Sets the scores to use by default.
+     */
+    private void setDefaultScores() {
+        defaultScores = new HashSet<Integer>(1);
+        defaultScores.add(PsmScores.native_score.index);
     }
 }

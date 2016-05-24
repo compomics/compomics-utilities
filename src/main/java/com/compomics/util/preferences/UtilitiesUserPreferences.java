@@ -152,6 +152,7 @@ public class UtilitiesUserPreferences implements Serializable {
     private Boolean autoUpdate = true;
     /**
      * Indicates whether the tool should notify its start.
+     * @deprecated replaced by autoUpdate only
      */
     private Boolean notifyStart = true;
     /**

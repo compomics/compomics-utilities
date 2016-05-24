@@ -48,7 +48,6 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
             utilitiesUserPreferences = new UtilitiesUserPreferences();
         }
         updatesCheck.setSelected(utilitiesUserPreferences.isAutoUpdate());
-        toolStartCheck.setSelected(utilitiesUserPreferences.isNotifyStart());
     }
 
     /**
@@ -56,7 +55,6 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
      */
     private void savePreferences() {
         utilitiesUserPreferences.setAutoUpdate(updatesCheck.isSelected());
-        utilitiesUserPreferences.setNotifyStart(toolStartCheck.isSelected());
         try {
             UtilitiesUserPreferences.saveUserPreferences(utilitiesUserPreferences);
         } catch (Exception e) {
@@ -79,7 +77,6 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
         settingsPanel = new javax.swing.JPanel();
-        toolStartCheck = new javax.swing.JCheckBox();
         updatesCheck = new javax.swing.JCheckBox();
         confidentialLabel = new javax.swing.JLabel();
 
@@ -125,11 +122,7 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
         settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options (all CompOmics tools)"));
         settingsPanel.setOpaque(false);
 
-        toolStartCheck.setText("Provide annonymous usage statistics");
-        toolStartCheck.setIconTextGap(15);
-        toolStartCheck.setOpaque(false);
-
-        updatesCheck.setText("Check for updates when the tool starts");
+        updatesCheck.setText("Check for Updates at Tool Startup");
         updatesCheck.setIconTextGap(15);
         updatesCheck.setOpaque(false);
 
@@ -139,18 +132,14 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(updatesCheck)
-                    .addComponent(toolStartCheck))
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addComponent(updatesCheck)
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(updatesCheck)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(toolStartCheck)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -262,7 +251,6 @@ public class PrivacySettingsDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
     private javax.swing.JPanel settingsPanel;
-    private javax.swing.JCheckBox toolStartCheck;
     private javax.swing.JCheckBox updatesCheck;
     // End of variables declaration//GEN-END:variables
 }

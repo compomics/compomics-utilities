@@ -119,11 +119,6 @@ public enum PsmScore {
     }
 
     /**
-     * A peptide spectrum annotator used when computing scores.
-     */
-    private static PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
-
-    /**
      * Scores the match between the given peptide and spectrum using the given
      * score. The score is forced to decrease with the quality of the match by
      * taking the opposite value when relevant.
@@ -135,13 +130,14 @@ public enum PsmScore {
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
+     * @param peptideSpectrumAnnotator the spectrum annotator to use
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
+    public static double getDecreasingScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
         PsmScore psmScore = getScore(scoreIndex);
-        double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
+        double score = getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
         if (psmScore.increasing) {
             return -score;
         }
@@ -159,13 +155,14 @@ public enum PsmScore {
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
+     * @param peptideSpectrumAnnotator the spectrum annotator to use
      * @param scoreIndex the index of the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, int scoreIndex) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
         PsmScore psmScore = getScore(scoreIndex);
-        return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, psmScore);
+        return getScore(peptide, peptideCharge, spectrum, shotgunProtocol, identificationParameters, specificAnnotationPreferences, peptideSpectrumAnnotator, psmScore);
     }
 
     /**
@@ -179,11 +176,12 @@ public enum PsmScore {
      * @param identificationParameters the identification parameters
      * @param specificAnnotationPreferences the annotation preferences specific
      * to this psm
+     * @param peptideSpectrumAnnotator the spectrum annotator to use
      * @param psmScore the score to use
      *
      * @return the score of the match
      */
-    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PsmScore psmScore) {
+    public static double getScore(Peptide peptide, Integer peptideCharge, MSnSpectrum spectrum, ShotgunProtocol shotgunProtocol, IdentificationParameters identificationParameters, SpecificAnnotationSettings specificAnnotationPreferences, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");

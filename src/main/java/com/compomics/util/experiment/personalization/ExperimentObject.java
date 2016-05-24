@@ -27,9 +27,18 @@ public abstract class ExperimentObject implements Serializable, Cloneable {
      */
     public void addUrParam(UrParameter parameter) {
         if (urParams == null) {
-            urParams = new HashMap<String, UrParameter>(1);
+            createParamsMap();
         }
         urParams.put(getParameterKey(parameter), parameter);
+    }
+    
+    /**
+     * Creates the parameters map unless done by another thread already.
+     */
+    private synchronized void createParamsMap() {
+        if (urParams == null) {
+            urParams = new HashMap<String, UrParameter>(1);
+        }
     }
 
     /**

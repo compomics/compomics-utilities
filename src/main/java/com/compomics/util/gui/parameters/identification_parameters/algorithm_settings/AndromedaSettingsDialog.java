@@ -3,11 +3,13 @@ package com.compomics.util.gui.parameters.identification_parameters.algorithm_se
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters.AndromedaDecoyMode;
 import com.compomics.util.experiment.massspectrometry.FragmentationMethod;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Color;
 import java.awt.Dialog;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
@@ -32,7 +34,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
      *
      * @param parentFrame the parent frame
      * @param andromedaParameters the Andromeda parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public AndromedaSettingsDialog(java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
         super(parentFrame, true);
@@ -51,7 +54,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
      * @param owner the dialog owner
      * @param parentFrame the parent frame
      * @param andromedaParameters the Andromeda parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
     public AndromedaSettingsDialog(Dialog owner, java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
         super(owner, true);
@@ -68,7 +72,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
      * Sets up the GUI.
      */
     private void setUpGUI() {
-        
+
         neutralLossesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentAllCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -77,7 +81,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         ammoniaLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         waterLossCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         equalILCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        
+        decoyModeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
         minPepLengthNoEnzymeTxt.setEditable(editable);
         minPepLengthNoEnzymeTxt.setEnabled(editable);
         maxPepLengthNoEnzymeTxt.setEditable(editable);
@@ -102,12 +107,12 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         topPeaksTxt.setEnabled(editable);
         topPeaksWindowTxt.setEditable(editable);
         topPeaksWindowTxt.setEnabled(editable);
-        
+        decoyModeCmb.setEnabled(editable);
     }
 
     /**
      * Populates the GUI using the given settings.
-     * 
+     *
      * @param andromedaParameters the parameters to display
      */
     private void populateGUI(AndromedaParameters andromedaParameters) {
@@ -162,6 +167,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             higherChargeCombo.setSelectedIndex(1);
         }
 
+        decoyModeCmb.setSelectedItem(andromedaParameters.getDecoyMode());
+
         maxCombinationsTxt.setText(andromedaParameters.getMaxCombinations() + "");
         topPeaksTxt.setText(andromedaParameters.getTopPeaks() + "");
         topPeaksWindowTxt.setText(andromedaParameters.getTopPeaksWindow() + "");
@@ -171,7 +178,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
     public boolean isCancelled() {
         return cancelled;
     }
-    
+
     @Override
     public IdentificationAlgorithmParameter getParameters() {
         return getInput();
@@ -236,6 +243,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             result.setTopPeaksWindow(new Integer(input));
         }
 
+        result.setDecoyMode((AndromedaDecoyMode) decoyModeCmb.getSelectedItem());
+
         return result;
     }
 
@@ -284,6 +293,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         waterLossCombo = new javax.swing.JComboBox();
         equalILLabel = new javax.swing.JLabel();
         equalILCombo = new javax.swing.JComboBox();
+        decoyModeLabel = new javax.swing.JLabel();
+        decoyModeCmb = new javax.swing.JComboBox();
         openDialogHelpJButton = new javax.swing.JButton();
         advancedSettingsWarningLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
@@ -417,6 +428,10 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
         equalILCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         equalILCombo.setSelectedIndex(1);
 
+        decoyModeLabel.setText("Decoy Mode");
+
+        decoyModeCmb.setModel(new DefaultComboBoxModel(AndromedaDecoyMode.values()));
+
         javax.swing.GroupLayout settingsInnerPanelLayout = new javax.swing.GroupLayout(settingsInnerPanel);
         settingsInnerPanel.setLayout(settingsInnerPanelLayout);
         settingsInnerPanelLayout.setHorizontalGroup(
@@ -481,6 +496,10 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
                     .addComponent(topPeaksTxt)
                     .addComponent(topPeaksWindowTxt)
                     .addComponent(maxCombinationsTxt)))
+            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
+                .addComponent(decoyModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addComponent(decoyModeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         settingsInnerPanelLayout.setVerticalGroup(
             settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -546,7 +565,11 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(topPeaksWindowTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(topPeaksWindowLabel))
-                .addGap(0, 0, 0))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(decoyModeLabel)
+                    .addComponent(decoyModeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         settingsScrollPane.setViewportView(settingsInnerPanel);
@@ -564,7 +587,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -626,7 +649,7 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -819,6 +842,8 @@ public class AndromedaSettingsDialog extends javax.swing.JDialog implements Algo
     private javax.swing.JLabel ammoniaLossLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
+    private javax.swing.JComboBox decoyModeCmb;
+    private javax.swing.JLabel decoyModeLabel;
     private javax.swing.JComboBox empiricalCorrectionCombo;
     private javax.swing.JLabel empiricalCorrectionLabel;
     private javax.swing.JComboBox equalILCombo;

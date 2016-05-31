@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Represents an immonium ion.
- *  
+ *
  * @author Marc Vaudel
  */
 public class ImmoniumIon extends Ion {
@@ -245,7 +245,12 @@ public class ImmoniumIon extends Ion {
     }
 
     @Override
-    public CvTerm getPrideCvTerm() { // @TODO: replace by MS:1001239? will result in issues for the PRIDE XML export..
+    public CvTerm getPrideCvTerm() {
+        // @TODO: replace by MS:1001239? 
+        //        will result in issues for the PRIDE XML export 
+        //        and also has implications for the mzid export as all immonium ions will 
+        //        get the same cv term and this end up being group togeher when iterating 
+        //        the terms in the writeSpectrumIdentificationResult method
         switch (subType) {
             case ALANINE:
                 return new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");

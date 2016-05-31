@@ -357,6 +357,7 @@ public class ReporterIon extends Ion {
     public CvTerm getPrideCvTerm() {
 
         // @TODO: implement when the required cv terms are added
+        // return new CvTerm("PSI-MS", "MS:100????", "frag: reporter ion", null);
         return null;
     }
 

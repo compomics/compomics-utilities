@@ -174,6 +174,7 @@ public enum IdentificationParametersCLIParams {
     COMET_BATCH_SIZE("comet_batch_size", "Comet batch size, '0' means load and search all spectra at once, default is '0'.", false, true),
     COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, 1: true, 0: false, default is '1'.", false, true),
     COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.0'.", false, true),
+    COMET_OUTPUT("comet_output", "Comet output type, PepXML, SQT, TXT or Percolator, default is 'PepXML'.", false, true),
     //////////////////////////////////
     // Tide specific parameters
     //////////////////////////////////
@@ -227,12 +228,13 @@ public enum IdentificationParametersCLIParams {
     ANDROMEDA_FRAGMENT_ALL("andromeda_fragment_all", "Andromeda fragment all option, 1: true, 0: false, default is '0'.", false, true),
     ANDROMEDA_EMP_CORRECTION("andromeda_emp_correction", "Andromeda emperical correction, 1: true, 0: false, default is '1'.", false, true),
     ANDROMEDA_HIGHER_CHARGE("andromeda_higher_charge", "Andromeda higher charge option, 1: true, 0: false, default is '1'.", false, true),
-    ANDROMEDA_FRAG_METHOD("andromeda_frag_method", "Andromeda fragmentation method, (HCD, CID or EDT, true), default is 'CID'.", false, true),
+    ANDROMEDA_FRAG_METHOD("andromeda_frag_method", "Andromeda fragmentation method, HCD, CID or EDT, default is 'CID'.", false, true),
     ANDROMEDA_MAX_MODS("andromeda_max_mods", "Andromeda maximum number of modifications, default is '5'.", false, true),
     ANDROMEDA_MIN_PEP_LENGTH("andromeda_min_pep_length", "Andromeda minimum peptide length when using no enzyme, default is '8'.", false, true),
     ANDROMEDA_MAX_PEP_LENGTH("andromeda_max_pep_length", "Andromeda maximum peptide length when using no enzyme, default is '25'.", false, true),
     ANDROMEDA_EQUAL_IL("andromeda_equal_il", "Andromeda whether I and L should be considered indistinguishable, 1: true, 0: false, default is '0'.", false, true),
     ANDROMEDA_MAX_PSMS("andromeda_max_psms", "Andromeda maximum number of spectrum matches spectrum, default is '10'.", false, true),
+    ANDROMEDA_DECOY_MODE("andromeda_decoy_mode", "Andromeda decoy mode, none or decoy, default is 'none'.", false, true),
     //////////////////////////////////
     // PepNovo+ specific parameters
     //////////////////////////////////

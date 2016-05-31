@@ -47,11 +47,11 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
     /**
      * The minimum precursor mass considered.
      */
-    private Double minPrecursorMass = 0.0;
+    private Double minPrecursorMass = 600.0;
     /**
      * The maximum precursor mass considered.
      */
-    private Double maxPrecursorMass = 10000.0;
+    private Double maxPrecursorMass = 5000.0;
     /**
      * If true, the UseSmartPlusThreeModel us to be used.
      */

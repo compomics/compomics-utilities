@@ -86,6 +86,17 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
      * Map of the Andromeda indexes used for user modifications in this search.
      */
     private HashMap<Integer, String> ptmIndexes = new HashMap<Integer, String>(128);
+    /**
+     * The decoy mode.
+     */
+    private AndromedaDecoyMode decoyMode = AndromedaDecoyMode.none;
+
+    /**
+     * The available decoy modes.
+     */
+    public enum AndromedaDecoyMode {
+        none, reverse;
+    }
 
     /**
      * Constructor.
@@ -377,6 +388,27 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     public void setEqualIL(boolean equalIL) {
         this.equalIL = equalIL;
     }
+    
+    /**
+     * Returns the decoy mode.
+     * 
+     * @return the decoy mode.
+     */
+    public AndromedaDecoyMode getDecoyMode() {
+        if (decoyMode == null) {
+            decoyMode = AndromedaDecoyMode.none;
+        }
+        return decoyMode;
+    }
+
+    /**
+     * Set the decoy mode.
+     * 
+     * @param decoyMode the decoy mode
+     */
+    public void setDecoyMode(AndromedaDecoyMode decoyMode) {
+        this.decoyMode = decoyMode;
+    }
 
     /**
      * Returns the number of candidates.
@@ -513,6 +545,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
             if (topPeaksWindow != andromedaParameters.getTopPeaksWindow()) {
                 return false;
             }
+            if (getDecoyMode() != andromedaParameters.getDecoyMode()) {
+                return false;
+            }
 
             return true;
         }
@@ -585,6 +620,9 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("TOP_PEAKS_WINDOW=");
         output.append(topPeaksWindow);
+        output.append(newLine);
+        output.append("DECOY_MODE=");
+        output.append(decoyMode);
         output.append(newLine);
 
         return output.toString();

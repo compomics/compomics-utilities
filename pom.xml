@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>4.5.19</version>
     <name>computational omics utilities</name>
-    <url>http://compomics-utilities.googlecode.com</url>
+    <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
 
 
@@ -339,14 +339,7 @@
             <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
             <layout>default</layout>
         </repository>
-        
-        <!-- Suffix array construction -->
-        <repository>
-            <id>sonatype-nexus-public</id>
-            <name>SonaType public snapshots and releases repository</name>
-            <url>https://oss.sonatype.org/content/groups/public</url>
-            <layout>default</layout>
-        </repository>
+
     </repositories>
 
 

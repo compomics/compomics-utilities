@@ -90,7 +90,7 @@ public class Glycan extends Ion {
 
     @Override
     public CvTerm getPrideCvTerm() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     @Override

@@ -15,7 +15,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 
 /**
@@ -128,7 +127,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
             scoresNames.add(psmScore.name);
         }
 
-        // Get scores for each algorithm
+        // get scores for each algorithm
         Set<Integer> advocates = psmScoringPreferences.getAdvocates();
         spectrumMatchingScores = new HashMap<Integer, HashSet<Integer>>(advocates.size());
         for (Integer advocate : advocates) {
@@ -137,7 +136,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         }
         defaultScores = new HashSet<Integer>(psmScoringPreferences.getDefaultScores());
 
-        // Make an ordered list of the selected algorithms
+        // make an ordered list of the selected algorithms
         advocateNames = new ArrayList<String>(spectrumMatchingScores.size());
         for (Integer advocateId : advocates) {
             Advocate advocate = Advocate.getAdvocate(advocateId);
@@ -145,10 +144,10 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         }
         Collections.sort(advocateNames);
 
-        // Populate table
+        // populate table
         psmScoresJTable.setModel(new AlgorithmScoresTableModel());
 
-        // Set scores
+        // set scores
         PsmScore[] implementedScores = PsmScore.values();
         psmScoresTableToolTips = new ArrayList<String>(implementedScores.length);
         psmScoresTableToolTips.add(null);
@@ -204,8 +203,6 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         addJMenuItem = new javax.swing.JMenuItem();
         removeJMenuItem = new javax.swing.JMenuItem();
         backgroundPanel = new javax.swing.JPanel();
-        cancelButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
         scoresSelectionJPanel = new javax.swing.JPanel();
         psmScoresJScrollPane = new javax.swing.JScrollPane();
         psmScoresJTable = new JTable() {
@@ -220,6 +217,8 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
                 };
             }
         };
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         addJMenuItem.setText("Add");
         addJMenuItem.setEnabled(false);
@@ -250,20 +249,6 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
         backgroundPanel.setToolTipText("PSM Scoring");
 
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
         scoresSelectionJPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PSM Scores Selection"));
         scoresSelectionJPanel.setOpaque(false);
 
@@ -289,9 +274,23 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
             scoresSelectionJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(scoresSelectionJPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(psmScoresJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(psmScoresJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -313,7 +312,7 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(scoresSelectionJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -362,8 +361,12 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         canceled = true;
     }//GEN-LAST:event_formWindowClosing
 
+    /**
+     * Update the scores.
+     * 
+     * @param evt 
+     */
     private void psmScoresJTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_psmScoresJTableMouseReleased
-
         if (evt.getButton() == MouseEvent.BUTTON1) {
             int row = psmScoresJTable.getSelectedRow();
             int column = psmScoresJTable.getSelectedColumn();
@@ -391,12 +394,21 @@ public class PsmScoringSettingsDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_psmScoresJTableMouseReleased
 
+    /**
+     * Select a score.
+     * 
+     * @param evt 
+     */
     private void addJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addJMenuItemActionPerformed
         // TODO: let the user select a score
     }//GEN-LAST:event_addJMenuItemActionPerformed
 
+    /**
+     * Remove a score.
+     * 
+     * @param evt 
+     */
     private void removeJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeJMenuItemActionPerformed
-
         int row = psmScoresJTable.getSelectedRow();
         String advocateName = advocateNames.get(row);
         Advocate advocate = Advocate.getAdvocate(advocateName);

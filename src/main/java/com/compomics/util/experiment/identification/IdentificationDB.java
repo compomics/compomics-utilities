@@ -635,7 +635,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -659,7 +659,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param spectrumKeys the key of the spectra
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -706,7 +706,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -730,7 +730,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param spectrumKeys the key of the spectra
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -778,7 +778,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -802,7 +802,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param spectrumKeys the key of the spectrum matches to be loaded
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -849,7 +849,7 @@ public class IdentificationDB implements Serializable {
      * @param fileName the file name
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -875,7 +875,7 @@ public class IdentificationDB implements Serializable {
      * loaded
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -918,7 +918,7 @@ public class IdentificationDB implements Serializable {
      * Loads all peptide matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -941,7 +941,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param peptideKeys the list of peptide keys to load
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -969,7 +969,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -994,7 +994,7 @@ public class IdentificationDB implements Serializable {
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -1021,7 +1021,7 @@ public class IdentificationDB implements Serializable {
      * Loads all protein matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -1044,7 +1044,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param proteinKeys the list of protein keys to load
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -1072,7 +1072,7 @@ public class IdentificationDB implements Serializable {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -1097,7 +1097,7 @@ public class IdentificationDB implements Serializable {
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-
 /**
  * Rank as used in the FM index.
  *
@@ -24,7 +23,6 @@ public class Rank {
      * The sums.
      */
     private final byte[] sumsSecondLevel;
-    
     /**
      * The shift.
      */
@@ -60,17 +58,17 @@ public class Rank {
             bitfield[cell] |= (bit << pos);
 
             if (pos == 0 && i != 0) {
-                if ((i & 255) == 0) sumsSecondLevel[cell] = 0;
-                else{
-                    sumsSecondLevel[cell] = (byte)(sumsSecondLevel[cell - 1] + (byte)(Long.bitCount(bitfield[cell - 1])));
+                if ((i & 255) == 0) {
+                    sumsSecondLevel[cell] = 0;
+                } else {
+                    sumsSecondLevel[cell] = (byte) (sumsSecondLevel[cell - 1] + (byte) (Long.bitCount(bitfield[cell - 1])));
                 }
             }
-            if (((i & 255) == 0) && i != 0){
+            if (((i & 255) == 0) && i != 0) {
                 sums[i >> 8] = sums[(i >> 8) - 1] + (sumsSecondLevel[cell - 1] & 0xFF) + Long.bitCount(bitfield[cell - 1]);
             }
         }
     }
-
 
     /**
      * Returns the rank.
@@ -101,13 +99,13 @@ public class Rank {
         }
         throw new ArrayIndexOutOfBoundsException();
     }
-    
+
     /**
      * Returns the number of bytes for the allocated arrays.
      *
-     * @return  the number of bytes for the allocated arrays
+     * @return the number of bytes for the allocated arrays
      */
-    public int getAllocatedBytes(){
+    public int getAllocatedBytes() {
         return (bitfield.length << 3) + (sums.length << 2) + sumsSecondLevel.length;
     }
 }

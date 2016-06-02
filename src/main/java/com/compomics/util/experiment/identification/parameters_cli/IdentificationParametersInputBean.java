@@ -179,7 +179,6 @@ public class IdentificationParametersInputBean {
             Enzyme option = enzymeFactory.getEnzyme("Trypsin"); // no enzyme given, default to trypsin
             searchParameters.setEnzyme(option);
         }
-        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             File fastaFile = new File(arg);
@@ -187,6 +186,7 @@ public class IdentificationParametersInputBean {
 
             // also update the protein inference database if that option is not set
             if (identificationParameters != null && !commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
+                ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
                 proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
             }
         }
@@ -1623,6 +1623,7 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Protein inference parameters
         //////////////////////////////////
+        ProteinInferencePreferences proteinInferencePreferences = identificationParameters.getProteinInferencePreferences();
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB_PI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
             File fastaFile = new File(arg);

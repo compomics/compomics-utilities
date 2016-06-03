@@ -941,7 +941,6 @@ public class FMIndex implements PeptideMapper {
      * @param massTolerance the mass tolerance
      */
     private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance) {
-//System.out.println("without end mods");
 
         final int lenCombinations = combinations.length;
 
@@ -1015,7 +1014,7 @@ public class FMIndex implements PeptideMapper {
      * @param frontDirection is the direction forward to the text
      */
     private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance, boolean CTermDirection) {
-//System.out.println("with end mods");
+
         final int lenCombinations = combinations.length;
         while (!matrix.isEmpty()) {
             MatrixContent cell = matrix.removeFirst();
@@ -1378,8 +1377,6 @@ public class FMIndex implements PeptideMapper {
 
             cacheIt(refTagContent, cachePrimary);
         }
-
-//System.out.println("map front");
         
         // Map towards NTerm
         if (!hasNTermDirection) mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
@@ -1445,6 +1442,7 @@ public class FMIndex implements PeptideMapper {
             allMatches.put(new Peptide(peptide, modifications), matches);
         }
 
+        /*
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
             for (Peptide pep : allMatches.keySet()){
@@ -1455,6 +1453,7 @@ public class FMIndex implements PeptideMapper {
                 }
             }
         }
+        */
         return allMatches;
     }
 

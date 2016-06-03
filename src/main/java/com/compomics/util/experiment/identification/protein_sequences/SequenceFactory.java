@@ -1303,15 +1303,16 @@ public class SequenceFactory {
      * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
+     * reading or writing a file
      * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
+     * while deserializing an object
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while indexing the database.
+     * occurred while indexing the database
      * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
+     * interacting with an SQL database
      */
-    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings,
+            WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
         return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, waitingHandler, exceptionHandler, true, nThreads);
     }
@@ -1328,20 +1329,22 @@ public class SequenceFactory {
      * indexing the database
      * @param nThreads the number of threads to use during indexing
      * @param ptmSettings contains modification parameters for identification
+     * @param identificationParameters the identification parameters
      *
      * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
+     * reading or writing a file
      * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
+     * while deserializing an object
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while indexing the database.
+     * occurred while indexing the database
      * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
+     * interacting with an SQL database
      */
-    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, int nThreads, IdentificationParameters identificationParameters) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, waitingHandler, exceptionHandler, true, nThreads);
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler,
+            ExceptionHandler exceptionHandler, int nThreads, IdentificationParameters identificationParameters) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, waitingHandler, exceptionHandler, true, nThreads); // @TODO: why add identificationParameters? it's not used?
     }
 
     /**
@@ -1362,15 +1365,16 @@ public class SequenceFactory {
      * @return the default peptide mapper
      *
      * @throws IOException exception thrown whenever an error occurs while
-     * reading or writing a file.
+     * reading or writing a file
      * @throws ClassNotFoundException exception thrown whenever an error occurs
-     * while deserializing an object.
+     * while deserializing an object
      * @throws InterruptedException exception thrown whenever a threading issue
-     * occurred while indexing the database.
+     * occurred while indexing the database
      * @throws SQLException exception thrown whenever a problem occurred while
-     * interacting with an SQL database.
+     * interacting with an SQL database
      */
-    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler, ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler,
+            ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (defaultPeptideMapper == null) {
 
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
@@ -1421,7 +1425,7 @@ public class SequenceFactory {
      * @param targetOnly boolean indicating whether only target accessions shall
      * be iterated
      * @return a header iterator
-     * 
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public HeaderIterator getHeaderIterator(boolean targetOnly) throws FileNotFoundException {

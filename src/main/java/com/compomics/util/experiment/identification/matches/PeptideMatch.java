@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class PeptideMatch extends IdentificationMatch {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
+     * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = 7195830246336841081L;
     /**
@@ -56,7 +56,7 @@ public class PeptideMatch extends IdentificationMatch {
      * Constructor for the peptide match.
      *
      * @param peptide the matching peptide
-     * @param matchKey the key of the match as referenced in the identification.
+     * @param matchKey the key of the match as referenced in the identification
      */
     public PeptideMatch(Peptide peptide, String matchKey) {
         theoreticPeptide = peptide;

@@ -73,11 +73,11 @@ public class CometParameters implements IdentificationAlgorithmParameter {
     /**
      * The minimum precursor mass.
      */
-    private Double minPrecursorMass = 0.0;
+    private Double minPrecursorMass = 600.0;
     /**
      * The maximum precursor mass.
      */
-    private Double maxPrecursorMass = 10000.0;
+    private Double maxPrecursorMass = 5000.0;
     /**
      * The maximum fragment charge.
      */

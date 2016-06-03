@@ -54,7 +54,7 @@ public class SpectrumMatch extends IdentificationMatch {
     private TagAssumption bestTagAsssumption;
     /**
      * The spectrum number in the mgf file. Will be used in case the spectrum
-     * title does not match
+     * title does not match.
      */
     private Integer spectrumNumber = null;
 
@@ -67,8 +67,8 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumKey The matched spectrumKey
-     * @param assumption The matching assumption
+     * @param spectrumKey the matched spectrumKey
+     * @param assumption the matching assumption
      */
     public SpectrumMatch(String spectrumKey, SpectrumIdentificationAssumption assumption) {
         int advocateId = assumption.getAdvocate();
@@ -84,7 +84,7 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumKey The matched spectrum key
+     * @param spectrumKey the matched spectrum key
      */
     public SpectrumMatch(String spectrumKey) {
         this.spectrumKey = spectrumKey;
@@ -166,7 +166,8 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the assumptions map: advocate id → score → list of assumptions.
+     * Returns the assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
      *
      * @return the assumptions map
      */
@@ -426,7 +427,7 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Removes the tags assumptions Map to free memory.
+     * Removes the tags assumptions map to free memory.
      */
     public void removeTagAssumptionsMap() {
         tagAssumptionsMap = null;

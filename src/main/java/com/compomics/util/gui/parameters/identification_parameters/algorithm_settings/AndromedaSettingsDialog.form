@@ -70,7 +70,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="settingsPanel" pref="549" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" pref="585" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -113,7 +113,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="settingsScrollPane" pref="504" max="32767" attributes="0"/>
+                      <Component id="settingsScrollPane" pref="540" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -215,6 +215,11 @@
                                   <Component id="maxCombinationsTxt" max="32767" attributes="2"/>
                               </Group>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="decoyModeLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                              <Component id="decoyModeCmb" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -296,7 +301,12 @@
                                   <Component id="topPeaksWindowTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="topPeaksWindowLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="decoyModeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="decoyModeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -535,6 +545,18 @@
                           </StringArray>
                         </Property>
                         <Property name="selectedIndex" type="int" value="1"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="decoyModeLabel">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Decoy Mode"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="decoyModeCmb">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="new DefaultComboBoxModel(AndromedaDecoyMode.values())" type="code"/>
+                        </Property>
                       </Properties>
                     </Component>
                   </SubComponents>

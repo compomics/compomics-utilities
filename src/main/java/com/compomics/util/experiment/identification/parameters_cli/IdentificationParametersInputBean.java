@@ -23,6 +23,8 @@ import com.compomics.util.experiment.identification.identification_parameters.to
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.XtandemParameters;
 import com.compomics.util.experiment.massspectrometry.Charge;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.AndromedaParameters.AndromedaDecoyMode;
+import com.compomics.util.experiment.identification.identification_parameters.tool_specific.CometParameters.CometOutputFormat;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.ptm.PtmScore;
@@ -859,6 +861,18 @@ public class IdentificationParametersInputBean {
             Double option = new Double(arg);
             cometParameters.setFragmentBinOffset(option);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_OUTPUT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_OUTPUT.id);
+            if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.PepXML.toString())) {
+                cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.PepXML);
+            } else if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.Percolator.toString())) {
+                cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.Percolator);
+            } else if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.SQT.toString())) {
+                cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.SQT);
+            } else if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.TXT.toString())) {
+                cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.TXT);
+            }
+        }
 
         ///////////////////////////////////
         // Tide parameters
@@ -1143,6 +1157,14 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
             Integer option = new Integer(arg);
             andromedaParameters.setNumberOfCandidates(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id);
+            if (arg.equalsIgnoreCase("none")) {
+                andromedaParameters.setDecoyMode(AndromedaParameters.AndromedaDecoyMode.none);
+            } else if (arg.equalsIgnoreCase("reverse")) {
+                andromedaParameters.setDecoyMode(AndromedaParameters.AndromedaDecoyMode.reverse);
+            }
         }
 
         ///////////////////////////////////
@@ -1581,6 +1603,22 @@ public class IdentificationParametersInputBean {
             ptmSequenceMatchingPreferences.setSequenceMatchingType(value);
             ptmScoringPreferences.setSequenceMatchingPreferences(ptmSequenceMatchingPreferences);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PTM_ALIGNMENT.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            ptmScoringPreferences.setAlignNonConfidentPTMs(value);
+        }
 
         //////////////////////////////////
         // Protein inference parameters
@@ -1590,6 +1628,86 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB_PI.id);
             File fastaFile = new File(arg);
             proteinInferencePreferences.setProteinSequenceDatabase(fastaFile);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroups(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsScore(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsEnzymaticity(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsEvidence(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setSimplifyGroupsUncharacterized(value);
         }
 
         //////////////////////////////////
@@ -2564,6 +2682,16 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_OUTPUT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_OUTPUT.id);
+            List<String> supportedInput = new ArrayList<String>();
+            for (CometOutputFormat format : CometOutputFormat.values()) {
+                supportedInput.add(format.toString());
+            }
+            if (!isInList(IdentificationParametersCLIParams.COMET_OUTPUT.id, arg, supportedInput)) {
+                return false;
+            }
+        }
 
         //////////////////////////////////
         // Tide specific parameters
@@ -2887,6 +3015,16 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id);
             if (!isPositiveInteger(IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id);
+            List<String> supportedInput = new ArrayList<String>();
+            for (AndromedaDecoyMode decoyMode : AndromedaDecoyMode.values()) {
+                supportedInput.add(decoyMode.toString());
+            }
+            if (!isInList(IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id, arg, supportedInput)) {
                 return false;
             }
         }
@@ -3243,6 +3381,13 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PTM_ALIGNMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_ALIGNMENT.id);
+            List<String> supportedInput = Arrays.asList("0", "1");
+            if (!isInList(IdentificationParametersCLIParams.PTM_ALIGNMENT.id, arg, supportedInput)) {
+                return false;
+            }
+        }
 
         //////////////////////////////////
         // Protein inference parameters
@@ -3254,6 +3399,36 @@ public class IdentificationParametersInputBean {
                 System.out.println(System.getProperty("line.separator")
                         + "Protein inference database not found."
                         + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_SCORE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
+            if (!isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id, arg)) {
                 return false;
             }
         }

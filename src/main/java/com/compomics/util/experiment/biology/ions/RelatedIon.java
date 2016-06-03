@@ -175,6 +175,7 @@ public class RelatedIon extends Ion {
     @Override
     public CvTerm getPrideCvTerm() {
         // @TODO: implement when the required cv terms are available
+        // return new CvTerm("PSI-MS", "MS:100????", "frag: related ion", null);
         return null;
     }
 

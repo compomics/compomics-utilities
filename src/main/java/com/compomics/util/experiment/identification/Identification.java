@@ -134,7 +134,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -157,7 +157,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -180,7 +180,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -202,7 +202,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param fileName the file name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -224,7 +224,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param spectrumKeys the spectrum keys
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -248,7 +248,7 @@ public abstract class Identification extends ExperimentObject {
      * @param fileName the file name
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -272,7 +272,7 @@ public abstract class Identification extends ExperimentObject {
      * loaded
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -295,7 +295,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param peptideKeys the list of peptide keys to load
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -316,7 +316,7 @@ public abstract class Identification extends ExperimentObject {
      * Loads all peptide matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -339,7 +339,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -363,7 +363,7 @@ public abstract class Identification extends ExperimentObject {
      * @param peptideKeys the list of peptide keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -384,7 +384,7 @@ public abstract class Identification extends ExperimentObject {
      * Loads all protein matches in the cache of the database.
      *
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -407,7 +407,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param proteinKeys the list of protein keys to load
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -430,7 +430,7 @@ public abstract class Identification extends ExperimentObject {
      *
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -454,7 +454,7 @@ public abstract class Identification extends ExperimentObject {
      * @param proteinKeys the list of protein keys of the parameters to load
      * @param urParameter the parameter type
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -1473,7 +1473,7 @@ public abstract class Identification extends ExperimentObject {
      * assigned using the default protein tree and the given matching
      * parameters.
      *
-     * @param spectrumMatchKey The key of the spectrum match to add
+     * @param spectrumMatchKey the key of the spectrum match to add
      * @param sequenceMatchingPreferences the sequence matching preferences
      *
      * @throws SQLException exception thrown whenever an error occurred while

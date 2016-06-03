@@ -1004,7 +1004,7 @@ public class SpectrumFactory {
         // a special fix for mgf files with titles containing url encoding, e.g.: %3b instead of ;
         if (mgfIndexesMap.get(fileName).getIndex(spectrumTitle) == null) {
             try {
-                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // @TODO: only required for mascot??
+                spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
             } catch (UnsupportedEncodingException e) {
                 System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
                 e.printStackTrace();

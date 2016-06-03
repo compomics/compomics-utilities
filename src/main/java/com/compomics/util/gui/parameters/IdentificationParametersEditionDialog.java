@@ -610,7 +610,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         psmScoringButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
         psmScoringButton.setText("PSM Scoring");
-        psmScoringButton.setEnabled(false);
         psmScoringButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         psmScoringButton.setIconTextGap(15);
         psmScoringButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N

@@ -442,7 +442,7 @@ public class ObjectsDB implements Serializable {
      *
      * @param tableName the table name
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -559,7 +559,7 @@ public class ObjectsDB implements Serializable {
      * @param tableName the table name
      * @param keys the keys of the objects to load
      * @param waitingHandler the waiting handler allowing displaying progress
-     * and cancelling the process
+     * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      *
@@ -597,7 +597,7 @@ public class ObjectsDB implements Serializable {
                 }
             }
 
-            ArrayList<String> toLoad = new ArrayList<String>();
+            ArrayList<String> toLoad = new ArrayList<String>(queue.size());
 
             for (String key : queue) {
                 String correctedKey = correctKey(tableName, key);
@@ -612,6 +612,9 @@ public class ObjectsDB implements Serializable {
 
                 try {
                     Statement stmt = dbConnection.createStatement();
+                    //Statement stmt = dbConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY); // @TODO: test if this is faster
+                    //stmt.setFetchSize(toLoad.size()); // @TODO: test if this is faster
+
                     try {
                         ResultSet results = stmt.executeQuery("select * from " + tableName);
 

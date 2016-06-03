@@ -1173,7 +1173,7 @@ public class FMIndex implements PeptideMapper {
                             hasFixed = true;
                             for (int i = 0; i < fmodaaMass[lastAcid].size(); ++i){
                                 if (Math.abs(massDiff - fmodaaMass[lastAcid].get(i)) < massTolerance){
-                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen);
+                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
                                 }
                             }
                         }
@@ -1182,7 +1182,7 @@ public class FMIndex implements PeptideMapper {
                             hasFixed = true;
                             for (int i = 0; i < fmod.size(); ++i){
                                 if (Math.abs(massDiff - fmodMass.get(i)) < massTolerance){
-                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen);
+                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
                                 }
                             }
                         }
@@ -1191,7 +1191,7 @@ public class FMIndex implements PeptideMapper {
                             if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0){
                                 for (int i = 0; i < vmodaaMass[lastAcid].size(); ++i){
                                     if (Math.abs(massDiff - vmodaaMass[lastAcid].get(i)) < massTolerance){
-                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen);
+                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
                                     }
                                 }
                             }
@@ -1199,7 +1199,7 @@ public class FMIndex implements PeptideMapper {
                             if (vmod != null && modificationMatchEnd == null){
                                 for (int i = 0; i < vmod.size(); ++i){
                                     if (Math.abs(massDiff - vmodMass.get(i)) < massTolerance){
-                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen);
+                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
                                     }
                                 }
                             }

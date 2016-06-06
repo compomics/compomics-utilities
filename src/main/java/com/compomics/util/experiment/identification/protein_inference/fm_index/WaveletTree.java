@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -31,6 +32,17 @@ public class WaveletTree {
      * Number of characters in alphabet list.
      */
     private int lenAlphabet;
+    
+    /**
+     * First character in alphabet
+     */
+    private int firstChar;
+    
+    /**
+     * last character in alphabet
+     */
+    private int lastChar;
+    
     /**
      * Text length.
      */
@@ -63,6 +75,8 @@ public class WaveletTree {
      * Mask for fast bitwise modulo operations.
      */
     private final int mask = 63;
+    
+    
 
     /**
      * Class for huffman nodes.
@@ -210,6 +224,8 @@ public class WaveletTree {
         for (int i = 0; i < root.charAlphabet.size(); ++i) {
             charAlphabetField[i] = root.charAlphabet.get(i);
         }
+        firstChar = charAlphabetField[0];
+        lastChar = charAlphabetField[lenAlphabet - 1];
 
         int len_alphabet_left = Long.bitCount(alphabet_left[0]) + Long.bitCount(alphabet_left[1]);
         int len_alphabet_right = Long.bitCount(alphabet_right[0]) + Long.bitCount(alphabet_right[1]);
@@ -308,6 +324,9 @@ public class WaveletTree {
             int pos = character & mask;
 
             boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;
+            
+            
+            
             int result = rank.getRank(index, left);
 
             if (left && leftChild != null) {
@@ -374,42 +393,37 @@ public class WaveletTree {
      * @return list of counted characters
      */
     public ArrayList<Integer[]> rangeQuery(int leftIndex, int rightIndex) {
-        ArrayList<Integer[]> setCharacter = new ArrayList<Integer[]>(26);
-        rangeQuery(leftIndex, rightIndex, setCharacter);
-        return setCharacter;
+        ArrayList<Integer[]> query = new ArrayList<Integer[]>(32);
+        rangeQuery(leftIndex, rightIndex, query);
+        return query;
     }
 
     /**
-     * Set the rang query.
+     * Fills a list of character and new left/right index for a given range.
      *
      * @param leftIndex left index boundary
      * @param rightIndex right index boundary
      * @param setCharacter list of counted characters
      */
     public void rangeQuery(int leftIndex, int rightIndex, ArrayList<Integer[]> setCharacter) {
-        if ((leftIndex < rightIndex)) {
-
-            int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
-            int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
-
-            if (continueLeftRangeQuery) {
-
-                if (leftChild != null) {
-                    leftChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
-                } else if (newRightIndex - newLeftIndex > 0) {
-                    setCharacter.add(new Integer[]{(int) charAlphabetField[0], newLeftIndex, newRightIndex, (int) charAlphabetField[0], 0});
-                }
+        int newLeftIndex = (leftIndex >= 0) ? rank.getRankOne(leftIndex) : 0;
+        int newRightIndex = (rightIndex >= 0) ? rank.getRankOne(rightIndex) : 0;
+        
+        if (continueRightRangeQuery && newRightIndex - newLeftIndex > 0) {
+            if (rightChild != null) {
+                rightChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
+            } else {
+                setCharacter.add(new Integer[]{lastChar, newLeftIndex, newRightIndex, lastChar});
             }
+        }
 
-            if (continueRightRangeQuery) {
-                newLeftIndex = leftIndex - newLeftIndex;
-                newRightIndex = rightIndex - newRightIndex;
-
-                if (rightChild != null) {
-                    rightChild.rangeQuery(newLeftIndex, newRightIndex, setCharacter);
-                } else if (newRightIndex - newLeftIndex > 0) {
-                    setCharacter.add(new Integer[]{(int) charAlphabetField[lenAlphabet - 1], newLeftIndex + 1, newRightIndex + 1, (int) charAlphabetField[lenAlphabet - 1], 0});
-                }
+        newLeftIndex = leftIndex - newLeftIndex;
+        newRightIndex = rightIndex - newRightIndex;
+        if (continueLeftRangeQuery && newRightIndex - newLeftIndex > 0) {
+            if (leftChild != null) {
+                leftChild.rangeQuery(newLeftIndex, newRightIndex, setCharacter);
+            } else {
+                setCharacter.add(new Integer[]{firstChar, newLeftIndex + 1, newRightIndex + 1, firstChar});
             }
         }
     }
@@ -425,8 +439,8 @@ public class WaveletTree {
      * recursively
      */
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
-        int newLeftIndex = (leftIndex >= 0) ? rank.getRank(leftIndex, true) : 0;
-        int newRightIndex = (rightIndex >= 0) ? rank.getRank(rightIndex, true) : 0;
+        int newLeftIndex = (leftIndex >= 0) ? rank.getRankZero(leftIndex) : 0;
+        int newRightIndex = (rightIndex >= 0) ? rank.getRankZero(rightIndex) : 0;
         int cell = character >> shift;
         int pos = character & mask;
         boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;

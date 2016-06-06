@@ -57,6 +57,10 @@ public class MatrixContent {
      * List of all modifications.
      */
     public ArrayList<ModificationMatch> modifications;
+    /**
+     * List of all modifications.
+     */
+    public int modificationPos;
 
     /**
      * Constructor.
@@ -72,9 +76,10 @@ public class MatrixContent {
      * @param numX number of current X amino acids
      * @param modification index to modification list
      * @param modifications intermediate list of modifications
+     * @param modifictationPos index to modification list for ptm
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, 
-            int combinationLength, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications) {
+            int combinationLength, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
 
         this.left = left;
         this.right = right;
@@ -87,6 +92,7 @@ public class MatrixContent {
         this.numX = numX;
         this.modification = modification;
         this.modifications = modifications;
+        this.modificationPos = modifictationPos;
     }
 
     /**
@@ -106,6 +112,7 @@ public class MatrixContent {
         this.numX = foreign.numX;
         this.modification = foreign.modification;
         this.modifications = foreign.modifications;
+        this.modificationPos = foreign.modificationPos;
     }
 
     /**
@@ -129,5 +136,6 @@ public class MatrixContent {
         this.numX = numX;
         this.modification = null;
         this.modifications = null;
+        this.modificationPos = -1;
     }
 }

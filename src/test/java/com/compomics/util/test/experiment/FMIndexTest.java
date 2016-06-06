@@ -133,7 +133,6 @@ public class FMIndexTest extends TestCase {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping;
         Peptide outputProtein;
         
-        
 
         // TESTMRITESTCKTESTK with no modifications
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -562,25 +561,43 @@ public class FMIndexTest extends TestCase {
         
         
         
-        
         // TESTMRITESTCKTESTK with several modifictations
         aminoAcidPattern = new AminoAcidSequence("KTES");
-        nTermGap = 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        nTermGap = 203.07 + 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         cTermGap = -0.98 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         ptmSettings = new PtmSettings();
         ptmSettings.addFixedModification(ptmFactory.getPTM("Amidation of the protein C-term"));
         ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("HexNAc of T"));
         fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings);
         
         proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
         Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
-        Assert.assertTrue(outputProtein.getModificationMatches().get(0).getModificationSite() == 2);
+        Assert.assertTrue(outputProtein.getModificationMatches().size() == 3);
         
         
+        // TESTMRITESTCKTESTK with several modifictations
+        aminoAcidPattern = new AminoAcidSequence("KTES");
+        nTermGap = 203.07 + 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        cTermGap = -0.98 + 203.07 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new PtmSettings();
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Amidation of the protein C-term"));
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("HexNAc of T"));
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings);
         
+        proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!proteinMapping.isEmpty());
+        outputProtein = proteinMapping.keySet().iterator().next();
+        Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
+        Assert.assertTrue(outputProtein.getModificationMatches().size() == 4);
+        
+        
+        // ptmFactory.getPTM("HexNAc of T") //	203.07937251951006
         // ptmFactory.getPTM("Acetylation of peptide N-term") //	42.0105646837
         // ptmFactory.getPTM("Acetylation of protein N-term") //	42.0105646837
         // ptmFactory.getPTM("Amidation of the peptide C-term") //	-0.9840155826899988

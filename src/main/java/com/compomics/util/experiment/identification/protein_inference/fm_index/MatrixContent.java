@@ -39,7 +39,6 @@ public class MatrixContent {
      * Current combination sequence length.
      */
     public int combinationLength;
-    
     /**
      * Current peptide sequence length.
      */
@@ -51,7 +50,6 @@ public class MatrixContent {
     /**
      * Index to the modifications list.
      */
-    
     public ModificationMatch modification;
     /**
      * List of all modifications.
@@ -80,6 +78,7 @@ public class MatrixContent {
      */
     public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, 
             int combinationLength, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
+
 
         this.left = left;
         this.right = right;

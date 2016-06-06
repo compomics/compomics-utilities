@@ -130,8 +130,7 @@ public class WaveletTree {
     public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
         prepareWaveletTree(text, aAlphabet, waitingHandler, hasPTMatTerminus);
     }
-    
-    
+
     /**
      * Constructor.
      *
@@ -142,7 +141,7 @@ public class WaveletTree {
     public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
         prepareWaveletTree(text, aAlphabet, waitingHandler, false);
     }
-    
+
     /**
      * Constructor forward function.
      *
@@ -151,7 +150,8 @@ public class WaveletTree {
      * @param waitingHandler the waiting handler
      * @param hasPTMatTerminus indicates how to handle / sign
      */
-    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus){
+    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
+
         int[] counts = new int[128];
         for (byte c : text) {
             ++counts[c];
@@ -180,6 +180,7 @@ public class WaveletTree {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
+     * @param hasPTMatTerminus if there is a PTM at the terminus
      */
     public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
         createWaveletTreeHuffman(text, waitingHandler, root, hasPTMatTerminus);
@@ -191,13 +192,17 @@ public class WaveletTree {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
+     * @param hasPTMatTerminus if there is a PTM at the terminus
      */
     public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
+
         alphabet[0] = root.alphabet[0];
         alphabet[1] = root.alphabet[1];
 
         alphabetExcluded[0] = 1L << '$';
-        if (!hasPTMatTerminus) alphabetExcluded[0] |= 1L << '/';
+        if (!hasPTMatTerminus) {
+            alphabetExcluded[0] |= 1L << '/';
+        }
         alphabetExcluded[1] = 1L << ('B' & 63);
         alphabetExcluded[1] |= 1L << ('X' & 63);
         alphabetExcluded[1] |= 1L << ('Z' & 63);

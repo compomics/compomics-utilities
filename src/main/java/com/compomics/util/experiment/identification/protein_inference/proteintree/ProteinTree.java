@@ -1208,6 +1208,18 @@ public class ProteinTree implements PeptideMapper {
                 }
             }
         }
+        
+        
+        if (tag.getContent().size() == 3){
+            ArrayList<TagComponent> tc = tag.getContent();
+            for (Peptide pep : results.keySet()){
+                for (String acc : results.get(pep).keySet()){
+                    for (int pos : results.get(pep).get(acc)){
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
+                    }
+                }
+            }
+        }
         return results;
     }
 

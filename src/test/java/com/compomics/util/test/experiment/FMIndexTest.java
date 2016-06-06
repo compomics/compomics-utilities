@@ -133,7 +133,6 @@ public class FMIndexTest extends TestCase {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping;
         Peptide outputProtein;
         
-
         // TESTMRITESTCKTESTK with no modifications
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -145,7 +144,6 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
         Assert.assertTrue(outputProtein.getSequence().compareTo("TMRITESTCK") == 0);
-        
         
 
         // TESTMRITESTCKTESTK with one fixed modification
@@ -160,6 +158,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
         Assert.assertTrue(outputProtein.getSequence().compareTo("TMRITESTCK") == 0);
+        Assert.assertTrue(outputProtein.getModificationMatches().size() == 1);
         Assert.assertTrue(outputProtein.getModificationMatches().get(0).getModificationSite() == 9);
         
         

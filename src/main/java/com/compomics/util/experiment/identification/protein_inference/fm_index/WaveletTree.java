@@ -200,9 +200,7 @@ public class WaveletTree {
         alphabet[1] = root.alphabet[1];
 
         alphabetExcluded[0] = 1L << '$';
-        if (!hasPTMatTerminus) {
-            alphabetExcluded[0] |= 1L << '/';
-        }
+        if (!hasPTMatTerminus) alphabetExcluded[0] |= 1L << '/';
         alphabetExcluded[1] = 1L << ('B' & 63);
         alphabetExcluded[1] |= 1L << ('X' & 63);
         alphabetExcluded[1] |= 1L << ('Z' & 63);

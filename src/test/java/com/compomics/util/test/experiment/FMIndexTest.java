@@ -133,6 +133,9 @@ public class FMIndexTest extends TestCase {
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping;
         Peptide outputProtein;
         
+                
+        
+        
         // TESTMRITESTCKTESTK with no modifications
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -144,6 +147,8 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
         Assert.assertTrue(outputProtein.getSequence().compareTo("TMRITESTCK") == 0);
+        
+        
         
 
         // TESTMRITESTCKTESTK with one fixed modification
@@ -594,30 +599,6 @@ public class FMIndexTest extends TestCase {
         outputProtein = proteinMapping.keySet().iterator().next();
         Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
         Assert.assertTrue(outputProtein.getModificationMatches().size() == 4);
-        
-        
-        // ptmFactory.getPTM("HexNAc of T") //	203.07937251951006
-        // ptmFactory.getPTM("Acetylation of peptide N-term") //	42.0105646837
-        // ptmFactory.getPTM("Acetylation of protein N-term") //	42.0105646837
-        // ptmFactory.getPTM("Amidation of the peptide C-term") //	-0.9840155826899988
-        // ptmFactory.getPTM("Amidation of the protein C-term") //	-0.9840155826899988
-        // ptmFactory.getPTM("Carbamilation of protein N-term") //	43.00581365643
-        // ptmFactory.getPTM("Dimethylation of peptide N-term") //	28.031300128279995
-        // ptmFactory.getPTM("Dimethylation of peptide N-term 2H(4)") //	32.0564071112
-        // ptmFactory.getPTM("Dimethylation of peptide N-term 2H(6)") //	34.068960602660006
-        // ptmFactory.getPTM("Dimethylation of peptide N-term 2H(6) 13C(2)") //	36.075670278260006
-        // ptmFactory.getPTM("FormylMet of protein N-term") //	159.03539953255
-        // ptmFactory.getPTM("Formylation of peptide N-term") //	27.99491461956
-        // ptmFactory.getPTM("Formylation of protein N-term") //	27.99491461956
-        // ptmFactory.getPTM("Guanidination of peptide N-term") //	42.02179807374
-        // ptmFactory.getPTM("ICPL4 of peptide N-term") //	109.04657070348998
-        // ptmFactory.getPTM("ICPL6 of peptide N-term") //	111.04159274737
-        // ptmFactory.getPTM("Palmitoylation of protein N-term") //	238.22966558166
-        // ptmFactory.getPTM("Propionamide of peptide N-term") //	71.03711378470999
-        // ptmFactory.getPTM("TMT 10-plex of peptide N-term") //	229.16293213472008
-        // ptmFactory.getPTM("TMT 6-plex of peptide N-term") //	229.16293213472008
-        // ptmFactory.getPTM("Trideuterated Methyl Ester of peptide C-term") //	17.034480301330003
-        // ptmFactory.getPTM("iTRAQ 8-plex of peptide N-term") //	304.1990394611601
         
     }
 

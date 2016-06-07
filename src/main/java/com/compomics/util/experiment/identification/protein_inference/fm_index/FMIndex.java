@@ -575,7 +575,7 @@ public class FMIndex implements PeptideMapper {
                 Protein currentProtein = pi.getNextProtein();
                 int proteinLen = currentProtein.getLength();
                 T[tmpN++] = '/'; // adding the delimiters
-                System.arraycopy(currentProtein.getSequence().getBytes(), 0, T, tmpN, proteinLen);
+                System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
                 tmpN += proteinLen;
                 accessions[tmpNumProtein++] = currentProtein.getAccession();
                 boundaries[tmpNumProtein] = tmpN + 1;

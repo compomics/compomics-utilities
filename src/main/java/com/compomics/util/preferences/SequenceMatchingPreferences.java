@@ -39,7 +39,6 @@ public class SequenceMatchingPreferences implements Serializable {
          * The index of the type as integer.
          */
         public final int index;
-
         /**
          * The description.
          */
@@ -94,8 +93,8 @@ public class SequenceMatchingPreferences implements Serializable {
             }
             throw new IllegalArgumentException("No matching type found for index " + index + ".");
         }
-
     }
+
     /**
      * The amino acid matching type.
      */
@@ -115,7 +114,7 @@ public class SequenceMatchingPreferences implements Serializable {
     /**
      * The peptide mapper to use, FMI by default.
      */
-    private PeptideMapperType peptideMapperType = PeptideMapperType.tree;
+    private PeptideMapperType peptideMapperType = PeptideMapperType.fm_index;
 
     /**
      * Constructor for empty preferences.

@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -32,17 +31,14 @@ public class WaveletTree {
      * Number of characters in alphabet list.
      */
     private int lenAlphabet;
-    
     /**
-     * First character in alphabet
+     * First character in alphabet.
      */
     private int firstChar;
-    
     /**
-     * last character in alphabet
+     * Last character in alphabet.
      */
     private int lastChar;
-    
     /**
      * Text length.
      */
@@ -75,8 +71,6 @@ public class WaveletTree {
      * Mask for fast bitwise modulo operations.
      */
     private final int mask = 63;
-    
-    
 
     /**
      * Class for huffman nodes.

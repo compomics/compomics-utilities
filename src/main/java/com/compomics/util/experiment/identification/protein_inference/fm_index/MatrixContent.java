@@ -76,9 +76,8 @@ public class MatrixContent {
      * @param modifications intermediate list of modifications
      * @param modifictationPos index to modification list for ptm
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence, 
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, double mass, String peptideSequence,
             int combinationLength, int length, int numX, ModificationMatch modification, ArrayList<ModificationMatch> modifications, int modifictationPos) {
-
 
         this.left = left;
         this.right = right;

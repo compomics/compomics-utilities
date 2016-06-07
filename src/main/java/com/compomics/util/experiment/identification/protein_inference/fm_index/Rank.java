@@ -84,7 +84,6 @@ public class Rank {
         int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
         return zeros ? index + 1 - count_ones : count_ones;
     }
-    
 
     /**
      * Returns the rank of ones.
@@ -92,15 +91,13 @@ public class Rank {
      * @param index the value
      * @return the rank
      */
-    public final int getRankOne(int index){
+    public final int getRankOne(int index) {
         final int cell = index >> shift;
         final int pos = index & mask;
         final long active_ones = bitfield[cell] << (mask - pos);
         final int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
         return count_ones;
     }
-    
-    
 
     /**
      * Returns the rank of zeros.
@@ -108,14 +105,13 @@ public class Rank {
      * @param index the value
      * @return the rank
      */
-    public int getRankZero(int index){
+    public int getRankZero(int index) {
         int cell = index >> shift;
         int pos = index & mask;
         long active_ones = bitfield[cell] << (mask - pos);
         int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
         return index + 1 - count_ones;
     }
-           
 
     /**
      * Returns true if the value is equal to one.

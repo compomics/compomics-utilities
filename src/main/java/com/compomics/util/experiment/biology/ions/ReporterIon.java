@@ -15,6 +15,7 @@ import java.util.Set;
  * This class models a reporter ion and is its own factory.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ReporterIon extends Ion {
 
@@ -77,11 +78,11 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion iTRAQ (reporter + balancer).
      */
-    public final static ReporterIon iTRAQ_145 = new ReporterIon("iTRAQ145", 145.1); // @TODO: add the actual composition
+    public final static ReporterIon iTRAQ_145 = new ReporterIon("iTRAQ145", 144.1); // @TODO: add the actual composition
     /**
      * Standard reporter ion iTRAQ (reporter + balancer).
      */
-    public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 305.2); // @TODO: add the actual composition
+    public final static ReporterIon iTRAQ_305 = new ReporterIon("iTRAQ305", 304.2); // @TODO: add the actual composition
     /**
      * Standard reporter ion TMT 126.
      */
@@ -165,11 +166,11 @@ public class ReporterIon extends Ion {
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
-    public final static ReporterIon TMT_230 = new ReporterIon("TMT230", 230.2); // @TODO: add the actual composition
+    public final static ReporterIon TMT_230 = new ReporterIon("TMT230", 229.2); // @TODO: add the actual composition
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
-    public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 226.2); // @TODO: add the actual composition
+    public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 225.2); // @TODO: add the actual composition
     /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
@@ -254,6 +255,10 @@ public class ReporterIon extends Ion {
      * Ion name for user defined ions.
      */
     private String name;
+    /**
+     * The CV term of the reporter ion, null if not set.
+     */
+    private CvTerm cvTerm = null;
 
     /**
      * Constructor for a user-defined reporter ion. The reporter ion is saved in
@@ -312,7 +317,7 @@ public class ReporterIon extends Ion {
             addReporterIon(this);
         }
     }
-    
+
     /**
      * Adds a reporter ion to the class static map. Reporter ions with the same
      * name will be overwritten.
@@ -342,6 +347,7 @@ public class ReporterIon extends Ion {
      */
     public void setName(String name) {
         this.name = name;
+        this.cvTerm = null;
     }
 
     /**
@@ -356,9 +362,85 @@ public class ReporterIon extends Ion {
     @Override
     public CvTerm getPrideCvTerm() {
 
-        // @TODO: implement when the required cv terms are added
-        // return new CvTerm("PSI-MS", "MS:100????", "frag: reporter ion", null);
-        return null;
+        if (cvTerm != null) {
+            return cvTerm;
+        }
+
+        String name = getName();
+
+        if (name.contains("TMT")) {
+
+            if (name.equalsIgnoreCase("TMT_126")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "126");
+            } else if (name.equalsIgnoreCase("TMT_127N")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "127N");
+            } else if (name.equalsIgnoreCase("TMT_127C")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "127C");
+            } else if (name.equalsIgnoreCase("TMT_128N")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "128N");
+            } else if (name.equalsIgnoreCase("TMT_128C")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "128C");
+            } else if (name.equalsIgnoreCase("TMT_129N")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "129N");
+            } else if (name.equalsIgnoreCase("TMT_129C")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "129C");
+            } else if (name.equalsIgnoreCase("TMT_130N")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "130N");
+            } else if (name.equalsIgnoreCase("TMT_130C")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "130C");
+            } else if (name.equalsIgnoreCase("TMT_131")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "131");
+            } else if (name.equalsIgnoreCase("TMT_126_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "126");
+            } else if (name.equalsIgnoreCase("TMT_127N_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "127N");
+            } else if (name.equalsIgnoreCase("TMT_127C_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "127C");
+            } else if (name.equalsIgnoreCase("TMT_128N_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "128N");
+            } else if (name.equalsIgnoreCase("TMT_128C_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "128C");
+            } else if (name.equalsIgnoreCase("TMT_129N_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "129N");
+            } else if (name.equalsIgnoreCase("TMT_129C_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "129C");
+            } else if (name.equalsIgnoreCase("TMT_130N_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "130N");
+            } else if (name.equalsIgnoreCase("TMT_130C_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "130C");
+            } else if (name.equalsIgnoreCase("TMT_131_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "131");
+            }
+
+        } else if (name.contains("iTRAQ")) {
+            if (name.equalsIgnoreCase("iTRAQ4Plex_114")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002668", "frag: iTRAQ 4plex reporter ion", "114");
+            } else if (name.equalsIgnoreCase("iTRAQ4Plex_115")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002668", "frag: iTRAQ 4plex reporter ion", "115");
+            } else if (name.equalsIgnoreCase("iTRAQ4Plex_116")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002668", "frag: iTRAQ 4plex reporter ion", "116");
+            } else if (name.equalsIgnoreCase("iTRAQ4Plex_117")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002668", "frag: iTRAQ 4plex reporter ion", "117");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_113")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "113");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_114")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "114");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_115")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "115");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_116")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "116");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_117")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "117");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_118")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "118");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_119")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "119");
+            } else if (name.equalsIgnoreCase("iTRAQ8Plex_121")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: iTRAQ 8plex reporter ion", "121");
+            }
+        }
+
+        return cvTerm;
     }
 
     /**
@@ -456,7 +538,7 @@ public class ReporterIon extends Ion {
         }
         return false;
     }
-    
+
     @Override
     public ReporterIon clone() {
         return new ReporterIon(name, atomChain.clone(), false);

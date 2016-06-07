@@ -1817,7 +1817,7 @@ public class FMIndex implements PeptideMapper {
             allMatches.put(new Peptide(peptide, modifications), matches);
         }
         
-        
+        /*
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
             for (Peptide pep : allMatches.keySet()){
@@ -1827,7 +1827,7 @@ public class FMIndex implements PeptideMapper {
                     }
                 }
             }
-        }
+        }*/
         
         return allMatches;
     }

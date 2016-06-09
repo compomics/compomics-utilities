@@ -6,6 +6,8 @@ import com.compomics.util.experiment.biology.AminoAcid;
  * This class represents a mutation of one amino acid to another from the
  * 20-letter amino acid alphabet.
  *
+ * @deprecated replaced by com.compomics.util.experiment.biology.variants.AminoAcidSubstitution instead
+ * 
  * @author Thilo Muth
  */
 public class Mutation {

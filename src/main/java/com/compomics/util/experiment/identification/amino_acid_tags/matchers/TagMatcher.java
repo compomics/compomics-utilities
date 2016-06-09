@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.amino_acid_tags.matchers;
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.AminoAcidPattern;
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
@@ -161,7 +160,7 @@ public class TagMatcher {
      * The sequence matching preferences
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
-    
+
     private BufferedWriter debugbw = null;
 
     /**
@@ -397,25 +396,6 @@ public class TagMatcher {
 
         String seedSequence = sequence.substring(tagIndex, tagIndex + componentAtIndexLength);
 
-        int seedMutations = 0;
-        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-            if (componentAtIndex instanceof AminoAcidPattern) {
-
-                AminoAcidPattern tagPattern = (AminoAcidPattern) componentAtIndex;
-                seedMutations = tagPattern.nMutations(seedSequence, sequenceMatchingPreferences);
-            } else if (componentAtIndex instanceof AminoAcidSequence) {
-
-                AminoAcidSequence tagSequence = (AminoAcidSequence) componentAtIndex;
-                seedMutations = tagSequence.nMutations(seedSequence, sequenceMatchingPreferences);
-            } else {
-                throw new UnsupportedOperationException("Tag mapping not supported for tag component " + componentAtIndex.getClass() + ".");
-            }
-        }
-
-        if (sequenceMatchingPreferences.hasMutationMatrix() && sequenceMatchingPreferences.getMaxMutationsPerPeptide() != null && sequenceMatchingPreferences.getMaxMutationsPerPeptide() < seedMutations) {
-            return new HashMap<Integer, ArrayList<Peptide>>(0);
-        }
-
         // Check tag components to the N-term
         ArrayList<SequenceSegment> nTermPossibleSequences = new ArrayList<SequenceSegment>(1);
         nTermPossibleSequences.add(new SequenceSegment(tagIndex, true));
@@ -448,7 +428,7 @@ public class TagMatcher {
         }
 
         // create all possible peptide sequences by adding all possible N and C term to the seed sequence
-        HashMap<Integer, ArrayList<Peptide>> result = buildPeptides(sequence, nTermPossibleSequences, seedSequence, cTermPossibleSequences, modificationsAtIndex, seedMutations);
+        HashMap<Integer, ArrayList<Peptide>> result = buildPeptides(sequence, nTermPossibleSequences, seedSequence, cTermPossibleSequences, modificationsAtIndex, 0);
 
         return result;
     }
@@ -471,64 +451,55 @@ public class TagMatcher {
 
         HashMap<Integer, ArrayList<Peptide>> result = new HashMap<Integer, ArrayList<Peptide>>(nTermPossibleSequences.size() * cTermPossibleSequences.size());
 
-        if (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() > mutationsAtIndex) {
+        for (SequenceSegment nTermSegment : nTermPossibleSequences) {
 
-            for (SequenceSegment nTermSegment : nTermPossibleSequences) {
+            StringBuilder nTermSequence = new StringBuilder(nTermSegment.length() + seedSequence.length());
+            nTermSequence.append(nTermSegment.getSegmentSequence(sequence));
+            nTermSequence.append(seedSequence);
 
-                StringBuilder nTermSequence = new StringBuilder(nTermSegment.length() + seedSequence.length());
-                nTermSequence.append(nTermSegment.getSegmentSequence(sequence));
-                nTermSequence.append(seedSequence);
+            for (SequenceSegment cTermSegment : cTermPossibleSequences) {
 
-                if (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() > mutationsAtIndex + nTermSegment.getnMutations()) {
+                StringBuilder peptideSequence = new StringBuilder(nTermSegment.length() + seedSequence.length() + cTermSegment.length());
+                peptideSequence.append(nTermSequence);
+                ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>(1);
+                HashMap<Integer, String> nTermModifications = nTermSegment.getModificationMatches();
 
-                    for (SequenceSegment cTermSegment : cTermPossibleSequences) {
+                if (nTermModifications != null) {
+                    for (Integer site : nTermModifications.keySet()) {
+                        String ptmName = nTermModifications.get(site);
+                        int remappedSite = nTermSegment.length() + 1 - site;
+                        modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
+                    }
+                }
 
-                        if (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() > mutationsAtIndex + nTermSegment.getnMutations() + cTermSegment.getnMutations()) {
-
-                            StringBuilder peptideSequence = new StringBuilder(nTermSegment.length() + seedSequence.length() + cTermSegment.length());
-                            peptideSequence.append(nTermSequence);
-                            ArrayList<ModificationMatch> modificationMatches = new ArrayList<ModificationMatch>(1);
-                            HashMap<Integer, String> nTermModifications = nTermSegment.getModificationMatches();
-
-                            if (nTermModifications != null) {
-                                for (Integer site : nTermModifications.keySet()) {
-                                    String ptmName = nTermModifications.get(site);
-                                    int remappedSite = nTermSegment.length() + 1 - site;
-                                    modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
-                                }
-                            }
-
-                            if (modificationsAtIndex != null) {
-                                for (Integer i : modificationsAtIndex.keySet()) {
-                                    for (ModificationMatch modificationMatch : modificationsAtIndex.get(i)) {
-                                        modificationMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), nTermSegment.length() + i));
-                                    }
-                                }
-                            }
-
-                            peptideSequence.append(cTermSegment.getSegmentSequence(sequence));
-                            HashMap<Integer, String> cTermModifications = cTermSegment.getModificationMatches();
-
-                            if (cTermModifications != null) {
-                                for (Integer site : cTermModifications.keySet()) {
-                                    String ptmName = cTermModifications.get(site);
-                                    int remappedSite = nTermSegment.length() + seedSequence.length() + site;
-                                    modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
-                                }
-                            }
-
-                            Peptide peptide = new Peptide(peptideSequence.toString(), modificationMatches);
-                            Integer nTermIndex = nTermSegment.getTerminalIndex() + 1;
-                            ArrayList<Peptide> peptides = result.get(nTermIndex);
-
-                            if (peptides == null) {
-                                peptides = new ArrayList<Peptide>(1);
-                                result.put(nTermIndex, peptides);
-                            }
-                            peptides.add(peptide);
+                if (modificationsAtIndex != null) {
+                    for (Integer i : modificationsAtIndex.keySet()) {
+                        for (ModificationMatch modificationMatch : modificationsAtIndex.get(i)) {
+                            modificationMatches.add(new ModificationMatch(modificationMatch.getTheoreticPtm(), modificationMatch.isVariable(), nTermSegment.length() + i));
                         }
                     }
                 }
+
+                peptideSequence.append(cTermSegment.getSegmentSequence(sequence));
+                HashMap<Integer, String> cTermModifications = cTermSegment.getModificationMatches();
+
+                if (cTermModifications != null) {
+                    for (Integer site : cTermModifications.keySet()) {
+                        String ptmName = cTermModifications.get(site);
+                        int remappedSite = nTermSegment.length() + seedSequence.length() + site;
+                        modificationMatches.add(new ModificationMatch(ptmName, true, remappedSite));
+                    }
+                }
+
+                Peptide peptide = new Peptide(peptideSequence.toString(), modificationMatches);
+                Integer nTermIndex = nTermSegment.getTerminalIndex() + 1;
+                ArrayList<Peptide> peptides = result.get(nTermIndex);
+
+                if (peptides == null) {
+                    peptides = new ArrayList<Peptide>(1);
+                    result.put(nTermIndex, peptides);
+                }
+                peptides.add(peptide);
             }
         }
         return result;
@@ -660,12 +631,12 @@ public class TagMatcher {
 
                     if (validateSegments(possibleSequences, validSequences, massGap, massTolerance, sequence, sequenceAa, nTerminus)) {
                         if (debugbw != null) {
-                        try {
-                            debugbw.write(segmentLength + "\n");
-                            debugbw.flush();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
+                            try {
+                                debugbw.write(segmentLength + "\n");
+                                debugbw.flush();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                         break;
                     }
@@ -1030,43 +1001,6 @@ public class TagMatcher {
                 overGap = false;
                 if (sequenceMass + terminalModificationMax >= massGap - massTolerance) {
                     found = validateSegment(validSequences, sequenceSegment, sequenceMass, massGap, massTolerance, sequenceAa, nTerminus);
-                }
-            }
-            if (!found && sequenceMatchingPreferences.hasMutationMatrix()
-                    && (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() > sequenceSegment.getnMutations())) {
-                MutationMatrix mutationMatrix = sequenceMatchingPreferences.getMutationMatrix();
-                Double minDelta = 0.0;
-                if (mutationMatrix.getMinDelta() != null) {
-                    minDelta = mutationMatrix.getMinDelta();
-                }
-                if (sequenceMass + terminalModificationMin + minDelta <= massGap + massTolerance) {
-                    overGap = false;
-                    Double maxDelta = 0.0;
-                    if (mutationMatrix.getMaxDelta() != null) {
-                        maxDelta = mutationMatrix.getMaxDelta();
-                    }
-                    if (sequenceMass + terminalModificationMax + maxDelta >= massGap - massTolerance) {
-                        for (int j = 0; j < sequenceSegment.length(); j++) {
-                            int indexOnProtein = sequenceSegment.getIndexOnProtein() + j;
-                            int indexOnSegment;
-                            if (nTerminus) {
-                                indexOnSegment = sequenceSegment.length() - 1 - j;
-                            } else {
-                                indexOnSegment = j;
-                            }
-                            char originalAa = sequence.charAt(indexOnProtein);
-                            HashMap<Double, HashSet<Character>> mutationMap = mutationMatrix.getMutatedMasses(originalAa);
-                            if (mutationMap != null) {
-                                Iterator<Double> deltaMassIterator = mutationMap.keySet().iterator();
-                                while (deltaMassIterator.hasNext()) {
-                                    Double deltaMass = deltaMassIterator.next();
-                                    if (validateSegment(validSequences, sequenceSegment, sequenceMass, massGap, massTolerance, sequenceAa, indexOnSegment, deltaMass, mutationMap.get(deltaMass), nTerminus)) {
-                                        found = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
             if (!found && !overGap) {

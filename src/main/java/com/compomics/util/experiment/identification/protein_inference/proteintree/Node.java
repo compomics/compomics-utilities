@@ -160,19 +160,6 @@ public class Node implements Serializable {
                 result.add('J');
                 result.add('L');
             }
-
-            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                HashSet<Character> mutatedResults = new HashSet<Character>(result);
-                for (Character originalAa : result) {
-                    HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa);
-                    if (mutatedAas != null) {
-                        for (Character mutatedAa : mutatedAas) {
-                            result.add(mutatedAa);
-                        }
-                    }
-                }
-                result = mutatedResults;
-            }
         }
 
         return result;

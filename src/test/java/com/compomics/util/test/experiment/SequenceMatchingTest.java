@@ -1,7 +1,6 @@
 package com.compomics.util.test.experiment;
 
 import com.compomics.util.experiment.biology.AminoAcidSequence;
-import com.compomics.util.experiment.biology.mutations.MutationMatrix;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,25 +56,5 @@ public class SequenceMatchingTest extends TestCase {
         Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
         Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-
-        sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        MutationMatrix mutationMatrix = MutationMatrix.synonymousMutation;
-        sequenceMatchingPreferences.setMutationMatrix(mutationMatrix);
-        sequenceMatchingPreferences.setMaxMutationsPerPeptide(1);
-        Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
-        Assert.assertTrue(!aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
-
-        sequenceMatchingPreferences = new SequenceMatchingPreferences();
-        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
-        sequenceMatchingPreferences.setMutationMatrix(mutationMatrix);
-        Assert.assertTrue(aminoAcidSequence.matches(ref, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(testAminoAcid, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(testIndistinguishible, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(test1Mutation, sequenceMatchingPreferences));
-        Assert.assertTrue(aminoAcidSequence.matches(test2Mutations, sequenceMatchingPreferences));
     }
 }

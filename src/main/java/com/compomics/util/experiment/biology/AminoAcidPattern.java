@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.regex.Pattern;
 
 /**
@@ -372,18 +371,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                             }
                         }
                     }
-                    if (includeMutations && sequenceMatchingPreferences.hasMutationMatrix()) {
-                        ArrayList<Character> toAddWithMutations = new ArrayList<Character>(toAdd);
-                        for (Character aa : toAdd) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(aa);
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    toAddWithMutations.add(mutatedAa);
-                                }
-                            }
-                        }
-                        toAdd = toAddWithMutations;
-                    }
                 }
             }
 
@@ -573,7 +560,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidSequence.length();
         int lastIndex = aminoAcidPatternLength - patternLength;
-        int nMutations = 0;
 
         for (int i = startIndex; i <= lastIndex; i++) {
 
@@ -582,15 +568,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int j = 0; j < patternLength; j++) {
                 char aa = aminoAcidSequence.charAt(i + j);
                 if (!isTargeted(aa, j, sequenceMatchingPreferences)) {
-                    if (!sequenceMatchingPreferences.hasMutationMatrix()
-                            || (sequenceMatchingPreferences.getMaxMutationsPerPeptide() != null && sequenceMatchingPreferences.getMaxMutationsPerPeptide() == nMutations)
-                            || !isMutationTarget(aa, j, sequenceMatchingPreferences)) {
-                        match = false;
-                    } else {
-                        nMutations++;
-                    }
-                }
-                if (!match) {
+                    match = false;
                     break;
                 }
             }
@@ -618,7 +596,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
         int lastIndex = aminoAcidPatternLength - patternLength;
-        int nMutations = 0;
 
         for (int i = startIndex; i <= lastIndex; i++) {
             boolean match = true;
@@ -630,16 +607,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
                         if (isTargeted(aa, j, sequenceMatchingPreferences)) {
                             aaMatched = true;
                             break;
-                        }
-                    }
-                    if (!aaMatched) {
-                        for (Character aa : aminoAcids) {
-                            if (sequenceMatchingPreferences.hasMutationMatrix()
-                                    && (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() >= nMutations)
-                                    && isMutationTarget(aa, j, sequenceMatchingPreferences)) {
-                                aaMatched = true;
-                                nMutations++;
-                            }
                         }
                     }
                     if (!aaMatched) {
@@ -712,77 +679,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
     }
 
     /**
-     * Indicates whether the given amino acid at the given index of the pattern
-     * is targeted when accounting for mutations.
-     *
-     * @param aa the amino acid as character
-     * @param index the index in the pattern
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return true if the given amino acid at the given index of the pattern is
-     * targeted
-     */
-    public boolean isMutationTarget(Character aa, int index, SequenceMatchingPreferences sequenceMatchingPreferences) {
-
-        if (!sequenceMatchingPreferences.hasMutationMatrix()) {
-            return false;
-        }
-        if (residueTargeted != null) {
-
-            MatchingType matchingType = sequenceMatchingPreferences.getSequenceMatchingType();
-            ArrayList<Character> aaList = residueTargeted.get(index);
-
-            if (aaList != null && !aaList.isEmpty()) {
-
-                for (int i = 0; i < aaList.size(); i++) {
-                    Character targetedAA = aaList.get(i);
-                    HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(targetedAA);
-                    if (mutatedAas != null && mutatedAas.contains(aa)) {
-                        return true;
-                    }
-                    if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishableAminoAcids) {
-
-                        AminoAcid targetedAminoAcid = AminoAcid.getAminoAcid(targetedAA);
-
-                        for (char tempAA : targetedAminoAcid.getSubAminoAcids()) {
-                            mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(tempAA);
-                            if (mutatedAas != null && mutatedAas.contains(aa)) {
-                                return true;
-                            }
-                        }
-
-                        for (char tempAA : targetedAminoAcid.getCombinations()) {
-                            mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(tempAA);
-                            if (mutatedAas != null && mutatedAas.contains(aa)) {
-                                return true;
-                            }
-                        }
-
-                        if (matchingType == MatchingType.indistiguishableAminoAcids
-                                && (targetedAminoAcid == AminoAcid.I || targetedAminoAcid == AminoAcid.J || targetedAminoAcid == AminoAcid.L)) {
-                            mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('I');
-                            if (mutatedAas != null && mutatedAas.contains(aa)) {
-                                return true;
-                            }
-                            mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('J');
-                            if (mutatedAas != null && mutatedAas.contains(aa)) {
-                                return true;
-                            }
-                            mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('L');
-                            if (mutatedAas != null && mutatedAas.contains(aa)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            } else if (aaList != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Indicates whether the pattern is found in the given amino acid sequence.
      *
      * @param aminoAcidSequence the amino acid sequence
@@ -820,33 +716,6 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
-    }
-
-    /**
-     * Returns the number of mutations used to match an amino acid sequence. -1
-     * if the sequence does not match.
-     *
-     * @param aminoAcidSequence another amino acid sequence
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return the number of mutations used to match an amino acid sequence
-     */
-    public int nMutations(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        if (!matches(aminoAcidSequence, sequenceMatchingPreferences)) {
-            return -1;
-        }
-        int nMutations = 0;
-        int patternLength = length();
-        for (int i = 0; i < patternLength; i++) {
-            char aa = aminoAcidSequence.charAt(i);
-            if (!isTargeted(aa, i, sequenceMatchingPreferences)
-                    && sequenceMatchingPreferences.hasMutationMatrix()
-                    && (sequenceMatchingPreferences.getMaxMutationsPerPeptide() == null || sequenceMatchingPreferences.getMaxMutationsPerPeptide() >= nMutations)
-                    && isMutationTarget(aa, i, sequenceMatchingPreferences)) {
-                nMutations++;
-            }
-        }
-        return nMutations;
     }
 
     /**

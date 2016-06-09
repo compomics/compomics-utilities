@@ -1255,74 +1255,20 @@ public class ProteinTree implements PeptideMapper {
                 if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.string) {
                     String originalAa = aminoAcid.singleLetterCode;
                     result.add(originalAa);
-                    if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                        HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa.charAt(0));
-                        if (mutatedAas != null) {
-                            for (Character mutatedAa : mutatedAas) {
-                                String newAa = String.valueOf(mutatedAa);
-                                result.add(newAa);
-                            }
-                        }
-                    }
                 } else {
                     for (char originalAa : aminoAcid.getSubAminoAcids()) {
                         String newTag = String.valueOf(originalAa);
                         result.add(newTag);
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa);
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    result.add(newAa);
-                                }
-                            }
-                        }
                     }
                     for (char combinationAa : aminoAcid.getCombinations()) {
                         String newTag = String.valueOf(combinationAa);
                         result.add(newTag);
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(combinationAa);
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    result.add(newAa);
-                                }
-                            }
-                        }
                     }
                     if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.indistiguishableAminoAcids
                             && (aminoAcid == AminoAcid.I || aminoAcid == AminoAcid.J || aminoAcid == AminoAcid.L)) {
                         result.add("I");
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('I');
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    result.add(newAa);
-                                }
-                            }
-                        }
                         result.add("J");
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('J');
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    result.add(newAa);
-                                }
-                            }
-                        }
                         result.add("L");
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('L');
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    result.add(newAa);
-                                }
-                            }
-                        }
                     }
                 }
             } else {
@@ -1331,77 +1277,23 @@ public class ProteinTree implements PeptideMapper {
                     if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.string) {
                         String originalAa = aminoAcid.singleLetterCode;
                         newResults.add(sequence + aminoAcid.singleLetterCode);
-                        if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                            HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa.charAt(0));
-                            if (mutatedAas != null) {
-                                for (Character mutatedAa : mutatedAas) {
-                                    String newAa = String.valueOf(mutatedAa);
-                                    newResults.add(sequence + newAa);
-                                }
-                            }
-                        }
                     } else {
                         for (char originalAa : aminoAcid.getSubAminoAcids()) {
                             String newTag = sequence + originalAa;
                             newResults.add(newTag);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(originalAa);
-                                if (mutatedAas != null) {
-                                    for (Character mutatedAa : mutatedAas) {
-                                        newTag = sequence + String.valueOf(mutatedAa);
-                                        newResults.add(newTag);
-                                    }
-                                }
-                            }
                         }
                         for (char newAa : aminoAcid.getCombinations()) {
                             String newTag = sequence + newAa;
                             newResults.add(newTag);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids(newAa);
-                                if (mutatedAas != null) {
-                                    for (Character mutatedAa : mutatedAas) {
-                                        newTag = sequence + String.valueOf(mutatedAa);
-                                        newResults.add(newTag);
-                                    }
-                                }
-                            }
                         }
                         if (sequenceMatchingPreferences.getSequenceMatchingType() == MatchingType.indistiguishableAminoAcids
                                 && (aminoAcid == AminoAcid.I || aminoAcid == AminoAcid.J || aminoAcid == AminoAcid.L)) {
                             String newTag = sequence + "I";
                             newResults.add(newTag);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('I');
-                                if (mutatedAas != null) {
-                                    for (Character mutatedAa : mutatedAas) {
-                                        newTag = sequence + String.valueOf(mutatedAa);
-                                        newResults.add(newTag);
-                                    }
-                                }
-                            }
                             newTag = sequence + "J";
                             newResults.add(newTag);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('J');
-                                if (mutatedAas != null) {
-                                    for (Character mutatedAa : mutatedAas) {
-                                        newTag = sequence + String.valueOf(mutatedAa);
-                                        newResults.add(newTag);
-                                    }
-                                }
-                            }
                             newTag = sequence + "L";
                             newResults.add(newTag);
-                            if (sequenceMatchingPreferences.hasMutationMatrix()) {
-                                HashSet<Character> mutatedAas = sequenceMatchingPreferences.getMutationMatrix().getMutatedAminoAcids('L');
-                                if (mutatedAas != null) {
-                                    for (Character mutatedAa : mutatedAas) {
-                                        newTag = sequence + String.valueOf(mutatedAa);
-                                        newResults.add(newTag);
-                                    }
-                                }
-                            }
                         }
                     }
                 }

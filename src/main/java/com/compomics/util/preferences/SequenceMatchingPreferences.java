@@ -105,10 +105,14 @@ public class SequenceMatchingPreferences implements Serializable {
     private Double limitX = null;
     /**
      * Matrix of allowed mutations.
+     * 
+     * @deprecated use the PeptideVariantPreferences instead.
      */
     private MutationMatrix mutationMatrix = null;
     /**
      * The maximal number of mutations allowed per peptide.
+     * 
+     * @deprecated use the PeptideVariantPreferences instead.
      */
     private Integer maxMutationsPerPeptide = null;
     /**
@@ -198,53 +202,6 @@ public class SequenceMatchingPreferences implements Serializable {
     }
 
     /**
-     * Returns the mutation matrix to use. Null if not set.
-     *
-     * @return the mutation matrix to use
-     */
-    public MutationMatrix getMutationMatrix() {
-        return mutationMatrix;
-    }
-
-    /**
-     * Sets the mutation matrix to use.
-     *
-     * @param mutationMatrix the mutation matrix to use
-     */
-    public void setMutationMatrix(MutationMatrix mutationMatrix) {
-        this.mutationMatrix = mutationMatrix;
-    }
-
-    /**
-     * Indicates whether a mutation matrix shall be used.
-     *
-     * @return whether a mutation matrix shall be used
-     */
-    public boolean hasMutationMatrix() {
-        return mutationMatrix != null;
-    }
-
-    /**
-     * Returns the maximal number of mutations allowed per peptide. Null if not
-     * set.
-     *
-     * @return the maximal number of mutations allowed per peptide
-     */
-    public Integer getMaxMutationsPerPeptide() {
-        return maxMutationsPerPeptide;
-    }
-
-    /**
-     * Sets the maximal number of mutations allowed per peptide.
-     *
-     * @param maxMutationsPerPeptide the maximal number of mutations allowed per
-     * peptide
-     */
-    public void setMaxMutationsPerPeptide(Integer maxMutationsPerPeptide) {
-        this.maxMutationsPerPeptide = maxMutationsPerPeptide;
-    }
-
-    /**
      * Returns the type of peptide mapper to use.
      *
      * @return the type of peptide mapper to use
@@ -292,15 +249,6 @@ public class SequenceMatchingPreferences implements Serializable {
             return false;
         }
         if (!hasLimitX() && sequenceMatchingPreferences.hasLimitX()) {
-            return false;
-        }
-        if (hasMutationMatrix() && sequenceMatchingPreferences.hasMutationMatrix() && !mutationMatrix.isSameAs(sequenceMatchingPreferences.getMutationMatrix())) {
-            return false;
-        }
-        if (!hasMutationMatrix() && sequenceMatchingPreferences.hasMutationMatrix()) {
-            return false;
-        }
-        if (hasMutationMatrix() && !sequenceMatchingPreferences.hasMutationMatrix()) {
             return false;
         }
         return true;

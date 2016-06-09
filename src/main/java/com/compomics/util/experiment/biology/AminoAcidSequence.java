@@ -244,20 +244,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     }
 
     /**
-     * Returns the number of mutations used when matching the given reference
-     * sequence.
-     *
-     * @param aminoAcidSequence the sequence to compare to
-     * @param sequenceMatchingPreferences the sequence matching preferences
-     *
-     * @return the number of mutations used when matching the given reference
-     * sequence
-     */
-    public int nMutations(String aminoAcidSequence, SequenceMatchingPreferences sequenceMatchingPreferences) {
-        return getAsAminoAcidPattern().nMutations(aminoAcidSequence, sequenceMatchingPreferences);
-    }
-
-    /**
      * Returns the first index where the amino acid sequence is found in the
      * given sequence. -1 if not found. 0 is the first amino acid.
      *

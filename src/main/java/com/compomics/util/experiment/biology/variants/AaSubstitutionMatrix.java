@@ -78,7 +78,7 @@ public class AaSubstitutionMatrix {
      * @param substitutionAa the substituted amino acid represented by its single letter
      * code
      */
-    public void addMutation(Character originalAa, Character substitutionAa) {
+    public void addSubstitution(Character originalAa, Character substitutionAa) {
         HashSet<Character> substitutedAas = substitutions.get(originalAa);
         if (substitutedAas == null) {
             substitutedAas = new HashSet<Character>();
@@ -101,7 +101,7 @@ public class AaSubstitutionMatrix {
      *
      * @return the possible substituted amino acids
      */
-    public HashSet<Character> getSubstitutedAminoAcids(Character originalAminoAcid) {
+    public HashSet<Character> getSubstitutionAminoAcids(Character originalAminoAcid) {
         return substitutions.get(originalAminoAcid);
     }
 
@@ -143,8 +143,8 @@ public class AaSubstitutionMatrix {
      */
     public void add(AaSubstitutionMatrix otherMatrix) {
         for (Character originalAa : otherMatrix.getOriginalAminoAcids()) {
-            for (Character mutatedAa : otherMatrix.getSubstitutedAminoAcids(originalAa)) {
-                addMutation(originalAa, mutatedAa);
+            for (Character mutatedAa : otherMatrix.getSubstitutionAminoAcids(originalAa)) {
+                addSubstitution(originalAa, mutatedAa);
             }
         }
     }
@@ -171,7 +171,7 @@ public class AaSubstitutionMatrix {
                             if (mutatedAminoAcid != null) {
                                 char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
                                 if (originalAa != mutatedAa) {
-                                    result.addMutation(originalAa, mutatedAa);
+                                    result.addSubstitution(originalAa, mutatedAa);
                                 }
                             }
                         }
@@ -215,7 +215,7 @@ public class AaSubstitutionMatrix {
                             if (mutatedAminoAcid != null) {
                                 char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
                                 if (originalAa != mutatedAa) {
-                                    result.addMutation(originalAa, mutatedAa);
+                                    result.addSubstitution(originalAa, mutatedAa);
                                 }
                             }
                         }
@@ -259,7 +259,7 @@ public class AaSubstitutionMatrix {
                             if (mutatedAminoAcid != null) {
                                 char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
                                 if (originalAa != mutatedAa) {
-                                    result.addMutation(originalAa, mutatedAa);
+                                    result.addSubstitution(originalAa, mutatedAa);
                                 }
                             }
                         }
@@ -286,16 +286,16 @@ public class AaSubstitutionMatrix {
         for (char originalAminoAcid : nonPolarAliphatic) {
             for (char mutatedAminoAcid : nonPolarAliphatic) {
                 if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addMutation(originalAminoAcid, mutatedAminoAcid);
+                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
                 }
             }
-            result.addMutation('J', originalAminoAcid);
+            result.addSubstitution('J', originalAminoAcid);
         }
         char[] aromatic = new char[]{'F', 'Y', 'W'};
         for (char originalAminoAcid : aromatic) {
             for (char mutatedAminoAcid : aromatic) {
                 if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addMutation(originalAminoAcid, mutatedAminoAcid);
+                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
                 }
             }
         }
@@ -303,17 +303,17 @@ public class AaSubstitutionMatrix {
         for (char originalAminoAcid : polarNeutral) {
             for (char mutatedAminoAcid : polarNeutral) {
                 if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addMutation(originalAminoAcid, mutatedAminoAcid);
+                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
                 }
             }
-            result.addMutation('B', originalAminoAcid);
-            result.addMutation('Z', originalAminoAcid);
+            result.addSubstitution('B', originalAminoAcid);
+            result.addSubstitution('Z', originalAminoAcid);
         }
         char[] basic = new char[]{'K', 'R', 'H'};
         for (char originalAminoAcid : basic) {
             for (char mutatedAminoAcid : basic) {
                 if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addMutation(originalAminoAcid, mutatedAminoAcid);
+                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
                 }
             }
         }
@@ -321,15 +321,15 @@ public class AaSubstitutionMatrix {
         for (char originalAminoAcid : acidic) {
             for (char mutatedAminoAcid : acidic) {
                 if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addMutation(originalAminoAcid, mutatedAminoAcid);
+                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
                 }
             }
-            result.addMutation('B', originalAminoAcid);
-            result.addMutation('Z', originalAminoAcid);
+            result.addSubstitution('B', originalAminoAcid);
+            result.addSubstitution('Z', originalAminoAcid);
         }
         return result;
     }
-
+    
     /**
      * Returns the name of this mutation matrix.
      *
@@ -386,7 +386,7 @@ public class AaSubstitutionMatrix {
         }
         for (Character aa : substitutions.keySet()) {
             HashSet<Character> aaMutations = substitutions.get(aa);
-            HashSet<Character> otherMutations = aaSubstitutionMatrix.getSubstitutedAminoAcids(aa);
+            HashSet<Character> otherMutations = aaSubstitutionMatrix.getSubstitutionAminoAcids(aa);
             if (otherMutations == null || aaMutations.size() != otherMutations.size()) {
                 return false;
             }

@@ -17,7 +17,7 @@ public class PeptideVariantPreferences {
     /**
      * The amino acid substitution matrix selected.
      */
-    private AaSubstitutionMatrix aaSubstitutionMatrix;
+    private AaSubstitutionMatrix aaSubstitutionMatrix = AaSubstitutionMatrix.noSubstitution;
     
     /**
      * Constructor.

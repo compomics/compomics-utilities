@@ -274,6 +274,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         sequenceMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Sequence Matching</b></td>"
                 + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+        
+        peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
+                + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>"); // @TODO: replace with the correct settings!
 
         matchesFiltersButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Import Filters</b></td>"
                 + "<td><font size=2>" + formatDescription(peptideAssumptionFilter.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
@@ -330,6 +333,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         sequenceMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Sequence Matching</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
+        
+        peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
+                + "<td><font size=2></font></td></tr></table></html>");
 
         matchesFiltersButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Import Filters</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
@@ -355,6 +361,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         geneMappingButton.setEnabled(false);
         spectrumAnnotationButton.setEnabled(false);
         sequenceMatchingButton.setEnabled(false);
+        peptideVariantsButton.setEnabled(false);
         matchesFiltersButton.setEnabled(false);
         psmScoringButton.setEnabled(false);
         ptmLocalizationButton.setEnabled(false);
@@ -497,6 +504,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         matchesFiltersButton = new javax.swing.JButton();
         fractionsButton = new javax.swing.JButton();
         advancedSettingsLabel = new javax.swing.JLabel();
+        peptideVariantsButton = new javax.swing.JButton();
         exportLabel = new javax.swing.JLabel();
         importLabel = new javax.swing.JLabel();
 
@@ -698,6 +706,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
+        peptideVariantsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        peptideVariantsButton.setText("Peptide Variants");
+        peptideVariantsButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        peptideVariantsButton.setIconTextGap(15);
+        peptideVariantsButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        peptideVariantsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                peptideVariantsButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
@@ -718,11 +737,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                         .addComponent(proteinInferenceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(validationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
@@ -736,6 +753,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(matchesFiltersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -1202,12 +1221,29 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_importLabelMouseReleased
 
     /**
+     * Open the peptide variants dialog.
+     * 
+     * @param evt 
+     */
+    private void peptideVariantsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideVariantsButtonActionPerformed
+
+        // @TODO: replace with propper dialog and settings
+
+//        PeptideVariantsSettingsDialog peptideVariantsSettingsDialog = new PeptideVariantsSettingsDialog(this, parentFrame, sequenceMatchingPreferences, editable);
+//        if (!peptideVariantsSettingsDialog.isCanceled()) {
+//            sequenceMatchingPreferences = peptideVariantsSettingsDialog.getSequenceMatchingPreferences();
+//            updateGUI();
+//        }
+    }//GEN-LAST:event_peptideVariantsButtonActionPerformed
+
+    /**
      * Show/hide the advanced settings.
      */
     private void updateAdvancedSettings() {
         geneMappingButton.setVisible(showAdvancedSettings);
         spectrumAnnotationButton.setVisible(showAdvancedSettings);
         sequenceMatchingButton.setVisible(showAdvancedSettings);
+        peptideVariantsButton.setVisible(showAdvancedSettings);
         matchesFiltersButton.setVisible(showAdvancedSettings);
         psmScoringButton.setVisible(showAdvancedSettings);
         ptmLocalizationButton.setVisible(showAdvancedSettings);
@@ -1237,6 +1273,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private javax.swing.JButton matchesFiltersButton;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameTxt;
+    private javax.swing.JButton peptideVariantsButton;
     private javax.swing.JButton proteinInferenceButton;
     private javax.swing.JButton psmScoringButton;
     private javax.swing.JButton ptmLocalizationButton;

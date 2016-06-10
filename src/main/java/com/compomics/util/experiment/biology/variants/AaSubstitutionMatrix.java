@@ -13,61 +13,51 @@ import java.util.HashSet;
 public class AaSubstitutionMatrix {
 
     /**
-     * The name of this mutation matrix.
+     * The name of this substitution matrix.
      */
     private String name;
     /**
-     * The description of the mutation matrix.
+     * The description of the substitution matrix.
      */
     private String description;
     /**
-     * Map of the possible amino acid mutations: original aa &gt; mutated aa.
+     * Map of the possible amino acid substitutions: original aa &gt; substituted aa.
      */
-    private final HashMap<Character, HashSet<Character>> mutations = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> substitutions = new HashMap<Character, HashSet<Character>>(26);
     /**
-     * Map of the possible amino acid mutations: original aa &gt; delta mass
-     * (mutated - original) &gt; mutated aa.
-     */
-    private final HashMap<Character, HashMap<Double, HashSet<Character>>> mutationsMasses = new HashMap<Character, HashMap<Double, HashSet<Character>>>(26);
-    /**
-     * The minimum difference between an original amino acid and the mutated
-     * version.
-     */
-    private Double minDelta = null;
-    /**
-     * The maximum difference between an original amino acid and the mutated
-     * version.
-     */
-    private Double maxDelta = null;
-    /**
-     * Reverse map of the possible amino acid mutations: mutated aa &gt;
+     * Reverse map of the possible amino acid substitution: substituted aa &gt;
      * original aa.
      */
-    private final HashMap<Character, HashSet<Character>> mutationsReverse = new HashMap<Character, HashSet<Character>>(26);
+    private final HashMap<Character, HashSet<Character>> reverseMap = new HashMap<Character, HashSet<Character>>(26);
+    
     /**
-     * Mutation matrix allowing for a single base mutation.
+     * Empty substitution matrix.
+     */
+    public static final AaSubstitutionMatrix noSubstitution = new AaSubstitutionMatrix("No substitution", "No substitution");
+    /**
+     * Substitution matrix allowing for a single base substitution.
      */
     public static final AaSubstitutionMatrix singleBaseSubstitution = singleBaseSubstitution();
     /**
-     * Mutation matrix allowing for a single base transitions mutation.
+     * Substitution matrix allowing for a single base transition variant.
      */
     public static final AaSubstitutionMatrix transitionsSingleBaseSubstitution = transitionsSingleBaseSubstitution();
     /**
-     * Mutation matrix allowing for a single base transversion mutation.
+     * Substitution matrix allowing for a single base transversion variant.
      */
     public static final AaSubstitutionMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
     /**
-     * Mutation matrix grouping synonymous amino acids. Amino acids are grouped
+     * Substitution matrix grouping synonymous amino acids. Amino acids are grouped
      * according to their side chain properties: - Non-polar aliphatic groups:
      * {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F', 'Y', 'W'} - Polar
      * neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic groups: {'K', 'R',
      * 'H'} - Acidic groups: {'D', 'E'}.
      */
-    public static final AaSubstitutionMatrix synonymousMutation = synonymousMutation();
+    public static final AaSubstitutionMatrix synonymousVariant = synonymousVariant();
     /**
      * Returns the implemented default mutation matrices.
      */
-    public static final AaSubstitutionMatrix[] defaultMutationMatrices = new AaSubstitutionMatrix[]{singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousMutation};
+    public static final AaSubstitutionMatrix[] defaultMutationMatrices = new AaSubstitutionMatrix[]{noSubstitution, singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousVariant};
 
     /**
      * Constructor.
@@ -85,96 +75,65 @@ public class AaSubstitutionMatrix {
      *
      * @param originalAa the original amino acid represented by its single
      * letter code
-     * @param mutatedAa the mutated amino acid represented by its single letter
+     * @param substitutionAa the substituted amino acid represented by its single letter
      * code
      */
-    public void addMutation(Character originalAa, Character mutatedAa) {
-        HashSet<Character> mutatedAas = mutations.get(originalAa);
-        if (mutatedAas == null) {
-            mutatedAas = new HashSet<Character>();
-            mutations.put(originalAa, mutatedAas);
+    public void addMutation(Character originalAa, Character substitutionAa) {
+        HashSet<Character> substitutedAas = substitutions.get(originalAa);
+        if (substitutedAas == null) {
+            substitutedAas = new HashSet<Character>();
+            substitutions.put(originalAa, substitutedAas);
         }
-        mutatedAas.add(mutatedAa);
-        HashMap<Double, HashSet<Character>> deltaMasses = mutationsMasses.get(originalAa);
-        if (deltaMasses == null) {
-            deltaMasses = new HashMap<Double, HashSet<Character>>(1);
-            mutationsMasses.put(originalAa, deltaMasses);
-        }
-        double deltaMass = AminoAcid.getAminoAcid(mutatedAa).getMonoisotopicMass() - AminoAcid.getAminoAcid(originalAa).getMonoisotopicMass();
-        if (minDelta == null || deltaMass < minDelta) {
-            minDelta = deltaMass;
-        }
-        if (maxDelta == null || deltaMass > maxDelta) {
-            maxDelta = deltaMass;
-        }
-        mutatedAas = deltaMasses.get(deltaMass);
-        if (mutatedAas == null) {
-            mutatedAas = new HashSet<Character>();
-            deltaMasses.put(deltaMass, mutatedAas);
-        }
-        mutatedAas.add(mutatedAa);
-        HashSet<Character> originalAas = mutationsReverse.get(originalAa);
+        substitutedAas.add(substitutionAa);
+        HashSet<Character> originalAas = reverseMap.get(originalAa);
         if (originalAas == null) {
             originalAas = new HashSet<Character>();
-            mutationsReverse.put(mutatedAa, originalAas);
+            reverseMap.put(substitutionAa, originalAas);
         }
         originalAas.add(originalAa);
     }
-
+    
     /**
-     * Returns the possible mutated amino acids for the given amino acid as a
-     * map where the list of their single letter code is indexed by the delta
-     * mass to the original amino acid. Null if none found.
-     *
-     * @param originalAminoAcid the amino acid of interest
-     *
-     * @return the possible mutated amino acids
-     */
-    public HashMap<Double, HashSet<Character>> getMutatedMasses(Character originalAminoAcid) {
-        return mutationsMasses.get(originalAminoAcid);
-    }
-
-    /**
-     * Returns the possible mutated amino acids for the given amino acid as a
+     * Returns the possible substituted amino acids for the given amino acid as a
      * list of their single letter code. Null if none found.
      *
      * @param originalAminoAcid the amino acid of interest
      *
-     * @return the possible mutated amino acids
+     * @return the possible substituted amino acids
      */
-    public HashSet<Character> getMutatedAminoAcids(Character originalAminoAcid) {
-        return mutations.get(originalAminoAcid);
+    public HashSet<Character> getSubstitutedAminoAcids(Character originalAminoAcid) {
+        return substitutions.get(originalAminoAcid);
     }
 
     /**
-     * Returns the possible original amino acids for the given mutated amino
+     * Returns the possible original amino acids for the given substituted amino
      * acid as a list of their single letter code. Null if none found.
      *
-     * @param mutatedAminoAcid the mutated amino acid of interest
+     * @param substitutedAminoAcid the mutated amino acid of interest
      *
-     * @return the possible original amino acids for the given mutated amino
+     * @return the possible original amino acids for the given substituted amino
      * acid
      */
-    public HashSet<Character> getOriginalAminoAcids(Character mutatedAminoAcid) {
-        return mutationsReverse.get(mutatedAminoAcid);
+    public HashSet<Character> getOriginalAminoAcids(Character substitutedAminoAcid) {
+        return reverseMap.get(substitutedAminoAcid);
     }
 
     /**
-     * Returns the amino acids where a mutation has been registered.
+     * Returns the amino acids where a substitution has been registered.
      *
-     * @return the amino acids where a mutation has been registered
+     * @return the amino acids where a substitution has been registered
      */
     public HashSet<Character> getOriginalAminoAcids() {
-        return new HashSet<Character>(mutations.keySet());
+        return new HashSet<Character>(substitutions.keySet());
     }
 
     /**
-     * Returns the possible mutated amino acids.
+     * Returns the possible substituted amino acids.
      *
-     * @return the possible mutated amino acids
+     * @return the possible substituted amino acids
      */
-    public HashSet<Character> getMutatedAminoAcids() {
-        return new HashSet<Character>(mutations.keySet());
+    public HashSet<Character> getSubstitutionAminoAcids() {
+        return new HashSet<Character>(substitutions.keySet());
     }
 
     /**
@@ -184,19 +143,19 @@ public class AaSubstitutionMatrix {
      */
     public void add(AaSubstitutionMatrix otherMatrix) {
         for (Character originalAa : otherMatrix.getOriginalAminoAcids()) {
-            for (Character mutatedAa : otherMatrix.getMutatedAminoAcids(originalAa)) {
+            for (Character mutatedAa : otherMatrix.getSubstitutedAminoAcids(originalAa)) {
                 addMutation(originalAa, mutatedAa);
             }
         }
     }
 
     /**
-     * Returns the mutation matrix allowing for a single base mutation.
+     * Returns the substitution matrix allowing for a single base substitution.
      *
-     * @return the mutation matrix allowing for a single base mutation
+     * @return the substitution matrix allowing for a single base substitution
      */
     private static AaSubstitutionMatrix singleBaseSubstitution() {
-        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Mutation", "Single base substitutions");
+        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Substitution", "Single base substitutions");
         char[] bases = {'A', 'T', 'G', 'C'};
         for (char originalAa : AminoAcid.getAminoAcids()) {
             if (originalAa != 'X') {
@@ -226,13 +185,13 @@ public class AaSubstitutionMatrix {
 
     /**
      * Returns the mutation matrix allowing for a single base transitions
-     * mutation.
+     * variant.
      *
      * @return the mutation matrix allowing for a single base transitions
-     * mutation
+     * variant
      */
     private static AaSubstitutionMatrix transitionsSingleBaseSubstitution() {
-        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Transition Mutation", "Single base transitions substitutions.");
+        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Transition", "Single base transitions substitutions.");
         char[] purines = {'A', 'G'}, pyrimidines = {'T', 'C'};
         for (char originalAa : AminoAcid.getAminoAcids()) {
             if (originalAa != 'X') {
@@ -270,13 +229,13 @@ public class AaSubstitutionMatrix {
 
     /**
      * Returns the mutation matrix allowing for a single base transversion
-     * mutation.
+     * variant.
      *
      * @return the mutation matrix allowing for a single base transversion
-     * mutation
+     * variant
      */
     private static AaSubstitutionMatrix transversalSingleBaseSubstitution() {
-        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Transversion Mutation", "Single base transversion substitutions.");
+        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Transversion", "Single base transversion substitutions.");
         char[] purines = {'A', 'G'}, pyrimidines = {'T', 'C'};
         for (char originalAa : AminoAcid.getAminoAcids()) {
             if (originalAa != 'X') {
@@ -313,16 +272,16 @@ public class AaSubstitutionMatrix {
     }
 
     /**
-     * Returns a mutation matrix grouping synonymous amino acids. Amino acids
+     * Returns a substitution matrix grouping synonymous amino acids. Amino acids
      * are grouped according to their side chain properties: - Non-polar
      * aliphatic groups: {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F',
      * 'Y', 'W'} - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic
      * groups: {'K', 'R', 'H'} - Acidic groups: {'D', 'E'}.
      *
-     * @return a mutation matrix grouping synonymous amino acids
+     * @return a substitution matrix grouping synonymous amino acids
      */
-    private static AaSubstitutionMatrix synonymousMutation() {
-        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Synonymous Mutation", "Mutations keeping amino acid properties.");
+    private static AaSubstitutionMatrix synonymousVariant() {
+        AaSubstitutionMatrix result = new AaSubstitutionMatrix("Synonymous Variant", "Variants keeping amino acid properties.");
         char[] nonPolarAliphatic = new char[]{'G', 'A', 'V', 'L', 'M', 'I'};
         for (char originalAminoAcid : nonPolarAliphatic) {
             for (char mutatedAminoAcid : nonPolarAliphatic) {
@@ -408,28 +367,6 @@ public class AaSubstitutionMatrix {
     }
 
     /**
-     * Returns the minimum difference between an original amino acid and the
-     * mutated version.
-     *
-     * @return the minimum difference between an original amino acid and the
-     * mutated version
-     */
-    public Double getMinDelta() {
-        return minDelta;
-    }
-
-    /**
-     * Returns the maximum difference between an original amino acid and the
-     * mutated version.
-     *
-     * @return the maximum difference between an original amino acid and the
-     * mutated version
-     */
-    public Double getMaxDelta() {
-        return maxDelta;
-    }
-
-    /**
      * Indicates whether the given AaSubstitutionMatrix is the same as this one.
      *
      * @param aaSubstitutionMatrix the mutation matrix
@@ -447,9 +384,9 @@ public class AaSubstitutionMatrix {
         if (!description.equals(aaSubstitutionMatrix.getDescription())) {
             return false;
         }
-        for (Character aa : mutations.keySet()) {
-            HashSet<Character> aaMutations = mutations.get(aa);
-            HashSet<Character> otherMutations = aaSubstitutionMatrix.getMutatedAminoAcids(aa);
+        for (Character aa : substitutions.keySet()) {
+            HashSet<Character> aaMutations = substitutions.get(aa);
+            HashSet<Character> otherMutations = aaSubstitutionMatrix.getSubstitutedAminoAcids(aa);
             if (otherMutations == null || aaMutations.size() != otherMutations.size()) {
                 return false;
             }
@@ -460,5 +397,10 @@ public class AaSubstitutionMatrix {
             }
         }
         return true;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
     }
 }

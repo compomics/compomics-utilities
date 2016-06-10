@@ -200,7 +200,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
@@ -219,13 +219,10 @@
                                       <Component id="fractionsButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
                                       <Component id="qualityControlButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="geneMappingButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
+                                  <Component id="peptideVariantsButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="geneMappingButton" min="-2" pref="661" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="20" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -240,6 +237,8 @@
                               <Component id="spectrumAnnotationButton" min="-2" pref="45" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="sequenceMatchingButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="peptideVariantsButton" min="-2" pref="45" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="matchesFiltersButton" min="-2" pref="45" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -446,6 +445,22 @@
                         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseEntered"/>
                         <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseExited"/>
                         <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="advancedSettingsLabelMouseReleased"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="peptideVariantsButton">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/icons/edit_gray.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Peptide Variants"/>
+                        <Property name="horizontalAlignment" type="int" value="2"/>
+                        <Property name="iconTextGap" type="int" value="15"/>
+                        <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/icons/edit.png"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="peptideVariantsButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

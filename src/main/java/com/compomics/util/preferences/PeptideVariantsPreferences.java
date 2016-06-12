@@ -89,7 +89,7 @@ public class PeptideVariantsPreferences {
 
         StringBuilder output = new StringBuilder();
 
-        output.append("#Edits: ").append(nEdits).append(".").append(newLine);
+        output.append("Edits: ").append(nEdits).append(".").append(newLine);
         output.append("Substitution Matrix: ").append(aaSubstitutionMatrix.toString()).append(".").append(newLine);
 
         return output.toString();

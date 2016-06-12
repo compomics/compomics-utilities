@@ -41,7 +41,7 @@ public class AaSubstitutionMatrixTableModel extends DefaultTableModel {
     @Override
     public int getRowCount() {
         if (aminoAcids != null) {
-            return aminoAcids.length + 1;
+            return aminoAcids.length;
         }
         return 0;
     }
@@ -49,14 +49,17 @@ public class AaSubstitutionMatrixTableModel extends DefaultTableModel {
     @Override
     public int getColumnCount() {
         if (aminoAcids != null) {
-            return aminoAcids.length;
+            return aminoAcids.length + 1;
         }
         return 0;
     }
 
     @Override
     public String getColumnName(int column) {
-        return aminoAcids[column] + "";
+        if (column == 0) {
+            return "  ";
+        }
+        return aminoAcids[column-1] + "";
     }
 
     @Override

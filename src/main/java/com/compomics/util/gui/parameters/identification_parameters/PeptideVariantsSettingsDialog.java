@@ -1,14 +1,19 @@
 package com.compomics.util.gui.parameters.identification_parameters;
 
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
+import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.variants.aa_substitutions.AaSubstitutionMatrixTableModel;
 import com.compomics.util.preferences.FractionSettings;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 
 /**
  * FractionSettingsDialog.
@@ -71,6 +76,22 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         maxVariantsSpinner.setEnabled(editable);
         substitutionMatrixComboBox.setEnabled(editable);
         substitutionMatrixComboBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
+        setTableProperties();
+    }
+
+    /**
+     * Sets the table properties.
+     */
+    private void setTableProperties() {
+        TableColumnModel tableColumnModel = substitutionMatrixTable.getColumnModel();
+        tableColumnModel.getColumn(0).setMaxWidth(50);
+        substitutionMatrixTableJScrollPane.getViewport().setOpaque(false);
+        for (int i = 0; i < AminoAcid.getAminoAcids().length; i++) {
+            tableColumnModel.getColumn(i + 1).setCellRenderer(new TrueFalseIconRenderer(
+                    new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
+                    null,
+                    "On", "Off"));
+        }
     }
 
     /**
@@ -144,7 +165,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         aaSubstitutionsTableJPanel = new javax.swing.JPanel();
         substitutionMatrixComboBox = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        substitutionMatrixTableJScrollPane = new javax.swing.JScrollPane();
         substitutionMatrixTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -211,7 +232,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         });
 
         substitutionMatrixTable.setModel(new AaSubstitutionMatrixTableModel(null, false));
-        jScrollPane1.setViewportView(substitutionMatrixTable);
+        substitutionMatrixTableJScrollPane.setViewportView(substitutionMatrixTable);
 
         javax.swing.GroupLayout aaSubstitutionsTableJPanelLayout = new javax.swing.GroupLayout(aaSubstitutionsTableJPanel);
         aaSubstitutionsTableJPanel.setLayout(aaSubstitutionsTableJPanelLayout);
@@ -220,7 +241,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
             .addGroup(aaSubstitutionsTableJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(aaSubstitutionsTableJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(substitutionMatrixTableJScrollPane)
                     .addComponent(substitutionMatrixComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -230,8 +251,8 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(substitutionMatrixComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(substitutionMatrixTableJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout backgrounPanelLayout = new javax.swing.GroupLayout(backgrounPanel);
@@ -239,7 +260,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         backgrounPanelLayout.setHorizontalGroup(
             backgrounPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgrounPanelLayout.createSequentialGroup()
-                .addContainerGap(587, Short.MAX_VALUE)
+                .addContainerGap(700, Short.MAX_VALUE)
                 .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cancelButton)
@@ -319,13 +340,13 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JPanel aaSubstitutionsTableJPanel;
     private javax.swing.JPanel backgrounPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel maxVariantsJPanel;
     private javax.swing.JLabel maxVariantsLbl;
     private javax.swing.JSpinner maxVariantsSpinner;
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox substitutionMatrixComboBox;
     private javax.swing.JTable substitutionMatrixTable;
+    private javax.swing.JScrollPane substitutionMatrixTableJScrollPane;
     // End of variables declaration//GEN-END:variables
 
 }

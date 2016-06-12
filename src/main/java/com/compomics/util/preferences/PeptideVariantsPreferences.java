@@ -95,4 +95,16 @@ public class PeptideVariantsPreferences {
         return output.toString();
     }
     
+    /**
+     * Returns the preferences corresponding to no variants allowed.
+     * 
+     * @return the preferences corresponding to no variants allowed
+     */
+    public static PeptideVariantsPreferences getNoVariantPreferences() {
+        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        peptideVariantsPreferences.setnEdits(0);
+        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
+        return peptideVariantsPreferences;
+    }
+    
 }

@@ -248,6 +248,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         annotationSettings = identificationParameters.getAnnotationPreferences();
         searchParameters = identificationParameters.getSearchParameters();
         sequenceMatchingPreferences = identificationParameters.getSequenceMatchingPreferences();
+        peptideVariantsPreferences = identificationParameters.getPeptideVariantsPreferences();
         genePreferences = identificationParameters.getGenePreferences();
         psmScoringPreferences = identificationParameters.getPsmScoringPreferences();
         peptideAssumptionFilter = identificationParameters.getPeptideAssumptionFilter();
@@ -280,7 +281,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         sequenceMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Sequence Matching</b></td>"
                 + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
-        
+
         peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
                 + "<td><font size=2>" + formatDescription(peptideVariantsPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>"); // @TODO: replace with the correct settings!
 
@@ -339,7 +340,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         sequenceMatchingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Sequence Matching</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
-        
+
         peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
 
@@ -1228,8 +1229,8 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
     /**
      * Open the peptide variants dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void peptideVariantsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideVariantsButtonActionPerformed
 

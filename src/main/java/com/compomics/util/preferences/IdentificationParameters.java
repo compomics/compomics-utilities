@@ -288,6 +288,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @return the peptide variant preferences
      */
     public PeptideVariantsPreferences getPeptideVariantsPreferences() {
+        if (peptideVariantsPreferences == null) { // Backward compatibility
+            peptideVariantsPreferences = PeptideVariantsPreferences.getNoVariantPreferences();
+        }
         return peptideVariantsPreferences;
     }
 
@@ -619,9 +622,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (!sequenceMatchingPreferences.isSameAs(otherIdentificationParameters.getSequenceMatchingPreferences())) {
             return false;
         }
-        if (peptideVariantsPreferences == null && otherIdentificationParameters.getPeptideVariantsPreferences() != null
-                || peptideVariantsPreferences != null && otherIdentificationParameters.getDefaultDescription() == null
-                || peptideVariantsPreferences != null && otherIdentificationParameters.getPeptideVariantsPreferences() != null && !peptideVariantsPreferences.isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
+        if (getPeptideVariantsPreferences().isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
             return false;
         }
         if (!genePreferences.equals(otherIdentificationParameters.getGenePreferences())) {

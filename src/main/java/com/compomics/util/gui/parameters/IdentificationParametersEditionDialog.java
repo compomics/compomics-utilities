@@ -12,6 +12,7 @@ import com.compomics.util.gui.parameters.identification_parameters.FractionSetti
 import com.compomics.util.gui.parameters.identification_parameters.GenePreferencesDialog;
 import com.compomics.util.gui.parameters.identification_parameters.MatchesImportFiltersDialog;
 import com.compomics.util.gui.parameters.identification_parameters.PTMLocalizationParametersDialog;
+import com.compomics.util.gui.parameters.identification_parameters.PeptideVariantsSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.ProteinInferenceSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.PsmScoringSettingsDialog;
 import com.compomics.util.gui.parameters.identification_parameters.SearchSettingsDialog;
@@ -26,6 +27,7 @@ import com.compomics.util.preferences.IdMatchValidationPreferences;
 import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.LastSelectedFolder;
 import com.compomics.util.preferences.PTMScoringPreferences;
+import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.PsmScoringPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
@@ -85,6 +87,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * The peptide to protein matching preferences.
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
+    /**
+     * The peptide variants preferences.
+     */
+    private PeptideVariantsPreferences peptideVariantsPreferences;
     /**
      * The gene preferences.
      */
@@ -276,7 +282,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
         
         peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
-                + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>"); // @TODO: replace with the correct settings!
+                + "<td><font size=2>" + formatDescription(peptideVariantsPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>"); // @TODO: replace with the correct settings!
 
         matchesFiltersButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Import Filters</b></td>"
                 + "<td><font size=2>" + formatDescription(peptideAssumptionFilter.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
@@ -1227,13 +1233,11 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      */
     private void peptideVariantsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideVariantsButtonActionPerformed
 
-        // @TODO: replace with propper dialog and settings
-
-//        PeptideVariantsSettingsDialog peptideVariantsSettingsDialog = new PeptideVariantsSettingsDialog(this, parentFrame, sequenceMatchingPreferences, editable);
-//        if (!peptideVariantsSettingsDialog.isCanceled()) {
-//            sequenceMatchingPreferences = peptideVariantsSettingsDialog.getSequenceMatchingPreferences();
-//            updateGUI();
-//        }
+        PeptideVariantsSettingsDialog peptideVariantsSettingsDialog = new PeptideVariantsSettingsDialog(this, parentFrame, peptideVariantsPreferences, editable);
+        if (!peptideVariantsSettingsDialog.isCanceled()) {
+            peptideVariantsPreferences = peptideVariantsSettingsDialog.getPeptideVariantsPreferences();
+            updateGUI();
+        }
     }//GEN-LAST:event_peptideVariantsButtonActionPerformed
 
     /**

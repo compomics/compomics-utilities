@@ -7,7 +7,7 @@ import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
  *
  * @author Marc Vaudel
  */
-public class PeptideVariantPreferences {
+public class PeptideVariantsPreferences {
 
     /**
      * The number of sequence edits allowed.
@@ -22,7 +22,7 @@ public class PeptideVariantPreferences {
     /**
      * Constructor.
      */
-    public PeptideVariantPreferences() {
+    public PeptideVariantsPreferences() {
         
     }
 
@@ -60,6 +60,39 @@ public class PeptideVariantPreferences {
      */
     public void setAaSubstitutionMatrix(AaSubstitutionMatrix aaSubstitutionMatrix) {
         this.aaSubstitutionMatrix = aaSubstitutionMatrix;
+    }
+
+    /**
+     * Indicates whether another peptide variant preferences is the same as
+     * this one.
+     *
+     * @param peptideVariantsPreferences the other preferences
+     *
+     * @return whether another peptide variant preferences is the same as this
+     * one
+     */
+    public boolean isSameAs(PeptideVariantsPreferences peptideVariantsPreferences) {
+        if (!nEdits.equals(peptideVariantsPreferences.getnEdits())) {
+            return false;
+        }
+        return aaSubstitutionMatrix.isSameAs(peptideVariantsPreferences.getAaSubstitutionMatrix());
+    }
+
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+
+        String newLine = System.getProperty("line.separator");
+
+        StringBuilder output = new StringBuilder();
+
+        output.append("#Edits: ").append(nEdits).append(".").append(newLine);
+        output.append("Substitution Matrix: ").append(aaSubstitutionMatrix.toString()).append(".").append(newLine);
+
+        return output.toString();
     }
     
 }

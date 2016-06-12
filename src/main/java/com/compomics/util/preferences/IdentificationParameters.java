@@ -52,6 +52,10 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      */
     private SequenceMatchingPreferences sequenceMatchingPreferences;
     /**
+     * The peptide variants preferences.
+     */
+    private PeptideVariantsPreferences peptideVariantsPreferences;
+    /**
      * The gene preferences.
      */
     private GenePreferences genePreferences;
@@ -105,6 +109,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param searchParameters the search parameters
      * @param annotationSettings the annotation preferences
      * @param sequenceMatchingPreferences the sequence matching preferences
+     * @param peptideVariantsPreferences the peptide variant preferences
      * @param genePreferences the gene preferences
      * @param psmScoringPreferences the PSM scoring preferences
      * @param peptideAssumptionFilter the peptide assumption filters
@@ -114,7 +119,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
      * @param fractionSettings the fraction settings
      */
     public IdentificationParameters(String name, String description, SearchParameters searchParameters, AnnotationSettings annotationSettings,
-            SequenceMatchingPreferences sequenceMatchingPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences,
+            SequenceMatchingPreferences sequenceMatchingPreferences, PeptideVariantsPreferences peptideVariantsPreferences, GenePreferences genePreferences, PsmScoringPreferences psmScoringPreferences,
             PeptideAssumptionFilter peptideAssumptionFilter, PTMScoringPreferences ptmScoringPreferences, ProteinInferencePreferences proteinInferencePreferences,
             IdMatchValidationPreferences idValidationPreferences, FractionSettings fractionSettings) {
         this.name = name;
@@ -122,6 +127,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         this.searchParameters = searchParameters;
         this.annotationSettings = annotationSettings;
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
+        this.peptideVariantsPreferences = peptideVariantsPreferences;
         this.genePreferences = genePreferences;
         this.psmScoringPreferences = psmScoringPreferences;
         this.peptideAssumptionFilter = peptideAssumptionFilter;
@@ -277,6 +283,24 @@ public class IdentificationParameters implements Serializable, MarshallableParam
     }
 
     /**
+     * Returns the peptide variant preferences.
+     * 
+     * @return the peptide variant preferences
+     */
+    public PeptideVariantsPreferences getPeptideVariantsPreferences() {
+        return peptideVariantsPreferences;
+    }
+
+    /**
+     * Sets the peptide variant preferences.
+     * 
+     * @param peptideVariantsPreferences the peptide variant preferences
+     */
+    public void setPeptideVariantsPreferences(PeptideVariantsPreferences peptideVariantsPreferences) {
+        this.peptideVariantsPreferences = peptideVariantsPreferences;
+    }
+
+    /**
      * Returns the identification matches validation preferences.
      *
      * @return the identification matches validation preferences
@@ -424,7 +448,7 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             if (validationQCPreferences != null) {
                 idMatchValidationPreferences = new IdMatchValidationPreferences(idMatchValidationPreferences);
                 idMatchValidationPreferences.setValidationQCPreferences(new ValidationQCPreferences());
-                identificationParameters = new IdentificationParameters(identificationParameters.getName(), identificationParameters.getDescription(), identificationParameters.getSearchParameters(), identificationParameters.getAnnotationPreferences(), identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getGenePreferences(), identificationParameters.getPsmScoringPreferences(), identificationParameters.getPeptideAssumptionFilter(), identificationParameters.ptmScoringPreferences, identificationParameters.getProteinInferencePreferences(), idMatchValidationPreferences, identificationParameters.getFractionSettings());
+                identificationParameters = new IdentificationParameters(identificationParameters.getName(), identificationParameters.getDescription(), identificationParameters.getSearchParameters(), identificationParameters.getAnnotationPreferences(), identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getPeptideVariantsPreferences(), identificationParameters.getGenePreferences(), identificationParameters.getPsmScoringPreferences(), identificationParameters.getPeptideAssumptionFilter(), identificationParameters.ptmScoringPreferences, identificationParameters.getProteinInferencePreferences(), idMatchValidationPreferences, identificationParameters.getFractionSettings());
             }
         }
 
@@ -514,6 +538,9 @@ public class IdentificationParameters implements Serializable, MarshallableParam
         if (sequenceMatchingPreferences == null) {
             sequenceMatchingPreferences = SequenceMatchingPreferences.getDefaultSequenceMatching();
         }
+        if (peptideVariantsPreferences == null) {
+            peptideVariantsPreferences = new PeptideVariantsPreferences();
+        }
         if (genePreferences == null) {
             genePreferences = new GenePreferences();
             genePreferences.setPreferencesFromSearchParameters(searchParameters);
@@ -590,6 +617,11 @@ public class IdentificationParameters implements Serializable, MarshallableParam
             return false;
         }
         if (!sequenceMatchingPreferences.isSameAs(otherIdentificationParameters.getSequenceMatchingPreferences())) {
+            return false;
+        }
+        if (peptideVariantsPreferences == null && otherIdentificationParameters.getPeptideVariantsPreferences() != null
+                || peptideVariantsPreferences != null && otherIdentificationParameters.getDefaultDescription() == null
+                || peptideVariantsPreferences != null && otherIdentificationParameters.getPeptideVariantsPreferences() != null && !peptideVariantsPreferences.isSameAs(otherIdentificationParameters.getPeptideVariantsPreferences())) {
             return false;
         }
         if (!genePreferences.equals(otherIdentificationParameters.getGenePreferences())) {

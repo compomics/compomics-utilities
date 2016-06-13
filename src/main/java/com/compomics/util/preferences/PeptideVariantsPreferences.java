@@ -106,5 +106,4 @@ public class PeptideVariantsPreferences {
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
         return peptideVariantsPreferences;
     }
-    
 }

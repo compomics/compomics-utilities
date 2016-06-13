@@ -51,7 +51,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
         if (dbFolder != null) {
             databasesFolderTxt.setText(dbFolder.getAbsolutePath());
         }
-        fastaSuffixTxt.setText(userPreferences.getTargetDecoyFileNameTag());
+        fastaSuffixTxt.setText(userPreferences.getTargetDecoyFileNameSuffix());
     }
 
     /**

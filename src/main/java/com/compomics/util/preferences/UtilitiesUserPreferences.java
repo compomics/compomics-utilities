@@ -969,11 +969,11 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Returns the target-decoy file name tag.
+     * Returns the target-decoy file name suffix.
      *
-     * @return the targetDecoyFileNameTag
+     * @return the targetDecoyFileNameSuffix
      */
-    public String getTargetDecoyFileNameTag() {
+    public String getTargetDecoyFileNameSuffix() {
         if (targetDecoyFileNameTag == null) {
             targetDecoyFileNameTag = "_concatenated_target_decoy";
         }
@@ -983,7 +983,7 @@ public class UtilitiesUserPreferences implements Serializable {
     /**
      * Set the target-decoy file name suffix.
      *
-     * @param targetDecoyFileNameSuffix the targetDecoyFileNameTag to set
+     * @param targetDecoyFileNameSuffix the targetDecoyFileNameSuffix to set
      */
     public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
         this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;

@@ -220,7 +220,7 @@ public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         UtilitiesUserPreferences tempUserPreferences = UtilitiesUserPreferences.loadUserPreferences();
         tempUserPreferences.setProteinTreeFolder(dbFolder);
-        tempUserPreferences.setTargetDecoyFileNameTag(fastaSuffixTxt.getText().trim());
+        tempUserPreferences.setTargetDecoyFileNameSuffix(fastaSuffixTxt.getText().trim());
         UtilitiesUserPreferences.saveUserPreferences(tempUserPreferences);
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed

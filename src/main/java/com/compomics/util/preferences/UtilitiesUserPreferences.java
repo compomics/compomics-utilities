@@ -981,12 +981,12 @@ public class UtilitiesUserPreferences implements Serializable {
     }
 
     /**
-     * Set the target-decoy file name tag.
+     * Set the target-decoy file name suffix.
      *
-     * @param targetDecoyFileNameTag the targetDecoyFileNameTag to set
+     * @param targetDecoyFileNameSuffix the targetDecoyFileNameTag to set
      */
-    public void setTargetDecoyFileNameTag(String targetDecoyFileNameTag) {
-        this.targetDecoyFileNameTag = targetDecoyFileNameTag;
+    public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
+        this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;
     }
 
     /**

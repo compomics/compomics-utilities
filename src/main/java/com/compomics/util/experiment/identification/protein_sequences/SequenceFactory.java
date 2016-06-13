@@ -511,10 +511,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
      */
-    public void loadFastaFile(File fastaFile) throws IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    public void loadFastaFile(File fastaFile) throws IOException, ClassNotFoundException {
         loadFastaFile(fastaFile, null);
     }
 
@@ -529,10 +527,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
      */
-    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws IOException, ClassNotFoundException {
 
         if (!fastaFile.exists()) {
             throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");

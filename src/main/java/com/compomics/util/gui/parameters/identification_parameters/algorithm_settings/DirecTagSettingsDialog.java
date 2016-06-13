@@ -1,9 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.DirecTagParameters;
 import com.compomics.util.gui.GuiUtilities;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
@@ -18,10 +16,6 @@ import javax.swing.SwingConstants;
 public class DirecTagSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The search parameters
-     */
-    private SearchParameters searchParameters;
-    /**
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
@@ -34,16 +28,16 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      * Creates a new DirecTagSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
-     * @param searchParameters the search parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param direcTagParameters the DirecTag parameters
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public DirecTagSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public DirecTagSettingsDialog(java.awt.Frame parent, DirecTagParameters direcTagParameters, boolean editable) {
         super(parent, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(direcTagParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
@@ -53,16 +47,16 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      *
      * @param owner the dialog owner
      * @param parent the parent frame
-     * @param searchParameters the search parameters
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param direcTagParameters the DirecTag parameters
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public DirecTagSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public DirecTagSettingsDialog(Dialog owner, java.awt.Frame parent, DirecTagParameters direcTagParameters, boolean editable) {
         super(owner, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(direcTagParameters);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
@@ -71,9 +65,11 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      * Sets up the GUI.
      */
     private void setUpGUI() {
-        
+
         duplicateSpectraPerChargeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        
+        adjustPrecursorMassCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        useSpectrumChargeStateCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
         tagLengthTextField.setEditable(editable);
         tagLengthTextField.setEnabled(editable);
         numVariableModsTextField.setEditable(editable);
@@ -105,19 +101,15 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         mzFidelityScoreWeightTextField.setEnabled(editable);
         complementScoreWeightTextField.setEditable(editable);
         complementScoreWeightTextField.setEnabled(editable);
-        
     }
 
     /**
      * Populates the GUI using the given settings.
-     * 
-     * @param searchParameters the search parameters
+     *
+     * @param direcTagParameters the search parameters
      */
-    private void populateGUI(SearchParameters searchParameters) {
+    private void populateGUI(DirecTagParameters direcTagParameters) {
 
-        DirecTagParameters direcTagParameters = (DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex());
-
-        // DirecTag specific parameters
         tagLengthTextField.setText(String.valueOf(direcTagParameters.getTagLength()));
         numVariableModsTextField.setText(String.valueOf(direcTagParameters.getMaxDynamicMods()));
         numberOfChargeStatesTextField.setText(String.valueOf(direcTagParameters.getNumChargeStates()));
@@ -139,7 +131,18 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         intensityScoreWeightTextField.setText(String.valueOf(direcTagParameters.getIntensityScoreWeight()));
         mzFidelityScoreWeightTextField.setText(String.valueOf(direcTagParameters.getMzFidelityScoreWeight()));
         complementScoreWeightTextField.setText(String.valueOf(direcTagParameters.getComplementScoreWeight()));
-        
+
+        maxTagCountSpinner.setValue(direcTagParameters.getMaxTagCount());
+        if (direcTagParameters.isAdjustPrecursorMass()) {
+            adjustPrecursorMassCmb.setSelectedIndex(1);
+        } else {
+            adjustPrecursorMassCmb.setSelectedIndex(0);
+        }
+        if (direcTagParameters.isUseChargeStateFromMS()) {
+            useSpectrumChargeStateCmb.setSelectedIndex(1);
+        } else {
+            useSpectrumChargeStateCmb.setSelectedIndex(0);
+        }
     }
 
     /**
@@ -188,6 +191,12 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         mzFidelityScoreWeightTextField = new javax.swing.JTextField();
         complementScoreWeightTextField = new javax.swing.JTextField();
         ticCutoffTextField = new javax.swing.JTextField();
+        maxTagCountLabel = new javax.swing.JLabel();
+        maxTagCountSpinner = new javax.swing.JSpinner();
+        adjustPrecursorMassLabel = new javax.swing.JLabel();
+        adjustPrecursorMassCmb = new javax.swing.JComboBox();
+        useSpectrumChargeStateLabel = new javax.swing.JLabel();
+        useSpectrumChargeStateCmb = new javax.swing.JComboBox();
         cancelButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
 
@@ -375,6 +384,18 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
             }
         });
 
+        maxTagCountLabel.setText("Max Tag Count");
+
+        maxTagCountSpinner.setModel(new javax.swing.SpinnerNumberModel(10, 1, 2000, 1));
+
+        adjustPrecursorMassLabel.setText("Adjust Precursor Mass");
+
+        adjustPrecursorMassCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        useSpectrumChargeStateLabel.setText("Use Spectrum Charge State");
+
+        useSpectrumChargeStateCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
         javax.swing.GroupLayout directTagPanelLayout = new javax.swing.GroupLayout(directTagPanel);
         directTagPanel.setLayout(directTagPanelLayout);
         directTagPanelLayout.setHorizontalGroup(
@@ -382,6 +403,34 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
             .addGroup(directTagPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(directTagPanelLayout.createSequentialGroup()
+                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(directTagPanelLayout.createSequentialGroup()
+                                .addGap(198, 198, 198)
+                                .addComponent(tagLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tagLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(directTagPanelLayout.createSequentialGroup()
+                                .addComponent(numVariableModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(numVariableModsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(directTagPanelLayout.createSequentialGroup()
+                                .addComponent(numberOfChargeStatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(numberOfChargeStatesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(directTagPanelLayout.createSequentialGroup()
+                                .addComponent(ticCutoffLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ticCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, directTagPanelLayout.createSequentialGroup()
+                                .addComponent(precursorAdjustmentStepLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(precursorAdjustmentStepTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(directTagPanelLayout.createSequentialGroup()
+                                .addComponent(complementToleranceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(complementToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(directTagPanelLayout.createSequentialGroup()
                         .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, directTagPanelLayout.createSequentialGroup()
@@ -412,7 +461,11 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
                                     .addGroup(directTagPanelLayout.createSequentialGroup()
                                         .addComponent(maxPeakCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(maxPeakCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(maxPeakCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(directTagPanelLayout.createSequentialGroup()
+                                        .addComponent(maxTagCountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(maxTagCountSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(directTagPanelLayout.createSequentialGroup()
@@ -434,35 +487,15 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
                                 .addGap(18, 18, 18)
                                 .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(intensityScoreWeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mzFidelityScoreWeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(directTagPanelLayout.createSequentialGroup()
-                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(directTagPanelLayout.createSequentialGroup()
-                                .addGap(198, 198, 198)
-                                .addComponent(tagLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tagLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(directTagPanelLayout.createSequentialGroup()
-                                .addComponent(numVariableModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mzFidelityScoreWeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, directTagPanelLayout.createSequentialGroup()
+                                .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(adjustPrecursorMassLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(useSpectrumChargeStateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addComponent(numVariableModsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(directTagPanelLayout.createSequentialGroup()
-                                .addComponent(numberOfChargeStatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(numberOfChargeStatesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(directTagPanelLayout.createSequentialGroup()
-                                .addComponent(ticCutoffLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(ticCutoffTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, directTagPanelLayout.createSequentialGroup()
-                                .addComponent(precursorAdjustmentStepLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(precursorAdjustmentStepTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(directTagPanelLayout.createSequentialGroup()
-                                .addComponent(complementToleranceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(complementToleranceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(useSpectrumChargeStateCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(adjustPrecursorMassCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         directTagPanelLayout.setVerticalGroup(
@@ -531,7 +564,11 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(maxPeakCountLabel)
-                            .addComponent(maxPeakCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(maxPeakCountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxTagCountSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxTagCountLabel)))
                     .addGroup(directTagPanelLayout.createSequentialGroup()
                         .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(mzFidelityScoreWeightLabel)
@@ -539,7 +576,15 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(complementScoreWeightLabel)
-                            .addComponent(complementScoreWeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(complementScoreWeightTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(adjustPrecursorMassCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(adjustPrecursorMassLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(directTagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(useSpectrumChargeStateCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(useSpectrumChargeStateLabel))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -575,8 +620,8 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(directTagPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(directTagPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
@@ -593,7 +638,7 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(directTagPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(directTagPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -606,11 +651,11 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -766,11 +811,9 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
         boolean valid = validateParametersInput(true);
-
         if (valid) {
-            setVisible(false);
+            dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -823,6 +866,8 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
     }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox adjustPrecursorMassCmb;
+    private javax.swing.JLabel adjustPrecursorMassLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel complementScoreWeightLabel;
@@ -842,6 +887,8 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
     private javax.swing.JTextField maxPeakCountTextField;
     private javax.swing.JLabel maxPrecursorAdjustmentLabel;
     private javax.swing.JTextField maxPrecursorAdjustmentTextField;
+    private javax.swing.JLabel maxTagCountLabel;
+    private javax.swing.JSpinner maxTagCountSpinner;
     private javax.swing.JLabel minPrecursorAdjustmentLabel;
     private javax.swing.JTextField minPrecursorAdjustmentTextField;
     private javax.swing.JLabel mzFidelityScoreWeightLabel;
@@ -862,6 +909,8 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
     private javax.swing.JTextField tagLengthTextField;
     private javax.swing.JLabel ticCutoffLabel;
     private javax.swing.JTextField ticCutoffTextField;
+    private javax.swing.JComboBox useSpectrumChargeStateCmb;
+    private javax.swing.JLabel useSpectrumChargeStateLabel;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -895,34 +944,12 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
     }
 
     /**
-     * Returns the search parameters as set in the GUI.
-     *
-     * @return the search parameters as set in the GUI
-     */
-    public SearchParameters getSearchParametersFromGUI() {
-
-        SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
-        tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
-        tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
-        tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());
-        tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
-        tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
-
-        DirecTagParameters direcTagParameters = getDirecTagParameters();
-        
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.direcTag.getIndex(), direcTagParameters);
-
-        return tempSearchParameters;
-    }
-    
-    /**
      * Returns the DirecTag parameters as set by the user.
-     * 
+     *
      * @return the DirecTag parameters
      */
-    public DirecTagParameters getDirecTagParameters() {
-        
+    public DirecTagParameters getInput() {
+
         DirecTagParameters direcTagParameters = new DirecTagParameters();
         direcTagParameters.setTagLength(Integer.parseInt(tagLengthTextField.getText()));
         direcTagParameters.setMaxDynamicMods(Integer.parseInt(numVariableModsTextField.getText()));
@@ -941,11 +968,10 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
         direcTagParameters.setIntensityScoreWeight(Double.parseDouble(intensityScoreWeightTextField.getText()));
         direcTagParameters.setMzFidelityScoreWeight(Double.parseDouble(mzFidelityScoreWeightTextField.getText()));
         direcTagParameters.setComplementScoreWeight(Double.parseDouble(complementScoreWeightTextField.getText()));
+        direcTagParameters.setMaxTagCount((Integer) maxTagCountSpinner.getValue());
+        direcTagParameters.setAdjustPrecursorMass(adjustPrecursorMassCmb.getSelectedIndex() == 1);
+        direcTagParameters.setUseChargeStateFromMS(useSpectrumChargeStateCmb.getSelectedIndex() == 0);
 
-        direcTagParameters.setMaxTagCount(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).getMaxTagCount());
-        direcTagParameters.setAdjustPrecursorMass(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).isAdjustPrecursorMass());
-        direcTagParameters.setUseChargeStateFromMS(((DirecTagParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.direcTag.getIndex())).isUseChargeStateFromMS());
-        
         return direcTagParameters;
     }
 
@@ -953,9 +979,9 @@ public class DirecTagSettingsDialog extends javax.swing.JDialog implements Algor
     public boolean isCancelled() {
         return canceled;
     }
-    
+
     @Override
     public IdentificationAlgorithmParameter getParameters() {
-        return getDirecTagParameters();
+        return getInput();
     }
 }

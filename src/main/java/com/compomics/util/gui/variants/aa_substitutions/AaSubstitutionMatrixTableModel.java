@@ -2,8 +2,6 @@ package com.compomics.util.gui.variants.aa_substitutions;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
-import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import java.util.HashSet;
 import javax.swing.table.DefaultTableModel;
 

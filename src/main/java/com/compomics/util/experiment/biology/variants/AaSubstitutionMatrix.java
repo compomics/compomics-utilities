@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.variants;
 
 import com.compomics.util.experiment.biology.AminoAcid;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -10,8 +11,12 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class AaSubstitutionMatrix {
+public class AaSubstitutionMatrix implements Serializable {
 
+    /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -4257237524665484732L;
     /**
      * The name of this substitution matrix.
      */
@@ -21,7 +26,8 @@ public class AaSubstitutionMatrix {
      */
     private String description;
     /**
-     * Map of the possible amino acid substitutions: original aa &gt; substituted aa.
+     * Map of the possible amino acid substitutions: original aa &gt;
+     * substituted aa.
      */
     private final HashMap<Character, HashSet<Character>> substitutions = new HashMap<Character, HashSet<Character>>(26);
     /**
@@ -29,11 +35,10 @@ public class AaSubstitutionMatrix {
      * original aa.
      */
     private final HashMap<Character, HashSet<Character>> reverseMap = new HashMap<Character, HashSet<Character>>(26);
-    
     /**
      * Empty substitution matrix.
      */
-    public static final AaSubstitutionMatrix noSubstitution = new AaSubstitutionMatrix("No substitution", "No substitution");
+    public static final AaSubstitutionMatrix noSubstitution = new AaSubstitutionMatrix("No Substitution", "No substitution");
     /**
      * Substitution matrix allowing for a single base substitution.
      */
@@ -47,17 +52,18 @@ public class AaSubstitutionMatrix {
      */
     public static final AaSubstitutionMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
     /**
-     * Substitution matrix grouping synonymous amino acids. Amino acids are grouped
-     * according to their side chain properties: - Non-polar aliphatic groups:
-     * {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F', 'Y', 'W'} - Polar
-     * neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic groups: {'K', 'R',
-     * 'H'} - Acidic groups: {'D', 'E'}.
+     * Substitution matrix grouping synonymous amino acids. Amino acids are
+     * grouped according to their side chain properties: - Non-polar aliphatic
+     * groups: {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F', 'Y', 'W'}
+     * - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic groups:
+     * {'K', 'R', 'H'} - Acidic groups: {'D', 'E'}.
      */
     public static final AaSubstitutionMatrix synonymousVariant = synonymousVariant();
     /**
      * Returns the implemented default mutation matrices.
      */
-    public static final AaSubstitutionMatrix[] defaultMutationMatrices = new AaSubstitutionMatrix[]{noSubstitution, singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousVariant};
+    public static final AaSubstitutionMatrix[] defaultMutationMatrices = new AaSubstitutionMatrix[]{
+        noSubstitution, singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousVariant};
 
     /**
      * Constructor.
@@ -75,8 +81,8 @@ public class AaSubstitutionMatrix {
      *
      * @param originalAa the original amino acid represented by its single
      * letter code
-     * @param substitutionAa the substituted amino acid represented by its single letter
-     * code
+     * @param substitutionAa the substituted amino acid represented by its
+     * single letter code
      */
     public void addSubstitution(Character originalAa, Character substitutionAa) {
         HashSet<Character> substitutedAas = substitutions.get(originalAa);
@@ -92,10 +98,10 @@ public class AaSubstitutionMatrix {
         }
         originalAas.add(originalAa);
     }
-    
+
     /**
-     * Returns the possible substituted amino acids for the given amino acid as a
-     * list of their single letter code. Null if none found.
+     * Returns the possible substituted amino acids for the given amino acid as
+     * a list of their single letter code. Null if none found.
      *
      * @param originalAminoAcid the amino acid of interest
      *
@@ -272,8 +278,8 @@ public class AaSubstitutionMatrix {
     }
 
     /**
-     * Returns a substitution matrix grouping synonymous amino acids. Amino acids
-     * are grouped according to their side chain properties: - Non-polar
+     * Returns a substitution matrix grouping synonymous amino acids. Amino
+     * acids are grouped according to their side chain properties: - Non-polar
      * aliphatic groups: {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F',
      * 'Y', 'W'} - Polar neutral groups: {'S', 'T', 'C', 'P', 'N', 'Q'} - Basic
      * groups: {'K', 'R', 'H'} - Acidic groups: {'D', 'E'}.
@@ -329,7 +335,7 @@ public class AaSubstitutionMatrix {
         }
         return result;
     }
-    
+
     /**
      * Returns the name of this mutation matrix.
      *
@@ -398,7 +404,7 @@ public class AaSubstitutionMatrix {
         }
         return true;
     }
-    
+
     @Override
     public String toString() {
         return name;

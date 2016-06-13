@@ -1,9 +1,7 @@
 package com.compomics.util.gui.parameters.identification_parameters.algorithm_settings;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
-import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
 import com.compomics.util.experiment.identification.identification_parameters.tool_specific.NovorParameters;
 import com.compomics.util.gui.parameters.identification_parameters.AlgorithmSettingsDialog;
 import java.awt.Dialog;
@@ -17,10 +15,6 @@ import javax.swing.SwingConstants;
 public class NovorSettingsDialog extends javax.swing.JDialog implements AlgorithmSettingsDialog {
 
     /**
-     * The search parameters.
-     */
-    private SearchParameters searchParameters;
-    /**
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;
@@ -33,16 +27,16 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      * Creates a new NovorSettingsDialog with a frame as owner.
      *
      * @param parent the parent frame
-     * @param searchParameters the search parameters 
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param novorParameters the Novor parameters
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public NovorSettingsDialog(java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public NovorSettingsDialog(java.awt.Frame parent, NovorParameters novorParameters, boolean editable) {
         super(parent, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(novorParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
     }
@@ -52,16 +46,16 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      *
      * @param owner the dialog owner
      * @param parent the parent frame
-     * @param searchParameters the search parameters 
-     * @param editable boolean indicating whether the settings can be edited by the user
+     * @param novorParameters the Novor parameters
+     * @param editable boolean indicating whether the settings can be edited by
+     * the user
      */
-    public NovorSettingsDialog(Dialog owner, java.awt.Frame parent, SearchParameters searchParameters, boolean editable) {
+    public NovorSettingsDialog(Dialog owner, java.awt.Frame parent, NovorParameters novorParameters, boolean editable) {
         super(owner, true);
-        this.searchParameters = searchParameters;
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(searchParameters);
+        populateGUI(novorParameters);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
@@ -70,24 +64,18 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      * Sets up the GUI.
      */
     private void setUpGUI() {
-        
         fragmentationMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         massAnalyzerCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        
         fragmentationMethodCmb.setEnabled(editable);
         massAnalyzerCmb.setEnabled(editable);
-        
     }
 
     /**
      * Populates the GUI using the given settings.
-     * 
-     * @param searchParameters the parameters to display
+     *
+     * @param novorParameters the parameters to display
      */
-    private void populateGUI(SearchParameters searchParameters) {
-
-        NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
-
+    private void populateGUI(NovorParameters novorParameters) {
         fragmentationMethodCmb.setSelectedItem(novorParameters.getFragmentationMethod());
         massAnalyzerCmb.setSelectedItem(novorParameters.getMassAnalyzer());
     }
@@ -149,12 +137,12 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
                     .addGroup(novorPanelLayout.createSequentialGroup()
                         .addComponent(fragmentationMethodLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(fragmentationMethodCmb, 0, 130, Short.MAX_VALUE))
+                        .addComponent(fragmentationMethodCmb, 0, 140, Short.MAX_VALUE))
                     .addGroup(novorPanelLayout.createSequentialGroup()
                         .addComponent(massAnalyzerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(massAnalyzerCmb, 0, 130, Short.MAX_VALUE)))
-                .addGap(20, 20, 20))
+                        .addComponent(massAnalyzerCmb, 0, 140, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         novorPanelLayout.setVerticalGroup(
             novorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,11 +237,9 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
         boolean valid = validateParametersInput(true);
-
         if (valid) {
-            setVisible(false);
+            dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -330,48 +316,24 @@ public class NovorSettingsDialog extends javax.swing.JDialog implements Algorith
     }
 
     /**
-     * Returns the search parameters as set in the GUI.
-     *
-     * @return the search parameters as set in the GUI
-     */
-    public SearchParameters getSearchParametersFromGUI() {
-
-        SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
-        tempSearchParameters.setEnzyme(searchParameters.getEnzyme());
-        tempSearchParameters.setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
-        tempSearchParameters.setFragmentAccuracyType(searchParameters.getFragmentAccuracyType());
-        tempSearchParameters.setPrecursorAccuracy(searchParameters.getPrecursorAccuracy());
-        tempSearchParameters.setPrecursorAccuracyType(searchParameters.getPrecursorAccuracyType());
-        tempSearchParameters.setPtmSettings(searchParameters.getPtmSettings());
-        
-        NovorParameters novorParameters = getNovorParameters();
-
-        tempSearchParameters.setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), novorParameters);
-
-        return tempSearchParameters;
-    }
-    
-    /**
      * Returns the Novor parameters as set by the user.
-     * 
+     *
      * @return the Novor parameters as set by the user
      */
-    public NovorParameters getNovorParameters() {
-
+    public NovorParameters getInput() {
         NovorParameters novorParameters = new NovorParameters();
         novorParameters.setFragmentationMethod((String) fragmentationMethodCmb.getSelectedItem());
         novorParameters.setMassAnalyzer((String) massAnalyzerCmb.getSelectedItem());
         return novorParameters;
-        
     }
 
     @Override
     public boolean isCancelled() {
         return canceled;
     }
-    
+
     @Override
     public IdentificationAlgorithmParameter getParameters() {
-        return getNovorParameters();
+        return getInput();
     }
 }

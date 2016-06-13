@@ -1,19 +1,23 @@
 package com.compomics.util.preferences;
 
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
+import java.io.Serializable;
 
 /**
  * Preferences for the allowed variants in peptide sequences.
  *
  * @author Marc Vaudel
  */
-public class PeptideVariantsPreferences {
+public class PeptideVariantsPreferences implements Serializable {
 
+    /**
+     * Serial number for backward compatibility.
+     */
+    static final long serialVersionUID = -236026128063733907L;
     /**
      * The number of sequence edits allowed.
      */
     private Integer nEdits = 1;
-    
     /**
      * The amino acid substitution matrix selected.
      */

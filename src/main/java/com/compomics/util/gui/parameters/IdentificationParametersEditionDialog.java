@@ -283,7 +283,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                 + "<td><font size=2>" + formatDescription(sequenceMatchingPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
 
         peptideVariantsButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Peptide Variants</b></td>"
-                + "<td><font size=2>" + formatDescription(peptideVariantsPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>"); // @TODO: replace with the correct settings!
+                + "<td><font size=2>" + formatDescription(peptideVariantsPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
 
         matchesFiltersButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Import Filters</b></td>"
                 + "<td><font size=2>" + formatDescription(peptideAssumptionFilter.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
@@ -310,7 +310,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         spectrumAnnotationButton.setEnabled(true);
         sequenceMatchingButton.setEnabled(true);
         matchesFiltersButton.setEnabled(true);
-        //psmScoringButton.setEnabled(true); // @TODO: enable when implemented
+        psmScoringButton.setEnabled(true);
         ptmLocalizationButton.setEnabled(true);
         proteinInferenceButton.setEnabled(true);
         validationButton.setEnabled(true);
@@ -1233,7 +1233,6 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void peptideVariantsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peptideVariantsButtonActionPerformed
-
         PeptideVariantsSettingsDialog peptideVariantsSettingsDialog = new PeptideVariantsSettingsDialog(this, parentFrame, peptideVariantsPreferences, editable);
         if (!peptideVariantsSettingsDialog.isCanceled()) {
             peptideVariantsPreferences = peptideVariantsSettingsDialog.getPeptideVariantsPreferences();

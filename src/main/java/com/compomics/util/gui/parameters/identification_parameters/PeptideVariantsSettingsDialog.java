@@ -2,10 +2,8 @@ package com.compomics.util.gui.parameters.identification_parameters;
 
 import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
-import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.variants.aa_substitutions.AaSubstitutionMatrixTableModel;
-import com.compomics.util.preferences.FractionSettings;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import java.awt.Dialog;
 import javax.swing.DefaultComboBoxModel;

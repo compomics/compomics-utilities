@@ -11,7 +11,6 @@ public class AminoAcidSubstitution {
      * The original amino acid represented by its single letter code.
      */
     public final char originalAminoAcid;
-
     /**
      * The variant amino acid represented by its single letter code.
      */
@@ -20,12 +19,11 @@ public class AminoAcidSubstitution {
     /**
      * Constructor.
      *
-     * @param originalAminoAcid
-     * @param variantAminoAcid
+     * @param originalAminoAcid the original amino acid 
+     * @param variantAminoAcid the variant amino acid
      */
     public AminoAcidSubstitution(char originalAminoAcid, char variantAminoAcid) {
         this.originalAminoAcid = originalAminoAcid;
         this.variantAminoAcid = variantAminoAcid;
     }
-
 }

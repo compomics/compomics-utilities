@@ -14,6 +14,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.matchers.Tag
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
@@ -186,9 +187,10 @@ public class FMIndex implements PeptideMapper {
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param ptmSettings contains modification parameters for identification
+     * @param ptmSettings modification parameters for identification
+     * @param peptideVariantsPreferences the peptide variants preferences set by the user
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) {
 
         if (ptmSettings != null) {
             // create masses table and modifications

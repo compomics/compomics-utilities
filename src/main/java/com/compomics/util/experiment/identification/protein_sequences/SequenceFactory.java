@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.protein_inference.proteintre
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.SerializationUtils;
 import com.compomics.util.preferences.IdentificationParameters;
+import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.preferences.UtilitiesUserPreferences;
 import com.compomics.util.protein.Header;
@@ -1342,11 +1343,13 @@ public class SequenceFactory {
      * if none found.
      *
      * @param sequenceMatchingPreferences the sequences matching preferences
+     * @param ptmSettings contains modification parameters for identification
+     * @param peptideVariantsPreferences the peptide variants preferences set by
+     * the user
      * @param waitingHandler waiting handler displaying progress to the user
      * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
      * indexing the database
-     * @param ptmSettings contains modification parameters for identification
      *
      * @return the default peptide mapper
      *
@@ -1359,10 +1362,10 @@ public class SequenceFactory {
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with an SQL database
      */
-    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings,
+    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences,
             WaitingHandler waitingHandler, ExceptionHandler exceptionHandler) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         int nThreads = Math.max(Runtime.getRuntime().availableProcessors(), 1);
-        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, waitingHandler, exceptionHandler, true, nThreads);
+        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, peptideVariantsPreferences, waitingHandler, exceptionHandler, true, nThreads);
     }
 
     /**
@@ -1370,13 +1373,11 @@ public class SequenceFactory {
      * factory according to the sequence matching preferences. Creates a new one
      * if none found.
      *
-     * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
      * during the indexation of the database
      * @param exceptionHandler handler for the exceptions encountered while
      * indexing the database
      * @param nThreads the number of threads to use during indexing
-     * @param ptmSettings contains modification parameters for identification
      * @param identificationParameters the identification parameters
      *
      * @return the default peptide mapper
@@ -1390,9 +1391,9 @@ public class SequenceFactory {
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with an SQL database
      */
-    public PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler,
+    public PeptideMapper getDefaultPeptideMapper(WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler, int nThreads, IdentificationParameters identificationParameters) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
-        return getDefaultPeptideMapper(sequenceMatchingPreferences, ptmSettings, waitingHandler, exceptionHandler, true, nThreads); // @TODO: why add identificationParameters? it's not used?
+        return getDefaultPeptideMapper(identificationParameters.getSequenceMatchingPreferences(), identificationParameters.getSearchParameters().getPtmSettings(), identificationParameters.getPeptideVariantsPreferences(), waitingHandler, exceptionHandler, true, nThreads); // @TODO: why add identificationParameters? it's not used?
     }
 
     /**
@@ -1403,6 +1404,8 @@ public class SequenceFactory {
      * @param sequenceMatchingPreferences the sequences matching preferences
      * @param waitingHandler waiting handler displaying progress to the user
      * during the indexation of the database
+     * @param peptideVariantsPreferences the peptide variants preferences set by
+     * the user
      * @param exceptionHandler handler for the exceptions encountered while
      * indexing the database
      * @param displayProgress boolean indicating whether the progress of the
@@ -1421,14 +1424,14 @@ public class SequenceFactory {
      * @throws SQLException exception thrown whenever a problem occurred while
      * interacting with an SQL database
      */
-    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, WaitingHandler waitingHandler,
+    public synchronized PeptideMapper getDefaultPeptideMapper(SequenceMatchingPreferences sequenceMatchingPreferences, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences, WaitingHandler waitingHandler,
             ExceptionHandler exceptionHandler, boolean displayProgress, int nThreads) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         if (defaultPeptideMapper == null) {
 
             PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
             switch (peptideMapperType) {
                 case fm_index:
-                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress, ptmSettings);
+                    defaultPeptideMapper = new FMIndex(waitingHandler, displayProgress, ptmSettings, peptideVariantsPreferences);
                     break;
                 case tree:
 

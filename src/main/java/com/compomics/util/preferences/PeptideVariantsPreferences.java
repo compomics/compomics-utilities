@@ -15,9 +15,21 @@ public class PeptideVariantsPreferences implements Serializable {
      */
     static final long serialVersionUID = -236026128063733907L;
     /**
-     * The number of sequence edits allowed.
+     * The number of amino acid deletions allowed.
      */
-    private Integer nEdits = 1;
+    private Integer nAaDeletions = 1;
+    /**
+     * The number of amino acid insertions allowed.
+     */
+    private Integer nAaInsertions = 1;
+    /**
+     * The number of amino acid substitutions allowed.
+     */
+    private Integer nAaSubstitutions = 1;
+    /**
+     * The number of amino acid swap allowed.
+     */
+    private Integer nAaSwap = 1;
     /**
      * The amino acid substitution matrix selected.
      */
@@ -31,21 +43,75 @@ public class PeptideVariantsPreferences implements Serializable {
     }
 
     /**
-     * Returns the number of sequence edits allowed.
+     * Returns the number of amino acid deletions allowed.
      * 
-     * @return the number of sequence edits allowed
+     * @return the number of amino acid deletions allowed
      */
-    public Integer getnEdits() {
-        return nEdits;
+    public Integer getnAaDeletions() {
+        return nAaDeletions;
     }
 
     /**
-     * Sets the number of sequence edits allowed.
+     * Sets the number of amino acid deletions allowed.
      * 
-     * @param nEdits the number of sequence edits allowed
+     * @param nAaDeletions the number of amino acid deletions allowed
      */
-    public void setnEdits(Integer nEdits) {
-        this.nEdits = nEdits;
+    public void setnAaDeletions(Integer nAaDeletions) {
+        this.nAaDeletions = nAaDeletions;
+    }
+
+    /**
+     * Returns the number of amino acid insertions allowed.
+     * 
+     * @return the number of amino acid insertions allowed
+     */
+    public Integer getnAaInsertions() {
+        return nAaInsertions;
+    }
+
+    /**
+     * Sets the number of amino acid insertions allowed.
+     * 
+     * @param nAaInsertions the number of amino acid insertions allowed
+     */
+    public void setnAaInsertions(Integer nAaInsertions) {
+        this.nAaInsertions = nAaInsertions;
+    }
+
+    /**
+     * Returns the number of amino acid substitutions allowed.
+     * 
+     * @return the number of amino acid substitutions allowed
+     */
+    public Integer getnAaSubstitutions() {
+        return nAaSubstitutions;
+    }
+
+    /**
+     * Sets the number of amino acid substitutions allowed.
+     * 
+     * @param nAaSubstitutions the number of amino acid substitutions allowed
+     */
+    public void setnAaSubstitutions(Integer nAaSubstitutions) {
+        this.nAaSubstitutions = nAaSubstitutions;
+    }
+
+    /**
+     * Returns the number of amino acid swaps allowed.
+     * 
+     * @return the number of amino acid swaps allowed
+     */
+    public Integer getnAaSwap() {
+        return nAaSwap;
+    }
+
+    /**
+     * Sets the number of amino acid swaps allowed.
+     * 
+     * @param nAaSwap the number of amino acid swaps allowed
+     */
+    public void setnAaSwap(Integer nAaSwap) {
+        this.nAaSwap = nAaSwap;
     }
 
     /**
@@ -76,7 +142,16 @@ public class PeptideVariantsPreferences implements Serializable {
      * one
      */
     public boolean isSameAs(PeptideVariantsPreferences peptideVariantsPreferences) {
-        if (!nEdits.equals(peptideVariantsPreferences.getnEdits())) {
+        if (!nAaDeletions.equals(peptideVariantsPreferences.getnAaDeletions())) {
+            return false;
+        }
+        if (!nAaInsertions.equals(peptideVariantsPreferences.getnAaInsertions())) {
+            return false;
+        }
+        if (!nAaSubstitutions.equals(peptideVariantsPreferences.getnAaSubstitutions())) {
+            return false;
+        }
+        if (!nAaSwap.equals(peptideVariantsPreferences.getnAaSwap())) {
             return false;
         }
         return aaSubstitutionMatrix.isSameAs(peptideVariantsPreferences.getAaSubstitutionMatrix());
@@ -93,7 +168,10 @@ public class PeptideVariantsPreferences implements Serializable {
 
         StringBuilder output = new StringBuilder();
 
-        output.append("Edits: ").append(nEdits).append(".").append(newLine);
+        output.append("AA Deletions: ").append(nAaDeletions).append(".").append(newLine);
+        output.append("AA Insertions: ").append(nAaInsertions).append(".").append(newLine);
+        output.append("AA Substitutions: ").append(nAaSubstitutions).append(".").append(newLine);
+        output.append("AA Swap: ").append(nAaSwap).append(".").append(newLine);
         output.append("Substitution Matrix: ").append(aaSubstitutionMatrix.toString()).append(".").append(newLine);
 
         return output.toString();
@@ -106,7 +184,10 @@ public class PeptideVariantsPreferences implements Serializable {
      */
     public static PeptideVariantsPreferences getNoVariantPreferences() {
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
-        peptideVariantsPreferences.setnEdits(0);
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        peptideVariantsPreferences.setnAaSwap(0);
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
         return peptideVariantsPreferences;
     }

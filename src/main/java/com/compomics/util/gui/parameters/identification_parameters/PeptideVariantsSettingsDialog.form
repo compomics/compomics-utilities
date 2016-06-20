@@ -91,7 +91,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Max Variants"/>
+                <TitledBorder title="Maximal numeber of variants per perptide"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -100,11 +100,30 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="maxVariantsLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="maxVariantsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="deletionsLbl" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="deletionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="deletionsLbl1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="insertionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="deletionsLbl2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="subsitutionsSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="deletionsLbl3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="swapSpinner" min="-2" pref="150" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -114,22 +133,72 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="maxVariantsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="maxVariantsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deletionsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deletionsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="deletionsLbl1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="insertionsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="deletionsLbl3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="swapSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="deletionsLbl2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="subsitutionsSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="maxVariantsLbl">
+            <Component class="javax.swing.JSpinner" name="deletionsSpinner">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Maximal number of edits per peptide"/>
-                <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;The minium protein confidence required to be included in the&lt;br&gt;&#xa;average molecular weight analysis in the Fractions tab.&#xa;&lt;/html&gt;"/>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JSpinner" name="maxVariantsSpinner">
+            <Component class="javax.swing.JLabel" name="deletionsLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Amino acid deletions"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="deletionsLbl1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Amino acid insertions"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="insertionsSpinner">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="deletionsLbl2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Amino acid substitutions"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="subsitutionsSpinner">
+              <Properties>
+                <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                  <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="deletionsLbl3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Amino acid swap"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JSpinner" name="swapSpinner">
               <Properties>
                 <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
                   <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
@@ -158,7 +227,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Amino Acid Substitutions"/>
+                <TitledBorder title="Allowed Amino Acid Substitutions"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -183,7 +252,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="substitutionMatrixComboBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="substitutionMatrixTableJScrollPane" pref="277" max="32767" attributes="0"/>
+                      <Component id="substitutionMatrixTableJScrollPane" pref="268" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

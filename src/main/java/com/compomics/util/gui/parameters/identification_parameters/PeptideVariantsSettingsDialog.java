@@ -87,7 +87,7 @@ public class PeptideVariantsSettingsDialog extends javax.swing.JDialog {
         TableColumnModel tableColumnModel = substitutionMatrixTable.getColumnModel();
         tableColumnModel.getColumn(0).setMaxWidth(50);
         substitutionMatrixTableJScrollPane.getViewport().setOpaque(false);
-        for (int i = 0; i < AminoAcid.getAminoAcids().length; i++) {
+        for (int i = 0; i < AminoAcid.getUniqueAminoAcids().length; i++) {
             tableColumnModel.getColumn(i + 1).setCellRenderer(new TrueFalseIconRenderer(
                     new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
                     null,

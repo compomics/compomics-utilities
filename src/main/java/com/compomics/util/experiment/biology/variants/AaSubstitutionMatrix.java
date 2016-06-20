@@ -52,6 +52,10 @@ public class AaSubstitutionMatrix implements Serializable {
      */
     public static final AaSubstitutionMatrix transversalSingleBaseSubstitution = transversalSingleBaseSubstitution();
     /**
+     * Substitution matrix allowing all substitutions.
+     */
+    public static final AaSubstitutionMatrix allSubstitutions = all();
+    /**
      * Substitution matrix grouping synonymous amino acids. Amino acids are
      * grouped according to their side chain properties: - Non-polar aliphatic
      * groups: {'G', 'A', 'V', 'L', 'M', 'I'} - Aromatic groups: {'F', 'Y', 'W'}
@@ -60,16 +64,16 @@ public class AaSubstitutionMatrix implements Serializable {
      */
     public static final AaSubstitutionMatrix synonymousVariant = synonymousVariant();
     /**
-     * Returns the implemented default mutation matrices.
+     * Returns the implemented default substitution matrices.
      */
     public static final AaSubstitutionMatrix[] defaultMutationMatrices = new AaSubstitutionMatrix[]{
-        noSubstitution, singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousVariant};
+        noSubstitution, singleBaseSubstitution, transitionsSingleBaseSubstitution, transversalSingleBaseSubstitution, synonymousVariant, allSubstitutions};
 
     /**
      * Constructor.
      *
-     * @param name the name of this mutation matrix
-     * @param description the description of the mutation matrix
+     * @param name the name of this substitution matrix
+     * @param description the description of the substitution matrix
      */
     public AaSubstitutionMatrix(String name, String description) {
         this.name = name;
@@ -77,7 +81,7 @@ public class AaSubstitutionMatrix implements Serializable {
     }
 
     /**
-     * Adds a possible mutation.
+     * Adds a possible substitution.
      *
      * @param originalAa the original amino acid represented by its single
      * letter code
@@ -115,7 +119,7 @@ public class AaSubstitutionMatrix implements Serializable {
      * Returns the possible original amino acids for the given substituted amino
      * acid as a list of their single letter code. Null if none found.
      *
-     * @param substitutedAminoAcid the mutated amino acid of interest
+     * @param substitutedAminoAcid the substitution amino acid of interest
      *
      * @return the possible original amino acids for the given substituted amino
      * acid
@@ -143,14 +147,14 @@ public class AaSubstitutionMatrix implements Serializable {
     }
 
     /**
-     * Adds the content of a mutation matrix in this matrix.
+     * Adds the content of a substitution matrix in this matrix.
      *
      * @param otherMatrix the other matrix to add
      */
     public void add(AaSubstitutionMatrix otherMatrix) {
         for (Character originalAa : otherMatrix.getOriginalAminoAcids()) {
-            for (Character mutatedAa : otherMatrix.getSubstitutionAminoAcids(originalAa)) {
-                addSubstitution(originalAa, mutatedAa);
+            for (Character substitutionAa : otherMatrix.getSubstitutionAminoAcids(originalAa)) {
+                addSubstitution(originalAa, substitutionAa);
             }
         }
     }
@@ -163,26 +167,24 @@ public class AaSubstitutionMatrix implements Serializable {
     private static AaSubstitutionMatrix singleBaseSubstitution() {
         AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Substitution", "Single base substitutions");
         char[] bases = {'A', 'T', 'G', 'C'};
-        for (char originalAa : AminoAcid.getAminoAcids()) {
-            if (originalAa != 'X') {
-                AminoAcid aminoAcid = AminoAcid.getAminoAcid(originalAa);
-                for (String geneCode : aminoAcid.getStandardGeneticCode()) {
-                    StringBuilder geneCodeStringBuilder = new StringBuilder(geneCode);
-                    for (int i = 0; i < geneCode.length(); i++) {
-                        char originalBase = geneCode.charAt(i);
-                        for (char base : bases) {
-                            geneCodeStringBuilder.setCharAt(i, base);
-                            String newCode = geneCodeStringBuilder.toString();
-                            AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            if (mutatedAminoAcid != null) {
-                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                                if (originalAa != mutatedAa) {
-                                    result.addSubstitution(originalAa, mutatedAa);
-                                }
+        for (char originalAa : AminoAcid.getUniqueAminoAcids()) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(originalAa);
+            for (String geneCode : aminoAcid.getStandardGeneticCode()) {
+                StringBuilder geneCodeStringBuilder = new StringBuilder(geneCode);
+                for (int i = 0; i < geneCode.length(); i++) {
+                    char originalBase = geneCode.charAt(i);
+                    for (char base : bases) {
+                        geneCodeStringBuilder.setCharAt(i, base);
+                        String newCode = geneCodeStringBuilder.toString();
+                        AminoAcid substitutionAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
+                        if (substitutionAminoAcid != null) {
+                            char substitutionAa = substitutionAminoAcid.getSingleLetterCodeAsChar();
+                            if (originalAa != substitutionAa) {
+                                result.addSubstitution(originalAa, substitutionAa);
                             }
                         }
-                        geneCodeStringBuilder.setCharAt(i, originalBase);
                     }
+                    geneCodeStringBuilder.setCharAt(i, originalBase);
                 }
             }
         }
@@ -190,16 +192,16 @@ public class AaSubstitutionMatrix implements Serializable {
     }
 
     /**
-     * Returns the mutation matrix allowing for a single base transitions
+     * Returns the substitution matrix allowing for a single base transitions
      * variant.
      *
-     * @return the mutation matrix allowing for a single base transitions
+     * @return the substitution matrix allowing for a single base transitions
      * variant
      */
     private static AaSubstitutionMatrix transitionsSingleBaseSubstitution() {
         AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Transition", "Single base transitions substitutions.");
         char[] purines = {'A', 'G'}, pyrimidines = {'T', 'C'};
-        for (char originalAa : AminoAcid.getAminoAcids()) {
+        for (char originalAa : AminoAcid.getUniqueAminoAcids()) {
             if (originalAa != 'X') {
                 AminoAcid aminoAcid = AminoAcid.getAminoAcid(originalAa);
                 for (String geneCode : aminoAcid.getStandardGeneticCode()) {
@@ -217,11 +219,11 @@ public class AaSubstitutionMatrix implements Serializable {
                         for (char base : bases) {
                             geneCodeStringBuilder.setCharAt(i, base);
                             String newCode = geneCodeStringBuilder.toString();
-                            AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            if (mutatedAminoAcid != null) {
-                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                                if (originalAa != mutatedAa) {
-                                    result.addSubstitution(originalAa, mutatedAa);
+                            AminoAcid substitutionAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
+                            if (substitutionAminoAcid != null) {
+                                char substitutionAa = substitutionAminoAcid.getSingleLetterCodeAsChar();
+                                if (originalAa != substitutionAa) {
+                                    result.addSubstitution(originalAa, substitutionAa);
                                 }
                             }
                         }
@@ -234,43 +236,41 @@ public class AaSubstitutionMatrix implements Serializable {
     }
 
     /**
-     * Returns the mutation matrix allowing for a single base transversion
+     * Returns the substitution matrix allowing for a single base transversion
      * variant.
      *
-     * @return the mutation matrix allowing for a single base transversion
+     * @return the substitution matrix allowing for a single base transversion
      * variant
      */
     private static AaSubstitutionMatrix transversalSingleBaseSubstitution() {
         AaSubstitutionMatrix result = new AaSubstitutionMatrix("Single Base Transversion", "Single base transversion substitutions.");
         char[] purines = {'A', 'G'}, pyrimidines = {'T', 'C'};
-        for (char originalAa : AminoAcid.getAminoAcids()) {
-            if (originalAa != 'X') {
-                AminoAcid aminoAcid = AminoAcid.getAminoAcid(originalAa);
-                for (String geneCode : aminoAcid.getStandardGeneticCode()) {
-                    StringBuilder geneCodeStringBuilder = new StringBuilder(geneCode);
-                    for (int i = 0; i < geneCode.length(); i++) {
-                        char originalBase = geneCode.charAt(i);
-                        char[] bases;
-                        if (originalBase == purines[0] || originalBase == purines[1]) {
-                            bases = pyrimidines;
-                        } else if (originalBase == pyrimidines[0] || originalBase == pyrimidines[1]) {
-                            bases = purines;
-                        } else {
-                            throw new IllegalArgumentException(originalBase + " not recognized for transversion substitutions.");
-                        }
-                        for (char base : bases) {
-                            geneCodeStringBuilder.setCharAt(i, base);
-                            String newCode = geneCodeStringBuilder.toString();
-                            AminoAcid mutatedAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
-                            if (mutatedAminoAcid != null) {
-                                char mutatedAa = mutatedAminoAcid.getSingleLetterCodeAsChar();
-                                if (originalAa != mutatedAa) {
-                                    result.addSubstitution(originalAa, mutatedAa);
-                                }
+        for (char originalAa : AminoAcid.getUniqueAminoAcids()) {
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(originalAa);
+            for (String geneCode : aminoAcid.getStandardGeneticCode()) {
+                StringBuilder geneCodeStringBuilder = new StringBuilder(geneCode);
+                for (int i = 0; i < geneCode.length(); i++) {
+                    char originalBase = geneCode.charAt(i);
+                    char[] bases;
+                    if (originalBase == purines[0] || originalBase == purines[1]) {
+                        bases = pyrimidines;
+                    } else if (originalBase == pyrimidines[0] || originalBase == pyrimidines[1]) {
+                        bases = purines;
+                    } else {
+                        throw new IllegalArgumentException(originalBase + " not recognized for transversion substitutions.");
+                    }
+                    for (char base : bases) {
+                        geneCodeStringBuilder.setCharAt(i, base);
+                        String newCode = geneCodeStringBuilder.toString();
+                        AminoAcid substitutionAminoAcid = AminoAcid.getAminoAcidFromGeneticCode(newCode);
+                        if (substitutionAminoAcid != null) {
+                            char substitutionAa = substitutionAminoAcid.getSingleLetterCodeAsChar();
+                            if (originalAa != substitutionAa) {
+                                result.addSubstitution(originalAa, substitutionAa);
                             }
                         }
-                        geneCodeStringBuilder.setCharAt(i, originalBase);
                     }
+                    geneCodeStringBuilder.setCharAt(i, originalBase);
                 }
             }
         }
@@ -290,83 +290,96 @@ public class AaSubstitutionMatrix implements Serializable {
         AaSubstitutionMatrix result = new AaSubstitutionMatrix("Synonymous Variant", "Variants keeping amino acid properties.");
         char[] nonPolarAliphatic = new char[]{'G', 'A', 'V', 'L', 'M', 'I'};
         for (char originalAminoAcid : nonPolarAliphatic) {
-            for (char mutatedAminoAcid : nonPolarAliphatic) {
-                if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
+            for (char substitutionAminoAcid : nonPolarAliphatic) {
+                if (originalAminoAcid != substitutionAminoAcid) {
+                    result.addSubstitution(originalAminoAcid, substitutionAminoAcid);
                 }
             }
-            result.addSubstitution('J', originalAminoAcid);
         }
         char[] aromatic = new char[]{'F', 'Y', 'W'};
         for (char originalAminoAcid : aromatic) {
-            for (char mutatedAminoAcid : aromatic) {
-                if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
+            for (char substitutionAminoAcid : aromatic) {
+                if (originalAminoAcid != substitutionAminoAcid) {
+                    result.addSubstitution(originalAminoAcid, substitutionAminoAcid);
                 }
             }
         }
         char[] polarNeutral = new char[]{'S', 'T', 'C', 'P', 'N', 'Q'};
         for (char originalAminoAcid : polarNeutral) {
-            for (char mutatedAminoAcid : polarNeutral) {
-                if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
+            for (char substitutionAminoAcid : polarNeutral) {
+                if (originalAminoAcid != substitutionAminoAcid) {
+                    result.addSubstitution(originalAminoAcid, substitutionAminoAcid);
                 }
             }
-            result.addSubstitution('B', originalAminoAcid);
-            result.addSubstitution('Z', originalAminoAcid);
         }
         char[] basic = new char[]{'K', 'R', 'H'};
         for (char originalAminoAcid : basic) {
-            for (char mutatedAminoAcid : basic) {
-                if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
+            for (char substitutionAminoAcid : basic) {
+                if (originalAminoAcid != substitutionAminoAcid) {
+                    result.addSubstitution(originalAminoAcid, substitutionAminoAcid);
                 }
             }
         }
         char[] acidic = new char[]{'D', 'E'};
         for (char originalAminoAcid : acidic) {
-            for (char mutatedAminoAcid : acidic) {
-                if (originalAminoAcid != mutatedAminoAcid) {
-                    result.addSubstitution(originalAminoAcid, mutatedAminoAcid);
+            for (char substitutionAminoAcid : acidic) {
+                if (originalAminoAcid != substitutionAminoAcid) {
+                    result.addSubstitution(originalAminoAcid, substitutionAminoAcid);
                 }
             }
-            result.addSubstitution('B', originalAminoAcid);
-            result.addSubstitution('Z', originalAminoAcid);
         }
         return result;
     }
 
     /**
-     * Returns the name of this mutation matrix.
+     * Returns the substitution matrix allowing all substitutions.
      *
-     * @return the name of this mutation matrix
+     * @return the substitution matrix allowing all substitutions
+     */
+    private static AaSubstitutionMatrix all() {
+
+        AaSubstitutionMatrix result = new AaSubstitutionMatrix("All", "All possible substitutions.");
+        for (char originalAa : AminoAcid.getUniqueAminoAcids()) {
+            for (char varianAa : AminoAcid.getUniqueAminoAcids()) {
+                if (originalAa != varianAa) {
+                    result.addSubstitution(originalAa, varianAa);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the name of this substitution matrix.
+     *
+     * @return the name of this substitution matrix
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Sets the name of this mutation matrix.
+     * Sets the name of this substitution matrix.
      *
-     * @param name the name of this mutation matrix
+     * @param name the name of this substitution matrix
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Returns the description of this mutation matrix.
+     * Returns the description of this substitution matrix.
      *
-     * @return the description of this mutation matrix
+     * @return the description of this substitution matrix
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Sets the description of this mutation matrix.
+     * Sets the description of this substitution matrix.
      *
-     * @param description the description of this mutation matrix
+     * @param description the description of this substitution matrix
      */
     public void setDescription(String description) {
         this.description = description;
@@ -375,7 +388,7 @@ public class AaSubstitutionMatrix implements Serializable {
     /**
      * Indicates whether the given AaSubstitutionMatrix is the same as this one.
      *
-     * @param aaSubstitutionMatrix the mutation matrix
+     * @param aaSubstitutionMatrix the substitution matrix
      *
      * @return a boolean indicating whether the given AaSubstitutionMatrix is
      * the same as this one
@@ -396,8 +409,8 @@ public class AaSubstitutionMatrix implements Serializable {
             if (otherMutations == null || aaMutations.size() != otherMutations.size()) {
                 return false;
             }
-            for (Character mutatedAa : aaMutations) {
-                if (!otherMutations.contains(mutatedAa)) {
+            for (Character substitutionAa : aaMutations) {
+                if (!otherMutations.contains(substitutionAa)) {
                     return false;
                 }
             }

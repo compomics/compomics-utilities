@@ -17,11 +17,11 @@ public class PeptideVariantsPreferences implements Serializable {
     /**
      * The number of amino acid deletions allowed.
      */
-    private Integer nAaDeletions = 1;
+    private Integer nAaDeletions = 0;
     /**
      * The number of amino acid insertions allowed.
      */
-    private Integer nAaInsertions = 1;
+    private Integer nAaInsertions = 0;
     /**
      * The number of amino acid substitutions allowed.
      */
@@ -29,7 +29,7 @@ public class PeptideVariantsPreferences implements Serializable {
     /**
      * The number of amino acid swap allowed.
      */
-    private Integer nAaSwap = 1;
+    private Integer nAaSwap = 0;
     /**
      * The amino acid substitution matrix selected.
      */

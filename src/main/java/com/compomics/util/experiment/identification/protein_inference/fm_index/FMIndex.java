@@ -204,7 +204,7 @@ public class FMIndex implements PeptideMapper {
      * @param displayProgress if true, the progress is displayed
      * @param ptmSettings contains modification parameters for identification
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) {
         if (ptmSettings != null) {
             // create masses table and modifications
             int[] modificationCounts = new int[128];
@@ -215,9 +215,6 @@ public class FMIndex implements PeptideMapper {
             ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
             PTMFactory ptmFactory = PTMFactory.getInstance();
             
-            
-            PeptideVariantsPreferences peptideVariantsPreferences =  PeptideVariantsPreferences.getNoVariantPreferences();
-            System.out.println(peptideVariantsPreferences.getnEdits());
             
 
             int hasVariableModification = 0;

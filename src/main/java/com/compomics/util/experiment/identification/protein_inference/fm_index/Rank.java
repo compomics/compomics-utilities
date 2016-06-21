@@ -41,20 +41,20 @@ public class Rank {
     public Rank(byte[] text, long[] aAlphabet) {
         length = text.length;
 
-        int field_len = (length >> 6) + 1;
+        int field_len = (length >>> 6) + 1;
         bitfield = new long[field_len];
-        sums = new int[(length >> 8) + 1];
+        sums = new int[(length >>> 8) + 1];
         sums[0] = 0;
         sumsSecondLevel = new byte[field_len];
         sumsSecondLevel[0] = 0;
 
         for (int i = 0; i < length; ++i) {
-            int cell = i >> shift;
+            int cell = i >>> shift;
             int pos = i & mask;
             if (pos == 0) {
                 bitfield[cell] = 0;
             }
-            long bit = (aAlphabet[text[i] >> shift] >> (text[i] & mask)) & 1L;
+            long bit = (aAlphabet[text[i] >>> shift] >>> (text[i] & mask)) & 1L;
             bitfield[cell] |= (bit << pos);
 
             if (pos == 0 && i != 0) {
@@ -65,7 +65,7 @@ public class Rank {
                 }
             }
             if (((i & 255) == 0) && i != 0) {
-                sums[i >> 8] = sums[(i >> 8) - 1] + (sumsSecondLevel[cell - 1] & 0xFF) + Long.bitCount(bitfield[cell - 1]);
+                sums[i >>> 8] = sums[(i >>> 8) - 1] + (sumsSecondLevel[cell - 1] & 0xFF) + Long.bitCount(bitfield[cell - 1]);
             }
         }
     }
@@ -78,10 +78,10 @@ public class Rank {
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
-        int cell = index >> shift;
+        int cell = index >>> shift;
         int pos = index & mask;
         long active_ones = bitfield[cell] << (mask - pos);
-        int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
+        int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return zeros ? index + 1 - count_ones : count_ones;
     }
 
@@ -92,10 +92,10 @@ public class Rank {
      * @return the rank
      */
     public final int getRankOne(int index) {
-        final int cell = index >> shift;
+        final int cell = index >>> shift;
         final int pos = index & mask;
         final long active_ones = bitfield[cell] << (mask - pos);
-        final int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
+        final int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return count_ones;
     }
 
@@ -106,10 +106,10 @@ public class Rank {
      * @return the rank
      */
     public int getRankZero(int index) {
-        int cell = index >> shift;
+        int cell = index >>> shift;
         int pos = index & mask;
         long active_ones = bitfield[cell] << (mask - pos);
-        int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >> 8] + Long.bitCount(active_ones);
+        int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return index + 1 - count_ones;
     }
 
@@ -121,9 +121,9 @@ public class Rank {
      */
     public boolean isOne(int index) {
         if (0 <= index && index < length) {
-            int cell = index >> shift;
+            int cell = index >>> shift;
             int pos = index & mask;
-            return (((bitfield[cell] >> pos) & 1L) == 1);
+            return (((bitfield[cell] >>> pos) & 1L) == 1);
         }
         throw new ArrayIndexOutOfBoundsException();
     }

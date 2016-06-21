@@ -85,7 +85,7 @@ public class WaveletTree {
 
         public HuffmanNode(int counts, int character) {
             this.counts = counts;
-            alphabet[character >> shift] |= 1L << (character & mask);
+            alphabet[character >>> shift] |= 1L << (character & mask);
             charAlphabet.add((byte) character);
         }
 
@@ -153,7 +153,7 @@ public class WaveletTree {
 
         ArrayList<HuffmanNode> huffmanNodes = new ArrayList<HuffmanNode>();
         for (int i = 0; i < 128; ++i) {
-            if (((aAlphabet[i >> shift] >> (i & mask)) & 1L) == 1) {
+            if (((aAlphabet[i >>> shift] >>> (i & mask)) & 1L) == 1) {
                 huffmanNodes.add(new HuffmanNode(counts[i], i));
             }
         }
@@ -230,17 +230,17 @@ public class WaveletTree {
         if (len_alphabet_left > 1) {
             int len_text_left = 0;
             for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> shift;
+                int cell = text[i] >>> shift;
                 int pos = text[i] & mask;
-                len_text_left += (int) ((alphabet_left[cell] >> pos) & 1L);
+                len_text_left += (int) ((alphabet_left[cell] >>> pos) & 1L);
             }
             if (len_text_left > 0) {
                 byte[] text_left = new byte[len_text_left];
                 int j = 0;
                 for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >> shift;
+                    int cell = text[i] >>> shift;
                     int pos = text[i] & mask;
-                    long bit = (alphabet_left[cell] >> pos) & 1L;
+                    long bit = (alphabet_left[cell] >>> pos) & 1L;
                     if (bit > 0) {
                         text_left[j++] = text[i];
                     }
@@ -255,17 +255,17 @@ public class WaveletTree {
         if (len_alphabet_right > 1) {
             int len_text_right = 0;
             for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >> shift;
+                int cell = text[i] >>> shift;
                 int pos = text[i] & mask;
-                len_text_right += (int) ((alphabet_right[cell] >> pos) & 1L);
+                len_text_right += (int) ((alphabet_right[cell] >>> pos) & 1L);
             }
             if (len_text_right > 0) {
                 byte[] text_right = new byte[len_text_right];
                 int j = 0;
                 for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >> shift;
+                    int cell = text[i] >>> shift;
                     int pos = text[i] & mask;
-                    long bit = (alphabet_right[cell] >> pos) & 1L;
+                    long bit = (alphabet_right[cell] >>> pos) & 1L;
                     if (bit > 0) {
                         text_right[j++] = text[i];
                     }
@@ -285,7 +285,7 @@ public class WaveletTree {
         int cumulativeSum = 0;
         for (int i = 0; i < 128; ++i) {
             less[i] = cumulativeSum;
-            if (((alphabet[i >> shift] >> (i & mask)) & 1L) != 0) {
+            if (((alphabet[i >>> shift] >>> (i & mask)) & 1L) != 0) {
                 cumulativeSum += getRank(lenText - 1, i);
             }
         }
@@ -317,10 +317,10 @@ public class WaveletTree {
      */
     public int getRankRecursive(int index, int character) {
         if (index >= 0) {
-            int cell = character >> shift;
+            int cell = character >>> shift;
             int pos = character & mask;
 
-            boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;
+            boolean left = ((alphabetDirections[cell] >>> pos) & 1) == 1;
             
             
             
@@ -436,26 +436,24 @@ public class WaveletTree {
      * recursively
      */
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
-        int newLeftIndex = (leftIndex >= 0) ? rank.getRankZero(leftIndex) : 0;
-        int newRightIndex = (rightIndex >= 0) ? rank.getRankZero(rightIndex) : 0;
-        int cell = character >> shift;
-        int pos = character & mask;
-        boolean left = ((alphabetDirections[cell] >> pos) & 1) == 1;
+        boolean left = ((alphabetDirections[character >>> shift] >>> (character & mask)) & 1) == 1;
 
         if (left) {
+            int newLeftIndex = (leftIndex >= 0) ? rank.getRankZero(leftIndex) : 0;
+            int newRightIndex = (rightIndex >= 0) ? rank.getRankZero(rightIndex) : 0;
             if (leftChild != null) {
                 return leftChild.singleRangeQuery(newLeftIndex - 1, newRightIndex - 1, character);
             } else {
                 return new int[]{newLeftIndex, newRightIndex};
             }
         } else {
-            newLeftIndex = leftIndex - newLeftIndex;
-            newRightIndex = rightIndex - newRightIndex;
+            int newLeftIndex = (leftIndex >= 0) ? rank.getRankOne(leftIndex) : 0;
+            int newRightIndex = (rightIndex >= 0) ? rank.getRankOne(rightIndex) : 0;
 
             if (rightChild != null) {
-                return rightChild.singleRangeQuery(newLeftIndex, newRightIndex, character);
+                return rightChild.singleRangeQuery(newLeftIndex - 1, newRightIndex - 1, character);
             } else {
-                return new int[]{newLeftIndex + 1, newRightIndex + 1};
+                return new int[]{newLeftIndex, newRightIndex};
             }
         }
     }

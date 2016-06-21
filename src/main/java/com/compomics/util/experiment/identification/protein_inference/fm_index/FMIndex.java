@@ -14,6 +14,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.matchers.Tag
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
+import com.compomics.util.gui.AaMass;
 import com.compomics.util.preferences.PeptideVariantsPreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import com.compomics.util.waiting.WaitingHandler;
@@ -22,10 +23,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import org.jsuffixarrays.*;
+
 
 /**
  * The FM index.
@@ -153,6 +156,11 @@ public class FMIndex implements PeptideMapper {
     private boolean hasFixedPTM_NatTerminus = false;
 
     double negativePTMMass = 0;
+    
+    /**
+     * number of allowed edit operations
+     */
+    int maxNumberVariants = 2;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -180,6 +188,13 @@ public class FMIndex implements PeptideMapper {
         }
         return mid;
     }
+    
+    private final int mersenneMask = (1 << 27) - 1;
+    public int computeHash(int l, int r, int a, int p){
+        int value = l ^ (l << 8) ^ r ^ (r >> 8) ^ (a << 10) ^ (p << 20);
+        value = (value >>> 27) + (value & mersenneMask);
+        return (value >= mersenneMask) ? value - mersenneMask : value;
+    }
 
     /**
      * Constructor. If PTM settings are provided the index will contain
@@ -187,11 +202,9 @@ public class FMIndex implements PeptideMapper {
      *
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param ptmSettings modification parameters for identification
-     * @param peptideVariantsPreferences the peptide variants preferences set by the user
+     * @param ptmSettings contains modification parameters for identification
      */
-    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) {
-
+    public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings) {
         if (ptmSettings != null) {
             // create masses table and modifications
             int[] modificationCounts = new int[128];
@@ -201,6 +214,11 @@ public class FMIndex implements PeptideMapper {
             ArrayList<String> variableModifications = ptmSettings.getVariableModifications();
             ArrayList<String> fixedModifications = ptmSettings.getFixedModifications();
             PTMFactory ptmFactory = PTMFactory.getInstance();
+            
+            
+            PeptideVariantsPreferences peptideVariantsPreferences =  PeptideVariantsPreferences.getNoVariantPreferences();
+            System.out.println(peptideVariantsPreferences.getnEdits());
+            
 
             int hasVariableModification = 0;
 
@@ -553,7 +571,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         SequenceFactory sf = SequenceFactory.getInstance(100000);
-        boolean deNovo = true; // @TODO: change it for de novo
+        boolean deNovo = false; // @TODO: change it for de novo
         int maxProgressBar = 6 + ((deNovo) ? 4 : 0);
 
         if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
@@ -858,7 +876,23 @@ public class FMIndex implements PeptideMapper {
      */
     @Override
     public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptide, SequenceMatchingPreferences seqMatchPref) {
-
+        if (maxNumberVariants == 0){
+            return getProteinMappingWithoutVariants(peptide, seqMatchPref);
+        }
+        else {
+            return getProteinMappingWithVariants(peptide, seqMatchPref);
+        }
+        
+    }
+      
+    
+    /**
+     * Exact mapping peptides against the proteome
+     * @param peptide
+     * @param seqMatchPref
+     * @return 
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingWithoutVariants(String peptide, SequenceMatchingPreferences seqMatchPref) {
         HashMap<String, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
 
         String pep_rev = new StringBuilder(peptide).reverse().toString();
@@ -936,6 +970,166 @@ public class FMIndex implements PeptideMapper {
         }
         return allMatches;
     }
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Variant tolerant mapping peptides against the proteome
+     * @param peptide
+     * @param seqMatchPref
+     * @return 
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingWithVariants(String peptide, SequenceMatchingPreferences seqMatchPref) {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+
+        String pep_rev = new StringBuilder(peptide).reverse().toString();
+        int lenPeptide = peptide.length();
+        ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
+        int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
+        long[] keys = new long[(mersenneMask >> 6) + 1];
+
+        ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
+
+        for (int k = 0; k <= maxNumberVariants; ++k){
+            for (int j = 0; j <= lenPeptide; ++j) {
+                backwardMatrix[k][j] = new ArrayList<MatrixContent>(10);
+            }
+        }
+        int countX = 0;
+        for (int j = 0; j <= lenPeptide; ++j) {
+            if (j < lenPeptide && pep_rev.charAt(j) == 'X') ++countX;
+        }
+        
+        
+        if (countX <= xNumLimit) {
+            backwardMatrix[0][0].add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0)); // L, R, char, previous content, num of X
+            
+            for (int k = 0; k <= maxNumberVariants; ++k){
+                ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
+                for (int j = 0; j < lenPeptide; ++j) {
+                    String combinationSequence = combinations.get(j);
+                    ArrayList<MatrixContent> cell = backwardList[j];
+
+
+
+                    for (int i = 0; i < cell.size(); ++i) {
+                        MatrixContent content = cell.get(i);
+                        int leftIndexOld = content.left;
+                        int rightIndexOld = content.right;
+                        int numX = content.numX;
+                        int numVariants = content.numEdits;
+                        int length = content.length;
+                        int hash = content.hash;
+
+                        for (int c = 0; c < combinationSequence.length(); ++c) {
+                            int aminoAcid = combinationSequence.charAt(c);
+
+                            int lessValue = lessTablePrimary[aminoAcid];
+                            int[] range = occurrenceTablePrimary.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                            final int leftIndex = lessValue + range[0];
+                            final int rightIndex = lessValue + range[1] - 1;
+                            int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+
+                            //long matchKey = (((((long)leftIndex) << 32) | (long)rightIndex) ^ (((long)aminoAcid) << 20) ^ (((long)length + 1) << 40));
+                            int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, length + 1);
+
+                            if (leftIndex <= rightIndex && ((keys[matchKey >> 6] >> (matchKey & 63)) & 1L) == 0) {
+                                if (newNumX > xNumLimit) continue;
+
+                                // match
+                                backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-', (int)matchKey));
+                                keys[matchKey >> 6] |= (1L << (matchKey & 63));
+                            }
+
+                            if (numVariants < maxNumberVariants && c == 0){
+                                // deletion
+                                int deletionKey = computeHash(leftIndexOld, rightIndexOld, aminoAcid, length + 1);
+
+                                if (numVariants < maxNumberVariants && ((keys[deletionKey >> 6] >> (deletionKey & 63)) & 1L) == 0){
+                                    backwardMatrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*', (int)deletionKey));
+                                }
+
+                                // insertion and substitution
+                                ArrayList<Integer[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (Integer[] borders : setCharacter) {
+                                    final int errorAminoAcid = borders[0];
+                                    final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
+                                    final int errorLessValue = lessTablePrimary[errorAminoAcid];
+                                    final int errorLeftIndex = errorLessValue + borders[1];
+                                    final int errorRightIndex = errorLessValue + borders[2] - 1;
+
+                                    if (errorNewNumX <= xNumLimit){
+                                        int insertionKey = computeHash(errorLeftIndex, errorRightIndex, '*', length);
+
+                                        // insertion
+                                        if (((keys[insertionKey >> 6] >> (insertionKey & 63)) & 1L) == 0 && j > 0){
+                                            MatrixContent newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], (int)insertionKey);
+                                            backwardMatrix[k + 1][j].add(newErrorCell);
+                                        }
+
+                                        // substitution
+                                        if (aminoAcid != errorAminoAcid){
+                                            int substitutionKey = computeHash(errorLeftIndex, errorRightIndex, aminoAcid, length + 1);
+                                            if (((keys[substitutionKey >> 6] >> (substitutionKey & 63)) & 1L) == 0){
+                                                backwardMatrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1,  (char)errorAminoAcid, (int)substitutionKey));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // traceback
+            for (ArrayList<MatrixContent>[] backwardList : backwardMatrix){
+                for (MatrixContent content : backwardList[lenPeptide]) {
+                    MatrixContent currentContent = content;
+                    String currentPeptide = "";
+                    String errors = "";
+
+                    while (currentContent.previousContent != null) {
+                        //if (currentContent.character != '*')
+                        currentPeptide += (char)currentContent.character;
+                        errors += currentContent.editOperation;
+                        currentContent = currentContent.previousContent;
+                    }
+
+                    int leftIndex = content.left;
+                    int rightIndex = content.right;
+
+                    HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
+
+                    for (int j = leftIndex; j <= rightIndex; ++j) {
+                        int pos = getTextPosition(j);
+                        int index = binarySearch(boundaries, pos);
+                        String accession = accessions[index];
+
+                        if (!matches.containsKey(accession)) {
+                            matches.put(accession, new ArrayList<Integer>());
+                        }
+                        matches.get(accession).add(pos - boundaries[index]);
+System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[index]) + " | " + errors);
+                    }
+
+                    allMatches.put(currentPeptide, matches);
+                }
+            }
+        }
+        return allMatches;
+    }
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     public void emptyCache() {
@@ -1033,6 +1227,155 @@ public class FMIndex implements PeptideMapper {
             }
         }
     }
+    
+    
+    
+
+    /**
+     * Mapping the tag elements to the reference text.
+     *
+     * @param combinations the combinations
+     * @param matrix the matrix
+     * @param matrixFinished the finished matrix
+     * @param less the less array
+     * @param occurrence the wavelet tree
+     * @param massTolerance the mass tolerance
+     * @param numberEdits number of allowed edit operations
+     */
+    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance, int numberEdits) {
+        final int lenCombinations = combinations.length;
+        while (!matrix.isEmpty()) {
+            MatrixContent cell = matrix.removeFirst();
+            final int combinationLength = cell.combinationLength;
+            final int pepLen = cell.length;
+            final int leftIndexOld = cell.left;
+            final int rightIndexOld = cell.right;
+            TagElement combination = combinations[combinationLength];
+            final int oldNumEdits = cell.numEdits;
+            if (combination.isMass) {
+                final double combinationMass = combination.mass;
+                final double oldMass = cell.mass;
+
+                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                if (withVariableModifications) {
+                    addModifications(setCharacter);
+                }
+                for (Integer[] borders : setCharacter) {
+                    final int aminoAcid = borders[0];
+                    if (aminoAcid == '/') continue;
+                    final double newMass = oldMass + aaMasses[borders[3]];
+                    if (newMass - massTolerance <= combinationMass) {
+                        final int lessValue = less[aminoAcid];
+                        final int leftIndex = lessValue + borders[1];
+                        final int rightIndex = lessValue + borders[2] - 1;
+                        if (Math.abs(combinationMass - newMass) <= massTolerance) {
+                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, 0, null, null, borders[3], oldNumEdits, '\0', null);
+                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
+                            insertList.add(newCell);
+                        } else {
+                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, borders[3], oldNumEdits, '\0', null);
+                            matrix.add(newCell);
+                            
+                            // deletion
+                            if (oldNumEdits < numberEdits){
+                                matrix.add(new MatrixContent(leftIndex, rightIndex, '*', cell, oldMass, null, combinationLength, pepLen, 0, null, null, borders[3], oldNumEdits + 1, Character.toChars(borders[0] + 32)[0], null));
+                            }
+                        }
+                    }
+                }
+                if (oldNumEdits < numberEdits){
+                    for (int i = 0; i < aaMasses.length; ++i){
+                        if (aaMasses[i] > 0 && oldMass + aaMasses[i] < combinationMass + massTolerance){
+                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
+                            double newMass = oldMass + aaMasses[i];
+                            
+                            // substitution
+                            for (Integer[] borders : setCharacter) {
+                                if ((i & 127) == borders[0]) continue;
+                                final int lessValue = less[borders[0]];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                if (Math.abs(combinationMass - newMass) <= massTolerance){
+                                    insertList.add(new MatrixContent(leftIndex, rightIndex, i & 127, cell, newMass, null, combinationLength + 1, pepLen + 1, 0, null, null, i, oldNumEdits + 1, Character.toChars(borders[0])[0], null));
+                                }
+                                else {
+                                    matrix.add(new MatrixContent(leftIndex, rightIndex, i & 127, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, i, oldNumEdits + 1, Character.toChars(borders[0])[0], null));
+                                }
+                            }
+                            
+                            // insertion
+                            if (Math.abs(combinationMass - newMass) <= massTolerance){
+                                insertList.add(new MatrixContent(leftIndexOld, rightIndexOld, i & 127, cell, newMass, null, combinationLength + 1, pepLen + 1, 0, null, null, i, oldNumEdits + 1, '*', null));
+                            }
+                            else {
+                                matrix.add(new MatrixContent(leftIndexOld, rightIndexOld, i & 127, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, i, oldNumEdits + 1, '*', null));
+                            }
+                        }
+                    }
+                }
+                
+            } else {
+                final String combinationSequence = combination.sequence;
+                final int xNumLimit = combination.xNumLimit;
+                final int numX = cell.numX;
+
+                for (int i = 0; i < combinationSequence.length(); ++i) {
+                    final int aminoAcid = combinationSequence.charAt(i);
+                    final int lessValue = less[aminoAcid];
+                    final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                    final int leftIndex = lessValue + range[0];
+                    final int rightIndex = lessValue + range[1] - 1;
+                    final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                    if (leftIndex <= rightIndex && newNumX <= xNumLimit){
+                        
+                        MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1, oldNumEdits, '\0', null);
+                        List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
+                        insertList.add(newCell);
+                    }
+                    if (oldNumEdits < numberEdits){
+                        // deletion
+                        if (newNumX <= xNumLimit){
+                            MatrixContent newErrorCell = new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1, oldNumEdits + 1, 'd', null);
+                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
+                            insertList.add(newErrorCell);
+                        }
+                        
+                        // insertion and substitution
+                        ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        for (Integer[] borders : setCharacter) {
+                            final int errorAminoAcid = borders[0];
+                            final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
+                            final int errorLessValue = less[errorAminoAcid];
+                            final int errorLeftIndex = errorLessValue + borders[1];
+                            final int errorRightIndex = errorLessValue + borders[2] - 1;
+                           
+                            if (errorNewNumX <= xNumLimit){                                
+                                // insertion
+                                MatrixContent newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, errorAminoAcid, cell, 0, null, combinationLength, pepLen + 1, errorNewNumX, null, null, -1, oldNumEdits + 1, 'i', null);
+                                matrix.add(newErrorCell);
+                                
+                                // substitution
+                                if (errorAminoAcid != aminoAcid){
+                                    newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, errorNewNumX, null, null, -1, oldNumEdits + 1,  (char)errorAminoAcid, null);
+                                    List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
+                                    insertList.add(newErrorCell);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    double pepMass(String peptide){
+        double mass = 0;
+        for (int i = 0; i < peptide.length(); ++i){
+            mass += aaMasses[peptide.charAt(i)];
+        }
+        return mass;
+    }
+    
 
     /**
      * Mapping the tag elements to the reference text.
@@ -1586,6 +1929,7 @@ public class FMIndex implements PeptideMapper {
             }
         }
     }
+    
 
     @Override
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
@@ -1685,7 +2029,8 @@ public class FMIndex implements PeptideMapper {
         if (cached == null) {
             // Map Reverse
             if (!hasCTermDirection) {
-                mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance);
+                if (maxNumberVariants == 0) mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance);
+                else mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance, maxNumberVariants);
             } else {
                 mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance, towardsC);
             }
@@ -1698,16 +2043,46 @@ public class FMIndex implements PeptideMapper {
                 int leftIndexFront = 0;
                 int rightIndexFront = indexStringLength - 1;
                 ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+                int errors = 0;
+                String allEdits = "";
 
+//System.out.println();
                 while (currentContent.previousContent != null) {
-                    final int aminoAcid = currentContent.character;
-                    if (aminoAcid > 0) {
-                        currentPeptide += (char) currentContent.character;
-                        final int lessValue = lessPrimary[aminoAcid];
-                        final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcid);
-                        leftIndexFront = lessValue + range[0];
-                        rightIndexFront = lessValue + range[1] - 1;
+//System.out.println(currentContent.length + " " + (char)currentContent.character + " " + currentContent.editOperation);
+                    int aminoAcid = currentContent.character;
+                    int aminoAcidAdd = currentContent.character;
+                    char edit = currentContent.editOperation;
+                    boolean update = true;
+                    
+                    if (edit == 0){
+                        allEdits += "-";
                     }
+                    else if (edit == '*'){ // insertion
+                        allEdits += "*";
+                        errors += 1;
+                        update = false;
+                    }
+                    else if (65 <= edit && edit <= 90){ // substitution
+                        aminoAcid = currentContent.editOperation;
+                        allEdits += currentContent.editOperation;
+                        errors += 1;
+                    }
+                    else { // delition
+                        aminoAcid = currentContent.editOperation - 32;
+                        allEdits += currentContent.editOperation;
+                        errors += 1;
+                    }
+                    if (aminoAcidAdd > 0) {
+                        currentPeptide += (char)aminoAcidAdd;
+                        if (update){
+//System.out.println("update: " + (char)aminoAcid);
+                            final int lessValue = lessPrimary[aminoAcid];
+                            final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcid);
+                            leftIndexFront = lessValue + range[0];
+                            rightIndexFront = lessValue + range[1] - 1;
+                        }
+                    }
+                    
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
                             if (modifictationFlags[currentContent.modificationPos]) {
@@ -1720,7 +2095,10 @@ public class FMIndex implements PeptideMapper {
                     currentContent = currentContent.previousContent;
                 }
                 String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
-                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1));
+                allEdits = (new StringBuilder(allEdits).reverse()).toString();
+//System.out.println(reversePeptide + " " + leftIndexFront + " " + rightIndexFront);
+//System.out.println(allEdits);
+                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1, errors, '\0', allEdits));
             }
 
             if (lenCombinations > 0) {
@@ -1735,11 +2113,12 @@ public class FMIndex implements PeptideMapper {
 
             cacheIt(refTagContent, cachePrimary);
         }
-
-        if (!matrix.isEmpty()) {
-            // Map towards NTerm
+        
+        if (!matrix.isEmpty()){
             if (!hasNTermDirection) {
-                mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
+                if (maxNumberVariants == 0) mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
+                else mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance, maxNumberVariants);
+
             } else {
                 mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance, !towardsC);
             }
@@ -1749,16 +2128,33 @@ public class FMIndex implements PeptideMapper {
             MatrixContent currentContent = content;
             String currentPeptide = "";
             ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+            String allEdits = "";
 
+//System.out.println();
             while (currentContent.previousContent != null) {
-                if (currentContent.character != '\0') {
-                    currentPeptide += (char) currentContent.character;
+//System.out.println(currentContent.length + " " + (char)currentContent.character + " " + currentContent.editOperation);
+                
+                if (currentContent.character > 0) {
+                    switch (currentContent.editOperation){
+                        case '\0':
+                            allEdits += "-";
+                            currentPeptide += (char) currentContent.character;
+                            break;
+                        case 'd':
+                            allEdits += "d";
+                            currentPeptide += (char) currentContent.character;
+                            break;
+                        case 'i':
+                            allEdits += "i";
+                            break;
+                        default:
+                            currentPeptide += (char) currentContent.character;
+                            allEdits += currentContent.editOperation;
+                            break;
+                    }
                 }
-
-                /*
-                if (currentContent.modification != null) {
-                    modifications.add(currentContent.modification);
-                }*/
+                
+                
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                     if (currentContent.modificationPos >= 0) {
                         if (modifictationFlags[currentContent.modificationPos]) {
@@ -1784,18 +2180,35 @@ public class FMIndex implements PeptideMapper {
             }
 
             String peptide = currentPeptide + currentContent.peptideSequence;
+            allEdits += currentContent.allEdits;
 
+System.out.println();
             if (turned) {
                 leftIndex = 0;
                 rightIndex = indexStringLength - 1;
 
                 for (int p = 0; p < peptide.length(); ++p) {
-                    final int aminoAcid = peptide.charAt(p);
-                    final int lessValue = lessReversed[aminoAcid];
-                    final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
-                    leftIndex = lessValue + range[0];
-                    rightIndex = lessValue + range[1] - 1;
-
+System.out.println(p + " " + peptide.charAt(p) + " " + allEdits.charAt(p));
+                    boolean update = true;
+                    int aminoAcid = peptide.charAt(p);
+                    int edit = allEdits.charAt(p);
+                    if (edit == '*'){ // deletion
+                        update = false;
+                    }
+                    else if (65 <= edit && edit <= 90){ // substitution
+                        aminoAcid = edit;
+                    }
+                    else if (97 <= edit && edit <= 122) { // insertion
+                        aminoAcid = edit - 32;
+                    }
+                    
+                    if (update){
+System.out.println("update " + aminoAcid);
+                        final int lessValue = lessReversed[aminoAcid];
+                        final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
+                        leftIndex = lessValue + range[0];
+                        rightIndex = lessValue + range[1] - 1;
+                    }
                 }
 
                 for (ModificationMatch modificationMatch : modifications) {
@@ -1804,6 +2217,7 @@ public class FMIndex implements PeptideMapper {
 
                 peptide = (new StringBuilder(peptide).reverse()).toString();
             }
+System.out.println(peptide + " " + leftIndex + " " + rightIndex);
 
             HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
             for (int j = leftIndex; j <= rightIndex; ++j) {
@@ -1823,10 +2237,13 @@ public class FMIndex implements PeptideMapper {
         /*
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
+            
+            double tagmass = tc.get(0).getMass() + pepMass(tc.get(1).asSequence()) + tc.get(2).getMass();
+            
             for (Peptide pep : allMatches.keySet()){
                 for (String acc : allMatches.get(pep).keySet()){
                     for (int pos : allMatches.get(pep).get(acc)){
-                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos + " | " + tagmass + " " + pepMass(pep.getSequence()));
                     }
                 }
             }

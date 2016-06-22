@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.pride.CvTerm;
 import java.util.HashMap;
 
 /**
@@ -60,6 +61,10 @@ public class NeutralLoss extends ExperimentObject {
      * Map of available neutral losses.
      */
     private static HashMap<String, NeutralLoss> neutralLosses;
+    /**
+     * The PSI MS CV term of the neutral loss, null if not set.
+     */
+    private CvTerm psiCvTerm = null;
 
     /**
      * Constructor for a user defined neutral loss. The neutral loss is added to
@@ -130,6 +135,21 @@ public class NeutralLoss extends ExperimentObject {
         }
     }
 
+    /**
+     * Returns the CV term for the neutral loss. Null if none
+     * corresponding.
+     *
+     * @return the CV term for the neutral loss. Null if none
+     * corresponding
+     */
+    public CvTerm getPsiMsCvTerm() {
+        if (psiCvTerm != null) {
+            return psiCvTerm;
+        }
+        psiCvTerm = new CvTerm("PSI-MS", "MS:1000336", "neutral loss", composition.toHillNotation());
+        return psiCvTerm;
+    }
+    
     /**
      * Returns a boolean indicating whether the neutral loss is fixed or not.
      *

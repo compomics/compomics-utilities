@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.protein_sequences;
 
 import com.compomics.util.Util;
 import com.compomics.util.exceptions.ExceptionHandler;
+import com.compomics.util.experiment.biology.AminoAcid;
 import com.compomics.util.experiment.biology.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
@@ -351,7 +352,8 @@ public class SequenceFactory {
             }
             reading = true;
             currentRandomAccessFile.seek(index);
-            String line, sequence = "";
+            String line;
+            StringBuilder sequence = new StringBuilder();
             Header currentHeader = currentHeaderMap.get(accession);
             boolean headerFound = false;
 
@@ -359,7 +361,7 @@ public class SequenceFactory {
                 line = line.trim();
 
                 if (line.startsWith(">")) {
-                    if (!sequence.equals("") || headerFound) {
+                    if (sequence.length() != 0 || headerFound) {
                         break;
                     }
                     if (currentHeader == null) {
@@ -371,11 +373,10 @@ public class SequenceFactory {
                     }
                     headerFound = true;
                 } else {
-                    sequence += Util.removeSubString(line, "\\*");
+                    sequence.append(line.trim());
                 }
             }
-
-            Protein currentProtein = new Protein(accession, currentHeader.getDatabaseType(), sequence, isDecoyAccession(accession));
+            Protein currentProtein = new Protein(accession, currentHeader.getDatabaseType(), importSequenceFromFasta(sequence), isDecoyAccession(accession));
 
             addProteinToCache(accession, currentProtein);
 
@@ -391,6 +392,38 @@ public class SequenceFactory {
                 return getProtein(accession, index, 2 * waitingTime);
             } else {
                 throw e;
+            }
+        }
+    }
+
+    /**
+     * Processes the sequence as present in the fasta file.
+     *
+     * @param fastaSequence the sequence as present in the fasta file
+     *
+     * @return the protein sequence
+     */
+    public static String importSequenceFromFasta(StringBuilder fastaSequence) {
+        String sequence;
+        if (fastaSequence.charAt(fastaSequence.length() - 1) == '*') {
+            sequence = fastaSequence.substring(0, fastaSequence.length() - 1);
+        } else {
+            sequence = fastaSequence.toString();
+        }
+        return sequence;
+    }
+
+    /**
+     * Verifies that the sequence can be parsed into a series of amino acids.
+     *
+     * @param proteinSequence the protein sequence
+     */
+    public static void validateSequence(String proteinSequence) {
+        for (int i = 0; i < proteinSequence.length(); i++) {
+            char aa = proteinSequence.charAt(i);
+            AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+            if (aminoAcid == null) {
+                throw new IllegalArgumentException("Found character in protein sequence that cannot be mapped to an amino acid (" + aa + ").");
             }
         }
     }
@@ -511,10 +544,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
      */
-    public void loadFastaFile(File fastaFile) throws IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    public void loadFastaFile(File fastaFile) throws IOException, ClassNotFoundException {
         loadFastaFile(fastaFile, null);
     }
 
@@ -529,10 +560,8 @@ public class SequenceFactory {
      * the FASTA file
      * @throws ClassNotFoundException exception thrown whenever an error
      * occurred while deserializing the file index
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
      */
-    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws IOException, ClassNotFoundException, StringIndexOutOfBoundsException {
+    public void loadFastaFile(File fastaFile, WaitingHandler waitingHandler) throws IOException, ClassNotFoundException {
 
         if (!fastaFile.exists()) {
             throw new FileNotFoundException("The FASTA file \'" + fastaFile.getAbsolutePath() + "\' could not be found!");
@@ -686,7 +715,8 @@ public class SequenceFactory {
     }
 
     /**
-     * Static method to create a FASTA index for a FASTA file.
+     * Static method to create a FASTA index for a FASTA file. Non-valid fasta
+     * files will throw an exception.
      *
      * @param fastaFile the FASTA file
      * @param progressBar a progress bar showing the progress
@@ -700,11 +730,9 @@ public class SequenceFactory {
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
-     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
-     * parsing of the protein headers
      */
     private static FastaIndex createFastaIndex(File fastaFile, String name, String decoyTag, String version,
-            WaitingHandler waitingHandler) throws IOException, StringIndexOutOfBoundsException {
+            WaitingHandler waitingHandler) throws IOException {
 
         HashMap<String, Long> indexes = new HashMap<String, Long>();
         HashSet<String> decoyAccessions = new HashSet<String>();
@@ -728,12 +756,30 @@ public class SequenceFactory {
         // a map of the species
         HashMap<String, Integer> species = new HashMap<String, Integer>();
 
+        StringBuilder sequenceBuilder = new StringBuilder();
+        String accession = null;
+        int lineNumber = 0;
+
         while ((line = bufferedRandomAccessFile.readLine()) != null) {
+
+            lineNumber++;
 
             if (line.startsWith(">")) {
 
+                if (sequenceBuilder.length() != 0 && accession != null) {
+                    String sequence = importSequenceFromFasta(sequenceBuilder);
+                    try {
+                        validateSequence(sequence);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("An error occurred while parsing the sequence of " + accession + " at line " + lineNumber + ": " + e.toString());
+                    }
+                }
+
                 Header fastaHeader = Header.parseFromFASTA(line);
-                String accession = fastaHeader.getAccessionOrRest();
+                accession = fastaHeader.getAccessionOrRest();
+                if (accession == null) {
+                    throw new IllegalArgumentException("No accession found for header at line " + lineNumber + ".");
+                }
 
 //                if (fastaHeader.getStartLocation() != -1) {
 //                    accession += " (" + fastaHeader.getStartLocation() + "-" + fastaHeader.getEndLocation() + ")"; // special dbtoolkit pattern
@@ -787,8 +833,10 @@ public class SequenceFactory {
                     }
                 }
                 index = bufferedRandomAccessFile.getFilePointer();
+                sequenceBuilder = new StringBuilder();
             } else {
                 index = bufferedRandomAccessFile.getFilePointer();
+                sequenceBuilder.append(line.trim());
             }
         }
 
@@ -1594,7 +1642,7 @@ public class SequenceFactory {
         public boolean hasNext() throws IOException {
 
             nextProtein = null;
-            String sequence = "";
+            StringBuilder sequence = new StringBuilder();
             Header header = nextHeader;
             boolean newHeaderFound = false;
 
@@ -1630,14 +1678,14 @@ public class SequenceFactory {
                         break;
                     }
                 } else {
-                    sequence += line.trim();
+                    sequence.append(line.trim());
                 }
 
                 line = br.readLine();
             }
             if (newHeaderFound || line == null) { // line == null means that we read the last protein
                 String accession = header.getAccessionOrRest();
-                nextProtein = new Protein(accession, header.getDatabaseType(), sequence, isDecoyAccession(accession));
+                nextProtein = new Protein(accession, header.getDatabaseType(), importSequenceFromFasta(sequence), isDecoyAccession(accession));
                 currentHeaderMap.put(accession, header);
                 return true;
             } else {

@@ -137,7 +137,7 @@ public class TagFragmentIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        if (neutralLosses != null) {
+        if (neutralLosses == null) {
             this.neutralLosses = new ArrayList<NeutralLoss>(0);
         }
         return neutralLosses;

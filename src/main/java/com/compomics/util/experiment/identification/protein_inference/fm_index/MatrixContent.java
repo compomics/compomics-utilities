@@ -188,7 +188,7 @@ public class MatrixContent {
         this.right = right;
         this.character = character;
         this.previousContent = previousContent;
-        this.mass = -1;
+        this.mass = 0;
         this.peptideSequence = null;
         this.combinationLength = 0;
         this.length = 0;
@@ -219,7 +219,7 @@ public class MatrixContent {
         this.right = right;
         this.character = character;
         this.previousContent = previousContent;
-        this.mass = -1;
+        this.mass = 0;
         this.peptideSequence = null;
         this.combinationLength = 0;
         this.length = length;

@@ -161,7 +161,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * number of allowed edit operations
      */
-    int maxNumberVariants = 0;
+    int maxNumberVariants = 1;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -1254,125 +1254,160 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
      * @param massTolerance the mass tolerance
      * @param numberEdits number of allowed edit operations
      */
-    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance, int numberEdits) {
+    private void mappingSequenceAndMassesWithVariants(TagElement[] combinations, LinkedList<MatrixContent>[][] matrix, int[] less, WaveletTree occurrence, double massTolerance) {
         final int lenCombinations = combinations.length;
-        while (!matrix.isEmpty()) {
-            MatrixContent cell = matrix.removeFirst();
-            final int combinationLength = cell.combinationLength;
-            final int pepLen = cell.length;
-            final int leftIndexOld = cell.left;
-            final int rightIndexOld = cell.right;
-            TagElement combination = combinations[combinationLength];
-            final int oldNumEdits = cell.numEdits;
-            if (combination.isMass) {
-                final double combinationMass = combination.mass;
-                final double oldMass = cell.mass;
+        long[] keys = new long[(mersenneMask >> 6) + 1];
+        
+        for (int k = 0; k <= maxNumberVariants; ++k){
+            LinkedList<MatrixContent>[] row = matrix[k];
+            
+            for (int j = 0; j < lenCombinations; ++j){
+                LinkedList<MatrixContent> cell = row[j];
+                while (!cell.isEmpty()) {
+                    MatrixContent content = cell.removeFirst();
+                    final int leftIndexOld = content.left;
+                    final int length = content.length;
+                    final int rightIndexOld = content.right;
+                    TagElement combination = combinations[j];
+                    final int numVariants = content.numEdits;
+                    if (combination.isMass) {
+                        final double combinationMass = combination.mass;
+                        final double oldMass = content.mass;
+//System.out.println(k + " " + j + " | " + leftIndexOld + " " + rightIndexOld);
 
-                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                if (withVariableModifications) {
-                    addModifications(setCharacter);
-                }
-                for (Integer[] borders : setCharacter) {
-                    final int aminoAcid = borders[0];
-                    if (aminoAcid == '/') continue;
-                    final double newMass = oldMass + aaMasses[borders[3]];
-                    if (newMass - massTolerance <= combinationMass) {
-                        final int lessValue = less[aminoAcid];
-                        final int leftIndex = lessValue + borders[1];
-                        final int rightIndex = lessValue + borders[2] - 1;
-                        if (Math.abs(combinationMass - newMass) <= massTolerance) {
-                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, 0, null, null, borders[3], oldNumEdits, '\0', null);
-                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                            insertList.add(newCell);
-                        } else {
-                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, borders[3], oldNumEdits, '\0', null);
-                            matrix.add(newCell);
-                            
-                            // deletion
-                            if (oldNumEdits < numberEdits){
-                                matrix.add(new MatrixContent(leftIndex, rightIndex, '*', cell, oldMass, null, combinationLength, pepLen, 0, null, null, borders[3], oldNumEdits + 1, Character.toChars(borders[0] + 32)[0], null));
-                            }
-                        }
-                    }
-                }
-                if (oldNumEdits < numberEdits){
-                    for (int i = 0; i < aaMasses.length; ++i){
-                        if (aaMasses[i] > 0 && oldMass + aaMasses[i] < combinationMass + massTolerance){
-                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                            double newMass = oldMass + aaMasses[i];
-                            
-                            // substitution
-                            for (Integer[] borders : setCharacter) {
-                                if ((i & 127) == borders[0]) continue;
-                                final int lessValue = less[borders[0]];
+                        ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        if (withVariableModifications) addModifications(setCharacter);
+                        
+
+                        for (Integer[] borders : setCharacter) {
+                            final int aminoAcid = borders[0];
+                            if (aminoAcid == '/') continue;
+                            final double newMass = oldMass + aaMasses[borders[3]];
+                            if (newMass - massTolerance <= combinationMass) {
+                                
+                                final int lessValue = less[aminoAcid];
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
+                                
+//System.out.println(k + " " + j + " | " + oldMass + " " + (char)content.character + " -> " + (char)aminoAcid + " " + Math.abs(combinationMass - newMass));
                                 if (Math.abs(combinationMass - newMass) <= massTolerance){
-                                    insertList.add(new MatrixContent(leftIndex, rightIndex, i & 127, cell, newMass, null, combinationLength + 1, pepLen + 1, 0, null, null, i, oldNumEdits + 1, Character.toChars(borders[0])[0], null));
+                                    int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, j + 1);
+                                    //if (((keys[matchKey >> 6] >> (matchKey & 63)) & 1L) == 0) {
+                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, 0, null, 0 + 1, length + 1, 0, null, null, borders[3], numVariants, '-', null));
+                                        //keys[matchKey >> 6] |= (1L << (matchKey & 63));
+                                    //}
+                                    
+                                } else {
+                                    cell.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, null, 0, length + 1, 0, null, null, borders[3], numVariants, '-', null));
+                                    
+                                    // deletion
+                                    //if (numVariants < maxNumberVariants){
+                                    //    matrix[k + 1][j].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newMass, null, 0, length + 1, 0, null, null, borders[3], numVariants + 1, '*', null));
+                                    //}
                                 }
-                                else {
-                                    matrix.add(new MatrixContent(leftIndex, rightIndex, i & 127, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, i, oldNumEdits + 1, Character.toChars(borders[0])[0], null));
+                                
+                            }
+                        }
+                        /*
+                        if (numVariants < maxNumberVariants){
+                            for (int i = 0; i < aaMasses.length; ++i){
+                                if (aaMasses[i] > 0 && oldMass + aaMasses[i] < combinationMass + massTolerance){
+                                    double newMass = oldMass + aaMasses[i];
+
+                                    // substitution
+                                    for (Integer[] borders : setCharacter) {
+                                        final int errorAminoAcid = borders[0];
+                                        final int errorLessValue = less[borders[0]];
+                                        final int errorLeftIndex = errorLessValue + borders[1];
+                                        final int errorRightIndex = errorLessValue + borders[2] - 1;
+
+                                        // insertion
+                                        //if (Math.abs(combinationMass - newMass) <= massTolerance){
+                                        //    int matchInsertionKey = computeHash(errorLeftIndex, errorRightIndex, '*', length);
+                                        //    if (((keys[matchInsertionKey >> 6] >> (matchInsertionKey & 63)) & 1L) == 0) {
+                                        //        row[j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, oldMass, null, length + 1, length, 0, null, null, i, numVariants + 1, '*', null));
+                                        //    }
+                                        //}
+                                        //else {
+                                            //matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, oldMass, null, length, length, 0, null, null, i, numVariants + 1, '*', null));
+                                        //}
+                                        
+                                        
+                                        //if ((i & 127) == errorAminoAcid) continue;
+                                        //if (Math.abs(combinationMass - newMass) <= massTolerance){
+                                        //    int matchSubstitutionKey = computeHash(errorLeftIndex, errorRightIndex, i & 127, length + 1);
+                                        //    if (((keys[matchSubstitutionKey >> 6] >> (matchSubstitutionKey & 63)) & 1L) == 0) {
+                                        //        row[j].add(new MatrixContent(errorLeftIndex, errorRightIndex, i & 127, content, newMass, null, length + 1, length + 1, 0, null, null, i, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], null));
+                                        //    }
+                                        //}
+                                        //else {
+                                        //    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, i & 127, content, newMass, null, length, length + 1, 0, null, null, i, numVariants + 1, (char)errorAminoAcid, null));
+                                        //}
+                                    }
+                                }
+                            }
+                        }*/
+
+                    } else { // sequence mapping 
+                        final String combinationSequence = combination.sequence;
+                        final int xNumLimit = combination.xNumLimit;
+                        final int numX = content.numX;
+                        
+
+                        for (int c = 0; c < combinationSequence.length(); ++c) {
+                            final int aminoAcid = combinationSequence.charAt(c);
+                            final int lessValue = less[aminoAcid];
+                            final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                            final int leftIndex = lessValue + range[0];
+                            final int rightIndex = lessValue + range[1] - 1;
+                            final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                            int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, length + 1);
+
+//System.out.println("m: " + k + " " + j + " | " + leftIndex + " " + rightIndex + " " + (char)aminoAcid + " " + matchKey + " " + (((keys[matchKey >> 6] >> (matchKey & 63)) & 1L) == 0));
+                            if (leftIndex <= rightIndex && ((keys[matchKey >> 6] >> (matchKey & 63)) & 1L) == 0) {
+                                if (newNumX > xNumLimit) continue;
+
+                                // match
+                                row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-', (int)matchKey));
+                                keys[matchKey >> 6] |= (1L << (matchKey & 63));
+                            }
+
+                            if (numVariants < maxNumberVariants && c == 0){
+                                // deletion
+                                int deletionKey = computeHash(leftIndexOld, rightIndexOld, aminoAcid, length + 1);
+
+                                if (numVariants < maxNumberVariants && ((keys[deletionKey >> 6] >> (deletionKey & 63)) & 1L) == 0){
+                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*', (int)deletionKey));
+                                }
+
+                                // insertion and substitution
+                                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (Integer[] borders : setCharacter) {
+                                    final int errorAminoAcid = borders[0];
+                                    final int errorNewNumX = newNumX + ((errorAminoAcid != 'X') ? 0 : 1);
+                                    final int errorLessValue = less[errorAminoAcid];
+                                    final int errorLeftIndex = errorLessValue + borders[1];
+                                    final int errorRightIndex = errorLessValue + borders[2] - 1;
+
+                                    if (errorNewNumX <= xNumLimit){
+                                        int insertionKey = computeHash(errorLeftIndex, errorRightIndex, '*', length);
+                                        // insertion
+                                        if (((keys[insertionKey >> 6] >> (insertionKey & 63)) & 1L) == 0){
+//System.out.println("i: " + k + " " + j + " | " + errorLeftIndex + " " + errorRightIndex  + " " + (char)errorAminoAcid + " " + insertionKey);
+                                            matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], (int)insertionKey));
+                                        }
+
+                                        // substitution
+                                        if (aminoAcid != errorAminoAcid){
+                                            int substitutionKey = computeHash(errorLeftIndex, errorRightIndex, aminoAcid, length + 1);
+                                            if (((keys[substitutionKey >> 6] >> (substitutionKey & 63)) & 1L) == 0){
+                                                matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1,  (char)errorAminoAcid, (int)substitutionKey));
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             
-                            // insertion
-                            if (Math.abs(combinationMass - newMass) <= massTolerance){
-                                insertList.add(new MatrixContent(leftIndexOld, rightIndexOld, i & 127, cell, newMass, null, combinationLength + 1, pepLen + 1, 0, null, null, i, oldNumEdits + 1, '*', null));
-                            }
-                            else {
-                                matrix.add(new MatrixContent(leftIndexOld, rightIndexOld, i & 127, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, i, oldNumEdits + 1, '*', null));
-                            }
-                        }
-                    }
-                }
-                
-            } else {
-                final String combinationSequence = combination.sequence;
-                final int xNumLimit = combination.xNumLimit;
-                final int numX = cell.numX;
-
-                for (int i = 0; i < combinationSequence.length(); ++i) {
-                    final int aminoAcid = combinationSequence.charAt(i);
-                    final int lessValue = less[aminoAcid];
-                    final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
-                    final int leftIndex = lessValue + range[0];
-                    final int rightIndex = lessValue + range[1] - 1;
-                    final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                    if (leftIndex <= rightIndex && newNumX <= xNumLimit){
-                        
-                        MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1, oldNumEdits, '\0', null);
-                        List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                        insertList.add(newCell);
-                    }
-                    if (oldNumEdits < numberEdits){
-                        // deletion
-                        if (newNumX <= xNumLimit){
-                            MatrixContent newErrorCell = new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1, oldNumEdits + 1, 'd', null);
-                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                            insertList.add(newErrorCell);
-                        }
-                        
-                        // insertion and substitution
-                        ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                        for (Integer[] borders : setCharacter) {
-                            final int errorAminoAcid = borders[0];
-                            final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
-                            final int errorLessValue = less[errorAminoAcid];
-                            final int errorLeftIndex = errorLessValue + borders[1];
-                            final int errorRightIndex = errorLessValue + borders[2] - 1;
-                           
-                            if (errorNewNumX <= xNumLimit){                                
-                                // insertion
-                                MatrixContent newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, errorAminoAcid, cell, 0, null, combinationLength, pepLen + 1, errorNewNumX, null, null, -1, oldNumEdits + 1, 'i', null);
-                                matrix.add(newErrorCell);
-                                
-                                // substitution
-                                if (errorAminoAcid != aminoAcid){
-                                    newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, errorNewNumX, null, null, -1, oldNumEdits + 1,  (char)errorAminoAcid, null);
-                                    List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                                    insertList.add(newErrorCell);
-                                }
-                            }
                         }
                     }
                 }
@@ -1391,14 +1426,14 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
 
     /**
      * Mapping the tag elements to the reference text.
-     *
-     * @param combinations the combinations
-     * @param matrix the matrix
-     * @param matrixFinished the finished matrix
-     * @param less the less array
-     * @param occurrence the wavelet tree
-     * @param massTolerance the mass tolerance
-     * @param frontDirection is the direction forward to the text
+     * 
+     * @param combinations
+     * @param matrix
+     * @param matrixFinished
+     * @param less
+     * @param occurrence
+     * @param massTolerance
+     * @param CTermDirection 
      */
     private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance, boolean CTermDirection) {
 
@@ -1945,7 +1980,17 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
 
     @Override
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+        if (maxNumberVariants == 0){
+            return getProteinMappingWithoutVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+        }
+        else {
+            return getProteinMappingWithVariants(tag, tagMatcher, sequenceMatchingPreferences, massTolerance);
+        }
+    }
+    
 
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMappingWithoutVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
@@ -2028,14 +2073,6 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
         LinkedList<MatrixContent> matrix = new LinkedList<MatrixContent>();
         ArrayList<MatrixContent> matrixFinished = new ArrayList<MatrixContent>();
         ArrayList<MatrixContent> cachePrimary = new ArrayList<MatrixContent>();
-        
-        
-        
-        for (TagElement te : combinationsReversed){
-            if (te.isMass) System.out.println(te.mass);
-            else System.out.println(te.sequence);
-        }
-        
 
         if (cached != null) {
             for (MatrixContent matrixContent : cached) {
@@ -2049,8 +2086,7 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
         if (cached == null) {
             // Map Reverse
             if (!hasCTermDirection) {
-                if (maxNumberVariants == 0) mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance);
-                else mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance, maxNumberVariants);
+                mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance);
             } else {
                 mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance, towardsC);
             }
@@ -2063,46 +2099,16 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
                 int leftIndexFront = 0;
                 int rightIndexFront = indexStringLength - 1;
                 ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-                int errors = 0;
-                String allEdits = "";
 
-//System.out.println();
                 while (currentContent.previousContent != null) {
-//System.out.println(currentContent.length + " " + (char)currentContent.character + " " + currentContent.editOperation);
-                    int aminoAcid = currentContent.character;
-                    int aminoAcidAdd = currentContent.character;
-                    char edit = currentContent.editOperation;
-                    boolean update = true;
-                    
-                    if (edit == 0){
-                        allEdits += "-";
+                    final int aminoAcid = currentContent.character;
+                    if (aminoAcid > 0) {
+                        currentPeptide += (char) currentContent.character;
+                        final int lessValue = lessPrimary[aminoAcid];
+                        final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcid);
+                        leftIndexFront = lessValue + range[0];
+                        rightIndexFront = lessValue + range[1] - 1;
                     }
-                    else if (edit == '*'){ // insertion
-                        allEdits += "*";
-                        errors += 1;
-                        update = false;
-                    }
-                    else if (65 <= edit && edit <= 90){ // substitution
-                        aminoAcid = currentContent.editOperation;
-                        allEdits += currentContent.editOperation;
-                        errors += 1;
-                    }
-                    else { // delition
-                        aminoAcid = currentContent.editOperation - 32;
-                        allEdits += currentContent.editOperation;
-                        errors += 1;
-                    }
-                    if (aminoAcidAdd > 0) {
-                        currentPeptide += (char)aminoAcidAdd;
-                        if (update){
-//System.out.println("update: " + (char)aminoAcid);
-                            final int lessValue = lessPrimary[aminoAcid];
-                            final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcid);
-                            leftIndexFront = lessValue + range[0];
-                            rightIndexFront = lessValue + range[1] - 1;
-                        }
-                    }
-                    
                     if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                         if (currentContent.modificationPos >= 0) {
                             if (modifictationFlags[currentContent.modificationPos]) {
@@ -2115,10 +2121,7 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
                     currentContent = currentContent.previousContent;
                 }
                 String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
-                allEdits = (new StringBuilder(allEdits).reverse()).toString();
-//System.out.println(reversePeptide + " " + leftIndexFront + " " + rightIndexFront);
-//System.out.println(allEdits);
-                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1, errors, '\0', allEdits));
+                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1));
             }
 
             if (lenCombinations > 0) {
@@ -2133,12 +2136,11 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
 
             cacheIt(refTagContent, cachePrimary);
         }
-        
-        if (!matrix.isEmpty()){
-            if (!hasNTermDirection) {
-                if (maxNumberVariants == 0) mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
-                else mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance, maxNumberVariants);
 
+        if (!matrix.isEmpty()) {
+            // Map towards NTerm
+            if (!hasNTermDirection) {
+                mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
             } else {
                 mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance, !towardsC);
             }
@@ -2148,33 +2150,16 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
             MatrixContent currentContent = content;
             String currentPeptide = "";
             ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-            String allEdits = "";
 
-//System.out.println();
             while (currentContent.previousContent != null) {
-//System.out.println(currentContent.length + " " + (char)currentContent.character + " " + currentContent.editOperation);
-                
-                if (currentContent.character > 0) {
-                    switch (currentContent.editOperation){
-                        case '\0':
-                            allEdits += "-";
-                            currentPeptide += (char) currentContent.character;
-                            break;
-                        case 'd':
-                            allEdits += "d";
-                            currentPeptide += (char) currentContent.character;
-                            break;
-                        case 'i':
-                            allEdits += "i";
-                            break;
-                        default:
-                            currentPeptide += (char) currentContent.character;
-                            allEdits += currentContent.editOperation;
-                            break;
-                    }
+                if (currentContent.character != '\0') {
+                    currentPeptide += (char) currentContent.character;
                 }
-                
-                
+
+                /*
+                if (currentContent.modification != null) {
+                    modifications.add(currentContent.modification);
+                }*/
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                     if (currentContent.modificationPos >= 0) {
                         if (modifictationFlags[currentContent.modificationPos]) {
@@ -2200,32 +2185,18 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
             }
 
             String peptide = currentPeptide + currentContent.peptideSequence;
-            allEdits += currentContent.allEdits;
 
             if (turned) {
                 leftIndex = 0;
                 rightIndex = indexStringLength - 1;
 
                 for (int p = 0; p < peptide.length(); ++p) {
-                    boolean update = true;
-                    int aminoAcid = peptide.charAt(p);
-                    int edit = allEdits.charAt(p);
-                    if (edit == '*'){ // deletion
-                        update = false;
-                    }
-                    else if (65 <= edit && edit <= 90){ // substitution
-                        aminoAcid = edit;
-                    }
-                    else if (97 <= edit && edit <= 122) { // insertion
-                        aminoAcid = edit - 32;
-                    }
-                    
-                    if (update){
-                        final int lessValue = lessReversed[aminoAcid];
-                        final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
-                        leftIndex = lessValue + range[0];
-                        rightIndex = lessValue + range[1] - 1;
-                    }
+                    final int aminoAcid = peptide.charAt(p);
+                    final int lessValue = lessReversed[aminoAcid];
+                    final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
+                    leftIndex = lessValue + range[0];
+                    rightIndex = lessValue + range[1] - 1;
+
                 }
 
                 for (ModificationMatch modificationMatch : modifications) {
@@ -2248,6 +2219,279 @@ System.out.println(accession + " " + currentPeptide + " " + (pos - boundaries[in
             }
 
             allMatches.put(new Peptide(peptide, modifications), matches);
+        }
+
+        /*
+        if (tag.getContent().size() == 3){
+            ArrayList<TagComponent> tc = tag.getContent();
+            for (Peptide pep : allMatches.keySet()){
+                for (String acc : allMatches.get(pep).keySet()){
+                    for (int pos : allMatches.get(pep).get(acc)){
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos);
+                    }
+                }
+            }
+        }
+        */
+        return allMatches;
+    }
+
+    
+        
+        
+    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMappingWithVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
+    
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
+        double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
+
+        // copying tags into own data structure
+        int maxSequencePosition = -1;
+        TagElement[] tagElements = new TagElement[tag.getContent().size()];
+        for (int i = 0; i < tag.getContent().size(); ++i) {
+            if (tag.getContent().get(i) instanceof MassGap) {
+                tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), 0);
+            } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
+                tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int) (xLimit * tag.getContent().get(i).asSequence().length()));
+                if (maxSequencePosition == -1 || tagElements[i].sequence.length() < tagElements[i].sequence.length()) {
+                    maxSequencePosition = i;
+                }
+            } else {
+                throw new UnsupportedOperationException("Unsupported tag in tag mapping for FM-Index.");
+            }
+        }
+
+        final boolean turned = (tagElements.length == 3
+                && tagElements[0].isMass
+                && !tagElements[1].isMass
+                && tagElements[2].isMass
+                && tagElements[0].mass < tagElements[2].mass);
+
+        TagElement[] refTagContent = null;
+        int[] lessPrimary = null;
+        int[] lessReversed = null;
+        WaveletTree occurrencePrimary = null;
+        WaveletTree occurrenceReversed = null;
+        boolean hasCTermDirection = hasCTermDirectionPTM;
+        boolean hasNTermDirection = hasNTermDirectionPTM;
+        boolean towardsC = true;
+
+        // turning complete tag content if tag set starts with a smaller mass than it ends
+        if (turned) {
+            refTagContent = new TagElement[tagElements.length];
+            for (int i = tagElements.length - 1, j = 0; i >= 0; --i, ++j) {
+                String sequenceReversed = (new StringBuilder(tagElements[i].sequence).reverse()).toString();
+                refTagContent[j] = new TagElement(tagElements[i].isMass, sequenceReversed, tagElements[i].mass, tagElements[i].xNumLimit);
+            }
+
+            lessReversed = lessTablePrimary;
+            lessPrimary = lessTableReversed;
+            occurrenceReversed = occurrenceTablePrimary;
+            occurrencePrimary = occurrenceTableReversed;
+            hasCTermDirection = hasNTermDirectionPTM;
+            hasNTermDirection = hasCTermDirectionPTM;
+            towardsC = false;
+        } else {
+            refTagContent = tagElements;
+            lessPrimary = lessTablePrimary;
+            lessReversed = lessTableReversed;
+            occurrencePrimary = occurrenceTablePrimary;
+            occurrenceReversed = occurrenceTableReversed;
+        }
+
+        ArrayList<MatrixContent> cached = isCached(refTagContent);
+        if (cached != null && cached.isEmpty()) {
+            return allMatches;
+        }
+
+        TagElement[] tagComponents = new TagElement[maxSequencePosition];
+        for (int i = maxSequencePosition - 1, j = 0; i >= 0; --i, ++j) {
+            String sequenceReversed = (new StringBuilder(refTagContent[i].sequence).reverse()).toString();
+            tagComponents[j] = new TagElement(refTagContent[i].isMass, sequenceReversed, refTagContent[i].mass, refTagContent[i].xNumLimit);
+        }
+
+        TagElement[] tagComponentsReverse = new TagElement[tagElements.length - maxSequencePosition];
+        for (int i = maxSequencePosition, j = 0; i < refTagContent.length; ++i, ++j) {
+            tagComponentsReverse[j] = refTagContent[i];
+        }
+
+        TagElement[] combinations = createPeptideCombinations(tagComponents, sequenceMatchingPreferences);
+        TagElement[] combinationsReversed = createPeptideCombinations(tagComponentsReverse, sequenceMatchingPreferences);
+
+        LinkedList<MatrixContent>[][] matrixReversed = (LinkedList<MatrixContent>[][]) new LinkedList[maxNumberVariants + 1][combinationsReversed.length + 1];
+        LinkedList<MatrixContent>[][] matrix = (LinkedList<MatrixContent>[][]) new LinkedList[maxNumberVariants + 1][combinations.length + 1];
+        ArrayList<MatrixContent> cachePrimary = new ArrayList<MatrixContent>();
+        
+        // filling both matrices
+        for (int k = 0; k <= maxNumberVariants; ++k){
+            for (int j = 0; j <= combinationsReversed.length; ++j) matrixReversed[k][j] = new LinkedList<MatrixContent>();
+            for (int j = 0; j <= combinations.length; ++j) matrix[k][j] = new LinkedList<MatrixContent>();
+        }
+        
+    
+        if (cached != null) {
+            for (MatrixContent matrixContent : cached) {
+                matrix[0][0].add(matrixContent);
+            }
+        } else {
+            // left index, right index, current character, previous matrix content, mass, peptideSequence, peptide length, number of X
+            matrixReversed[0][0].add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0, null, 0, 1, 0, null, null, -1));
+        }
+
+        if (cached == null) {
+            // Map Reverse
+            mappingSequenceAndMassesWithVariants(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, massTolerance);
+            
+            // Traceback Reverse
+            for (int k = 0; k <= maxNumberVariants; ++k){
+                for (MatrixContent content : matrixReversed[k][combinationsReversed.length]) {
+                    MatrixContent currentContent = content;
+                    String currentPeptide = "";
+                    int leftIndexFront = 0;
+                    int rightIndexFront = indexStringLength - 1;
+                    ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+                    int errors = 0;
+                    String allEdits = "";
+
+                    while (currentContent.previousContent != null) {
+                        int aminoAcidPep = currentContent.character;
+                        int aminoAcidProt = currentContent.character;
+                        int edit = currentContent.editOperation;
+                        errors += (edit == '-') ? 0 : 1;
+                        boolean update = true;
+                        
+                        if (edit != '-'){
+                            if (edit == '*') update = false; // deletion
+                            else if ('A' <= edit && edit <= 'Z') aminoAcidProt = edit; // substitution
+                            else if ('a' <= edit && edit <= 'z') aminoAcidProt = edit - 32; // insertion
+                        }
+                        
+                        if (aminoAcidPep > 0) {
+                            currentPeptide += (char)aminoAcidPep;
+                            allEdits += (char)edit;
+                            if (update){
+                                final int lessValue = lessPrimary[aminoAcidProt];
+                                final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcidProt);
+                                leftIndexFront = lessValue + range[0];
+                                rightIndexFront = lessValue + range[1] - 1;
+                            }
+                        }
+
+                        if (currentContent.modification != null || currentContent.modificationPos >= 0) {
+                            if (currentContent.modificationPos >= 0) {
+                                if (modifictationFlags[currentContent.modificationPos]) {
+                                    modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
+                                }
+                            } else {
+                                modifications.add(currentContent.modification);
+                            }
+                        }
+                        currentContent = currentContent.previousContent;
+                    }
+                    
+    
+System.out.println(currentPeptide + " | " + allEdits);
+                    String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
+                    allEdits = (new StringBuilder(allEdits).reverse()).toString();
+                    cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1, errors, '\0', allEdits));
+
+                }
+            }
+
+            for (MatrixContent matrixContent : cachePrimary) {
+                matrix[0][0].add(matrixContent);
+            }
+            cacheIt(refTagContent, cachePrimary);
+        }
+        
+        if (!matrix[0][0].isEmpty()){
+            mappingSequenceAndMassesWithVariants(combinations, matrix, lessPrimary, occurrencePrimary, massTolerance);
+        }
+        // Traceback from NTerm
+        for (int k = 0; k <= maxNumberVariants; ++k){
+            for (MatrixContent content : matrix[k][combinations.length]) {
+                MatrixContent currentContent = content;
+                String currentPeptide = "";
+                ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
+                String allEdits = "";
+
+                while (currentContent.previousContent != null) {
+                    if (currentContent.character > 0) {
+                        currentPeptide += (char)currentContent.character;
+                        allEdits += (char)currentContent.editOperation;
+                    }
+
+
+                    if (currentContent.modification != null || currentContent.modificationPos >= 0) {
+                        if (currentContent.modificationPos >= 0) {
+                            if (modifictationFlags[currentContent.modificationPos]) {
+                                modifications.add(new ModificationMatch(modifictationLabels[currentContent.modificationPos], currentContent.modificationPos >= 128, currentContent.length - 1));
+                            }
+                        } else {
+                            modifications.add(currentContent.modification);
+                        }
+                    }
+
+                    currentContent = currentContent.previousContent;
+                }
+                for (ModificationMatch modificationMatch : modifications) {
+                    modificationMatch.setModificationSite(currentContent.peptideSequence.length() + currentPeptide.length() - modificationMatch.getModificationSite() + 1);
+                }
+
+                int leftIndex = content.left;
+                int rightIndex = content.right;
+
+                for (ModificationMatch modificationMatch : currentContent.modifications) {
+                    modificationMatch.setModificationSite(modificationMatch.getModificationSite() + currentPeptide.length());
+                    modifications.add(modificationMatch);
+                }
+
+                String peptide = currentPeptide + currentContent.peptideSequence;
+                allEdits += currentContent.allEdits;
+System.out.println(peptide + " | " + allEdits);
+
+                if (turned) {
+                    leftIndex = 0;
+                    rightIndex = indexStringLength - 1;
+
+                    for (int p = 0; p < peptide.length(); ++p) {
+                        boolean update = true;
+                        int aminoAcid = peptide.charAt(p);
+                        int edit = allEdits.charAt(p);
+                        if (edit != '-'){
+                            if (edit == '*')update = false;
+                            else if ('A' <= edit && edit <= 'Z') aminoAcid = edit; // substitution
+                            else if (97 <= edit && edit <= 122) aminoAcid = edit - 32; // insertion
+                        }
+                        
+                        if (update){
+                            final int lessValue = lessReversed[aminoAcid];
+                            final int[] range = occurrenceReversed.singleRangeQuery(leftIndex - 1, rightIndex, aminoAcid);
+                            leftIndex = lessValue + range[0];
+                            rightIndex = lessValue + range[1] - 1;
+                        }
+                    }
+
+                    for (ModificationMatch modificationMatch : modifications) {
+                        modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
+                    }
+
+                    peptide = (new StringBuilder(peptide).reverse()).toString();
+                }
+
+                HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
+                for (int j = leftIndex; j <= rightIndex; ++j) {
+                    int pos = getTextPosition(j);
+                    int index = binarySearch(boundaries, pos);
+                    String accession = accessions[index];
+
+                    if (!matches.containsKey(accession)) {
+                        matches.put(accession, new ArrayList<Integer>());
+                    }
+                    matches.get(accession).add(pos - boundaries[index]);
+                }
+
+                allMatches.put(new Peptide(peptide, modifications), matches);
+            }
         }
 
         if (tag.getContent().size() == 3){

@@ -271,5 +271,4 @@ public class SequenceMatchingPreferences implements Serializable {
 
         return output.toString();
     }
-
 }

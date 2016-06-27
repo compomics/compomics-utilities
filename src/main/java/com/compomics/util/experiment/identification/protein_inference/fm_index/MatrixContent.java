@@ -72,7 +72,6 @@ public class MatrixContent {
      */
     public String allEdits;
     
-    public int hash;
 
     /**
      * Constructor.
@@ -108,7 +107,6 @@ public class MatrixContent {
         this.numEdits = 0;
         this.editOperation = '\0';
         this.allEdits = null;
-        this.hash = 0;
     }
 
     /**
@@ -147,7 +145,6 @@ public class MatrixContent {
         this.numEdits = numEdits;
         this.editOperation = editOperation;
         this.allEdits = allEdits;
-        this.hash = 0;
     }
 
     /**
@@ -171,7 +168,6 @@ public class MatrixContent {
         this.numEdits = foreign.numEdits;
         this.editOperation = foreign.editOperation;
         this.allEdits = foreign.allEdits;
-        this.hash = foreign.hash;
     }
 
     /**
@@ -199,7 +195,6 @@ public class MatrixContent {
         this.numEdits = 0;
         this.editOperation = '\0';
         this.allEdits = null;
-        this.hash = 0;
     }
 
     /**
@@ -214,7 +209,7 @@ public class MatrixContent {
      * @param numEdits number of edit operations
      * @param editOperation type of edit operation 
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int length, int numEdits, char editOperation, int hash) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int length, int numEdits, char editOperation) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -230,6 +225,5 @@ public class MatrixContent {
         this.numEdits = numEdits;
         this.editOperation = editOperation;
         this.allEdits = null;
-        this.hash = hash;
     }
 }

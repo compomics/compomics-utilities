@@ -137,8 +137,8 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITESTCKTESTKMELTSESTES with no modifications
-        aminoAcidPattern = new AminoAcidSequence("PEST");
-        nTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass();
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.T.getMonoisotopicMass() + 0 * AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         ptmSettings = new PtmSettings();
@@ -146,7 +146,7 @@ public class FMIndexTest extends TestCase {
         proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
-        Assert.assertTrue(outputProtein.getSequence().compareTo("TMRIPESTCK") == 0);
+        Assert.assertTrue(outputProtein.getSequence().compareTo("TRITESTCK") == 0);
         
         
         /*

@@ -115,7 +115,8 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, 
+            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide) {
         return getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, null);
     }
 
@@ -134,7 +135,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) {
+    public synchronized ArrayList<IonMatch> getSpectrumAnnotation(AnnotationSettings annotationSettings, 
+            SpecificAnnotationSettings specificAnnotationSettings, MSnSpectrum spectrum, Peptide peptide, 
+            HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> possiblePeptideFragments) {
 
         ArrayList<IonMatch> result = new ArrayList<IonMatch>();
 
@@ -162,7 +165,7 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                     if (ions != null) {
                         for (Ion ion : ions) {
 
-                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
+                            if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) { // @TODO: neutral losses from the same PTM should only be included once?
 
                                 ArrayList<Integer> ionPossibleCharges;
 

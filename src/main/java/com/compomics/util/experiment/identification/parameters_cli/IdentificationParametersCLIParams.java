@@ -294,8 +294,9 @@ public enum IdentificationParametersCLIParams {
     // Sequence matching
     //////////////////////////////////
     SEQUENCE_INDEX_TYPE("sequence_index_type", "The protein database index type. (" + PeptideMapperType.getCommandLineOptions() + ", default is " + PeptideMapperType.fm_index + ")", false, true),
-    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids + ")", false, true),
-    SEQUENCE_MATCHING_X("sequence_matching_x", "The maximal share of Xs in a sequence, 0.25 means 25% of Xs, default is 0.25.", false, true),
+    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() 
+            + ", default is " + SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids + ")", false, true),
+    SEQUENCE_MATCHING_X("sequence_matching_x", "The maximum share of X's in a sequence, 0.25 means 25% of X's, default is 0.25.", false, true),
     //////////////////////////////////
     // Import filters
     //////////////////////////////////
@@ -312,7 +313,8 @@ public enum IdentificationParametersCLIParams {
     PTM_SCORE("ptm_score", "The PTM probabilistic score to use for PTM localization (" + PtmScore.getCommandLineOptions() + ", default is '1').", false, true),
     PTM_THRESHOLD("ptm_threshold", "The threshold to use for the PTM scores. Automatic mode will be used if not set. Default is automatic threshold.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
-    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() + ", default is " + SequenceMatchingPreferences.MatchingType.aminoAcid + ")", false, true),
+    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The PTM to peptide sequence matching type. (" + SequenceMatchingPreferences.MatchingType.getCommandLineOptions() 
+            + ", default is " + SequenceMatchingPreferences.MatchingType.aminoAcid + ")", false, true),
     PTM_ALIGNMENT("ptm_alignment", "Align peptide ambiguously localized PTMs on confident sites (1: true, 0: false, default is '1').", false, true),
     //////////////////////////////////
     // Protein inference parameters

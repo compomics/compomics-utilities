@@ -28,6 +28,10 @@ public class PrecursorIon extends Ion {
      * The CV term of the reporter ion, null if not set.
      */
     private CvTerm cvTerm = null;
+    /**
+     * The PSI MS CV term of the reporter ion, null if not set.
+     */
+    private CvTerm psiCvTerm = null;
 
     /**
      * Constructor.
@@ -90,16 +94,17 @@ public class PrecursorIon extends Ion {
             cvTerm = new CvTerm("PSI-MS", "MS:1001521", "frag: precursor ion - H2O", "0");
         } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
             cvTerm = new CvTerm("PSI-MS", "MS:1001522", "frag: precursor ion - NH3", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-            cvTerm = new CvTerm("PSI-MS", "MS:1002692", "frag: precursor ion - H3PO4", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-            cvTerm = new CvTerm("PSI-MS", "MS:1002693", "frag: precursor ion - HPO3", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-            cvTerm = new CvTerm("PSI-MS", "MS:1002694", "frag: precursor ion - CH4OS", "0");
-        } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-            cvTerm = new CvTerm("PSI-MS", "MS:1002695", "frag: precursor ion - C3H9N", "0");
         }
         
+        return cvTerm;
+    }
+    
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+        if (psiCvTerm != null) {
+            return psiCvTerm;
+        }
+        psiCvTerm = new CvTerm("PSI-MS", "MS:1001523", "frag: precursor ion", null);
         return cvTerm;
     }
 
@@ -126,6 +131,9 @@ public class PrecursorIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
+        if (neutralLosses == null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(0);
+        }
         return neutralLosses;
     }
 

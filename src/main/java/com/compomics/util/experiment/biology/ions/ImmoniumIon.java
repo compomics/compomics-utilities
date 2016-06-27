@@ -110,6 +110,10 @@ public class ImmoniumIon extends Ion {
      * The CV term of the reporter ion, null if not set.
      */
     private CvTerm cvTerm = null;
+    /**
+     * The PSI MS CV term of the reporter ion, null if not set.
+     */
+    private CvTerm psiCvTerm = null;
 
     /**
      * Constructor for an immonium ion.
@@ -255,11 +259,11 @@ public class ImmoniumIon extends Ion {
         //        and also has implications for the mzid export as all immonium ions will 
         //        get the same cv term and this end up being group togeher when iterating 
         //        the terms in the writeSpectrumIdentificationResult method
-        
+
         if (cvTerm != null) {
             return cvTerm;
         }
-        
+
         switch (subType) {
             case ALANINE:
                 cvTerm = new CvTerm("PRIDE", "PRIDE:0000240", "immonium A", "0");
@@ -322,8 +326,17 @@ public class ImmoniumIon extends Ion {
                 cvTerm = new CvTerm("PRIDE", "PRIDE:0000259", "immonium Y", "0");
                 break;
         }
-        
+
         return cvTerm;
+    }
+
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+        if (psiCvTerm != null) {
+            return psiCvTerm;
+        }
+        psiCvTerm = new CvTerm("PSI-MS", "MS:1001239", "frag: immonium ion", null);
+        return psiCvTerm;
     }
 
     @Override
@@ -368,7 +381,7 @@ public class ImmoniumIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        return new ArrayList<NeutralLoss>();
+        return new ArrayList<NeutralLoss>(0);
     }
 
     @Override

@@ -181,7 +181,7 @@ public class AtomChain implements Serializable {
      * Estimates the mass of the atom chain.
      */
     private synchronized void estimateMass() {
-        
+
         if (mass == null) {
             Double tempMass = 0.0;
             for (AtomImpl atom : atomChain) {
@@ -268,34 +268,83 @@ public class AtomChain implements Serializable {
     public String toString() {
 
         HashMap<String, Integer> composition = new HashMap<String, Integer>();
+
         for (AtomImpl atom : atomChain) {
-            String name = atom.toString();
-            Integer occurrence = composition.get(name);
+            String atomName = atom.toString();
+            Integer occurrence = composition.get(atomName);
             if (occurrence == null) {
                 occurrence = 0;
             }
-            composition.put(name, occurrence + 1);
+            composition.put(atomName, occurrence + 1);
         }
 
-        ArrayList<String> names = new ArrayList<String>(composition.keySet());
-        Collections.sort(names);
-        StringBuilder result = new StringBuilder(names.size());
-        for (String name : names) {
-            if (result.length() > 0) {
-                result.append(" ");
+        ArrayList<String> atomNames = new ArrayList<String>(composition.keySet());
+        Collections.sort(atomNames);
+
+        StringBuilder compositionAsString = new StringBuilder(atomNames.size());
+
+        for (String atomName : atomNames) {
+            if (compositionAsString.length() > 0) {
+                compositionAsString.append(" ");
             }
-            result.append(name);
-            Integer occurrence = composition.get(name);
+            compositionAsString.append(atomName);
+            Integer occurrence = composition.get(atomName);
             if (addition) {
                 if (occurrence > 1) {
-                    result.append("(").append(occurrence).append(")");
+                    compositionAsString.append("(").append(occurrence).append(")");
                 }
             } else {
-                result.append("(").append("-").append(occurrence).append(")");
+                compositionAsString.append("(").append("-").append(occurrence).append(")");
             }
         }
 
-        return result.toString();
+        return compositionAsString.toString();
+    }
+
+    /**
+     * Returns the atom chain in Hill notation. Null if the atom chain cannot be
+     * written in Hill notation.
+     *
+     * @return the atom chain in Hill notation.
+     */
+    public String toHillNotation() {
+        
+        if (!addition) {
+            return null; // @TODO: anything to be done here?
+        }
+        
+        HashMap<String, Integer> composition = new HashMap<String, Integer>();
+
+        for (AtomImpl atom : atomChain) {
+            
+            if (atom.getIsotope() != 0) { // @TODO: support isotopes?
+                return null;
+            }
+            
+            String atomName = atom.toString();
+            Integer occurrence = composition.get(atomName);
+            if (occurrence == null) {
+                occurrence = 0;
+            }
+            composition.put(atomName, occurrence + 1);
+        }
+        
+        ArrayList<String> atomNames = new ArrayList<String>(composition.keySet());
+        Collections.sort(atomNames); // @TODO: note that this is only correct Hill notation as long as not atoms sort earlier than C...
+
+        StringBuilder compositionAsString = new StringBuilder(atomNames.size());
+
+        for (String atomName : atomNames) {
+            compositionAsString.append(atomName);
+            Integer occurrence = composition.get(atomName);
+            if (addition) {
+                if (occurrence > 1) {
+                    compositionAsString.append(occurrence);
+                }
+            }
+        }
+
+        return compositionAsString.toString();
     }
 
     @Override

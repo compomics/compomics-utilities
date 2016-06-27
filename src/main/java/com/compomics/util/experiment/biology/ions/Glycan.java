@@ -92,6 +92,11 @@ public class Glycan extends Ion {
     public CvTerm getPrideCvTerm() {
         return null;
     }
+    
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+        return null;
+    }
 
     @Override
     public int getSubType() {

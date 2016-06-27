@@ -366,8 +366,6 @@ public class ReporterIon extends Ion {
             return cvTerm;
         }
 
-        String name = getName();
-
         if (name.contains("TMT")) {
 
             if (name.equalsIgnoreCase("TMT_126")) {
@@ -441,6 +439,11 @@ public class ReporterIon extends Ion {
         }
 
         return cvTerm;
+    }
+    
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+        return getPrideCvTerm();
     }
 
     /**
@@ -527,7 +530,7 @@ public class ReporterIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        return new ArrayList<NeutralLoss>();
+        return new ArrayList<NeutralLoss>(0);
     }
 
     @Override

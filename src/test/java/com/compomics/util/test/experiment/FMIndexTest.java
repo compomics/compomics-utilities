@@ -113,7 +113,6 @@ public class FMIndexTest extends TestCase {
      * occurred while interacting with the tree database
      */
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-        /*
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
 
@@ -549,11 +548,10 @@ public class FMIndexTest extends TestCase {
         
         
         
-        
-        // TESTMRITESTCKTESTK with one variable modifications at protein c-terminus
-        aminoAcidPattern = new AminoAcidSequence("CKTE");
-        nTermGap = AminoAcid.T.getMonoisotopicMass();
-        cTermGap = -0.98 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        // TESTMRITESTCKTESTKMELTSESTE with one variable modifications at protein c-terminus
+        aminoAcidPattern = new AminoAcidSequence("LTSE");
+        nTermGap = AminoAcid.E.getMonoisotopicMass();
+        cTermGap = -0.98 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         ptmSettings = new PtmSettings();
         ptmSettings.addFixedModification(ptmFactory.getPTM("Amidation of the protein C-term"));
@@ -562,47 +560,50 @@ public class FMIndexTest extends TestCase {
         proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
-        Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
+        Assert.assertTrue(outputProtein.getSequence().compareTo("ELTSESTE") == 0);
         Assert.assertTrue(outputProtein.getModificationMatches().size() == 1);
         Assert.assertTrue(outputProtein.getModificationMatches().get(0).getModificationSite() == 8);
         
         
-        
-        // TESTMRITESTCKTESTK with several modifictations
-        aminoAcidPattern = new AminoAcidSequence("KTES");
-        nTermGap = 203.07 + 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
-        cTermGap = -0.98 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        // TESTMRITESTCKTESTKMELTSESTE with several modifictations
+        aminoAcidPattern = new AminoAcidSequence("LTSE");
+        nTermGap = 15.99 + AminoAcid.M.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = -0.98 + 203.07 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         ptmSettings = new PtmSettings();
         ptmSettings.addFixedModification(ptmFactory.getPTM("Amidation of the protein C-term"));
-        ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Oxidation of M"));
         ptmSettings.addVariableModification(ptmFactory.getPTM("HexNAc of T"));
         fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, PeptideVariantsPreferences.getNoVariantPreferences());
         
         proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
-        Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
+        Assert.assertTrue(outputProtein.getSequence().compareTo("MELTSESTE") == 0);
         Assert.assertTrue(outputProtein.getModificationMatches().size() == 3);
         
         
-        // TESTMRITESTCKTESTK with several modifictations
-        aminoAcidPattern = new AminoAcidSequence("KTES");
-        nTermGap = 203.07 + 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
-        cTermGap = -0.98 + 203.07 + AminoAcid.T.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        
+        
+        
+        
+        // TESTMRITESTCKTESTKMELTSESTE with several modifictations
+        aminoAcidPattern = new AminoAcidSequence("ELTS");
+        nTermGap = 15.99 + AminoAcid.M.getMonoisotopicMass() + 42.01 + AminoAcid.K.getMonoisotopicMass();
+        cTermGap = -0.98 + 203.07 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + 2 * AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
         ptmSettings = new PtmSettings();
         ptmSettings.addFixedModification(ptmFactory.getPTM("Amidation of the protein C-term"));
-        ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Oxidation of M"));
         ptmSettings.addVariableModification(ptmFactory.getPTM("HexNAc of T"));
+        ptmSettings.addVariableModification(ptmFactory.getPTM("Acetylation of K"));
         fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, PeptideVariantsPreferences.getNoVariantPreferences());
         
         proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
         Assert.assertTrue(!proteinMapping.isEmpty());
         outputProtein = proteinMapping.keySet().iterator().next();
-        Assert.assertTrue(outputProtein.getSequence().compareTo("TCKTESTK") == 0);
+        Assert.assertTrue(outputProtein.getSequence().compareTo("KMELTSESTE") == 0);
         Assert.assertTrue(outputProtein.getModificationMatches().size() == 4);
-        */
     }
     
     
@@ -624,6 +625,7 @@ public class FMIndexTest extends TestCase {
      * occurred while interacting with the tree database
      */
     public void testTagToProteinMappingWithVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    /*
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
 
@@ -975,6 +977,6 @@ public class FMIndexTest extends TestCase {
             if (outputProtein.getSequence().compareTo("STMRITESTACKTES") == 0) isPresent = true;
         }
         Assert.assertTrue(isPresent);
+    */
     }
-
 }

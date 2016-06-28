@@ -165,7 +165,7 @@ public class FMIndex implements PeptideMapper {
     /**
      * number of allowed edit operations
      */
-    int maxNumberVariants = 1;
+    int maxNumberVariants = 0;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -1583,7 +1583,6 @@ public class FMIndex implements PeptideMapper {
                             }
 
                         } else if (pepLen > 1) {
-
                             int lastAcid = cell.character;
                             double massDiff = combinationMass - oldMass;
                             ModificationMatch modificationMatchEnd = null;
@@ -2130,10 +2129,6 @@ public class FMIndex implements PeptideMapper {
                     currentPeptide += (char) currentContent.character;
                 }
 
-                /*
-                if (currentContent.modification != null) {
-                    modifications.add(currentContent.modification);
-                }*/
                 if (currentContent.modification != null || currentContent.modificationPos >= 0) {
                     if (currentContent.modificationPos >= 0) {
                         if (modifictationFlags[currentContent.modificationPos]) {
@@ -2195,7 +2190,7 @@ public class FMIndex implements PeptideMapper {
             allMatches.put(new Peptide(peptide, modifications), matches);
         }
 
-        /*
+        
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
             for (Peptide pep : allMatches.keySet()){
@@ -2206,7 +2201,7 @@ public class FMIndex implements PeptideMapper {
                 }
             }
         }
-        */
+        
         return allMatches;
     }
 

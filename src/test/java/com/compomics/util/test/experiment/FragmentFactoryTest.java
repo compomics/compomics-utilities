@@ -20,7 +20,7 @@ import java.util.HashMap;
  * This class compares the results of peptide fragment mass prediction with
  * results from protein prospector.
  *
- * @author Marc
+ * @author Marc Vaudel
  */
 public class FragmentFactoryTest extends TestCase {
 
@@ -34,7 +34,7 @@ public class FragmentFactoryTest extends TestCase {
     private double tolerance = 0.01;
 
     /**
-     * Tests the in sillico fragmentation of a peptide.
+     * Tests the in silico fragmentation of a peptide.
      */
     public void testPeptideFragmentation() {
 
@@ -370,7 +370,7 @@ public class FragmentFactoryTest extends TestCase {
     }
 
     /**
-     * Tests the in sillico fragmentation of a tag.
+     * Tests the in silico fragmentation of a tag.
      */
     public void testTagFragmentation() {
 

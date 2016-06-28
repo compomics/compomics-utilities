@@ -463,7 +463,7 @@ public class IonFactory {
      * /!\ this method will work only if the PTMs found in the tag are in the
      * PTMFactory.
      *
-     * @param tag The considered tag
+     * @param tag the considered tag
      * @return the expected fragment ions
      */
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag) {

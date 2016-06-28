@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.EnzymeFactory;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.identification.identification_parameters.SearchParameters;
@@ -37,6 +36,7 @@ import com.compomics.util.preferences.IdentificationParameters;
 import com.compomics.util.preferences.PTMScoringPreferences;
 import com.compomics.util.preferences.ProteinInferencePreferences;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
+import com.compomics.util.preferences.SequenceMatchingPreferences.MatchingType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -546,8 +546,7 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_RESULTS.id);
-            Double option = new Double(arg);
-            xtandemParameters.setMaxEValue(option);
+            xtandemParameters.setOutputResults(arg);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
@@ -2007,13 +2006,13 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MIN_ISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MIN_ISOTOPE.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.MIN_ISOTOPE.id, arg, false)) {
+            if (!isPositiveInteger(IdentificationParametersCLIParams.MIN_ISOTOPE.id, arg, true)) {
                 return false;
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MAX_ISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MAX_ISOTOPE.id);
-            if (!isPositiveInteger(IdentificationParametersCLIParams.MAX_ISOTOPE.id, arg, false)) {
+            if (!isPositiveInteger(IdentificationParametersCLIParams.MAX_ISOTOPE.id, arg, true)) {
                 return false;
             }
         }
@@ -2234,7 +2233,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id);
-            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id, arg, false)) {
+            if (!isPositiveDouble(IdentificationParametersCLIParams.OMSSA_ITERATIVE_REPLACE_EVALUE.id, arg, true)) {
                 return false;
             }
         }
@@ -3696,10 +3695,9 @@ public class IdentificationParametersInputBean {
      * @return true of the input is in the list
      */
     public static boolean isSequenceMatchingType(String argType, String arg) {
-
-        List<String> supportedInput = new ArrayList<String>(IdentificationMatch.MatchType.values().length);
-        for (IdentificationMatch.MatchType matchType : IdentificationMatch.MatchType.values()) {
-            supportedInput.add(matchType.toString());
+        List<String> supportedInput = new ArrayList<String>(MatchingType.values().length);
+        for (MatchingType tempMatchType : MatchingType.values()) {
+            supportedInput.add("" + tempMatchType.index);
         }
         return isInList(argType, arg, supportedInput);
     }

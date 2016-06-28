@@ -100,13 +100,22 @@ public abstract class Ion extends ExperimentObject {
     public abstract String getName();
 
     /**
-     * Returns the CV term adapted to the fragment ion. null if none
+     * Returns the CV term adapted to the fragment ion. Null if none
      * corresponding.
      *
-     * @return the CV term adapted to the fragment ion. null if none
+     * @return the CV term adapted to the fragment ion. Null if none
      * corresponding
      */
     public abstract CvTerm getPrideCvTerm();
+    
+    /**
+     * Returns the CV term adapted to the fragment ion. Null if none
+     * corresponding.
+     *
+     * @return the CV term adapted to the fragment ion. Null if none
+     * corresponding
+     */
+    public abstract CvTerm getPsiMsCvTerm();
 
     /**
      * Returns the ion subtype.

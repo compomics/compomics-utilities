@@ -61,6 +61,10 @@ public class TagFragmentIon extends Ion {
      * The CV term of the reporter ion, null if not set.
      */
     private CvTerm cvTerm = null;
+    /**
+     * The PSI MS CV term of the reporter ion, null if not set.
+     */
+    private CvTerm psiCvTerm = null;
 
     /**
      * Constructor.
@@ -133,6 +137,9 @@ public class TagFragmentIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
+        if (neutralLosses == null) {
+            this.neutralLosses = new ArrayList<NeutralLoss>(0);
+        }
         return neutralLosses;
     }
 
@@ -165,11 +172,11 @@ public class TagFragmentIon extends Ion {
 
     @Override
     public CvTerm getPrideCvTerm() {
-        
+
         if (cvTerm != null) {
             return cvTerm;
         }
-        
+
         switch (subType) {
             case A_ION:
                 if (neutralLosses == null || neutralLosses.isEmpty()) {
@@ -178,14 +185,6 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001234", "frag: a ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001235", "frag: a ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002668", "frag: a ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002669", "frag: a ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: a ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: a ion - C3H9N", null);
                 }
                 break;
             case B_ION:
@@ -195,14 +194,6 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001232", "frag: b ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002672", "frag: b ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002673", "frag: b ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002674", "frag: b ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002675", "frag: b ion - C3H9N", null);
                 }
                 break;
             case C_ION:
@@ -212,14 +203,6 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001515", "frag: c ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001516", "frag: c ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002676", "frag: c ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002677", "frag: c ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002678", "frag: c ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002679", "frag: c ion - C3H9N", null);
                 }
                 break;
             case X_ION:
@@ -229,14 +212,6 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001519", "frag: x ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001520", "frag: x ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002680", "frag: x ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002681", "frag: x ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002682", "frag: x ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002683", "frag: x ion - C3H9N", null);
                 }
                 break;
             case Y_ION:
@@ -246,14 +221,6 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001223", "frag: y ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001233", "frag: y ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002684", "frag: y ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002685", "frag: y ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002686", "frag: y ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002687", "frag: y ion - C3H9N", null);
                 }
                 break;
             case Z_ION:
@@ -263,19 +230,42 @@ public class TagFragmentIon extends Ion {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001517", "frag: z ion - H2O", null);
                 } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.NH3)) {
                     cvTerm = new CvTerm("PSI-MS", "MS:1001518", "frag: z ion - NH3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.H3PO4)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002688", "frag: z ion - H3PO4", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.HPO3)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002689", "frag: z ion - HPO3", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.CH4OS)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002690", "frag: z ion - CH4OS", null);
-                } else if (neutralLosses.size() == 1 && neutralLosses.get(0).isSameAs(NeutralLoss.C3H9N)) {
-                    cvTerm = new CvTerm("PSI-MS", "MS:1002691", "frag: z ion - C3H9N", null);
                 }
                 break;
         }
-        
+
         return cvTerm;
+    }
+
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+
+        if (psiCvTerm != null) {
+            return psiCvTerm;
+        }
+
+        switch (subType) {
+            case A_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", null);
+                break;
+            case B_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", null);
+                break;
+            case C_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", null);
+                break;
+            case X_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", null);
+                break;
+            case Y_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", null);
+                break;
+            case Z_ION:
+                psiCvTerm = new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", null);
+                break;
+        }
+
+        return psiCvTerm;
     }
 
     @Override

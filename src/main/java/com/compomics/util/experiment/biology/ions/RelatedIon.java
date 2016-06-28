@@ -178,6 +178,13 @@ public class RelatedIon extends Ion {
         // return new CvTerm("PSI-MS", "MS:100????", "frag: related ion", null);
         return null;
     }
+    
+    @Override
+    public CvTerm getPsiMsCvTerm() {
+        // @TODO: implement when the required cv terms are available
+        // return new CvTerm("PSI-MS", "MS:100????", "frag: related ion", null);
+        return null;
+    }
 
     /**
      * Compares the current related ion with another one based on their
@@ -215,7 +222,7 @@ public class RelatedIon extends Ion {
 
     @Override
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        return new ArrayList<NeutralLoss>();
+        return new ArrayList<NeutralLoss>(0);
     }
 
     @Override

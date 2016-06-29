@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.AminoAcidSequence;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
@@ -36,6 +37,12 @@ import org.xmlpull.v1.XmlPullParserException;
  * @author dominik.kopczynski
  */
 public class FMIndexTest extends TestCase {
+    
+    
+    boolean testSequenceMatching = false;
+    boolean testTagMatching = false;
+    boolean testVariantMatching = false;
+    boolean testVariantPTMMatching = false;
 
     /**
      * Tests the import and the mapping of a few peptide sequences.
@@ -51,6 +58,7 @@ public class FMIndexTest extends TestCase {
      * occurred while interacting with the tree database
      */
     public void testPeptideToProteinMapping() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+        if (!testSequenceMatching) return;
         
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
@@ -113,6 +121,8 @@ public class FMIndexTest extends TestCase {
      * occurred while interacting with the tree database
      */
     public void testTagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        if (!testTagMatching) return;
+        
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
 
@@ -626,7 +636,8 @@ public class FMIndexTest extends TestCase {
      * occurred while interacting with the tree database
      */
     public void testTagToProteinMappingWithVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
-    
+        if (!testVariantMatching) return;
+        
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         
@@ -1002,10 +1013,12 @@ public class FMIndexTest extends TestCase {
      */
     
     public void testTagToProteinMappingWithPTMsAndVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        if (!testVariantPTMMatching) return;
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
 
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.singleBaseSubstitution);
         peptideVariantsPreferences.setnAaSubstitutions(1);
         
         PTMFactory ptmFactory = PTMFactory.getInstance();
@@ -1170,5 +1183,32 @@ public class FMIndexTest extends TestCase {
         }
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 6);
+    }
+    
+    
+    public void testExperiment() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
+        sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
+        sequenceMatchingPreferences.setLimitX(0.25);
+        
+        PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
+        peptideVariantsPreferences.setnAaSubstitutions(2);
+
+        PTMFactory ptmFactory = PTMFactory.getInstance();
+        ptmFactory.clearFactory();
+        ptmFactory = PTMFactory.getInstance();
+        
+        PtmSettings ptmSettings = new PtmSettings();
+        ptmSettings.addFixedModification(ptmFactory.getPTM("Carbamidomethylation of C"));
+        
+
+        WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
+        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
+        File sequences = new File("/scratch/U507_human_TD_2015_07_22.fasta");
+        SequenceFactory sequenceFactory = SequenceFactory.getInstance();
+        sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
+        
+        FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesX = fmIndex.getProteinMapping("EDNEGVYNGSWGGR", sequenceMatchingPreferences);
     }
 }

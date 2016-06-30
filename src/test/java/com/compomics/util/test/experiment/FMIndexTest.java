@@ -1187,13 +1187,23 @@ public class FMIndexTest extends TestCase {
     
     
     public void testExperiment() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+        //if (true) return;
+        AminoAcidSequence aminoAcidPattern;
+        double nTermGap;
+        double cTermGap;
+        Tag tag;
+        FMIndex fmIndex;
+        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping;
+        Peptide outputProtein;
+        boolean isPresent = false;
+        Iterator<Peptide> it;
+        int numPTMs = 0;
+        
         SequenceMatchingPreferences sequenceMatchingPreferences = new SequenceMatchingPreferences();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingPreferences.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
-        
         PeptideVariantsPreferences peptideVariantsPreferences = new PeptideVariantsPreferences();
         peptideVariantsPreferences.setnAaSubstitutions(2);
-
         PTMFactory ptmFactory = PTMFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = PTMFactory.getInstance();
@@ -1204,11 +1214,44 @@ public class FMIndexTest extends TestCase {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
-        File sequences = new File("/scratch/U507_human_TD_2015_07_22.fasta");
+        File sequences = new File("../../Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
+        //File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);
         
-        FMIndex fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
-        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexesX = fmIndex.getProteinMapping("EDNEGVYNGSWGGR", sequenceMatchingPreferences);
+        
+        
+        
+        /*
+        // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = 57.02 + AminoAcid.C.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        Assert.assertTrue(!proteinMapping.isEmpty());
+        isPresent = false;
+        it = proteinMapping.keySet().iterator();
+        while (it.hasNext()){
+            outputProtein = it.next();
+            if (outputProtein.getSequence().compareTo("STMRITESTCMTEST") == 0){
+                isPresent = true;
+                numPTMs = outputProtein.getModificationMatches().size();
+            }
+        }
+        Assert.assertTrue(isPresent);
+        */
+        
+        
+        aminoAcidPattern = new AminoAcidSequence("SFAS");
+        nTermGap = 402.186;
+        cTermGap = 1651.92;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        fmIndex = new FMIndex(waitingHandlerCLIImpl, false, ptmSettings, peptideVariantsPreferences);
+        long start = System.nanoTime();
+        proteinMapping = fmIndex.getProteinMapping(tag, null, sequenceMatchingPreferences, 0.02);
+        System.out.println("time: " + (System.nanoTime() - start));
+        
     }
 }

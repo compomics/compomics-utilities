@@ -1,4 +1,4 @@
-package com.compomics.software;
+package com.compomics.software.cli;
 
 import com.compomics.util.Util;
 import java.io.File;

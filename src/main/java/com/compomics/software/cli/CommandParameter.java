@@ -16,12 +16,12 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 
 /**
- * Convenience methods for the validation of command line input.
+ * Convenience methods for the validation of command line parameters.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class InputValidation {
+public class CommandParameter {
 
     /**
      * Verifies the command line start parameters.

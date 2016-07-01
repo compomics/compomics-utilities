@@ -9,6 +9,7 @@ import com.compomics.util.experiment.biology.MassGap;
 import com.compomics.util.experiment.biology.PTM;
 import com.compomics.util.experiment.biology.PTMFactory;
 import com.compomics.util.experiment.biology.Peptide;
+import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -163,9 +165,34 @@ public class FMIndex implements PeptideMapper {
     double negativePTMMass = 0;
     
     /**
-     * number of allowed edit operations
+     * Either search with one maximal number of variants or use an upper limit for every variant (insertion / deletion / substitution)
      */
-    int maxNumberVariants = 0;
+    boolean genericVariantMatching = true;
+    
+    /**
+     * number of allowed variant operations
+     */
+    int maxNumberVariants = 1;
+    
+    /**
+     * number of allowed insertion operations
+     */
+    int maxNumberInsertions = 0;
+    
+    /**
+     * number of allowed deletion operations
+     */
+    int maxNumberDeletions = 0;
+    
+    /**
+     * number of allowed substitution operations
+     */
+    int maxNumberSubstitutions = 0;
+    
+    /**
+     * allowed substitutions
+     */
+    int[][] substiturionMatrix = null;
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -200,6 +227,10 @@ public class FMIndex implements PeptideMapper {
         value = (value >>> 27) + (value & mersenneMask);
         return (value >= mersenneMask) ? value - mersenneMask : value;
     }
+    
+    public boolean keyNotSet(long[] keys, int key){
+         return ((keys[key >> 6] >> (key & 63)) & 1L) == 0;
+    }
 
     /**
      * Constructor. If PTM settings are provided the index will contain
@@ -208,8 +239,36 @@ public class FMIndex implements PeptideMapper {
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param ptmSettings contains modification parameters for identification
+     * @param peptideVariantsPreferences contains all parameters for variants
      */
     public FMIndex(WaitingHandler waitingHandler, boolean displayProgress, PtmSettings ptmSettings, PeptideVariantsPreferences peptideVariantsPreferences) {
+        
+        // load all variant preferences
+        //maxNumberVariants = peptideVariantsPreferences.getnAaSubstitutions();
+        maxNumberInsertions = peptideVariantsPreferences.getnAaInsertions();
+        maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
+        maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
+        
+        substiturionMatrix = new int[128][];
+        for (int i = 0; i < 128; ++i) substiturionMatrix[i] = null;
+        AaSubstitutionMatrix aaSubstitutionMatrix = peptideVariantsPreferences.getAaSubstitutionMatrix();
+        for (int aa = 'A'; aa <= 'Z'; ++aa){
+            if (!aaSubstitutionMatrix.getOriginalAminoAcids().contains((char)aa)) continue;
+            HashSet<Character> substitutions = aaSubstitutionMatrix.getSubstitutionAminoAcids((char)aa);
+            if (substitutions.isEmpty()) continue;
+            substiturionMatrix[aa] = new int[substitutions.size()];
+            Iterator<Character> substitutionAAIterator = substitutions.iterator();
+            int i = 0;
+            while (substitutionAAIterator.hasNext()){
+                substiturionMatrix[aa][i] = (int)substitutionAAIterator.next();
+                ++i;
+            }
+        }
+        
+        System.out.println(maxNumberVariants);
+        
+        
+        // load all ptm preferences
         if (ptmSettings != null) {
             // create masses table and modifications
             int[] modificationCounts = new int[128];
@@ -221,9 +280,6 @@ public class FMIndex implements PeptideMapper {
             PTMFactory ptmFactory = PTMFactory.getInstance();
             
             
-            //peptideVariantsPreferences.get
-            
-
             int hasVariableModification = 0;
 
             // check which amino acids have variable modificatitions
@@ -653,6 +709,8 @@ public class FMIndex implements PeptideMapper {
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
+        
+        
 
         int[] T_int = new int[indexStringLength];
         for (int i = 0; i < indexStringLength; ++i) {
@@ -906,8 +964,11 @@ public class FMIndex implements PeptideMapper {
         if (maxNumberVariants == 0){
             return getProteinMappingWithoutVariants(peptide, seqMatchPref);
         }
-        else {
+        else if (genericVariantMatching){
             return getProteinMappingWithVariants(peptide, seqMatchPref);
+        }
+        else {
+            return getProteinMappingWithVariantsSpecific(peptide, seqMatchPref);
         }
         
     }
@@ -938,7 +999,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         if (countX <= maxX) {
-            backwardList[0].add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0)); // L, R, char, previous content, num of X
+            backwardList[0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
             for (int j = 0; j < lenPeptide; ++j) {
                 String combinationSequence = combinations.get(j);
                 ArrayList<MatrixContent> cell = backwardList[j];
@@ -1033,7 +1094,7 @@ public class FMIndex implements PeptideMapper {
         
         
         if (countX <= xNumLimit) {
-            backwardMatrix[0][0].add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0)); // L, R, char, previous content, num of X
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
             
             for (int k = 0; k <= maxNumberVariants; ++k){
                 ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
@@ -1048,7 +1109,7 @@ public class FMIndex implements PeptideMapper {
                         int leftIndexOld = content.left;
                         int rightIndexOld = content.right;
                         int numX = content.numX;
-                        int numVariants = content.numEdits;
+                        int numVariants = content.numVariants;
                         int length = content.length;
 
                         for (int c = 0; c < combinationSequence.length(); ++c) {
@@ -1122,7 +1183,159 @@ public class FMIndex implements PeptideMapper {
                     while (currentContent.previousContent != null) {
                         //if (currentContent.character != '*')
                         currentPeptide += (char)currentContent.character;
-                        errors += currentContent.editOperation;
+                        errors += currentContent.variant;
+                        currentContent = currentContent.previousContent;
+                    }
+
+                    int leftIndex = content.left;
+                    int rightIndex = content.right;
+
+                    HashMap<String, ArrayList<Integer>> matches = new HashMap<String, ArrayList<Integer>>();
+
+                    for (int j = leftIndex; j <= rightIndex; ++j) {
+                        int pos = getTextPosition(j);
+                        int index = binarySearch(boundaries, pos);
+                        String accession = accessions[index];
+
+                        if (!matches.containsKey(accession)) {
+                            matches.put(accession, new ArrayList<Integer>());
+                        }
+                        matches.get(accession).add(pos - boundaries[index]);
+System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPeptide);
+                    }
+
+                    allMatches.put(currentPeptide, matches);
+                }
+            }
+        }
+        return allMatches;
+    }
+    
+    
+    
+    
+    
+    
+    /**
+     * Variant tolerant mapping peptides against the proteome
+     * @param peptide
+     * @param seqMatchPref
+     * @return 
+     */
+    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMappingWithVariantsSpecific(String peptide, SequenceMatchingPreferences seqMatchPref) {
+        HashMap<String, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<String, HashMap<String, ArrayList<Integer>>>();
+
+        String pep_rev = new StringBuilder(peptide).reverse().toString();
+        int lenPeptide = peptide.length();
+        ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
+        int xNumLimit = (int) (((seqMatchPref.getLimitX() != null) ? seqMatchPref.getLimitX() : 1) * lenPeptide);
+        long[] keys = new long[(mersenneMask >> 6) + 1];
+
+        ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
+
+        for (int k = 0; k <= maxNumberVariants; ++k){
+            for (int j = 0; j <= lenPeptide; ++j) {
+                backwardMatrix[k][j] = new ArrayList<MatrixContent>(10);
+            }
+        }
+        int countX = 0;
+        for (int j = 0; j <= lenPeptide; ++j) {
+            if (j < lenPeptide && pep_rev.charAt(j) == 'X') ++countX;
+        }
+        
+        
+        if (countX <= xNumLimit) {
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLength - 1)); // L, R, char, previous content, num of X
+            
+            for (int k = 0; k <= maxNumberVariants; ++k){
+                ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
+                for (int j = 0; j < lenPeptide; ++j) {
+                    String combinationSequence = combinations.get(j);
+                    ArrayList<MatrixContent> cell = backwardList[j];
+
+
+
+                    for (int i = 0; i < cell.size(); ++i) {
+                        MatrixContent content = cell.get(i);
+                        int leftIndexOld = content.left;
+                        int rightIndexOld = content.right;
+                        int numX = content.numX;
+                        int numVariants = content.numVariants;
+                        int length = content.length;
+
+                        for (int c = 0; c < combinationSequence.length(); ++c) {
+                            int aminoAcid = combinationSequence.charAt(c);
+
+                            int lessValue = lessTablePrimary[aminoAcid];
+                            int[] range = occurrenceTablePrimary.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                            final int leftIndex = lessValue + range[0];
+                            final int rightIndex = lessValue + range[1] - 1;
+                            int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+
+                            //long matchKey = (((((long)leftIndex) << 32) | (long)rightIndex) ^ (((long)aminoAcid) << 20) ^ (((long)length + 1) << 40));
+                            int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, length + 1);
+
+                            if (leftIndex <= rightIndex && ((keys[matchKey >> 6] >> (matchKey & 63)) & 1L) == 0) {
+                                if (newNumX > xNumLimit) continue;
+
+                                // match
+                                backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                keys[matchKey >> 6] |= (1L << (matchKey & 63));
+                            }
+
+                            if (numVariants < maxNumberVariants && c == 0){
+                                // deletion
+                                int deletionKey = computeHash(leftIndexOld, rightIndexOld, aminoAcid, length + 1);
+
+                                if (numVariants < maxNumberVariants && ((keys[deletionKey >> 6] >> (deletionKey & 63)) & 1L) == 0){
+                                    backwardMatrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
+                                }
+
+                                // insertion and substitution
+                                
+                                ArrayList<Integer[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (Integer[] borders : setCharacter) {
+                                    final int errorAminoAcid = borders[0];
+                                    final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
+                                    final int errorLessValue = lessTablePrimary[errorAminoAcid];
+                                    final int errorLeftIndex = errorLessValue + borders[1];
+                                    final int errorRightIndex = errorLessValue + borders[2] - 1;
+
+                                    if (errorNewNumX <= xNumLimit){
+                                        int insertionKey = computeHash(errorLeftIndex, errorRightIndex, '*', length);
+
+                                        // insertion
+                                        if (((keys[insertionKey >> 6] >> (insertionKey & 63)) & 1L) == 0 && j > 0){
+                                            MatrixContent newErrorCell = new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]);
+                                            backwardMatrix[k + 1][j].add(newErrorCell);
+                                        }
+
+                                        // substitution
+                                        if (aminoAcid != errorAminoAcid){
+                                            int substitutionKey = computeHash(errorLeftIndex, errorRightIndex, aminoAcid, length + 1);
+                                            if (((keys[substitutionKey >> 6] >> (substitutionKey & 63)) & 1L) == 0){
+                                                backwardMatrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1,  (char)errorAminoAcid));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // traceback
+            for (ArrayList<MatrixContent>[] backwardList : backwardMatrix){
+                for (MatrixContent content : backwardList[lenPeptide]) {
+                    MatrixContent currentContent = content;
+                    String currentPeptide = "";
+                    String errors = "";
+
+                    while (currentContent.previousContent != null) {
+                        //if (currentContent.character != '*')
+                        currentPeptide += (char)currentContent.character;
+                        errors += currentContent.variant;
                         currentContent = currentContent.previousContent;
                     }
 
@@ -1148,6 +1361,11 @@ public class FMIndex implements PeptideMapper {
         }
         return allMatches;
     }
+    
+    
+    
+    
+    
     
     
     
@@ -1192,61 +1410,58 @@ public class FMIndex implements PeptideMapper {
      * @param occurrence the wavelet tree
      * @param massTolerance the mass tolerance
      */
-    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance) {
-        final int lenCombinations = combinations.length;
+    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent>[] matrix, int[] less, WaveletTree occurrence, double massTolerance) {
 
-        while (!matrix.isEmpty()) {
-            MatrixContent cell = matrix.removeFirst();
-            final int combinationLength = cell.combinationLength;
-            final int pepLen = cell.length;
-            final int leftIndexOld = cell.left;
-            final int rightIndexOld = cell.right;
-            TagElement combination = combinations[combinationLength];
+        for (int j = 0; j < combinations.length; ++j){
+            LinkedList<MatrixContent> content = matrix[j];
+            TagElement combination = combinations[j];
+            
+            while (!content.isEmpty()) {
+                MatrixContent cell = content.removeFirst();
+                final int length = cell.length;
+                final int leftIndexOld = cell.left;
+                final int rightIndexOld = cell.right;
 
-            if (combination.isMass) {
-                final double combinationMass = combination.mass;
-                final double oldMass = cell.mass;
+                if (combination.isMass) {
+                    final double combinationMass = combination.mass;
+                    final double oldMass = cell.mass;
 
-                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                if (withVariableModifications) {
-                    addModifications(setCharacter);
-                }
-                for (Integer[] borders : setCharacter) {
-                    final int aminoAcid = borders[0];
-                    if (aminoAcid == '/') {
-                        continue;
+                    ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                    if (withVariableModifications) {
+                        addModifications(setCharacter);
                     }
-                    final double newMass = oldMass + aaMasses[borders[3]];
-                    if (newMass - massTolerance <= combinationMass) {
-                        final int lessValue = less[aminoAcid];
-                        final int leftIndex = lessValue + borders[1];
-                        final int rightIndex = lessValue + borders[2] - 1;
-                        //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
-                        if (combinationMass <= newMass + massTolerance) {
-                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, 0, null, null, borders[3]);
-                            List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                            insertList.add(newCell);
-                        } else {
-                            matrix.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, borders[3]));
+                    for (Integer[] borders : setCharacter) {
+                        final int aminoAcid = borders[0];
+                        if (aminoAcid == '/') {
+                            continue;
+                        }
+                        final double newMass = oldMass + aaMasses[borders[3]];
+                        if (newMass - massTolerance <= combinationMass) {
+                            final int lessValue = less[aminoAcid];
+                            final int leftIndex = lessValue + borders[1];
+                            final int rightIndex = lessValue + borders[2] - 1;
+                            if (combinationMass <= newMass + massTolerance) {
+                                matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, 0, borders[3]));
+                            } else {
+                                content.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, 0, borders[3]));
+                            }
                         }
                     }
-                }
-            } else {
-                final String combinationSequence = combination.sequence;
-                final int xNumLimit = combination.xNumLimit;
-                final int numX = cell.numX;
+                } else {
+                    final String combinationSequence = combination.sequence;
+                    final int xNumLimit = combination.xNumLimit;
+                    final int numX = cell.numX;
 
-                for (int i = 0; i < combinationSequence.length(); ++i) {
-                    final int aminoAcid = combinationSequence.charAt(i);
-                    final int lessValue = less[aminoAcid];
-                    final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
-                    final int leftIndex = lessValue + range[0];
-                    final int rightIndex = lessValue + range[1] - 1;
-                    final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                    if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
-                        MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1);
-                        List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                        insertList.add(newCell);
+                    for (int i = 0; i < combinationSequence.length(); ++i) {
+                        final int aminoAcid = combinationSequence.charAt(i);
+                        final int lessValue = less[aminoAcid];
+                        final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                        final int leftIndex = lessValue + range[0];
+                        final int rightIndex = lessValue + range[1] - 1;
+                        final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                        if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
+                            matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1));
+                        }
                     }
                 }
             }
@@ -1269,6 +1484,8 @@ public class FMIndex implements PeptideMapper {
      */
     private void mappingSequenceAndMassesWithVariants(TagElement[] combinations, LinkedList<MatrixContent>[][] matrix, int[] less, WaveletTree occurrence, double massTolerance) {
         final int lenCombinations = combinations.length;
+        long[] keys = new long[(mersenneMask >> 6) + 1];
+        int cnt = 0;
         
         for (int k = 0; k <= maxNumberVariants; ++k){
             LinkedList<MatrixContent>[] row = matrix[k];
@@ -1277,18 +1494,20 @@ public class FMIndex implements PeptideMapper {
                 TagElement combination = combinations[j];
                 LinkedList<MatrixContent> cell = row[j];
                 while (!cell.isEmpty()) {
+                    ++cnt;
                     MatrixContent content = cell.removeFirst();
                     final int leftIndexOld = content.left;
                     final int length = content.length;
                     final int rightIndexOld = content.right;
-                    final int numVariants = content.numEdits;
+                    final int numVariants = content.numVariants;
+                    final int numX = content.numX;
                     if (combination.isMass) {
                         final double combinationMass = combination.mass;
                         final double oldMass = content.mass;
 
                         ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
                         if (withVariableModifications) addModifications(setCharacter);
-                   
+                        /*
                         for (Integer[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             if (aminoAcid == '/') continue;
@@ -1296,19 +1515,21 @@ public class FMIndex implements PeptideMapper {
                             final int lessValue = less[aminoAcid];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            if (newMass - massTolerance <= combinationMass) {
+                            int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, length + 1);
+                            if (newMass - massTolerance <= combinationMass && keyNotSet(keys, matchKey)) {
+                                keys[matchKey >> 6] |= (1L << (matchKey & 63));
                                 
                                 if (Math.abs(combinationMass - newMass) <= massTolerance){
-                                    row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, 0, null, 0 + 1, length + 1, 0, null, null, borders[3], numVariants, '-', null));
-                                    
+                                    row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, 0, length + 1, 0, borders[3], numVariants, '-', null));
                                 } else {
-                                    cell.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, null, 0, length + 1, 0, null, null, borders[3], numVariants, '-', null));
+                                    cell.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, 0, borders[3], numVariants, '-', null));
                                 }
                                 
                             }
                             // insertion
                             if (numVariants < maxNumberVariants){
-                                matrix[k + 1][j].add(new MatrixContent(leftIndex, rightIndex, '*', content, oldMass, null, 0, length, 0, null, null, borders[3], numVariants + 1, (char)aminoAcid, null));
+                                int insertionKey = computeHash(leftIndex, rightIndex, '*', length + 1);
+                                matrix[k + 1][j].add(new MatrixContent(leftIndex, rightIndex, '*', content, oldMass, length, 0, borders[3], numVariants + 1, (char)aminoAcid, null));
                             }
                         }
                         
@@ -1319,7 +1540,7 @@ public class FMIndex implements PeptideMapper {
                                 if (aminoAcidMass > 0 && oldMass + aminoAcidMass < combinationMass + massTolerance){
                                     double newMass = oldMass + aminoAcidMass;
 
-                                    // substitution
+                                    // deletion + substitution
                                     for (Integer[] borders : setCharacter) {
                                         final int errorAminoAcid = borders[0];
                                         final int errorLessValue = less[borders[0]];
@@ -1328,21 +1549,73 @@ public class FMIndex implements PeptideMapper {
                                         int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
 
                                         // deletion
-                                        matrix[k + 1][j + offset].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, newMass, null, length + 1, length + 1, 0, null, null, index, numVariants + 1, '*', null));
+                                         matrix[k + 1][j + offset].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, newMass, length + 1, 0, index, numVariants + 1, '*', null));
                                         
                                             
                                         if (amino == errorAminoAcid) continue;
-                                        matrix[k + 1][j + offset].add(new MatrixContent(errorLeftIndex, errorRightIndex, amino, content, newMass, null, length + 1, length + 1, 0, null, null, index, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], null));
+                                        matrix[k + 1][j + offset].add(new MatrixContent(errorLeftIndex, errorRightIndex, amino, content, newMass, length + 1, 0, index, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], null));
                                         
                                     }
                                 }
                             }
                         }
+                        */
+                        
+                        
+                        
+                        for (Integer[] borders : setCharacter) {
+                            final int aminoAcid = borders[0];
+                            if (aminoAcid == '/') continue;
+                            final double newMass = oldMass + aaMasses[borders[3]];                                
+                            final int lessValue = less[aminoAcid];
+                            final int leftIndex = lessValue + borders[1];
+                            final int rightIndex = lessValue + borders[2] - 1;
+                            if (newMass - massTolerance <= combinationMass) {
+                                int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
+                                row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
+                            }
+                            // variants
+                            if (numVariants < maxNumberVariants){
+                                
+                                // insertion
+                                matrix[k + 1][j].add(new MatrixContent(leftIndex, rightIndex, '*', content, oldMass, length, numX, -1, numVariants + 1, Character.toChars(aminoAcid + 32)[0], null));
+                                
+                                // substitution
+                                for (int index : aaMassIndexes){
+                                    double aminoMass = oldMass + aaMasses[index];
+                                    int offset = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
+                                    int amino = index & 127;
+                                
+                                    if (amino != aminoAcid && aminoMass < combinationMass + massTolerance){
+                                        matrix[k + 1][j + offset].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char)aminoAcid, null));
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // deletion
+                        if (numVariants < maxNumberVariants){
+                            for (int index : aaMassIndexes){
+                                double aminoMass = oldMass + aaMasses[index];
+                                int offset = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
+                                int amino = index & 127;
+                                
+                                if (aminoMass < combinationMass + massTolerance){
+                                    matrix[k + 1][j + offset].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
+                                }
+                            }
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
 
                     } else { // sequence mapping 
                         final String combinationSequence = combination.sequence;
                         final int xNumLimit = combination.xNumLimit;
-                        final int numX = content.numX;
                         
 
                         for (int c = 0; c < combinationSequence.length(); ++c) {
@@ -1387,6 +1660,7 @@ public class FMIndex implements PeptideMapper {
                 }
             }
         }
+System.out.println("count: " + cnt);
     }
     
     double pepMass(String peptide){
@@ -1409,541 +1683,537 @@ public class FMIndex implements PeptideMapper {
      * @param massTolerance
      * @param CTermDirection 
      */
-    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent> matrix, ArrayList<MatrixContent> matrixFinished, int[] less, WaveletTree occurrence, double massTolerance, boolean CTermDirection) {
+    private void mappingSequenceAndMasses(TagElement[] combinations, LinkedList<MatrixContent>[] matrix, int[] less, WaveletTree occurrence, double massTolerance, boolean CTermDirection) {
 
         final int lenCombinations = combinations.length;
-        while (!matrix.isEmpty()) {
+        for (int k = 0; k < lenCombinations; ++k){
+        TagElement combination = combinations[k];
+        LinkedList<MatrixContent> content = matrix[k];
+            
+            while (!content.isEmpty()) {
 
-            MatrixContent cell = matrix.removeFirst();
-            final int combinationLength = cell.combinationLength;
-            final int pepLen = cell.length;
-            final int leftIndexOld = cell.left;
-            final int rightIndexOld = cell.right;
-            TagElement combination = combinations[combinationLength];
+                MatrixContent cell = content.removeFirst();
+                final int length = cell.length;
+                final int leftIndexOld = cell.left;
+                final int rightIndexOld = cell.right;
 
-            if (combination.isMass) {
-                final double combinationMass = combination.mass;
-                final double oldMass = cell.mass;
+                if (combination.isMass) {
+                    final double combinationMass = combination.mass;
+                    final double oldMass = cell.mass;
 
-                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                if (withVariableModifications) {
-                    addModifications(setCharacter);
-                }
+                    ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                    if (withVariableModifications) {
+                        addModifications(setCharacter);
+                    }
 
-                if (combinationLength == lenCombinations - 1) {
-                    for (Integer[] borders : setCharacter) {
-                        final int aminoAcid = borders[0];
+                    if (k == lenCombinations - 1) {
+                        for (Integer[] borders : setCharacter) {
+                            final int aminoAcid = borders[0];
 
-                        if (aminoAcid != '/') {
+                            if (aminoAcid != '/') {
+                                final double newMass = oldMass + aaMasses[borders[3]];
+                                double massDiff = combinationMass - newMass;
+                                int lastAcid = aminoAcid;
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
+                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, 0, borders[3]);
+
+                                ModificationMatch modificationMatchEnd = null;
+                                ModificationMatch modificationMatchEndEnd = null;
+                                boolean endOfPeptide = false;
+
+                                // ptm at terminus handling
+                                ArrayList<String> fmodp = fmodcp;
+                                ArrayList<Double> fmodpMass = fmodcpMass;
+                                ArrayList<String>[] fmodpaa = fmodcpaa;
+                                ArrayList<Double>[] fmodpaaMass = fmodcpaaMass;
+                                ArrayList<String> vmodp = vmodcp;
+                                ArrayList<Double> vmodpMass = vmodcpMass;
+                                ArrayList<String>[] vmodpaa = vmodcpaa;
+                                ArrayList<Double>[] vmodpaaMass = vmodcpaaMass;
+                                boolean hasFixedPTM_atTerminus = hasFixedPTM_CatTerminus;
+
+                                if (!CTermDirection) {
+                                    fmodp = fmodnp;
+                                    fmodpMass = fmodnpMass;
+                                    fmodpaa = fmodnpaa;
+                                    fmodpaaMass = fmodnpaaMass;
+                                    vmodp = vmodnp;
+                                    vmodpMass = vmodnpMass;
+                                    vmodpaa = vmodnpaa;
+                                    vmodpaaMass = vmodnpaaMass;
+                                    hasFixedPTM_atTerminus = hasFixedPTM_NatTerminus;
+                                }
+
+                                boolean hasFixed = false;
+
+                                // fixed aa defined peptide terminal modification
+                                if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
+                                    hasFixed = true;
+                                    for (int i = 0; i < fmodpaaMass[lastAcid].size(); ++i) {
+                                        double massDiffDiff = massDiff - fmodpaaMass[lastAcid].get(i);
+
+                                        if (Math.abs(massDiffDiff) < massTolerance) {
+                                            endOfPeptide = true;
+                                            modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
+                                        }
+
+                                        if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    endOfPeptide = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
+                                                }
+                                            }
+                                        }
+                                        // variable undefined peptide terminal modifictation
+                                        if (!endOfPeptide && vmodp != null) {
+                                            for (int j = 0; j < vmodp.size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                    endOfPeptide = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length);
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                                // fixed undefined peptide terminal modifictation
+                                if (fmodp != null && !endOfPeptide) {
+                                    hasFixed = true;
+                                    for (int i = 0; i < fmodp.size(); ++i) {
+                                        double massDiffDiff = massDiff - fmodpMass.get(i);
+                                        if (Math.abs(massDiff - fmodpMass.get(i)) < massTolerance) {
+                                            endOfPeptide = true;
+                                            modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
+                                        }
+
+                                        if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    endOfPeptide = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length);
+                                                }
+                                            }
+                                        }
+                                        // variable undefined peptide terminal modifictation
+                                        if (!endOfPeptide && vmodp != null) {
+                                            for (int j = 0; j < vmodp.size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                    endOfPeptide = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, length);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, length);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (!hasFixedPTM_atTerminus && !hasFixed && !endOfPeptide) {
+
+                                    // without any peptide terminal modification
+                                    if (Math.abs(massDiff) < massTolerance) {
+                                        endOfPeptide = true;
+                                    }
+
+                                    // variable aa defined peptide terminal modification
+                                    if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                        for (int i = 0; i < vmodpaaMass[lastAcid].size(); ++i) {
+                                            if (Math.abs(massDiff - vmodpaaMass[lastAcid].get(i)) < massTolerance) {
+                                                endOfPeptide = true;
+                                                modificationMatchEnd = new ModificationMatch(vmodpaa[lastAcid].get(i), true, length);
+                                            }
+                                        }
+                                    }
+                                    // variable undefined peptide terminal modifictation
+                                    if (!endOfPeptide && vmodp != null) {
+                                        for (int i = 0; i < vmodp.size(); ++i) {
+                                            if (Math.abs(massDiff - vmodpMass.get(i)) < massTolerance) {
+                                                endOfPeptide = true;
+                                                modificationMatchEnd = new ModificationMatch(vmodp.get(i), false, length);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (!endOfPeptide) {
+                                    if (newMass - massTolerance + negativePTMMass <= combinationMass) {
+                                        content.add(newCell);
+                                    }
+                                } else if (modificationMatchEnd != null) {
+                                    MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, length, 0, modificationMatchEnd, null, -1);
+                                    if (modificationMatchEndEnd == null) {
+                                        matrix[k + 1].add(newEndCell);
+                                    } else {
+                                        MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, length, 0, modificationMatchEndEnd, null, -1);
+                                        matrix[k + 1].add(newEndEndCell);
+                                    }
+                                } else {
+                                    matrix[k + 1].add(newCell);
+                                }
+
+                            } else if (length > 1) {
+                                int lastAcid = cell.character;
+                                double massDiff = combinationMass - oldMass;
+                                ModificationMatch modificationMatchEnd = null;
+                                ModificationMatch modificationMatchEndEnd = null;
+
+                                // ptm at terminus handling
+                                ArrayList<String> fmod = fmodc;
+                                ArrayList<Double> fmodMass = fmodcMass;
+                                ArrayList<String>[] fmodaa = fmodcaa;
+                                ArrayList<Double>[] fmodaaMass = fmodcaaMass;
+                                ArrayList<String> vmod = vmodc;
+                                ArrayList<Double> vmodMass = vmodcMass;
+                                ArrayList<String>[] vmodaa = vmodcaa;
+                                ArrayList<Double>[] vmodaaMass = vmodcaaMass;
+                                ArrayList<String> fmodp = fmodcp;
+                                ArrayList<Double> fmodpMass = fmodcpMass;
+                                ArrayList<String>[] fmodpaa = fmodcpaa;
+                                ArrayList<Double>[] fmodpaaMass = fmodcpaaMass;
+                                ArrayList<String> vmodp = vmodcp;
+                                ArrayList<Double> vmodpMass = vmodcpMass;
+                                ArrayList<String>[] vmodpaa = vmodcpaa;
+                                ArrayList<Double>[] vmodpaaMass = vmodcpaaMass;
+
+                                if (!CTermDirection) {
+                                    fmod = fmodn;
+                                    fmodMass = fmodnMass;
+                                    fmodaa = fmodnaa;
+                                    fmodaaMass = fmodnaaMass;
+                                    vmod = vmodn;
+                                    vmodMass = vmodnMass;
+                                    vmodaa = vmodnaa;
+                                    vmodaaMass = vmodnaaMass;
+                                    fmodp = fmodnp;
+                                    fmodpMass = fmodnpMass;
+                                    fmodpaa = fmodnpaa;
+                                    fmodpaaMass = fmodnpaaMass;
+                                    vmodp = vmodnp;
+                                    vmodpMass = vmodnpMass;
+                                    vmodpaa = vmodnpaa;
+                                    vmodpaaMass = vmodnpaaMass;
+                                }
+
+
+                                // fixed aa defined protein terminal modification
+                                if (fmodaa != null && lastAcid > 0 && fmodaaMass[lastAcid].size() > 0) {
+                                    for (int i = 0; i < fmodaaMass[lastAcid].size(); ++i) {
+                                        Double massDiffDiff = massDiff - fmodaaMass[lastAcid].get(i);
+                                        if (Math.abs(massDiffDiff) < massTolerance) {
+                                            modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                        }
+
+                                        // variable aa defined protein terminal modification
+                                        if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length - 1);
+                                                }
+                                            }
+                                        }
+                                        // variable undefined protein terminal modifictation
+                                        if (vmod != null && modificationMatchEnd == null) {
+                                            for (int j = 0; j < vmod.size(); ++j) {
+                                                if (Math.abs(massDiffDiff - vmodMass.get(j)) < massTolerance) {
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        // second ptm at peptide terminus
+                                        boolean hasFixedPep = false;
+                                        if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
+
+                                                if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    hasFixedPep = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        if (fmodp != null) {
+                                            for (int j = 0; j < fmodp.size(); ++j) {
+                                                if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
+                                                    hasFixedPep = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        if (!hasFixedPep) {
+                                            if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                                for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+
+                                                    if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (vmodp != null) {
+                                                for (int j = 0; j < vmodp.size(); ++j) {
+                                                    if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+
+                                // fixed undefined protein terminal modifictation
+                                if (fmod != null && modificationMatchEnd == null) {
+
+                                    for (int i = 0; i < fmod.size(); ++i) {
+                                        Double massDiffDiff = massDiff - fmodMass.get(i);
+                                        if (Math.abs(massDiffDiff) < massTolerance) {
+                                            modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                        }
+
+                                        // variable aa defined protein terminal modification
+                                        if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
+                                                if (Math.abs(massDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, length - 1);
+                                                }
+                                            }
+                                        }
+                                        // variable undefined protein terminal modifictation
+                                        if (vmod != null && modificationMatchEnd == null) {
+                                            for (int j = 0; j < vmod.size(); ++j) {
+                                                if (Math.abs(massDiff - vmodMass.get(j)) < massTolerance) {
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        // second ptm at peptide terminus
+                                        boolean hasFixedPep = false;
+                                        if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
+                                            for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
+
+                                                if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                    hasFixedPep = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        if (fmodp != null) {
+                                            for (int j = 0; j < fmodp.size(); ++j) {
+                                                if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
+                                                    hasFixedPep = true;
+                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                }
+                                            }
+                                        }
+
+                                        if (!hasFixedPep) {
+                                            if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                                for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+
+                                                    if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (vmodp != null) {
+                                                for (int j = 0; j < vmodp.size(); ++j) {
+                                                    if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (modificationMatchEnd == null) {
+                                    // variable aa defined protein terminal modification
+                                    if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
+                                        for (int i = 0; i < vmodaaMass[lastAcid].size(); ++i) {
+                                            double massDiffDiff = massDiff - vmodaaMass[lastAcid].get(i);
+                                            if (Math.abs(massDiffDiff) < massTolerance) {
+                                                modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                            }
+
+                                            // second ptm at peptide terminus
+                                            boolean hasFixedPep = false;
+                                            if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
+                                                for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
+
+                                                    if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (fmodp != null) {
+                                                for (int j = 0; j < fmodp.size(); ++j) {
+                                                    if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (!hasFixedPep) {
+                                                if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                                    for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+
+                                                        if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                            hasFixedPep = true;
+                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                        }
+                                                    }
+                                                }
+
+                                                if (vmodp != null) {
+                                                    for (int j = 0; j < vmodp.size(); ++j) {
+                                                        if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                            hasFixedPep = true;
+                                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, length - 1);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // variable undefined protein terminal modifictation
+                                    if (vmod != null && modificationMatchEnd == null) {
+                                        for (int i = 0; i < vmod.size(); ++i) {
+                                            double massDiffDiff = massDiff - vmodMass.get(i);
+                                            if (Math.abs(massDiffDiff) < massTolerance) {
+                                                modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                            }
+
+                                            // second ptm at peptide terminus
+                                            boolean hasFixedPep = false;
+                                            if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
+                                                for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
+                                                    if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (fmodp != null) {
+                                                for (int j = 0; j < fmodp.size(); ++j) {
+                                                    if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
+                                                        hasFixedPep = true;
+                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                                        modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, length - 1);
+                                                    }
+                                                }
+                                            }
+
+                                            if (!hasFixedPep) {
+                                                if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
+                                                    for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
+
+                                                        if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
+                                                            hasFixedPep = true;
+                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, length - 1);
+                                                        }
+                                                    }
+                                                }
+
+                                                if (vmodp != null) {
+                                                    for (int j = 0; j < vmodp.size(); ++j) {
+                                                        if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
+                                                            hasFixedPep = true;
+                                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, length - 1);
+                                                            modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, length - 1);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (modificationMatchEnd != null) {
+                                    MatrixContent newEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', cell, 0, null, length, 0, modificationMatchEnd, null, -1);
+                                    if (modificationMatchEndEnd == null) {
+                                        matrix[k + 1].add(newEndCell);
+                                    } else {
+                                        MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, length, 0, modificationMatchEndEnd, null, -1);
+                                        matrix[k + 1].add(newEndEndCell);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        for (Integer[] borders : setCharacter) {
+                            final int aminoAcid = borders[0];
+                            if (aminoAcid == '/') {
+                                continue;
+                            }
                             final double newMass = oldMass + aaMasses[borders[3]];
-                            double massDiff = combinationMass - newMass;
-                            int lastAcid = aminoAcid;
-                            final int lessValue = less[aminoAcid];
-                            final int leftIndex = lessValue + borders[1];
-                            final int rightIndex = lessValue + borders[2] - 1;
-                            //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
-                            MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, borders[3]);
-
-                            ModificationMatch modificationMatchEnd = null;
-                            ModificationMatch modificationMatchEndEnd = null;
-                            boolean endOfPeptide = false;
-
-                            // ptm at terminus handling
-                            ArrayList<String> fmodp = fmodcp;
-                            ArrayList<Double> fmodpMass = fmodcpMass;
-                            ArrayList<String>[] fmodpaa = fmodcpaa;
-                            ArrayList<Double>[] fmodpaaMass = fmodcpaaMass;
-                            ArrayList<String> vmodp = vmodcp;
-                            ArrayList<Double> vmodpMass = vmodcpMass;
-                            ArrayList<String>[] vmodpaa = vmodcpaa;
-                            ArrayList<Double>[] vmodpaaMass = vmodcpaaMass;
-                            boolean hasFixedPTM_atTerminus = hasFixedPTM_CatTerminus;
-
-                            if (!CTermDirection) {
-                                fmodp = fmodnp;
-                                fmodpMass = fmodnpMass;
-                                fmodpaa = fmodnpaa;
-                                fmodpaaMass = fmodnpaaMass;
-                                vmodp = vmodnp;
-                                vmodpMass = vmodnpMass;
-                                vmodpaa = vmodnpaa;
-                                vmodpaaMass = vmodnpaaMass;
-                                hasFixedPTM_atTerminus = hasFixedPTM_NatTerminus;
-                            }
-
-                            boolean hasFixed = false;
-
-                            // fixed aa defined peptide terminal modification
-                            if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
-                                hasFixed = true;
-                                for (int i = 0; i < fmodpaaMass[lastAcid].size(); ++i) {
-                                    double massDiffDiff = massDiff - fmodpaaMass[lastAcid].get(i);
-
-                                    if (Math.abs(massDiffDiff) < massTolerance) {
-                                        endOfPeptide = true;
-                                        modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, pepLen);
-                                    }
-
-                                    if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, pepLen);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen);
-                                            }
-                                        }
-                                    }
-                                    // variable undefined peptide terminal modifictation
-                                    if (!endOfPeptide && vmodp != null) {
-                                        for (int j = 0; j < vmodp.size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodpaa[lastAcid].get(i), false, pepLen);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, pepLen);
-                                            }
-                                        }
-                                    }
-
-                                }
-                            }
-
-                            // fixed undefined peptide terminal modifictation
-                            if (fmodp != null && !endOfPeptide) {
-                                hasFixed = true;
-                                for (int i = 0; i < fmodp.size(); ++i) {
-                                    double massDiffDiff = massDiff - fmodpMass.get(i);
-                                    if (Math.abs(massDiff - fmodpMass.get(i)) < massTolerance) {
-                                        endOfPeptide = true;
-                                        modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, pepLen);
-                                    }
-
-                                    if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, pepLen);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen);
-                                            }
-                                        }
-                                    }
-                                    // variable undefined peptide terminal modifictation
-                                    if (!endOfPeptide && vmodp != null) {
-                                        for (int j = 0; j < vmodp.size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                endOfPeptide = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodp.get(i), false, pepLen);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), false, pepLen);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (!hasFixedPTM_atTerminus && !hasFixed && !endOfPeptide) {
-
-                                // without any peptide terminal modification
-                                if (Math.abs(massDiff) < massTolerance) {
-                                    endOfPeptide = true;
-                                }
-
-                                // variable aa defined peptide terminal modification
-                                if (!endOfPeptide && vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                    for (int i = 0; i < vmodpaaMass[lastAcid].size(); ++i) {
-                                        if (Math.abs(massDiff - vmodpaaMass[lastAcid].get(i)) < massTolerance) {
-                                            endOfPeptide = true;
-                                            modificationMatchEnd = new ModificationMatch(vmodpaa[lastAcid].get(i), true, pepLen);
-                                        }
-                                    }
-                                }
-                                // variable undefined peptide terminal modifictation
-                                if (!endOfPeptide && vmodp != null) {
-                                    for (int i = 0; i < vmodp.size(); ++i) {
-                                        if (Math.abs(massDiff - vmodpMass.get(i)) < massTolerance) {
-                                            endOfPeptide = true;
-                                            modificationMatchEnd = new ModificationMatch(vmodp.get(i), false, pepLen);
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (!endOfPeptide) {
-                                if (newMass - massTolerance + negativePTMMass <= combinationMass) {
-                                    matrix.add(newCell);
-                                }
-                            } else if (modificationMatchEnd != null) {
-                                MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, combinationLength, pepLen, 0, modificationMatchEnd, null, -1);
-                                if (modificationMatchEndEnd == null) {
-                                    matrixFinished.add(newEndCell);
+                            if (newMass - massTolerance <= combinationMass) {
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
+                                if (combinationMass <= newMass + massTolerance) {
+                                    matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, length + 1, 0, null, null, borders[3]));
                                 } else {
-                                    MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, combinationLength, pepLen, 0, modificationMatchEndEnd, null, -1);
-                                    matrixFinished.add(newEndEndCell);
-                                }
-                            } else {
-                                matrixFinished.add(newCell);
-                            }
-
-                        } else if (pepLen > 1) {
-                            int lastAcid = cell.character;
-                            double massDiff = combinationMass - oldMass;
-                            ModificationMatch modificationMatchEnd = null;
-                            ModificationMatch modificationMatchEndEnd = null;
-
-                            // ptm at terminus handling
-                            ArrayList<String> fmod = fmodc;
-                            ArrayList<Double> fmodMass = fmodcMass;
-                            ArrayList<String>[] fmodaa = fmodcaa;
-                            ArrayList<Double>[] fmodaaMass = fmodcaaMass;
-                            ArrayList<String> vmod = vmodc;
-                            ArrayList<Double> vmodMass = vmodcMass;
-                            ArrayList<String>[] vmodaa = vmodcaa;
-                            ArrayList<Double>[] vmodaaMass = vmodcaaMass;
-                            ArrayList<String> fmodp = fmodcp;
-                            ArrayList<Double> fmodpMass = fmodcpMass;
-                            ArrayList<String>[] fmodpaa = fmodcpaa;
-                            ArrayList<Double>[] fmodpaaMass = fmodcpaaMass;
-                            ArrayList<String> vmodp = vmodcp;
-                            ArrayList<Double> vmodpMass = vmodcpMass;
-                            ArrayList<String>[] vmodpaa = vmodcpaa;
-                            ArrayList<Double>[] vmodpaaMass = vmodcpaaMass;
-
-                            if (!CTermDirection) {
-                                fmod = fmodn;
-                                fmodMass = fmodnMass;
-                                fmodaa = fmodnaa;
-                                fmodaaMass = fmodnaaMass;
-                                vmod = vmodn;
-                                vmodMass = vmodnMass;
-                                vmodaa = vmodnaa;
-                                vmodaaMass = vmodnaaMass;
-                                fmodp = fmodnp;
-                                fmodpMass = fmodnpMass;
-                                fmodpaa = fmodnpaa;
-                                fmodpaaMass = fmodnpaaMass;
-                                vmodp = vmodnp;
-                                vmodpMass = vmodnpMass;
-                                vmodpaa = vmodnpaa;
-                                vmodpaaMass = vmodnpaaMass;
-                            }
-
-                            boolean hasFixed = false;
-
-                            // fixed aa defined protein terminal modification
-                            if (fmodaa != null && lastAcid > 0 && fmodaaMass[lastAcid].size() > 0) {
-                                hasFixed = true;
-                                for (int i = 0; i < fmodaaMass[lastAcid].size(); ++i) {
-                                    Double massDiffDiff = massDiff - fmodaaMass[lastAcid].get(i);
-                                    if (Math.abs(massDiffDiff) < massTolerance) {
-                                        modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
-                                    }
-
-                                    // variable aa defined protein terminal modification
-                                    if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, pepLen - 1);
-                                            }
-                                        }
-                                    }
-                                    // variable undefined protein terminal modifictation
-                                    if (vmod != null && modificationMatchEnd == null) {
-                                        for (int j = 0; j < vmod.size(); ++j) {
-                                            if (Math.abs(massDiffDiff - vmodMass.get(j)) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    // second ptm at peptide terminus
-                                    boolean hasFixedPep = false;
-                                    if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                            if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                hasFixedPep = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    if (fmodp != null) {
-                                        for (int j = 0; j < fmodp.size(); ++j) {
-                                            if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
-                                                hasFixedPep = true;
-                                                modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    if (!hasFixedPep) {
-                                        if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                            for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (vmodp != null) {
-                                            for (int j = 0; j < vmodp.size(); ++j) {
-                                                if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, pepLen - 1);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                }
-
-                            }
-
-                            // fixed undefined protein terminal modifictation
-                            if (fmod != null && modificationMatchEnd == null) {
-
-                                hasFixed = true;
-                                for (int i = 0; i < fmod.size(); ++i) {
-                                    Double massDiffDiff = massDiff - fmodMass.get(i);
-                                    if (Math.abs(massDiffDiff) < massTolerance) {
-                                        modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                    }
-
-                                    // variable aa defined protein terminal modification
-                                    if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < vmodaaMass[lastAcid].size(); ++j) {
-                                            if (Math.abs(massDiff - vmodaaMass[lastAcid].get(j)) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(vmodaa[lastAcid].get(j), true, pepLen - 1);
-                                            }
-                                        }
-                                    }
-                                    // variable undefined protein terminal modifictation
-                                    if (vmod != null && modificationMatchEnd == null) {
-                                        for (int j = 0; j < vmod.size(); ++j) {
-                                            if (Math.abs(massDiff - vmodMass.get(j)) < massTolerance) {
-                                                modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(vmod.get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    // second ptm at peptide terminus
-                                    boolean hasFixedPep = false;
-                                    if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
-                                        for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                            if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                hasFixedPep = true;
-                                                modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    if (fmodp != null) {
-                                        for (int j = 0; j < fmodp.size(); ++j) {
-                                            if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
-                                                hasFixedPep = true;
-                                                modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, pepLen - 1);
-                                            }
-                                        }
-                                    }
-
-                                    if (!hasFixedPep) {
-                                        if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                            for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (vmodp != null) {
-                                            for (int j = 0; j < vmodp.size(); ++j) {
-                                                if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(fmod.get(i), false, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, pepLen - 1);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (modificationMatchEnd == null) {
-                                // variable aa defined protein terminal modification
-                                if (vmodaa != null && lastAcid > 0 && vmodaaMass[lastAcid].size() > 0) {
-                                    for (int i = 0; i < vmodaaMass[lastAcid].size(); ++i) {
-                                        double massDiffDiff = massDiff - vmodaaMass[lastAcid].get(i);
-                                        if (Math.abs(massDiffDiff) < massTolerance) {
-                                            modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
-                                        }
-
-                                        // second ptm at peptide terminus
-                                        boolean hasFixedPep = false;
-                                        if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
-                                            for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-
-                                                if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (fmodp != null) {
-                                            for (int j = 0; j < fmodp.size(); ++j) {
-                                                if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (!hasFixedPep) {
-                                            if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                                for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                    if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                        hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen - 1);
-                                                    }
-                                                }
-                                            }
-
-                                            if (vmodp != null) {
-                                                for (int j = 0; j < vmodp.size(); ++j) {
-                                                    if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                        hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmodaa[lastAcid].get(i), true, pepLen - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, pepLen - 1);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                // variable undefined protein terminal modifictation
-                                if (vmod != null && modificationMatchEnd == null) {
-                                    for (int i = 0; i < vmod.size(); ++i) {
-                                        double massDiffDiff = massDiff - vmodMass.get(i);
-                                        if (Math.abs(massDiffDiff) < massTolerance) {
-                                            modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
-                                        }
-
-                                        // second ptm at peptide terminus
-                                        boolean hasFixedPep = false;
-                                        if (fmodpaa != null && lastAcid > 0 && fmodpaaMass[lastAcid].size() > 0) {
-                                            for (int j = 0; j < fmodpaaMass[lastAcid].size(); ++j) {
-                                                if (Math.abs(massDiffDiff - fmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodpaa[lastAcid].get(j), false, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (fmodp != null) {
-                                            for (int j = 0; j < fmodp.size(); ++j) {
-                                                if (Math.abs(massDiffDiff - fmodpMass.get(j)) < massTolerance) {
-                                                    hasFixedPep = true;
-                                                    modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
-                                                    modificationMatchEndEnd = new ModificationMatch(fmodp.get(j), false, pepLen - 1);
-                                                }
-                                            }
-                                        }
-
-                                        if (!hasFixedPep) {
-                                            if (vmodpaa != null && lastAcid > 0 && vmodpaaMass[lastAcid].size() > 0) {
-                                                for (int j = 0; j < vmodpaaMass[lastAcid].size(); ++j) {
-
-                                                    if (Math.abs(massDiffDiff - vmodpaaMass[lastAcid].get(j)) < massTolerance) {
-                                                        hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodpaa[lastAcid].get(j), true, pepLen - 1);
-                                                    }
-                                                }
-                                            }
-
-                                            if (vmodp != null) {
-                                                for (int j = 0; j < vmodp.size(); ++j) {
-                                                    if (Math.abs(massDiffDiff - vmodpMass.get(j)) < massTolerance) {
-                                                        hasFixedPep = true;
-                                                        modificationMatchEnd = new ModificationMatch(vmod.get(i), false, pepLen - 1);
-                                                        modificationMatchEndEnd = new ModificationMatch(vmodp.get(j), true, pepLen - 1);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (modificationMatchEnd != null) {
-                                MatrixContent newEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', cell, 0, null, combinationLength, pepLen, 0, modificationMatchEnd, null, -1);
-                                if (modificationMatchEndEnd == null) {
-                                    matrixFinished.add(newEndCell);
-                                } else {
-                                    MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, combinationLength, pepLen, 0, modificationMatchEndEnd, null, -1);
-                                    matrixFinished.add(newEndEndCell);
+                                    content.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, length + 1, 0, null, null, borders[3]));
                                 }
                             }
                         }
                     }
+
                 } else {
-                    for (Integer[] borders : setCharacter) {
-                        final int aminoAcid = borders[0];
-                        if (aminoAcid == '/') {
-                            continue;
-                        }
-                        final double newMass = oldMass + aaMasses[borders[3]];
-                        if (newMass - massTolerance <= combinationMass) {
-                            final int lessValue = less[aminoAcid];
-                            final int leftIndex = lessValue + borders[1];
-                            final int rightIndex = lessValue + borders[2] - 1;
-                            //ModificationMatch modificationMatch = modifictationFlags[borders[3]] ? new ModificationMatch(modifictationLabels[borders[3]], (borders[3] >= 128), pepLen) : null;
-                            if (combinationMass <= newMass + massTolerance) {
-                                MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, 0, null, null, borders[3]);
-                                List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                                insertList.add(newCell);
-                            } else {
-                                matrix.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, null, combinationLength, pepLen + 1, 0, null, null, borders[3]));
-                            }
-                        }
-                    }
-                }
+                    final String combinationSequence = combination.sequence;
+                    final int xNumLimit = combination.xNumLimit;
+                    final int numX = cell.numX;
 
-            } else {
-                final String combinationSequence = combination.sequence;
-                final int xNumLimit = combination.xNumLimit;
-                final int numX = cell.numX;
-
-                for (int i = 0; i < combinationSequence.length(); ++i) {
-                    final int aminoAcid = combinationSequence.charAt(i);
-                    final int lessValue = less[aminoAcid];
-                    final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
-                    final int leftIndex = lessValue + range[0];
-                    final int rightIndex = lessValue + range[1] - 1;
-                    final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                    if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
-                        MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, null, combinationLength + 1, pepLen + 1, newNumX, null, null, -1);
-                        List insertList = (combinationLength + 1 < lenCombinations) ? matrix : matrixFinished;
-                        insertList.add(newCell);
+                    for (int i = 0; i < combinationSequence.length(); ++i) {
+                        final int aminoAcid = combinationSequence.charAt(i);
+                        final int lessValue = less[aminoAcid];
+                        final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
+                        final int leftIndex = lessValue + range[0];
+                        final int rightIndex = lessValue + range[1] - 1;
+                        final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
+                        if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
+                            matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1));
+                        }
                     }
                 }
             }
@@ -1964,6 +2234,7 @@ public class FMIndex implements PeptideMapper {
 
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMappingWithoutVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
     
+        
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
@@ -2039,33 +2310,33 @@ public class FMIndex implements PeptideMapper {
 
         TagElement[] combinations = createPeptideCombinations(tagComponents, sequenceMatchingPreferences);
         TagElement[] combinationsReversed = createPeptideCombinations(tagComponentsReverse, sequenceMatchingPreferences);
-        int lenCombinations = combinations.length;
 
-        LinkedList<MatrixContent> matrixReversed = new LinkedList<MatrixContent>();
-        ArrayList<MatrixContent> matrixReversedFinished = new ArrayList<MatrixContent>();
-        LinkedList<MatrixContent> matrix = new LinkedList<MatrixContent>();
-        ArrayList<MatrixContent> matrixFinished = new ArrayList<MatrixContent>();
+        LinkedList<MatrixContent>[] matrixReversed = (LinkedList<MatrixContent>[])new LinkedList[combinationsReversed.length + 1];
+        LinkedList<MatrixContent>[] matrix = (LinkedList<MatrixContent>[])new LinkedList[combinations.length + 1];
         ArrayList<MatrixContent> cachePrimary = new ArrayList<MatrixContent>();
+        
+        for (int i = 0; i <= combinationsReversed.length; ++i) matrixReversed[i] = new LinkedList<MatrixContent>();
+        for (int i = 0; i <= combinations.length; ++i) matrix[i] = new LinkedList<MatrixContent>();
 
         if (cached != null) {
             for (MatrixContent matrixContent : cached) {
-                matrix.add(matrixContent);
+                matrix[0].add(matrixContent);
             }
         } else {
             // left index, right index, current character, previous matrix content, mass, peptideSequence, peptide length, number of X
-            matrixReversed.add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0, null, 0, 1, 0, null, null, -1));
+            matrixReversed[0].add(new MatrixContent(indexStringLength - 1));
         }
 
         if (cached == null) {
             // Map Reverse
             if (!hasCTermDirection) {
-                mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance);
+                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, massTolerance);
             } else {
-                mappingSequenceAndMasses(combinationsReversed, matrixReversed, matrixReversedFinished, lessReversed, occurrenceReversed, massTolerance, towardsC);
+                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, massTolerance, towardsC);
             }
 
             // Traceback Reverse
-            for (MatrixContent content : matrixReversedFinished) {
+            for (MatrixContent content : matrixReversed[combinationsReversed.length]) {
                 MatrixContent currentContent = content;
                 String currentPeptide = "";
 
@@ -2094,32 +2365,26 @@ public class FMIndex implements PeptideMapper {
                     currentContent = currentContent.previousContent;
                 }
                 String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
-                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1));
+                cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1));
             }
 
-            if (lenCombinations > 0) {
-                for (MatrixContent matrixContent : cachePrimary) {
-                    matrix.add(matrixContent);
-                }
-            } else {
-                for (MatrixContent matrixContent : cachePrimary) {
-                    matrixFinished.add(matrixContent);
-                }
+            for (MatrixContent matrixContent : cachePrimary) {
+                matrix[0].add(matrixContent);
             }
 
             cacheIt(refTagContent, cachePrimary);
         }
 
-        if (!matrix.isEmpty()) {
+        if (!matrix[0].isEmpty()) {
             // Map towards NTerm
             if (!hasNTermDirection) {
-                mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance);
+                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary, massTolerance);
             } else {
-                mappingSequenceAndMasses(combinations, matrix, matrixFinished, lessPrimary, occurrencePrimary, massTolerance, !towardsC);
+                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary, massTolerance, !towardsC);
             }
         }
         // Traceback from NTerm
-        for (MatrixContent content : matrixFinished) {
+        for (MatrixContent content : matrix[combinations.length]) {
             MatrixContent currentContent = content;
             String currentPeptide = "";
             ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
@@ -2206,10 +2471,22 @@ public class FMIndex implements PeptideMapper {
     }
 
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
         
     public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMappingWithVariants(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
     
+        long starttime = System.nanoTime();
+        
         HashMap<Peptide, HashMap<String, ArrayList<Integer>>> allMatches = new HashMap<Peptide, HashMap<String, ArrayList<Integer>>>();
         double xLimit = ((sequenceMatchingPreferences.getLimitX() != null) ? sequenceMatchingPreferences.getLimitX() : 1);
 
@@ -2299,11 +2576,11 @@ public class FMIndex implements PeptideMapper {
     
         if (cached != null) {
             for (MatrixContent matrixContent : cached) {
-                matrix[matrixContent.numEdits][0].add(matrixContent);
+                matrix[matrixContent.numVariants][0].add(matrixContent);
             }
         } else {
             // left index, right index, current character, previous matrix content, mass, peptideSequence, peptide length, number of X
-            matrixReversed[0][0].add(new MatrixContent(0, indexStringLength - 1, '\0', null, 0, null, 0, 1, 0, null, null, -1));
+            matrixReversed[0][0].add(new MatrixContent(indexStringLength - 1));
         }
 
         boolean firstHits = false;
@@ -2321,12 +2598,12 @@ public class FMIndex implements PeptideMapper {
                     int rightIndexFront = indexStringLength - 1;
                     ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
                     int errors = 0;
-                    String allEdits = "";
+                    String allVariants = "";
 
                     while (currentContent.previousContent != null) {
                         int aminoAcidPep = currentContent.character;
                         int aminoAcidProt = currentContent.character;
-                        int edit = currentContent.editOperation;
+                        int edit = currentContent.variant;
                         errors += (edit == '-') ? 0 : 1;
                         boolean update = true;
                         
@@ -2339,7 +2616,7 @@ public class FMIndex implements PeptideMapper {
                         if (aminoAcidPep > 0) {
                             currentPeptide += (char)aminoAcidPep;
                             testPeptide += (char)aminoAcidPep;
-                            allEdits += (char)edit;
+                            allVariants += (char)edit;
                             if (update){
                                 final int lessValue = lessPrimary[aminoAcidProt];
                                 final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, aminoAcidProt);
@@ -2359,17 +2636,17 @@ public class FMIndex implements PeptideMapper {
                         }
                         currentContent = currentContent.previousContent;
                     }
-                    
-System.out.println(testPeptide + " | " + allEdits);
+ 
+//System.out.println(currentPeptide + " " + allVariants);                   
                     String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
-                    allEdits = (new StringBuilder(allEdits).reverse()).toString();
-                    cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, 0, content.length, 0, null, modifications, -1, errors, '\0', allEdits));
+                    allVariants = (new StringBuilder(allVariants).reverse()).toString();
+                    cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1, errors, '\0', allVariants));
                     firstHits = true;
                 }
             }
 
             for (MatrixContent matrixContent : cachePrimary) {
-                matrix[matrixContent.numEdits][0].add(matrixContent);
+                matrix[matrixContent.numVariants][0].add(matrixContent);
             }
             cacheIt(refTagContent, cachePrimary);
         }
@@ -2384,13 +2661,13 @@ System.out.println(testPeptide + " | " + allEdits);
                 MatrixContent currentContent = content;
                 String currentPeptide = "";
                 ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
-                String allEdits = "";
+                String allVariants = "";
 
                 while (currentContent.previousContent != null) {
                     int aminoAcid = currentContent.character;
                     if (aminoAcid > 0) {
                         currentPeptide += (char)aminoAcid;
-                        allEdits += (char)currentContent.editOperation;
+                        allVariants += (char)currentContent.variant;
                     }
 
 
@@ -2419,7 +2696,7 @@ System.out.println(testPeptide + " | " + allEdits);
                 }
 
                 String peptide = currentPeptide + currentContent.peptideSequence;
-                allEdits += currentContent.allEdits;
+                allVariants += currentContent.allVariants;
 
                 if (turned) {
                     leftIndex = 0;
@@ -2428,7 +2705,7 @@ System.out.println(testPeptide + " | " + allEdits);
                     for (int p = 0; p < peptide.length(); ++p) {
                         boolean update = true;
                         int aminoAcid = peptide.charAt(p);
-                        int edit = allEdits.charAt(p);
+                        int edit = allVariants.charAt(p);
                         if (edit != '-'){
                             if (edit == '*') update = false;
                             else if ('A' <= edit && edit <= 'Z') aminoAcid = edit; // substitution
@@ -2447,11 +2724,10 @@ System.out.println(testPeptide + " | " + allEdits);
                         modificationMatch.setModificationSite(peptide.length() - modificationMatch.getModificationSite() + 1);
                     }
 
-                    allEdits = (new StringBuilder(allEdits).reverse()).toString();
+                    allVariants = (new StringBuilder(allVariants).reverse()).toString();
                     peptide = (new StringBuilder(peptide).reverse()).toString();
                 }
-System.out.println(peptide + " | " + allEdits + " " + leftIndex + " " + rightIndex);
-
+//System.out.println(peptide + " | " + allVariants);
                 for (int j = leftIndex; j <= rightIndex; ++j) {
                     int pos = getTextPosition(j);
                     int index = binarySearch(boundaries, pos);
@@ -2506,7 +2782,7 @@ System.out.println(peptide + " | " + allEdits + " " + leftIndex + " " + rightInd
                 }
             }
         }
-
+        /*
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
             
@@ -2515,11 +2791,15 @@ System.out.println(peptide + " | " + allEdits + " " + leftIndex + " " + rightInd
             for (Peptide pep : allMatches.keySet()){
                 for (String acc : allMatches.get(pep).keySet()){
                     for (int pos : allMatches.get(pep).get(acc)){
-                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos); // + " | " + tagmass + " " + pepMass(pep.getSequence()));
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos + " | " + tagmass + " " + pepMass(pep.getSequence()));
                     }
                 }
             }
         }
+        */
+        
+        System.out.println("time: " + (System.nanoTime() - starttime));
+        
         return allMatches;
     }
 

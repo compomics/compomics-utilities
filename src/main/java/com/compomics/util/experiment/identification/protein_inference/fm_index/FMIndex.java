@@ -94,6 +94,10 @@ public class FMIndex implements PeptideMapper {
      */
     private int[] aaMassIndexes = null;
     /**
+     * List of all indexes for valid amino acid masses
+     */
+    private int numMasses = 0;
+    /**
      * List of all amino acid masses.
      */
     private String[] modifictationLabels = null;
@@ -227,6 +231,11 @@ public class FMIndex implements PeptideMapper {
         value = (value >>> 27) + (value & mersenneMask);
         return (value >= mersenneMask) ? value - mersenneMask : value;
     }
+    public int computeHash(int l, int r, int a, int k, int j, int m){
+        int value = l ^ (l << 8) ^ r ^ (r >> 8) ^ (a << 6) ^ (k << 12) ^ (j << 18) ^ m;
+        value = (value >>> 27) + (value & mersenneMask);
+        return (value >= mersenneMask) ? value - mersenneMask : value;
+    }
     
     public boolean keyNotSet(long[] keys, int key){
          return ((keys[key >> 6] >> (key & 63)) & 1L) == 0;
@@ -265,7 +274,6 @@ public class FMIndex implements PeptideMapper {
             }
         }
         
-        System.out.println(maxNumberVariants);
         
         
         // load all ptm preferences
@@ -637,6 +645,7 @@ public class FMIndex implements PeptideMapper {
         
         aaMassIndexes = new int[aaMassVector.size()];
         for (int i = 0; i < aaMassVector.size(); ++i) aaMassIndexes[i] = aaMassVector.get(i); 
+        numMasses = aaMassVector.size();
         
         
         
@@ -758,7 +767,7 @@ public class FMIndex implements PeptideMapper {
         }
 
         // creating the occurrence table and less table for backward search over forward text
-        occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, hasPTMatTerminus);
+        occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
         lessTablePrimary = occurrenceTablePrimary.createLessTable();
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -796,7 +805,7 @@ public class FMIndex implements PeptideMapper {
             }
 
             // create inversed less and occurrence table
-            occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler, hasPTMatTerminus);
+            occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler, numMasses, hasPTMatTerminus);
             lessTableReversed = occurrenceTableReversed.createLessTable();
             if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
                 waitingHandler.increaseSecondaryProgressCounter();
@@ -804,9 +813,13 @@ public class FMIndex implements PeptideMapper {
 
             TReversed = null;
         }
-
+        
+        
         T = null;
         bwt = null;
+        
+        
+        
     }
 
     /**
@@ -1141,8 +1154,9 @@ public class FMIndex implements PeptideMapper {
                                 }
 
                                 // insertion and substitution
-                                ArrayList<Integer[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                                for (Integer[] borders : setCharacter) {
+                                int[][] setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                                    int[] borders = setCharacter[b];
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
                                     final int errorLessValue = lessTablePrimary[errorAminoAcid];
@@ -1293,8 +1307,9 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
 
                                 // insertion and substitution
                                 
-                                ArrayList<Integer[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                                for (Integer[] borders : setCharacter) {
+                                int[][] setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                                    int[] borders = setCharacter[b];
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
                                     final int errorLessValue = lessTablePrimary[errorAminoAcid];
@@ -1389,12 +1404,12 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
      *
      * @param setCharacter the set characters
      */
-    private void addModifications(ArrayList<Integer[]> setCharacter) {
-        int maxNum = setCharacter.size();
+    private void addModificationsI(int[][] setCharacter) {
+        int maxNum = setCharacter[numMasses][0];
         for (int i = 0; i < maxNum; ++i) {
-            int pos = 128 + setCharacter.get(i)[0];
+            int pos = 128 + setCharacter[i][0];
             while (pos < aaMasses.length && aaMasses[pos] != -1) {
-                setCharacter.add(new Integer[]{setCharacter.get(i)[0], setCharacter.get(i)[1], setCharacter.get(i)[2], pos, 0});
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{setCharacter[i][0], setCharacter[i][1], setCharacter[i][2], pos};
                 pos += 128;
             }
         }
@@ -1421,36 +1436,35 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                 final int length = cell.length;
                 final int leftIndexOld = cell.left;
                 final int rightIndexOld = cell.right;
+                final int numX = cell.numX;
 
                 if (combination.isMass) {
                     final double combinationMass = combination.mass;
                     final double oldMass = cell.mass;
 
-                    ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                    if (withVariableModifications) {
-                        addModifications(setCharacter);
-                    }
-                    for (Integer[] borders : setCharacter) {
+                    int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                    if (withVariableModifications) addModificationsI(setCharacter);
+                    
+                    //for (Integer[] borders : setCharacter) {
+                    for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                        int[] borders = setCharacter[b];
                         final int aminoAcid = borders[0];
-                        if (aminoAcid == '/') {
-                            continue;
-                        }
+                        if (aminoAcid == '/') continue;
                         final double newMass = oldMass + aaMasses[borders[3]];
                         if (newMass - massTolerance <= combinationMass) {
                             final int lessValue = less[aminoAcid];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
                             if (combinationMass <= newMass + massTolerance) {
-                                matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, 0, borders[3]));
+                                matrix[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, numX, borders[3]));
                             } else {
-                                content.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, 0, borders[3]));
+                                content.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, numX, borders[3]));
                             }
                         }
                     }
                 } else {
                     final String combinationSequence = combination.sequence;
                     final int xNumLimit = combination.xNumLimit;
-                    final int numX = cell.numX;
 
                     for (int i = 0; i < combinationSequence.length(); ++i) {
                         final int aminoAcid = combinationSequence.charAt(i);
@@ -1484,8 +1498,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
      */
     private void mappingSequenceAndMassesWithVariants(TagElement[] combinations, LinkedList<MatrixContent>[][] matrix, int[] less, WaveletTree occurrence, double massTolerance) {
         final int lenCombinations = combinations.length;
-        long[] keys = new long[(mersenneMask >> 6) + 1];
-        int cnt = 0;
+        //int cnt = 0;
         
         for (int k = 0; k <= maxNumberVariants; ++k){
             LinkedList<MatrixContent>[] row = matrix[k];
@@ -1493,85 +1506,37 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
             for (int j = 0; j < lenCombinations; ++j){
                 TagElement combination = combinations[j];
                 LinkedList<MatrixContent> cell = row[j];
+                
                 while (!cell.isEmpty()) {
-                    ++cnt;
+                    //++cnt;
                     MatrixContent content = cell.removeFirst();
                     final int leftIndexOld = content.left;
                     final int length = content.length;
                     final int rightIndexOld = content.right;
                     final int numVariants = content.numVariants;
                     final int numX = content.numX;
+                    
+                    
+//System.out.println(k + " " + j + " | " + leftIndexOld + " " + rightIndexOld + " | " + (char)content.character + " " + content.mass);
                     if (combination.isMass) {
                         final double combinationMass = combination.mass;
                         final double oldMass = content.mass;
-
-                        ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                        if (withVariableModifications) addModifications(setCharacter);
-                        /*
-                        for (Integer[] borders : setCharacter) {
+                        
+                        int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        if (withVariableModifications) addModificationsI(setCharacter);
+                        
+                        for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                            int[] borders = setCharacter[b];
+                        //for (Integer[] borders : setCharacter){
                             final int aminoAcid = borders[0];
                             if (aminoAcid == '/') continue;
                             final double newMass = oldMass + aaMasses[borders[3]];                                
                             final int lessValue = less[aminoAcid];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            int matchKey = computeHash(leftIndex, rightIndex, aminoAcid, length + 1);
-                            if (newMass - massTolerance <= combinationMass && keyNotSet(keys, matchKey)) {
-                                keys[matchKey >> 6] |= (1L << (matchKey & 63));
-                                
-                                if (Math.abs(combinationMass - newMass) <= massTolerance){
-                                    row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, 0, length + 1, 0, borders[3], numVariants, '-', null));
-                                } else {
-                                    cell.add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, 0, borders[3], numVariants, '-', null));
-                                }
-                                
-                            }
-                            // insertion
-                            if (numVariants < maxNumberVariants){
-                                int insertionKey = computeHash(leftIndex, rightIndex, '*', length + 1);
-                                matrix[k + 1][j].add(new MatrixContent(leftIndex, rightIndex, '*', content, oldMass, length, 0, borders[3], numVariants + 1, (char)aminoAcid, null));
-                            }
-                        }
-                        
-                        if (numVariants < maxNumberVariants){
-                            for (int index : aaMassIndexes){
-                                double aminoAcidMass = aaMasses[index];
-                                int amino = index & 127;
-                                if (aminoAcidMass > 0 && oldMass + aminoAcidMass < combinationMass + massTolerance){
-                                    double newMass = oldMass + aminoAcidMass;
-
-                                    // deletion + substitution
-                                    for (Integer[] borders : setCharacter) {
-                                        final int errorAminoAcid = borders[0];
-                                        final int errorLessValue = less[borders[0]];
-                                        final int errorLeftIndex = errorLessValue + borders[1];
-                                        final int errorRightIndex = errorLessValue + borders[2] - 1;
-                                        int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
-
-                                        // deletion
-                                         matrix[k + 1][j + offset].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, newMass, length + 1, 0, index, numVariants + 1, '*', null));
-                                        
-                                            
-                                        if (amino == errorAminoAcid) continue;
-                                        matrix[k + 1][j + offset].add(new MatrixContent(errorLeftIndex, errorRightIndex, amino, content, newMass, length + 1, 0, index, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0], null));
-                                        
-                                    }
-                                }
-                            }
-                        }
-                        */
-                        
-                        
-                        
-                        for (Integer[] borders : setCharacter) {
-                            final int aminoAcid = borders[0];
-                            if (aminoAcid == '/') continue;
-                            final double newMass = oldMass + aaMasses[borders[3]];                                
-                            final int lessValue = less[aminoAcid];
-                            final int leftIndex = lessValue + borders[1];
-                            final int rightIndex = lessValue + borders[2] - 1;
+                            int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
+                            
                             if (newMass - massTolerance <= combinationMass) {
-                                int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
                                 row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
                             }
                             // variants
@@ -1583,11 +1548,11 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                 // substitution
                                 for (int index : aaMassIndexes){
                                     double aminoMass = oldMass + aaMasses[index];
-                                    int offset = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
+                                    int offsetSub = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
                                     int amino = index & 127;
                                 
                                     if (amino != aminoAcid && aminoMass < combinationMass + massTolerance){
-                                        matrix[k + 1][j + offset].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char)aminoAcid, null));
+                                        matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char)aminoAcid, null));
                                     }
                                 }
                             }
@@ -1597,22 +1562,16 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         if (numVariants < maxNumberVariants){
                             for (int index : aaMassIndexes){
                                 double aminoMass = oldMass + aaMasses[index];
-                                int offset = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
+                                int offsetDel = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
                                 int amino = index & 127;
                                 
                                 if (aminoMass < combinationMass + massTolerance){
-                                    matrix[k + 1][j + offset].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
+                                    matrix[k + 1][j + offsetDel].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
                                 }
                             }
                         }
                         
                         
-                        
-                        
-                        
-                        
-                        
-
                     } else { // sequence mapping 
                         final String combinationSequence = combination.sequence;
                         final int xNumLimit = combination.xNumLimit;
@@ -1637,8 +1596,9 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                                 if (numVariants < maxNumberVariants) matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
 
                                 // insertion and substitution
-                                ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                                for (Integer[] borders : setCharacter) {
+                                int[][] setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                for (int b = 0; b < setCharacterSeq[numMasses][0]; ++b){
+                                    int[] borders = setCharacterSeq[b];
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid != 'X') ? 0 : 1);
                                     if (errorNewNumX > xNumLimit) continue;
@@ -1660,7 +1620,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                 }
             }
         }
-System.out.println("count: " + cnt);
+//System.out.println("count: " + cnt);
     }
     
     double pepMass(String peptide){
@@ -1701,13 +1661,11 @@ System.out.println("count: " + cnt);
                     final double combinationMass = combination.mass;
                     final double oldMass = cell.mass;
 
-                    ArrayList<Integer[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                    if (withVariableModifications) {
-                        addModifications(setCharacter);
-                    }
-
+                    int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                    if (withVariableModifications) addModificationsI(setCharacter);
                     if (k == lenCombinations - 1) {
-                        for (Integer[] borders : setCharacter) {
+                        for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                            int[] borders = setCharacter[b];
                             final int aminoAcid = borders[0];
 
                             if (aminoAcid != '/') {
@@ -2179,11 +2137,11 @@ System.out.println("count: " + cnt);
                             }
                         }
                     } else {
-                        for (Integer[] borders : setCharacter) {
+                        for (int b = 0; b < setCharacter[numMasses][0]; ++b){
+                            int[] borders = setCharacter[b];
                             final int aminoAcid = borders[0];
-                            if (aminoAcid == '/') {
-                                continue;
-                            }
+                            if (aminoAcid == '/') continue;
+                            
                             final double newMass = oldMass + aaMasses[borders[3]];
                             if (newMass - massTolerance <= combinationMass) {
                                 final int lessValue = less[aminoAcid];
@@ -2651,7 +2609,6 @@ System.out.println("count: " + cnt);
             cacheIt(refTagContent, cachePrimary);
         }
         
-        //if (!matrix[0][0].isEmpty()){
         if (firstHits){
             mappingSequenceAndMassesWithVariants(combinations, matrix, lessPrimary, occurrencePrimary, massTolerance);
         }
@@ -2782,7 +2739,8 @@ System.out.println("count: " + cnt);
                 }
             }
         }
-        /*
+        
+        long computetime = System.nanoTime() - starttime;
         if (tag.getContent().size() == 3){
             ArrayList<TagComponent> tc = tag.getContent();
             
@@ -2791,14 +2749,15 @@ System.out.println("count: " + cnt);
             for (Peptide pep : allMatches.keySet()){
                 for (String acc : allMatches.get(pep).keySet()){
                     for (int pos : allMatches.get(pep).get(acc)){
-                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos + " | " + tagmass + " " + pepMass(pep.getSequence()));
+                        System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + pep.getSequence() + " " + acc + " " + pos + " | " + tagmass + " " + pepMass(pep.getSequence()) + " | " + computetime);
                     }
                 }
             }
         }
-        */
-        
-        System.out.println("time: " + (System.nanoTime() - starttime));
+        if (allMatches.isEmpty()){
+            ArrayList<TagComponent> tc = tag.getContent();
+            System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " | " + computetime);
+        }
         
         return allMatches;
     }

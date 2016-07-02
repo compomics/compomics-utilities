@@ -120,12 +120,21 @@ public class Rank {
      * @return true if the value is equal to one
      */
     public boolean isOne(int index) {
-        if (0 <= index && index < length) {
-            int cell = index >>> shift;
-            int pos = index & mask;
-            return (((bitfield[cell] >>> pos) & 1L) == 1);
-        }
-        throw new ArrayIndexOutOfBoundsException();
+        int cell = index >>> shift;
+        int pos = index & mask;
+        return (((bitfield[cell] >>> pos) & 1L) == 1);
+    }
+
+    /**
+     * Returns true if the value is equal to one.
+     *
+     * @param index the value
+     * @return the bit 
+     */
+    public int isOneInt(int index) {
+        int cell = index >>> shift;
+        int pos = index & mask;
+        return (int)((bitfield[cell] >>> pos) & 1L);
     }
 
     /**

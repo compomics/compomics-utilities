@@ -1212,7 +1212,7 @@ public class FMIndexTest extends TestCase {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
-        File sequences = new File("../../Data/ps/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
+        File sequences = new File("../../data/1.4-resources/uniprot-human-reviewed-trypsin-april-2016_concatenated_target_decoy.fasta");
         //File sequences = new File("src/test/resources/experiment/proteinTreeTestSequences_1");
         SequenceFactory sequenceFactory = SequenceFactory.getInstance();
         sequenceFactory.loadFastaFile(sequences, waitingHandlerCLIImpl);

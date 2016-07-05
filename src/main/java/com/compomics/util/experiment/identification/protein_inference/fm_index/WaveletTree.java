@@ -76,14 +76,7 @@ public class WaveletTree {
      */
     private int leftRightMask;
     
-    
-    private WaveletNode[] waveletNodes;
-    
     private int[] less;
-    
-    private int innerNodes;
-    
-    private int numRankIndexes;
     
 
     /**
@@ -132,30 +125,7 @@ public class WaveletTree {
     }
     
     
-    public class WaveletNode {
-        long[] directions;
-        int leftChar;
-        int rightChar;
-        int leftRightMask;
-        boolean continueLeft;
-        boolean continueRight;
-        Rank rank;
-        
-        /*WaveletNode(long[] directions, int rankIndex, int leftChar, int rightChar, boolean continueLeft, boolean continueRight){
-            this.directions = directions;
-            this.rankIndex = rankIndex;
-            this.leftChar = leftChar;
-            this.rightChar = rightChar;
-            this.continueLeft = continueLeft;
-            this.continueRight = continueRight;
-        }*/
-        
-        WaveletNode(){
-            directions = new long[2];
-            rank = null;
-        }
-          
-    }
+    
 
     /**
      * Constructor.
@@ -212,13 +182,6 @@ public class WaveletTree {
             huffmanNodes.add(new HuffmanNode(first, second));
         }
         
-        numRankIndexes = (1 << huffmanNodes.get(0).depth) - 1;
-        waveletNodes = new WaveletNode[numRankIndexes];
-        innerNodes = huffmanNodes.get(0).innernodes;
-        for (int i = 1; i < numRankIndexes; ++i) waveletNodes[i] = null;
-        this.numMasses = numMasses;
-        
-        createWaveletTreeHuffmanIterative(text, waitingHandler, huffmanNodes.get(0), hasPTMatTerminus, 0);
         createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0), numMasses, hasPTMatTerminus);
         
         
@@ -248,101 +211,6 @@ public class WaveletTree {
         this.numMasses = numMasses;
         createWaveletTreeHuffman(text, waitingHandler, root, numMasses, hasPTMatTerminus);
     }
-    
-    
-    
-    public void createWaveletTreeHuffmanIterative(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus, int rankIndex) {
-        long[] alphabet = new long[2];
-        alphabet[0] = root.alphabet[0];
-        alphabet[1] = root.alphabet[1];
-        
-        WaveletNode waveletNode = new WaveletNode();
-
-        long[] alphabetExcluded = new long[2];
-        alphabetExcluded[0] = 1L << '$';
-        if (!hasPTMatTerminus) alphabetExcluded[0] |= 1L << '/';
-        alphabetExcluded[1] = 1L << ('B' & 63);
-        alphabetExcluded[1] |= 1L << ('X' & 63);
-        alphabetExcluded[1] |= 1L << ('Z' & 63);
-
-        long[] alphabet_left = new long[2];
-        long[] alphabet_right = new long[2];
-        
-        
-
-        waveletNode.directions[0] = alphabet_left[0] = root.leftChild.alphabet[0];
-        waveletNode.directions[1] = alphabet_left[1] = root.leftChild.alphabet[1];
-        alphabet_right[0] = root.rightChild.alphabet[0];
-        alphabet_right[1] = root.rightChild.alphabet[1];
-
-        waveletNode.continueLeft = (((alphabet_left[0] & (~alphabetExcluded[0])) + (alphabet_left[1] & (~alphabetExcluded[1]))) > 0);
-        waveletNode.continueRight = (((alphabet_right[0] & (~alphabetExcluded[0])) + (alphabet_right[1] & (~alphabetExcluded[1]))) > 0);
-        waveletNode.rank = new Rank(text, alphabet_right);
-
-        int lenAlphabet = Long.bitCount(alphabet[0]) + Long.bitCount(alphabet[1]);
-        byte[] charAlphabetField = new byte[lenAlphabet];
-
-        for (int i = 0; i < root.charAlphabet.size(); ++i) {
-            charAlphabetField[i] = root.charAlphabet.get(i);
-        }
-        waveletNode.leftChar = charAlphabetField[0];
-        waveletNode.rightChar = charAlphabetField[lenAlphabet - 1];
-        if (root.leftChild.depth > 0) waveletNode.leftRightMask = 4;
-        if (root.rightChild.depth > 0) waveletNode.leftRightMask |= 2;
-        
-        waveletNodes[rankIndex] = waveletNode;
-
-        int len_alphabet_left = Long.bitCount(alphabet_left[0]) + Long.bitCount(alphabet_left[1]);
-        int len_alphabet_right = Long.bitCount(alphabet_right[0]) + Long.bitCount(alphabet_right[1]);
-
-        if (len_alphabet_left > 1) {
-            int len_text_left = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >>> shift;
-                int pos = text[i] & mask;
-                len_text_left += (int) ((alphabet_left[cell] >>> pos) & 1L);
-            }
-            if (len_text_left > 0) {
-                byte[] text_left = new byte[len_text_left];
-                int j = 0;
-                for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >>> shift;
-                    int pos = text[i] & mask;
-                    long bit = (alphabet_left[cell] >>> pos) & 1L;
-                    if (bit > 0) {
-                        text_left[j++] = text[i];
-                    }
-                }
-                createWaveletTreeHuffmanIterative(text_left, waitingHandler, root.leftChild, hasPTMatTerminus, 2 * rankIndex + 1);
-            }
-        }
-        if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-            return;
-        }
-
-        if (len_alphabet_right > 1) {
-            int len_text_right = 0;
-            for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >>> shift;
-                int pos = text[i] & mask;
-                len_text_right += (int) ((alphabet_right[cell] >>> pos) & 1L);
-            }
-            if (len_text_right > 0) {
-                byte[] text_right = new byte[len_text_right];
-                int j = 0;
-                for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >>> shift;
-                    int pos = text[i] & mask;
-                    long bit = (alphabet_right[cell] >>> pos) & 1L;
-                    if (bit > 0) {
-                        text_right[j++] = text[i];
-                    }
-                }
-                createWaveletTreeHuffmanIterative(text_right, waitingHandler, root.rightChild, hasPTMatTerminus, 2 * rankIndex + 2);
-            }
-        }
-    }
-    
     
     
 
@@ -553,8 +421,8 @@ public class WaveletTree {
         query[numMasses] = new int[]{0};
         
         if (leftIndex + 1 < rightIndex)
-            rangeQueryIterative(leftIndex, rightIndex, query);
-        else rangeQueryOneValueIterative(rightIndex, query);
+            rangeQuery(leftIndex, rightIndex, query);
+        else rangeQueryOneValue(rightIndex, query);
         
         return query;
     }
@@ -589,51 +457,6 @@ public class WaveletTree {
         }
     }
     
-    
-    public void rangeQueryIterative(int leftIndex, int rightIndex, int[][] setCharacter){
-        int[] queue = new int[innerNodes];
-        int[] leftIndexes = new int[innerNodes];
-        int[] rightIndexes = new int[innerNodes];
-        queue[0] = 0;
-        leftIndexes[0] = leftIndex;
-        rightIndexes[0] = rightIndex;
-        int start = 0;
-        int end = 1;
-        
-        while (start < end){
-            leftIndex = leftIndexes[start];
-            rightIndex = rightIndexes[start];
-            int rankIndex = queue[start++];
-            WaveletNode waveletNode = waveletNodes[rankIndex];
-            int newLeftIndex = (leftIndex >= 0) ? waveletNode.rank.getRankOne(leftIndex) : 0;
-            int newRightIndex = (rightIndex >= 0) ? waveletNode.rank.getRankOne(rightIndex) : 0;
-
-            if (waveletNode.continueRight && newRightIndex - newLeftIndex > 0) {
-                int newRankIndex = (rankIndex << 1) + 2;
-                if (newRankIndex < numRankIndexes && waveletNodes[newRankIndex] != null) {
-                    leftIndexes[end] = newLeftIndex - 1;
-                    rightIndexes[end] = newRightIndex - 1;
-                    queue[end++] = newRankIndex;
-                } else {
-                    setCharacter[setCharacter[numMasses][0]++] = new int[]{waveletNode.rightChar, newLeftIndex, newRightIndex, waveletNode.rightChar};
-                }
-            }
-
-            newLeftIndex = leftIndex - newLeftIndex;
-            newRightIndex = rightIndex - newRightIndex;
-            if (waveletNode.continueLeft && newRightIndex - newLeftIndex > 0) {
-                int newRankIndex = (rankIndex << 1) + 1;
-                if (newRankIndex < numRankIndexes && waveletNodes[newRankIndex] != null) {
-                    leftIndexes[end] = newLeftIndex;
-                    rightIndexes[end] = newRightIndex;
-                    queue[end++] = newRankIndex;
-                } else {
-                    setCharacter[setCharacter[numMasses][0]++] = new int[]{waveletNode.leftChar, newLeftIndex + 1, newRightIndex + 1, waveletNode.leftChar};
-                }
-            }
-        }
-    }
-    
 
     /**
      * Fills a list of character and new left/right index for a given range.
@@ -645,9 +468,10 @@ public class WaveletTree {
         int switchOption = rank.isOneInt(index);
         switchOption += leftRightMask & (4 >> switchOption);
         switch(switchOption){
-            case 0: // go left and no left child avaliable
-                int newIndex0 = rank.getRankZero(index);
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar};
+                
+            case 3: // go right and right child avaliable
+                int newIndex3 = rank.getRankOne(index);
+                rightChild.rangeQueryOneValue(newIndex3 - 1, setCharacter);
                 break;
                 
             case 4: // go left and left child avaliable
@@ -655,55 +479,15 @@ public class WaveletTree {
                 leftChild.rangeQueryOneValue(newIndex4 - 1, setCharacter);
                 break;
                 
+            case 0: // go left and no left child avaliable
+                int newIndex0 = rank.getRankZero(index);
+                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar};
+                break;
+                
             case 1: // go right and no right child avaliable
                 int newIndex1 = rank.getRankOne(index);
                 setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar};
                 break;
-                
-            case 3: // go right and right child avaliable
-                int newIndex3 = rank.getRankOne(index);
-                rightChild.rangeQueryOneValue(newIndex3 - 1, setCharacter);
-                break;
-        }
-    }
-    
-    /**
-     * Fills a list of character and new left/right index for a given range.
-     *
-     * @param index index boundary
-     * @param setCharacter list of counted characters
-     */
-    public void rangeQueryOneValueIterative(int index, int[][] setCharacter) {
-        boolean stayInLoop = true;
-        int rankIndex = 0;
-        
-        while(stayInLoop){
-            WaveletNode waveletNode = waveletNodes[rankIndex];
-            int switchOption = waveletNode.rank.isOneInt(index);
-            switchOption += waveletNode.leftRightMask & (4 >> switchOption);
-            switch(switchOption){
-                case 0: // go left and no left child avaliable
-                    index = waveletNode.rank.getRankZero(index);
-                    setCharacter[setCharacter[numMasses][0]++] = new int[]{waveletNode.leftChar, index - 1, index, waveletNode.leftChar};
-                    stayInLoop = false;
-                    break;
-
-                case 4: // go left and left child avaliable
-                    index = waveletNode.rank.getRankZero(index) - 1;
-                    rankIndex = (rankIndex << 1) + 1;
-                    break;
-
-                case 1: // go right and no right child avaliable
-                    index = waveletNode.rank.getRankOne(index);
-                    setCharacter[setCharacter[numMasses][0]++] = new int[]{waveletNode.rightChar, index - 1, index, waveletNode.rightChar};
-                    stayInLoop = false;
-                    break;
-
-                case 3: // go right and right child avaliable
-                    index = waveletNode.rank.getRankOne(index) - 1;
-                    rankIndex = (rankIndex << 1) + 2;
-                    break;
-            }
         }
     }
     

@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 import org.jsuffixarrays.*;
 
@@ -1404,7 +1403,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
      *
      * @param setCharacter the set characters
      */
-    private void addModificationsI(int[][] setCharacter) {
+    private void addModifications(int[][] setCharacter) {
         int maxNum = setCharacter[numMasses][0];
         for (int i = 0; i < maxNum; ++i) {
             int pos = 128 + setCharacter[i][0];
@@ -1443,7 +1442,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     final double oldMass = cell.mass;
 
                     int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                    if (withVariableModifications) addModificationsI(setCharacter);
+                    if (withVariableModifications) addModifications(setCharacter);
                     
                     //for (Integer[] borders : setCharacter) {
                     for (int b = 0; b < setCharacter[numMasses][0]; ++b){
@@ -1523,11 +1522,10 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         final double oldMass = content.mass;
                         
                         int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                        if (withVariableModifications) addModificationsI(setCharacter);
+                        if (withVariableModifications) addModifications(setCharacter);
                         
                         for (int b = 0; b < setCharacter[numMasses][0]; ++b){
                             int[] borders = setCharacter[b];
-                        //for (Integer[] borders : setCharacter){
                             final int aminoAcid = borders[0];
                             if (aminoAcid == '/') continue;
                             final double newMass = oldMass + aaMasses[borders[3]];                                
@@ -1591,7 +1589,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                             if (leftIndex <= rightIndex) row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
 
                             // variants
-                            if (numVariants < maxNumberVariants && c == 0){
+                            if (false && numVariants < maxNumberVariants && c == 0){
                                 // deletion
                                 if (numVariants < maxNumberVariants) matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
 
@@ -1662,7 +1660,7 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     final double oldMass = cell.mass;
 
                     int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-                    if (withVariableModifications) addModificationsI(setCharacter);
+                    if (withVariableModifications) addModifications(setCharacter);
                     if (k == lenCombinations - 1) {
                         for (int b = 0; b < setCharacter[numMasses][0]; ++b){
                             int[] borders = setCharacter[b];
@@ -2475,9 +2473,9 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
         int[] lessReversed = null;
         WaveletTree occurrencePrimary = null;
         WaveletTree occurrenceReversed = null;
-        boolean hasCTermDirection = hasCTermDirectionPTM;
-        boolean hasNTermDirection = hasNTermDirectionPTM;
-        boolean towardsC = true;
+        //boolean hasCTermDirection = hasCTermDirectionPTM;
+        //boolean hasNTermDirection = hasNTermDirectionPTM;
+        //boolean towardsC = true;
 
         // turning complete tag content if tag set starts with a smaller mass than it ends
         if (turned) {
@@ -2491,9 +2489,9 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
             lessPrimary = lessTableReversed;
             occurrenceReversed = occurrenceTablePrimary;
             occurrencePrimary = occurrenceTableReversed;
-            hasCTermDirection = hasNTermDirectionPTM;
-            hasNTermDirection = hasCTermDirectionPTM;
-            towardsC = false;
+            //hasCTermDirection = hasNTermDirectionPTM;
+            //hasNTermDirection = hasCTermDirectionPTM;
+            //towardsC = false;
         } else {
             refTagContent = tagElements;
             lessPrimary = lessTablePrimary;
@@ -2551,7 +2549,6 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                 for (MatrixContent content : matrixReversed[k][combinationsReversed.length]) {
                     MatrixContent currentContent = content;
                     String currentPeptide = "";
-                    String testPeptide = "";  // TODO: delete
                     int leftIndexFront = 0;
                     int rightIndexFront = indexStringLength - 1;
                     ArrayList<ModificationMatch> modifications = new ArrayList<ModificationMatch>();
@@ -2573,7 +2570,6 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                         
                         if (aminoAcidPep > 0) {
                             currentPeptide += (char)aminoAcidPep;
-                            testPeptide += (char)aminoAcidPep;
                             allVariants += (char)edit;
                             if (update){
                                 final int lessValue = lessPrimary[aminoAcidProt];
@@ -2753,10 +2749,9 @@ System.out.println(accession + " " + (pos - boundaries[index]) + " " + currentPe
                     }
                 }
             }
-        }
-        if (allMatches.isEmpty()){
-            ArrayList<TagComponent> tc = tag.getContent();
-            System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " | " + computetime);
+            if (allMatches.isEmpty()){
+                System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " | " + computetime);
+            }
         }
         
         return allMatches;

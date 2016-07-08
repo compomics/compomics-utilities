@@ -366,18 +366,12 @@ public class SpectrumMatch extends IdentificationMatch {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
                         ArrayList<PeptideProteinMapping> proteinMapping
                                 = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
-                        HashSet<String> peptideKeys = new HashSet<String>(proteinMapping.size());
-                        for (PeptideProteinMapping peptideProteinMapping : proteinMapping) {
-                            Peptide peptide = new Peptide(peptideProteinMapping.getPeptideSequence(), peptideProteinMapping.getModificationMatches());
-                            String peptideKey = peptide.getKey();
-                            if (!peptideKeys.contains(peptideKey)) {
-                                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
-                                        assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
-                                peptideAssumption.setRawScore(score);
-                                peptideAssumption.addUrParam(tagAssumption);
-                                spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
-                                peptideKeys.add(peptideKey);
-                            }
+                        for (Peptide peptide : PeptideProteinMapping.getPeptides(proteinMapping)) {
+                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
+                                    assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
+                            peptideAssumption.setRawScore(score);
+                            peptideAssumption.addUrParam(tagAssumption);
+                            spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
                         }
                     }
                 }

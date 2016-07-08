@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
@@ -47,6 +48,10 @@ public class Peptide extends ExperimentObject {
      */
     private ArrayList<ModificationMatch> modifications = null;
     /**
+     * The variants carried by the peptide.
+     */
+    private ArrayList<VariantMatch> variants = null;
+    /**
      * Separator preceding confident localization of the confident localization
      * of a modification.
      */
@@ -83,6 +88,32 @@ public class Peptide extends ExperimentObject {
                 }
             }
             this.modifications = new ArrayList<ModificationMatch>(modifications);
+            this.variants = new ArrayList<VariantMatch>();
+        }
+    }
+
+    /**
+     * Constructor for the peptide.
+     *
+     * @param aSequence the peptide sequence, assumed to be in upper case only
+     * @param modifications the PTM of this peptide
+     * @throws IllegalArgumentException if the peptide sequence contains unknown
+     * amino acids
+     */
+    public Peptide(String aSequence, ArrayList<ModificationMatch> modifications, ArrayList<VariantMatch> variants) throws IllegalArgumentException {
+        this.sequence = aSequence;
+        sequence = sequence.replaceAll("[#*$%&]", "");
+        if (modifications != null) {
+            for (ModificationMatch mod : modifications) {
+                if (mod.getTheoreticPtm().contains(MODIFICATION_SEPARATOR)) {
+                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+                }
+                if (mod.getTheoreticPtm().contains(MODIFICATION_LOCALIZATION_SEPARATOR)) {
+                    throw new IllegalArgumentException("PTM names containing '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name: " + mod.getTheoreticPtm());
+                }
+            }
+            this.modifications = new ArrayList<ModificationMatch>(modifications);
+            this.variants = new ArrayList<VariantMatch>(variants);
         }
     }
 
@@ -137,6 +168,50 @@ public class Peptide extends ExperimentObject {
         modifications.add(modificationMatch);
         mass = null;
     }
+    
+    /**
+     * Getter for the variants carried by this peptide.
+     *
+     * @return the variants matches as found by the search engine
+     */
+    public ArrayList<VariantMatch> getVariantMatches() {
+        return variants;
+    }
+
+    /**
+     * Sets new modification matches for the peptide.
+     *
+     * @param variants the new variant matches
+     */
+    public void setVariantMatches(ArrayList<VariantMatch> variants) {
+        this.variants = variants;
+    }
+
+    /**
+     * Clears the list of imported variant matches.
+     */
+    public void clearVariantMatches() {
+        variants.clear();
+    }
+
+    /**
+     * Adds a modification match.
+     *
+     * @param variantMatch the variant match to add
+     */
+    public void addVariantMatch(VariantMatch variantMatch) {
+        if (variants == null) {
+            variants = new ArrayList<VariantMatch>(1);
+        }
+        variants.add(variantMatch);
+    }
+    
+    
+    
+    
+    
+    
+    
 
     /**
      * Getter for the sequence.

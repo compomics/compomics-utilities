@@ -80,7 +80,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
 
         peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
-        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinMap(peptideProteinMappings);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
         Assert.assertTrue(testIndexes.size() == 1);
         HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
         Assert.assertTrue(proteinMapping.size() == 2);

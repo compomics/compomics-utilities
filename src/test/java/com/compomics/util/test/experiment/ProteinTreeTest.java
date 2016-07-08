@@ -58,7 +58,7 @@ public class ProteinTreeTest extends TestCase {
         proteinTree.initiateTree(3, 50, 50, waitingHandlerCLIImpl, exceptionHandler, true, false, 1);
 
         ArrayList<PeptideProteinMapping> peptideProteinMappings = proteinTree.getProteinMapping("SSS", SequenceMatchingPreferences.defaultStringMatching);
-        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinMap(peptideProteinMappings);
+        HashMap<String, HashMap<String, ArrayList<Integer>>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
          Assert.assertTrue(testIndexes.size() == 1);
         HashMap<String, ArrayList<Integer>> proteinMapping = testIndexes.get("SSS");
         Assert.assertTrue(proteinMapping.size() == 2);

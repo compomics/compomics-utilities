@@ -14,6 +14,10 @@ public class VariantMatch {
      */
     private Variant variant;
     /**
+     * The accession of the protein where this variant was found.
+     */
+    private String proteinAccession;
+    /**
      * The site on the peptide. 0 is the first amino acid. For a swap, the amino acid to the left is the site.
      */
     private int site;
@@ -22,10 +26,12 @@ public class VariantMatch {
      * Constructor.
      * 
      * @param variant the variant found
+     * @param proteinAccession the accession of the protein where this variant was found
      * @param site the site
      */
-    public VariantMatch(Variant variant, int site) {
+    public VariantMatch(Variant variant, String proteinAccession, int site) {
         this.variant = variant;
+        this.proteinAccession = proteinAccession;
         this.site = site;
     }
 
@@ -45,6 +51,15 @@ public class VariantMatch {
      */
     public int getSite() {
         return site;
+    }
+
+    /**
+     * Returns the protein accession where this variant was found.
+     * 
+     * @return the protein accession where this variant was found
+     */
+    public String getProteinAccession() {
+        return proteinAccession;
     }
     
 }

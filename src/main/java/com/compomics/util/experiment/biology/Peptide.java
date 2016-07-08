@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology;
 
 import com.compomics.util.Util;
+import com.compomics.util.experiment.biology.variants.Variant;
 import com.compomics.util.experiment.identification.protein_sequences.SequenceFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.VariantMatch;
@@ -48,9 +49,13 @@ public class Peptide extends ExperimentObject {
      */
     private ArrayList<ModificationMatch> modifications = null;
     /**
-     * The variants carried by the peptide.
+     * The variants observed when mapping this peptide to the database.
      */
     private ArrayList<VariantMatch> variants = null;
+    /**
+     * The variants in a map indexed by protein .
+     */
+    private HashMap<String, HashMap<Integer, ArrayList<Variant>>> variantsMap = null;
     /**
      * Separator preceding confident localization of the confident localization
      * of a modification.
@@ -194,11 +199,12 @@ public class Peptide extends ExperimentObject {
     public void clearVariantMatches() {
         if (variants != null) {
             variants.clear();
+        variantsMap = null;
         }
     }
 
     /**
-     * Adds a modification match.
+     * Adds a variant match.
      *
      * @param variantMatch the variant match to add
      */
@@ -207,6 +213,54 @@ public class Peptide extends ExperimentObject {
             variants = new ArrayList<VariantMatch>(1);
         }
         variants.add(variantMatch);
+        variantsMap = null;
+    }
+
+    /**
+     * Adds variant matches.
+     *
+     * @param variantMatch the variant match to add
+     */
+    public void addVariantMatches(Collection<VariantMatch> variantMatch) {
+        if (variants == null) {
+            variants = new ArrayList<VariantMatch>(variantMatch.size());
+        }
+        variants.addAll(variantMatch);
+        variantsMap = null;
+    }
+    
+    /**
+     * Returns the variants in a map indexed by protein accession and index. The map is computed from the list of variants and saved in cache.
+     * 
+     * @return the variants in a map 
+     */
+    public HashMap<String, HashMap<Integer, ArrayList<Variant>>> getVariantsMap() {
+        if (variantsMap == null) {
+            variantsMap = new HashMap<String, HashMap<Integer, ArrayList<Variant>>>(variants.size());
+            for (VariantMatch variantMatch : variants) {
+                String proteinAccession = variantMatch.getProteinAccession();
+                HashMap<Integer, ArrayList<Variant>> proteinVariants = variantsMap.get(proteinAccession);
+                if (proteinVariants == null) {
+                    proteinVariants = new HashMap<Integer, ArrayList<Variant>>(2);
+                    variantsMap.put(proteinAccession, proteinVariants);
+                }
+                int site = variantMatch.getSite();
+                ArrayList<Variant> variantsAtSite = proteinVariants.get(site);
+                if (variantsAtSite == null) {
+                    variantsAtSite = new ArrayList<Variant>(1);
+                    proteinVariants.put(site, variantsAtSite);
+                }
+                variantsAtSite.add(variantMatch.getVariant());
+            }
+        }
+        return variantsMap;
+    }
+    
+    /**
+     * Clears the map saved in cache.
+     */
+    public void clearVariantsMap() {
+        variantsMap = null;
     }
 
     /**

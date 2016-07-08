@@ -7,7 +7,6 @@ import com.compomics.util.experiment.identification.matches.VariantMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
-import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
@@ -20,6 +19,7 @@ import java.util.*;
  * This class models a peptide.
  *
  * @author Marc Vaudel
+ * @author Dominik Kopczynski
  */
 public class Peptide extends ExperimentObject {
 
@@ -88,7 +88,6 @@ public class Peptide extends ExperimentObject {
                 }
             }
             this.modifications = new ArrayList<ModificationMatch>(modifications);
-            this.variants = new ArrayList<VariantMatch>();
         }
     }
 
@@ -97,6 +96,8 @@ public class Peptide extends ExperimentObject {
      *
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param modifications the PTM of this peptide
+     * @param variants the variants compared to the database
+     *
      * @throws IllegalArgumentException if the peptide sequence contains unknown
      * amino acids
      */
@@ -168,9 +169,9 @@ public class Peptide extends ExperimentObject {
         modifications.add(modificationMatch);
         mass = null;
     }
-    
+
     /**
-     * Getter for the variants carried by this peptide.
+     * Getter for the variants carried by this peptide. Null if not set.
      *
      * @return the variants matches as found by the search engine
      */
@@ -179,7 +180,7 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Sets new modification matches for the peptide.
+     * Sets new variants for the peptide.
      *
      * @param variants the new variant matches
      */
@@ -191,7 +192,9 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
-        variants.clear();
+        if (variants != null) {
+            variants.clear();
+        }
     }
 
     /**
@@ -205,13 +208,6 @@ public class Peptide extends ExperimentObject {
         }
         variants.add(variantMatch);
     }
-    
-    
-    
-    
-    
-    
-    
 
     /**
      * Getter for the sequence.

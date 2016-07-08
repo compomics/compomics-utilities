@@ -6,7 +6,7 @@ package com.compomics.util.experiment.biology.variants;
  * @author Marc Vaudel
  */
 public interface Variant {
-
+    
     /**
      * Returns the description of the variant as string.
      * 

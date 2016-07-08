@@ -25,7 +25,8 @@ public class VariantMatch {
      * @param site the site
      */
     public VariantMatch(Variant variant, int site) {
-        
+        this.variant = variant;
+        this.site = site;
     }
 
     /**

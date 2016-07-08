@@ -38,7 +38,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database
      */
-    public HashMap<String, HashMap<String, ArrayList<Integer>>> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
+    public ArrayList<PeptideProteinMapping> getProteinMapping(String peptideSequence, SequenceMatchingPreferences proteinInferencePreferences)
             throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
@@ -64,7 +64,7 @@ public interface PeptideMapper {
      * @throws SQLException if an SQLException exception thrown whenever a
      * problem occurred while interacting with the tree database.
      */
-    public HashMap<Peptide, HashMap<String, ArrayList<Integer>>> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
+    public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, TagMatcher tagMatcher, SequenceMatchingPreferences sequenceMatchingPreferences, Double massTolerance) throws IOException, InterruptedException, ClassNotFoundException, SQLException;
 
     /**
      * Empties all caches.

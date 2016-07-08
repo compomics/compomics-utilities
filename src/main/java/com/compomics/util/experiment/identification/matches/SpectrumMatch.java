@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.protein_inference.proteintree.ProteinTree;
 import com.compomics.util.experiment.identification.amino_acid_tags.matchers.TagMatcher;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * This class models a spectrum match.
@@ -362,14 +364,20 @@ public class SpectrumMatch extends IdentificationMatch {
                 for (SpectrumIdentificationAssumption assumption : originalAssumptions) {
                     if (assumption instanceof TagAssumption) {
                         TagAssumption tagAssumption = (TagAssumption) assumption;
-                        HashMap<Peptide, HashMap<String, ArrayList<Integer>>> proteinMapping
+                        ArrayList<PeptideProteinMapping> proteinMapping
                                 = proteinTree.getProteinMapping(tagAssumption.getTag(), tagMatcher, sequenceMatchingPreferences, massTolerance);
-                        for (Peptide peptide : proteinMapping.keySet()) {
-                            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
-                                    assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
-                            peptideAssumption.setRawScore(score);
-                            peptideAssumption.addUrParam(tagAssumption);
-                            spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
+                        HashSet<String> peptideKeys = new HashSet<String>(proteinMapping.size());
+                        for (PeptideProteinMapping peptideProteinMapping : proteinMapping) {
+                            Peptide peptide = new Peptide(peptideProteinMapping.getPeptideSequence(), peptideProteinMapping.getModificationMatches());
+                            String peptideKey = peptide.getKey();
+                            if (!peptideKeys.contains(peptideKey)) {
+                                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocateId,
+                                        assumption.getIdentificationCharge(), score, assumption.getIdentificationFile());
+                                peptideAssumption.setRawScore(score);
+                                peptideAssumption.addUrParam(tagAssumption);
+                                spectrumMatch.addHit(advocateId, peptideAssumption, ascendingScore);
+                                peptideKeys.add(peptideKey);
+                            }
                         }
                     }
                 }

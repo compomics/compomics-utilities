@@ -7,6 +7,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.identification_parameters.PtmSettings;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideMapperType;
+import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.preferences.SequenceMatchingPreferences;
 
 import java.io.FileNotFoundException;
@@ -303,30 +304,11 @@ public class Peptide extends ExperimentObject {
     public synchronized void mapParentProteins(SequenceMatchingPreferences sequenceMatchingPreferences, PeptideMapper peptideMapper) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
 
         if (parentProteins == null) {
-            HashMap<String, HashMap<String, ArrayList<Integer>>> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
+            ArrayList<PeptideProteinMapping> proteinMapping = peptideMapper.getProteinMapping(sequence, sequenceMatchingPreferences);
             HashSet<String> accessionsFound = new HashSet<String>(2);
-
-            PeptideMapperType peptideMapperType = sequenceMatchingPreferences.getPeptideMapperType();
-            switch (peptideMapperType) {
-                case fm_index:
-                    for (String peptideSequence : proteinMapping.keySet()) {
-                        HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                        accessionsFound.addAll(subMapping.keySet());
-                    }
-                    break;
-                case tree:
-                    for (String peptideSequence : proteinMapping.keySet()) {
-                        double xShare = ((double) Util.getOccurrence(peptideSequence, 'X')) / sequence.length(); //@TODO: should be done in the tree
-                        if (!sequenceMatchingPreferences.hasLimitX() || xShare <= sequenceMatchingPreferences.getLimitX()) {
-                            HashMap<String, ArrayList<Integer>> subMapping = proteinMapping.get(peptideSequence);
-                            accessionsFound.addAll(subMapping.keySet());
-                        }
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Peptide mapper type " + peptideMapperType + " not supported.");
+            for (PeptideProteinMapping peptideProteinMapping : proteinMapping) {
+                accessionsFound.add(peptideProteinMapping.getProteinAccession());
             }
-
             parentProteins = new ArrayList<String>(accessionsFound);
             Collections.sort(parentProteins);
         }
